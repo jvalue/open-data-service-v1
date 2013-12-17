@@ -1,0 +1,5 @@
+Dependencies:
+Restlet - Apache 2.0
+Jackson - Apache 2.0
+Ektorp  - Apache 2.0
+JUnit 4.11
