@@ -19,11 +19,13 @@
 package org.jvalue.ods.main;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 
+import org.ektorp.support.CouchDbDocument;
 import org.jvalue.ods.adapter.pegelonline.PegelOnlineAdapter;
 import org.jvalue.ods.adapter.pegelonline.data.*;
-import org.jvalue.ods.inserter.pegelonline.*;
+import org.jvalue.ods.inserter.*;
 import org.restlet.Component;
 import org.restlet.data.Protocol;
 import org.restlet.resource.Get;
@@ -37,7 +39,26 @@ import com.fasterxml.jackson.databind.JsonMappingException;
  * The Class Main.
  */
 public class Main extends ServerResource {
+	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 * @throws Exception the exception
+	 */
+	public static void main(String[] args) throws Exception {
+		initializeRestlet();
+		
+		insertPegelOnlineStationsIntoDatabase();		
 
+		//printPegelOnlineStations();
+	}
+	
+	/**
+	 * Initialize restlet.
+	 *
+	 * @throws Exception the exception
+	 */
 	private static void initializeRestlet() throws Exception
 	{
 		// Create a new Restlet component and add a HTTP server connector to it  
@@ -52,62 +73,64 @@ public class Main extends ServerResource {
 	    component.start(); 
 	}
 	
+//	private static void printPegelOnlineStations() throws JsonParseException,
+//			JsonMappingException, IOException {
+//		PegelOnlineAdapter pegelOnlineAdapter = new PegelOnlineAdapter();
+//		List<Station> stationData = pegelOnlineAdapter.getStationData();
+//		for (Station s : stationData) {
+//
+//			System.out.println("Id:" + s.getUuid() + "\t" + "Pegelname: "
+//					+ s.getLongname() + "\t" + "Fluss-KM: " + s.getKm() + "\t"
+//					+ "Gewässer: " + s.getLongname());
+//
+//			for (Timeseries t : s.getTimeseries()) {
+//				String comment = "";
+//				Comment c = t.getComment();
+//				if (c != null)
+//					comment = c.getLongDescription();
+//
+//				System.out.println("\t" + t.getLongname() + ": " + comment);
+//
+//				List<Measurement> measurementData = pegelOnlineAdapter
+//						.getMeasurementOfStation(s.getUuid(), t.getShortname());
+//				for (Measurement m : measurementData) {
+//					System.out.println("\t\t" + m.getTimestamp() + "\t"
+//							+ m.getValue() + t.getUnit());
+//				}
+//			}
+//			System.out.println();
+//		}
+//	}
+
 	/**
-	 * The main method.
-	 * 
-	 * @param args
-	 *            the arguments
-	 * @throws Exception 
-	 */
-	public static void main(String[] args) throws Exception {
-		initializeRestlet();
-		
-		insertPegelOnlineStationsIntoDatabase();		
-
-		//printPegelOnlineStations();
-	}
-	
-	private static void printPegelOnlineStations() throws JsonParseException,
-			JsonMappingException, IOException {
+ * Insert pegel online stations into database.
+ *
+ * @throws JsonParseException the json parse exception
+ * @throws JsonMappingException the json mapping exception
+ * @throws IOException Signals that an I/O exception has occurred.
+ */
+private static void insertPegelOnlineStationsIntoDatabase() throws JsonParseException, JsonMappingException, IOException {
 		PegelOnlineAdapter pegelOnlineAdapter = new PegelOnlineAdapter();
-		List<Station> stationData;
-
-		stationData = pegelOnlineAdapter.getStationData();
-		for (Station s : stationData) {
-
-			System.out.println("Id:" + s.getUuid() + "\t" + "Pegelname: "
-					+ s.getLongname() + "\t" + "Fluss-KM: " + s.getKm() + "\t"
-					+ "Gewässer: " + s.getLongname());
-
-			for (Timeseries t : s.getTimeseries()) {
-				String comment = "";
-				Comment c = t.getComment();
-				if (c != null)
-					comment = c.getLongDescription();
-
-				System.out.println("\t" + t.getLongname() + ": " + comment);
-
-				List<Measurement> measurementData = pegelOnlineAdapter
-						.getMeasurementOfStation(s.getUuid(), t.getShortname());
-				for (Measurement m : measurementData) {
-					System.out.println("\t\t" + m.getTimestamp() + "\t"
-							+ m.getValue() + t.getUnit());
-				}
-			}
-			System.out.println();
+		List<Station> stationData = pegelOnlineAdapter.getStationData();
+		List<CouchDbDocument> list = new LinkedList<CouchDbDocument>();
+		for (Station s: stationData)
+		{
+			list.add(s);
 		}
-	}
-
-	private static void insertPegelOnlineStationsIntoDatabase() throws JsonParseException, JsonMappingException, IOException {
-		PegelOnlineAdapter pegelOnlineAdapter = new PegelOnlineAdapter();
-		List<Station> stationData;
-
-		stationData = pegelOnlineAdapter.getStationData();	    
-		PegelOnlineInserter inserter = new PegelOnlineDBInserter(stationData);
+		
+		Inserter inserter = new CouchDbInserter("open-data-service", list);
 		inserter.insert();		
 	}
 	
 
+	/**
+	 * Do get.
+	 *
+	 * @return the list
+	 * @throws JsonParseException the json parse exception
+	 * @throws JsonMappingException the json mapping exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Get("json")
 	public List<Station> doGet() throws JsonParseException, JsonMappingException, IOException{
 		PegelOnlineAdapter pegelOnlineAdapter = new PegelOnlineAdapter();

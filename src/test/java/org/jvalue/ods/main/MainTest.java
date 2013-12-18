@@ -28,7 +28,8 @@ public class MainTest {
 
 	/**
 	 * Test main.
-	 * @throws Exception 
+	 *
+	 * @throws Exception the exception
 	 */
 	@Test
 	public void TestMain() throws Exception {

@@ -30,6 +30,7 @@ public class Timeseries extends CouchDbDocument {
 
 	private Comment comment;
 
+	/** The current measurement. */
 	private CurrentMeasurement currentMeasurement;
 
 	/** The equidistance. */

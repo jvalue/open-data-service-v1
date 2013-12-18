@@ -44,7 +44,8 @@ public class HttpJsonAdapter {
 
 	/**
 	 * Gets the request.
-	 * 
+	 *
+	 * @param charsetName the charset name
 	 * @return the request
 	 */
 	public String getRequest(String charsetName) {
@@ -72,7 +73,8 @@ public class HttpJsonAdapter {
 
 	/**
 	 * Gets the json.
-	 * 
+	 *
+	 * @param charsetName the charset name
 	 * @return the json
 	 */
 	public String getJSON(String charsetName) {
