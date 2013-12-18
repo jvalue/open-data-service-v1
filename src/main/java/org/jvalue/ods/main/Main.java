@@ -21,8 +21,8 @@ package org.jvalue.ods.main;
 import java.io.IOException;
 import java.util.List;
 
-import org.jvalue.ods.adapter.PegelOnlineAdapter;
-import org.jvalue.ods.adapter.data.Station;
+import org.jvalue.ods.adapter.pegelonline.PegelOnlineAdapter;
+import org.jvalue.ods.adapter.pegelonline.data.Station;
 import org.restlet.Component;
 import org.restlet.data.Protocol;
 import org.restlet.resource.Get;

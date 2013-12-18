@@ -16,36 +16,59 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jvalue.ods.adapter.data;
+package org.jvalue.ods.adapter.pegelonline.data;
+
 
 /**
- * The Class Measurement.
+ * The Class GaugeZero.
  */
-public class Measurement {
+public class GaugeZero {
 
-	/** The timestamp. */
-	private String timestamp;
+	/** The unit. */
+	private String unit;
+
+	/** The valid from. */
+	private String validFrom;
 
 	/** The value. */
 	private Number value;
 
 	/**
-	 * Gets the timestamp.
+	 * Gets the unit.
 	 * 
-	 * @return the timestamp
+	 * @return the unit
 	 */
-	public String getTimestamp() {
-		return this.timestamp;
+	public String getUnit() {
+		return this.unit;
 	}
 
 	/**
-	 * Sets the timestamp.
+	 * Sets the unit.
 	 * 
-	 * @param timestamp
-	 *            the new timestamp
+	 * @param unit
+	 *            the new unit
 	 */
-	public void setTimestamp(String timestamp) {
-		this.timestamp = timestamp;
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
+
+	/**
+	 * Gets the valid from.
+	 * 
+	 * @return the valid from
+	 */
+	public String getValidFrom() {
+		return this.validFrom;
+	}
+
+	/**
+	 * Sets the valid from.
+	 * 
+	 * @param validFrom
+	 *            the new valid from
+	 */
+	public void setValidFrom(String validFrom) {
+		this.validFrom = validFrom;
 	}
 
 	/**

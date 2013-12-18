@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jvalue.ods.adapter.data;
+package org.jvalue.ods.adapter.pegelonline.data;
 
 /**
  * The Class Comment.

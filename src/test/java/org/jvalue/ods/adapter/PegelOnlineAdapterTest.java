@@ -25,8 +25,9 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-import org.jvalue.ods.adapter.data.Station;
-import org.jvalue.ods.adapter.data.Water;
+import org.jvalue.ods.adapter.pegelonline.PegelOnlineAdapter;
+import org.jvalue.ods.adapter.pegelonline.data.Station;
+import org.jvalue.ods.adapter.pegelonline.data.Water;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
