@@ -18,10 +18,12 @@
 
 package org.jvalue.ods.adapter.pegelonline.data;
 
+import org.ektorp.support.CouchDbDocument;
+
 /**
  * The Class CurrentMeasurement.
  */
-public class CurrentMeasurement {
+public class CurrentMeasurement extends CouchDbDocument {
 
 	/** The state mnw mhw. */
 	private String stateMnwMhw;

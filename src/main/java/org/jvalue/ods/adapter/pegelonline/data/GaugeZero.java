@@ -18,11 +18,13 @@
 
 package org.jvalue.ods.adapter.pegelonline.data;
 
+import org.ektorp.support.CouchDbDocument;
+
 
 /**
  * The Class GaugeZero.
  */
-public class GaugeZero {
+public class GaugeZero extends CouchDbDocument {
 
 	/** The unit. */
 	private String unit;

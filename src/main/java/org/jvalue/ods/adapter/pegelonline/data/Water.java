@@ -20,10 +20,12 @@ package org.jvalue.ods.adapter.pegelonline.data;
 
 import java.util.List;
 
+import org.ektorp.support.CouchDbDocument;
+
 /**
  * The Class Water.
  */
-public class Water {
+public class Water extends CouchDbDocument {
 
 	/** The longname. */
 	private String longname;

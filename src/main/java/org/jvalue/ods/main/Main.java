@@ -22,7 +22,8 @@ import java.io.IOException;
 import java.util.List;
 
 import org.jvalue.ods.adapter.pegelonline.PegelOnlineAdapter;
-import org.jvalue.ods.adapter.pegelonline.data.Station;
+import org.jvalue.ods.adapter.pegelonline.data.*;
+import org.jvalue.ods.inserter.pegelonline.*;
 import org.restlet.Component;
 import org.restlet.data.Protocol;
 import org.restlet.resource.Get;
@@ -37,15 +38,8 @@ import com.fasterxml.jackson.databind.JsonMappingException;
  */
 public class Main extends ServerResource {
 
-	/**
-	 * The main method.
-	 * 
-	 * @param args
-	 *            the arguments
-	 * @throws Exception 
-	 */
-	public static void main(String[] args) throws Exception {
-		
+	private static void initializeRestlet() throws Exception
+	{
 		// Create a new Restlet component and add a HTTP server connector to it  
 	    Component component = new Component();  
 	    component.getServers().add(Protocol.HTTP, 8182);  
@@ -56,39 +50,64 @@ public class Main extends ServerResource {
 	    // Now, let's start the component!  
 	    // Note that the HTTP server connector is also automatically started.  
 	    component.start(); 
-
-//		PegelOnlineAdapter pegelOnlineAdapter = new PegelOnlineAdapter();
-//		List<Station> stationData;
-//
-//		stationData = pegelOnlineAdapter.getStationData();	    
-//		PegelOnlineInserter inserter = new PegelOnlineDBInserter(stationData);
-//		inserter.insert();
-
-		// for (Station s : stationData) {
-		//
-		// System.out.println("Id:" + s.getUuid() + "\t" + "Pegelname: "
-		// + s.getLongname() + "\t" + "Fluss-KM: " + s.getKm() + "\t"
-		// + "Gewässer: " + s.getLongname());
-		//
-		// for (Timeseries t : s.getTimeseries()) {
-		// String comment = "";
-		// Comment c = t.getComment();
-		// if (c != null)
-		// comment = c.getLongDescription();
-		//
-		// System.out.println("\t" + t.getLongname() + ": " + comment);
-		//
-		// List<Measurement> measurementData = pegelOnlineAdapter
-		// .getMeasurementOfStation(s.getUuid(), t.getShortname());
-		// for (Measurement m : measurementData) {
-		// System.out.println("\t\t" + m.getTimestamp() + "\t"
-		// + m.getValue() + t.getUnit());
-		// }
-		// }
-		// System.out.println();
-		// }
 	}
 	
+	/**
+	 * The main method.
+	 * 
+	 * @param args
+	 *            the arguments
+	 * @throws Exception 
+	 */
+	public static void main(String[] args) throws Exception {
+		initializeRestlet();
+		
+		insertPegelOnlineStationsIntoDatabase();		
+
+		//printPegelOnlineStations();
+	}
+	
+	private static void printPegelOnlineStations() throws JsonParseException,
+			JsonMappingException, IOException {
+		PegelOnlineAdapter pegelOnlineAdapter = new PegelOnlineAdapter();
+		List<Station> stationData;
+
+		stationData = pegelOnlineAdapter.getStationData();
+		for (Station s : stationData) {
+
+			System.out.println("Id:" + s.getUuid() + "\t" + "Pegelname: "
+					+ s.getLongname() + "\t" + "Fluss-KM: " + s.getKm() + "\t"
+					+ "Gewässer: " + s.getLongname());
+
+			for (Timeseries t : s.getTimeseries()) {
+				String comment = "";
+				Comment c = t.getComment();
+				if (c != null)
+					comment = c.getLongDescription();
+
+				System.out.println("\t" + t.getLongname() + ": " + comment);
+
+				List<Measurement> measurementData = pegelOnlineAdapter
+						.getMeasurementOfStation(s.getUuid(), t.getShortname());
+				for (Measurement m : measurementData) {
+					System.out.println("\t\t" + m.getTimestamp() + "\t"
+							+ m.getValue() + t.getUnit());
+				}
+			}
+			System.out.println();
+		}
+	}
+
+	private static void insertPegelOnlineStationsIntoDatabase() throws JsonParseException, JsonMappingException, IOException {
+		PegelOnlineAdapter pegelOnlineAdapter = new PegelOnlineAdapter();
+		List<Station> stationData;
+
+		stationData = pegelOnlineAdapter.getStationData();	    
+		PegelOnlineInserter inserter = new PegelOnlineDBInserter(stationData);
+		inserter.insert();		
+	}
+	
+
 	@Get("json")
 	public List<Station> doGet() throws JsonParseException, JsonMappingException, IOException{
 		PegelOnlineAdapter pegelOnlineAdapter = new PegelOnlineAdapter();

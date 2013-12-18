@@ -20,10 +20,12 @@ package org.jvalue.ods.adapter.pegelonline.data;
 
 import java.util.List;
 
+import org.ektorp.support.CouchDbDocument;
+
 /**
  * The Class Station.
  */
-public class Station {
+public class Station extends CouchDbDocument {
 
 	/** The agency. */
 	private String agency;

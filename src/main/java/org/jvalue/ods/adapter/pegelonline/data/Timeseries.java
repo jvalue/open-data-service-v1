@@ -18,11 +18,13 @@
 
 package org.jvalue.ods.adapter.pegelonline.data;
 
+import org.ektorp.support.CouchDbDocument;
+
 /**
  * The Class Timeseries.
  */
 
-public class Timeseries {
+public class Timeseries extends CouchDbDocument {
 
 	/** The comment. */
 

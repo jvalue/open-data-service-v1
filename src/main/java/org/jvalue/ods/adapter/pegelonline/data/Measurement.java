@@ -18,10 +18,12 @@
 
 package org.jvalue.ods.adapter.pegelonline.data;
 
+import org.ektorp.support.CouchDbDocument;
+
 /**
  * The Class Measurement.
  */
-public class Measurement {
+public class Measurement extends CouchDbDocument {
 
 	/** The timestamp. */
 	private String timestamp;

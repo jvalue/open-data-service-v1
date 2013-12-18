@@ -18,10 +18,12 @@
 
 package org.jvalue.ods.adapter.pegelonline.data;
 
+import org.ektorp.support.CouchDbDocument;
+
 /**
  * The Class Comment.
  */
-public class Comment {
+public class Comment extends CouchDbDocument {
 
 	/** The long description. */
 	private String longDescription;
