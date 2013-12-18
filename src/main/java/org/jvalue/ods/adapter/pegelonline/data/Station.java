@@ -27,6 +27,11 @@ import org.ektorp.support.CouchDbDocument;
  */
 public class Station extends CouchDbDocument {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The agency. */
 	private String agency;
 

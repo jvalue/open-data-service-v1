@@ -25,6 +25,11 @@ import org.ektorp.support.CouchDbDocument;
  */
 public class Measurement extends CouchDbDocument {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The timestamp. */
 	private String timestamp;
 

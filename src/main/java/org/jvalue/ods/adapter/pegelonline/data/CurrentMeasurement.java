@@ -25,6 +25,11 @@ import org.ektorp.support.CouchDbDocument;
  */
 public class CurrentMeasurement extends CouchDbDocument {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The state mnw mhw. */
 	private String stateMnwMhw;
 

@@ -1,16 +1,13 @@
+# Ignore #
 *.class
-
-# Package Files #
-# *.jar #
 *.war
 *.ear
 /target
 /bin
-
+/build
 /.gradle
-/build
-/.settings
-/build
-
+/.settings/gradle
 .classpath
 .project
+
+# Allow #

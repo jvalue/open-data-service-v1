@@ -25,6 +25,11 @@ import org.ektorp.support.CouchDbDocument;
  */
 public class Comment extends CouchDbDocument {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The long description. */
 	private String longDescription;
 

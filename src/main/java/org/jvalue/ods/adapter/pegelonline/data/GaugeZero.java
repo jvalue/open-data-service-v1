@@ -26,6 +26,11 @@ import org.ektorp.support.CouchDbDocument;
  */
 public class GaugeZero extends CouchDbDocument {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The unit. */
 	private String unit;
 

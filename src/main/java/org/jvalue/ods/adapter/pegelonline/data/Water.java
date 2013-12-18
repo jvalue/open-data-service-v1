@@ -27,6 +27,11 @@ import org.ektorp.support.CouchDbDocument;
  */
 public class Water extends CouchDbDocument {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The longname. */
 	private String longname;
 
