@@ -44,30 +44,17 @@ public class DbInsertMain {
 		PegelOnlineAdapter pegelOnlineAdapter = new PegelOnlineAdapter();
 		List<Station> stationData = pegelOnlineAdapter.getStationData();
 		
-		for (Station s : stationData) {
-/*
-//			System.out.println("Id:" + s.getUuid() + "\t" + "Pegelname: "
-//					+ s.getLongname() + "\t" + "Fluss-KM: " + s.getKm() + "\t"
-//					+ "Gewässer: " + s.getLongname());
-*/
-			for (Timeseries t : s.getTimeseries()) {
-//				String comment = "";
-//				Comment c = t.getComment();
-//				if (c != null)
-//					comment = c.getLongDescription();
-//
-//				System.out.println("\t" + t.getLongname() + ": " + comment);
-
-				List<Measurement> measurementData = pegelOnlineAdapter
-						.getMeasurementOfStation(s.getUuid(), t.getShortname());
-				
-				for (Measurement m : measurementData) {
-//					System.out.println("\t\t" + m.getTimestamp() + "\t"
-//							+ m.getValue() + t.getUnit());
-				}
-			}
-		}
-		
+//TODO: Write Measurement to DB
+//		for (Station s : stationData) {
+//			for (Timeseries t : s.getTimeseries()) {
+//				List<Measurement> measurementData = pegelOnlineAdapter
+//						.getMeasurementOfStation(s.getUuid(), t.getShortname());
+//				
+//				for (Measurement m : measurementData) {
+//					//...
+//				}
+//			}
+//		}		
 		
 		
 		List<Station> stations = new LinkedList<Station>();
@@ -76,12 +63,8 @@ public class DbInsertMain {
 		}
 		
 		
-		
-		
-		
 
-		Inserter inserter = new CouchDbInserter("open-data-service",
-				new PegelOnlineData(stations));
+		Inserter inserter = new CouchDbInserter("open-data-service", new PegelOnlineData(stations));
 		inserter.insert();
 	}
 	
