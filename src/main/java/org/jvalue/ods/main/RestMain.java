@@ -23,12 +23,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.jvalue.ods.adapter.pegelonline.PegelOnlineAdapter;
-import org.jvalue.ods.adapter.pegelonline.data.*;
-import org.jvalue.ods.inserter.*;
-import org.restlet.Component;
-import org.restlet.data.Protocol;
-import org.restlet.resource.Get;
-import org.restlet.resource.ServerResource;
+import org.jvalue.ods.adapter.pegelonline.PegelOnlineRouter;
+import org.jvalue.ods.adapter.pegelonline.data.PegelOnlineData;
+import org.jvalue.ods.adapter.pegelonline.data.Station;
+import org.jvalue.ods.inserter.CouchDbInserter;
+import org.jvalue.ods.inserter.Inserter;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -36,7 +35,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 /**
  * The Class Main.
  */
-public class RestMain extends ServerResource {
+public class Main {
 
 	/**
 	 * The main method.
@@ -47,35 +46,43 @@ public class RestMain extends ServerResource {
 	 *             the exception
 	 */
 	public static void main(String[] args) throws Exception {
-		initializeRestlet();
+		PegelOnlineRouter.initRestlet();
 		
 		// printPegelOnlineStations();
 	}
 
+	// private static void printPegelOnlineStations() throws JsonParseException,
+	// JsonMappingException, IOException {
+	// PegelOnlineAdapter pegelOnlineAdapter = new PegelOnlineAdapter();
+	// List<Station> stationData = pegelOnlineAdapter.getStationData();
+	// for (Station s : stationData) {
+	//
+	// System.out.println("Id:" + s.getUuid() + "\t" + "Pegelname: "
+	// + s.getLongname() + "\t" + "Fluss-KM: " + s.getKm() + "\t"
+	// + "Gewässer: " + s.getLongname());
+	//
+	// for (Timeseries t : s.getTimeseries()) {
+	// String comment = "";
+	// Comment c = t.getComment();
+	// if (c != null)
+	// comment = c.getLongDescription();
+	//
+	// System.out.println("\t" + t.getLongname() + ": " + comment);
+	//
+	// List<Measurement> measurementData = pegelOnlineAdapter
+	// .getMeasurementOfStation(s.getUuid(), t.getShortname());
+	// for (Measurement m : measurementData) {
+	// System.out.println("\t\t" + m.getTimestamp() + "\t"
+	// + m.getValue() + t.getUnit());
+	// }
+	// }
+	// System.out.println();
+	// }
+	// }
+
 	/**
-	 * Initialize restlet.
+	 * Insert pegel online stations into database.
 	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
-	private static void initializeRestlet() throws Exception {
-		// Create a new Restlet component and add a HTTP server connector to it
-		Component component = new Component();
-		component.getServers().add(Protocol.HTTP, 8182);
-
-		// Then attach it to the local host
-		component.getDefaultHost().attach("/", RestMain.class);
-
-		// Now, let's start the component!
-		// Note that the HTTP server connector is also automatically started.
-		component.start();
-	}
-	
-
-	/**
-	 * Do get.
-	 * 
-	 * @return the list
 	 * @throws JsonParseException
 	 *             the json parse exception
 	 * @throws JsonMappingException
@@ -83,19 +90,18 @@ public class RestMain extends ServerResource {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	@Get("json")
-	public List<Station> doGet() throws JsonParseException,
-			JsonMappingException, IOException {
+	private static void insertPegelOnlineStationsIntoDatabase()
+			throws JsonParseException, JsonMappingException, IOException {
 		PegelOnlineAdapter pegelOnlineAdapter = new PegelOnlineAdapter();
 		List<Station> stationData = pegelOnlineAdapter.getStationData();
+		List<Station> stations = new LinkedList<Station>();
+		for (Station s : stationData) {
+			stations.add(s);
+		}
 
-		return stationData;
-		// // Print the requested URI path
-		// return "Resource URI  : " + getReference() + '\n' +
-		// "Root URI      : "
-		// + getRootRef() + '\n' + "Routed part   : "
-		// + getReference().getBaseRef() + '\n' + "Remaining part: "
-		// + getReference().getRemainingPart();
+		Inserter inserter = new CouchDbInserter("open-data-service",
+				new PegelOnlineData(stations));
+		inserter.insert();
 	}
 
 }

@@ -73,4 +73,10 @@ public class Measurement extends CouchDbDocument {
 	public void setValue(Number value) {
 		this.value = value;
 	}
+
+	public String toString() {
+		return timestamp + "|" + value;
+
+	}
+
 }

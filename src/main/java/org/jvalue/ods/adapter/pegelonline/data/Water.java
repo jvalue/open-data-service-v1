@@ -97,4 +97,10 @@ public class Water extends CouchDbDocument {
 	public void setStations(List<Station> stations) {
 		this.stations = stations;
 	}
+
+	public String toString() {
+		return longname;
+
+	}
+
 }

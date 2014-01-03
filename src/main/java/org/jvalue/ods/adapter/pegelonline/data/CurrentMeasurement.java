@@ -139,4 +139,14 @@ public class CurrentMeasurement extends CouchDbDocument {
 	public void setValue(Number value) {
 		this.value = value;
 	}
+
+	public String toString() {
+
+		return "\n\t\t" + "timestamp: " + timestamp + "\n\t\t" + "value: "
+				+ value + "\n\t\t" + "trend: " + trend + "\n\t\t"
+				+ "stateMnwMhw: " + stateMnwMhw + "\n\t\t" + "stateNswHsw: "
+				+ stateNswHsw;
+
+	}
+
 }
