@@ -24,7 +24,7 @@ import org.jvalue.ods.adapter.pegelonline.PegelOnlineRouter;
 /**
  * The Class Main.
  */
-public class RestMain {
+public class Main {
 
 	/**
 	 * The main method.

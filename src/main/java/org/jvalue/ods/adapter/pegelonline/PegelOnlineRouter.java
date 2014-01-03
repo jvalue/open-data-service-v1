@@ -30,6 +30,8 @@ import org.restlet.data.MediaType;
 import org.restlet.data.Protocol;
 import org.restlet.routing.Router;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class PegelOnlineRouter extends Application {
 
 	public static void initRestlet() throws Exception {
@@ -68,14 +70,16 @@ public class PegelOnlineRouter extends Application {
 								|| s.getShortname().equalsIgnoreCase(
 										(String) request.getAttributes().get(
 												"station"))) {
-							message = s.toString();
+							
+							ObjectMapper mapper = new ObjectMapper();
+							message += mapper.writeValueAsString(s);
+							
 							break;
 						}
 					}
 
-					response.setEntity(message, MediaType.TEXT_PLAIN);
+					response.setEntity(message, MediaType.APPLICATION_JSON);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -93,13 +97,13 @@ public class PegelOnlineRouter extends Application {
 
 					for (Station s : sd) {
 
-						message += s.toString() + "\n\n";
+						ObjectMapper mapper = new ObjectMapper();
+						message += mapper.writeValueAsString(s);
 
 					}
 
-					response.setEntity(message, MediaType.TEXT_PLAIN);
+					response.setEntity(message, MediaType.APPLICATION_JSON);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -123,15 +127,17 @@ public class PegelOnlineRouter extends Application {
 								|| s.getShortname().equalsIgnoreCase(
 										(String) request.getAttributes().get(
 												"station"))) {
-							message += s.getTimeseries().get(0)
-									.getCurrentMeasurement().getValue();
+							
+							ObjectMapper mapper = new ObjectMapper();
+							message += mapper.writeValueAsString(s.getTimeseries().get(0)
+									.getCurrentMeasurement().getValue());
 							break;
 						}
 					}
-
-					response.setEntity(message, MediaType.TEXT_PLAIN);
+					
+					response.setEntity(message, MediaType.APPLICATION_JSON);
+					
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

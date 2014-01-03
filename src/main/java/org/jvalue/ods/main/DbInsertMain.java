@@ -5,10 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.jvalue.ods.adapter.pegelonline.PegelOnlineAdapter;
-import org.jvalue.ods.adapter.pegelonline.data.Measurement;
 import org.jvalue.ods.adapter.pegelonline.data.PegelOnlineData;
 import org.jvalue.ods.adapter.pegelonline.data.Station;
-import org.jvalue.ods.adapter.pegelonline.data.Timeseries;
 import org.jvalue.ods.inserter.CouchDbInserter;
 import org.jvalue.ods.inserter.Inserter;
 
@@ -44,7 +42,7 @@ public class DbInsertMain {
 		PegelOnlineAdapter pegelOnlineAdapter = new PegelOnlineAdapter();
 		List<Station> stationData = pegelOnlineAdapter.getStationData();
 		
-//TODO: Write Measurement to DB
+//TODO: Write Measurements to DB
 //		for (Station s : stationData) {
 //			for (Timeseries t : s.getTimeseries()) {
 //				List<Measurement> measurementData = pegelOnlineAdapter
