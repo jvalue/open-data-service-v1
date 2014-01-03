@@ -33,7 +33,7 @@ public class MainTest {
 	 */
 	@Test
 	public void TestMain() throws Exception {
-		Main.main(null);
+		RestMain.main(null);
 	}
 
 }

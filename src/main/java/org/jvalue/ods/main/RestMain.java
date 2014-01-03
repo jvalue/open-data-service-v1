@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.ektorp.support.CouchDbDocument;
 import org.jvalue.ods.adapter.pegelonline.PegelOnlineAdapter;
 import org.jvalue.ods.adapter.pegelonline.data.*;
 import org.jvalue.ods.inserter.*;
@@ -37,7 +36,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 /**
  * The Class Main.
  */
-public class Main extends ServerResource {
+public class RestMain extends ServerResource {
 
 	/**
 	 * The main method.
@@ -49,9 +48,7 @@ public class Main extends ServerResource {
 	 */
 	public static void main(String[] args) throws Exception {
 		initializeRestlet();
-
-		insertPegelOnlineStationsIntoDatabase();
-
+		
 		// printPegelOnlineStations();
 	}
 
@@ -67,65 +64,13 @@ public class Main extends ServerResource {
 		component.getServers().add(Protocol.HTTP, 8182);
 
 		// Then attach it to the local host
-		component.getDefaultHost().attach("/", Main.class);
+		component.getDefaultHost().attach("/", RestMain.class);
 
 		// Now, let's start the component!
 		// Note that the HTTP server connector is also automatically started.
 		component.start();
 	}
-
-	// private static void printPegelOnlineStations() throws JsonParseException,
-	// JsonMappingException, IOException {
-	// PegelOnlineAdapter pegelOnlineAdapter = new PegelOnlineAdapter();
-	// List<Station> stationData = pegelOnlineAdapter.getStationData();
-	// for (Station s : stationData) {
-	//
-	// System.out.println("Id:" + s.getUuid() + "\t" + "Pegelname: "
-	// + s.getLongname() + "\t" + "Fluss-KM: " + s.getKm() + "\t"
-	// + "Gewässer: " + s.getLongname());
-	//
-	// for (Timeseries t : s.getTimeseries()) {
-	// String comment = "";
-	// Comment c = t.getComment();
-	// if (c != null)
-	// comment = c.getLongDescription();
-	//
-	// System.out.println("\t" + t.getLongname() + ": " + comment);
-	//
-	// List<Measurement> measurementData = pegelOnlineAdapter
-	// .getMeasurementOfStation(s.getUuid(), t.getShortname());
-	// for (Measurement m : measurementData) {
-	// System.out.println("\t\t" + m.getTimestamp() + "\t"
-	// + m.getValue() + t.getUnit());
-	// }
-	// }
-	// System.out.println();
-	// }
-	// }
-
-	/**
-	 * Insert pegel online stations into database.
-	 * 
-	 * @throws JsonParseException
-	 *             the json parse exception
-	 * @throws JsonMappingException
-	 *             the json mapping exception
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
-	private static void insertPegelOnlineStationsIntoDatabase()
-			throws JsonParseException, JsonMappingException, IOException {
-		PegelOnlineAdapter pegelOnlineAdapter = new PegelOnlineAdapter();
-		List<Station> stationData = pegelOnlineAdapter.getStationData();
-		List<Station> stations = new LinkedList<Station>();
-		for (Station s : stationData) {
-			stations.add(s);
-		}
-
-		Inserter inserter = new CouchDbInserter("open-data-service",
-				new PegelOnlineData(stations));
-		inserter.insert();
-	}
+	
 
 	/**
 	 * Do get.

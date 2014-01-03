@@ -17,13 +17,11 @@
  */
 package org.jvalue.ods.inserter;
 
-import java.util.List;
 
 import org.ektorp.*;
 import org.ektorp.http.*;
 import org.ektorp.impl.*;
 import org.ektorp.support.CouchDbDocument;
-import org.jvalue.ods.adapter.pegelonline.data.PegelOnlineData;
 
 /**
  * The Class CouchDbInserter.
