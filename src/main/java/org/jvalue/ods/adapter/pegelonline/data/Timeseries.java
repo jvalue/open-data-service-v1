@@ -187,4 +187,13 @@ public class Timeseries extends CouchDbDocument {
 	public void setUnit(String unit) {
 		this.unit = unit;
 	}
+
+	public String toString() {
+		return "\n\t" + "longname: " + longname + "\n\t" + "unit: " + unit
+				+ "\n\t" + "equidistance: " + equidistance + "\n\t"
+				+ "currentMeasurement: " + currentMeasurement + "\n\t"
+				+ "gaugeZero: " + gaugeZero + "\n\t" + "comment: " + comment
+				+ "\n";
+	}
+
 }

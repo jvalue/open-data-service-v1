@@ -73,4 +73,11 @@ public class Comment extends CouchDbDocument {
 	public void setShortDescription(String shortDescription) {
 		this.shortDescription = shortDescription;
 	}
+
+	public String toString() {
+
+		return longDescription;
+
+	}
+
 }

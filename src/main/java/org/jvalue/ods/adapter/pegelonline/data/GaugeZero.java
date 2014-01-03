@@ -20,7 +20,6 @@ package org.jvalue.ods.adapter.pegelonline.data;
 
 import org.ektorp.support.CouchDbDocument;
 
-
 /**
  * The Class GaugeZero.
  */
@@ -96,4 +95,11 @@ public class GaugeZero extends CouchDbDocument {
 	public void setValue(Number value) {
 		this.value = value;
 	}
+
+	public String toString() {
+
+		return "\n\t\tunit: " + unit + "\n\t\t" + "value: " + value + "\n\t\t"
+				+ "validFrom: " + validFrom;
+	}
+
 }

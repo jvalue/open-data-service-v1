@@ -22,14 +22,12 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.ektorp.support.CouchDbDocument;
 import org.jvalue.ods.adapter.pegelonline.PegelOnlineAdapter;
-import org.jvalue.ods.adapter.pegelonline.data.*;
-import org.jvalue.ods.inserter.*;
-import org.restlet.Component;
-import org.restlet.data.Protocol;
-import org.restlet.resource.Get;
-import org.restlet.resource.ServerResource;
+import org.jvalue.ods.adapter.pegelonline.PegelOnlineRouter;
+import org.jvalue.ods.adapter.pegelonline.data.PegelOnlineData;
+import org.jvalue.ods.adapter.pegelonline.data.Station;
+import org.jvalue.ods.inserter.CouchDbInserter;
+import org.jvalue.ods.inserter.Inserter;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -37,7 +35,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 /**
  * The Class Main.
  */
-public class Main extends ServerResource {
+public class Main {
 
 	/**
 	 * The main method.
@@ -48,30 +46,11 @@ public class Main extends ServerResource {
 	 *             the exception
 	 */
 	public static void main(String[] args) throws Exception {
-		initializeRestlet();
+		PegelOnlineRouter.initRestlet();
 
 		insertPegelOnlineStationsIntoDatabase();
 
 		// printPegelOnlineStations();
-	}
-
-	/**
-	 * Initialize restlet.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
-	private static void initializeRestlet() throws Exception {
-		// Create a new Restlet component and add a HTTP server connector to it
-		Component component = new Component();
-		component.getServers().add(Protocol.HTTP, 8182);
-
-		// Then attach it to the local host
-		component.getDefaultHost().attach("/", Main.class);
-
-		// Now, let's start the component!
-		// Note that the HTTP server connector is also automatically started.
-		component.start();
 	}
 
 	// private static void printPegelOnlineStations() throws JsonParseException,
@@ -125,32 +104,6 @@ public class Main extends ServerResource {
 		Inserter inserter = new CouchDbInserter("open-data-service",
 				new PegelOnlineData(stations));
 		inserter.insert();
-	}
-
-	/**
-	 * Do get.
-	 * 
-	 * @return the list
-	 * @throws JsonParseException
-	 *             the json parse exception
-	 * @throws JsonMappingException
-	 *             the json mapping exception
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
-	@Get("json")
-	public List<Station> doGet() throws JsonParseException,
-			JsonMappingException, IOException {
-		PegelOnlineAdapter pegelOnlineAdapter = new PegelOnlineAdapter();
-		List<Station> stationData = pegelOnlineAdapter.getStationData();
-
-		return stationData;
-		// // Print the requested URI path
-		// return "Resource URI  : " + getReference() + '\n' +
-		// "Root URI      : "
-		// + getRootRef() + '\n' + "Routed part   : "
-		// + getReference().getBaseRef() + '\n' + "Remaining part: "
-		// + getReference().getRemainingPart();
 	}
 
 }

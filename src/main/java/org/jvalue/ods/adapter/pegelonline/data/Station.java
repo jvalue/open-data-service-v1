@@ -251,4 +251,14 @@ public class Station extends CouchDbDocument {
 	public void setWater(Water water) {
 		this.water = water;
 	}
+
+	public String toString() {
+
+		return "uuid: " + uuid + "\n" + "number: " + number + "\n"
+				+ "longname: " + longname + "\n" + "km: " + km + "\n"
+				+ "agency: " + agency + "\n" + "longitude: " + longitude + "\n"
+				+ "latitude: " + latitude + "\n" + "water: " + water + "\n"
+				+ "timeseries: " + timeseries;
+	}
+
 }
