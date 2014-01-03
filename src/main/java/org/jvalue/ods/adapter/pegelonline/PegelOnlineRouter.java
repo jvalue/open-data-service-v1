@@ -56,7 +56,7 @@ public class PegelOnlineRouter extends Application {
 			@Override
 			public void handle(Request request, Response response) {
 				// Print the requested URI path
-				String message = "not found";
+				String message = "";
 				try {
 
 					List<Station> sd = new PegelOnlineAdapter()
@@ -70,10 +70,10 @@ public class PegelOnlineRouter extends Application {
 								|| s.getShortname().equalsIgnoreCase(
 										(String) request.getAttributes().get(
 												"station"))) {
-							
+
 							ObjectMapper mapper = new ObjectMapper();
 							message += mapper.writeValueAsString(s);
-							
+
 							break;
 						}
 					}
@@ -109,7 +109,7 @@ public class PegelOnlineRouter extends Application {
 			}
 		};
 
-		Restlet valueRestlet = new Restlet() {
+		Restlet currentMeasurementRestlet = new Restlet() {
 			@Override
 			public void handle(Request request, Response response) {
 				// Print the requested URI path
@@ -127,25 +127,27 @@ public class PegelOnlineRouter extends Application {
 								|| s.getShortname().equalsIgnoreCase(
 										(String) request.getAttributes().get(
 												"station"))) {
-							
+
 							ObjectMapper mapper = new ObjectMapper();
-							message += mapper.writeValueAsString(s.getTimeseries().get(0)
-									.getCurrentMeasurement().getValue());
+							message += mapper.writeValueAsString(s
+									.getTimeseries().get(0)
+									.getCurrentMeasurement());
 							break;
 						}
 					}
-					
+
 					response.setEntity(message, MediaType.APPLICATION_JSON);
-					
+
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
 		};
 
-		router.attach("/pegelonline/stations/", stationsRestlet);
+		router.attach("/pegelonline/stations", stationsRestlet);
 		router.attach("/pegelonline/stations/{station}", singleStationRestlet);
-		router.attach("/pegelonline/stations/{station}/currentValue", valueRestlet);
+		router.attach("/pegelonline/stations/{station}/currentMeasurement",
+				currentMeasurementRestlet);
 
 		return router;
 	}
