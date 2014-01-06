@@ -26,9 +26,7 @@ import org.ektorp.support.CouchDbDocument;
 
 public class Timeseries extends CouchDbDocument {
 
-	/**
-	 * 
-	 */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
 	/** The comment. */
@@ -188,6 +186,9 @@ public class Timeseries extends CouchDbDocument {
 		this.unit = unit;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString() {
 		return "\n\t" + "longname: " + longname + "\n\t" + "unit: " + unit
 				+ "\n\t" + "equidistance: " + equidistance + "\n\t"

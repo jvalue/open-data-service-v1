@@ -25,9 +25,7 @@ import org.ektorp.support.CouchDbDocument;
  */
 public class Measurement extends CouchDbDocument {
 
-	/**
-	 * 
-	 */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
 	/** The timestamp. */
@@ -74,6 +72,9 @@ public class Measurement extends CouchDbDocument {
 		this.value = value;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString() {
 		return timestamp + "|" + value;
 

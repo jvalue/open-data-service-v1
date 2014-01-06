@@ -1,5 +1,4 @@
-/*
-    Open Data Service
+/*  Open Data Service
     Copyright (C) 2013  Tsysin Konstantin, Reischl Patrick
 
     This program is free software: you can redistribute it and/or modify
@@ -14,17 +13,32 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-package org.jvalue.ods.inserter;
+    
+*/
+package org.jvalue.ods.main;
+
+import java.io.IOException;
+
+import org.junit.Test;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 /**
- * The Interface Inserter.
+ * The Class DbInsertMainTest.
  */
-public interface Inserter {
+public class DbInsertMainTest {
 
 	/**
-	 * Insert method.
+	 * Test main.
+	 *
+	 * @throws JsonParseException the json parse exception
+	 * @throws JsonMappingException the json mapping exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	void insert();
+	@Test
+	public void testMain() throws JsonParseException, JsonMappingException, IOException {
+		DbInsertMain.main(null);
+	}
 
 }

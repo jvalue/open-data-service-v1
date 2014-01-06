@@ -27,9 +27,7 @@ import org.ektorp.support.CouchDbDocument;
  */
 public class Station extends CouchDbDocument {
 
-	/**
-	 * 
-	 */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
 	/** The agency. */
@@ -252,6 +250,9 @@ public class Station extends CouchDbDocument {
 		this.water = water;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString() {
 
 		return "uuid: " + uuid + "\n" + "number: " + number + "\n"

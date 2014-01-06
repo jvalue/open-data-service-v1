@@ -32,8 +32,16 @@ import org.restlet.routing.Router;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * The Class PegelOnlineRouter.
+ */
 public class PegelOnlineRouter extends Application {
 
+	/**
+	 * Inits the restlet.
+	 *
+	 * @throws Exception the exception
+	 */
 	public static void initRestlet() throws Exception {
 
 		Component component = new Component();
@@ -46,6 +54,9 @@ public class PegelOnlineRouter extends Application {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.restlet.Application#createInboundRoot()
+	 */
 	@Override
 	public Restlet createInboundRoot() {
 		// Create a root router

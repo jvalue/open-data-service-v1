@@ -31,36 +31,38 @@ public class CouchDbInserter implements Inserter {
 	/** The db. */
 	private CouchDbConnector db;
 
-	/** The data. */
+	/** The data to insert. */
 	private CouchDbDocument data;
 
 	/**
-	 * Instantiates a new pegel online db inserter.
+	 * Instantiates a new pegel online db inserter. Database will be created if does not exist yet
 	 * 
 	 * @param databaseName
 	 *            the database name
 	 * @param data
-	 *            the data
+	 *            the data to insert
 	 */
 	public CouchDbInserter(String databaseName, CouchDbDocument data) {
+		if (databaseName == null)
+			throw new IllegalArgumentException("databaseName is null");
+		if (data == null)
+			throw new IllegalArgumentException("data is null");
+		
 		HttpClient httpClient = new StdHttpClient.Builder().build();
 		CouchDbInstance dbInstance = new StdCouchDbInstance(httpClient);
 		if (!dbInstance.checkIfDbExists(databaseName))
 			dbInstance.createDatabase(databaseName);
+		
 		this.db = new StdCouchDbConnector(databaseName, dbInstance);
-
 		this.data = data;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	
+	/* (non-Javadoc)
 	 * @see org.jvalue.ods.inserter.Inserter#insert()
 	 */
 	public void insert() {
-
 		db.create(data);
-
 	}
 
 }

@@ -29,15 +29,23 @@ public class PegelOnlineData extends CouchDbDocument {
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
+	/** The name. */
 	private final String name = "PegelOnline";
 
+	/** The publisher. */
 	private final String publisher = "Wasser- und Schifffahrtsverwaltung des Bundes (WSV)";
 
+	/** The source. */
 	private final String source = "www.pegelonline.wsv.de/";
 
 	/** The stations. */
 	private List<Station> stations;
 
+	/**
+	 * Instantiates a new pegel online data.
+	 *
+	 * @param stations the stations
+	 */
 	public PegelOnlineData(List<Station> stations) {
 		this.stations = stations;
 	}
@@ -61,14 +69,29 @@ public class PegelOnlineData extends CouchDbDocument {
 		this.stations = stations;
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Gets the publisher.
+	 *
+	 * @return the publisher
+	 */
 	public String getPublisher() {
 		return publisher;
 	}
 
+	/**
+	 * Gets the source.
+	 *
+	 * @return the source
+	 */
 	public String getSource() {
 		return source;
 	}

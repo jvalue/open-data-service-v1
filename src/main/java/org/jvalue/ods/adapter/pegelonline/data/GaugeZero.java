@@ -25,9 +25,7 @@ import org.ektorp.support.CouchDbDocument;
  */
 public class GaugeZero extends CouchDbDocument {
 
-	/**
-	 * 
-	 */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
 	/** The unit. */
@@ -96,6 +94,9 @@ public class GaugeZero extends CouchDbDocument {
 		this.value = value;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString() {
 
 		return "\n\t\tunit: " + unit + "\n\t\t" + "value: " + value + "\n\t\t"

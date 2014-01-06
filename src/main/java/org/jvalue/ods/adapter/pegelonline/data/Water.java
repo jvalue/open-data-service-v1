@@ -27,9 +27,7 @@ import org.ektorp.support.CouchDbDocument;
  */
 public class Water extends CouchDbDocument {
 
-	/**
-	 * 
-	 */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
 	/** The longname. */
@@ -98,6 +96,9 @@ public class Water extends CouchDbDocument {
 		this.stations = stations;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString() {
 		return longname;
 
