@@ -1,5 +1,4 @@
-/*
-    Open Data Service
+/*  Open Data Service
     Copyright (C) 2013  Tsysin Konstantin, Reischl Patrick
 
     This program is free software: you can redistribute it and/or modify
@@ -14,31 +13,24 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+    
+*/
+package org.jvalue.ods.adapter;
 
-package org.jvalue.ods.main;
+import java.util.Map;
 
-import org.jvalue.ods.adapter.pegelonline.PegelOnlineRouter;
-import org.jvalue.ods.restlet.RestletAdapter;
-
+import org.restlet.Restlet;
 
 /**
- * The Class Main.
+ * The Interface RouterInterface.
  */
-public class Main {
+public interface RouterInterface {
 
 	/**
-	 * The main method.
-	 * 
-	 * @param args
-	 *            the arguments
-	 * @throws Exception
-	 *             the exception
+	 * Gets the routes.
+	 *
+	 * @return the routes
 	 */
-	public static void main(String[] args) throws Exception {
-		PegelOnlineRouter router = new PegelOnlineRouter();	
-		
-		RestletAdapter.initRestlet(router.getRoutes());
-	}
-
+	public Map<String, Restlet> getRoutes();
+	
 }

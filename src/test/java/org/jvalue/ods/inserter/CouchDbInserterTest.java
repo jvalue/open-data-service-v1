@@ -19,7 +19,6 @@ package org.jvalue.ods.inserter;
 
 import static org.junit.Assert.*;
 
-import org.ektorp.DbAccessException;
 import org.ektorp.support.CouchDbDocument;
 import org.ektorp.util.Assert;
 import org.junit.Before;

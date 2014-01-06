@@ -18,50 +18,32 @@
 package org.jvalue.ods.adapter.pegelonline;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.jvalue.ods.adapter.RouterInterface;
 import org.jvalue.ods.adapter.pegelonline.data.Station;
-import org.restlet.Application;
-import org.restlet.Component;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
 import org.restlet.data.MediaType;
-import org.restlet.data.Protocol;
-import org.restlet.routing.Router;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * The Class PegelOnlineRouter.
+ *
  */
-public class PegelOnlineRouter extends Application {
+public class PegelOnlineRouter implements RouterInterface {
 
-	/**
-	 * Inits the restlet.
-	 *
-	 * @throws Exception the exception
-	 */
-	public static void initRestlet() throws Exception {
-
-		Component component = new Component();
-		component.getServers().add(Protocol.HTTP, 8182);
-
-		Application app = new PegelOnlineRouter();
-
-		component.getDefaultHost().attach(app);
-		component.start();
-	}
 
 	/* (non-Javadoc)
-	 * @see org.restlet.Application#createInboundRoot()
+	 * @see org.jvalue.ods.adapter.RouterInterface#getRoutes()
 	 */
-	@Override
-	public Restlet createInboundRoot() {
-		// Create a root router
-		Router router = new Router(getContext());
+	public Map<String, Restlet> getRoutes() {
+		Map<String, Restlet> routes = new HashMap<String, Restlet>();
 
-		// Create the account handler
 		Restlet singleStationRestlet = new Restlet() {
 			@Override
 			public void handle(Request request, Response response) {
@@ -154,12 +136,12 @@ public class PegelOnlineRouter extends Application {
 			}
 		};
 
-		router.attach("/pegelonline/stations", stationsRestlet);
-		router.attach("/pegelonline/stations/{station}", singleStationRestlet);
-		router.attach("/pegelonline/stations/{station}/currentMeasurement",
+		routes.put("/pegelonline/stations", stationsRestlet);
+		routes.put("/pegelonline/stations/{station}", singleStationRestlet);
+		routes.put("/pegelonline/stations/{station}/currentMeasurement",
 				currentMeasurementRestlet);
 
-		return router;
+		return routes;
 	}
 
 }
