@@ -32,7 +32,7 @@ public class MainTest {
 	 * @throws Exception the exception
 	 */
 	@Test
-	public void TestMain() throws Exception {
+	public void testMain() throws Exception {
 		Main.main(null);
 	}
 

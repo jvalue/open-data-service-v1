@@ -50,8 +50,18 @@ public class CouchDbInserter implements Inserter {
 		
 		HttpClient httpClient = new StdHttpClient.Builder().build();
 		CouchDbInstance dbInstance = new StdCouchDbInstance(httpClient);
-		if (!dbInstance.checkIfDbExists(databaseName))
-			dbInstance.createDatabase(databaseName);
+		
+		try
+		{
+			if (!dbInstance.checkIfDbExists(databaseName)) {
+				dbInstance.createDatabase(databaseName);
+			}
+		}
+		catch (DbAccessException ex)
+		{			
+			System.err.println("CouchDb needs to be installed!\n" + ex.getMessage());
+			throw ex;
+		}
 		
 		this.db = new StdCouchDbConnector(databaseName, dbInstance);
 		this.data = data;

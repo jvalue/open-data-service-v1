@@ -19,6 +19,7 @@ package org.jvalue.ods.inserter;
 
 import static org.junit.Assert.*;
 
+import org.ektorp.DbAccessException;
 import org.ektorp.support.CouchDbDocument;
 import org.ektorp.util.Assert;
 import org.junit.Before;
@@ -43,7 +44,8 @@ public class CouchDbInserterTest {
 	 */
 	@Before
 	public void initialize() {
-		couchDbInserter = new CouchDbInserter(testDbName, data);
+		//This test needs installed Apache CouchDB!
+		couchDbInserter = new CouchDbInserter(testDbName, data);			
 		assertNotNull(couchDbInserter);
 	}
 	

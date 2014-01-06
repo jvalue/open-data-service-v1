@@ -51,7 +51,6 @@ public class PegelOnlineRouter extends Application {
 
 		component.getDefaultHost().attach(app);
 		component.start();
-
 	}
 
 	/* (non-Javadoc)

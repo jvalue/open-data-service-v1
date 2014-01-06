@@ -58,7 +58,7 @@ public class PegelOnlineAdapterTest {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	@Test
-	public void getWaterDataTest() throws JsonParseException,
+	public void testGetWaterData() throws JsonParseException,
 			JsonMappingException, IOException {
 		List<Water> waterData = adapter.getWaterData();
 		assertNotNull(waterData);
@@ -79,7 +79,7 @@ public class PegelOnlineAdapterTest {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	@Test
-	public void getStationDataTest() throws JsonParseException,
+	public void testGetStationData() throws JsonParseException,
 			JsonMappingException, IOException {
 		List<Station> stationData = adapter.getStationData();
 		assertNotNull(stationData);

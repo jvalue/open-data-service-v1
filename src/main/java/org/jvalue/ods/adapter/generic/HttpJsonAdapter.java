@@ -47,27 +47,24 @@ public class HttpJsonAdapter {
 	 *
 	 * @param charsetName the charset name
 	 * @return the request
+	 * @throws IOException 
 	 */
-	public String getRequest(String charsetName) {
+	public String getRequest(String charsetName) throws IOException {
 		// using string builder for best performance of string concatenation
 		StringBuilder sb = new StringBuilder();
-		try {
-			URL url = new URL(this.url);
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setRequestMethod("GET");
+		
+		URL url = new URL(this.url);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestMethod("GET");
 			
-			BufferedReader rd = new BufferedReader(new InputStreamReader(
+		BufferedReader rd = new BufferedReader(new InputStreamReader(
 					conn.getInputStream(), Charset.forName(charsetName)));
-			String line;
-			while ((line = rd.readLine()) != null) {
-				sb.append(line);
-			}
-			rd.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
+		String line;
+		while ((line = rd.readLine()) != null) {
+			sb.append(line);
 		}
+		rd.close();
+		
 		return sb.toString();
 	}
 
@@ -76,8 +73,9 @@ public class HttpJsonAdapter {
 	 *
 	 * @param charsetName the charset name
 	 * @return the json
+	 * @throws IOException 
 	 */
-	public String getJSON(String charsetName) {
+	public String getJSON(String charsetName) throws IOException {
 		return getRequest(charsetName);
 	}
 }
