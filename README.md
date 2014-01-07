@@ -16,6 +16,7 @@ Build and run with Eclipse:
 
 
 current REST-API:
+* GET /api -> prints the API
 * GET /pegelonline/stations -> json representation of all stations /
-* GET /pegelonline/stations/{stationname} -> a specific station
+* GET /pegelonline/stations/{stationname} -> a specific station /
 * GET /pegelonline/stations/{stationname}/currentMeasurement -> the current measurement of a specific station
