@@ -18,9 +18,12 @@
 
 package org.jvalue.ods.main;
 
+import java.util.HashMap;
+
+import org.jvalue.ods.adapter.ApiRouter;
 import org.jvalue.ods.adapter.pegelonline.PegelOnlineRouter;
 import org.jvalue.ods.restlet.RestletAdapter;
-
+import org.restlet.Restlet;
 
 /**
  * The Class Main.
@@ -36,9 +39,17 @@ public class Main {
 	 *             the exception
 	 */
 	public static void main(String[] args) throws Exception {
-		PegelOnlineRouter router = new PegelOnlineRouter();	
-		
-		RestletAdapter.initRestlet(router.getRoutes());
+		PegelOnlineRouter poRouter = new PegelOnlineRouter();
+
+		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
+		combinedRouter.putAll(poRouter.getRoutes());
+
+		// last router, generates api output
+		ApiRouter router = new ApiRouter(combinedRouter);
+
+		combinedRouter.putAll(router.getRoutes());
+
+		RestletAdapter.initRestlet(combinedRouter);
 	}
 
 }
