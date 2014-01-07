@@ -18,9 +18,11 @@
 package org.jvalue.ods.adapter.pegelonline;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 
 import org.jvalue.ods.adapter.RouterInterface;
 import org.jvalue.ods.adapter.pegelonline.data.Station;
@@ -33,16 +35,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * The Class PegelOnlineRouter.
- *
+ * 
  */
 public class PegelOnlineRouter implements RouterInterface {
 
+	private HashMap<String, Restlet> routes;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.jvalue.ods.adapter.RouterInterface#getRoutes()
 	 */
 	public Map<String, Restlet> getRoutes() {
-		Map<String, Restlet> routes = new HashMap<String, Restlet>();
+		routes = new HashMap<String, Restlet>();
 
 		Restlet singleStationRestlet = new Restlet() {
 			@Override
@@ -136,10 +141,27 @@ public class PegelOnlineRouter implements RouterInterface {
 			}
 		};
 
+		Restlet apiRestlet = new Restlet() {
+			@Override
+			public void handle(Request request, Response response) {
+				// Print the requested URI path
+				String message = "";
+
+				for (String s : new TreeSet<String>(routes.keySet())) {
+
+					message += s + "\n";
+				}
+
+				response.setEntity(message, MediaType.APPLICATION_JSON);
+
+			}
+		};
+
 		routes.put("/pegelonline/stations", stationsRestlet);
 		routes.put("/pegelonline/stations/{station}", singleStationRestlet);
 		routes.put("/pegelonline/stations/{station}/currentMeasurement",
 				currentMeasurementRestlet);
+		routes.put("/api", apiRestlet);
 
 		return routes;
 	}
