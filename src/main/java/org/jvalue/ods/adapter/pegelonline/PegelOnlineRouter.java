@@ -169,16 +169,57 @@ public class PegelOnlineRouter implements RouterInterface {
 			}
 		};
 
-		// updates the pegelonline data or creates the initial document if
-		// necessary
-		Restlet updateRestlet = new Restlet() {
-			
-			
+		Restlet timeseriesRestlet = new Restlet() {
 			@Override
 			public void handle(Request request, Response response) {
 				// Print the requested URI path
 				String message = "";
-				
+				try {
+
+					List<Station> sd = getListOfStations(response);
+
+					if (sd == null) {
+						return;
+					}
+
+					for (Station s : sd) {
+						if (s.getLongname()
+								.equalsIgnoreCase(
+										(String) request.getAttributes().get(
+												"station"))
+								|| s.getShortname().equalsIgnoreCase(
+										(String) request.getAttributes().get(
+												"station"))) {
+
+							ObjectMapper mapper = new ObjectMapper();
+							message += mapper.writeValueAsString(s
+									.getTimeseries());
+							break;
+						}
+					}
+
+					if (!message.equals("")) {
+						response.setEntity(message, MediaType.APPLICATION_JSON);
+					} else {
+						response.setEntity("Station not found.",
+								MediaType.TEXT_PLAIN);
+					}
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		};
+
+		// updates the pegelonline data or creates the initial document if
+		// necessary
+		Restlet updateRestlet = new Restlet() {
+
+			@Override
+			public void handle(Request request, Response response) {
+				// Print the requested URI path
+				String message = "";
+
 				try {
 					List<Station> list = new PegelOnlineAdapter()
 							.getStationData();
@@ -212,8 +253,10 @@ public class PegelOnlineRouter implements RouterInterface {
 
 		routes.put("/pegelonline/stations", stationsRestlet);
 		routes.put("/pegelonline/stations/{station}", singleStationRestlet);
-		routes.put("/pegelonline/stations/{station}/currentMeasurement",
+		routes.put("/pegelonline/stations/{station}/timeseries/currentMeasurement",
 				currentMeasurementRestlet);
+		routes.put("/pegelonline/stations/{station}/timeseries",
+				timeseriesRestlet);
 		routes.put("/pegelonline/update", updateRestlet);
 
 		return routes;
