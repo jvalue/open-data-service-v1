@@ -26,7 +26,7 @@ import org.jvalue.ods.adapter.RouterInterface;
 import org.jvalue.ods.adapter.pegelonline.data.PegelOnlineData;
 import org.jvalue.ods.adapter.pegelonline.data.Station;
 import org.jvalue.ods.db.CouchDbExtractor;
-import org.jvalue.ods.main.DbInsertMain;
+import org.jvalue.ods.db.CouchDbInserter;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
@@ -169,16 +169,36 @@ public class PegelOnlineRouter implements RouterInterface {
 			}
 		};
 
-		// updates the pegelonline data
+		// updates the pegelonline data or creates the initial document if
+		// necessary
 		Restlet updateRestlet = new Restlet() {
+			
+			
 			@Override
 			public void handle(Request request, Response response) {
 				// Print the requested URI path
 				String message = "";
-
+				
 				try {
-					// TODO: ugly, do we need a second main-class?
-					DbInsertMain.main(null);
+					List<Station> list = new PegelOnlineAdapter()
+							.getStationData();
+
+					CouchDbExtractor ex = new CouchDbExtractor(
+							"open-data-service");
+
+					String first = ex.getFirstDocumentId();
+					// if null the database is empty, ugly
+					if (first != null) {
+
+						PegelOnlineData pod = ex.getDocument(
+								PegelOnlineData.class, first);
+						pod.setStations(list);
+						new CouchDbInserter("open-data-service").update(pod);
+					} else {
+						PegelOnlineData pod = new PegelOnlineData(list);
+						new CouchDbInserter("open-data-service").insert(pod);
+					}
+
 					message += "Database successfully updated.";
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -206,7 +226,7 @@ public class PegelOnlineRouter implements RouterInterface {
 		try {
 
 			CouchDbExtractor ex = new CouchDbExtractor("open-data-service");
-			String docName = ex.getDocumentIds().get(0);
+			String docName = ex.getFirstDocumentId();
 			PegelOnlineData data = ex.getDocument(PegelOnlineData.class,
 					docName);
 

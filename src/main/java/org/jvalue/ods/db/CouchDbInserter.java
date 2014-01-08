@@ -48,4 +48,11 @@ public class CouchDbInserter extends CouchDbAccessor {
 		db.create(data);
 	}
 
+	public void update(CouchDbDocument data) {
+		if (data == null)
+			throw new IllegalArgumentException("data is null");
+
+		db.update(data);
+	}
+
 }

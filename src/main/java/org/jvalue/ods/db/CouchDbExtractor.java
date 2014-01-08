@@ -17,7 +17,6 @@
  */
 package org.jvalue.ods.db;
 
-import java.util.List;
 
 /**
  * The Class CouchDbExtractor.
@@ -60,9 +59,13 @@ public class CouchDbExtractor extends CouchDbAccessor {
 
 	}
 
-	public List<String> getDocumentIds() {
+	public String getFirstDocumentId() {
 
-		return db.getAllDocIds();
+		if (!db.getAllDocIds().isEmpty()) {
+			return db.getAllDocIds().get(0);
+		} else {
+			return null;
+		}
 	}
 
 }
