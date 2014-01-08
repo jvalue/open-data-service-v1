@@ -1,5 +1,4 @@
-/*
-    Open Data Service
+/*  Open Data Service
     Copyright (C) 2013  Tsysin Konstantin, Reischl Patrick
 
     This program is free software: you can redistribute it and/or modify
@@ -14,17 +13,39 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    
  */
-package org.jvalue.ods.inserter;
+package org.jvalue.ods.db;
+
+import org.ektorp.support.CouchDbDocument;
 
 /**
- * The Interface Inserter.
+ * The Class CouchDbInserter.
  */
-public interface Inserter {
+public class CouchDbInserter extends CouchDbAccessor {
 
 	/**
-	 * Insert method.
+	 * Instantiates a new couch db inserter.
+	 * 
+	 * @param databaseName
+	 *            the database name
 	 */
-	void insert();
+	public CouchDbInserter(String databaseName) {
+		super(databaseName);
+	}
+
+	/**
+	 * Insert.
+	 * 
+	 * @param data
+	 *            the data
+	 */
+	public void insert(CouchDbDocument data) {
+
+		if (data == null)
+			throw new IllegalArgumentException("data is null");
+
+		db.create(data);
+	}
 
 }

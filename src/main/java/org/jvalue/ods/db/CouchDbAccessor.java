@@ -15,64 +15,49 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.inserter;
+package org.jvalue.ods.db;
 
-
-import org.ektorp.*;
-import org.ektorp.http.*;
-import org.ektorp.impl.*;
-import org.ektorp.support.CouchDbDocument;
+import org.ektorp.CouchDbConnector;
+import org.ektorp.CouchDbInstance;
+import org.ektorp.DbAccessException;
+import org.ektorp.http.HttpClient;
+import org.ektorp.http.StdHttpClient;
+import org.ektorp.impl.StdCouchDbConnector;
+import org.ektorp.impl.StdCouchDbInstance;
 
 /**
- * The Class CouchDbInserter.
+ * The Class CouchDbAccessor.
+ * abstracts the connection to db
  */
-public class CouchDbInserter implements Inserter {
+public abstract class CouchDbAccessor {
 
 	/** The db. */
-	private CouchDbConnector db;
-
-	/** The data to insert. */
-	private CouchDbDocument data;
+	protected CouchDbConnector db;
 
 	/**
-	 * Instantiates a new pegel online db inserter. Database will be created if does not exist yet
+	 * Instantiates a new couch db accessor.
 	 * 
 	 * @param databaseName
 	 *            the database name
-	 * @param data
-	 *            the data to insert
 	 */
-	public CouchDbInserter(String databaseName, CouchDbDocument data) {
-		if (databaseName == null)
+	public CouchDbAccessor(String databaseName) {
+		if (databaseName == null) {
 			throw new IllegalArgumentException("databaseName is null");
-		if (data == null)
-			throw new IllegalArgumentException("data is null");
-		
+		}
 		HttpClient httpClient = new StdHttpClient.Builder().build();
 		CouchDbInstance dbInstance = new StdCouchDbInstance(httpClient);
-		
-		try
-		{
+
+		try {
 			if (!dbInstance.checkIfDbExists(databaseName)) {
 				dbInstance.createDatabase(databaseName);
 			}
-		}
-		catch (DbAccessException ex)
-		{			
-			System.err.println("CouchDb needs to be installed!\n" + ex.getMessage());
+		} catch (DbAccessException ex) {
+			System.err.println("CouchDb needs to be installed!\n"
+					+ ex.getMessage());
 			throw ex;
 		}
-		
+
 		this.db = new StdCouchDbConnector(databaseName, dbInstance);
-		this.data = data;
 	}
-
 	
-	/* (non-Javadoc)
-	 * @see org.jvalue.ods.inserter.Inserter#insert()
-	 */
-	public void insert() {
-		db.create(data);
-	}
-
 }

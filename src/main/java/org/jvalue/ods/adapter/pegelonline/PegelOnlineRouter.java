@@ -23,7 +23,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.jvalue.ods.adapter.RouterInterface;
+import org.jvalue.ods.adapter.pegelonline.data.PegelOnlineData;
 import org.jvalue.ods.adapter.pegelonline.data.Station;
+import org.jvalue.ods.db.CouchDbExtractor;
+import org.jvalue.ods.main.DbInsertMain;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
@@ -32,21 +35,54 @@ import org.restlet.data.MediaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * The Class PegelOnlineRouter.
+ * The Class PegelOnlineRouter. defines routes that start with /pegelonline/
  * 
  */
 public class PegelOnlineRouter implements RouterInterface {
 
 	private HashMap<String, Restlet> routes;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.jvalue.ods.adapter.RouterInterface#getRoutes()
-	 */
+	// TODO: use database features, couchdb only serializes the pojo at the
+	// moment
+
 	public Map<String, Restlet> getRoutes() {
 		routes = new HashMap<String, Restlet>();
 
+		// gets data from all stations
+		Restlet stationsRestlet = new Restlet() {
+			@Override
+			public void handle(Request request, Response response) {
+				// Print the requested URI path
+				String message = "";
+				try {
+
+					List<Station> sd = getListOfStations(response);
+
+					if (sd == null) {
+						return;
+					}
+
+					for (Station s : sd) {
+
+						ObjectMapper mapper = new ObjectMapper();
+						message += mapper.writeValueAsString(s);
+
+					}
+
+					if (!message.equals("")) {
+						response.setEntity(message, MediaType.APPLICATION_JSON);
+					} else {
+						response.setEntity("No stations found.",
+								MediaType.TEXT_PLAIN);
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+		};
+
+		// gets the data of a single station
 		Restlet singleStationRestlet = new Restlet() {
 			@Override
 			public void handle(Request request, Response response) {
@@ -54,8 +90,11 @@ public class PegelOnlineRouter implements RouterInterface {
 				String message = "";
 				try {
 
-					List<Station> sd = new PegelOnlineAdapter()
-							.getStationData();
+					List<Station> sd = getListOfStations(response);
+
+					if (sd == null) {
+						return;
+					}
 
 					for (Station s : sd) {
 						if (s.getLongname()
@@ -73,37 +112,20 @@ public class PegelOnlineRouter implements RouterInterface {
 						}
 					}
 
-					response.setEntity(message, MediaType.APPLICATION_JSON);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		};
-
-		Restlet stationsRestlet = new Restlet() {
-			@Override
-			public void handle(Request request, Response response) {
-				// Print the requested URI path
-				String message = "";
-				try {
-
-					List<Station> sd = new PegelOnlineAdapter()
-							.getStationData();
-
-					for (Station s : sd) {
-
-						ObjectMapper mapper = new ObjectMapper();
-						message += mapper.writeValueAsString(s);
-
+					if (!message.equals("")) {
+						response.setEntity(message, MediaType.APPLICATION_JSON);
+					} else {
+						response.setEntity("Station not found.",
+								MediaType.TEXT_PLAIN);
 					}
-
-					response.setEntity(message, MediaType.APPLICATION_JSON);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
 		};
 
+		// gets the current measurement of a station including its current
+		// height value
 		Restlet currentMeasurementRestlet = new Restlet() {
 			@Override
 			public void handle(Request request, Response response) {
@@ -111,8 +133,11 @@ public class PegelOnlineRouter implements RouterInterface {
 				String message = "";
 				try {
 
-					List<Station> sd = new PegelOnlineAdapter()
-							.getStationData();
+					List<Station> sd = getListOfStations(response);
+
+					if (sd == null) {
+						return;
+					}
 
 					for (Station s : sd) {
 						if (s.getLongname()
@@ -131,7 +156,12 @@ public class PegelOnlineRouter implements RouterInterface {
 						}
 					}
 
-					response.setEntity(message, MediaType.APPLICATION_JSON);
+					if (!message.equals("")) {
+						response.setEntity(message, MediaType.APPLICATION_JSON);
+					} else {
+						response.setEntity("Station not found.",
+								MediaType.TEXT_PLAIN);
+					}
 
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -139,12 +169,58 @@ public class PegelOnlineRouter implements RouterInterface {
 			}
 		};
 
+		// updates the pegelonline data
+		Restlet updateRestlet = new Restlet() {
+			@Override
+			public void handle(Request request, Response response) {
+				// Print the requested URI path
+				String message = "";
+
+				try {
+					// TODO: ugly, do we need a second main-class?
+					DbInsertMain.main(null);
+					message += "Database successfully updated.";
+				} catch (IOException e) {
+					e.printStackTrace();
+					message += "Could not update database.";
+				}
+
+				response.setEntity(message, MediaType.TEXT_PLAIN);
+
+			}
+		};
+
 		routes.put("/pegelonline/stations", stationsRestlet);
 		routes.put("/pegelonline/stations/{station}", singleStationRestlet);
 		routes.put("/pegelonline/stations/{station}/currentMeasurement",
 				currentMeasurementRestlet);
+		routes.put("/pegelonline/update", updateRestlet);
 
 		return routes;
+	}
+
+	// helper method to get the list of pegelonline stations
+	private List<Station> getListOfStations(Response response) {
+		List<Station> sd = null;
+
+		try {
+
+			CouchDbExtractor ex = new CouchDbExtractor("open-data-service");
+			String docName = ex.getDocumentIds().get(0);
+			PegelOnlineData data = ex.getDocument(PegelOnlineData.class,
+					docName);
+
+			sd = data.getStations();
+
+		} catch (Exception e) {
+
+			System.err.println("Could not retrieve data.");
+			response.setEntity(
+					"Could not retrieve data. Try to update database via /pegelonline/update.",
+					MediaType.TEXT_PLAIN);
+			sd = null;
+		}
+		return sd;
 	}
 
 }

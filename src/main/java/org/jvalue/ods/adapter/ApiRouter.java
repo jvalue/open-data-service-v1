@@ -37,6 +37,7 @@ public class ApiRouter implements RouterInterface {
 	@Override
 	public Map<String, Restlet> getRoutes() {
 
+		// creates a visualization of the API
 		Restlet apiRestlet = new Restlet() {
 			@Override
 			public void handle(Request request, Response response) {
@@ -48,7 +49,7 @@ public class ApiRouter implements RouterInterface {
 					message += s + "\n";
 				}
 
-				response.setEntity(message, MediaType.APPLICATION_JSON);
+				response.setEntity(message, MediaType.TEXT_PLAIN);
 
 			}
 		};

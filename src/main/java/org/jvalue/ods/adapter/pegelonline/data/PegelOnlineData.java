@@ -43,11 +43,16 @@ public class PegelOnlineData extends CouchDbDocument {
 
 	/**
 	 * Instantiates a new pegel online data.
-	 *
-	 * @param stations the stations
+	 * 
+	 * @param stations
+	 *            the stations
 	 */
 	public PegelOnlineData(List<Station> stations) {
 		this.stations = stations;
+	}
+
+	public PegelOnlineData() {
+
 	}
 
 	/**
@@ -71,7 +76,7 @@ public class PegelOnlineData extends CouchDbDocument {
 
 	/**
 	 * Gets the name.
-	 *
+	 * 
 	 * @return the name
 	 */
 	public String getName() {
@@ -80,7 +85,7 @@ public class PegelOnlineData extends CouchDbDocument {
 
 	/**
 	 * Gets the publisher.
-	 *
+	 * 
 	 * @return the publisher
 	 */
 	public String getPublisher() {
@@ -89,7 +94,7 @@ public class PegelOnlineData extends CouchDbDocument {
 
 	/**
 	 * Gets the source.
-	 *
+	 * 
 	 * @return the source
 	 */
 	public String getSource() {
