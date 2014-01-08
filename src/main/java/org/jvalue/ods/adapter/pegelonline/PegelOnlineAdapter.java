@@ -75,12 +75,12 @@ public class PegelOnlineAdapter {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public List<Measurement> getMeasurementOfStation(String stationUUID,
-			String timeseriesShortname) throws JsonParseException,
+			String timeseriesShortname, int days) throws JsonParseException,
 			JsonMappingException, IOException {
 		HttpJsonAdapter httpAdapter = new HttpJsonAdapter(
 				"http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations/"
 						+ stationUUID + "/" + timeseriesShortname
-						+ "/measurements.json?start=P100D");
+						+ "/measurements.json?start=P" + days + "D");
 		String json = httpAdapter.getJSON("UTF-8");
 
 		ObjectMapper mapper = new ObjectMapper();
