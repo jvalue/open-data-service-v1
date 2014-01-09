@@ -14,7 +14,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
-*/
+ */
 package org.jvalue.ods.db;
 
 import java.util.List;
@@ -31,18 +31,19 @@ import org.ektorp.support.CouchDbDocument;
 /**
  * The Class CouchDbAdapter.
  */
-public class CouchDbAdapter {
-	
+public class CouchDbAdapter implements DbAdapter<CouchDbDocument> {
+
 	/** The db. */
 	private CouchDbConnector db;
-	
+
 	/** The db instance. */
 	private CouchDbInstance dbInstance;
-	
+
 	/**
 	 * Instantiates a new couch db adapter.
-	 *
-	 * @param databaseName the database name
+	 * 
+	 * @param databaseName
+	 *            the database name
 	 */
 	public CouchDbAdapter(String databaseName) {
 		if (databaseName == null) {
@@ -50,7 +51,7 @@ public class CouchDbAdapter {
 		}
 		HttpClient httpClient = new StdHttpClient.Builder().build();
 		dbInstance = new StdCouchDbInstance(httpClient);
-		
+
 		try {
 			if (!dbInstance.checkIfDbExists(databaseName)) {
 				dbInstance.createDatabase(databaseName);
@@ -63,17 +64,16 @@ public class CouchDbAdapter {
 
 		this.db = new StdCouchDbConnector(databaseName, dbInstance);
 	}
-	
-	
+
 	/**
 	 * Gets the document.
 	 *
-	 * @param <T> the generic type
+	 * @param <X> the generic type
 	 * @param c the c
 	 * @param id the id
 	 * @return the document
 	 */
-	public <T> T getDocument(Class<T> c, String id) {
+	public <X extends CouchDbDocument> X getDocument(Class<X> c, String id) {
 		if (c == null) {
 			throw new IllegalArgumentException("c is null");
 		}
@@ -87,7 +87,7 @@ public class CouchDbAdapter {
 
 	/**
 	 * Gets the last document id.
-	 *
+	 * 
 	 * @return the last document id
 	 */
 	public String getLastDocumentId() {
@@ -95,14 +95,14 @@ public class CouchDbAdapter {
 		if (allDocs.isEmpty())
 			return null;
 		else
-				return allDocs.get(allDocs.size()-1);
+			return allDocs.get(allDocs.size() - 1);
 	}
-
 
 	/**
 	 * Insert.
-	 *
-	 * @param data the data
+	 * 
+	 * @param data
+	 *            the data
 	 * @return the string
 	 */
 	public String insert(CouchDbDocument data) {
@@ -111,14 +111,15 @@ public class CouchDbAdapter {
 			throw new IllegalArgumentException("data is null");
 
 		db.create(data);
-		
+
 		return data.getId();
 	}
 
 	/**
 	 * Update.
-	 *
-	 * @param data the data
+	 * 
+	 * @param data
+	 *            the data
 	 * @return the string
 	 */
 	public String update(CouchDbDocument data) {
@@ -128,22 +129,22 @@ public class CouchDbAdapter {
 		db.update(data);
 		return data.getRevision();
 	}
-	
+
 	/**
 	 * Delete database.
 	 */
-	public void deleteDatabase()
-	{
-		String databaseName = db.getDatabaseName();		
-		
+	public void deleteDatabase() {
+		String databaseName = db.getDatabaseName();
+
 		try {
 			if (dbInstance.checkIfDbExists(databaseName)) {
 				dbInstance.deleteDatabase(databaseName);
 			}
 		} catch (DbAccessException ex) {
-		System.err.println("CouchDb needs to be installed!\n"
-				+ ex.getMessage());
-		throw ex;
+			System.err.println("CouchDb needs to be installed!\n"
+					+ ex.getMessage());
+			throw ex;
 		}
 	}
+
 }

@@ -22,10 +22,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.ektorp.support.CouchDbDocument;
 import org.jvalue.ods.adapter.RouterInterface;
 import org.jvalue.ods.adapter.pegelonline.data.PegelOnlineData;
 import org.jvalue.ods.adapter.pegelonline.data.Station;
 import org.jvalue.ods.db.CouchDbAdapter;
+import org.jvalue.ods.db.DbAdapter;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
@@ -45,7 +47,9 @@ public class PegelOnlineRouter implements RouterInterface {
 	// TODO: use database features, couchdb only serializes the pojo at the
 	// moment
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.jvalue.ods.adapter.RouterInterface#getRoutes()
 	 */
 	public Map<String, Restlet> getRoutes() {
@@ -227,7 +231,8 @@ public class PegelOnlineRouter implements RouterInterface {
 					List<Station> list = new PegelOnlineAdapter()
 							.getStationData();
 
-					CouchDbAdapter adapter = new CouchDbAdapter("open-data-service");
+					DbAdapter<CouchDbDocument> adapter = new CouchDbAdapter(
+							"open-data-service");
 
 					String last = adapter.getLastDocumentId();
 					// if null the database is empty, ugly
@@ -255,7 +260,8 @@ public class PegelOnlineRouter implements RouterInterface {
 
 		routes.put("/pegelonline/stations", stationsRestlet);
 		routes.put("/pegelonline/stations/{station}", singleStationRestlet);
-		routes.put("/pegelonline/stations/{station}/timeseries/currentMeasurement",
+		routes.put(
+				"/pegelonline/stations/{station}/timeseries/currentMeasurement",
 				currentMeasurementRestlet);
 		routes.put("/pegelonline/stations/{station}/timeseries",
 				timeseriesRestlet);
@@ -267,8 +273,9 @@ public class PegelOnlineRouter implements RouterInterface {
 	// helper method to get the list of pegelonline stations
 	/**
 	 * Gets the list of stations.
-	 *
-	 * @param response the response
+	 * 
+	 * @param response
+	 *            the response
 	 * @return the list of stations
 	 */
 	private List<Station> getListOfStations(Response response) {
@@ -276,7 +283,8 @@ public class PegelOnlineRouter implements RouterInterface {
 
 		try {
 
-			CouchDbAdapter adapter = new CouchDbAdapter("open-data-service");
+			DbAdapter<CouchDbDocument> adapter = new CouchDbAdapter(
+					"open-data-service");
 			String docId = adapter.getLastDocumentId();
 			PegelOnlineData data = adapter.getDocument(PegelOnlineData.class,
 					docId);

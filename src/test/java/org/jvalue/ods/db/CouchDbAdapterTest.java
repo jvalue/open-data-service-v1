@@ -17,7 +17,6 @@
  */
 package org.jvalue.ods.db;
 
-
 import org.ektorp.DbAccessException;
 import org.ektorp.support.CouchDbDocument;
 
@@ -39,7 +38,7 @@ public class CouchDbAdapterTest {
 	private final CouchDbDocument data = new CouchDbDocument();
 
 	/** The couch db inserter. */
-	private CouchDbAdapter couchDbAdapter;
+	private DbAdapter<CouchDbDocument> couchDbAdapter;
 
 	/**
 	 * Initialize.
@@ -48,10 +47,9 @@ public class CouchDbAdapterTest {
 	public void initialize() {
 		// This test needs installed Apache CouchDB!
 		couchDbAdapter = new CouchDbAdapter(testDbName);
-		assertNotNull(couchDbAdapter);		
+		assertNotNull(couchDbAdapter);
 	}
 
-	
 	/**
 	 * Clean up.
 	 */
@@ -67,8 +65,9 @@ public class CouchDbAdapterTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testCouchDbInserterConstructorEmptyDatabaseName() {
 		String databaseName = "";
-		CouchDbAdapter couchDbAdapter = new CouchDbAdapter(databaseName);
-		 assertNotNull(couchDbAdapter);
+		DbAdapter<CouchDbDocument> couchDbAdapter = new CouchDbAdapter(
+				databaseName);
+		assertNotNull(couchDbAdapter);
 	}
 
 	/**
@@ -77,7 +76,8 @@ public class CouchDbAdapterTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testCouchDbInserterConstructorNullDatabaseName() {
 		String databaseName = null;
-		CouchDbAdapter couchDbAdapter = new CouchDbAdapter(databaseName);
+		DbAdapter<CouchDbDocument> couchDbAdapter = new CouchDbAdapter(
+				databaseName);
 		assertNotNull(couchDbAdapter);
 	}
 
@@ -88,17 +88,17 @@ public class CouchDbAdapterTest {
 	@Test
 	public void testInsert() {
 		String id = couchDbAdapter.insert(data);
-		assertEquals(data.getId(), id);	
+		assertEquals(data.getId(), id);
 	}
-	
+
 	/**
 	 * Test insert twice same data.
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testInsertTwiceSameData() {
 		String id = couchDbAdapter.insert(data);
-		assertEquals(data.getId(), id);		
-		id = couchDbAdapter.insert(data);			
+		assertEquals(data.getId(), id);
+		id = couchDbAdapter.insert(data);
 	}
 
 	/**
@@ -107,9 +107,9 @@ public class CouchDbAdapterTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testInsertNullData() {
 		couchDbAdapter.insert(null);
-		couchDbAdapter.deleteDatabase();		
+		couchDbAdapter.deleteDatabase();
 	}
-	
+
 	/**
 	 * Test update invalid revision.
 	 */
@@ -117,27 +117,26 @@ public class CouchDbAdapterTest {
 	public void testUpdateInvalidRevision() {
 		String id = "42";
 		String revision = "invalidRevision";
-		
-		CouchDbDocument doc = new CouchDbDocument();		
+
+		CouchDbDocument doc = new CouchDbDocument();
 		doc.setId(id);
 		doc.setRevision(revision);
-		
-		couchDbAdapter.update(doc);		
+
+		couchDbAdapter.update(doc);
 	}
-	
+
 	/**
 	 * Test update empty id.
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testUpdateEmptyId() {
-		String id = "";		
-		
-		CouchDbDocument doc = new CouchDbDocument();		
+		String id = "";
+
+		CouchDbDocument doc = new CouchDbDocument();
 		doc.setId(id);
-		
-		couchDbAdapter.update(doc);		
+
+		couchDbAdapter.update(doc);
 	}
-	
 
 	/**
 	 * Test get last document id.
@@ -145,30 +144,27 @@ public class CouchDbAdapterTest {
 	@Test
 	public void testGetLastDocumentId() {
 		String id = couchDbAdapter.insert(data);
-		assertEquals(data.getId(), id);		
-		
+		assertEquals(data.getId(), id);
+
 		String lastId = couchDbAdapter.getLastDocumentId();
 		assertEquals(lastId, id);
 	}
-	
-	
+
 	/**
 	 * Test update.
 	 */
 	@Test
 	public void testUpdate() {
-		String id = "42";		
-		
-		CouchDbDocument doc = new CouchDbDocument();		
+		String id = "42";
+
+		CouchDbDocument doc = new CouchDbDocument();
 		doc.setId(id);
-		
-		String rev = doc.getRevision();		
+
+		String rev = doc.getRevision();
 		couchDbAdapter.update(doc);
-		
-		//Revision of document should have changed
+
+		// Revision of document should have changed
 		assertNotEquals(doc.getRevision(), rev);
 	}
-	
-	
-	
+
 }
