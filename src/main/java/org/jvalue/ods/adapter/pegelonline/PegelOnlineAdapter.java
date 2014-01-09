@@ -56,6 +56,13 @@ public class PegelOnlineAdapter {
 		List<Station> stationData = mapper.readValue(json,
 				new TypeReference<List<Station>>() {
 				});
+
+//		// add old measurements
+//		for (Station s : stationData) {
+//			s.setOldMeasurements(getMeasurementOfStation(s.getUuid(), s
+//					.getTimeseries().get(0).getShortname(), 1));
+//		}
+
 		return stationData;
 	}
 

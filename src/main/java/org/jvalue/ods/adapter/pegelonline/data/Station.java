@@ -60,6 +60,8 @@ public class Station extends CouchDbDocument {
 	/** The water. */
 	private Water water;
 
+	private List<Measurement> oldMeasurements;
+
 	/**
 	 * Gets the agency.
 	 * 
@@ -250,7 +252,9 @@ public class Station extends CouchDbDocument {
 		this.water = water;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
@@ -259,7 +263,16 @@ public class Station extends CouchDbDocument {
 				+ "longname: " + longname + "\n" + "km: " + km + "\n"
 				+ "agency: " + agency + "\n" + "longitude: " + longitude + "\n"
 				+ "latitude: " + latitude + "\n" + "water: " + water + "\n"
-				+ "timeseries: " + timeseries;
+				+ "timeseries: " + timeseries + "\n" + "oldMeasurements: "
+				+ oldMeasurements;
+	}
+
+	public List<Measurement> getOldMeasurements() {
+		return oldMeasurements;
+	}
+
+	public void setOldMeasurements(List<Measurement> oldMeasurements) {
+		this.oldMeasurements = oldMeasurements;
 	}
 
 }
