@@ -18,13 +18,11 @@
 package org.jvalue.ods.main;
 
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.jvalue.ods.adapter.pegelonline.PegelOnlineAdapter;
-import org.jvalue.ods.adapter.pegelonline.data.PegelOnlineData;
-import org.jvalue.ods.adapter.pegelonline.data.Station;
-import org.jvalue.ods.db.CouchDbInserter;
+import org.jvalue.ods.adapter.pegelonline.data.*;
+import org.jvalue.ods.db.CouchDbAdapter;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -66,25 +64,18 @@ public class DbInsertMain {
 		PegelOnlineAdapter pegelOnlineAdapter = new PegelOnlineAdapter();
 		List<Station> stationData = pegelOnlineAdapter.getStationData();
 
-		// TODO: Write Measurements to DB
-		// for (Station s : stationData) {
-		// for (Timeseries t : s.getTimeseries()) {
-		// List<Measurement> measurementData = pegelOnlineAdapter
-		// .getMeasurementOfStation(s.getUuid(), t.getShortname());
-		//
-		// for (Measurement m : measurementData) {
-		// //...
-		// }
-		// }
-		// }
+		
+//		 for (Station s : stationData) {
+//			 List<Measurement> measurementData = pegelOnlineAdapter.getMeasurementOfStation(s.getUuid(), s.getTimeseries().get(0).getShortname(), 1);
+//			 s.setOldMeasurements(measurementData);
+////			 for (Timeseries t : s.getTimeseries()) {
+////				 List<Measurement> measurementData = pegelOnlineAdapter.getMeasurementOfStation(s.getUuid(), t.getShortname(), 100);
+////				 s.setOldMeasurements(measurementData);
+////			 }
+//		}
 
-		List<Station> stations = new LinkedList<Station>();
-		for (Station s : stationData) {
-			stations.add(s);
-		}
-
-		CouchDbInserter inserter = new CouchDbInserter("open-data-service");
-		inserter.insert(new PegelOnlineData(stations));
+		CouchDbAdapter adapter = new CouchDbAdapter("open-data-service");
+		adapter.insert(new PegelOnlineData(stationData));
 	}
 
 }

@@ -51,6 +51,9 @@ public class PegelOnlineData extends CouchDbDocument {
 		this.stations = stations;
 	}
 
+	/**
+	 * Instantiates a new pegel online data.
+	 */
 	public PegelOnlineData() {
 
 	}

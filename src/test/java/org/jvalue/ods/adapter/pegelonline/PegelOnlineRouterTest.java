@@ -15,67 +15,45 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
 */
-package org.jvalue.ods.restlet;
+package org.jvalue.ods.adapter.pegelonline;
+
+import static org.junit.Assert.*;
+
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
+import java.util.Map.Entry;
 
-import org.restlet.Application;
-import org.restlet.Component;
+import org.junit.Before;
+import org.junit.Test;
 import org.restlet.Restlet;
-import org.restlet.data.Protocol;
-import org.restlet.routing.Router;
 
 /**
- * The Class RestletAdapter.
+ * The Class PegelOnlineRouterTest.
  */
-public class RestletAdapter extends Application {
-	
-	//Collection of routes for Restlet
-	/** The routes. */
-	private Map<String, Restlet> routes;
-    
-	
+public class PegelOnlineRouterTest {
+
+	/** The router. */
+	PegelOnlineRouter router;
 	
 	/**
-	 * Instantiates a new restlet adapter.
-	 *
-	 * @param routes the routes
-	 * @throws Exception the exception
-	 */
-	public RestletAdapter(Map<String, Restlet> routes) throws Exception
-	{
-		if (routes == null || routes.isEmpty())
-			throw new IllegalArgumentException("routes are null or empty");
-		
-		this.routes = routes;
-		initialize();
-	}
-    
-	
-	/**
-	 * Initialize.
+	 * Sets the up.
 	 *
 	 * @throws Exception the exception
 	 */
-	private void initialize() throws Exception {
-		Component component = new Component();
-		component.getServers().add(Protocol.HTTP, 8182);
-
-		Application app = this;
-
-		component.getDefaultHost().attach(app);
-		component.start();		
+	@Before
+	public void setUp() throws Exception {
+		 router = new PegelOnlineRouter();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.restlet.Application#createInboundRoot()
+
+	/**
+	 * Test get routes.
 	 */
-	@Override
-	public Restlet createInboundRoot() {
-		// Create a root router
-		Router router = new Router(getContext());
+	@Test
+	public void testGetRoutes() {
+		Map<String, Restlet> routes = router.getRoutes();
+		assertNotNull(routes);
 		
 		//Get Map in Set interface to get key and value		
         Set<Entry<String, Restlet>> s=routes.entrySet();
@@ -86,10 +64,9 @@ public class RestletAdapter extends Application {
         while(it.hasNext())
         {
         	Entry<String, Restlet> m =it.next();        	
-        	router.attach(m.getKey(), m.getValue());    		
+        	assertNotNull(m.getKey());
+        	assertNotNull(m.getValue());
         }	
-        
-        return router;
 	}
-	
+
 }

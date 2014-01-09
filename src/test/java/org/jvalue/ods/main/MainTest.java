@@ -33,7 +33,13 @@ public class MainTest {
 	 */
 	@Test
 	public void testMain() throws Exception {
-		Main.main(null);
+		try
+		{
+			Main.main(null);
+		} catch (java.net.BindException ex)
+		{
+			System.err.println("Restlet service already running");
+		}
 	}
 
 }

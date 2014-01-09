@@ -60,6 +60,7 @@ public class Station extends CouchDbDocument {
 	/** The water. */
 	private Water water;
 
+	/** The old measurements. */
 	private List<Measurement> oldMeasurements;
 
 	/**
@@ -267,10 +268,20 @@ public class Station extends CouchDbDocument {
 				+ oldMeasurements;
 	}
 
+	/**
+	 * Gets the old measurements.
+	 *
+	 * @return the old measurements
+	 */
 	public List<Measurement> getOldMeasurements() {
 		return oldMeasurements;
 	}
 
+	/**
+	 * Sets the old measurements.
+	 *
+	 * @param oldMeasurements the new old measurements
+	 */
 	public void setOldMeasurements(List<Measurement> oldMeasurements) {
 		this.oldMeasurements = oldMeasurements;
 	}

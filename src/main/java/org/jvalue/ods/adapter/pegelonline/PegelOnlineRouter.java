@@ -25,8 +25,7 @@ import java.util.Map;
 import org.jvalue.ods.adapter.RouterInterface;
 import org.jvalue.ods.adapter.pegelonline.data.PegelOnlineData;
 import org.jvalue.ods.adapter.pegelonline.data.Station;
-import org.jvalue.ods.db.CouchDbExtractor;
-import org.jvalue.ods.db.CouchDbInserter;
+import org.jvalue.ods.db.CouchDbAdapter;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
@@ -40,11 +39,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class PegelOnlineRouter implements RouterInterface {
 
+	/** The routes. */
 	private HashMap<String, Restlet> routes;
 
 	// TODO: use database features, couchdb only serializes the pojo at the
 	// moment
 
+	/* (non-Javadoc)
+	 * @see org.jvalue.ods.adapter.RouterInterface#getRoutes()
+	 */
 	public Map<String, Restlet> getRoutes() {
 		routes = new HashMap<String, Restlet>();
 
@@ -224,20 +227,19 @@ public class PegelOnlineRouter implements RouterInterface {
 					List<Station> list = new PegelOnlineAdapter()
 							.getStationData();
 
-					CouchDbExtractor ex = new CouchDbExtractor(
-							"open-data-service");
+					CouchDbAdapter adapter = new CouchDbAdapter("open-data-service");
 
-					String first = ex.getFirstDocumentId();
+					String last = adapter.getLastDocumentId();
 					// if null the database is empty, ugly
-					if (first != null) {
+					if (last != null) {
 
-						PegelOnlineData pod = ex.getDocument(
-								PegelOnlineData.class, first);
+						PegelOnlineData pod = adapter.getDocument(
+								PegelOnlineData.class, last);
 						pod.setStations(list);
-						new CouchDbInserter("open-data-service").update(pod);
+						adapter.update(pod);
 					} else {
 						PegelOnlineData pod = new PegelOnlineData(list);
-						new CouchDbInserter("open-data-service").insert(pod);
+						adapter.insert(pod);
 					}
 
 					message += "Database successfully updated.";
@@ -263,15 +265,21 @@ public class PegelOnlineRouter implements RouterInterface {
 	}
 
 	// helper method to get the list of pegelonline stations
+	/**
+	 * Gets the list of stations.
+	 *
+	 * @param response the response
+	 * @return the list of stations
+	 */
 	private List<Station> getListOfStations(Response response) {
 		List<Station> sd = null;
 
 		try {
 
-			CouchDbExtractor ex = new CouchDbExtractor("open-data-service");
-			String docName = ex.getFirstDocumentId();
-			PegelOnlineData data = ex.getDocument(PegelOnlineData.class,
-					docName);
+			CouchDbAdapter adapter = new CouchDbAdapter("open-data-service");
+			String docId = adapter.getLastDocumentId();
+			PegelOnlineData data = adapter.getDocument(PegelOnlineData.class,
+					docId);
 
 			sd = data.getStations();
 

@@ -17,6 +17,7 @@
  */
 package org.jvalue.ods.adapter.pegelonline;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -86,7 +87,148 @@ public class PegelOnlineAdapterTest {
 		for (Station station : stationData) {
 			assertNotNull(station);
 		}
-
 	}
+	
+	
+	/**
+	 * Test get measurement of station.
+	 *
+	 * @throws JsonParseException the json parse exception
+	 * @throws JsonMappingException the json mapping exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	@Test
+	public void testGetMeasurementOfStation() throws JsonParseException, JsonMappingException, IOException
+	{
+		List<Station> stationData = adapter.getStationData();
+		assertNotNull(stationData);
+		
+		Station s = stationData.get(0);
+		if (s != null)
+		{
+			Timeseries t = s.getTimeseries().get(0);
+			if (t != null)
+			{
+				String timeseriesShortname = t.getShortname();
+				List<Measurement> measurementData = adapter.getMeasurementOfStation(s.getUuid(), timeseriesShortname, 1);
+				assertNotNull(measurementData);
+				for (Measurement m: measurementData)
+				{
+					assertNotNull(m);
+				}
+			}
+		}
+	}
+		
+		/**
+		 * Test get measurement of station with null uuid.
+		 *
+		 * @throws JsonParseException the json parse exception
+		 * @throws JsonMappingException the json mapping exception
+		 * @throws IOException Signals that an I/O exception has occurred.
+		 */
+		@Test(expected = FileNotFoundException.class)
+		public void testGetMeasurementOfStationWithNullUUID() throws JsonParseException, JsonMappingException, IOException
+		{
+			List<Station> stationData = adapter.getStationData();
+			assertNotNull(stationData);
+			
+			Station s = stationData.get(0);
+			if (s != null)
+			{
+				Timeseries t = s.getTimeseries().get(0);
+				if (t != null)
+				{
+					String timeseriesShortname = t.getShortname();
+					adapter.getMeasurementOfStation(null, timeseriesShortname, 1);
+					
+				}
+			}
+		}
+		
+		/**
+		 * Test get measurement of station with empty uuid.
+		 *
+		 * @throws JsonParseException the json parse exception
+		 * @throws JsonMappingException the json mapping exception
+		 * @throws IOException Signals that an I/O exception has occurred.
+		 */
+		@Test(expected = FileNotFoundException.class)
+		public void testGetMeasurementOfStationWithEmptyUUID() throws JsonParseException, JsonMappingException, IOException
+		{
+			List<Station> stationData = adapter.getStationData();
+			assertNotNull(stationData);
+			
+			Station s = stationData.get(0);
+			if (s != null)
+			{
+				Timeseries t = s.getTimeseries().get(0);
+				if (t != null)
+				{
+					String timeseriesShortname = t.getShortname();
+					adapter.getMeasurementOfStation("", timeseriesShortname, 1);
+					
+				}
+			}
+		}
+		
+		
+		/**
+		 * Test get measurement of station with null time series short name.
+		 *
+		 * @throws JsonParseException the json parse exception
+		 * @throws JsonMappingException the json mapping exception
+		 * @throws IOException Signals that an I/O exception has occurred.
+		 */
+		@Test(expected = FileNotFoundException.class)
+		public void testGetMeasurementOfStationWithNullTimeSeriesShortName() throws JsonParseException, JsonMappingException, IOException
+		{
+			List<Station> stationData = adapter.getStationData();
+			assertNotNull(stationData);
+			
+			Station s = stationData.get(0);
+			if (s != null)
+			{
+				Timeseries t = s.getTimeseries().get(0);
+				if (t != null)
+				{
+					List<Measurement> measurementData = adapter.getMeasurementOfStation(s.getUuid(), null, 1);
+					assertNotNull(measurementData);
+					for (Measurement m: measurementData)
+					{
+						assertNotNull(m);
+					}
+				}
+			}
+		}
+
+		/**
+		 * Test get measurement of station with empty time series short name.
+		 *
+		 * @throws JsonParseException the json parse exception
+		 * @throws JsonMappingException the json mapping exception
+		 * @throws IOException Signals that an I/O exception has occurred.
+		 */
+		@Test(expected = FileNotFoundException.class)
+		public void testGetMeasurementOfStationWithEmptyTimeSeriesShortName() throws JsonParseException, JsonMappingException, IOException
+		{
+			List<Station> stationData = adapter.getStationData();
+			assertNotNull(stationData);
+			
+			Station s = stationData.get(0);
+			if (s != null)
+			{
+				Timeseries t = s.getTimeseries().get(0);
+				if (t != null)
+				{
+					List<Measurement> measurementData = adapter.getMeasurementOfStation(s.getUuid(), "", 1);
+					assertNotNull(measurementData);
+					for (Measurement m: measurementData)
+					{
+						assertNotNull(m);
+					}
+				}
+			}
+		}
 
 }

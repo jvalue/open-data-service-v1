@@ -15,30 +15,36 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
 */
-package org.jvalue.ods.main;
+package org.jvalue.ods.restlet;
 
-import java.io.IOException;
+import java.util.HashMap;
 
 import org.junit.Test;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
+import org.restlet.Restlet;
 
 /**
- * The Class DbInsertMainTest.
+ * The Class RestletAdapterTest.
  */
-public class DbInsertMainTest {
+public class RestletAdapterTest {
 
 	/**
-	 * Test main.
+	 * Restlet adapter with null routes.
 	 *
-	 * @throws JsonParseException the json parse exception
-	 * @throws JsonMappingException the json mapping exception
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws Exception the exception
 	 */
-	@Test
-	public void testMain() throws JsonParseException, JsonMappingException, IOException {
-		DbInsertMain.main(null);
+	@Test(expected = IllegalArgumentException.class)
+	public void RestletAdapterWithNullRoutes() throws Exception {
+		new RestletAdapter(null);		
 	}
+	
 
+	/**
+	 * Restlet adapter with empty routes.
+	 *
+	 * @throws Exception the exception
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void RestletAdapterWithEmptyRoutes() throws Exception {
+		new RestletAdapter(new HashMap<String, Restlet>());		
+	}
 }

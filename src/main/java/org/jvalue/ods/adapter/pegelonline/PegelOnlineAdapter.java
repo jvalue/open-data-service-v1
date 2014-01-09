@@ -57,29 +57,19 @@ public class PegelOnlineAdapter {
 				new TypeReference<List<Station>>() {
 				});
 
-//		// add old measurements
-//		for (Station s : stationData) {
-//			s.setOldMeasurements(getMeasurementOfStation(s.getUuid(), s
-//					.getTimeseries().get(0).getShortname(), 1));
-//		}
-
 		return stationData;
 	}
 
 	/**
 	 * Gets the measurement of station.
-	 * 
-	 * @param stationUUID
-	 *            the station uuid
-	 * @param timeseriesShortname
-	 *            the timeseries shortname
+	 *
+	 * @param stationUUID the station uuid
+	 * @param timeseriesShortname the timeseries shortname
+	 * @param days the days
 	 * @return the measurement of station
-	 * @throws JsonParseException
-	 *             the json parse exception
-	 * @throws JsonMappingException
-	 *             the json mapping exception
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @throws JsonParseException the json parse exception
+	 * @throws JsonMappingException the json mapping exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public List<Measurement> getMeasurementOfStation(String stationUUID,
 			String timeseriesShortname, int days) throws JsonParseException,

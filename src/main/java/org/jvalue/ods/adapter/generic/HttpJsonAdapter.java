@@ -39,33 +39,10 @@ public class HttpJsonAdapter {
 	 *            the url
 	 */
 	public HttpJsonAdapter(String url) {
-		this.url = url;
-	}
-
-	/**
-	 * Gets the request.
-	 *
-	 * @param charsetName the charset name
-	 * @return the request
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	public String getRequest(String charsetName) throws IOException {
-		// using string builder for best performance of string concatenation
-		StringBuilder sb = new StringBuilder();
-		
-		URL url = new URL(this.url);
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		conn.setRequestMethod("GET");
+		if (url == null || url.isEmpty())
+			throw new IllegalArgumentException("url is null or empty!");
 			
-		BufferedReader rd = new BufferedReader(new InputStreamReader(
-					conn.getInputStream(), Charset.forName(charsetName)));
-		String line;
-		while ((line = rd.readLine()) != null) {
-			sb.append(line);
-		}
-		rd.close();
-		
-		return sb.toString();
+		this.url = url;
 	}
 
 	/**
@@ -76,6 +53,21 @@ public class HttpJsonAdapter {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public String getJSON(String charsetName) throws IOException {
-		return getRequest(charsetName);
+		// using string builder for best performance of string concatenation
+				StringBuilder sb = new StringBuilder();
+				
+				URL url = new URL(this.url);
+				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+				conn.setRequestMethod("GET");
+					
+				BufferedReader rd = new BufferedReader(new InputStreamReader(
+							conn.getInputStream(), Charset.forName(charsetName)));
+				String line;
+				while ((line = rd.readLine()) != null) {
+					sb.append(line);
+				}
+				rd.close();
+				
+				return sb.toString();
 	}
 }

@@ -26,14 +26,29 @@ import org.restlet.Response;
 import org.restlet.Restlet;
 import org.restlet.data.MediaType;
 
+/**
+ * The Class ApiRouter.
+ */
 public class ApiRouter implements RouterInterface {
 
+	/** The routes. */
 	private HashMap<String, Restlet> routes;
 
+	/**
+	 * Instantiates a new api router.
+	 *
+	 * @param routes the routes
+	 */
 	public ApiRouter(HashMap<String, Restlet> routes) {
+		if (routes == null)
+			throw new IllegalArgumentException("routes is null");
+		
 		this.routes = routes;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.jvalue.ods.adapter.RouterInterface#getRoutes()
+	 */
 	@Override
 	public Map<String, Restlet> getRoutes() {
 

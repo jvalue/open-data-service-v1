@@ -49,7 +49,7 @@ public class Main {
 
 		combinedRouter.putAll(router.getRoutes());
 
-		RestletAdapter.initRestlet(combinedRouter);
+		new RestletAdapter(combinedRouter);
 	}
 
 }
