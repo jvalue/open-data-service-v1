@@ -15,15 +15,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.inserter;
+package org.jvalue.ods.db;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 import org.ektorp.support.CouchDbDocument;
 import org.ektorp.util.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.jvalue.ods.db.CouchDbInserter;
 
 /**
  * The Class CouchDbInserterTest.
