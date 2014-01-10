@@ -17,10 +17,9 @@
 */
 package org.jvalue.ods.adapter.generic;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -71,7 +70,7 @@ public class HttpJsonAdapterTest {
 	 *
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	@Test(expected = MalformedURLException.class)
+	@Test
 	public void testHttpJsonAdapterWithInvalidUrl() throws IOException {
 		adapter = new HttpJsonAdapter("invalidUrl");
 		assertNotNull(adapter);

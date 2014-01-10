@@ -17,15 +17,17 @@
  */
 package org.jvalue.ods.adapter.pegelonline;
 
-import java.io.FileNotFoundException;
+import static org.junit.Assert.assertNotNull;
+
 import java.io.IOException;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.jvalue.ods.adapter.pegelonline.data.*;
-
-import static org.junit.Assert.*;
+import org.jvalue.ods.adapter.pegelonline.data.Measurement;
+import org.jvalue.ods.adapter.pegelonline.data.Station;
+import org.jvalue.ods.adapter.pegelonline.data.Timeseries;
+import org.jvalue.ods.adapter.pegelonline.data.Water;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -127,7 +129,7 @@ public class PegelOnlineAdapterTest {
 		 * @throws JsonMappingException the json mapping exception
 		 * @throws IOException Signals that an I/O exception has occurred.
 		 */
-		@Test(expected = FileNotFoundException.class)
+		@Test(expected = JsonMappingException.class)
 		public void testGetMeasurementOfStationWithNullUUID() throws JsonParseException, JsonMappingException, IOException
 		{
 			List<Station> stationData = adapter.getStationData();
@@ -153,7 +155,7 @@ public class PegelOnlineAdapterTest {
 		 * @throws JsonMappingException the json mapping exception
 		 * @throws IOException Signals that an I/O exception has occurred.
 		 */
-		@Test(expected = FileNotFoundException.class)
+		@Test(expected = JsonMappingException.class)
 		public void testGetMeasurementOfStationWithEmptyUUID() throws JsonParseException, JsonMappingException, IOException
 		{
 			List<Station> stationData = adapter.getStationData();
@@ -180,7 +182,7 @@ public class PegelOnlineAdapterTest {
 		 * @throws JsonMappingException the json mapping exception
 		 * @throws IOException Signals that an I/O exception has occurred.
 		 */
-		@Test(expected = FileNotFoundException.class)
+		@Test(expected = JsonMappingException.class)
 		public void testGetMeasurementOfStationWithNullTimeSeriesShortName() throws JsonParseException, JsonMappingException, IOException
 		{
 			List<Station> stationData = adapter.getStationData();
@@ -209,7 +211,7 @@ public class PegelOnlineAdapterTest {
 		 * @throws JsonMappingException the json mapping exception
 		 * @throws IOException Signals that an I/O exception has occurred.
 		 */
-		@Test(expected = FileNotFoundException.class)
+		@Test(expected = JsonMappingException.class)
 		public void testGetMeasurementOfStationWithEmptyTimeSeriesShortName() throws JsonParseException, JsonMappingException, IOException
 		{
 			List<Station> stationData = adapter.getStationData();
