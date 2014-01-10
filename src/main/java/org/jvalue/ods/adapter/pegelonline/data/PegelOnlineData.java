@@ -17,6 +17,7 @@
  */
 package org.jvalue.ods.adapter.pegelonline.data;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.ektorp.support.CouchDbDocument;
@@ -29,14 +30,33 @@ public class PegelOnlineData extends CouchDbDocument {
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
+	// metadata loosely based on
+	// https://github.com/fraunhoferfokus/ogd-metadata/blob/master/OGPD_JSON_Schema.json
+	// at first
+
 	/** The name. */
-	private final String name = "PegelOnline";
+	private final String name = "de-pegelonline";
 
-	/** The publisher. */
-	private final String publisher = "Wasser- und Schifffahrtsverwaltung des Bundes (WSV)";
+	/** The title. */
+	private final String title = "pegelonline";
 
-	/** The source. */
-	private final String source = "www.pegelonline.wsv.de/";
+	/** The author. */
+	private final String author = "Wasser- und Schifffahrtsverwaltung des Bundes (WSV)";
+
+	/** The author_email. */
+	private final String author_email = "https://www.pegelonline.wsv.de/adminmail";
+
+	/** The notes. */
+	private final String notes = "PEGELONLINE stellt kostenfrei tagesaktuelle Rohwerte verschiedener gewässerkundlicher Parameter (z.B. Wasserstand) der Binnen- und Küstenpegel der Wasserstraßen des Bundes bis maximal 30 Tage rückwirkend zur Ansicht und zum Download bereit.";
+
+	/** The url. */
+	private final String url = "https://www.pegelonline.wsv.de";
+
+	/** The terms_of_use. */
+	private final String terms_of_use = "http://www.pegelonline.wsv.de/gast/nutzungsbedingungen";
+
+	/** The date. */
+	private String date;
 
 	/** The stations. */
 	private List<Station> stations;
@@ -49,6 +69,7 @@ public class PegelOnlineData extends CouchDbDocument {
 	 */
 	public PegelOnlineData(List<Station> stations) {
 		this.stations = stations;
+		this.date = new Timestamp(System.currentTimeMillis()).toString();
 	}
 
 	/**
@@ -87,20 +108,76 @@ public class PegelOnlineData extends CouchDbDocument {
 	}
 
 	/**
-	 * Gets the publisher.
+	 * Gets the date.
 	 * 
-	 * @return the publisher
+	 * @return the date
 	 */
-	public String getPublisher() {
-		return publisher;
+	public String getDate() {
+		return date;
 	}
 
 	/**
-	 * Gets the source.
+	 * Sets the date.
 	 * 
-	 * @return the source
+	 * @param date
+	 *            the new date
 	 */
-	public String getSource() {
-		return source;
+	public void setDate(String date) {
+		this.date = date;
 	}
+
+	/**
+	 * Gets the title.
+	 * 
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
+
+	/**
+	 * Gets the author.
+	 * 
+	 * @return the author
+	 */
+	public String getAuthor() {
+		return author;
+	}
+
+	/**
+	 * Gets the author_email.
+	 * 
+	 * @return the author_email
+	 */
+	public String getAuthor_email() {
+		return author_email;
+	}
+
+	/**
+	 * Gets the notes.
+	 * 
+	 * @return the notes
+	 */
+	public String getNotes() {
+		return notes;
+	}
+
+	/**
+	 * Gets the url.
+	 * 
+	 * @return the url
+	 */
+	public String getUrl() {
+		return url;
+	}
+
+	/**
+	 * Gets the terms_of_use.
+	 *
+	 * @return the terms_of_use
+	 */
+	public String getTerms_of_use() {
+		return terms_of_use;
+	}
+
 }

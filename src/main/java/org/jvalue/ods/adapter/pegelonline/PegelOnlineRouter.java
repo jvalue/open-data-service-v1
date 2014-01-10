@@ -18,6 +18,7 @@
 package org.jvalue.ods.adapter.pegelonline;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -241,6 +242,8 @@ public class PegelOnlineRouter implements RouterInterface {
 						PegelOnlineData pod = adapter.getDocument(
 								PegelOnlineData.class, last);
 						pod.setStations(list);
+						pod.setDate(new Timestamp(System.currentTimeMillis())
+								.toString());
 						adapter.update(pod);
 					} else {
 						PegelOnlineData pod = new PegelOnlineData(list);
