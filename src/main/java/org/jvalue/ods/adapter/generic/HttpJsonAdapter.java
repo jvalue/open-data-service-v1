@@ -81,12 +81,14 @@ public class HttpJsonAdapter {
 		} finally {
 			// close stream and connection
 			try {
-				rd.close();
+				if (rd != null)
+					rd.close();
 			} catch (IOException e) {
 				System.err
 						.println("An I/O Exception occured while trying to close the input reader.");
 			} finally {
-				conn.disconnect();
+				if (conn != null)
+					conn.disconnect();
 			}
 		}
 		return sb.toString();
