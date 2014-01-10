@@ -2,6 +2,9 @@
 *.class
 *.war
 *.ear
+*.iml
+*.ipr
+*.iws
 /target
 /bin
 /build
