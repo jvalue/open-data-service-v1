@@ -141,6 +141,7 @@ public class CurrentMeasurement extends CouchDbDocument {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString() {
 
 		return "\n\t\t" + "timestamp: " + timestamp + "\n\t\t" + "value: "

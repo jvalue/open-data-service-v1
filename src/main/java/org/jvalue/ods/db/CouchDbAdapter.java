@@ -73,6 +73,7 @@ public class CouchDbAdapter implements DbAdapter<CouchDbDocument> {
 	 * @param id the id
 	 * @return the document
 	 */
+	@Override
 	public <X extends CouchDbDocument> X getDocument(Class<X> c, String id) {
 		if (c == null) {
 			throw new IllegalArgumentException("c is null");
@@ -90,6 +91,7 @@ public class CouchDbAdapter implements DbAdapter<CouchDbDocument> {
 	 * 
 	 * @return the last document id
 	 */
+	@Override
 	public String getLastDocumentId() {
 		List<String> allDocs = db.getAllDocIds();
 		if (allDocs.isEmpty())
@@ -105,6 +107,7 @@ public class CouchDbAdapter implements DbAdapter<CouchDbDocument> {
 	 *            the data
 	 * @return the string
 	 */
+	@Override
 	public String insert(CouchDbDocument data) {
 
 		if (data == null)
@@ -122,6 +125,7 @@ public class CouchDbAdapter implements DbAdapter<CouchDbDocument> {
 	 *            the data
 	 * @return the string
 	 */
+	@Override
 	public String update(CouchDbDocument data) {
 		if (data == null)
 			throw new IllegalArgumentException("data is null");
@@ -133,6 +137,7 @@ public class CouchDbAdapter implements DbAdapter<CouchDbDocument> {
 	/**
 	 * Delete database.
 	 */
+	@Override
 	public void deleteDatabase() {
 		String databaseName = db.getDatabaseName();
 

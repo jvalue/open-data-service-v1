@@ -189,6 +189,7 @@ public class Timeseries extends CouchDbDocument {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString() {
 		return "\n\t" + "longname: " + longname + "\n\t" + "unit: " + unit
 				+ "\n\t" + "equidistance: " + equidistance + "\n\t"

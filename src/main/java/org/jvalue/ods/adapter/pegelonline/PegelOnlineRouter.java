@@ -53,6 +53,7 @@ public class PegelOnlineRouter implements RouterInterface {
 	 * 
 	 * @see org.jvalue.ods.adapter.RouterInterface#getRoutes()
 	 */
+	@Override
 	public Map<String, Restlet> getRoutes() {
 		routes = new HashMap<String, Restlet>();
 

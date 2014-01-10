@@ -258,6 +258,7 @@ public class Station extends CouchDbDocument {
 	 * 
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString() {
 
 		return "uuid: " + uuid + "\n" + "number: " + number + "\n"

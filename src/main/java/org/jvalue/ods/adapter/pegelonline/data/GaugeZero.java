@@ -97,6 +97,7 @@ public class GaugeZero extends CouchDbDocument {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString() {
 
 		return "\n\t\tunit: " + unit + "\n\t\t" + "value: " + value + "\n\t\t"
