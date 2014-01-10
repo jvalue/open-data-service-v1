@@ -70,12 +70,8 @@ public class PegelOnlineRouter implements RouterInterface {
 						return;
 					}
 
-					for (Station s : sd) {
-
-						ObjectMapper mapper = new ObjectMapper();
-						message += mapper.writeValueAsString(s);
-
-					}
+					ObjectMapper mapper = new ObjectMapper();
+					message += mapper.writeValueAsString(sd);
 
 					if (!message.equals("")) {
 						response.setEntity(message, MediaType.APPLICATION_JSON);
