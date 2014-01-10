@@ -21,6 +21,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.nio.charset.Charset;
 
@@ -41,33 +42,53 @@ public class HttpJsonAdapter {
 	public HttpJsonAdapter(String url) {
 		if (url == null || url.isEmpty())
 			throw new IllegalArgumentException("url is null or empty!");
-			
+
 		this.url = url;
 	}
 
 	/**
 	 * Gets the json.
-	 *
-	 * @param charsetName the charset name
+	 * 
+	 * @param charsetName
+	 *            the charset name
 	 * @return the json
-	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public String getJSON(String charsetName) throws IOException {
+	public String getJSON(String charsetName) {
 		// using string builder for best performance of string concatenation
-				StringBuilder sb = new StringBuilder();
-				
-				URL url = new URL(this.url);
-				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-				conn.setRequestMethod("GET");
-					
-				BufferedReader rd = new BufferedReader(new InputStreamReader(
-							conn.getInputStream(), Charset.forName(charsetName)));
-				String line;
-				while ((line = rd.readLine()) != null) {
-					sb.append(line);
-				}
+		StringBuilder sb = new StringBuilder();
+		HttpURLConnection conn = null;
+		BufferedReader rd = null;
+		try {
+
+			URL url = new URL(this.url);
+			conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("GET");
+			conn.setReadTimeout(10000);
+			conn.setConnectTimeout(10000);
+
+			rd = new BufferedReader(new InputStreamReader(
+					conn.getInputStream(), Charset.forName(charsetName)));
+			String line;
+			while ((line = rd.readLine()) != null) {
+				sb.append(line);
+			}
+			rd.close();
+		} catch (SocketTimeoutException ste) {
+			System.err.println("Socket timeout.");
+		} catch (IOException ioe) {
+			System.err
+					.println("An I/O Exception occured while trying to read from HTTP server.");
+		} finally {
+			// close stream and connection
+			try {
 				rd.close();
-				
-				return sb.toString();
+			} catch (IOException e) {
+				System.err
+						.println("An I/O Exception occured while trying to close the input reader.");
+			} finally {
+				conn.disconnect();
+			}
+		}
+		return sb.toString();
 	}
 }
