@@ -70,7 +70,7 @@ public class HttpJsonAdapterTest {
 	 *
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	@Test
+	@Test(expected = IOException.class)
 	public void testHttpJsonAdapterWithInvalidUrl() throws IOException {
 		adapter = new HttpJsonAdapter("invalidUrl");
 		assertNotNull(adapter);

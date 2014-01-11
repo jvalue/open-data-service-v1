@@ -95,7 +95,7 @@ public class CouchDbAdapter implements DbAdapter<CouchDbDocument> {
 	public String getLastDocumentId() {
 		List<String> allDocs = db.getAllDocIds();
 		if (allDocs.isEmpty())
-			return null;
+			throw new DbAccessException("DB is empty.");
 		else
 			return allDocs.get(allDocs.size() - 1);
 	}

@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.ektorp.DbAccessException;
 import org.ektorp.support.CouchDbDocument;
 import org.jvalue.ods.adapter.RouterInterface;
 import org.jvalue.ods.adapter.pegelonline.data.PegelOnlineData;
@@ -65,23 +66,25 @@ public class PegelOnlineRouter implements RouterInterface {
 				String message = "";
 				try {
 
-					List<Station> sd = getListOfStations(response);
-
-					if (sd == null) {
+					List<Station> sd = null;
+					try {
+						sd = getListOfStations(response);
+					} catch (RuntimeException e) {
 						return;
 					}
 
 					ObjectMapper mapper = new ObjectMapper();
 					message += mapper.writeValueAsString(sd);
 
-					if (!message.equals("")) {
-						response.setEntity(message, MediaType.APPLICATION_JSON);
-					} else {
-						response.setEntity("No stations found.",
-								MediaType.TEXT_PLAIN);
-					}
 				} catch (IOException e) {
-					e.printStackTrace();
+					System.err.println("Error during client request: " + e);
+				}
+
+				if (!message.equals("")) {
+					response.setEntity(message, MediaType.APPLICATION_JSON);
+				} else {
+					response.setEntity("No stations found.",
+							MediaType.TEXT_PLAIN);
 				}
 			}
 
@@ -95,9 +98,10 @@ public class PegelOnlineRouter implements RouterInterface {
 				String message = "";
 				try {
 
-					List<Station> sd = getListOfStations(response);
-
-					if (sd == null) {
+					List<Station> sd = null;
+					try {
+						sd = getListOfStations(response);
+					} catch (RuntimeException e) {
 						return;
 					}
 
@@ -117,14 +121,14 @@ public class PegelOnlineRouter implements RouterInterface {
 						}
 					}
 
-					if (!message.equals("")) {
-						response.setEntity(message, MediaType.APPLICATION_JSON);
-					} else {
-						response.setEntity("Station not found.",
-								MediaType.TEXT_PLAIN);
-					}
 				} catch (IOException e) {
-					e.printStackTrace();
+					System.err.println("Error during client request: " + e);
+				}
+				if (!message.equals("")) {
+					response.setEntity(message, MediaType.APPLICATION_JSON);
+				} else {
+					response.setEntity("Station not found.",
+							MediaType.TEXT_PLAIN);
 				}
 			}
 		};
@@ -137,10 +141,10 @@ public class PegelOnlineRouter implements RouterInterface {
 				// Print the requested URI path
 				String message = "";
 				try {
-
-					List<Station> sd = getListOfStations(response);
-
-					if (sd == null) {
+					List<Station> sd = null;
+					try {
+						sd = getListOfStations(response);
+					} catch (RuntimeException e) {
 						return;
 					}
 
@@ -161,15 +165,14 @@ public class PegelOnlineRouter implements RouterInterface {
 						}
 					}
 
-					if (!message.equals("")) {
-						response.setEntity(message, MediaType.APPLICATION_JSON);
-					} else {
-						response.setEntity("Station not found.",
-								MediaType.TEXT_PLAIN);
-					}
-
 				} catch (IOException e) {
-					e.printStackTrace();
+					System.err.println("Error during client request: " + e);
+				}
+				if (!message.equals("")) {
+					response.setEntity(message, MediaType.APPLICATION_JSON);
+				} else {
+					response.setEntity("Station not found.",
+							MediaType.TEXT_PLAIN);
 				}
 			}
 		};
@@ -181,9 +184,11 @@ public class PegelOnlineRouter implements RouterInterface {
 				String message = "";
 				try {
 
-					List<Station> sd = getListOfStations(response);
+					List<Station> sd = null;
 
-					if (sd == null) {
+					try {
+						sd = getListOfStations(response);
+					} catch (RuntimeException e) {
 						return;
 					}
 
@@ -203,15 +208,15 @@ public class PegelOnlineRouter implements RouterInterface {
 						}
 					}
 
-					if (!message.equals("")) {
-						response.setEntity(message, MediaType.APPLICATION_JSON);
-					} else {
-						response.setEntity("Station not found.",
-								MediaType.TEXT_PLAIN);
-					}
-
 				} catch (IOException e) {
-					e.printStackTrace();
+					System.err.println("Error during client request: " + e);
+				}
+
+				if (!message.equals("")) {
+					response.setEntity(message, MediaType.APPLICATION_JSON);
+				} else {
+					response.setEntity("Station not found.",
+							MediaType.TEXT_PLAIN);
 				}
 			}
 		};
@@ -232,25 +237,23 @@ public class PegelOnlineRouter implements RouterInterface {
 					DbAdapter<CouchDbDocument> adapter = new CouchDbAdapter(
 							"open-data-service");
 
-					String last = adapter.getLastDocumentId();
-					// if null the database is empty, ugly
-					if (last != null) {
-
+					try {
+						String last = adapter.getLastDocumentId();
 						PegelOnlineData pod = adapter.getDocument(
 								PegelOnlineData.class, last);
 						pod.setStations(list);
 						pod.setDate(new Timestamp(System.currentTimeMillis())
 								.toString());
 						adapter.update(pod);
-					} else {
+					} catch (DbAccessException e) {
 						PegelOnlineData pod = new PegelOnlineData(list);
 						adapter.insert(pod);
 					}
 
 					message += "Database successfully updated.";
 				} catch (IOException e) {
-					e.printStackTrace();
-					message += "Could not update database.";
+					System.err.println("Error during client request: " + e);
+					message += "Could not update database: " + e.getMessage();
 				}
 
 				response.setEntity(message, MediaType.TEXT_PLAIN);
@@ -272,13 +275,14 @@ public class PegelOnlineRouter implements RouterInterface {
 
 	// helper method to get the list of pegelonline stations
 	/**
-	 * Gets the list of stations.
+	 * Gets the list of stations from db.
 	 * 
 	 * @param response
 	 *            the response
 	 * @return the list of stations
 	 */
-	private List<Station> getListOfStations(Response response) {
+	private List<Station> getListOfStations(Response response)
+			throws RuntimeException {
 		List<Station> sd = null;
 
 		try {
@@ -291,13 +295,13 @@ public class PegelOnlineRouter implements RouterInterface {
 
 			sd = data.getStations();
 
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 
-			System.err.println("Could not retrieve data.");
+			System.err.println("Could not retrieve data from db: " + e);
 			response.setEntity(
 					"Could not retrieve data. Try to update database via /pegelonline/update.",
 					MediaType.TEXT_PLAIN);
-			sd = null;
+			throw e;
 		}
 		return sd;
 	}

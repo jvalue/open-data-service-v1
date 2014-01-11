@@ -52,8 +52,9 @@ public class HttpJsonAdapter {
 	 * @param charsetName
 	 *            the charset name
 	 * @return the json
+	 * @throws IOException
 	 */
-	public String getJSON(String charsetName) {
+	public String getJSON(String charsetName) throws IOException {
 		// using string builder for best performance of string concatenation
 		StringBuilder sb = new StringBuilder();
 		HttpURLConnection conn = null;
@@ -74,21 +75,22 @@ public class HttpJsonAdapter {
 			}
 			rd.close();
 		} catch (SocketTimeoutException ste) {
-			System.err.println("Socket timeout.");
+			throw new IOException("Socket timeout.");
 		} catch (IOException ioe) {
-			System.err
-					.println("An I/O Exception occured while trying to read from HTTP server.");
+			throw new IOException("An I/O Exception occured while trying to read from HTTP server.");
 		} finally {
 			// close stream and connection
 			try {
-				if (rd != null)
+				if (rd != null) {
 					rd.close();
+				}
 			} catch (IOException e) {
 				System.err
 						.println("An I/O Exception occured while trying to close the input reader.");
 			} finally {
-				if (conn != null)
+				if (conn != null) {
 					conn.disconnect();
+				}
 			}
 		}
 		return sb.toString();

@@ -129,7 +129,7 @@ public class PegelOnlineAdapterTest {
 		 * @throws JsonMappingException the json mapping exception
 		 * @throws IOException Signals that an I/O exception has occurred.
 		 */
-		@Test(expected = JsonMappingException.class)
+		@Test(expected = IOException.class)
 		public void testGetMeasurementOfStationWithNullUUID() throws JsonParseException, JsonMappingException, IOException
 		{
 			List<Station> stationData = adapter.getStationData();
@@ -155,7 +155,7 @@ public class PegelOnlineAdapterTest {
 		 * @throws JsonMappingException the json mapping exception
 		 * @throws IOException Signals that an I/O exception has occurred.
 		 */
-		@Test(expected = JsonMappingException.class)
+		@Test(expected = IOException.class)
 		public void testGetMeasurementOfStationWithEmptyUUID() throws JsonParseException, JsonMappingException, IOException
 		{
 			List<Station> stationData = adapter.getStationData();
@@ -182,7 +182,7 @@ public class PegelOnlineAdapterTest {
 		 * @throws JsonMappingException the json mapping exception
 		 * @throws IOException Signals that an I/O exception has occurred.
 		 */
-		@Test(expected = JsonMappingException.class)
+		@Test(expected = IOException.class)
 		public void testGetMeasurementOfStationWithNullTimeSeriesShortName() throws JsonParseException, JsonMappingException, IOException
 		{
 			List<Station> stationData = adapter.getStationData();
@@ -211,7 +211,7 @@ public class PegelOnlineAdapterTest {
 		 * @throws JsonMappingException the json mapping exception
 		 * @throws IOException Signals that an I/O exception has occurred.
 		 */
-		@Test(expected = JsonMappingException.class)
+		@Test(expected = IOException.class)
 		public void testGetMeasurementOfStationWithEmptyTimeSeriesShortName() throws JsonParseException, JsonMappingException, IOException
 		{
 			List<Station> stationData = adapter.getStationData();
