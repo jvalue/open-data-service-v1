@@ -20,6 +20,7 @@ package org.jvalue.ods.restlet;
 import java.util.HashMap;
 
 import org.junit.Test;
+import org.jvalue.ods.adapter.pegelonline.PegelOnlineRouter;
 import org.restlet.Restlet;
 
 /**
@@ -34,7 +35,7 @@ public class RestletAdapterTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void RestletAdapterWithNullRoutes() throws Exception {
-		new RestletAdapter(null);		
+		new RestletAdapter(null, 8182);		
 	}
 	
 
@@ -45,6 +46,23 @@ public class RestletAdapterTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void RestletAdapterWithEmptyRoutes() throws Exception {
-		new RestletAdapter(new HashMap<String, Restlet>());		
+		new RestletAdapter(new HashMap<String, Restlet>(), 8182);		
 	}
+	
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void RestletAdapterWithIllegalPorts() throws Exception {
+		
+		PegelOnlineRouter poRouter = new PegelOnlineRouter();
+
+		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
+		combinedRouter.putAll(poRouter.getRoutes());
+		
+		new RestletAdapter(combinedRouter, -50);
+		new RestletAdapter(combinedRouter, 1000);
+		new RestletAdapter(combinedRouter, 50000);
+	}
+	
+	
+	
 }

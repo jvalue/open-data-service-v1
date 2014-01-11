@@ -44,13 +44,17 @@ public class RestletAdapter extends Application {
 	 * @param routes the routes
 	 * @throws Exception the exception
 	 */
-	public RestletAdapter(Map<String, Restlet> routes) throws Exception
+	public RestletAdapter(Map<String, Restlet> routes, int port) throws Exception
 	{
 		if (routes == null || routes.isEmpty())
 			throw new IllegalArgumentException("routes are null or empty");
 		
+		if (port < 1024 || port > 49151) 
+			throw new IllegalArgumentException("port not between 1024 and 49151");
+
+		
 		this.routes = routes;
-		initialize();
+		initialize(port);
 	}
     
 	
@@ -59,9 +63,9 @@ public class RestletAdapter extends Application {
 	 *
 	 * @throws Exception the exception
 	 */
-	private void initialize() throws Exception {
+	private void initialize(int port) throws Exception {
 		Component component = new Component();
-		component.getServers().add(Protocol.HTTP, 8182);
+		component.getServers().add(Protocol.HTTP, port);
 
 		Application app = this;
 
