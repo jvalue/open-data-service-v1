@@ -30,6 +30,9 @@ import org.restlet.Restlet;
  */
 public class Main {
 
+	/** The Constant port. */
+	private final static int port = 8182;
+	
 	/**
 	 * The main method.
 	 * 
@@ -49,7 +52,7 @@ public class Main {
 
 		combinedRouter.putAll(router.getRoutes());
 
-		new RestletAdapter(combinedRouter, 8182);
+		new RestletAdapter(combinedRouter, port);
 	}
 
 }

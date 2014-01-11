@@ -17,11 +17,12 @@
  */
 package org.jvalue.ods.db;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+
 import org.ektorp.DbAccessException;
 import org.ektorp.support.CouchDbDocument;
-
-import static org.junit.Assert.*;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -148,6 +149,13 @@ public class CouchDbAdapterTest {
 
 		String lastId = couchDbAdapter.getLastDocumentId();
 		assertEquals(lastId, id);
+	}
+	
+	@Test(expected=DbAccessException.class)
+	public void testGetLastDocumentIdEmptyDatabase() {
+		couchDbAdapter = new CouchDbAdapter(testDbName);
+		couchDbAdapter.deleteDatabase();
+		couchDbAdapter.getLastDocumentId();
 	}
 
 	/**
