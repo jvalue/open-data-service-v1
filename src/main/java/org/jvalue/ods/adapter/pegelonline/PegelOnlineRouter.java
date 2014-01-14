@@ -243,8 +243,9 @@ public class PegelOnlineRouter implements RouterInterface {
 						PegelOnlineData pod = adapter.getDocument(
 								PegelOnlineData.class, last);
 						pod.setStations(list);
-						pod.setDate(new Timestamp(System.currentTimeMillis())
-								.toString());
+						pod.getMetaData().setDate(
+								new Timestamp(System.currentTimeMillis())
+										.toString());
 						adapter.update(pod);
 					} catch (DbAccessException e) {
 						PegelOnlineData pod = new PegelOnlineData(list);

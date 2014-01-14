@@ -17,10 +17,10 @@
  */
 package org.jvalue.ods.adapter.pegelonline.data;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 import org.ektorp.support.CouchDbDocument;
+import org.jvalue.ods.data.JacksonMetaData;
 
 /**
  * The Class PegelOnlineData.
@@ -34,6 +34,10 @@ public class PegelOnlineData extends CouchDbDocument {
 	// https://github.com/fraunhoferfokus/ogd-metadata/blob/master/OGPD_JSON_Schema.json
 	// at first
 
+	/** The jmd. */
+	private JacksonMetaData metaData;
+
+	// constants for metadata object, only used in constructor
 	/** The name. */
 	private final String name = "de-pegelonline";
 
@@ -55,9 +59,6 @@ public class PegelOnlineData extends CouchDbDocument {
 	/** The terms_of_use. */
 	private final String terms_of_use = "http://www.pegelonline.wsv.de/gast/nutzungsbedingungen";
 
-	/** The date. */
-	private String date;
-
 	/** The stations. */
 	private List<Station> stations;
 
@@ -69,7 +70,8 @@ public class PegelOnlineData extends CouchDbDocument {
 	 */
 	public PegelOnlineData(List<Station> stations) {
 		this.stations = stations;
-		this.date = new Timestamp(System.currentTimeMillis()).toString();
+		this.metaData = new JacksonMetaData(name, title, author, author_email,
+				notes, url, terms_of_use);
 	}
 
 	/**
@@ -99,85 +101,21 @@ public class PegelOnlineData extends CouchDbDocument {
 	}
 
 	/**
-	 * Gets the name.
-	 * 
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * Gets the date.
-	 * 
-	 * @return the date
-	 */
-	public String getDate() {
-		return date;
-	}
-
-	/**
-	 * Sets the date.
-	 * 
-	 * @param date
-	 *            the new date
-	 */
-	public void setDate(String date) {
-		this.date = date;
-	}
-
-	/**
-	 * Gets the title.
-	 * 
-	 * @return the title
-	 */
-	public String getTitle() {
-		return title;
-	}
-
-	/**
-	 * Gets the author.
-	 * 
-	 * @return the author
-	 */
-	public String getAuthor() {
-		return author;
-	}
-
-	/**
-	 * Gets the author_email.
-	 * 
-	 * @return the author_email
-	 */
-	public String getAuthor_email() {
-		return author_email;
-	}
-
-	/**
-	 * Gets the notes.
-	 * 
-	 * @return the notes
-	 */
-	public String getNotes() {
-		return notes;
-	}
-
-	/**
-	 * Gets the url.
-	 * 
-	 * @return the url
-	 */
-	public String getUrl() {
-		return url;
-	}
-
-	/**
-	 * Gets the terms_of_use.
+	 * Gets the jmd.
 	 *
-	 * @return the terms_of_use
+	 * @return the jmd
 	 */
-	public String getTerms_of_use() {
-		return terms_of_use;
+	public JacksonMetaData getMetaData() {
+		return metaData;
+	}
+
+	/**
+	 * Sets the omd.
+	 *
+	 * @param jmd the new omd
+	 */
+	public void setMetaData(JacksonMetaData jmd) {
+		this.metaData = jmd;
 	}
 
 }
