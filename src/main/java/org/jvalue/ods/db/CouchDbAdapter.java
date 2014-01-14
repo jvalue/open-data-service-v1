@@ -39,6 +39,9 @@ public class CouchDbAdapter implements DbAdapter<CouchDbDocument> {
 	/** The db instance. */
 	private CouchDbInstance dbInstance;
 
+	/** The database name. */
+	private String databaseName;
+
 	/**
 	 * Instantiates a new couch db adapter.
 	 * 
@@ -49,6 +52,17 @@ public class CouchDbAdapter implements DbAdapter<CouchDbDocument> {
 		if (databaseName == null) {
 			throw new IllegalArgumentException("databaseName is null");
 		}
+
+		this.databaseName = databaseName;
+
+		connect();
+	}
+
+	/**
+	 * Connect.
+	 */
+	@Override
+	public void connect() {
 		HttpClient httpClient = new StdHttpClient.Builder().build();
 		dbInstance = new StdCouchDbInstance(httpClient);
 
@@ -67,10 +81,13 @@ public class CouchDbAdapter implements DbAdapter<CouchDbDocument> {
 
 	/**
 	 * Gets the document.
-	 *
-	 * @param <X> the generic type
-	 * @param c the c
-	 * @param id the id
+	 * 
+	 * @param <X>
+	 *            the generic type
+	 * @param c
+	 *            the c
+	 * @param id
+	 *            the id
 	 * @return the document
 	 */
 	@Override

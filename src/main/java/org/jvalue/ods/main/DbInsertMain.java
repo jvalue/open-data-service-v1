@@ -81,6 +81,7 @@ public class DbInsertMain {
 
 		DbAdapter<CouchDbDocument> adapter = new CouchDbAdapter(
 				"open-data-service");
+		adapter.connect();
 		adapter.insert(new PegelOnlineData(stationData));
 	}
 

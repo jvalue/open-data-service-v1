@@ -236,6 +236,7 @@ public class PegelOnlineRouter implements RouterInterface {
 
 					DbAdapter<CouchDbDocument> adapter = new CouchDbAdapter(
 							"open-data-service");
+					adapter.connect();
 
 					try {
 						String last = adapter.getLastDocumentId();
@@ -289,6 +290,7 @@ public class PegelOnlineRouter implements RouterInterface {
 
 			DbAdapter<CouchDbDocument> adapter = new CouchDbAdapter(
 					"open-data-service");
+			adapter.connect();
 			String docId = adapter.getLastDocumentId();
 			PegelOnlineData data = adapter.getDocument(PegelOnlineData.class,
 					docId);

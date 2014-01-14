@@ -49,6 +49,7 @@ public class CouchDbAdapterTest {
 		// This test needs installed Apache CouchDB!
 		couchDbAdapter = new CouchDbAdapter(testDbName);
 		assertNotNull(couchDbAdapter);
+		couchDbAdapter.connect();
 	}
 
 	/**
@@ -82,6 +83,13 @@ public class CouchDbAdapterTest {
 		assertNotNull(couchDbAdapter);
 	}
 
+	@Test
+	public void testConnect() {
+		DbAdapter<CouchDbDocument> couchDbAdapter = new CouchDbAdapter(
+				testDbName);
+		couchDbAdapter.connect();
+	}
+	
 	// Method Tests
 	/**
 	 * Test insert and getFirstDocumentId method.
@@ -154,6 +162,7 @@ public class CouchDbAdapterTest {
 	@Test(expected=DbAccessException.class)
 	public void testGetLastDocumentIdEmptyDatabase() {
 		couchDbAdapter = new CouchDbAdapter(testDbName);
+		couchDbAdapter.connect();
 		couchDbAdapter.deleteDatabase();
 		couchDbAdapter.getLastDocumentId();
 	}
