@@ -52,7 +52,7 @@ public class Main {
 
 		combinedRouter.putAll(router.getRoutes());
 
-		new RestletAdapter(combinedRouter, port);
+		new RestletAdapter(combinedRouter, port).initialize();
 	}
 
 }

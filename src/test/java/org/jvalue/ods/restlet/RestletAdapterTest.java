@@ -17,6 +17,7 @@
  */
 package org.jvalue.ods.restlet;
 
+import java.net.BindException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -61,8 +62,9 @@ public class RestletAdapterTest {
 
 	/**
 	 * Instantiates a new restlet adapter test.
-	 *
-	 * @param port the port
+	 * 
+	 * @param port
+	 *            the port
 	 */
 	public RestletAdapterTest(int port) {
 		this.port = port;
@@ -70,7 +72,7 @@ public class RestletAdapterTest {
 
 	/**
 	 * Data.
-	 *
+	 * 
 	 * @return the collection
 	 */
 	@Parameters
@@ -82,8 +84,9 @@ public class RestletAdapterTest {
 
 	/**
 	 * Restlet adapter with illegal ports.
-	 *
-	 * @throws Exception the exception
+	 * 
+	 * @throws Exception
+	 *             the exception
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void RestletAdapterWithIllegalPorts() throws Exception {
@@ -94,8 +97,63 @@ public class RestletAdapterTest {
 		combinedRouter.putAll(poRouter.getRoutes());
 
 		new RestletAdapter(combinedRouter, port);
-		new RestletAdapter(combinedRouter, port);
-		new RestletAdapter(combinedRouter, port);
+	}
+
+	/**
+	 * Test initialize.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
+	@Test
+	public void testInitialize() throws Exception {
+
+		PegelOnlineRouter poRouter = new PegelOnlineRouter();
+
+		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
+		combinedRouter.putAll(poRouter.getRoutes());
+
+		RestletAdapter ra = new RestletAdapter(combinedRouter, 8800);
+		ra.initialize();
+		ra.disconnect();
+
+	}
+
+	/**
+	 * Test double initialize.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
+	@Test(expected = BindException.class)
+	public void testDoubleInitialize() throws Exception {
+
+		PegelOnlineRouter poRouter = new PegelOnlineRouter();
+
+		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
+		combinedRouter.putAll(poRouter.getRoutes());
+
+		new RestletAdapter(combinedRouter, 8900).initialize();
+		new RestletAdapter(combinedRouter, 8900).initialize();
+	}
+
+	/**
+	 * Test stop without init.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
+	@Test
+	public void testStopWithoutInit() throws Exception {
+
+		PegelOnlineRouter poRouter = new PegelOnlineRouter();
+
+		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
+		combinedRouter.putAll(poRouter.getRoutes());
+
+		RestletAdapter ra = new RestletAdapter(combinedRouter, 8900);
+		ra.disconnect();
+
 	}
 
 }
