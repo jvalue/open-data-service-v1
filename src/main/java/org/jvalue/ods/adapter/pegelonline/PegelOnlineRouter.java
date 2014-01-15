@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.ektorp.DbAccessException;
-import org.ektorp.support.CouchDbDocument;
 import org.jvalue.ods.adapter.RouterInterface;
 import org.jvalue.ods.adapter.pegelonline.data.PegelOnlineData;
 import org.jvalue.ods.adapter.pegelonline.data.Station;
@@ -234,8 +233,7 @@ public class PegelOnlineRouter implements RouterInterface {
 					List<Station> list = new PegelOnlineAdapter()
 							.getStationData();
 
-					DbAdapter<CouchDbDocument> adapter = new CouchDbAdapter(
-							"pegelonline");
+					DbAdapter adapter = new CouchDbAdapter("pegelonline");
 					adapter.connect();
 
 					try {
@@ -289,8 +287,7 @@ public class PegelOnlineRouter implements RouterInterface {
 
 		try {
 
-			DbAdapter<CouchDbDocument> adapter = new CouchDbAdapter(
-					"pegelonline");
+			DbAdapter adapter = new CouchDbAdapter("pegelonline");
 			adapter.connect();
 			String docId = adapter.getLastDocumentId();
 			PegelOnlineData data = adapter.getDocument(PegelOnlineData.class,

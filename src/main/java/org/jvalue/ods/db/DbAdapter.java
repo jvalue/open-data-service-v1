@@ -19,24 +19,19 @@ package org.jvalue.ods.db;
 
 /**
  * The Interface DbAdapter.
- * 
- * @param <T>
- *            the generic type
+ *
  */
-public interface DbAdapter<T> {
+public interface DbAdapter {
 
 	/**
 	 * Gets the document.
-	 * 
-	 * @param <X>
-	 *            the generic type
-	 * @param c
-	 *            the c
-	 * @param id
-	 *            the id
+	 *
+	 * @param <T> the generic type
+	 * @param c the c
+	 * @param id the id
 	 * @return the document
 	 */
-	public <X extends T> X getDocument(Class<X> c, String id);
+	public <T> T getDocument(Class<T> c, String id);
 
 	/**
 	 * Gets the last document id.
@@ -47,12 +42,12 @@ public interface DbAdapter<T> {
 
 	/**
 	 * Insert.
-	 * 
-	 * @param data
-	 *            the data
+	 *
+	 * @param <T> the generic type
+	 * @param data the data
 	 * @return the string
 	 */
-	public String insert(T data);
+	public <T> void insert(T data);
 
 	/**
 	 * Update.
@@ -61,7 +56,7 @@ public interface DbAdapter<T> {
 	 *            the data
 	 * @return the string
 	 */
-	public String update(T data);
+	public void update(Object data);
 
 	/**
 	 * Delete database.

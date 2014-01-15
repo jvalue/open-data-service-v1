@@ -26,12 +26,11 @@ import org.ektorp.http.HttpClient;
 import org.ektorp.http.StdHttpClient;
 import org.ektorp.impl.StdCouchDbConnector;
 import org.ektorp.impl.StdCouchDbInstance;
-import org.ektorp.support.CouchDbDocument;
 
 /**
  * The Class CouchDbAdapter.
  */
-public class CouchDbAdapter implements DbAdapter<CouchDbDocument> {
+public class CouchDbAdapter implements DbAdapter {
 
 	/** The db. */
 	private CouchDbConnector db;
@@ -81,17 +80,14 @@ public class CouchDbAdapter implements DbAdapter<CouchDbDocument> {
 
 	/**
 	 * Gets the document.
-	 * 
-	 * @param <X>
-	 *            the generic type
-	 * @param c
-	 *            the c
-	 * @param id
-	 *            the id
+	 *
+	 * @param <T> the generic type
+	 * @param c the c
+	 * @param id the id
 	 * @return the document
 	 */
 	@Override
-	public <X extends CouchDbDocument> X getDocument(Class<X> c, String id) {
+	public <T> T getDocument(Class<T> c, String id) {
 		if (c == null) {
 			throw new IllegalArgumentException("c is null");
 		}
@@ -125,14 +121,14 @@ public class CouchDbAdapter implements DbAdapter<CouchDbDocument> {
 	 * @return the string
 	 */
 	@Override
-	public String insert(CouchDbDocument data) {
+	public void insert(Object data) {
 
 		if (data == null)
 			throw new IllegalArgumentException("data is null");
 
 		db.create(data);
 
-		return data.getId();
+		//return data.getId();
 	}
 
 	/**
@@ -143,12 +139,11 @@ public class CouchDbAdapter implements DbAdapter<CouchDbDocument> {
 	 * @return the string
 	 */
 	@Override
-	public String update(CouchDbDocument data) {
+	public void update(Object data) {
 		if (data == null)
 			throw new IllegalArgumentException("data is null");
 
 		db.update(data);
-		return data.getRevision();
 	}
 
 	/**

@@ -18,21 +18,71 @@
 
 package org.jvalue.ods.adapter.pegelonline.data;
 
-import org.ektorp.support.CouchDbDocument;
+import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * The Class Measurement.
  */
-public class Measurement extends CouchDbDocument {
+public class Measurement implements Serializable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+
+	/** The id. */
+	private String id;
+
+	/** The revision. */
+	private String revision;
 
 	/** The timestamp. */
 	private String timestamp;
 
 	/** The value. */
 	private Number value;
+
+	/**
+	 * Gets the id.
+	 * 
+	 * @return the id
+	 */
+	@JsonProperty("_id")
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * Sets the id.
+	 * 
+	 * @param id
+	 *            the new id
+	 */
+	@JsonProperty("_id")
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	/**
+	 * Gets the revision.
+	 * 
+	 * @return the revision
+	 */
+	@JsonProperty("_rev")
+	public String getRevision() {
+		return revision;
+	}
+
+	/**
+	 * Sets the revision.
+	 * 
+	 * @param revision
+	 *            the new revision
+	 */
+	@JsonProperty("_rev")
+	public void setRevision(String revision) {
+		this.revision = revision;
+	}
 
 	/**
 	 * Gets the timestamp.
@@ -72,7 +122,9 @@ public class Measurement extends CouchDbDocument {
 		this.value = value;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

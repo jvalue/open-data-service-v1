@@ -18,17 +18,24 @@
 
 package org.jvalue.ods.adapter.pegelonline.data;
 
+import java.io.Serializable;
 import java.util.List;
 
-import org.ektorp.support.CouchDbDocument;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * The Class Water.
  */
-public class Water extends CouchDbDocument {
+public class Water implements Serializable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+
+	/** The id. */
+	private String id;
+
+	/** The revision. */
+	private String revision;
 
 	/** The longname. */
 	private String longname;
@@ -38,6 +45,48 @@ public class Water extends CouchDbDocument {
 
 	/** The stations. */
 	private List<Station> stations;
+
+	/**
+	 * Gets the id.
+	 * 
+	 * @return the id
+	 */
+	@JsonProperty("_id")
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * Sets the id.
+	 * 
+	 * @param id
+	 *            the new id
+	 */
+	@JsonProperty("_id")
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	/**
+	 * Gets the revision.
+	 * 
+	 * @return the revision
+	 */
+	@JsonProperty("_rev")
+	public String getRevision() {
+		return revision;
+	}
+
+	/**
+	 * Sets the revision.
+	 * 
+	 * @param revision
+	 *            the new revision
+	 */
+	@JsonProperty("_rev")
+	public void setRevision(String revision) {
+		this.revision = revision;
+	}
 
 	/**
 	 * Gets the longname.
@@ -96,7 +145,9 @@ public class Water extends CouchDbDocument {
 		this.stations = stations;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

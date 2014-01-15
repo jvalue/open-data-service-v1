@@ -17,11 +17,14 @@
  */
 package org.jvalue.ods.data;
 
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * The Class JacksonMetaData.
  */
+@JsonInclude(Include.NON_NULL)
 public class JacksonMetaData extends OdsMetaData {
 
 	/** The id. */

@@ -17,18 +17,29 @@
  */
 package org.jvalue.ods.adapter.pegelonline.data;
 
+import java.io.Serializable;
 import java.util.List;
 
-import org.ektorp.support.CouchDbDocument;
 import org.jvalue.ods.data.JacksonMetaData;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * The Class PegelOnlineData.
  */
-public class PegelOnlineData extends CouchDbDocument {
+@JsonInclude(Include.NON_NULL)
+public class PegelOnlineData implements Serializable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+
+	/** The id. */
+	private String id;
+
+	/** The revision. */
+	private String revision;
 
 	// metadata loosely based on
 	// https://github.com/fraunhoferfokus/ogd-metadata/blob/master/OGPD_JSON_Schema.json
@@ -82,6 +93,48 @@ public class PegelOnlineData extends CouchDbDocument {
 	}
 
 	/**
+	 * Gets the id.
+	 * 
+	 * @return the id
+	 */
+	@JsonProperty("_id")
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * Sets the id.
+	 * 
+	 * @param id
+	 *            the new id
+	 */
+	@JsonProperty("_id")
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	/**
+	 * Gets the revision.
+	 * 
+	 * @return the revision
+	 */
+	@JsonProperty("_rev")
+	public String getRevision() {
+		return revision;
+	}
+
+	/**
+	 * Sets the revision.
+	 * 
+	 * @param revision
+	 *            the new revision
+	 */
+	@JsonProperty("_rev")
+	public void setRevision(String revision) {
+		this.revision = revision;
+	}
+
+	/**
 	 * Gets the stations.
 	 * 
 	 * @return the stations
@@ -102,7 +155,7 @@ public class PegelOnlineData extends CouchDbDocument {
 
 	/**
 	 * Gets the jmd.
-	 *
+	 * 
 	 * @return the jmd
 	 */
 	public JacksonMetaData getMetaData() {
@@ -111,8 +164,9 @@ public class PegelOnlineData extends CouchDbDocument {
 
 	/**
 	 * Sets the omd.
-	 *
-	 * @param jmd the new omd
+	 * 
+	 * @param jmd
+	 *            the new omd
 	 */
 	public void setMetaData(JacksonMetaData jmd) {
 		this.metaData = jmd;

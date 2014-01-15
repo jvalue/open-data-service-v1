@@ -39,7 +39,7 @@ public class CouchDbAdapterTest {
 	private final CouchDbDocument data = new CouchDbDocument();
 
 	/** The couch db inserter. */
-	private DbAdapter<CouchDbDocument> couchDbAdapter;
+	private DbAdapter couchDbAdapter;
 
 	/**
 	 * Initialize.
@@ -67,8 +67,7 @@ public class CouchDbAdapterTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testCouchDbInserterConstructorEmptyDatabaseName() {
 		String databaseName = "";
-		DbAdapter<CouchDbDocument> couchDbAdapter = new CouchDbAdapter(
-				databaseName);
+		DbAdapter couchDbAdapter = new CouchDbAdapter(databaseName);
 		assertNotNull(couchDbAdapter);
 	}
 
@@ -78,36 +77,25 @@ public class CouchDbAdapterTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testCouchDbInserterConstructorNullDatabaseName() {
 		String databaseName = null;
-		DbAdapter<CouchDbDocument> couchDbAdapter = new CouchDbAdapter(
-				databaseName);
+		DbAdapter couchDbAdapter = new CouchDbAdapter(databaseName);
 		assertNotNull(couchDbAdapter);
 	}
 
 	@Test
 	public void testConnect() {
-		DbAdapter<CouchDbDocument> couchDbAdapter = new CouchDbAdapter(
-				testDbName);
+		DbAdapter couchDbAdapter = new CouchDbAdapter(testDbName);
 		couchDbAdapter.connect();
 	}
-	
+
 	// Method Tests
-	/**
-	 * Test insert and getFirstDocumentId method.
-	 */
-	@Test
-	public void testInsert() {
-		String id = couchDbAdapter.insert(data);
-		assertEquals(data.getId(), id);
-	}
 
 	/**
 	 * Test insert twice same data.
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testInsertTwiceSameData() {
-		String id = couchDbAdapter.insert(data);
-		assertEquals(data.getId(), id);
-		id = couchDbAdapter.insert(data);
+		couchDbAdapter.insert(data);
+		couchDbAdapter.insert(data);
 	}
 
 	/**
@@ -152,14 +140,14 @@ public class CouchDbAdapterTest {
 	 */
 	@Test
 	public void testGetLastDocumentId() {
-		String id = couchDbAdapter.insert(data);
-		assertEquals(data.getId(), id);
+		couchDbAdapter.insert(data);
+		String id = data.getId();
 
 		String lastId = couchDbAdapter.getLastDocumentId();
 		assertEquals(lastId, id);
 	}
-	
-	@Test(expected=DbAccessException.class)
+
+	@Test(expected = DbAccessException.class)
 	public void testGetLastDocumentIdEmptyDatabase() {
 		couchDbAdapter = new CouchDbAdapter(testDbName);
 		couchDbAdapter.connect();

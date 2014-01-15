@@ -18,17 +18,24 @@
 
 package org.jvalue.ods.adapter.pegelonline.data;
 
+import java.io.Serializable;
 import java.util.List;
 
-import org.ektorp.support.CouchDbDocument;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * The Class Station.
  */
-public class Station extends CouchDbDocument {
+public class Station implements Serializable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+
+	/** The id. */
+	private String id;
+
+	/** The revision. */
+	private String revision;
 
 	/** The agency. */
 	private String agency;
@@ -62,6 +69,48 @@ public class Station extends CouchDbDocument {
 
 	/** The old measurements. */
 	private List<Measurement> oldMeasurements;
+
+	/**
+	 * Gets the id.
+	 * 
+	 * @return the id
+	 */
+	@JsonProperty("_id")
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * Sets the id.
+	 * 
+	 * @param id
+	 *            the new id
+	 */
+	@JsonProperty("_id")
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	/**
+	 * Gets the revision.
+	 * 
+	 * @return the revision
+	 */
+	@JsonProperty("_rev")
+	public String getRevision() {
+		return revision;
+	}
+
+	/**
+	 * Sets the revision.
+	 * 
+	 * @param revision
+	 *            the new revision
+	 */
+	@JsonProperty("_rev")
+	public void setRevision(String revision) {
+		this.revision = revision;
+	}
 
 	/**
 	 * Gets the agency.
@@ -271,7 +320,7 @@ public class Station extends CouchDbDocument {
 
 	/**
 	 * Gets the old measurements.
-	 *
+	 * 
 	 * @return the old measurements
 	 */
 	public List<Measurement> getOldMeasurements() {
@@ -280,8 +329,9 @@ public class Station extends CouchDbDocument {
 
 	/**
 	 * Sets the old measurements.
-	 *
-	 * @param oldMeasurements the new old measurements
+	 * 
+	 * @param oldMeasurements
+	 *            the new old measurements
 	 */
 	public void setOldMeasurements(List<Measurement> oldMeasurements) {
 		this.oldMeasurements = oldMeasurements;

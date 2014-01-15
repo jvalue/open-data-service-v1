@@ -20,9 +20,9 @@ package org.jvalue.ods.main;
 import java.io.IOException;
 import java.util.List;
 
-import org.ektorp.support.CouchDbDocument;
 import org.jvalue.ods.adapter.pegelonline.PegelOnlineAdapter;
-import org.jvalue.ods.adapter.pegelonline.data.*;
+import org.jvalue.ods.adapter.pegelonline.data.PegelOnlineData;
+import org.jvalue.ods.adapter.pegelonline.data.Station;
 import org.jvalue.ods.db.CouchDbAdapter;
 import org.jvalue.ods.db.DbAdapter;
 
@@ -79,8 +79,7 @@ public class DbInsertMain {
 		// // }
 		// }
 
-		DbAdapter<CouchDbDocument> adapter = new CouchDbAdapter(
-				"pegelonline");
+		DbAdapter adapter = new CouchDbAdapter("pegelonline");
 		adapter.connect();
 		adapter.insert(new PegelOnlineData(stationData));
 	}
