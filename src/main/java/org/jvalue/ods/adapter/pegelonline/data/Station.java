@@ -21,11 +21,14 @@ package org.jvalue.ods.adapter.pegelonline.data;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * The Class Station.
  */
+@JsonInclude(Include.NON_NULL)
 public class Station implements Serializable {
 
 	/** The Constant serialVersionUID. */
