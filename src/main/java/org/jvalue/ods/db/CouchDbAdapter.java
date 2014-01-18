@@ -26,6 +26,7 @@ import org.ektorp.http.HttpClient;
 import org.ektorp.http.StdHttpClient;
 import org.ektorp.impl.StdCouchDbConnector;
 import org.ektorp.impl.StdCouchDbInstance;
+import org.jvalue.ods.logger.Logging;
 
 /**
  * The Class CouchDbAdapter.
@@ -70,6 +71,7 @@ public class CouchDbAdapter implements DbAdapter {
 				dbInstance.createDatabase(databaseName);
 			}
 		} catch (DbAccessException ex) {
+			Logging.error(this.getClass(), ex.getMessage());
 			System.err.println("CouchDb needs to be installed!\n"
 					+ ex.getMessage());
 			throw ex;
@@ -158,6 +160,7 @@ public class CouchDbAdapter implements DbAdapter {
 				dbInstance.deleteDatabase(databaseName);
 			}
 		} catch (DbAccessException ex) {
+			Logging.error(this.getClass(), ex.getMessage());
 			System.err.println("CouchDb needs to be installed!\n"
 					+ ex.getMessage());
 			throw ex;
