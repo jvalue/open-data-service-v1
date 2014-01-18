@@ -22,7 +22,7 @@ dependencies {
 	compile 'org.restlet.jse:org.restlet.ext.jackson:2.1.6'
 	compile 'org.ektorp:org.ektorp:1.4.1'
 	compile 'org.slf4j:slf4j-api:1.7.5'
-	compile 'org.slf4j:slf4j-jdk14.jar:1.7.5'	
+	compile 'org.slf4j:slf4j-jdk14:1.7.5'	
 	testCompile 'junit:junit:4.11'
 }
 
