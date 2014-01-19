@@ -42,21 +42,40 @@ public class CouchDbAdapter implements DbAdapter {
 	/** The database name. */
 	private String databaseName;
 
+	/** The is connected. */
+	private boolean isConnected = false;
+	
 	/**
 	 * Instantiates a new couch db adapter.
 	 * 
 	 * @param databaseName
 	 *            the database name
 	 */
-	public CouchDbAdapter(String databaseName) {
-		if (databaseName == null) {
-			throw new IllegalArgumentException("databaseName is null");
+	protected CouchDbAdapter(String databaseName) {
+		if ((databaseName == null) || (databaseName.isEmpty())) {
+			throw new IllegalArgumentException("databaseName is null or empty");
 		}
 
 		this.databaseName = databaseName;
-
-		connect();
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.jvalue.ods.db.DbAdapter#isConnected()
+	 */
+	@Override
+	public boolean isConnected()
+	{		
+		return isConnected;
+	}
+	
+	/**
+	 * Check db state.
+	 */
+	private void checkDbState() {
+        if (!isConnected) {
+            throw new IllegalStateException("The database is not connected");
+        }
+    }
 
 	/**
 	 * Connect.
@@ -77,7 +96,9 @@ public class CouchDbAdapter implements DbAdapter {
 			throw ex;
 		}
 
-		this.db = new StdCouchDbConnector(databaseName, dbInstance);
+		db = new StdCouchDbConnector(databaseName, dbInstance);
+		
+		isConnected = true;
 	}
 
 	/**
@@ -96,9 +117,10 @@ public class CouchDbAdapter implements DbAdapter {
 		if (id == null) {
 			throw new IllegalArgumentException("id is null");
 		}
-
+		
+		checkDbState();
+			
 		return db.get(c, id);
-
 	}
 
 	/**
@@ -108,6 +130,8 @@ public class CouchDbAdapter implements DbAdapter {
 	 */
 	@Override
 	public String getLastDocumentId() {
+		checkDbState();
+		
 		List<String> allDocs = db.getAllDocIds();
 		if (allDocs.isEmpty())
 			throw new DbAccessException("DB is empty.");
@@ -124,10 +148,11 @@ public class CouchDbAdapter implements DbAdapter {
 	 */
 	@Override
 	public void insert(Object data) {
-
 		if (data == null)
 			throw new IllegalArgumentException("data is null");
 
+		checkDbState();
+		
 		db.create(data);
 
 		//return data.getId();
@@ -145,6 +170,8 @@ public class CouchDbAdapter implements DbAdapter {
 		if (data == null)
 			throw new IllegalArgumentException("data is null");
 
+		checkDbState();
+		
 		db.update(data);
 	}
 
@@ -153,6 +180,8 @@ public class CouchDbAdapter implements DbAdapter {
 	 */
 	@Override
 	public void deleteDatabase() {
+		checkDbState();
+		
 		String databaseName = db.getDatabaseName();
 
 		try {

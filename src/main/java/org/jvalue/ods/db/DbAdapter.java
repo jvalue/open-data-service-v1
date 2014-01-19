@@ -67,4 +67,11 @@ public interface DbAdapter {
 	 * Connect.
 	 */
 	public void connect();
+
+	/**
+	 * Checks if is connected.
+	 *
+	 * @return true, if is connected
+	 */
+	boolean isConnected();
 }

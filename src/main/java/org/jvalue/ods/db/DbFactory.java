@@ -15,62 +15,36 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
 */
-package org.jvalue.ods.logger;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package org.jvalue.ods.db;
 
 /**
- * The Class Logging.
+ * A factory for creating Db objects.
  */
-public abstract class Logging {
+public class DbFactory {
+	
+	/**
+	 * Creates a new Db object.
+	 *
+	 * @param databaseName the database name
+	 * @return the db adapter
+	 */
+	public static DbAdapter createCouchDbAdapter(String databaseName){
+		if (isUnitTest())
+			return new MockDbAdapter();
+		
+		return new CouchDbAdapter(databaseName);		
+	}
+	
+	/**
+	 * Checks if is unit test.
+	 *
+	 * @return true, if is unit test
+	 */
+	private static boolean isUnitTest()
+	{
+		//TODO check for unit test f.e. using argument in unit test configuration
+		return false;
+	}
+	
 
-
-	/**
-	 * Creates the logger.
-	 *
-	 * @param c the c
-	 * @return the logger
-	 */
-	private static Logger createLogger(Class<?> c) {
-		return LoggerFactory.getLogger(c);
-	}
-	
-	
-	/**
-	 * Info.
-	 *
-	 * @param c the c
-	 * @param s the s
-	 */
-	public static void info(Class<?> c, String s) {		
-		Logger log = createLogger(c);
-		log.info(s);
-	}
-	
-
-	/**
-	 * Error.
-	 *
-	 * @param c the c
-	 * @param s the s
-	 */
-	public static void error(Class<?> c, String s) {		
-		Logger log = createLogger(c);
-		log.error(s);
-	}
-	
-	/**
-	 * Debug.
-	 *
-	 * @param c the c
-	 * @param s the s
-	 */
-	public static void debug(Class<?> c, String s){		
-		Logger log = createLogger(c);
-		log.debug(s);
-	}
-	
-	
-	
 }

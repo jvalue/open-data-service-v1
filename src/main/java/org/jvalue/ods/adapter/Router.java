@@ -24,7 +24,7 @@ import org.restlet.Restlet;
 /**
  * The Interface RouterInterface.
  */
-public interface RouterInterface {
+public interface Router {
 
 	/**
 	 * Gets the routes.

@@ -24,11 +24,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.ektorp.DbAccessException;
-import org.jvalue.ods.adapter.RouterInterface;
+import org.jvalue.ods.adapter.Router;
 import org.jvalue.ods.adapter.pegelonline.data.PegelOnlineData;
 import org.jvalue.ods.adapter.pegelonline.data.Station;
-import org.jvalue.ods.db.CouchDbAdapter;
 import org.jvalue.ods.db.DbAdapter;
+import org.jvalue.ods.db.DbFactory;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
@@ -40,7 +40,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * The Class PegelOnlineRouter. defines routes that start with /pegelonline/
  * 
  */
-public class PegelOnlineRouter implements RouterInterface {
+public class PegelOnlineRouter implements Router {
 
 	/** The routes. */
 	private HashMap<String, Restlet> routes;
@@ -233,7 +233,7 @@ public class PegelOnlineRouter implements RouterInterface {
 					List<Station> list = new PegelOnlineAdapter()
 							.getStationData();
 
-					DbAdapter adapter = new CouchDbAdapter("pegelonline");
+					DbAdapter adapter = DbFactory.createCouchDbAdapter("pegelonline");
 					adapter.connect();
 
 					try {
@@ -276,10 +276,10 @@ public class PegelOnlineRouter implements RouterInterface {
 	// helper method to get the list of pegelonline stations
 	/**
 	 * Gets the list of stations from db.
-	 * 
-	 * @param response
-	 *            the response
+	 *
+	 * @param response the response
 	 * @return the list of stations
+	 * @throws RuntimeException the runtime exception
 	 */
 	private List<Station> getListOfStations(Response response)
 			throws RuntimeException {
@@ -287,7 +287,7 @@ public class PegelOnlineRouter implements RouterInterface {
 
 		try {
 
-			DbAdapter adapter = new CouchDbAdapter("pegelonline");
+			DbAdapter adapter = DbFactory.createCouchDbAdapter("pegelonline");
 			adapter.connect();
 			String docId = adapter.getLastDocumentId();
 			PegelOnlineData data = adapter.getDocument(PegelOnlineData.class,

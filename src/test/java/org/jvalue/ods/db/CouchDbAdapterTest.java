@@ -46,8 +46,7 @@ public class CouchDbAdapterTest {
 	 */
 	@Before
 	public void initialize() {
-		// This test needs installed Apache CouchDB!
-		couchDbAdapter = new CouchDbAdapter(testDbName);
+		couchDbAdapter = DbFactory.createCouchDbAdapter(testDbName);
 		assertNotNull(couchDbAdapter);
 		couchDbAdapter.connect();
 	}
@@ -57,7 +56,8 @@ public class CouchDbAdapterTest {
 	 */
 	@After
 	public void cleanUp() {
-		couchDbAdapter.deleteDatabase();
+		if (couchDbAdapter.isConnected())
+			couchDbAdapter.deleteDatabase();
 	}
 
 	// Constructor Tests
@@ -67,7 +67,7 @@ public class CouchDbAdapterTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testCouchDbInserterConstructorEmptyDatabaseName() {
 		String databaseName = "";
-		DbAdapter couchDbAdapter = new CouchDbAdapter(databaseName);
+		DbAdapter couchDbAdapter = DbFactory.createCouchDbAdapter(databaseName);
 		assertNotNull(couchDbAdapter);
 	}
 
@@ -77,13 +77,16 @@ public class CouchDbAdapterTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testCouchDbInserterConstructorNullDatabaseName() {
 		String databaseName = null;
-		DbAdapter couchDbAdapter = new CouchDbAdapter(databaseName);
+		DbAdapter couchDbAdapter = DbFactory.createCouchDbAdapter(databaseName);
 		assertNotNull(couchDbAdapter);
 	}
 
+	/**
+	 * Test connect.
+	 */
 	@Test
 	public void testConnect() {
-		DbAdapter couchDbAdapter = new CouchDbAdapter(testDbName);
+		DbAdapter couchDbAdapter = DbFactory.createCouchDbAdapter(testDbName);
 		couchDbAdapter.connect();
 	}
 
@@ -97,16 +100,42 @@ public class CouchDbAdapterTest {
 		couchDbAdapter.insert(data);
 		couchDbAdapter.insert(data);
 	}
+	
+	/**
+	 * Test insert without connect.
+	 */
+	@Test(expected = IllegalStateException.class)
+	public void testInserWithoutConnect() {
+		couchDbAdapter = DbFactory.createCouchDbAdapter(testDbName);
+		assertNotNull(couchDbAdapter);
+		couchDbAdapter.insert(data);		
+	}
 
 	/**
 	 * Test insert null data.
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testInsertNullData() {
-		couchDbAdapter.insert(null);
-		couchDbAdapter.deleteDatabase();
+		couchDbAdapter.insert(null);		
 	}
 
+	/**
+	 * Test update.
+	 */
+	@Test
+	public void testUpdate() {
+		String id = "42";
+
+		CouchDbDocument doc = new CouchDbDocument();
+		doc.setId(id);
+
+		String rev = doc.getRevision();
+		couchDbAdapter.update(doc);
+
+		// Revision of document should have changed
+		assertNotEquals(doc.getRevision(), rev);
+	}
+	
 	/**
 	 * Test update invalid revision.
 	 */
@@ -134,6 +163,17 @@ public class CouchDbAdapterTest {
 
 		couchDbAdapter.update(doc);
 	}
+	
+	
+	/**
+	 * Test update without connect.
+	 */
+	@Test(expected = IllegalStateException.class)
+	public void testUpdateWithoutConnect() {
+		couchDbAdapter = DbFactory.createCouchDbAdapter(testDbName);
+		assertNotNull(couchDbAdapter);		
+		couchDbAdapter.update(data);	
+	}
 
 	/**
 	 * Test get last document id.
@@ -147,29 +187,15 @@ public class CouchDbAdapterTest {
 		assertEquals(lastId, id);
 	}
 
+	/**
+	 * Test get last document id empty database.
+	 */
 	@Test(expected = DbAccessException.class)
 	public void testGetLastDocumentIdEmptyDatabase() {
-		couchDbAdapter = new CouchDbAdapter(testDbName);
-		couchDbAdapter.connect();
 		couchDbAdapter.deleteDatabase();
 		couchDbAdapter.getLastDocumentId();
 	}
 
-	/**
-	 * Test update.
-	 */
-	@Test
-	public void testUpdate() {
-		String id = "42";
-
-		CouchDbDocument doc = new CouchDbDocument();
-		doc.setId(id);
-
-		String rev = doc.getRevision();
-		couchDbAdapter.update(doc);
-
-		// Revision of document should have changed
-		assertNotEquals(doc.getRevision(), rev);
-	}
+	
 
 }

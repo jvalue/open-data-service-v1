@@ -48,11 +48,10 @@ public class HttpJsonAdapter {
 
 	/**
 	 * Gets the json.
-	 * 
-	 * @param charsetName
-	 *            the charset name
+	 *
+	 * @param charsetName the charset name
 	 * @return the json
-	 * @throws IOException
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public String getJSON(String charsetName) throws IOException {
 		// using string builder for best performance of string concatenation
