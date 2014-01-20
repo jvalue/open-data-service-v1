@@ -15,35 +15,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
 */
-package org.jvalue.ods.db;
+package org.jvalue.ods.db.exception;
 
 /**
- * A factory for creating Db objects.
+ * The Class DbAccessException.
  */
-public class DbFactory {
-	
-	/**
-	 * Creates a new Db object.
-	 *
-	 * @param databaseName the database name
-	 * @return the db adapter
-	 */
-	public static DbAccessor createCouchDbAdapter(String databaseName) {		
-		return new CouchDbAccessor(databaseName);
-	}
-	
-	
-	/**
-	 * Creates a new Db object.
-	 *
-	 * @param databaseName the database name
-	 * @return the db accessor
-	 */
-	public static DbAccessor createMockDbAdapter(String databaseName) {		
-		return new MockDbAdapter(databaseName);
-	}
-	
-	
-	
+public class DbAccessException extends RuntimeException {
+
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 1L;
 
 }

@@ -31,7 +31,7 @@ import org.jvalue.ods.logger.Logging;
 /**
  * The Class CouchDbAdapter.
  */
-public class CouchDbAdapter implements DbAdapter {
+public class CouchDbAccessor implements DbAccessor {
 
 	/** The db. */
 	private CouchDbConnector db;
@@ -51,7 +51,7 @@ public class CouchDbAdapter implements DbAdapter {
 	 * @param databaseName
 	 *            the database name
 	 */
-	protected CouchDbAdapter(String databaseName) {
+	protected CouchDbAccessor(String databaseName) {
 		if ((databaseName == null) || (databaseName.isEmpty())) {
 			throw new IllegalArgumentException("databaseName is null or empty");
 		}

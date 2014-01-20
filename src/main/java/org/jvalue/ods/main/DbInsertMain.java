@@ -23,7 +23,7 @@ import java.util.List;
 import org.jvalue.ods.adapter.pegelonline.PegelOnlineAdapter;
 import org.jvalue.ods.adapter.pegelonline.data.PegelOnlineData;
 import org.jvalue.ods.adapter.pegelonline.data.Station;
-import org.jvalue.ods.db.DbAdapter;
+import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -79,7 +79,7 @@ public class DbInsertMain {
 		// // }
 		// }
 
-		DbAdapter adapter = DbFactory.createCouchDbAdapter("pegelonline");
+		DbAccessor adapter = DbFactory.createCouchDbAdapter("pegelonline");
 		adapter.connect();
 		adapter.insert(new PegelOnlineData(stationData));
 	}

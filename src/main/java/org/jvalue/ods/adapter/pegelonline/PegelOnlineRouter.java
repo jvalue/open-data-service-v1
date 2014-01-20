@@ -27,7 +27,7 @@ import org.ektorp.DbAccessException;
 import org.jvalue.ods.adapter.Router;
 import org.jvalue.ods.adapter.pegelonline.data.PegelOnlineData;
 import org.jvalue.ods.adapter.pegelonline.data.Station;
-import org.jvalue.ods.db.DbAdapter;
+import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.restlet.Request;
 import org.restlet.Response;
@@ -233,7 +233,7 @@ public class PegelOnlineRouter implements Router {
 					List<Station> list = new PegelOnlineAdapter()
 							.getStationData();
 
-					DbAdapter adapter = DbFactory.createCouchDbAdapter("pegelonline");
+					DbAccessor adapter = DbFactory.createCouchDbAdapter("pegelonline");
 					adapter.connect();
 
 					try {
@@ -287,7 +287,7 @@ public class PegelOnlineRouter implements Router {
 
 		try {
 
-			DbAdapter adapter = DbFactory.createCouchDbAdapter("pegelonline");
+			DbAccessor adapter = DbFactory.createCouchDbAdapter("pegelonline");
 			adapter.connect();
 			String docId = adapter.getLastDocumentId();
 			PegelOnlineData data = adapter.getDocument(PegelOnlineData.class,

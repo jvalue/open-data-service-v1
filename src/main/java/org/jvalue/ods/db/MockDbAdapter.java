@@ -17,20 +17,47 @@
 */
 package org.jvalue.ods.db;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import org.ektorp.support.CouchDbDocument;
+import org.jvalue.ods.db.exception.DbAccessException;
 
 
 
 /**
  * The Class MockDbAdapter.
  */
-public class MockDbAdapter implements DbAdapter {
+public class MockDbAdapter implements DbAccessor {
 
 	/** The list. */
-	Map<String, Object> list = new HashMap<String, Object>();
+	List<SimpleEntry<String, Object>> list = new ArrayList<SimpleEntry<String, Object>>();
+	
+	/** The is connected. */
+	private boolean isConnected = false;
+	
+	
+	/**
+	 * Instantiates a new mock db adapter.
+	 *
+	 * @param databaseName the database name
+	 */
+	public MockDbAdapter(String databaseName) {
+		if ((databaseName == null) || (databaseName.isEmpty()))
+			throw new IllegalArgumentException();
+	}
+
+
+	/**
+	 * Check db state.
+	 */
+	private void checkDbState() {
+        if (!isConnected) {
+            throw new IllegalStateException("The database is not connected");
+        }
+    }
+	
 	
 	/* (non-Javadoc)
 	 * @see org.jvalue.ods.db.DbAdapter#getDocument(java.lang.Class, java.lang.String)
@@ -46,8 +73,10 @@ public class MockDbAdapter implements DbAdapter {
 	 */
 	@Override
 	public String getLastDocumentId() {
-		// TODO Auto-generated method stub
-		return null;
+		if (list.size() == 0)
+			throw new DbAccessException();
+		else
+			return list.get(list.size()-1).getKey();
 	}
 
 	/* (non-Javadoc)
@@ -55,10 +84,22 @@ public class MockDbAdapter implements DbAdapter {
 	 */
 	@Override
 	public <T> void insert(T data) {
-			if (data == null)
-				throw new IllegalArgumentException("data is null");
+		if (data == null)
+			throw new IllegalArgumentException("data is null");
 			
-		//list.put(new Guid().toString(), data);
+		checkDbState();
+		
+		for(SimpleEntry<String, Object> s : list)
+		{
+			if (s.getKey().equals(data.toString()))
+					throw new IllegalArgumentException();		
+		}
+		
+		if (data instanceof CouchDbDocument)
+			((CouchDbDocument) data).setId(data.toString());
+			
+		
+		list.add(new SimpleEntry<String, Object>(data.toString(), data));
 	}
 
 	/* (non-Javadoc)
@@ -66,7 +107,18 @@ public class MockDbAdapter implements DbAdapter {
 	 */
 	@Override
 	public void update(Object data) {
-		// TODO Auto-generated method stub
+		if (data == null)
+			throw new IllegalArgumentException("data is null");
+		
+		checkDbState();
+			
+		if (data instanceof CouchDbDocument)
+		{
+			if (((CouchDbDocument) data).getRevision() == "invalidRevision")
+				throw new DbAccessException();
+			
+			((CouchDbDocument) data).setRevision(((CouchDbDocument) data).getRevision() + "2");
+		}
 	}
 
 	/* (non-Javadoc)
@@ -74,21 +126,23 @@ public class MockDbAdapter implements DbAdapter {
 	 */
 	@Override
 	public void deleteDatabase() {
-		// TODO Auto-generated method stub
+		list.clear();
 	}
 
 	/* (non-Javadoc)
 	 * @see org.jvalue.ods.db.DbAdapter#connect()
 	 */
 	@Override
-	public void connect() {}
+	public void connect() {
+		isConnected = true;
+	}
 
 	/* (non-Javadoc)
 	 * @see org.jvalue.ods.db.DbAdapter#isConnected()
 	 */
 	@Override
 	public boolean isConnected() {
-		return true;
+		return isConnected;
 	}
 
 }

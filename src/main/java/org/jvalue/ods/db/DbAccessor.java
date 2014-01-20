@@ -21,7 +21,7 @@ package org.jvalue.ods.db;
  * The Interface DbAdapter.
  *
  */
-public interface DbAdapter {
+public interface DbAccessor {
 
 	/**
 	 * Gets the document.

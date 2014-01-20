@@ -21,32 +21,32 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
-import org.ektorp.DbAccessException;
 import org.ektorp.support.CouchDbDocument;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.jvalue.ods.db.exception.DbAccessException;
 
 /**
- * The Class CouchDbInserterTest.
+ * The Class DbAdapterTest.
  */
-public class CouchDbAdapterTest {
+public class DbAccessorTest {
 
 	/** The test db name. */
-	private final String testDbName = "CouchDbInserterTest";
+	private final String testDbName = "DbAdapterTest";
 
 	/** The data. */
 	private final CouchDbDocument data = new CouchDbDocument();
 
 	/** The couch db inserter. */
-	private DbAdapter couchDbAdapter;
+	private DbAccessor couchDbAdapter;
 
 	/**
 	 * Initialize.
 	 */
 	@Before
 	public void initialize() {
-		couchDbAdapter = DbFactory.createCouchDbAdapter(testDbName);
+		couchDbAdapter = DbFactory.createMockDbAdapter(testDbName);
 		assertNotNull(couchDbAdapter);
 		couchDbAdapter.connect();
 	}
@@ -67,7 +67,7 @@ public class CouchDbAdapterTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testCouchDbInserterConstructorEmptyDatabaseName() {
 		String databaseName = "";
-		DbAdapter couchDbAdapter = DbFactory.createCouchDbAdapter(databaseName);
+		DbAccessor couchDbAdapter = DbFactory.createMockDbAdapter(databaseName);
 		assertNotNull(couchDbAdapter);
 	}
 
@@ -77,7 +77,7 @@ public class CouchDbAdapterTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testCouchDbInserterConstructorNullDatabaseName() {
 		String databaseName = null;
-		DbAdapter couchDbAdapter = DbFactory.createCouchDbAdapter(databaseName);
+		DbAccessor couchDbAdapter = DbFactory.createMockDbAdapter(databaseName);
 		assertNotNull(couchDbAdapter);
 	}
 
@@ -86,7 +86,7 @@ public class CouchDbAdapterTest {
 	 */
 	@Test
 	public void testConnect() {
-		DbAdapter couchDbAdapter = DbFactory.createCouchDbAdapter(testDbName);
+		DbAccessor couchDbAdapter = DbFactory.createMockDbAdapter(testDbName);
 		couchDbAdapter.connect();
 	}
 
@@ -106,7 +106,7 @@ public class CouchDbAdapterTest {
 	 */
 	@Test(expected = IllegalStateException.class)
 	public void testInserWithoutConnect() {
-		couchDbAdapter = DbFactory.createCouchDbAdapter(testDbName);
+		couchDbAdapter = DbFactory.createMockDbAdapter(testDbName);
 		assertNotNull(couchDbAdapter);
 		couchDbAdapter.insert(data);		
 	}
@@ -137,6 +137,14 @@ public class CouchDbAdapterTest {
 	}
 	
 	/**
+	 * Test update null data.
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testUpdateNullData() {
+		couchDbAdapter.update(null);		
+	}
+	
+	/**
 	 * Test update invalid revision.
 	 */
 	@Test(expected = DbAccessException.class)
@@ -151,18 +159,7 @@ public class CouchDbAdapterTest {
 		couchDbAdapter.update(doc);
 	}
 
-	/**
-	 * Test update empty id.
-	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testUpdateEmptyId() {
-		String id = "";
 
-		CouchDbDocument doc = new CouchDbDocument();
-		doc.setId(id);
-
-		couchDbAdapter.update(doc);
-	}
 	
 	
 	/**
@@ -170,7 +167,7 @@ public class CouchDbAdapterTest {
 	 */
 	@Test(expected = IllegalStateException.class)
 	public void testUpdateWithoutConnect() {
-		couchDbAdapter = DbFactory.createCouchDbAdapter(testDbName);
+		couchDbAdapter = DbFactory.createMockDbAdapter(testDbName);
 		assertNotNull(couchDbAdapter);		
 		couchDbAdapter.update(data);	
 	}
