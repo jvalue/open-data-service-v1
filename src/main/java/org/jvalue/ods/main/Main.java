@@ -22,6 +22,7 @@ import java.util.HashMap;
 
 import org.jvalue.ods.adapter.ApiRouter;
 import org.jvalue.ods.adapter.pegelonline.PegelOnlineRouter;
+import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.restlet.RestletAdapter;
 import org.restlet.Restlet;
 
@@ -42,7 +43,8 @@ public class Main {
 	 *             the exception
 	 */
 	public static void main(String[] args) throws Exception {
-		PegelOnlineRouter poRouter = new PegelOnlineRouter();
+		
+		PegelOnlineRouter poRouter = new PegelOnlineRouter(DbFactory.createCouchDbAdapter("pegelonline"));
 
 		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
 		combinedRouter.putAll(poRouter.getRoutes());

@@ -33,7 +33,7 @@ import org.jvalue.ods.db.exception.DbAccessException;
 public class DbAccessorTest {
 
 	/** The test db name. */
-	private final String testDbName = "DbAdapterTest";
+	private final String testDbName = "DbAccessorTest";
 
 	/** The data. */
 	private final CouchDbDocument data = new CouchDbDocument();

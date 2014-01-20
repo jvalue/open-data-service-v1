@@ -40,7 +40,7 @@ public class DbFactory {
 	 * @return the db accessor
 	 */
 	public static DbAccessor createMockDbAdapter(String databaseName) {		
-		return new MockDbAdapter(databaseName);
+		return new MockDbAccessor(databaseName);
 	}
 	
 	

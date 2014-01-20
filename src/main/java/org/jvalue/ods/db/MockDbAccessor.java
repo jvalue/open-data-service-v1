@@ -29,7 +29,7 @@ import org.jvalue.ods.db.exception.DbAccessException;
 /**
  * The Class MockDbAdapter.
  */
-public class MockDbAdapter implements DbAccessor {
+public class MockDbAccessor implements DbAccessor {
 
 	/** The list. */
 	List<SimpleEntry<String, Object>> list = new ArrayList<SimpleEntry<String, Object>>();
@@ -43,7 +43,7 @@ public class MockDbAdapter implements DbAccessor {
 	 *
 	 * @param databaseName the database name
 	 */
-	public MockDbAdapter(String databaseName) {
+	public MockDbAccessor(String databaseName) {
 		if ((databaseName == null) || (databaseName.isEmpty()))
 			throw new IllegalArgumentException();
 	}

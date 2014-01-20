@@ -45,8 +45,13 @@ public class PegelOnlineRouter implements Router {
 	/** The routes. */
 	private HashMap<String, Restlet> routes;
 
-	// TODO: use database features, couchdb only serializes the pojo at the
-	// moment
+	private DbAccessor dbAccessor; 
+
+	public PegelOnlineRouter(DbAccessor dbAccessor)
+	{
+		this.dbAccessor = dbAccessor;
+	}
+		
 
 	/*
 	 * (non-Javadoc)
@@ -233,21 +238,20 @@ public class PegelOnlineRouter implements Router {
 					List<Station> list = new PegelOnlineAdapter()
 							.getStationData();
 
-					DbAccessor adapter = DbFactory.createCouchDbAdapter("pegelonline");
-					adapter.connect();
-
+					
+					dbAccessor.connect();
 					try {
-						String last = adapter.getLastDocumentId();
-						PegelOnlineData pod = adapter.getDocument(
+						String last = dbAccessor.getLastDocumentId();
+						PegelOnlineData pod = dbAccessor.getDocument(
 								PegelOnlineData.class, last);
 						pod.setStations(list);
 						pod.getMetaData().setDate(
 								new Timestamp(System.currentTimeMillis())
 										.toString());
-						adapter.update(pod);
+						dbAccessor.update(pod);
 					} catch (DbAccessException e) {
 						PegelOnlineData pod = new PegelOnlineData(list);
-						adapter.insert(pod);
+						dbAccessor.insert(pod);
 					}
 
 					message += "Database successfully updated.";
@@ -285,12 +289,10 @@ public class PegelOnlineRouter implements Router {
 			throws RuntimeException {
 		List<Station> sd = null;
 
-		try {
-
-			DbAccessor adapter = DbFactory.createCouchDbAdapter("pegelonline");
-			adapter.connect();
-			String docId = adapter.getLastDocumentId();
-			PegelOnlineData data = adapter.getDocument(PegelOnlineData.class,
+		try {	
+			dbAccessor.connect();
+			String docId = dbAccessor.getLastDocumentId();
+			PegelOnlineData data = dbAccessor.getDocument(PegelOnlineData.class,
 					docId);
 
 			sd = data.getStations();
