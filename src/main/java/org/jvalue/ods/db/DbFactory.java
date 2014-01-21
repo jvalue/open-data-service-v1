@@ -18,15 +18,15 @@
 package org.jvalue.ods.db;
 
 /**
- * A factory for creating Db objects.
+ * A factory for creating DbAccessor objects.
  */
 public class DbFactory {
 	
 	/**
-	 * Creates a new Db object.
+	 * Creates a new DbAccessor object.
 	 *
 	 * @param databaseName the database name
-	 * @return the db adapter
+	 * @return the db accessor
 	 */
 	public static DbAccessor createCouchDbAdapter(String databaseName) {		
 		return new CouchDbAccessor(databaseName);
@@ -34,7 +34,7 @@ public class DbFactory {
 	
 	
 	/**
-	 * Creates a new Db object.
+	 * Creates a new DbAccessor object.
 	 *
 	 * @param databaseName the database name
 	 * @return the db accessor

@@ -28,7 +28,6 @@ import org.jvalue.ods.adapter.Router;
 import org.jvalue.ods.adapter.pegelonline.data.PegelOnlineData;
 import org.jvalue.ods.adapter.pegelonline.data.Station;
 import org.jvalue.ods.db.DbAccessor;
-import org.jvalue.ods.db.DbFactory;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;

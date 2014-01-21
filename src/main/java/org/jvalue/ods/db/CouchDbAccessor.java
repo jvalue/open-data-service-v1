@@ -21,11 +21,11 @@ import java.util.List;
 
 import org.ektorp.CouchDbConnector;
 import org.ektorp.CouchDbInstance;
-import org.ektorp.DbAccessException;
 import org.ektorp.http.HttpClient;
 import org.ektorp.http.StdHttpClient;
 import org.ektorp.impl.StdCouchDbConnector;
 import org.ektorp.impl.StdCouchDbInstance;
+import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.logger.Logging;
 
 /**
@@ -89,11 +89,11 @@ public class CouchDbAccessor implements DbAccessor {
 			if (!dbInstance.checkIfDbExists(databaseName)) {
 				dbInstance.createDatabase(databaseName);
 			}
-		} catch (DbAccessException ex) {
+		} catch (Exception ex) {
 			Logging.error(this.getClass(), ex.getMessage());
 			System.err.println("CouchDb needs to be installed!\n"
 					+ ex.getMessage());
-			throw ex;
+			throw new DbException(ex);
 		}
 
 		db = new StdCouchDbConnector(databaseName, dbInstance);
@@ -132,11 +132,17 @@ public class CouchDbAccessor implements DbAccessor {
 	public String getLastDocumentId() {
 		checkDbState();
 		
-		List<String> allDocs = db.getAllDocIds();
+		try
+		{
+			List<String> allDocs = db.getAllDocIds();		
 		if (allDocs.isEmpty())
-			throw new DbAccessException("DB is empty.");
-		else
+			throw new DbException("DB is empty.");
+		
 			return allDocs.get(allDocs.size() - 1);
+		} catch(Exception ex)
+		{
+			throw new DbException(ex);
+		}
 	}
 
 	/**
@@ -172,7 +178,15 @@ public class CouchDbAccessor implements DbAccessor {
 
 		checkDbState();
 		
-		db.update(data);
+		try
+		{
+			db.update(data);
+		}
+		catch(Exception ex)
+		{
+			throw new DbException(ex);
+		}
+		
 	}
 
 	/**
@@ -188,11 +202,11 @@ public class CouchDbAccessor implements DbAccessor {
 			if (dbInstance.checkIfDbExists(databaseName)) {
 				dbInstance.deleteDatabase(databaseName);
 			}
-		} catch (DbAccessException ex) {
+		} catch (Exception ex) {
 			Logging.error(this.getClass(), ex.getMessage());
 			System.err.println("CouchDb needs to be installed!\n"
 					+ ex.getMessage());
-			throw ex;
+			throw new DbException(ex);
 		}
 	}
 

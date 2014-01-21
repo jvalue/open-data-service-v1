@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ektorp.support.CouchDbDocument;
-import org.jvalue.ods.db.exception.DbAccessException;
+import org.jvalue.ods.db.exception.DbException;
 
 
 
@@ -74,7 +74,7 @@ public class MockDbAccessor implements DbAccessor {
 	@Override
 	public String getLastDocumentId() {
 		if (list.size() == 0)
-			throw new DbAccessException();
+			throw new DbException("db is empty");
 		else
 			return list.get(list.size()-1).getKey();
 	}
@@ -115,7 +115,7 @@ public class MockDbAccessor implements DbAccessor {
 		if (data instanceof CouchDbDocument)
 		{
 			if (((CouchDbDocument) data).getRevision() == "invalidRevision")
-				throw new DbAccessException();
+				throw new DbException("invalid revision");
 			
 			((CouchDbDocument) data).setRevision(((CouchDbDocument) data).getRevision() + "2");
 		}

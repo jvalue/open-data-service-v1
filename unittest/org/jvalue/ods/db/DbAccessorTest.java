@@ -25,7 +25,7 @@ import org.ektorp.support.CouchDbDocument;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.jvalue.ods.db.exception.DbAccessException;
+import org.jvalue.ods.db.exception.DbException;
 
 /**
  * The Class DbAdapterTest.
@@ -147,7 +147,7 @@ public class DbAccessorTest {
 	/**
 	 * Test update invalid revision.
 	 */
-	@Test(expected = DbAccessException.class)
+	@Test(expected = DbException.class)
 	public void testUpdateInvalidRevision() {
 		String id = "42";
 		String revision = "invalidRevision";
@@ -187,7 +187,7 @@ public class DbAccessorTest {
 	/**
 	 * Test get last document id empty database.
 	 */
-	@Test(expected = DbAccessException.class)
+	@Test(expected = DbException.class)
 	public void testGetLastDocumentIdEmptyDatabase() {
 		couchDbAdapter.deleteDatabase();
 		couchDbAdapter.getLastDocumentId();

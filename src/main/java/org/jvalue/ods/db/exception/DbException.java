@@ -20,7 +20,15 @@ package org.jvalue.ods.db.exception;
 /**
  * The Class DbAccessException.
  */
-public class DbAccessException extends RuntimeException {
+public class DbException extends RuntimeException {
+
+	public DbException(Exception ex) {
+		super(ex);
+	}
+
+	public DbException(String s) {
+		super(s);
+	}
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
