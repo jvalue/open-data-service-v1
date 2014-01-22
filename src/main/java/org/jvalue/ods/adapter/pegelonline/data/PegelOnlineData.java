@@ -50,25 +50,25 @@ public class PegelOnlineData implements Serializable {
 
 	// constants for metadata object, only used in constructor
 	/** The name. */
-	private final String name = "de-pegelonline";
+	private static final String name = "de-pegelonline";
 
 	/** The title. */
-	private final String title = "pegelonline";
+	private static final String title = "pegelonline";
 
 	/** The author. */
-	private final String author = "Wasser- und Schifffahrtsverwaltung des Bundes (WSV)";
+	private static final String author = "Wasser- und Schifffahrtsverwaltung des Bundes (WSV)";
 
 	/** The author_email. */
-	private final String author_email = "https://www.pegelonline.wsv.de/adminmail";
+	private static final String author_email = "https://www.pegelonline.wsv.de/adminmail";
 
 	/** The notes. */
-	private final String notes = "PEGELONLINE stellt kostenfrei tagesaktuelle Rohwerte verschiedener gewässerkundlicher Parameter (z.B. Wasserstand) der Binnen- und Küstenpegel der Wasserstraßen des Bundes bis maximal 30 Tage rückwirkend zur Ansicht und zum Download bereit.";
+	private static final String notes = "PEGELONLINE stellt kostenfrei tagesaktuelle Rohwerte verschiedener gewässerkundlicher Parameter (z.B. Wasserstand) der Binnen- und Küstenpegel der Wasserstraßen des Bundes bis maximal 30 Tage rückwirkend zur Ansicht und zum Download bereit.";
 
 	/** The url. */
-	private final String url = "https://www.pegelonline.wsv.de";
+	private static final String url = "https://www.pegelonline.wsv.de";
 
 	/** The terms_of_use. */
-	private final String terms_of_use = "http://www.pegelonline.wsv.de/gast/nutzungsbedingungen";
+	private static final String terms_of_use = "http://www.pegelonline.wsv.de/gast/nutzungsbedingungen";
 
 	/** The stations. */
 	private List<Station> stations;
