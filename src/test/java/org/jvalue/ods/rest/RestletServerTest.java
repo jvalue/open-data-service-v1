@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.restlet;
+package org.jvalue.ods.rest;
 
 import java.net.BindException;
 import java.util.Arrays;
@@ -31,7 +31,7 @@ import org.jvalue.ods.db.DbFactory;
 import org.restlet.Restlet;
 
 /**
- * The Class RestletAdapterTest.
+ * The Class RestletServerTest.
  */
 @RunWith(value = Parameterized.class)
 public class RestletServerTest {
@@ -43,7 +43,7 @@ public class RestletServerTest {
 	 *             the exception
 	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void RestletAdapterWithNullRoutes() throws Exception {
+	public void RestletServerWithNullRoutes() throws Exception {
 		new RestletServer(null, 8182);
 	}
 
@@ -54,7 +54,7 @@ public class RestletServerTest {
 	 *             the exception
 	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void RestletAdapterWithEmptyRoutes() throws Exception {
+	public void RestletServerWithEmptyRoutes() throws Exception {
 		new RestletServer(new HashMap<String, Restlet>(), 8182);
 	}
 
@@ -90,7 +90,7 @@ public class RestletServerTest {
 	 *             the exception
 	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void RestletAdapterWithIllegalPorts() throws Exception {
+	public void RestletServerWithIllegalPorts() throws Exception {
 
 		PegelOnlineRouter poRouter = new PegelOnlineRouter(
 				DbFactory.createMockDbAdapter("DbAccessorTest"));
@@ -116,7 +116,7 @@ public class RestletServerTest {
 		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
 		combinedRouter.putAll(poRouter.getRoutes());
 
-		RestletServer ra = new RestletServer(combinedRouter, 8800);
+		RestServer ra = new RestletServer(combinedRouter, 8800);
 		ra.initialize();
 		ra.disconnect();
 
@@ -156,7 +156,7 @@ public class RestletServerTest {
 		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
 		combinedRouter.putAll(poRouter.getRoutes());
 
-		RestletServer ra = new RestletServer(combinedRouter, 8900);
+		RestServer ra = new RestletServer(combinedRouter, 8900);
 		ra.disconnect();
 
 	}

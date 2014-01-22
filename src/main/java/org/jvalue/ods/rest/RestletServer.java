@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.restlet;
+package org.jvalue.ods.rest;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -29,9 +29,9 @@ import org.restlet.data.Protocol;
 import org.restlet.routing.Router;
 
 /**
- * The Class RestletAdapter.
+ * The Class RestletServer.
  */
-public class RestletServer extends Application {
+public class RestletServer extends Application implements RestServer {
 
 	// Collection of routes for Restlet
 	/** The routes. */
@@ -66,12 +66,12 @@ public class RestletServer extends Application {
 		this.port = port;
 	}
 
-	/**
-	 * Initialize.
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @throws Exception
-	 *             the exception
+	 * @see org.jvalue.ods.rest.RestServer#initialize()
 	 */
+	@Override
 	public void initialize() throws Exception {
 		component = new Component();
 		component.getServers().add(Protocol.HTTP, port);
@@ -82,10 +82,12 @@ public class RestletServer extends Application {
 		component.start();
 	}
 
-	/**
-	 * Disconnect.
+	/*
+	 * (non-Javadoc)
 	 * 
+	 * @see org.jvalue.ods.rest.RestServer#disconnect()
 	 */
+	@Override
 	public void disconnect() {
 		try {
 			component.stop();

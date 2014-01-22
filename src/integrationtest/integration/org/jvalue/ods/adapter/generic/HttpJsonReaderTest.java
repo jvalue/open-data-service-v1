@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.jvalue.ods.adapter.generic.HttpJsonReader;
 
 /**
- * The Class HttpJsonAdapterTest.
+ * The Class HttpJsonReaderTest.
  */
 public class HttpJsonReaderTest {
 
@@ -52,7 +52,7 @@ public class HttpJsonReaderTest {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void testHttpJsonAdapterWithNullUrl() throws IOException {
+	public void testHttpJsonReaderWithNullUrl() throws IOException {
 		adapter = new HttpJsonReader(null);
 	}
 
@@ -62,7 +62,7 @@ public class HttpJsonReaderTest {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void testHttpJsonAdapterWithEmptyUrl() throws IOException {
+	public void testHttpJsonReaderWithEmptyUrl() throws IOException {
 		adapter = new HttpJsonReader("");
 	}
 	
@@ -72,7 +72,7 @@ public class HttpJsonReaderTest {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	@Test(expected = IOException.class)
-	public void testHttpJsonAdapterWithInvalidUrl() throws IOException {
+	public void testHttpJsonReaderWithInvalidUrl() throws IOException {
 		adapter = new HttpJsonReader("invalidUrl");
 		assertNotNull(adapter);
 		adapter.getJSON("");

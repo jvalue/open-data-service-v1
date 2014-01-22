@@ -23,7 +23,7 @@ import java.util.HashMap;
 import org.jvalue.ods.adapter.ApiRouter;
 import org.jvalue.ods.adapter.pegelonline.PegelOnlineRouter;
 import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.restlet.RestletServer;
+import org.jvalue.ods.rest.RestletServer;
 import org.restlet.Restlet;
 
 /**

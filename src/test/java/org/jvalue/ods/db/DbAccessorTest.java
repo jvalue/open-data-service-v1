@@ -28,7 +28,7 @@ import org.junit.Test;
 import org.jvalue.ods.db.exception.DbException;
 
 /**
- * The Class DbAdapterTest.
+ * The Class DbAccessorTest.
  */
 public class DbAccessorTest {
 

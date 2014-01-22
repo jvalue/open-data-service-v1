@@ -26,7 +26,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 
 /**
- * The Class HttpJsonAdapter.
+ * The Class HttpJsonReader.
  */
 public class HttpJsonReader {
 
