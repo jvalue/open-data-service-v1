@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.db;
+package integration.org.jvalue.ods.db;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -25,6 +25,8 @@ import org.ektorp.support.CouchDbDocument;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.jvalue.ods.db.DbAccessor;
+import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.exception.DbException;
 
 /**
@@ -67,7 +69,8 @@ public class CouchDbAccessorTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testCouchDbInserterConstructorEmptyDatabaseName() {
 		String databaseName = "";
-		DbAccessor couchDbAdapter = DbFactory.createCouchDbAdapter(databaseName);
+		DbAccessor couchDbAdapter = DbFactory
+				.createCouchDbAdapter(databaseName);
 		assertNotNull(couchDbAdapter);
 	}
 
@@ -77,7 +80,8 @@ public class CouchDbAccessorTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testCouchDbInserterConstructorNullDatabaseName() {
 		String databaseName = null;
-		DbAccessor couchDbAdapter = DbFactory.createCouchDbAdapter(databaseName);
+		DbAccessor couchDbAdapter = DbFactory
+				.createCouchDbAdapter(databaseName);
 		assertNotNull(couchDbAdapter);
 	}
 
@@ -100,7 +104,7 @@ public class CouchDbAccessorTest {
 		couchDbAdapter.insert(data);
 		couchDbAdapter.insert(data);
 	}
-	
+
 	/**
 	 * Test insert without connect.
 	 */
@@ -108,7 +112,7 @@ public class CouchDbAccessorTest {
 	public void testInserWithoutConnect() {
 		couchDbAdapter = DbFactory.createCouchDbAdapter(testDbName);
 		assertNotNull(couchDbAdapter);
-		couchDbAdapter.insert(data);		
+		couchDbAdapter.insert(data);
 	}
 
 	/**
@@ -116,7 +120,7 @@ public class CouchDbAccessorTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testInsertNullData() {
-		couchDbAdapter.insert(null);		
+		couchDbAdapter.insert(null);
 	}
 
 	/**
@@ -135,15 +139,15 @@ public class CouchDbAccessorTest {
 		// Revision of document should have changed
 		assertNotEquals(doc.getRevision(), rev);
 	}
-	
+
 	/**
 	 * Test update null data.
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testUpdateNullData() {
-		couchDbAdapter.update(null);		
+		couchDbAdapter.update(null);
 	}
-	
+
 	/**
 	 * Test update invalid revision.
 	 */
@@ -159,17 +163,14 @@ public class CouchDbAccessorTest {
 		couchDbAdapter.update(doc);
 	}
 
-
-	
-	
 	/**
 	 * Test update without connect.
 	 */
 	@Test(expected = IllegalStateException.class)
 	public void testUpdateWithoutConnect() {
 		couchDbAdapter = DbFactory.createCouchDbAdapter(testDbName);
-		assertNotNull(couchDbAdapter);		
-		couchDbAdapter.update(data);	
+		assertNotNull(couchDbAdapter);
+		couchDbAdapter.update(data);
 	}
 
 	/**
@@ -192,7 +193,5 @@ public class CouchDbAccessorTest {
 		couchDbAdapter.deleteDatabase();
 		couchDbAdapter.getLastDocumentId();
 	}
-
-	
 
 }

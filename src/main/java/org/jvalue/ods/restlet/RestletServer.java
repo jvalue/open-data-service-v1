@@ -31,7 +31,7 @@ import org.restlet.routing.Router;
 /**
  * The Class RestletAdapter.
  */
-public class RestletAdapter extends Application {
+public class RestletServer extends Application {
 
 	// Collection of routes for Restlet
 	/** The routes. */
@@ -53,7 +53,7 @@ public class RestletAdapter extends Application {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public RestletAdapter(Map<String, Restlet> routes, int port)
+	public RestletServer(Map<String, Restlet> routes, int port)
 			throws Exception {
 		if (routes == null || routes.isEmpty())
 			throw new IllegalArgumentException("routes are null or empty");

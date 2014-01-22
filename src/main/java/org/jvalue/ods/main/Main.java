@@ -23,7 +23,7 @@ import java.util.HashMap;
 import org.jvalue.ods.adapter.ApiRouter;
 import org.jvalue.ods.adapter.pegelonline.PegelOnlineRouter;
 import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.restlet.RestletAdapter;
+import org.jvalue.ods.restlet.RestletServer;
 import org.restlet.Restlet;
 
 /**
@@ -54,7 +54,7 @@ public class Main {
 
 		combinedRouter.putAll(router.getRoutes());
 
-		new RestletAdapter(combinedRouter, port).initialize();
+		new RestletServer(combinedRouter, port).initialize();
 	}
 
 }

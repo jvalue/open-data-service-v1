@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
 */
-package org.jvalue.ods.adapter.generic;
+package integration.org.jvalue.ods.adapter.generic;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -23,6 +23,7 @@ import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.jvalue.ods.adapter.generic.HttpJsonAdapter;
 
 /**
  * The Class HttpJsonAdapterTest.
