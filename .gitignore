@@ -9,7 +9,7 @@
 /bin
 /build
 /.gradle
-/.settings/gradle
+/.settings
 .classpath
 .project
 
