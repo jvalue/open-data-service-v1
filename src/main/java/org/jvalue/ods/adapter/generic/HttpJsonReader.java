@@ -28,7 +28,7 @@ import java.nio.charset.Charset;
 /**
  * The Class HttpJsonAdapter.
  */
-public class HttpJsonAdapter {
+public class HttpJsonReader {
 
 	/** The url. */
 	private String url;
@@ -39,7 +39,7 @@ public class HttpJsonAdapter {
 	 * @param url
 	 *            the url
 	 */
-	public HttpJsonAdapter(String url) {
+	public HttpJsonReader(String url) {
 		if (url == null || url.isEmpty())
 			throw new IllegalArgumentException("url is null or empty!");
 

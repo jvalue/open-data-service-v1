@@ -34,7 +34,7 @@ import org.restlet.Restlet;
  * The Class RestletAdapterTest.
  */
 @RunWith(value = Parameterized.class)
-public class RestletAdapterTest {
+public class RestletServerTest {
 
 	/**
 	 * Restlet adapter with null routes.
@@ -67,7 +67,7 @@ public class RestletAdapterTest {
 	 * @param port
 	 *            the port
 	 */
-	public RestletAdapterTest(int port) {
+	public RestletServerTest(int port) {
 		this.port = port;
 	}
 

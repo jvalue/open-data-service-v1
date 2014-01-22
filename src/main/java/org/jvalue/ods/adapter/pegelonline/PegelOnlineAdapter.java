@@ -20,7 +20,7 @@ package org.jvalue.ods.adapter.pegelonline;
 import java.io.IOException;
 import java.util.List;
 
-import org.jvalue.ods.adapter.generic.HttpJsonAdapter;
+import org.jvalue.ods.adapter.generic.HttpJsonReader;
 import org.jvalue.ods.adapter.pegelonline.data.Measurement;
 import org.jvalue.ods.adapter.pegelonline.data.Station;
 import org.jvalue.ods.adapter.pegelonline.data.Water;
@@ -48,7 +48,7 @@ public class PegelOnlineAdapter {
 	 */
 	public List<Station> getStationData() throws JsonParseException,
 			JsonMappingException, IOException {
-		HttpJsonAdapter httpAdapter = new HttpJsonAdapter(
+		HttpJsonReader httpAdapter = new HttpJsonReader(
 				"http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true");
 		String json = httpAdapter.getJSON("UTF-8");
 
@@ -74,7 +74,7 @@ public class PegelOnlineAdapter {
 	public List<Measurement> getMeasurementOfStation(String stationUUID,
 			String timeseriesShortname, int days) throws JsonParseException,
 			JsonMappingException, IOException {
-		HttpJsonAdapter httpAdapter = new HttpJsonAdapter(
+		HttpJsonReader httpAdapter = new HttpJsonReader(
 				"http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations/"
 						+ stationUUID + "/" + timeseriesShortname
 						+ "/measurements.json?start=P" + days + "D");
@@ -101,7 +101,7 @@ public class PegelOnlineAdapter {
 	 */
 	public List<Water> getWaterData() throws JsonParseException,
 			JsonMappingException, IOException {
-		HttpJsonAdapter httpAdapter = new HttpJsonAdapter(
+		HttpJsonReader httpAdapter = new HttpJsonReader(
 				"http://www.pegelonline.wsv.de/webservices/rest-api/v2/waters.json?includeStations=true&includeTimeseries=true&includeCurrentMeasurement=true");
 		String json = httpAdapter.getJSON("UTF-8");
 

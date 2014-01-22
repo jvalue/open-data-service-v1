@@ -23,15 +23,15 @@ import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.jvalue.ods.adapter.generic.HttpJsonAdapter;
+import org.jvalue.ods.adapter.generic.HttpJsonReader;
 
 /**
  * The Class HttpJsonAdapterTest.
  */
-public class HttpJsonAdapterTest {
+public class HttpJsonReaderTest {
 
 	/** The adapter. */
-	HttpJsonAdapter adapter;	
+	HttpJsonReader adapter;	
 	
 	/** The Test url. */
 	final String TestUrl = "http://www.pegelonline.wsv.de/webservices/rest-api/v2/waters.json?includeStations=true&includeTimeseries=true&includeCurrentMeasurement=true";
@@ -43,7 +43,7 @@ public class HttpJsonAdapterTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		adapter = new HttpJsonAdapter(TestUrl);
+		adapter = new HttpJsonReader(TestUrl);
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class HttpJsonAdapterTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testHttpJsonAdapterWithNullUrl() throws IOException {
-		adapter = new HttpJsonAdapter(null);
+		adapter = new HttpJsonReader(null);
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class HttpJsonAdapterTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testHttpJsonAdapterWithEmptyUrl() throws IOException {
-		adapter = new HttpJsonAdapter("");
+		adapter = new HttpJsonReader("");
 	}
 	
 	/**
@@ -73,7 +73,7 @@ public class HttpJsonAdapterTest {
 	 */
 	@Test(expected = IOException.class)
 	public void testHttpJsonAdapterWithInvalidUrl() throws IOException {
-		adapter = new HttpJsonAdapter("invalidUrl");
+		adapter = new HttpJsonReader("invalidUrl");
 		assertNotNull(adapter);
 		adapter.getJSON("");
 	}
