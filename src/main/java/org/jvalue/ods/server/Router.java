@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
 */
-package org.jvalue.ods.adapter;
+package org.jvalue.ods.server;
 
 import java.util.Map;
 

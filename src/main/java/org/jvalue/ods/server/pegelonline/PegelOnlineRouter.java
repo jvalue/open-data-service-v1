@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.adapter.pegelonline;
+package org.jvalue.ods.server.pegelonline;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -24,10 +24,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.ektorp.DbAccessException;
-import org.jvalue.ods.adapter.Router;
+import org.jvalue.ods.adapter.pegelonline.PegelOnlineAdapter;
 import org.jvalue.ods.adapter.pegelonline.data.PegelOnlineData;
 import org.jvalue.ods.adapter.pegelonline.data.Station;
 import org.jvalue.ods.db.DbAccessor;
+import org.jvalue.ods.server.Router;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;

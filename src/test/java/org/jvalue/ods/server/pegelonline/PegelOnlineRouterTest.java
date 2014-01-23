@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
 */
-package org.jvalue.ods.adapter.pegelonline;
+package org.jvalue.ods.server.pegelonline;
 
 import static org.junit.Assert.*;
 
@@ -27,6 +27,7 @@ import java.util.Map.Entry;
 import org.junit.Before;
 import org.junit.Test;
 import org.jvalue.ods.db.DbFactory;
+import org.jvalue.ods.server.pegelonline.PegelOnlineRouter;
 import org.restlet.Restlet;
 
 /**

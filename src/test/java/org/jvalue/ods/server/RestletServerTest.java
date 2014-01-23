@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.rest;
+package org.jvalue.ods.server;
 
 import java.net.BindException;
 import java.util.Arrays;
@@ -26,8 +26,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.jvalue.ods.adapter.pegelonline.PegelOnlineRouter;
 import org.jvalue.ods.db.DbFactory;
+import org.jvalue.ods.server.pegelonline.PegelOnlineRouter;
 import org.restlet.Restlet;
 
 /**
