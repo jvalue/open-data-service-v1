@@ -1,4 +1,4 @@
-/*  Open Data Service
+ï»¿/*  Open Data Service
     Copyright (C) 2013  Tsysin Konstantin, Reischl Patrick
 
     This program is free software: you can redistribute it and/or modify
@@ -62,7 +62,7 @@ public class PegelOnlineData implements Serializable {
 	private static final String author_email = "https://www.pegelonline.wsv.de/adminmail";
 
 	/** The notes. */
-	private static final String notes = "PEGELONLINE stellt kostenfrei tagesaktuelle Rohwerte verschiedener gewässerkundlicher Parameter (z.B. Wasserstand) der Binnen- und Küstenpegel der Wasserstraßen des Bundes bis maximal 30 Tage rückwirkend zur Ansicht und zum Download bereit.";
+	private static final String notes = "PEGELONLINE stellt kostenfrei tagesaktuelle Rohwerte verschiedener gewÃ¤sserkundlicher Parameter (z.B. Wasserstand) der Binnen- und KÃ¼stenpegel der WasserstraÃŸen des Bundes bis maximal 30 Tage rÃ¼ckwirkend zur Ansicht und zum Download bereit.";
 
 	/** The url. */
 	private static final String url = "https://www.pegelonline.wsv.de";
