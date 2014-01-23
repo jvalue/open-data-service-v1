@@ -20,10 +20,10 @@ package org.jvalue.ods.grabber.pegelonline;
 import java.io.IOException;
 import java.util.List;
 
+import org.jvalue.ods.data.pegelonline.Measurement;
+import org.jvalue.ods.data.pegelonline.Station;
+import org.jvalue.ods.data.pegelonline.Water;
 import org.jvalue.ods.grabber.generic.HttpJsonReader;
-import org.jvalue.ods.grabber.pegelonline.data.Measurement;
-import org.jvalue.ods.grabber.pegelonline.data.Station;
-import org.jvalue.ods.grabber.pegelonline.data.Water;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;

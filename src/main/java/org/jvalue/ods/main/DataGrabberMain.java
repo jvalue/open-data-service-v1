@@ -20,11 +20,11 @@ package org.jvalue.ods.main;
 import java.io.IOException;
 import java.util.List;
 
+import org.jvalue.ods.data.pegelonline.PegelOnlineData;
+import org.jvalue.ods.data.pegelonline.Station;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.grabber.pegelonline.PegelOnlineAdapter;
-import org.jvalue.ods.grabber.pegelonline.data.PegelOnlineData;
-import org.jvalue.ods.grabber.pegelonline.data.Station;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;

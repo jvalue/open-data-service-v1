@@ -16,16 +16,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jvalue.ods.grabber.pegelonline.data;
+package org.jvalue.ods.data.pegelonline;
 
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * The Class Measurement.
+ * The Class Comment.
  */
-public class Measurement implements Serializable {
+public class Comment implements Serializable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
@@ -36,11 +36,11 @@ public class Measurement implements Serializable {
 	/** The revision. */
 	private String revision;
 
-	/** The timestamp. */
-	private String timestamp;
+	/** The long description. */
+	private String longDescription;
 
-	/** The value. */
-	private Number value;
+	/** The short description. */
+	private String shortDescription;
 
 	/**
 	 * Gets the id.
@@ -85,41 +85,41 @@ public class Measurement implements Serializable {
 	}
 
 	/**
-	 * Gets the timestamp.
+	 * Gets the long description.
 	 * 
-	 * @return the timestamp
+	 * @return the long description
 	 */
-	public String getTimestamp() {
-		return this.timestamp;
+	public String getLongDescription() {
+		return this.longDescription;
 	}
 
 	/**
-	 * Sets the timestamp.
+	 * Sets the long description.
 	 * 
-	 * @param timestamp
-	 *            the new timestamp
+	 * @param longDescription
+	 *            the new long description
 	 */
-	public void setTimestamp(String timestamp) {
-		this.timestamp = timestamp;
+	public void setLongDescription(String longDescription) {
+		this.longDescription = longDescription;
 	}
 
 	/**
-	 * Gets the value.
+	 * Gets the short description.
 	 * 
-	 * @return the value
+	 * @return the short description
 	 */
-	public Number getValue() {
-		return this.value;
+	public String getShortDescription() {
+		return this.shortDescription;
 	}
 
 	/**
-	 * Sets the value.
+	 * Sets the short description.
 	 * 
-	 * @param value
-	 *            the new value
+	 * @param shortDescription
+	 *            the new short description
 	 */
-	public void setValue(Number value) {
-		this.value = value;
+	public void setShortDescription(String shortDescription) {
+		this.shortDescription = shortDescription;
 	}
 
 	/*
@@ -129,7 +129,8 @@ public class Measurement implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return timestamp + "|" + value;
+
+		return longDescription;
 
 	}
 

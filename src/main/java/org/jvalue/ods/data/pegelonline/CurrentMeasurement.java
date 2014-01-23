@@ -16,16 +16,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jvalue.ods.grabber.pegelonline.data;
+package org.jvalue.ods.data.pegelonline;
 
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * The Class GaugeZero.
+ * The Class CurrentMeasurement.
  */
-public class GaugeZero implements Serializable {
+public class CurrentMeasurement implements Serializable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
@@ -36,11 +36,17 @@ public class GaugeZero implements Serializable {
 	/** The revision. */
 	private String revision;
 
-	/** The unit. */
-	private String unit;
+	/** The state mnw mhw. */
+	private String stateMnwMhw;
 
-	/** The valid from. */
-	private String validFrom;
+	/** The state nsw hsw. */
+	private String stateNswHsw;
+
+	/** The timestamp. */
+	private String timestamp;
+
+	/** The trend. */
+	private Number trend;
 
 	/** The value. */
 	private Number value;
@@ -88,41 +94,79 @@ public class GaugeZero implements Serializable {
 	}
 
 	/**
-	 * Gets the unit.
+	 * Gets the state mnw mhw.
 	 * 
-	 * @return the unit
+	 * @return the state mnw mhw
 	 */
-	public String getUnit() {
-		return this.unit;
+	public String getStateMnwMhw() {
+		return this.stateMnwMhw;
 	}
 
 	/**
-	 * Sets the unit.
+	 * Sets the state mnw mhw.
 	 * 
-	 * @param unit
-	 *            the new unit
+	 * @param stateMnwMhw
+	 *            the new state mnw mhw
 	 */
-	public void setUnit(String unit) {
-		this.unit = unit;
+	public void setStateMnwMhw(String stateMnwMhw) {
+		this.stateMnwMhw = stateMnwMhw;
 	}
 
 	/**
-	 * Gets the valid from.
+	 * Gets the state nsw hsw.
 	 * 
-	 * @return the valid from
+	 * @return the state nsw hsw
 	 */
-	public String getValidFrom() {
-		return this.validFrom;
+	public String getStateNswHsw() {
+		return this.stateNswHsw;
 	}
 
 	/**
-	 * Sets the valid from.
+	 * Sets the state nsw hsw.
 	 * 
-	 * @param validFrom
-	 *            the new valid from
+	 * @param stateNswHsw
+	 *            the new state nsw hsw
 	 */
-	public void setValidFrom(String validFrom) {
-		this.validFrom = validFrom;
+	public void setStateNswHsw(String stateNswHsw) {
+		this.stateNswHsw = stateNswHsw;
+	}
+
+	/**
+	 * Gets the timestamp.
+	 * 
+	 * @return the timestamp
+	 */
+	public String getTimestamp() {
+		return this.timestamp;
+	}
+
+	/**
+	 * Sets the timestamp.
+	 * 
+	 * @param timestamp
+	 *            the new timestamp
+	 */
+	public void setTimestamp(String timestamp) {
+		this.timestamp = timestamp;
+	}
+
+	/**
+	 * Gets the trend.
+	 * 
+	 * @return the trend
+	 */
+	public Number getTrend() {
+		return this.trend;
+	}
+
+	/**
+	 * Sets the trend.
+	 * 
+	 * @param trend
+	 *            the new trend
+	 */
+	public void setTrend(Number trend) {
+		this.trend = trend;
 	}
 
 	/**
@@ -152,8 +196,11 @@ public class GaugeZero implements Serializable {
 	@Override
 	public String toString() {
 
-		return "\n\t\tunit: " + unit + "\n\t\t" + "value: " + value + "\n\t\t"
-				+ "validFrom: " + validFrom;
+		return "\n\t\t" + "timestamp: " + timestamp + "\n\t\t" + "value: "
+				+ value + "\n\t\t" + "trend: " + trend + "\n\t\t"
+				+ "stateMnwMhw: " + stateMnwMhw + "\n\t\t" + "stateNswHsw: "
+				+ stateNswHsw;
+
 	}
 
 }

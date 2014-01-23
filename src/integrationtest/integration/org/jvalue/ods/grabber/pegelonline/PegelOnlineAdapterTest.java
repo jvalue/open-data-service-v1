@@ -24,11 +24,11 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.jvalue.ods.data.pegelonline.Measurement;
+import org.jvalue.ods.data.pegelonline.Station;
+import org.jvalue.ods.data.pegelonline.Timeseries;
+import org.jvalue.ods.data.pegelonline.Water;
 import org.jvalue.ods.grabber.pegelonline.PegelOnlineAdapter;
-import org.jvalue.ods.grabber.pegelonline.data.Measurement;
-import org.jvalue.ods.grabber.pegelonline.data.Station;
-import org.jvalue.ods.grabber.pegelonline.data.Timeseries;
-import org.jvalue.ods.grabber.pegelonline.data.Water;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;

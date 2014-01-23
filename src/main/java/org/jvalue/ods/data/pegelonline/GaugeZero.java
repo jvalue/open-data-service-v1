@@ -16,16 +16,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jvalue.ods.grabber.pegelonline.data;
+package org.jvalue.ods.data.pegelonline;
 
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * The Class Comment.
+ * The Class GaugeZero.
  */
-public class Comment implements Serializable {
+public class GaugeZero implements Serializable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
@@ -36,11 +36,14 @@ public class Comment implements Serializable {
 	/** The revision. */
 	private String revision;
 
-	/** The long description. */
-	private String longDescription;
+	/** The unit. */
+	private String unit;
 
-	/** The short description. */
-	private String shortDescription;
+	/** The valid from. */
+	private String validFrom;
+
+	/** The value. */
+	private Number value;
 
 	/**
 	 * Gets the id.
@@ -85,41 +88,60 @@ public class Comment implements Serializable {
 	}
 
 	/**
-	 * Gets the long description.
+	 * Gets the unit.
 	 * 
-	 * @return the long description
+	 * @return the unit
 	 */
-	public String getLongDescription() {
-		return this.longDescription;
+	public String getUnit() {
+		return this.unit;
 	}
 
 	/**
-	 * Sets the long description.
+	 * Sets the unit.
 	 * 
-	 * @param longDescription
-	 *            the new long description
+	 * @param unit
+	 *            the new unit
 	 */
-	public void setLongDescription(String longDescription) {
-		this.longDescription = longDescription;
+	public void setUnit(String unit) {
+		this.unit = unit;
 	}
 
 	/**
-	 * Gets the short description.
+	 * Gets the valid from.
 	 * 
-	 * @return the short description
+	 * @return the valid from
 	 */
-	public String getShortDescription() {
-		return this.shortDescription;
+	public String getValidFrom() {
+		return this.validFrom;
 	}
 
 	/**
-	 * Sets the short description.
+	 * Sets the valid from.
 	 * 
-	 * @param shortDescription
-	 *            the new short description
+	 * @param validFrom
+	 *            the new valid from
 	 */
-	public void setShortDescription(String shortDescription) {
-		this.shortDescription = shortDescription;
+	public void setValidFrom(String validFrom) {
+		this.validFrom = validFrom;
+	}
+
+	/**
+	 * Gets the value.
+	 * 
+	 * @return the value
+	 */
+	public Number getValue() {
+		return this.value;
+	}
+
+	/**
+	 * Sets the value.
+	 * 
+	 * @param value
+	 *            the new value
+	 */
+	public void setValue(Number value) {
+		this.value = value;
 	}
 
 	/*
@@ -130,8 +152,8 @@ public class Comment implements Serializable {
 	@Override
 	public String toString() {
 
-		return longDescription;
-
+		return "\n\t\tunit: " + unit + "\n\t\t" + "value: " + value + "\n\t\t"
+				+ "validFrom: " + validFrom;
 	}
 
 }
