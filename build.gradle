@@ -35,3 +35,8 @@ idea.project.ipr {
         provider.node.component.find { it.@name == 'VcsDirectoryMappings' }.mapping.@vcs = 'Git'
     }
 }
+
+task grabData(type: JavaExec, dependsOn: 'classes') {
+    main = 'org.jvalue.ods.main.DataGrabberMain'
+	classpath = sourceSets.main.runtimeClasspath
+}
