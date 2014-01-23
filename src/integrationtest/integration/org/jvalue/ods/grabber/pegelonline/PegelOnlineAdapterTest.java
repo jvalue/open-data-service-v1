@@ -15,7 +15,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package integration.org.jvalue.ods.adapter.pegelonline;
+package integration.org.jvalue.ods.grabber.pegelonline;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -24,11 +24,11 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.jvalue.ods.adapter.pegelonline.PegelOnlineAdapter;
-import org.jvalue.ods.adapter.pegelonline.data.Measurement;
-import org.jvalue.ods.adapter.pegelonline.data.Station;
-import org.jvalue.ods.adapter.pegelonline.data.Timeseries;
-import org.jvalue.ods.adapter.pegelonline.data.Water;
+import org.jvalue.ods.grabber.pegelonline.PegelOnlineAdapter;
+import org.jvalue.ods.grabber.pegelonline.data.Measurement;
+import org.jvalue.ods.grabber.pegelonline.data.Station;
+import org.jvalue.ods.grabber.pegelonline.data.Timeseries;
+import org.jvalue.ods.grabber.pegelonline.data.Water;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;

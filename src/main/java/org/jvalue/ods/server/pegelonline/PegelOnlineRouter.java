@@ -24,10 +24,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.ektorp.DbAccessException;
-import org.jvalue.ods.adapter.pegelonline.PegelOnlineAdapter;
-import org.jvalue.ods.adapter.pegelonline.data.PegelOnlineData;
-import org.jvalue.ods.adapter.pegelonline.data.Station;
 import org.jvalue.ods.db.DbAccessor;
+import org.jvalue.ods.grabber.pegelonline.PegelOnlineAdapter;
+import org.jvalue.ods.grabber.pegelonline.data.PegelOnlineData;
+import org.jvalue.ods.grabber.pegelonline.data.Station;
 import org.jvalue.ods.server.Router;
 import org.restlet.Request;
 import org.restlet.Response;

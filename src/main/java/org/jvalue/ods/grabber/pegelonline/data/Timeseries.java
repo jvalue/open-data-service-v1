@@ -16,17 +16,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jvalue.ods.adapter.pegelonline.data;
+package org.jvalue.ods.grabber.pegelonline.data;
 
 import java.io.Serializable;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * The Class Water.
+ * The Class Timeseries.
  */
-public class Water implements Serializable {
+
+public class Timeseries implements Serializable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
@@ -37,14 +37,29 @@ public class Water implements Serializable {
 	/** The revision. */
 	private String revision;
 
+	/** The comment. */
+
+	private Comment comment;
+
+	/** The current measurement. */
+	private CurrentMeasurement currentMeasurement;
+
+	/** The equidistance. */
+	private Number equidistance;
+
+	/** The gauge zero. */
+
+	private GaugeZero gaugeZero;
+
 	/** The longname. */
+
 	private String longname;
 
 	/** The shortname. */
 	private String shortname;
 
-	/** The stations. */
-	private List<Station> stations;
+	/** The unit. */
+	private String unit;
 
 	/**
 	 * Gets the id.
@@ -89,6 +104,82 @@ public class Water implements Serializable {
 	}
 
 	/**
+	 * Gets the comment.
+	 * 
+	 * @return the comment
+	 */
+	public Comment getComment() {
+		return this.comment;
+	}
+
+	/**
+	 * Sets the comment.
+	 * 
+	 * @param comment
+	 *            the new comment
+	 */
+	public void setComment(Comment comment) {
+		this.comment = comment;
+	}
+
+	/**
+	 * Gets the current measurement.
+	 * 
+	 * @return the current measurement
+	 */
+	public CurrentMeasurement getCurrentMeasurement() {
+		return this.currentMeasurement;
+	}
+
+	/**
+	 * Sets the current measurement.
+	 * 
+	 * @param currentMeasurement
+	 *            the new current measurement
+	 */
+	public void setCurrentMeasurement(CurrentMeasurement currentMeasurement) {
+		this.currentMeasurement = currentMeasurement;
+	}
+
+	/**
+	 * Gets the equidistance.
+	 * 
+	 * @return the equidistance
+	 */
+	public Number getEquidistance() {
+		return this.equidistance;
+	}
+
+	/**
+	 * Sets the equidistance.
+	 * 
+	 * @param equidistance
+	 *            the new equidistance
+	 */
+	public void setEquidistance(Number equidistance) {
+		this.equidistance = equidistance;
+	}
+
+	/**
+	 * Gets the gauge zero.
+	 * 
+	 * @return the gauge zero
+	 */
+	public GaugeZero getGaugeZero() {
+		return this.gaugeZero;
+	}
+
+	/**
+	 * Sets the gauge zero.
+	 * 
+	 * @param gaugeZero
+	 *            the new gauge zero
+	 */
+	public void setGaugeZero(GaugeZero gaugeZero) {
+		this.gaugeZero = gaugeZero;
+	}
+
+	/**
 	 * Gets the longname.
 	 * 
 	 * @return the longname
@@ -127,22 +218,22 @@ public class Water implements Serializable {
 	}
 
 	/**
-	 * Gets the stations.
+	 * Gets the unit.
 	 * 
-	 * @return the stations
+	 * @return the unit
 	 */
-	public List<Station> getStations() {
-		return this.stations;
+	public String getUnit() {
+		return this.unit;
 	}
 
 	/**
-	 * Sets the stations.
+	 * Sets the unit.
 	 * 
-	 * @param stations
-	 *            the new stations
+	 * @param unit
+	 *            the new unit
 	 */
-	public void setStations(List<Station> stations) {
-		this.stations = stations;
+	public void setUnit(String unit) {
+		this.unit = unit;
 	}
 
 	/*
@@ -152,8 +243,11 @@ public class Water implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return longname;
-
+		return "\n\t" + "longname: " + longname + "\n\t" + "unit: " + unit
+				+ "\n\t" + "equidistance: " + equidistance + "\n\t"
+				+ "currentMeasurement: " + currentMeasurement + "\n\t"
+				+ "gaugeZero: " + gaugeZero + "\n\t" + "comment: " + comment
+				+ "\n";
 	}
 
 }

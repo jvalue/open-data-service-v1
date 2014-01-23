@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jvalue.ods.adapter.pegelonline.data;
+package org.jvalue.ods.grabber.pegelonline.data;
 
 import java.io.Serializable;
 import java.util.List;

@@ -16,16 +16,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jvalue.ods.adapter.pegelonline.data;
+package org.jvalue.ods.grabber.pegelonline.data;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * The Class Comment.
+ * The Class Water.
  */
-public class Comment implements Serializable {
+public class Water implements Serializable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
@@ -36,11 +37,14 @@ public class Comment implements Serializable {
 	/** The revision. */
 	private String revision;
 
-	/** The long description. */
-	private String longDescription;
+	/** The longname. */
+	private String longname;
 
-	/** The short description. */
-	private String shortDescription;
+	/** The shortname. */
+	private String shortname;
+
+	/** The stations. */
+	private List<Station> stations;
 
 	/**
 	 * Gets the id.
@@ -85,41 +89,60 @@ public class Comment implements Serializable {
 	}
 
 	/**
-	 * Gets the long description.
+	 * Gets the longname.
 	 * 
-	 * @return the long description
+	 * @return the longname
 	 */
-	public String getLongDescription() {
-		return this.longDescription;
+	public String getLongname() {
+		return this.longname;
 	}
 
 	/**
-	 * Sets the long description.
+	 * Sets the longname.
 	 * 
-	 * @param longDescription
-	 *            the new long description
+	 * @param longname
+	 *            the new longname
 	 */
-	public void setLongDescription(String longDescription) {
-		this.longDescription = longDescription;
+	public void setLongname(String longname) {
+		this.longname = longname;
 	}
 
 	/**
-	 * Gets the short description.
+	 * Gets the shortname.
 	 * 
-	 * @return the short description
+	 * @return the shortname
 	 */
-	public String getShortDescription() {
-		return this.shortDescription;
+	public String getShortname() {
+		return this.shortname;
 	}
 
 	/**
-	 * Sets the short description.
+	 * Sets the shortname.
 	 * 
-	 * @param shortDescription
-	 *            the new short description
+	 * @param shortname
+	 *            the new shortname
 	 */
-	public void setShortDescription(String shortDescription) {
-		this.shortDescription = shortDescription;
+	public void setShortname(String shortname) {
+		this.shortname = shortname;
+	}
+
+	/**
+	 * Gets the stations.
+	 * 
+	 * @return the stations
+	 */
+	public List<Station> getStations() {
+		return this.stations;
+	}
+
+	/**
+	 * Sets the stations.
+	 * 
+	 * @param stations
+	 *            the new stations
+	 */
+	public void setStations(List<Station> stations) {
+		this.stations = stations;
 	}
 
 	/*
@@ -129,8 +152,7 @@ public class Comment implements Serializable {
 	 */
 	@Override
 	public String toString() {
-
-		return longDescription;
+		return longname;
 
 	}
 
