@@ -9,10 +9,10 @@ repositories {
 
 jar {
 	version = '0.1'
-    manifest.attributes("Main-Class": "org.jvalue.ods.main.Main")
+    manifest.attributes("Main-Class": "org.jvalue.ods.main.DataServerMain")
 }
 
-mainClassName = "org.jvalue.ods.main.Main"
+mainClassName = "org.jvalue.ods.main.DataServerMain"
 
 dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind:2.2.3'

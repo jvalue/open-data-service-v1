@@ -27,9 +27,9 @@ import org.jvalue.ods.server.pegelonline.PegelOnlineRouter;
 import org.restlet.Restlet;
 
 /**
- * The Class Main.
+ * The Class DataServerMain.
  */
-public class Main {
+public class DataServerMain {
 
 	/** The Constant port. */
 	private final static int port = 8182;

@@ -20,24 +20,22 @@ package org.jvalue.ods.main;
 
 import org.junit.Test;
 
-
 /**
- * The Class MainTest.
+ * The Class DataServerMainTest.
  */
-public class MainTest {
+public class DataServerMainTest {
 
 	/**
 	 * Test main.
-	 *
-	 * @throws Exception the exception
+	 * 
+	 * @throws Exception
+	 *             the exception
 	 */
 	@Test
 	public void testMain() throws Exception {
-		try
-		{
-			Main.main(null);
-		} catch (java.net.BindException ex)
-		{
+		try {
+			DataServerMain.main(null);
+		} catch (java.net.BindException ex) {
 			System.err.println("Restlet service already running");
 		}
 	}

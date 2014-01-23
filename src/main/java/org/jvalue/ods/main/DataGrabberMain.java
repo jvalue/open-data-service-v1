@@ -30,9 +30,9 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 /**
- * The Class DbInsertMain.
+ * The Class DataGrabberMain.
  */
-public class DbInsertMain {
+public class DataGrabberMain {
 
 	/**
 	 * The main method.
