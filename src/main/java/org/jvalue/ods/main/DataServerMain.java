@@ -23,6 +23,7 @@ import java.util.HashMap;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.server.ApiRouter;
 import org.jvalue.ods.server.RestletServer;
+import org.jvalue.ods.server.nominatim.NominatimRouter;
 import org.jvalue.ods.server.pegelonline.PegelOnlineRouter;
 import org.restlet.Restlet;
 
@@ -45,9 +46,11 @@ public class DataServerMain {
 	public static void main(String[] args) throws Exception {
 		
 		PegelOnlineRouter poRouter = new PegelOnlineRouter(DbFactory.createCouchDbAdapter("pegelonline"));
-
+		NominatimRouter noRouter = new NominatimRouter();
+		
 		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
 		combinedRouter.putAll(poRouter.getRoutes());
+		combinedRouter.putAll(noRouter.getRoutes());
 
 		// last router, generates api output
 		ApiRouter router = new ApiRouter(combinedRouter);

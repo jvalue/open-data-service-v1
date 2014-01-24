@@ -22,10 +22,20 @@ package org.jvalue.ods.db.exception;
  */
 public class DbException extends RuntimeException {
 
+	/**
+	 * Instantiates a new db exception.
+	 *
+	 * @param ex the ex
+	 */
 	public DbException(Exception ex) {
 		super(ex);
 	}
 
+	/**
+	 * Instantiates a new db exception.
+	 *
+	 * @param s the s
+	 */
 	public DbException(String s) {
 		super(s);
 	}

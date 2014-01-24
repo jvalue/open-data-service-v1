@@ -46,8 +46,14 @@ public class PegelOnlineRouter implements Router {
 	/** The routes. */
 	private HashMap<String, Restlet> routes;
 
+	/** The db accessor. */
 	private DbAccessor dbAccessor; 
 
+	/**
+	 * Instantiates a new pegel online router.
+	 *
+	 * @param dbAccessor the db accessor
+	 */
 	public PegelOnlineRouter(DbAccessor dbAccessor)
 	{
 		this.dbAccessor = dbAccessor;
