@@ -55,11 +55,11 @@ public class NominatimGrabber {
 		String json = httpAdapter.getJSON("UTF-8");
 
 		ObjectMapper mapper = new ObjectMapper();
-		List<NominatimQueryResult> stationData = mapper.readValue(json,
+		List<NominatimQueryResult> res = mapper.readValue(json,
 				new TypeReference<List<NominatimQueryResult>>() {
 				});
 
-		return stationData;
+		return res;
 	}
 
 	/**

@@ -15,7 +15,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package integration.org.jvalue.ods.grabber.nominatim;
+package integration.org.jvalue.ods.grabber.openstreetmap.nominatim;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -26,6 +26,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.jvalue.ods.data.opensteetmap.nominatim.NominatimQueryResult;
 import org.jvalue.ods.grabber.openstreetmap.nominatim.NominatimGrabber;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 

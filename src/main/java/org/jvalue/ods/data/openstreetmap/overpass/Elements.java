@@ -1,43 +1,135 @@
+/*  Open Data Service
+    Copyright (C) 2013  Tsysin Konstantin, Reischl Patrick
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    
+ */
 
 package org.jvalue.ods.data.openstreetmap.overpass;
 
-import java.util.List;
+/**
+ * The Class Elements.
+ */
+public class Elements {
 
-public class Elements{
-   	private Number id;
-   	private Number lat;
-   	private Number lon;
-   	private Tags tags;
-   	private String type;
+	/** The id. */
+	private Number id;
 
- 	public Number getId(){
+	/** The lat. */
+	private Number lat;
+
+	/** The lon. */
+	private Number lon;
+
+	/** The tags. */
+	private Tags tags;
+
+	/** The type. */
+	private String type;
+
+	/**
+	 * Gets the id.
+	 * 
+	 * @return the id
+	 */
+	public Number getId() {
 		return this.id;
 	}
-	public void setId(Number id){
+
+	/**
+	 * Sets the id.
+	 * 
+	 * @param id
+	 *            the new id
+	 */
+	public void setId(Number id) {
 		this.id = id;
 	}
- 	public Number getLat(){
+
+	/**
+	 * Gets the lat.
+	 * 
+	 * @return the lat
+	 */
+	public Number getLat() {
 		return this.lat;
 	}
-	public void setLat(Number lat){
+
+	/**
+	 * Sets the lat.
+	 * 
+	 * @param lat
+	 *            the new lat
+	 */
+	public void setLat(Number lat) {
 		this.lat = lat;
 	}
- 	public Number getLon(){
+
+	/**
+	 * Gets the lon.
+	 * 
+	 * @return the lon
+	 */
+	public Number getLon() {
 		return this.lon;
 	}
-	public void setLon(Number lon){
+
+	/**
+	 * Sets the lon.
+	 * 
+	 * @param lon
+	 *            the new lon
+	 */
+	public void setLon(Number lon) {
 		this.lon = lon;
 	}
- 	public Tags getTags(){
+
+	/**
+	 * Gets the tags.
+	 * 
+	 * @return the tags
+	 */
+	public Tags getTags() {
 		return this.tags;
 	}
-	public void setTags(Tags tags){
+
+	/**
+	 * Sets the tags.
+	 * 
+	 * @param tags
+	 *            the new tags
+	 */
+	public void setTags(Tags tags) {
 		this.tags = tags;
 	}
- 	public String getType(){
+
+	/**
+	 * Gets the type.
+	 * 
+	 * @return the type
+	 */
+	public String getType() {
 		return this.type;
 	}
-	public void setType(String type){
+
+	/**
+	 * Sets the type.
+	 * 
+	 * @param type
+	 *            the new type
+	 */
+	public void setType(String type) {
 		this.type = type;
 	}
 }

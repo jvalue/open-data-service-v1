@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.server.nominatim;
+package org.jvalue.ods.server.openstreetmap;
 
 import java.io.IOException;
 import java.util.HashMap;
