@@ -27,7 +27,7 @@ import org.ektorp.DbAccessException;
 import org.jvalue.ods.data.pegelonline.PegelOnlineData;
 import org.jvalue.ods.data.pegelonline.Station;
 import org.jvalue.ods.db.DbAccessor;
-import org.jvalue.ods.grabber.pegelonline.PegelOnlineAdapter;
+import org.jvalue.ods.grabber.pegelonline.PegelOnlineGrabber;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.server.Router;
 import org.restlet.Request;
@@ -256,7 +256,7 @@ public class PegelOnlineRouter implements Router {
 				String message = "";
 
 				try {
-					List<Station> list = new PegelOnlineAdapter()
+					List<Station> list = new PegelOnlineGrabber()
 							.getStationData();
 
 					

@@ -31,9 +31,9 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * The Class PegelOnlineAdapter.
+ * The Class PegelOnlineGrabber.
  */
-public class PegelOnlineAdapter {
+public class PegelOnlineGrabber {
 
 	/**
 	 * Gets the stations.

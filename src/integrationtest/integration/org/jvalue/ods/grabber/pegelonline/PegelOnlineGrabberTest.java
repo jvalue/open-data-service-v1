@@ -28,25 +28,25 @@ import org.jvalue.ods.data.pegelonline.Measurement;
 import org.jvalue.ods.data.pegelonline.Station;
 import org.jvalue.ods.data.pegelonline.Timeseries;
 import org.jvalue.ods.data.pegelonline.Water;
-import org.jvalue.ods.grabber.pegelonline.PegelOnlineAdapter;
+import org.jvalue.ods.grabber.pegelonline.PegelOnlineGrabber;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 /**
- * The Class PegelOnlineAdapterTest.
+ * The Class PegelOnlineGrabberTest.
  */
-public class PegelOnlineAdapterTest {
+public class PegelOnlineGrabberTest {
 
 	/** The adapter. */
-	PegelOnlineAdapter adapter;
+	PegelOnlineGrabber adapter;
 
 	/**
 	 * Initialize.
 	 */
 	@Before
 	public void initialize() {
-		adapter = new PegelOnlineAdapter();
+		adapter = new PegelOnlineGrabber();
 		assertNotNull(adapter);
 	}
 

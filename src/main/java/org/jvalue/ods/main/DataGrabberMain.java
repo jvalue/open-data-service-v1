@@ -24,7 +24,7 @@ import org.jvalue.ods.data.pegelonline.PegelOnlineData;
 import org.jvalue.ods.data.pegelonline.Station;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.grabber.pegelonline.PegelOnlineAdapter;
+import org.jvalue.ods.grabber.pegelonline.PegelOnlineGrabber;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -63,7 +63,7 @@ public class DataGrabberMain {
 	 */
 	private static void insertPegelOnlineStationsIntoDatabase()
 			throws JsonParseException, JsonMappingException, IOException {
-		PegelOnlineAdapter pegelOnlineAdapter = new PegelOnlineAdapter();
+		PegelOnlineGrabber pegelOnlineAdapter = new PegelOnlineGrabber();
 		List<Station> stationData = pegelOnlineAdapter.getStationData();
 
 		// for (Station s : stationData) {

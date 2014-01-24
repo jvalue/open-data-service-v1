@@ -15,9 +15,9 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * The Class NominatimAdapter.
+ * The Class NominatimGrabber.
  */
-public class NominatimAdapter {
+public class NominatimGrabber {
 
 	/**
 	 * Gets the nominatim data.

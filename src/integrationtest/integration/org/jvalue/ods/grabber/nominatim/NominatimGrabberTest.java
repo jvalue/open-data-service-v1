@@ -15,7 +15,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package integration.org.jvalue.ods.grabber.pegelonline;
+package integration.org.jvalue.ods.grabber.nominatim;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -25,28 +25,27 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.jvalue.ods.data.opensteetmap.nominatim.NominatimQueryResult;
-import org.jvalue.ods.grabber.openstreetmap.nominatim.NominatimAdapter;
+import org.jvalue.ods.grabber.openstreetmap.nominatim.NominatimGrabber;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 /**
- * The Class PegelOnlineAdapterTest.
+ * The Class NominatimGrabberTest.
  */
-public class NominatimAdapterTest {
+public class NominatimGrabberTest {
 
 	/** The adapter. */
-	NominatimAdapter adapter;
+	NominatimGrabber adapter;
 
 	/**
 	 * Initialize.
 	 */
 	@Before
 	public void initialize() {
-		adapter = new NominatimAdapter();
+		adapter = new NominatimGrabber();
 		assertNotNull(adapter);
 	}
 
-	
 	@Test
 	public void testGetNominatimData() throws JsonParseException,
 			JsonMappingException, IOException {
