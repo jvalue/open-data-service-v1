@@ -53,7 +53,9 @@ public class CouchDbAccessor implements DbAccessor {
 	 */
 	protected CouchDbAccessor(String databaseName) {
 		if ((databaseName == null) || (databaseName.isEmpty())) {
-			throw new IllegalArgumentException("databaseName is null or empty");
+			String errorMessage = "databaseName is null or empty";
+			Logging.error(this.getClass(), errorMessage);
+			throw new IllegalArgumentException(errorMessage);
 		}
 
 		this.databaseName = databaseName;
@@ -73,7 +75,9 @@ public class CouchDbAccessor implements DbAccessor {
 	 */
 	private void checkDbState() {
         if (!isConnected) {
-            throw new IllegalStateException("The database is not connected");
+        	String errorMessage = "The database is not connected";
+			Logging.error(this.getClass(), errorMessage);
+            throw new IllegalStateException(errorMessage);
         }
     }
 
@@ -135,12 +139,16 @@ public class CouchDbAccessor implements DbAccessor {
 		try
 		{
 			List<String> allDocs = db.getAllDocIds();		
-		if (allDocs.isEmpty())
-			throw new DbException("DB is empty.");
+		if (allDocs.isEmpty()) {
+			String errorMessage = "DB is empty.";
+			Logging.error(this.getClass(), errorMessage);
+			throw new DbException(errorMessage);
+		}
 		
 			return allDocs.get(allDocs.size() - 1);
 		} catch(Exception ex)
 		{
+			Logging.error(this.getClass(), ex.getMessage());
 			throw new DbException(ex);
 		}
 	}
@@ -155,13 +163,15 @@ public class CouchDbAccessor implements DbAccessor {
 	@Override
 	public void insert(Object data) {
 		if (data == null)
-			throw new IllegalArgumentException("data is null");
+		{
+			String errorMessage = "data is null";
+			Logging.error(this.getClass(), errorMessage);
+			throw new IllegalArgumentException(errorMessage);
+		}
 
 		checkDbState();
 		
 		db.create(data);
-
-		//return data.getId();
 	}
 
 	/**
@@ -174,7 +184,11 @@ public class CouchDbAccessor implements DbAccessor {
 	@Override
 	public void update(Object data) {
 		if (data == null)
-			throw new IllegalArgumentException("data is null");
+		{
+			String errorMessage = "data is null";
+			Logging.error(this.getClass(), errorMessage);
+			throw new IllegalArgumentException(errorMessage);
+		}
 
 		checkDbState();
 		
@@ -209,5 +223,4 @@ public class CouchDbAccessor implements DbAccessor {
 			throw new DbException(ex);
 		}
 	}
-
 }

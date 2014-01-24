@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeSet;
 
+import org.jvalue.ods.logger.Logging;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
@@ -41,7 +42,11 @@ public class ApiRouter implements Router {
 	 */
 	public ApiRouter(HashMap<String, Restlet> routes) {
 		if (routes == null)
-			throw new IllegalArgumentException("routes is null");
+		{
+			String errorMessage = "routes is null";
+			Logging.error(this.getClass(), errorMessage);
+			throw new IllegalArgumentException(errorMessage);
+		}
 		
 		this.routes = routes;
 	}

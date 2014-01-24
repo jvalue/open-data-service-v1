@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.jvalue.ods.logger.Logging;
 import org.restlet.Application;
 import org.restlet.Component;
 import org.restlet.Restlet;
@@ -56,11 +57,19 @@ public class RestletServer extends Application implements RestServer {
 	public RestletServer(Map<String, Restlet> routes, int port)
 			throws Exception {
 		if (routes == null || routes.isEmpty())
-			throw new IllegalArgumentException("routes are null or empty");
+		{
+			String errorMessage = "routes are null or empty";
+			Logging.error(this.getClass(), errorMessage);
+			throw new IllegalArgumentException(errorMessage);
+		}
 
 		if (port < 1024 || port > 49151)
+		{
+			String errorMessage = "port not between 1024 and 49151";
+			Logging.error(this.getClass(), errorMessage);
 			throw new IllegalArgumentException(
 					"port not between 1024 and 49151");
+		}
 
 		this.routes = routes;
 		this.port = port;
@@ -92,7 +101,9 @@ public class RestletServer extends Application implements RestServer {
 		try {
 			component.stop();
 		} catch (Exception e) {
-			System.err.println("Component could not be stopped.");
+			String errorMessage = "Component could not be stopped";
+			Logging.error(this.getClass(), errorMessage);
+			System.err.println(errorMessage);
 		}
 	}
 

@@ -25,6 +25,8 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.nio.charset.Charset;
 
+import org.jvalue.ods.logger.Logging;
+
 /**
  * The Class HttpJsonReader.
  */
@@ -41,7 +43,11 @@ public class HttpJsonReader {
 	 */
 	public HttpJsonReader(String url) {
 		if (url == null || url.isEmpty())
-			throw new IllegalArgumentException("url is null or empty!");
+		{
+			String errorMessage = "url is null or empty";
+			Logging.error(this.getClass(), errorMessage);
+			throw new IllegalArgumentException(errorMessage);
+		}
 
 		this.url = url;
 	}
@@ -74,9 +80,13 @@ public class HttpJsonReader {
 			}
 			rd.close();
 		} catch (SocketTimeoutException ste) {
-			throw new IOException("Socket timeout.");
+			String errorMessage = "socket timeout";
+			Logging.error(this.getClass(), errorMessage);
+			throw new IOException(errorMessage);
 		} catch (IOException ioe) {
-			throw new IOException("An I/O Exception occured while trying to read from HTTP server.");
+			String errorMessage = "An I/O Exception occured while trying to read from HTTP server.";
+			Logging.error(this.getClass(), errorMessage);
+			throw new IOException(errorMessage);
 		} finally {
 			// close stream and connection
 			try {
@@ -84,8 +94,8 @@ public class HttpJsonReader {
 					rd.close();
 				}
 			} catch (IOException e) {
-				System.err
-						.println("An I/O Exception occured while trying to close the input reader.");
+				String errorMessage = "An I/O Exception occured while trying to read from HTTP server.";
+				Logging.error(this.getClass(), errorMessage);
 			} finally {
 				if (conn != null) {
 					conn.disconnect();

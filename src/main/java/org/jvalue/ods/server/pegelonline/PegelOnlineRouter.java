@@ -28,6 +28,7 @@ import org.jvalue.ods.data.pegelonline.PegelOnlineData;
 import org.jvalue.ods.data.pegelonline.Station;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.grabber.pegelonline.PegelOnlineAdapter;
+import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.server.Router;
 import org.restlet.Request;
 import org.restlet.Response;
@@ -81,7 +82,9 @@ public class PegelOnlineRouter implements Router {
 					message += mapper.writeValueAsString(sd);
 
 				} catch (IOException e) {
-					System.err.println("Error during client request: " + e);
+					String errorMessage = "Error during client request: " + e;
+					Logging.error(this.getClass(), errorMessage);
+					System.err.println(errorMessage);
 				}
 
 				if (!message.equals("")) {
@@ -106,6 +109,8 @@ public class PegelOnlineRouter implements Router {
 					try {
 						sd = getListOfStations(response);
 					} catch (RuntimeException e) {
+						String errorMessage = "Runtime exception occured: " + e;
+						Logging.error(this.getClass(), errorMessage);
 						return;
 					}
 
@@ -126,7 +131,9 @@ public class PegelOnlineRouter implements Router {
 					}
 
 				} catch (IOException e) {
-					System.err.println("Error during client request: " + e);
+					String errorMessage = "Error during client request: " + e;
+					Logging.error(this.getClass(), errorMessage);
+					System.err.println(errorMessage);
 				}
 				if (!message.equals("")) {
 					response.setEntity(message, MediaType.APPLICATION_JSON);
@@ -149,6 +156,8 @@ public class PegelOnlineRouter implements Router {
 					try {
 						sd = getListOfStations(response);
 					} catch (RuntimeException e) {
+						String errorMessage = "Runtime exception occured: " + e;
+						Logging.error(this.getClass(), errorMessage);
 						return;
 					}
 
@@ -170,7 +179,9 @@ public class PegelOnlineRouter implements Router {
 					}
 
 				} catch (IOException e) {
-					System.err.println("Error during client request: " + e);
+					String errorMessage = "Error during client request: " + e;
+					Logging.error(this.getClass(), errorMessage);
+					System.err.println(errorMessage);
 				}
 				if (!message.equals("")) {
 					response.setEntity(message, MediaType.APPLICATION_JSON);
@@ -193,6 +204,8 @@ public class PegelOnlineRouter implements Router {
 					try {
 						sd = getListOfStations(response);
 					} catch (RuntimeException e) {
+						String errorMessage = "Runtime exception occured: " + e;
+						Logging.error(this.getClass(), errorMessage);
 						return;
 					}
 
@@ -213,6 +226,8 @@ public class PegelOnlineRouter implements Router {
 					}
 
 				} catch (IOException e) {
+					String errorMessage = "Error during client request: " + e;
+					Logging.error(this.getClass(), errorMessage);
 					System.err.println("Error during client request: " + e);
 				}
 
@@ -298,8 +313,9 @@ public class PegelOnlineRouter implements Router {
 			sd = data.getStations();
 
 		} catch (RuntimeException e) {
-
-			System.err.println("Could not retrieve data from db: " + e);
+			String errorMessage = "Could not retrieve data from db: " + e;
+			Logging.error(this.getClass(), errorMessage);
+			System.err.println(errorMessage);
 			response.setEntity(
 					"Could not retrieve data. Try to update database via /pegelonline/update.",
 					MediaType.TEXT_PLAIN);
