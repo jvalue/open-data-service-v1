@@ -19,9 +19,4 @@ Build and run with Eclipse:
 
 
 current REST-API:
-* GET /api -> prints the API
-* GET /pegelonline/stations -> json representation of all stations /
-* GET /pegelonline/stations/{stationname} -> a specific station /
-* GET /pegelonline/stations/{stationname}/timeseries -> the timeseries of a specific station /
-* GET /pegelonline/stations/{stationname}/timeseries/currentMeasurement -> the current measurement of a specific station
-* GET /pegelonline/update -> updates pegelonline data
+* GET http://127.0.0.1:8182/api -> prints the API
