@@ -40,3 +40,22 @@ task grabData(type: JavaExec, dependsOn: 'classes') {
     main = 'org.jvalue.ods.main.DataGrabberMain'
 	classpath = sourceSets.main.runtimeClasspath
 }
+
+// integration test
+
+sourceSets {
+  integrationTest {
+    compileClasspath = sourceSets.main.output + configurations.testRuntime
+    runtimeClasspath = output + sourceSets.main.output + configurations.testRuntime
+    java {
+      srcDir 'src/integrationtest/integration'
+    }
+  }
+ }
+  
+task integrationTest(type: Test) {
+  testClassesDir = sourceSets.integrationTest.output.classesDir
+  classpath = sourceSets.integrationTest.runtimeClasspath
+}
+
+//build.dependsOn integrationTest
