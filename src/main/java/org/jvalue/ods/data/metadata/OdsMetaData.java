@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.data;
+package org.jvalue.ods.data.metadata;
 
 import java.sql.Timestamp;
 

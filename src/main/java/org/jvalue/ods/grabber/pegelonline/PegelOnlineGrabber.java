@@ -26,7 +26,7 @@ import java.util.Map;
 
 import org.jvalue.ods.data.GenericData;
 import org.jvalue.ods.data.ListValueType;
-import org.jvalue.ods.data.ValueType;
+import org.jvalue.ods.data.Value;
 import org.jvalue.ods.data.pegelonline.Measurement;
 import org.jvalue.ods.data.pegelonline.Station;
 import org.jvalue.ods.data.pegelonline.Water;
@@ -64,7 +64,7 @@ public class PegelOnlineGrabber {
 		ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(json);        
        
-        Map<String, ValueType<?,?>> attributes = new HashMap<String, ValueType<?,?>>();
+        Map<String, Value<?,?>> attributes = new HashMap<String, Value<?,?>>();
         fillAttributesRec(rootNode, attributes);
         GenericData genData = new GenericData(attributes);
         if (genData != null)
@@ -82,11 +82,11 @@ public class PegelOnlineGrabber {
 		return stationData;
 	}
 
-	private void fillAttributesRec(JsonNode objNode, Map<String, ValueType<?,?>> attributes) {
+	private void fillAttributesRec(JsonNode objNode, Map<String, Value<?,?>> attributes) {
 		if (objNode.isArray()) {
 			//ToDo: Fix
-			LinkedList<ValueType> list = new LinkedList<ValueType>();
-			ValueType listValueType = new ListValueType(list, list.getClass().getName());
+			LinkedList<Value> list = new LinkedList<Value>();
+			Value listValueType = new ListValueType(list, list.getClass().getName());
 			
 		    for (final JsonNode node : objNode) {
 		    	Iterator<Map.Entry<String,JsonNode>> fields = node.fields();
@@ -94,12 +94,12 @@ public class PegelOnlineGrabber {
 				    Map.Entry<String,JsonNode> field = fields.next();	   
 				    if (field.getValue().isArray())
 				    {
-				    	Map<String, ValueType<?,?>> attr = new HashMap<String, ValueType<?,?>>();
+				    	Map<String, Value<?,?>> attr = new HashMap<String, Value<?,?>>();
 				    	fillAttributesRec(field.getValue(), attr);
-				    	attributes.put(field.getKey(), new ValueType<Map<String, ValueType<?,?>>, String>(attr, attr.getClass().getName()));
+				    	attributes.put(field.getKey(), new Value<Map<String, Value<?,?>>, String>(attr, attr.getClass().getName()));
 				    }
 				    else
-				    	attributes.put(field.getKey(), new ValueType<String, String>(field.getValue().asText(), field.getValue().asText().getClass().getName()));
+				    	attributes.put(field.getKey(), new Value<String, String>(field.getValue().asText(), field.getValue().asText().getClass().getName()));
 				}
 		    }
 		}

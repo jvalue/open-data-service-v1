@@ -21,7 +21,7 @@ package org.jvalue.ods.data.pegelonline;
 import java.io.Serializable;
 import java.util.List;
 
-import org.jvalue.ods.data.JacksonMetaData;
+import org.jvalue.ods.data.metadata.JacksonMetaData;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
