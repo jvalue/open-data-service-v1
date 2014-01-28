@@ -18,16 +18,25 @@
 package org.jvalue.ods.grabber.pegelonline;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
+import org.jvalue.ods.data.GenericData;
+import org.jvalue.ods.data.ListValueType;
+import org.jvalue.ods.data.ValueType;
 import org.jvalue.ods.data.pegelonline.Measurement;
 import org.jvalue.ods.data.pegelonline.Station;
 import org.jvalue.ods.data.pegelonline.Water;
 import org.jvalue.ods.grabber.generic.HttpJsonReader;
+import org.jvalue.ods.logger.Logging;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -53,11 +62,50 @@ public class PegelOnlineGrabber {
 		String json = httpAdapter.getJSON("UTF-8");
 
 		ObjectMapper mapper = new ObjectMapper();
-		List<Station> stationData = mapper.readValue(json,
+        JsonNode rootNode = mapper.readTree(json);        
+       
+        Map<String, ValueType<?,?>> attributes = new HashMap<String, ValueType<?,?>>();
+        fillAttributesRec(rootNode, attributes);
+        GenericData genData = new GenericData(attributes);
+        if (genData != null)
+        {
+        	
+        }
+        
+        
+       
+                
+        List<Station> stationData = mapper.readValue(json,
 				new TypeReference<List<Station>>() {
 				});
 
 		return stationData;
+	}
+
+	private void fillAttributesRec(JsonNode objNode, Map<String, ValueType<?,?>> attributes) {
+		if (objNode.isArray()) {
+			//ToDo: Fix
+			LinkedList<ValueType> list = new LinkedList<ValueType>();
+			ValueType listValueType = new ListValueType(list, list.getClass().getName());
+			
+		    for (final JsonNode node : objNode) {
+		    	Iterator<Map.Entry<String,JsonNode>> fields = node.fields();
+				while (fields.hasNext()) {
+				    Map.Entry<String,JsonNode> field = fields.next();	   
+				    if (field.getValue().isArray())
+				    {
+				    	Map<String, ValueType<?,?>> attr = new HashMap<String, ValueType<?,?>>();
+				    	fillAttributesRec(field.getValue(), attr);
+				    	attributes.put(field.getKey(), new ValueType<Map<String, ValueType<?,?>>, String>(attr, attr.getClass().getName()));
+				    }
+				    else
+				    	attributes.put(field.getKey(), new ValueType<String, String>(field.getValue().asText(), field.getValue().asText().getClass().getName()));
+				}
+		    }
+		}
+		
+		
+		
 	}
 
 	/**
