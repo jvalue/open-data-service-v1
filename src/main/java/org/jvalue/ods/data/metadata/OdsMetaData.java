@@ -25,6 +25,7 @@ import java.sql.Timestamp;
  */
 abstract class OdsMetaData implements Serializable {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
 	/** The date. */

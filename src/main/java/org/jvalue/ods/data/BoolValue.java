@@ -17,6 +17,8 @@
  */
 package org.jvalue.ods.data;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * The Class BoolValue.
  */
@@ -27,9 +29,6 @@ public class BoolValue extends GenericValue {
 
 	/** The bool. */
 	private boolean bool;
-
-	/** The type. */
-	private final String type = "bool";
 
 	/**
 	 * Instantiates a new bool value.
@@ -46,17 +45,9 @@ public class BoolValue extends GenericValue {
 	 * 
 	 * @return the bool
 	 */
+	@JsonValue
 	public boolean getBool() {
 		return bool;
-	}
-
-	/**
-	 * Gets the type.
-	 * 
-	 * @return the type
-	 */
-	public String getType() {
-		return type;
 	}
 
 }

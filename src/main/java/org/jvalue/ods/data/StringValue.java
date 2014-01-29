@@ -17,6 +17,8 @@
  */
 package org.jvalue.ods.data;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * The Class StringValue.
  */
@@ -27,9 +29,6 @@ public class StringValue extends GenericValue {
 
 	/** The s. */
 	private String s;
-
-	/** The type. */
-	private final String type = "string";
 
 	/**
 	 * Instantiates a new string value.
@@ -46,17 +45,9 @@ public class StringValue extends GenericValue {
 	 * 
 	 * @return the string
 	 */
+	@JsonValue
 	public String getString() {
 		return s;
-	}
-
-	/**
-	 * Gets the type.
-	 * 
-	 * @return the type
-	 */
-	public String getType() {
-		return type;
 	}
 
 }

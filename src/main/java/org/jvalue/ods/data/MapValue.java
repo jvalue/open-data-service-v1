@@ -20,6 +20,8 @@ package org.jvalue.ods.data;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * The Class MapValue.
  */
@@ -32,10 +34,18 @@ public class MapValue extends GenericValue {
 	private Map<String, GenericValue> map = new HashMap<String, GenericValue>();
 
 	/**
+	 * Instantiates a new map value.
+	 */
+	public MapValue() {
+
+	}
+
+	/**
 	 * Gets the map.
 	 * 
 	 * @return the map
 	 */
+	@JsonValue
 	public Map<String, GenericValue> getMap() {
 		return map;
 	}

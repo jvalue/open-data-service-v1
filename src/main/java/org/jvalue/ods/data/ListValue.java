@@ -20,6 +20,8 @@ package org.jvalue.ods.data;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * The Class ListValue.
  */
@@ -32,10 +34,17 @@ public class ListValue extends GenericValue {
 	private List<GenericValue> list = new LinkedList<GenericValue>();
 
 	/**
+	 * Instantiates a new list value.
+	 */
+	public ListValue() {
+	}
+
+	/**
 	 * Gets the list.
 	 * 
 	 * @return the list
 	 */
+	@JsonValue
 	public List<GenericValue> getList() {
 		return list;
 	}

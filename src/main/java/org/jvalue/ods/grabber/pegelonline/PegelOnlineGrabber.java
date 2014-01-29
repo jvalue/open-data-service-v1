@@ -71,7 +71,14 @@ public class PegelOnlineGrabber {
 		return stationData;
 	}
 
-	public GenericValue getPegelOnlineStations() throws IOException {
+	/**
+	 * Gets the pegel online stations generic.
+	 * 
+	 * @return the pegel online stations generic
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public ListValue getPegelOnlineStationsGeneric() throws IOException {
 
 		HttpJsonReader httpAdapter = new HttpJsonReader(
 				"http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true");
@@ -80,9 +87,9 @@ public class PegelOnlineGrabber {
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode rootNode = mapper.readTree(json);
 
-		GenericValue gv = convertJson(rootNode);
+		ListValue lv = (ListValue) convertJson(rootNode);
 
-		return gv;
+		return lv;
 
 	}
 

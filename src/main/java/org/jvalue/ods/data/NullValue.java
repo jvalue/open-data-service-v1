@@ -17,6 +17,10 @@
  */
 package org.jvalue.ods.data;
 
+import javax.lang.model.type.NullType;
+
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * The Class NullValue.
  */
@@ -25,16 +29,17 @@ public class NullValue extends GenericValue {
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
-	/** The type. */
-	private final String type = "null";
+	/** The n. */
+	private NullType n;
 
 	/**
-	 * Gets the type.
+	 * Gets the null.
 	 * 
-	 * @return the type
+	 * @return the null
 	 */
-	public String getType() {
-		return type;
+	@JsonValue
+	public NullType getNull() {
+		return n;
 	}
 
 }

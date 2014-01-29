@@ -17,6 +17,8 @@
  */
 package org.jvalue.ods.data;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * The Class NumberValue.
  */
@@ -27,9 +29,6 @@ public class NumberValue extends GenericValue {
 
 	/** The number. */
 	private Number number;
-
-	/** The type. */
-	private final String type = "number";
 
 	/**
 	 * Instantiates a new number value.
@@ -46,17 +45,9 @@ public class NumberValue extends GenericValue {
 	 * 
 	 * @return the number
 	 */
+	@JsonValue
 	public Number getNumber() {
 		return number;
-	}
-
-	/**
-	 * Gets the type.
-	 * 
-	 * @return the type
-	 */
-	public String getType() {
-		return type;
 	}
 
 }

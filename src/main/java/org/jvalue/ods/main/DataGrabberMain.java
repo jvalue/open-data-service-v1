@@ -21,7 +21,9 @@ import java.io.IOException;
 import java.util.List;
 
 import org.jvalue.ods.data.GenericValue;
+import org.jvalue.ods.data.ListValue;
 import org.jvalue.ods.data.pegelonline.PegelOnlineData;
+import org.jvalue.ods.data.pegelonline.PegelOnlineMetaData;
 import org.jvalue.ods.data.pegelonline.Station;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
@@ -84,10 +86,15 @@ public class DataGrabberMain {
 		adapter.connect();
 		adapter.insert(new PegelOnlineData(stationData));
 
-		GenericValue gv = pegelOnlineAdapter.getPegelOnlineStations();
-		DbAccessor a = DbFactory.createCouchDbAccessor("foo");
+		// generic import
+		ListValue list = pegelOnlineAdapter.getPegelOnlineStationsGeneric();
+		DbAccessor a = DbFactory.createCouchDbAccessor("pegelonline_generic");
 		a.connect();
-		a.insert(gv);
+
+		a.insert(new PegelOnlineMetaData());
+		for (GenericValue gv : list.getList()) {
+			a.insert(gv);
+		}
 
 	}
 
