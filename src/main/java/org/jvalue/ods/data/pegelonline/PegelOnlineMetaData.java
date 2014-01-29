@@ -17,35 +17,24 @@
  */
 package org.jvalue.ods.data.pegelonline;
 
-import java.io.Serializable;
-
 import org.jvalue.ods.data.metadata.JacksonMetaData;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * The Class PegelOnlineMetaData.
  */
 @JsonInclude(Include.NON_NULL)
-public class PegelOnlineMetaData implements Serializable {
+public class PegelOnlineMetaData extends JacksonMetaData {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
-
-	/** The id. */
-	private String id;
-
-	/** The revision. */
-	private String revision;
 
 	// metadata loosely based on
 	// https://github.com/fraunhoferfokus/ogd-metadata/blob/master/OGPD_JSON_Schema.json
 	// at first
 
-	/** The jmd. */
-	private JacksonMetaData metaData;
 
 	// constants for metadata object, only used in constructor
 	/** The name. */
@@ -74,69 +63,8 @@ public class PegelOnlineMetaData implements Serializable {
 	 * 
 	 */
 	public PegelOnlineMetaData() {
-		this.metaData = new JacksonMetaData(name, title, author, author_email,
+		super(name, title, author, author_email,
 				notes, url, terms_of_use);
-	}
-
-	/**
-	 * Gets the id.
-	 * 
-	 * @return the id
-	 */
-	@JsonProperty("_id")
-	public String getId() {
-		return id;
-	}
-
-	/**
-	 * Sets the id.
-	 * 
-	 * @param id
-	 *            the new id
-	 */
-	@JsonProperty("_id")
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	/**
-	 * Gets the revision.
-	 * 
-	 * @return the revision
-	 */
-	@JsonProperty("_rev")
-	public String getRevision() {
-		return revision;
-	}
-
-	/**
-	 * Sets the revision.
-	 * 
-	 * @param revision
-	 *            the new revision
-	 */
-	@JsonProperty("_rev")
-	public void setRevision(String revision) {
-		this.revision = revision;
-	}
-
-	/**
-	 * Gets the jmd.
-	 * 
-	 * @return the jmd
-	 */
-	public JacksonMetaData getMetaData() {
-		return metaData;
-	}
-
-	/**
-	 * Sets the omd.
-	 * 
-	 * @param jmd
-	 *            the new omd
-	 */
-	public void setMetaData(JacksonMetaData jmd) {
-		this.metaData = jmd;
 	}
 
 }
