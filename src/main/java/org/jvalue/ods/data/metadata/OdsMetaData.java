@@ -17,12 +17,15 @@
  */
 package org.jvalue.ods.data.metadata;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
  * The Class OdsMetaData.
  */
-abstract class OdsMetaData {
+abstract class OdsMetaData implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	/** The date. */
 	private String date;

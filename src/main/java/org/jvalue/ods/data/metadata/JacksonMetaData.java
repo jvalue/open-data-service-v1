@@ -27,6 +27,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonInclude(Include.NON_NULL)
 public class JacksonMetaData extends OdsMetaData {
 
+	private static final long serialVersionUID = 1L;
+
 	/** The id. */
 	private String id;
 
