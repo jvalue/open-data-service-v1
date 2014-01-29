@@ -14,7 +14,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
-*/
+ */
 package integration.org.jvalue.ods.grabber.generic;
 
 import static org.junit.Assert.assertNotNull;
@@ -31,15 +31,16 @@ import org.jvalue.ods.grabber.generic.HttpJsonReader;
 public class HttpJsonReaderTest {
 
 	/** The adapter. */
-	HttpJsonReader adapter;	
-	
+	HttpJsonReader adapter;
+
 	/** The Test url. */
 	final String TestUrl = "http://www.pegelonline.wsv.de/webservices/rest-api/v2/waters.json?includeStations=true&includeTimeseries=true&includeCurrentMeasurement=true";
-	
+
 	/**
 	 * Sets the up.
-	 *
-	 * @throws Exception the exception
+	 * 
+	 * @throws Exception
+	 *             the exception
 	 */
 	@Before
 	public void setUp() throws Exception {
@@ -48,8 +49,9 @@ public class HttpJsonReaderTest {
 
 	/**
 	 * Test http json adapter with null url.
-	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testHttpJsonReaderWithNullUrl() throws IOException {
@@ -58,18 +60,20 @@ public class HttpJsonReaderTest {
 
 	/**
 	 * Test http json adapter with empty url.
-	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testHttpJsonReaderWithEmptyUrl() throws IOException {
 		adapter = new HttpJsonReader("");
 	}
-	
+
 	/**
 	 * Test http json adapter with invalid url.
-	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	@Test(expected = IOException.class)
 	public void testHttpJsonReaderWithInvalidUrl() throws IOException {
@@ -77,33 +81,35 @@ public class HttpJsonReaderTest {
 		assertNotNull(adapter);
 		adapter.getJSON("");
 	}
-	
 
 	/**
 	 * Test get json.
-	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	@Test()
 	public void testGetJSON() throws IOException {
 		adapter.getJSON("UTF-8");
 	}
-	
+
 	/**
 	 * Test get json with empty charset.
-	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testGetJSONWithEmptyCharset() throws IOException {
 		String json = adapter.getJSON("");
 		assertNotNull(json);
 	}
-	
+
 	/**
 	 * Test get json with null charset.
-	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testGetJSONWithNullCharset() throws IOException {

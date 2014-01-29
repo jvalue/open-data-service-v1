@@ -14,7 +14,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
-*/
+ */
 package org.jvalue.ods.db;
 
 import java.util.AbstractMap.SimpleEntry;
@@ -24,8 +24,6 @@ import java.util.List;
 import org.ektorp.support.CouchDbDocument;
 import org.jvalue.ods.db.exception.DbException;
 
-
-
 /**
  * The Class MockDbAdapter.
  */
@@ -33,34 +31,35 @@ public class MockDbAccessor implements DbAccessor {
 
 	/** The list. */
 	List<SimpleEntry<String, Object>> list = new ArrayList<SimpleEntry<String, Object>>();
-	
+
 	/** The is connected. */
 	private boolean isConnected = false;
-	
-	
+
 	/**
 	 * Instantiates a new mock db adapter.
-	 *
-	 * @param databaseName the database name
+	 * 
+	 * @param databaseName
+	 *            the database name
 	 */
 	public MockDbAccessor(String databaseName) {
 		if ((databaseName == null) || (databaseName.isEmpty()))
 			throw new IllegalArgumentException();
 	}
 
-
 	/**
 	 * Check db state.
 	 */
 	private void checkDbState() {
-        if (!isConnected) {
-            throw new IllegalStateException("The database is not connected");
-        }
-    }
-	
-	
-	/* (non-Javadoc)
-	 * @see org.jvalue.ods.db.DbAdapter#getDocument(java.lang.Class, java.lang.String)
+		if (!isConnected) {
+			throw new IllegalStateException("The database is not connected");
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.jvalue.ods.db.DbAdapter#getDocument(java.lang.Class,
+	 * java.lang.String)
 	 */
 	@Override
 	public <T> T getDocument(Class<T> c, String id) {
@@ -68,7 +67,9 @@ public class MockDbAccessor implements DbAccessor {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.jvalue.ods.db.DbAdapter#getLastDocumentId()
 	 */
 	@Override
@@ -76,52 +77,56 @@ public class MockDbAccessor implements DbAccessor {
 		if (list.size() == 0)
 			throw new DbException("db is empty");
 		else
-			return list.get(list.size()-1).getKey();
+			return list.get(list.size() - 1).getKey();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.jvalue.ods.db.DbAdapter#insert(java.lang.Object)
 	 */
 	@Override
 	public <T> void insert(T data) {
 		if (data == null)
 			throw new IllegalArgumentException("data is null");
-			
+
 		checkDbState();
-		
-		for(SimpleEntry<String, Object> s : list)
-		{
+
+		for (SimpleEntry<String, Object> s : list) {
 			if (s.getKey().equals(data.toString()))
-					throw new IllegalArgumentException();		
+				throw new IllegalArgumentException();
 		}
-		
+
 		if (data instanceof CouchDbDocument)
 			((CouchDbDocument) data).setId(data.toString());
-			
-		
+
 		list.add(new SimpleEntry<String, Object>(data.toString(), data));
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.jvalue.ods.db.DbAdapter#update(java.lang.Object)
 	 */
 	@Override
 	public void update(Object data) {
 		if (data == null)
 			throw new IllegalArgumentException("data is null");
-		
+
 		checkDbState();
-			
-		if (data instanceof CouchDbDocument)
-		{
+
+		if (data instanceof CouchDbDocument) {
 			if (((CouchDbDocument) data).getRevision() == "invalidRevision")
 				throw new DbException("invalid revision");
-			
-			((CouchDbDocument) data).setRevision(((CouchDbDocument) data).getRevision() + "2");
+
+			((CouchDbDocument) data).setRevision(((CouchDbDocument) data)
+					.getRevision() + "2");
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.jvalue.ods.db.DbAdapter#deleteDatabase()
 	 */
 	@Override
@@ -129,7 +134,9 @@ public class MockDbAccessor implements DbAccessor {
 		list.clear();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.jvalue.ods.db.DbAdapter#connect()
 	 */
 	@Override
@@ -137,7 +144,9 @@ public class MockDbAccessor implements DbAccessor {
 		isConnected = true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.jvalue.ods.db.DbAdapter#isConnected()
 	 */
 	@Override

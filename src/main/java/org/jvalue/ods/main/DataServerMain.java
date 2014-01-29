@@ -47,7 +47,7 @@ public class DataServerMain {
 	public static void main(String[] args) throws Exception {
 
 		PegelOnlineRouter poRouter = new PegelOnlineRouter(
-				DbFactory.createCouchDbAdapter("pegelonline"));
+				DbFactory.createCouchDbAccessor("pegelonline"));
 		NominatimRouter noRouter = new NominatimRouter();
 		OverpassRouter ovRouter = new OverpassRouter();
 

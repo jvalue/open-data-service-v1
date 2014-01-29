@@ -42,8 +42,7 @@ public class HttpJsonReader {
 	 *            the url
 	 */
 	public HttpJsonReader(String url) {
-		if (url == null || url.isEmpty())
-		{
+		if (url == null || url.isEmpty()) {
 			String errorMessage = "url is null or empty";
 			Logging.error(this.getClass(), errorMessage);
 			throw new IllegalArgumentException(errorMessage);
@@ -54,10 +53,12 @@ public class HttpJsonReader {
 
 	/**
 	 * Gets the json.
-	 *
-	 * @param charsetName the charset name
+	 * 
+	 * @param charsetName
+	 *            the charset name
 	 * @return the json
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public String getJSON(String charsetName) throws IOException {
 		// using string builder for best performance of string concatenation

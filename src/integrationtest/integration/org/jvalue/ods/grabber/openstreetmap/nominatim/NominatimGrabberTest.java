@@ -47,6 +47,16 @@ public class NominatimGrabberTest {
 		assertNotNull(adapter);
 	}
 
+	/**
+	 * Test get nominatim data.
+	 * 
+	 * @throws JsonParseException
+	 *             the json parse exception
+	 * @throws JsonMappingException
+	 *             the json mapping exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	@Test
 	public void testGetNominatimData() throws JsonParseException,
 			JsonMappingException, IOException {

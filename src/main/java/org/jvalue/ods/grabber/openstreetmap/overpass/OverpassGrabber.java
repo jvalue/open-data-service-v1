@@ -33,10 +33,11 @@ public class OverpassGrabber {
 	/**
 	 * Gets the location data.
 	 * 
-	 * @param string
-	 *            the string
+	 * @param query
+	 *            the query
 	 * @return the location data
 	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public Overpass getLocationData(String query) throws IOException {
 		HttpJsonReader httpAdapter = new HttpJsonReader(

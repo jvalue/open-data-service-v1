@@ -14,7 +14,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
-*/
+ */
 package org.jvalue.ods.server.pegelonline;
 
 import static org.junit.Assert.*;
@@ -37,17 +37,18 @@ public class PegelOnlineRouterTest {
 
 	/** The router. */
 	PegelOnlineRouter router;
-	
+
 	/**
 	 * Sets the up.
-	 *
-	 * @throws Exception the exception
+	 * 
+	 * @throws Exception
+	 *             the exception
 	 */
 	@Before
 	public void setUp() throws Exception {
-		 router = new PegelOnlineRouter(DbFactory.createMockDbAdapter("DbAccessorTest"));
+		router = new PegelOnlineRouter(
+				DbFactory.createMockDbAccessor("DbAccessorTest"));
 	}
-
 
 	/**
 	 * Test get routes.
@@ -56,19 +57,18 @@ public class PegelOnlineRouterTest {
 	public void testGetRoutes() {
 		Map<String, Restlet> routes = router.getRoutes();
 		assertNotNull(routes);
-		
-		//Get Map in Set interface to get key and value		
-        Set<Entry<String, Restlet>> s=routes.entrySet();
-        
-        //Move next key and value of Map by iterator
-        Iterator<Entry<String, Restlet>> it=s.iterator();
 
-        while(it.hasNext())
-        {
-        	Entry<String, Restlet> m =it.next();        	
-        	assertNotNull(m.getKey());
-        	assertNotNull(m.getValue());
-        }	
+		// Get Map in Set interface to get key and value
+		Set<Entry<String, Restlet>> s = routes.entrySet();
+
+		// Move next key and value of Map by iterator
+		Iterator<Entry<String, Restlet>> it = s.iterator();
+
+		while (it.hasNext()) {
+			Entry<String, Restlet> m = it.next();
+			assertNotNull(m.getKey());
+			assertNotNull(m.getValue());
+		}
 	}
 
 }

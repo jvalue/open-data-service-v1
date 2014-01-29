@@ -20,6 +20,7 @@ package org.jvalue.ods.main;
 import java.io.IOException;
 import java.util.List;
 
+import org.jvalue.ods.data.GenericValue;
 import org.jvalue.ods.data.pegelonline.PegelOnlineData;
 import org.jvalue.ods.data.pegelonline.Station;
 import org.jvalue.ods.db.DbAccessor;
@@ -79,9 +80,15 @@ public class DataGrabberMain {
 		// // }
 		// }
 
-		DbAccessor adapter = DbFactory.createCouchDbAdapter("pegelonline");
+		DbAccessor adapter = DbFactory.createCouchDbAccessor("pegelonline");
 		adapter.connect();
 		adapter.insert(new PegelOnlineData(stationData));
+
+		GenericValue gv = pegelOnlineAdapter.getPegelOnlineStations();
+		DbAccessor a = DbFactory.createCouchDbAccessor("foo");
+		a.connect();
+		a.insert(gv);
+
 	}
 
 }

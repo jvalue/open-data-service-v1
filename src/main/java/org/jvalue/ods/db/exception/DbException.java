@@ -14,7 +14,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
-*/
+ */
 package org.jvalue.ods.db.exception;
 
 /**
@@ -24,8 +24,9 @@ public class DbException extends RuntimeException {
 
 	/**
 	 * Instantiates a new db exception.
-	 *
-	 * @param ex the ex
+	 * 
+	 * @param ex
+	 *            the ex
 	 */
 	public DbException(Exception ex) {
 		super(ex);
@@ -33,8 +34,9 @@ public class DbException extends RuntimeException {
 
 	/**
 	 * Instantiates a new db exception.
-	 *
-	 * @param s the s
+	 * 
+	 * @param s
+	 *            the s
 	 */
 	public DbException(String s) {
 		super(s);

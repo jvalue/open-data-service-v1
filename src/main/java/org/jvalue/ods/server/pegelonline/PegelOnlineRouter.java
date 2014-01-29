@@ -47,18 +47,17 @@ public class PegelOnlineRouter implements Router {
 	private HashMap<String, Restlet> routes;
 
 	/** The db accessor. */
-	private DbAccessor dbAccessor; 
+	private DbAccessor dbAccessor;
 
 	/**
 	 * Instantiates a new pegel online router.
-	 *
-	 * @param dbAccessor the db accessor
+	 * 
+	 * @param dbAccessor
+	 *            the db accessor
 	 */
-	public PegelOnlineRouter(DbAccessor dbAccessor)
-	{
+	public PegelOnlineRouter(DbAccessor dbAccessor) {
 		this.dbAccessor = dbAccessor;
 	}
-		
 
 	/*
 	 * (non-Javadoc)
@@ -259,7 +258,6 @@ public class PegelOnlineRouter implements Router {
 					List<Station> list = new PegelOnlineGrabber()
 							.getStationData();
 
-					
 					dbAccessor.connect();
 					try {
 						String last = dbAccessor.getLastDocumentId();
@@ -301,20 +299,22 @@ public class PegelOnlineRouter implements Router {
 	// helper method to get the list of pegelonline stations
 	/**
 	 * Gets the list of stations from db.
-	 *
-	 * @param response the response
+	 * 
+	 * @param response
+	 *            the response
 	 * @return the list of stations
-	 * @throws RuntimeException the runtime exception
+	 * @throws RuntimeException
+	 *             the runtime exception
 	 */
 	private List<Station> getListOfStations(Response response)
 			throws RuntimeException {
 		List<Station> sd = null;
 
-		try {	
+		try {
 			dbAccessor.connect();
 			String docId = dbAccessor.getLastDocumentId();
-			PegelOnlineData data = dbAccessor.getDocument(PegelOnlineData.class,
-					docId);
+			PegelOnlineData data = dbAccessor.getDocument(
+					PegelOnlineData.class, docId);
 
 			sd = data.getStations();
 

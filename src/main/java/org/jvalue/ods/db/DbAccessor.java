@@ -19,16 +19,19 @@ package org.jvalue.ods.db;
 
 /**
  * The Interface DbAdapter.
- *
+ * 
  */
 public interface DbAccessor {
 
 	/**
 	 * Gets the document.
-	 *
-	 * @param <T> the generic type
-	 * @param c the c
-	 * @param id the id
+	 * 
+	 * @param <T>
+	 *            the generic type
+	 * @param c
+	 *            the c
+	 * @param id
+	 *            the id
 	 * @return the document
 	 */
 	public <T> T getDocument(Class<T> c, String id);
@@ -42,9 +45,11 @@ public interface DbAccessor {
 
 	/**
 	 * Insert.
-	 *
-	 * @param <T> the generic type
-	 * @param data the data
+	 * 
+	 * @param <T>
+	 *            the generic type
+	 * @param data
+	 *            the data
 	 * @return the string
 	 */
 	public <T> void insert(T data);
@@ -70,7 +75,7 @@ public interface DbAccessor {
 
 	/**
 	 * Checks if is connected.
-	 *
+	 * 
 	 * @return true, if is connected
 	 */
 	boolean isConnected();

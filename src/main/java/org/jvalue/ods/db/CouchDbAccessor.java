@@ -44,7 +44,7 @@ public class CouchDbAccessor implements DbAccessor {
 
 	/** The is connected. */
 	private boolean isConnected = false;
-	
+
 	/**
 	 * Instantiates a new couch db adapter.
 	 * 
@@ -60,26 +60,27 @@ public class CouchDbAccessor implements DbAccessor {
 
 		this.databaseName = databaseName;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.jvalue.ods.db.DbAdapter#isConnected()
 	 */
 	@Override
-	public boolean isConnected()
-	{		
+	public boolean isConnected() {
 		return isConnected;
 	}
-	
+
 	/**
 	 * Check db state.
 	 */
 	private void checkDbState() {
-        if (!isConnected) {
-        	String errorMessage = "The database is not connected";
+		if (!isConnected) {
+			String errorMessage = "The database is not connected";
 			Logging.error(this.getClass(), errorMessage);
-            throw new IllegalStateException(errorMessage);
-        }
-    }
+			throw new IllegalStateException(errorMessage);
+		}
+	}
 
 	/**
 	 * Connect.
@@ -101,16 +102,19 @@ public class CouchDbAccessor implements DbAccessor {
 		}
 
 		db = new StdCouchDbConnector(databaseName, dbInstance);
-		
+
 		isConnected = true;
 	}
 
 	/**
 	 * Gets the document.
-	 *
-	 * @param <T> the generic type
-	 * @param c the c
-	 * @param id the id
+	 * 
+	 * @param <T>
+	 *            the generic type
+	 * @param c
+	 *            the c
+	 * @param id
+	 *            the id
 	 * @return the document
 	 */
 	@Override
@@ -121,9 +125,9 @@ public class CouchDbAccessor implements DbAccessor {
 		if (id == null) {
 			throw new IllegalArgumentException("id is null");
 		}
-		
+
 		checkDbState();
-			
+
 		return db.get(c, id);
 	}
 
@@ -135,19 +139,17 @@ public class CouchDbAccessor implements DbAccessor {
 	@Override
 	public String getLastDocumentId() {
 		checkDbState();
-		
-		try
-		{
-			List<String> allDocs = db.getAllDocIds();		
-		if (allDocs.isEmpty()) {
-			String errorMessage = "DB is empty.";
-			Logging.error(this.getClass(), errorMessage);
-			throw new DbException(errorMessage);
-		}
-		
+
+		try {
+			List<String> allDocs = db.getAllDocIds();
+			if (allDocs.isEmpty()) {
+				String errorMessage = "DB is empty.";
+				Logging.error(this.getClass(), errorMessage);
+				throw new DbException(errorMessage);
+			}
+
 			return allDocs.get(allDocs.size() - 1);
-		} catch(Exception ex)
-		{
+		} catch (Exception ex) {
 			Logging.error(this.getClass(), ex.getMessage());
 			throw new DbException(ex);
 		}
@@ -162,15 +164,14 @@ public class CouchDbAccessor implements DbAccessor {
 	 */
 	@Override
 	public void insert(Object data) {
-		if (data == null)
-		{
+		if (data == null) {
 			String errorMessage = "data is null";
 			Logging.error(this.getClass(), errorMessage);
 			throw new IllegalArgumentException(errorMessage);
 		}
 
 		checkDbState();
-		
+
 		db.create(data);
 	}
 
@@ -183,24 +184,20 @@ public class CouchDbAccessor implements DbAccessor {
 	 */
 	@Override
 	public void update(Object data) {
-		if (data == null)
-		{
+		if (data == null) {
 			String errorMessage = "data is null";
 			Logging.error(this.getClass(), errorMessage);
 			throw new IllegalArgumentException(errorMessage);
 		}
 
 		checkDbState();
-		
-		try
-		{
+
+		try {
 			db.update(data);
-		}
-		catch(Exception ex)
-		{
+		} catch (Exception ex) {
 			throw new DbException(ex);
 		}
-		
+
 	}
 
 	/**
@@ -209,7 +206,7 @@ public class CouchDbAccessor implements DbAccessor {
 	@Override
 	public void deleteDatabase() {
 		checkDbState();
-		
+
 		String databaseName = db.getDatabaseName();
 
 		try {

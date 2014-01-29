@@ -56,15 +56,13 @@ public class RestletServer extends Application implements RestServer {
 	 */
 	public RestletServer(Map<String, Restlet> routes, int port)
 			throws Exception {
-		if (routes == null || routes.isEmpty())
-		{
+		if (routes == null || routes.isEmpty()) {
 			String errorMessage = "routes are null or empty";
 			Logging.error(this.getClass(), errorMessage);
 			throw new IllegalArgumentException(errorMessage);
 		}
 
-		if (port < 1024 || port > 49151)
-		{
+		if (port < 1024 || port > 49151) {
 			String errorMessage = "port not between 1024 and 49151";
 			Logging.error(this.getClass(), errorMessage);
 			throw new IllegalArgumentException(

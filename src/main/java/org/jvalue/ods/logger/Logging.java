@@ -14,7 +14,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
-*/
+ */
 package org.jvalue.ods.logger;
 
 import org.slf4j.Logger;
@@ -25,52 +25,54 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class Logging {
 
-
 	/**
 	 * Creates the logger.
-	 *
-	 * @param c the c
+	 * 
+	 * @param c
+	 *            the c
 	 * @return the logger
 	 */
 	private static Logger createLogger(Class<?> c) {
 		return LoggerFactory.getLogger(c);
 	}
-	
-	
+
 	/**
 	 * Info.
-	 *
-	 * @param c the c
-	 * @param s the s
+	 * 
+	 * @param c
+	 *            the c
+	 * @param s
+	 *            the s
 	 */
-	public static void info(Class<?> c, String s) {		
+	public static void info(Class<?> c, String s) {
 		Logger log = createLogger(c);
 		log.info(s);
 	}
-	
 
 	/**
 	 * Error.
-	 *
-	 * @param c the c
-	 * @param s the s
+	 * 
+	 * @param c
+	 *            the c
+	 * @param s
+	 *            the s
 	 */
-	public static void error(Class<?> c, String s) {		
+	public static void error(Class<?> c, String s) {
 		Logger log = createLogger(c);
 		log.error(s);
 	}
-	
+
 	/**
 	 * Debug.
-	 *
-	 * @param c the c
-	 * @param s the s
+	 * 
+	 * @param c
+	 *            the c
+	 * @param s
+	 *            the s
 	 */
-	public static void debug(Class<?> c, String s){		
+	public static void debug(Class<?> c, String s) {
 		Logger log = createLogger(c);
 		log.debug(s);
 	}
-	
-	
-	
+
 }

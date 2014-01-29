@@ -37,21 +37,23 @@ public class ApiRouter implements Router {
 
 	/**
 	 * Instantiates a new api router.
-	 *
-	 * @param routes the routes
+	 * 
+	 * @param routes
+	 *            the routes
 	 */
 	public ApiRouter(HashMap<String, Restlet> routes) {
-		if (routes == null)
-		{
+		if (routes == null) {
 			String errorMessage = "routes is null";
 			Logging.error(this.getClass(), errorMessage);
 			throw new IllegalArgumentException(errorMessage);
 		}
-		
+
 		this.routes = routes;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.jvalue.ods.adapter.RouterInterface#getRoutes()
 	 */
 	@Override

@@ -93,7 +93,7 @@ public class RestletServerTest {
 	public void RestletServerWithIllegalPorts() throws Exception {
 
 		PegelOnlineRouter poRouter = new PegelOnlineRouter(
-				DbFactory.createMockDbAdapter("DbAccessorTest"));
+				DbFactory.createMockDbAccessor("DbAccessorTest"));
 
 		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
 		combinedRouter.putAll(poRouter.getRoutes());
@@ -111,7 +111,7 @@ public class RestletServerTest {
 	public void testInitialize() throws Exception {
 
 		PegelOnlineRouter poRouter = new PegelOnlineRouter(
-				DbFactory.createMockDbAdapter("DbAccessorTest"));
+				DbFactory.createMockDbAccessor("DbAccessorTest"));
 
 		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
 		combinedRouter.putAll(poRouter.getRoutes());
@@ -132,7 +132,7 @@ public class RestletServerTest {
 	public void testDoubleInitialize() throws Exception {
 
 		PegelOnlineRouter poRouter = new PegelOnlineRouter(
-				DbFactory.createMockDbAdapter("DbAccessorTest"));
+				DbFactory.createMockDbAccessor("DbAccessorTest"));
 
 		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
 		combinedRouter.putAll(poRouter.getRoutes());
@@ -151,7 +151,7 @@ public class RestletServerTest {
 	public void testStopWithoutInit() throws Exception {
 
 		PegelOnlineRouter poRouter = new PegelOnlineRouter(
-				DbFactory.createMockDbAdapter("DbAccessorTest"));
+				DbFactory.createMockDbAccessor("DbAccessorTest"));
 
 		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
 		combinedRouter.putAll(poRouter.getRoutes());

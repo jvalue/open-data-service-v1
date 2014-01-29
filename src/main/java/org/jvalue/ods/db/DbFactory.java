@@ -14,36 +14,34 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
-*/
+ */
 package org.jvalue.ods.db;
 
 /**
  * A factory for creating DbAccessor objects.
  */
 public class DbFactory {
-	
+
 	/**
 	 * Creates a new DbAccessor object.
-	 *
-	 * @param databaseName the database name
+	 * 
+	 * @param databaseName
+	 *            the database name
 	 * @return the db accessor
 	 */
-	public static DbAccessor createCouchDbAdapter(String databaseName) {		
+	public static DbAccessor createCouchDbAccessor(String databaseName) {
 		return new CouchDbAccessor(databaseName);
 	}
-	
-	
+
 	/**
 	 * Creates a new DbAccessor object.
-	 *
-	 * @param databaseName the database name
+	 * 
+	 * @param databaseName
+	 *            the database name
 	 * @return the db accessor
 	 */
-	public static DbAccessor createMockDbAdapter(String databaseName) {		
+	public static DbAccessor createMockDbAccessor(String databaseName) {
 		return new MockDbAccessor(databaseName);
 	}
-	
-	
-	
 
 }
