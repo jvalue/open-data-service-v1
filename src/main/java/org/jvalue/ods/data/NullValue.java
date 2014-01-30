@@ -30,7 +30,7 @@ public class NullValue extends GenericValue {
 	private static final long serialVersionUID = 1L;
 
 	/** The n. */
-	private NullType n;
+	private NullType n = null;
 
 	/**
 	 * Gets the null.

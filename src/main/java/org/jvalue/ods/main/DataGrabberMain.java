@@ -69,24 +69,6 @@ public class DataGrabberMain {
 	private static void insertPegelOnlineStationsIntoDatabase()
 			throws JsonParseException, JsonMappingException, IOException {
 		PegelOnlineGrabber pegelOnlineAdapter = new PegelOnlineGrabber();
-		// List<Station> stationData = pegelOnlineAdapter.getStationData();
-
-		// for (Station s : stationData) {
-		// List<Measurement> measurementData =
-		// pegelOnlineAdapter.getMeasurementOfStation(s.getUuid(),
-		// s.getTimeseries().get(0).getShortname(), 1);
-		// s.setOldMeasurements(measurementData);
-		// // for (Timeseries t : s.getTimeseries()) {
-		// // List<Measurement> measurementData =
-		// pegelOnlineAdapter.getMeasurementOfStation(s.getUuid(),
-		// t.getShortname(), 100);
-		// // s.setOldMeasurements(measurementData);
-		// // }
-		// }
-
-		// DbAccessor adapter = DbFactory.createCouchDbAccessor("pegelonline");
-		// adapter.connect();
-		// adapter.insert(new PegelOnlineData(stationData));
 
 		// generic import
 		ListValue list = pegelOnlineAdapter.getPegelOnlineStationsGeneric();

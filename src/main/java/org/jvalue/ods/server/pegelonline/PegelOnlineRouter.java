@@ -230,7 +230,7 @@ public class PegelOnlineRouter implements Router {
 
 				try {
 
-					DataGrabberMain.main(null);
+					DataGrabberMain.main(new String[0]);
 
 					message += "Database successfully updated.";
 				} catch (IOException e) {
