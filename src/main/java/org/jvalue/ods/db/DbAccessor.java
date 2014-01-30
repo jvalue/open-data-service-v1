@@ -17,6 +17,8 @@
  */
 package org.jvalue.ods.db;
 
+import java.util.List;
+
 /**
  * The Interface DbAdapter.
  * 
@@ -79,4 +81,21 @@ public interface DbAccessor {
 	 * @return true, if is connected
 	 */
 	boolean isConnected();
+
+	/**
+	 * Gets the all documents.
+	 * 
+	 * @return the all documents
+	 */
+	public List<?> getAllDocuments();
+
+	/**
+	 * Gets the node by name.
+	 * 
+	 * @param name
+	 *            the name
+	 * @return the node by name
+	 */
+	public Object getNodeByName(String name);
+
 }

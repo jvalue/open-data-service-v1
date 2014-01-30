@@ -20,11 +20,15 @@ package org.jvalue.ods.data;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * The Class ListValue.
  */
+@JsonInclude(Include.NON_NULL)
 public class ListValue extends GenericValue {
 
 	/** The Constant serialVersionUID. */
@@ -37,6 +41,17 @@ public class ListValue extends GenericValue {
 	 * Instantiates a new list value.
 	 */
 	public ListValue() {
+	}
+
+	/**
+	 * Instantiates a new list value.
+	 * 
+	 * @param list
+	 *            the list
+	 */
+	@JsonCreator
+	public ListValue(List<GenericValue> list) {
+		this.list = list;
 	}
 
 	/**

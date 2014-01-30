@@ -19,7 +19,6 @@ package org.jvalue.ods.grabber.pegelonline;
 
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.jvalue.ods.data.BoolValue;
@@ -29,14 +28,8 @@ import org.jvalue.ods.data.MapValue;
 import org.jvalue.ods.data.NullValue;
 import org.jvalue.ods.data.NumberValue;
 import org.jvalue.ods.data.StringValue;
-import org.jvalue.ods.data.pegelonline.Measurement;
-import org.jvalue.ods.data.pegelonline.Station;
-import org.jvalue.ods.data.pegelonline.Water;
 import org.jvalue.ods.grabber.generic.HttpJsonReader;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -44,32 +37,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * The Class PegelOnlineGrabber.
  */
 public class PegelOnlineGrabber {
-
-	/**
-	 * Gets the stations.
-	 * 
-	 * @return the stations
-	 * @throws JsonParseException
-	 *             the json parse exception
-	 * @throws JsonMappingException
-	 *             the json mapping exception
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
-	public List<Station> getStationData() throws JsonParseException,
-			JsonMappingException, IOException {
-		HttpJsonReader httpAdapter = new HttpJsonReader(
-				"http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true");
-		String json = httpAdapter.getJSON("UTF-8");
-
-		ObjectMapper mapper = new ObjectMapper();
-
-		List<Station> stationData = mapper.readValue(json,
-				new TypeReference<List<Station>>() {
-				});
-
-		return stationData;
-	}
 
 	/**
 	 * Gets the pegel online stations generic.
@@ -157,64 +124,6 @@ public class PegelOnlineGrabber {
 			mv.getMap().put(field.getKey(), gv);
 		}
 
-	}
-
-	/**
-	 * Gets the measurement of station.
-	 * 
-	 * @param stationUUID
-	 *            the station uuid
-	 * @param timeseriesShortname
-	 *            the timeseries shortname
-	 * @param days
-	 *            the days
-	 * @return the measurement of station
-	 * @throws JsonParseException
-	 *             the json parse exception
-	 * @throws JsonMappingException
-	 *             the json mapping exception
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
-	public List<Measurement> getMeasurementOfStation(String stationUUID,
-			String timeseriesShortname, int days) throws JsonParseException,
-			JsonMappingException, IOException {
-		HttpJsonReader httpAdapter = new HttpJsonReader(
-				"http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations/"
-						+ stationUUID + "/" + timeseriesShortname
-						+ "/measurements.json?start=P" + days + "D");
-		String json = httpAdapter.getJSON("UTF-8");
-
-		ObjectMapper mapper = new ObjectMapper();
-		List<Measurement> measurementData = mapper.readValue(json,
-				new TypeReference<List<Measurement>>() {
-				});
-		return measurementData;
-
-	}
-
-	/**
-	 * Gets the measurement data.
-	 * 
-	 * @return the measurement data
-	 * @throws JsonParseException
-	 *             the json parse exception
-	 * @throws JsonMappingException
-	 *             the json mapping exception
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
-	public List<Water> getWaterData() throws JsonParseException,
-			JsonMappingException, IOException {
-		HttpJsonReader httpAdapter = new HttpJsonReader(
-				"http://www.pegelonline.wsv.de/webservices/rest-api/v2/waters.json?includeStations=true&includeTimeseries=true&includeCurrentMeasurement=true");
-		String json = httpAdapter.getJSON("UTF-8");
-
-		ObjectMapper mapper = new ObjectMapper();
-		List<Water> waterData = mapper.readValue(json,
-				new TypeReference<List<Water>>() {
-				});
-		return waterData;
 	}
 
 }

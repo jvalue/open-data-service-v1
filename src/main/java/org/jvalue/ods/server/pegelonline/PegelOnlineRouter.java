@@ -18,23 +18,21 @@
 package org.jvalue.ods.server.pegelonline;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.ektorp.DbAccessException;
-import org.jvalue.ods.data.pegelonline.PegelOnlineData;
-import org.jvalue.ods.data.pegelonline.Station;
 import org.jvalue.ods.db.DbAccessor;
-import org.jvalue.ods.grabber.pegelonline.PegelOnlineGrabber;
+import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.main.DataGrabberMain;
 import org.jvalue.ods.server.Router;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
 import org.restlet.data.MediaType;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -76,15 +74,15 @@ public class PegelOnlineRouter implements Router {
 				String message = "";
 				try {
 
-					List<Station> sd = null;
+					List<JsonNode> nodes = null;
 					try {
-						sd = getListOfStations(response);
+						nodes = getListOfStations(response);
 					} catch (RuntimeException e) {
 						return;
 					}
 
 					ObjectMapper mapper = new ObjectMapper();
-					message += mapper.writeValueAsString(sd);
+					message += mapper.writeValueAsString(nodes);
 
 				} catch (IOException e) {
 					String errorMessage = "Error during client request: " + e;
@@ -107,42 +105,18 @@ public class PegelOnlineRouter implements Router {
 			@Override
 			public void handle(Request request, Response response) {
 				// Print the requested URI path
-				String message = "";
+				JsonNode node = null;
+				dbAccessor.connect();
+
+				String s = (String) request.getAttributes().get("station");
+				s = s.toUpperCase();
+
 				try {
+					node = (JsonNode) dbAccessor.getNodeByName(s);
 
-					List<Station> sd = null;
-					try {
-						sd = getListOfStations(response);
-					} catch (RuntimeException e) {
-						String errorMessage = "Runtime exception occured: " + e;
-						Logging.error(this.getClass(), errorMessage);
-						return;
-					}
-
-					for (Station s : sd) {
-						if (s.getLongname()
-								.equalsIgnoreCase(
-										(String) request.getAttributes().get(
-												"station"))
-								|| s.getShortname().equalsIgnoreCase(
-										(String) request.getAttributes().get(
-												"station"))) {
-
-							ObjectMapper mapper = new ObjectMapper();
-							message += mapper.writeValueAsString(s);
-
-							break;
-						}
-					}
-
-				} catch (IOException e) {
-					String errorMessage = "Error during client request: " + e;
-					Logging.error(this.getClass(), errorMessage);
-					System.err.println(errorMessage);
-				}
-				if (!message.equals("")) {
-					response.setEntity(message, MediaType.APPLICATION_JSON);
-				} else {
+					response.setEntity(node.toString(),
+							MediaType.APPLICATION_JSON);
+				} catch (DbException ex) {
 					response.setEntity("Station not found.",
 							MediaType.TEXT_PLAIN);
 				}
@@ -151,99 +125,99 @@ public class PegelOnlineRouter implements Router {
 
 		// gets the current measurement of a station including its current
 		// height value
-		Restlet currentMeasurementRestlet = new Restlet() {
-			@Override
-			public void handle(Request request, Response response) {
-				// Print the requested URI path
-				String message = "";
-				try {
-					List<Station> sd = null;
-					try {
-						sd = getListOfStations(response);
-					} catch (RuntimeException e) {
-						String errorMessage = "Runtime exception occured: " + e;
-						Logging.error(this.getClass(), errorMessage);
-						return;
-					}
+		// Restlet currentMeasurementRestlet = new Restlet() {
+		// @Override
+		// public void handle(Request request, Response response) {
+		// // Print the requested URI path
+		// String message = "";
+		// try {
+		// List<Station> sd = null;
+		// try {
+		// sd = getListOfStations(response);
+		// } catch (RuntimeException e) {
+		// String errorMessage = "Runtime exception occured: " + e;
+		// Logging.error(this.getClass(), errorMessage);
+		// return;
+		// }
+		//
+		// for (Station s : sd) {
+		// if (s.getLongname()
+		// .equalsIgnoreCase(
+		// (String) request.getAttributes().get(
+		// "station"))
+		// || s.getShortname().equalsIgnoreCase(
+		// (String) request.getAttributes().get(
+		// "station"))) {
+		//
+		// ObjectMapper mapper = new ObjectMapper();
+		// message += mapper.writeValueAsString(s
+		// .getTimeseries().get(0)
+		// .getCurrentMeasurement());
+		// break;
+		// }
+		// }
+		//
+		// } catch (IOException e) {
+		// String errorMessage = "Error during client request: " + e;
+		// Logging.error(this.getClass(), errorMessage);
+		// System.err.println(errorMessage);
+		// }
+		// if (!message.equals("")) {
+		// response.setEntity(message, MediaType.APPLICATION_JSON);
+		// } else {
+		// response.setEntity("Station not found.",
+		// MediaType.TEXT_PLAIN);
+		// }
+		// }
+		// };
 
-					for (Station s : sd) {
-						if (s.getLongname()
-								.equalsIgnoreCase(
-										(String) request.getAttributes().get(
-												"station"))
-								|| s.getShortname().equalsIgnoreCase(
-										(String) request.getAttributes().get(
-												"station"))) {
-
-							ObjectMapper mapper = new ObjectMapper();
-							message += mapper.writeValueAsString(s
-									.getTimeseries().get(0)
-									.getCurrentMeasurement());
-							break;
-						}
-					}
-
-				} catch (IOException e) {
-					String errorMessage = "Error during client request: " + e;
-					Logging.error(this.getClass(), errorMessage);
-					System.err.println(errorMessage);
-				}
-				if (!message.equals("")) {
-					response.setEntity(message, MediaType.APPLICATION_JSON);
-				} else {
-					response.setEntity("Station not found.",
-							MediaType.TEXT_PLAIN);
-				}
-			}
-		};
-
-		Restlet timeseriesRestlet = new Restlet() {
-			@Override
-			public void handle(Request request, Response response) {
-				// Print the requested URI path
-				String message = "";
-				try {
-
-					List<Station> sd = null;
-
-					try {
-						sd = getListOfStations(response);
-					} catch (RuntimeException e) {
-						String errorMessage = "Runtime exception occured: " + e;
-						Logging.error(this.getClass(), errorMessage);
-						return;
-					}
-
-					for (Station s : sd) {
-						if (s.getLongname()
-								.equalsIgnoreCase(
-										(String) request.getAttributes().get(
-												"station"))
-								|| s.getShortname().equalsIgnoreCase(
-										(String) request.getAttributes().get(
-												"station"))) {
-
-							ObjectMapper mapper = new ObjectMapper();
-							message += mapper.writeValueAsString(s
-									.getTimeseries());
-							break;
-						}
-					}
-
-				} catch (IOException e) {
-					String errorMessage = "Error during client request: " + e;
-					Logging.error(this.getClass(), errorMessage);
-					System.err.println("Error during client request: " + e);
-				}
-
-				if (!message.equals("")) {
-					response.setEntity(message, MediaType.APPLICATION_JSON);
-				} else {
-					response.setEntity("Station not found.",
-							MediaType.TEXT_PLAIN);
-				}
-			}
-		};
+		// Restlet timeseriesRestlet = new Restlet() {
+		// @Override
+		// public void handle(Request request, Response response) {
+		// // Print the requested URI path
+		// String message = "";
+		// try {
+		//
+		// List<Station> sd = null;
+		//
+		// try {
+		// sd = getListOfStations(response);
+		// } catch (RuntimeException e) {
+		// String errorMessage = "Runtime exception occured: " + e;
+		// Logging.error(this.getClass(), errorMessage);
+		// return;
+		// }
+		//
+		// for (Station s : sd) {
+		// if (s.getLongname()
+		// .equalsIgnoreCase(
+		// (String) request.getAttributes().get(
+		// "station"))
+		// || s.getShortname().equalsIgnoreCase(
+		// (String) request.getAttributes().get(
+		// "station"))) {
+		//
+		// ObjectMapper mapper = new ObjectMapper();
+		// message += mapper.writeValueAsString(s
+		// .getTimeseries());
+		// break;
+		// }
+		// }
+		//
+		// } catch (IOException e) {
+		// String errorMessage = "Error during client request: " + e;
+		// Logging.error(this.getClass(), errorMessage);
+		// System.err.println("Error during client request: " + e);
+		// }
+		//
+		// if (!message.equals("")) {
+		// response.setEntity(message, MediaType.APPLICATION_JSON);
+		// } else {
+		// response.setEntity("Station not found.",
+		// MediaType.TEXT_PLAIN);
+		// }
+		// }
+		// };
 
 		// updates the pegelonline data or creates the initial document if
 		// necessary
@@ -255,23 +229,8 @@ public class PegelOnlineRouter implements Router {
 				String message = "";
 
 				try {
-					List<Station> list = new PegelOnlineGrabber()
-							.getStationData();
 
-					dbAccessor.connect();
-					try {
-						String last = dbAccessor.getLastDocumentId();
-						PegelOnlineData pod = dbAccessor.getDocument(
-								PegelOnlineData.class, last);
-						pod.setStations(list);
-						pod.getMetaData().setDate(
-								new Timestamp(System.currentTimeMillis())
-										.toString());
-						dbAccessor.update(pod);
-					} catch (DbAccessException e) {
-						PegelOnlineData pod = new PegelOnlineData(list);
-						dbAccessor.insert(pod);
-					}
+					DataGrabberMain.main(null);
 
 					message += "Database successfully updated.";
 				} catch (IOException e) {
@@ -286,11 +245,11 @@ public class PegelOnlineRouter implements Router {
 
 		routes.put("/pegelonline/stations", stationsRestlet);
 		routes.put("/pegelonline/stations/{station}", singleStationRestlet);
-		routes.put(
-				"/pegelonline/stations/{station}/timeseries/currentMeasurement",
-				currentMeasurementRestlet);
-		routes.put("/pegelonline/stations/{station}/timeseries",
-				timeseriesRestlet);
+		// routes.put(
+		// "/pegelonline/stations/{station}/timeseries/currentMeasurement",
+		// currentMeasurementRestlet);
+		// routes.put("/pegelonline/stations/{station}/timeseries",
+		// timeseriesRestlet);
 		routes.put("/pegelonline/update", updateRestlet);
 
 		return routes;
@@ -306,17 +265,15 @@ public class PegelOnlineRouter implements Router {
 	 * @throws RuntimeException
 	 *             the runtime exception
 	 */
-	private List<Station> getListOfStations(Response response)
+	@SuppressWarnings("unchecked")
+	private List<JsonNode> getListOfStations(Response response)
 			throws RuntimeException {
-		List<Station> sd = null;
+		List<JsonNode> nodes;
 
 		try {
 			dbAccessor.connect();
-			String docId = dbAccessor.getLastDocumentId();
-			PegelOnlineData data = dbAccessor.getDocument(
-					PegelOnlineData.class, docId);
 
-			sd = data.getStations();
+			nodes = (List<JsonNode>) dbAccessor.getAllDocuments();
 
 		} catch (RuntimeException e) {
 			String errorMessage = "Could not retrieve data from db: " + e;
@@ -327,7 +284,7 @@ public class PegelOnlineRouter implements Router {
 					MediaType.TEXT_PLAIN);
 			throw e;
 		}
-		return sd;
+		return nodes;
 	}
 
 }

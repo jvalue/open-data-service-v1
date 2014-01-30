@@ -35,7 +35,6 @@ public class PegelOnlineMetaData extends JacksonMetaData {
 	// https://github.com/fraunhoferfokus/ogd-metadata/blob/master/OGPD_JSON_Schema.json
 	// at first
 
-
 	// constants for metadata object, only used in constructor
 	/** The name. */
 	private static final String name = "de-pegelonline";
@@ -63,8 +62,7 @@ public class PegelOnlineMetaData extends JacksonMetaData {
 	 * 
 	 */
 	public PegelOnlineMetaData() {
-		super(name, title, author, author_email,
-				notes, url, terms_of_use);
+		super(name, title, author, author_email, notes, url, terms_of_use);
 	}
 
 }

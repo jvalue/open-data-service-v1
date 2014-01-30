@@ -17,16 +17,22 @@
  */
 package org.jvalue.ods.db;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.ektorp.CouchDbConnector;
 import org.ektorp.CouchDbInstance;
+import org.ektorp.ViewQuery;
+import org.ektorp.ViewResult;
+import org.ektorp.ViewResult.Row;
 import org.ektorp.http.HttpClient;
 import org.ektorp.http.StdHttpClient;
 import org.ektorp.impl.StdCouchDbConnector;
 import org.ektorp.impl.StdCouchDbInstance;
 import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.logger.Logging;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * The Class CouchDbAdapter.
@@ -220,4 +226,49 @@ public class CouchDbAccessor implements DbAccessor {
 			throw new DbException(ex);
 		}
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.jvalue.ods.db.DbAccessor#getAllDocuments()
+	 */
+	@Override
+	public List<JsonNode> getAllDocuments() {
+
+		ViewQuery q = new ViewQuery().allDocs().includeDocs(true);
+		ViewResult result = db.queryView(q);
+
+		List<JsonNode> list = new LinkedList<>();
+
+		for (Row r : result.getRows()) {
+			list.add(r.getDocAsNode());
+		}
+
+		return list;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.jvalue.ods.db.DbAccessor#getNodeByName(java.lang.String)
+	 */
+	public JsonNode getNodeByName(String name) {
+
+		ViewQuery q = new ViewQuery().designDocId("_design/pegelonline")
+				.viewName("getSingleStation").key(name).includeDocs(true);
+
+		List<Row> l = db.queryView(q).getRows();
+
+		if (l.isEmpty()) {
+			Logging.error(this.getClass(),
+					"Query not successful: !\n" + q.toString());
+			System.err.println("Query not successful: !\n" + q.toString());
+			throw new DbException("Unsuccessful query");
+		}
+
+		JsonNode ret = l.get(0).getDocAsNode();
+
+		return ret;
+	}
+
 }

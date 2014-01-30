@@ -154,4 +154,26 @@ public class MockDbAccessor implements DbAccessor {
 		return isConnected;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.jvalue.ods.db.DbAccessor#getAllDocuments()
+	 */
+	@Override
+	public List<?> getAllDocuments() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.jvalue.ods.db.DbAccessor#getNodeByName(java.lang.String)
+	 */
+	@Override
+	public Object getNodeByName(String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

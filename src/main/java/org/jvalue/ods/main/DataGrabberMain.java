@@ -18,13 +18,15 @@
 package org.jvalue.ods.main;
 
 import java.io.IOException;
-import java.util.List;
 
+import org.ektorp.DbAccessException;
+import org.ektorp.support.DesignDocument;
+import org.ektorp.support.DesignDocument.View;
+import org.ektorp.support.DesignDocumentFactory;
+import org.ektorp.support.StdDesignDocumentFactory;
 import org.jvalue.ods.data.GenericValue;
 import org.jvalue.ods.data.ListValue;
-import org.jvalue.ods.data.pegelonline.PegelOnlineData;
 import org.jvalue.ods.data.pegelonline.PegelOnlineMetaData;
-import org.jvalue.ods.data.pegelonline.Station;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.grabber.pegelonline.PegelOnlineGrabber;
@@ -67,7 +69,7 @@ public class DataGrabberMain {
 	private static void insertPegelOnlineStationsIntoDatabase()
 			throws JsonParseException, JsonMappingException, IOException {
 		PegelOnlineGrabber pegelOnlineAdapter = new PegelOnlineGrabber();
-		List<Station> stationData = pegelOnlineAdapter.getStationData();
+		// List<Station> stationData = pegelOnlineAdapter.getStationData();
 
 		// for (Station s : stationData) {
 		// List<Measurement> measurementData =
@@ -82,13 +84,16 @@ public class DataGrabberMain {
 		// // }
 		// }
 
-		DbAccessor adapter = DbFactory.createCouchDbAccessor("pegelonline");
-		adapter.connect();
-		adapter.insert(new PegelOnlineData(stationData));
+		// DbAccessor adapter = DbFactory.createCouchDbAccessor("pegelonline");
+		// adapter.connect();
+		// adapter.insert(new PegelOnlineData(stationData));
 
 		// generic import
 		ListValue list = pegelOnlineAdapter.getPegelOnlineStationsGeneric();
-		DbAccessor a = DbFactory.createCouchDbAccessor("pegelonline_generic");
+		DbAccessor a = DbFactory.createCouchDbAccessor("pegelonline");
+		a.connect();
+		a.deleteDatabase();
+		a = DbFactory.createCouchDbAccessor("pegelonline");
 		a.connect();
 
 		a.insert(new PegelOnlineMetaData());
@@ -96,6 +101,29 @@ public class DataGrabberMain {
 			a.insert(gv);
 		}
 
+		createPegelOnlineDesignDocument();
+
 	}
 
+	/**
+	 * Creates the pegel online design document.
+	 */
+	public static void createPegelOnlineDesignDocument() {
+
+		DesignDocumentFactory fac = new StdDesignDocumentFactory();
+		DesignDocument dd = fac.newDesignDocumentInstance();
+		dd.setId("_design/pegelonline");
+		View v = new DesignDocument.View();
+		String function = "function(doc) { if(doc.longname) emit( doc.longname, null)}";
+		v.setMap(function);
+		dd.addView("getSingleStation", v);
+		DbAccessor a = DbFactory.createCouchDbAccessor("pegelonline");
+		a.connect();
+		try {
+			a.insert(dd);
+		} catch (DbAccessException ex) {
+
+			System.err.println("Design Document already exists.");
+		}
+	}
 }

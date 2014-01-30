@@ -20,11 +20,14 @@ package org.jvalue.ods.data;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * The Class MapValue.
  */
+@JsonInclude(Include.NON_NULL)
 public class MapValue extends GenericValue {
 
 	/** The Constant serialVersionUID. */
