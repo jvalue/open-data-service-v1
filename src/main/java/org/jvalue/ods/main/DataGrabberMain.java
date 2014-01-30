@@ -19,7 +19,7 @@ package org.jvalue.ods.main;
 
 import java.io.IOException;
 
-import org.ektorp.DbAccessException;
+import org.ektorp.UpdateConflictException;
 import org.ektorp.support.DesignDocument;
 import org.ektorp.support.DesignDocument.View;
 import org.ektorp.support.DesignDocumentFactory;
@@ -30,7 +30,7 @@ import org.jvalue.ods.data.pegelonline.PegelOnlineMetaData;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.grabber.pegelonline.PegelOnlineGrabber;
-
+import org.jvalue.ods.logger.Logging;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
@@ -75,37 +75,34 @@ public class DataGrabberMain {
 		DbAccessor a = DbFactory.createCouchDbAccessor("pegelonline");
 		a.connect();
 		a.deleteDatabase();
-		a = DbFactory.createCouchDbAccessor("pegelonline");
-		a.connect();
-
 		a.insert(new PegelOnlineMetaData());
 		for (GenericValue gv : list.getList()) {
 			a.insert(gv);
 		}
 
-		createPegelOnlineDesignDocument();
+		//ToDo: IdPaths for createDesignDocument in a map, to have unique ids?
+		DesignDocument dd = createDesignDocument("_design/pegelonline", "function(doc) { if(doc.longname) emit( doc.longname, null)}");
+		try {
+			a.insert(dd);
+		} catch (UpdateConflictException ex) {
+			System.err.println("Design Document already exists."  + ex.getMessage());
+			Logging.error(DataGrabberMain.class, "Design Document already exists." + ex.getMessage());
+		}
 
 	}
 
 	/**
 	 * Creates the pegel online design document.
 	 */
-	public static void createPegelOnlineDesignDocument() {
-
+	public static DesignDocument createDesignDocument(String idPath, String function) {
 		DesignDocumentFactory fac = new StdDesignDocumentFactory();
 		DesignDocument dd = fac.newDesignDocumentInstance();
-		dd.setId("_design/pegelonline");
-		View v = new DesignDocument.View();
-		String function = "function(doc) { if(doc.longname) emit( doc.longname, null)}";
+		dd.setId(idPath);
+		View v = new DesignDocument.View();		
 		v.setMap(function);
 		dd.addView("getSingleStation", v);
-		DbAccessor a = DbFactory.createCouchDbAccessor("pegelonline");
-		a.connect();
-		try {
-			a.insert(dd);
-		} catch (DbAccessException ex) {
 
-			System.err.println("Design Document already exists.");
-		}
+		return dd;
+		
 	}
 }

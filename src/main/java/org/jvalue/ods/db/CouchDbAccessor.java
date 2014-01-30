@@ -77,6 +77,21 @@ public class CouchDbAccessor implements DbAccessor {
 		return isConnected;
 	}
 
+	
+	private void createDbIfNotExist()
+	{
+		try {
+			if (!dbInstance.checkIfDbExists(databaseName)) {
+				dbInstance.createDatabase(databaseName);
+			}
+		} catch (Exception ex) {
+			Logging.error(this.getClass(), ex.getMessage());
+			System.err.println("CouchDb needs to be installed!\n"
+				+ ex.getMessage());
+			throw new DbException(ex);
+		}
+	}
+	
 	/**
 	 * Check db state.
 	 */
@@ -86,6 +101,9 @@ public class CouchDbAccessor implements DbAccessor {
 			Logging.error(this.getClass(), errorMessage);
 			throw new IllegalStateException(errorMessage);
 		}
+		
+		createDbIfNotExist();
+
 	}
 
 	/**
@@ -95,20 +113,9 @@ public class CouchDbAccessor implements DbAccessor {
 	public void connect() {
 		HttpClient httpClient = new StdHttpClient.Builder().build();
 		dbInstance = new StdCouchDbInstance(httpClient);
-
-		try {
-			if (!dbInstance.checkIfDbExists(databaseName)) {
-				dbInstance.createDatabase(databaseName);
-			}
-		} catch (Exception ex) {
-			Logging.error(this.getClass(), ex.getMessage());
-			System.err.println("CouchDb needs to be installed!\n"
-					+ ex.getMessage());
-			throw new DbException(ex);
-		}
+		createDbIfNotExist();
 
 		db = new StdCouchDbConnector(databaseName, dbInstance);
-
 		isConnected = true;
 	}
 
@@ -252,6 +259,7 @@ public class CouchDbAccessor implements DbAccessor {
 	 * 
 	 * @see org.jvalue.ods.db.DbAccessor#getNodeByName(java.lang.String)
 	 */
+	@Override
 	public JsonNode getNodeByName(String name) {
 
 		ViewQuery q = new ViewQuery().designDocId("_design/pegelonline")
