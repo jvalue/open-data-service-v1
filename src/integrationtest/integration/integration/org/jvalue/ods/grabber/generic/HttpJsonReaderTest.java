@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.grabber.generic;
+package integration.org.jvalue.ods.grabber.generic;
 
 import static org.junit.Assert.assertNotNull;
 
