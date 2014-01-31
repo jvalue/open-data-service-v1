@@ -48,7 +48,7 @@ sourceSets {
     compileClasspath = sourceSets.main.output + configurations.testRuntime
     runtimeClasspath = output + sourceSets.main.output + configurations.testRuntime
     java {
-      srcDir 'src/integrationtest/integration'
+      srcDir 'src/integrationtest'
     }
   }
  }
