@@ -1,4 +1,5 @@
-/*  Open Data Service
+/*
+    Open Data Service
     Copyright (C) 2013  Tsysin Konstantin, Reischl Patrick
 
     This program is free software: you can redistribute it and/or modify
@@ -13,37 +14,37 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-    
  */
-package integration.org.jvalue.ods.grabber.openstreetmap.overpass;
+package org.jvalue.ods.grabber.openstreetmap.nominatim;
 
 import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.jvalue.ods.data.openstreetmap.overpass.Overpass;
-import org.jvalue.ods.grabber.openstreetmap.overpass.OverpassGrabber;
+import org.jvalue.ods.data.opensteetmap.nominatim.NominatimQueryResult;
+import org.jvalue.ods.grabber.openstreetmap.nominatim.NominatimGrabber;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 /**
- * The Class OverpassGrabberTest.
+ * The Class NominatimGrabberTest.
  */
-public class OverpassGrabberTest {
+public class NominatimGrabberTest {
 
-	/** The grabber. */
-	OverpassGrabber grabber;
+	/** The adapter. */
+	NominatimGrabber adapter;
 
 	/**
 	 * Initialize.
 	 */
 	@Before
 	public void initialize() {
-		grabber = new OverpassGrabber();
-		assertNotNull(grabber);
+		adapter = new NominatimGrabber();
+		assertNotNull(adapter);
 	}
 
 	/**
@@ -59,8 +60,11 @@ public class OverpassGrabberTest {
 	@Test
 	public void testGetNominatimData() throws JsonParseException,
 			JsonMappingException, IOException {
-		Overpass result = grabber.getLocationData("Rothsee");
+		List<NominatimQueryResult> result = adapter.getNominatimData("Rothsee");
 		assertNotNull(result);
+		for (NominatimQueryResult r : result) {
+			assertNotNull(r);
+		}
 	}
 
 }
