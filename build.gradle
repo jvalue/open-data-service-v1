@@ -54,9 +54,9 @@ sourceSets {
  }
   
 
-//task integrationTest(type: Test) {
-//  testClassesDir = sourceSets.integrationTest.output.classesDir
-//  classpath = sourceSets.integrationTest.runtimeClasspath
-//}
+task integrationTest(type: Test) {
+  testClassesDir = sourceSets.integrationTest.output.classesDir
+  classpath = sourceSets.integrationTest.runtimeClasspath
+}
 
 //build.dependsOn integrationTest
