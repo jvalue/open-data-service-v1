@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.jvalue.ods.data.opensteetmap.nominatim.NominatimQueryResult;
 import org.jvalue.ods.data.opensteetmap.nominatim.NominatimReverseQueryResult;
-import org.jvalue.ods.grabber.generic.HttpJsonReader;
+import org.jvalue.ods.grabber.HttpJsonReader;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;

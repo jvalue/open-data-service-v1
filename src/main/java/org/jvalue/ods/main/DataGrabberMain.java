@@ -30,7 +30,7 @@ import org.jvalue.ods.data.pegelonline.PegelOnlineMetaData;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.exception.DbException;
-import org.jvalue.ods.grabber.pegelonline.PegelOnlineGrabber;
+import org.jvalue.ods.grabber.JsonGrabber;
 import org.jvalue.ods.logger.Logging;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -70,10 +70,11 @@ public class DataGrabberMain {
 	 */
 	private static void insertPegelOnlineStationsIntoDatabase()
 			throws JsonParseException, JsonMappingException, IOException {
-		PegelOnlineGrabber pegelOnlineAdapter = new PegelOnlineGrabber();
+		JsonGrabber grabber = new JsonGrabber();
 
 		// generic import
-		ListValue list = pegelOnlineAdapter.getPegelOnlineStationsGeneric();
+		ListValue list = (ListValue) grabber
+				.grab("http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true");
 		DbAccessor accessor = DbFactory.createCouchDbAccessor("pegelonline");
 		accessor.connect();
 		accessor.deleteDatabase();
@@ -91,20 +92,21 @@ public class DataGrabberMain {
 				"getMeasurements",
 				"function(doc) { if(doc.longname) emit( doc.longname, doc.timeseries)}",
 				accessor);
-		createView(
-				"_design/pegelonline",
-				"getMetadata",
-				"function(doc) { if(doc.title) emit(null, doc)}",
-				accessor);
+		createView("_design/pegelonline", "getMetadata",
+				"function(doc) { if(doc.title) emit(null, doc)}", accessor);
 	}
 
 	/**
 	 * Creates the pegel online design document.
-	 *
-	 * @param idPath the id path
-	 * @param viewName the view name
-	 * @param function the function
-	 * @param accessor the accessor
+	 * 
+	 * @param idPath
+	 *            the id path
+	 * @param viewName
+	 *            the view name
+	 * @param function
+	 *            the function
+	 * @param accessor
+	 *            the accessor
 	 */
 	private static void createView(String idPath, String viewName,
 			String function, DbAccessor accessor) {

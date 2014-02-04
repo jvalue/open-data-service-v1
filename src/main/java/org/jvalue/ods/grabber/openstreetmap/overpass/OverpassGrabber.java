@@ -20,7 +20,7 @@ package org.jvalue.ods.grabber.openstreetmap.overpass;
 import java.io.IOException;
 
 import org.jvalue.ods.data.openstreetmap.overpass.Overpass;
-import org.jvalue.ods.grabber.generic.HttpJsonReader;
+import org.jvalue.ods.grabber.HttpJsonReader;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

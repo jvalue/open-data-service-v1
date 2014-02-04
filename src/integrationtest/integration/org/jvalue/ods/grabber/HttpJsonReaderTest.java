@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package integration.org.jvalue.ods.grabber.generic;
+package integration.org.jvalue.ods.grabber;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -23,7 +23,7 @@ import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.jvalue.ods.grabber.generic.HttpJsonReader;
+import org.jvalue.ods.grabber.HttpJsonReader;
 
 /**
  * The Class HttpJsonReaderTest.

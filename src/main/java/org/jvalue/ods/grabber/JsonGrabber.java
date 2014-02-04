@@ -15,7 +15,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jvalue.ods.grabber.pegelonline;
+package org.jvalue.ods.grabber;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -28,15 +28,14 @@ import org.jvalue.ods.data.MapValue;
 import org.jvalue.ods.data.NullValue;
 import org.jvalue.ods.data.NumberValue;
 import org.jvalue.ods.data.StringValue;
-import org.jvalue.ods.grabber.generic.HttpJsonReader;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * The Class PegelOnlineGrabber.
+ * The Class JsonGrabber.
  */
-public class PegelOnlineGrabber {
+public class JsonGrabber {
 
 	/**
 	 * Gets the pegel online stations generic.
@@ -45,10 +44,10 @@ public class PegelOnlineGrabber {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public ListValue getPegelOnlineStationsGeneric() throws IOException {
+	public GenericValue grab(String source) throws IOException {
 
 		HttpJsonReader httpAdapter = new HttpJsonReader(
-				"http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true");
+				source);
 		String json = httpAdapter.getJSON("UTF-8");
 
 		ObjectMapper mapper = new ObjectMapper();
