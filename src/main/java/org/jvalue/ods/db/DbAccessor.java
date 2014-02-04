@@ -84,20 +84,20 @@ public interface DbAccessor {
 
 	/**
 	 * Gets the all documents.
-	 *
+	 * 
 	 * @return the all documents
 	 */
 	public List<?> getAllDocuments();
 
-
 	/**
 	 * Execute document query.
 	 *
-	 * @param string the string
-	 * @param string2 the string2
-	 * @param name the name
+	 * @param designDocId the design doc id
+	 * @param viewName the view name
+	 * @param key the key
 	 * @return the object
 	 */
-	public Object executeDocumentQuery(String string, String string2, String name);
+	public Object executeDocumentQuery(String designDocId, String viewName,
+			String key);
 
 }

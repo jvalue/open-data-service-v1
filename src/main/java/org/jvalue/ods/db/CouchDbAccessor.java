@@ -264,12 +264,15 @@ public class CouchDbAccessor implements DbAccessor {
 		return list;
 	}
 
-
-	/* (non-Javadoc)
-	 * @see org.jvalue.ods.db.DbAccessor#executeDocumentQuery(java.lang.String, java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.jvalue.ods.db.DbAccessor#executeDocumentQuery(java.lang.String,
+	 * java.lang.String, java.lang.String)
 	 */
 	@Override
-	public Object executeDocumentQuery(String designDocId, String viewName, String key) {
+	public Object executeDocumentQuery(String designDocId, String viewName,
+			String key) {
 		ViewQuery q = new ViewQuery().designDocId(designDocId)
 				.viewName(viewName).key(key);
 
@@ -277,9 +280,7 @@ public class CouchDbAccessor implements DbAccessor {
 		List<Row> l = db.queryView(q).getRows();
 
 		if (l.isEmpty()) {
-			Logging.error(this.getClass(),
-					"Empty result list.\n" + q.toString());
-			System.err.println("Empty result list.\n" + q.toString());
+			Logging.info(this.getClass(), "Empty result list.\n" + q.toString());
 			throw new DbException("Empty result list.");
 		} else {
 

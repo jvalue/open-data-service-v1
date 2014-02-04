@@ -167,12 +167,16 @@ public class MockDbAccessor implements DbAccessor {
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.jvalue.ods.db.DbAccessor#getValueByKey(java.lang.String, java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.jvalue.ods.db.DbAccessor#getValueByKey(java.lang.String,
+	 * java.lang.String, java.lang.String)
 	 */
 	@Override
-	public Object executeDocumentQuery(String string, String string2, String name) {
-		// TODO Auto-generated method stub
+	public Object executeDocumentQuery(String designDocId, String viewName,
+			String key) {
+
 		return null;
 	}
 
