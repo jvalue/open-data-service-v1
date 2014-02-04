@@ -29,8 +29,10 @@ import org.jvalue.ods.data.ListValue;
 import org.jvalue.ods.data.pegelonline.PegelOnlineMetaData;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
+import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.grabber.pegelonline.PegelOnlineGrabber;
 import org.jvalue.ods.logger.Logging;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
@@ -72,37 +74,69 @@ public class DataGrabberMain {
 
 		// generic import
 		ListValue list = pegelOnlineAdapter.getPegelOnlineStationsGeneric();
-		DbAccessor a = DbFactory.createCouchDbAccessor("pegelonline");
-		a.connect();
-		a.deleteDatabase();
-		a.insert(new PegelOnlineMetaData());
+		DbAccessor accessor = DbFactory.createCouchDbAccessor("pegelonline");
+		accessor.connect();
+		accessor.deleteDatabase();
+		accessor.insert(new PegelOnlineMetaData());
 		for (GenericValue gv : list.getList()) {
-			a.insert(gv);
+			accessor.insert(gv);
 		}
 
-		//ToDo: IdPaths for createDesignDocument in a map, to have unique ids?
-		DesignDocument dd = createDesignDocument("_design/pegelonline", "function(doc) { if(doc.longname) emit( doc.longname, null)}");
-		try {
-			a.insert(dd);
-		} catch (UpdateConflictException ex) {
-			System.err.println("Design Document already exists."  + ex.getMessage());
-			Logging.error(DataGrabberMain.class, "Design Document already exists." + ex.getMessage());
-		}
-
+		// ToDo: IdPaths for createDesignDocument in a map, to have unique ids?
+		createView("_design/pegelonline", "getSingleStation",
+				"function(doc) { if(doc.longname) emit( doc.longname, doc)}",
+				accessor);
+		createView(
+				"_design/pegelonline",
+				"getMeasurements",
+				"function(doc) { if(doc.longname) emit( doc.longname, doc.timeseries)}",
+				accessor);
+		createView(
+				"_design/pegelonline",
+				"getMetadata",
+				"function(doc) { if(doc.title) emit(null, doc)}",
+				accessor);
 	}
 
 	/**
 	 * Creates the pegel online design document.
+	 *
+	 * @param idPath the id path
+	 * @param viewName the view name
+	 * @param function the function
+	 * @param accessor the accessor
 	 */
-	public static DesignDocument createDesignDocument(String idPath, String function) {
-		DesignDocumentFactory fac = new StdDesignDocumentFactory();
-		DesignDocument dd = fac.newDesignDocumentInstance();
-		dd.setId(idPath);
-		View v = new DesignDocument.View();		
-		v.setMap(function);
-		dd.addView("getSingleStation", v);
+	private static void createView(String idPath, String viewName,
+			String function, DbAccessor accessor) {
 
-		return dd;
-		
+		DesignDocument dd = null;
+		boolean update = true;
+
+		try {
+			dd = accessor.getDocument(DesignDocument.class, idPath);
+		} catch (DbException e) {
+			DesignDocumentFactory fac = new StdDesignDocumentFactory();
+			dd = fac.newDesignDocumentInstance();
+			dd.setId(idPath);
+			update = false;
+		}
+
+		View v = new DesignDocument.View();
+		v.setMap(function);
+		dd.addView(viewName, v);
+
+		try {
+			if (update) {
+				accessor.update(dd);
+			} else {
+				accessor.insert(dd);
+			}
+		} catch (UpdateConflictException ex) {
+			System.err.println("Design Document already exists."
+					+ ex.getMessage());
+			Logging.error(DataGrabberMain.class,
+					"Design Document already exists." + ex.getMessage());
+		}
+
 	}
 }

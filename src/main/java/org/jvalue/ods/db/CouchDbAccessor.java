@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.ektorp.CouchDbConnector;
 import org.ektorp.CouchDbInstance;
+import org.ektorp.DocumentNotFoundException;
 import org.ektorp.ViewQuery;
 import org.ektorp.ViewResult;
 import org.ektorp.ViewResult.Row;
@@ -77,9 +78,10 @@ public class CouchDbAccessor implements DbAccessor {
 		return isConnected;
 	}
 
-	
-	private void createDbIfNotExist()
-	{
+	/**
+	 * Creates the db if not exist.
+	 */
+	private void createDbIfNotExist() {
 		try {
 			if (!dbInstance.checkIfDbExists(databaseName)) {
 				dbInstance.createDatabase(databaseName);
@@ -87,11 +89,11 @@ public class CouchDbAccessor implements DbAccessor {
 		} catch (Exception ex) {
 			Logging.error(this.getClass(), ex.getMessage());
 			System.err.println("CouchDb needs to be installed!\n"
-				+ ex.getMessage());
+					+ ex.getMessage());
 			throw new DbException(ex);
 		}
 	}
-	
+
 	/**
 	 * Check db state.
 	 */
@@ -101,7 +103,7 @@ public class CouchDbAccessor implements DbAccessor {
 			Logging.error(this.getClass(), errorMessage);
 			throw new IllegalStateException(errorMessage);
 		}
-		
+
 		createDbIfNotExist();
 
 	}
@@ -141,7 +143,15 @@ public class CouchDbAccessor implements DbAccessor {
 
 		checkDbState();
 
-		return db.get(c, id);
+		T ret = null;
+
+		try {
+			ret = db.get(c, id);
+		} catch (DocumentNotFoundException e) {
+			throw new DbException(e);
+		}
+
+		return ret;
 	}
 
 	/**
@@ -245,7 +255,7 @@ public class CouchDbAccessor implements DbAccessor {
 		ViewQuery q = new ViewQuery().allDocs().includeDocs(true);
 		ViewResult result = db.queryView(q);
 
-		List<JsonNode> list = new LinkedList<>();
+		List<JsonNode> list = new LinkedList<JsonNode>();
 
 		for (Row r : result.getRows()) {
 			list.add(r.getDocAsNode());
@@ -254,28 +264,27 @@ public class CouchDbAccessor implements DbAccessor {
 		return list;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.jvalue.ods.db.DbAccessor#getNodeByName(java.lang.String)
+
+	/* (non-Javadoc)
+	 * @see org.jvalue.ods.db.DbAccessor#executeDocumentQuery(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public JsonNode getNodeByName(String name) {
+	public Object executeDocumentQuery(String designDocId, String viewName, String key) {
+		ViewQuery q = new ViewQuery().designDocId(designDocId)
+				.viewName(viewName).key(key);
 
-		ViewQuery q = new ViewQuery().designDocId("_design/pegelonline")
-				.viewName("getSingleStation").key(name).includeDocs(true);
-
+		JsonNode ret = null;
 		List<Row> l = db.queryView(q).getRows();
 
 		if (l.isEmpty()) {
 			Logging.error(this.getClass(),
-					"Query not successful: !\n" + q.toString());
-			System.err.println("Query not successful: !\n" + q.toString());
-			throw new DbException("Unsuccessful query");
+					"Empty result list.\n" + q.toString());
+			System.err.println("Empty result list.\n" + q.toString());
+			throw new DbException("Empty result list.");
+		} else {
+
+			ret = l.get(0).getValueAsNode();
 		}
-
-		JsonNode ret = l.get(0).getDocAsNode();
-
 		return ret;
 	}
 

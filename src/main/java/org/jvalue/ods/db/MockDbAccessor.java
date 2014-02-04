@@ -24,6 +24,8 @@ import java.util.List;
 import org.ektorp.support.CouchDbDocument;
 import org.jvalue.ods.db.exception.DbException;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 /**
  * The Class MockDbAdapter.
  */
@@ -160,18 +162,16 @@ public class MockDbAccessor implements DbAccessor {
 	 * @see org.jvalue.ods.db.DbAccessor#getAllDocuments()
 	 */
 	@Override
-	public List<?> getAllDocuments() {
+	public List<JsonNode> getAllDocuments() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.jvalue.ods.db.DbAccessor#getNodeByName(java.lang.String)
+	/* (non-Javadoc)
+	 * @see org.jvalue.ods.db.DbAccessor#getValueByKey(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public Object getNodeByName(String name) {
+	public Object executeDocumentQuery(String string, String string2, String name) {
 		// TODO Auto-generated method stub
 		return null;
 	}
