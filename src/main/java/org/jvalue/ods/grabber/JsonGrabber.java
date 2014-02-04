@@ -28,6 +28,7 @@ import org.jvalue.ods.data.MapValue;
 import org.jvalue.ods.data.NullValue;
 import org.jvalue.ods.data.NumberValue;
 import org.jvalue.ods.data.StringValue;
+import org.jvalue.ods.logger.Logging;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,24 +39,31 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class JsonGrabber {
 
 	/**
-	 * Gets the pegel online stations generic.
+	 * Grab.
 	 * 
-	 * @return the pegel online stations generic
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @param source
+	 *            the source
+	 * @return the generic value
 	 */
-	public GenericValue grab(String source) throws IOException {
+	public GenericValue grab(String source) {
 
-		HttpJsonReader httpAdapter = new HttpJsonReader(
-				source);
-		String json = httpAdapter.getJSON("UTF-8");
+		HttpJsonReader httpAdapter = new HttpJsonReader(source);
+		JsonNode rootNode = null;
+		try {
+			String json = httpAdapter.getJSON("UTF-8");
 
-		ObjectMapper mapper = new ObjectMapper();
-		JsonNode rootNode = mapper.readTree(json);
+			ObjectMapper mapper = new ObjectMapper();
+			rootNode = mapper.readTree(json);
 
-		ListValue lv = (ListValue) convertJson(rootNode);
+		} catch (IOException e) {
+			Logging.error(this.getClass(), "Could not grab source.");
+			System.err.println("Could not grab source.");
+			return new StringValue("Could not read source.");
+		}
 
-		return lv;
+		GenericValue gv = convertJson(rootNode);
+
+		return gv;
 
 	}
 

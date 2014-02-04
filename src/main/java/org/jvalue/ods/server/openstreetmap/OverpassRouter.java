@@ -21,8 +21,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jvalue.ods.data.openstreetmap.overpass.Overpass;
-import org.jvalue.ods.grabber.openstreetmap.overpass.OverpassGrabber;
+import org.jvalue.ods.data.GenericValue;
+import org.jvalue.ods.grabber.JsonGrabber;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.server.Router;
 import org.restlet.Request;
@@ -54,32 +54,26 @@ public class OverpassRouter implements Router {
 			public void handle(Request request, Response response) {
 				// Print the requested URI path
 				String message = "";
+
+				GenericValue ret = null;
 				try {
-
-					Overpass op = null;
-					try {
-						op = new OverpassGrabber()
-								.getLocationData((String) request
-										.getAttributes().get("location"));
-					} catch (RuntimeException e) {
-						return;
-					}
-
+					ret = new JsonGrabber()
+							.grab("http://overpass.osm.rambler.ru/cgi/interpreter?data=[out:json];node[name%3D"
+									+ (String) request.getAttributes().get(
+											"location") + "]%3Bout%3B");
 					ObjectMapper mapper = new ObjectMapper();
-					message += mapper.writeValueAsString(op);
+					message += mapper.writeValueAsString(ret);
 
 				} catch (IOException e) {
 					String errorMessage = "Error during client request: " + e;
 					Logging.error(this.getClass(), errorMessage);
 					System.err.println(errorMessage);
+					message += "Station not found: "
+							+ (String) request.getAttributes().get("location");
 				}
 
-				if (!message.equals("")) {
-					response.setEntity(message, MediaType.APPLICATION_JSON);
-				} else {
-					response.setEntity("No stations found.",
-							MediaType.TEXT_PLAIN);
-				}
+				response.setEntity(message, MediaType.APPLICATION_JSON);
+
 			}
 
 		};
@@ -88,5 +82,4 @@ public class OverpassRouter implements Router {
 
 		return routes;
 	}
-
 }

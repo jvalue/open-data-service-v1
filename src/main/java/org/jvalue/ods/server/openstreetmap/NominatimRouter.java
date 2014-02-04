@@ -19,12 +19,10 @@ package org.jvalue.ods.server.openstreetmap;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import org.jvalue.ods.data.opensteetmap.nominatim.NominatimQueryResult;
-import org.jvalue.ods.data.opensteetmap.nominatim.NominatimReverseQueryResult;
-import org.jvalue.ods.grabber.openstreetmap.nominatim.NominatimGrabber;
+import org.jvalue.ods.data.GenericValue;
+import org.jvalue.ods.grabber.JsonGrabber;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.server.Router;
 import org.restlet.Request;
@@ -64,30 +62,25 @@ public class NominatimRouter implements Router {
 				String message = "";
 				try {
 
-					List<NominatimQueryResult> sd = null;
-					try {
-						sd = new NominatimGrabber()
-								.getNominatimData((String) request
-										.getAttributes().get("location"));
-					} catch (RuntimeException e) {
-						return;
-					}
+					GenericValue ret = null;
+
+					ret = new JsonGrabber()
+							.grab("http://nominatim.openstreetmap.org/search?q="
+									+ (String) request.getAttributes().get(
+											"location") + "&format=json");
 
 					ObjectMapper mapper = new ObjectMapper();
-					message += mapper.writeValueAsString(sd);
+					message += mapper.writeValueAsString(ret);
 
 				} catch (IOException e) {
 					String errorMessage = "Error during client request: " + e;
 					Logging.error(this.getClass(), errorMessage);
 					System.err.println(errorMessage);
+					message += "Unable to geocode: "
+							+ (String) request.getAttributes().get("location");
 				}
 
-				if (!message.equals("")) {
-					response.setEntity(message, MediaType.APPLICATION_JSON);
-				} else {
-					response.setEntity("No stations found.",
-							MediaType.TEXT_PLAIN);
-				}
+				response.setEntity(message, MediaType.APPLICATION_JSON);
 			}
 
 		};
@@ -99,14 +92,12 @@ public class NominatimRouter implements Router {
 				String message = "";
 				try {
 
-					NominatimReverseQueryResult ret = null;
-					try {
-						ret = new NominatimGrabber()
-								.getReverseNominatimData((String) request
-										.getAttributes().get("coordinates"));
-					} catch (RuntimeException e) {
-						return;
-					}
+					GenericValue ret = null;
+
+					ret = new JsonGrabber()
+							.grab("http://nominatim.openstreetmap.org/reverse?format=json"
+									+ (String) request.getAttributes().get(
+											"coordinates"));
 
 					ObjectMapper mapper = new ObjectMapper();
 					message += mapper.writeValueAsString(ret);
@@ -115,14 +106,13 @@ public class NominatimRouter implements Router {
 					String errorMessage = "Error during client request: " + e;
 					Logging.error(this.getClass(), errorMessage);
 					System.err.println(errorMessage);
+					message += "Unable to reverse-geocode: "
+							+ (String) request.getAttributes().get(
+									"coordinates");
 				}
 
-				if (!message.equals("")) {
-					response.setEntity(message, MediaType.APPLICATION_JSON);
-				} else {
-					response.setEntity("No stations found.",
-							MediaType.TEXT_PLAIN);
-				}
+				response.setEntity(message, MediaType.APPLICATION_JSON);
+
 			}
 
 		};
