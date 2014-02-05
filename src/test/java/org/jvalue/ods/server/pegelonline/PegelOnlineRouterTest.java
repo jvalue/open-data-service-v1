@@ -17,17 +17,16 @@
  */
 package org.jvalue.ods.server.pegelonline;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.server.pegelonline.PegelOnlineRouter;
 import org.restlet.Restlet;
 
 /**

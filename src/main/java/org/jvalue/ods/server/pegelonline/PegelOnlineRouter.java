@@ -26,7 +26,7 @@ import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.DataGrabberMain;
-import org.jvalue.ods.server.Router;
+import org.jvalue.ods.main.Router;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;

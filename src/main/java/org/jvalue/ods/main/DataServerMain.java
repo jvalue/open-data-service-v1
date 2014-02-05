@@ -46,10 +46,10 @@ public class DataServerMain {
 	 */
 	public static void main(String[] args) throws Exception {
 
-		PegelOnlineRouter poRouter = new PegelOnlineRouter(
+		Router poRouter = new PegelOnlineRouter(
 				DbFactory.createCouchDbAccessor("pegelonline"));
-		NominatimRouter noRouter = new NominatimRouter();
-		OverpassRouter ovRouter = new OverpassRouter();
+		Router noRouter = new NominatimRouter();
+		Router ovRouter = new OverpassRouter();
 
 		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
 		combinedRouter.putAll(poRouter.getRoutes());
@@ -57,7 +57,7 @@ public class DataServerMain {
 		combinedRouter.putAll(ovRouter.getRoutes());
 
 		// last router, generates api output
-		ApiRouter router = new ApiRouter(combinedRouter);
+		Router router = new ApiRouter(combinedRouter);
 
 		combinedRouter.putAll(router.getRoutes());
 

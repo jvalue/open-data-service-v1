@@ -15,25 +15,22 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.server;
+package org.jvalue.ods.main;
+
+import java.util.Map;
+
+import org.restlet.Restlet;
 
 /**
- * The Interface RestServer.
+ * The Interface RouterInterface.
  */
-public interface RestServer {
+public interface Router {
 
 	/**
-	 * Initialize.
+	 * Gets the routes.
 	 * 
-	 * @throws Exception
-	 *             the exception
+	 * @return the routes
 	 */
-	public void initialize() throws Exception;
-
-	/**
-	 * Disconnect.
-	 * 
-	 */
-	public void disconnect();
+	public Map<String, Restlet> getRoutes();
 
 }

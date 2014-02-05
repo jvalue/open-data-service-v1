@@ -23,6 +23,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.main.RestServer;
 import org.restlet.Application;
 import org.restlet.Component;
 import org.restlet.Restlet;

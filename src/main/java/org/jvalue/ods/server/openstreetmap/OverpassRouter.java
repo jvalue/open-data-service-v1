@@ -24,7 +24,7 @@ import java.util.Map;
 import org.jvalue.ods.data.GenericValue;
 import org.jvalue.ods.grabber.JsonGrabber;
 import org.jvalue.ods.logger.Logging;
-import org.jvalue.ods.server.Router;
+import org.jvalue.ods.main.Router;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
