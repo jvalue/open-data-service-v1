@@ -27,7 +27,10 @@ public class XmlGrabber {
 	 * @return the generic value
 	 */
 	public GenericValue grab(String source) {
-		try {			 
+		if (source == null)
+			throw new IllegalArgumentException("source is null");	
+		
+		try {					 
 			File xmlFile = new File(source);
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
