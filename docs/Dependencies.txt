@@ -3,4 +3,5 @@ Restlet - Apache 2.0
 Jackson - Apache 2.0
 Ektorp  - Apache 2.0
 SLF4J - MIT License
+log4j - Apache 2.0
 JUnit 4.11
