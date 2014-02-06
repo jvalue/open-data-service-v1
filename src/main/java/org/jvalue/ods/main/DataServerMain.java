@@ -24,6 +24,7 @@ import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.server.ApiRouter;
 import org.jvalue.ods.server.RestletServer;
 import org.jvalue.ods.server.openstreetmap.NominatimRouter;
+import org.jvalue.ods.server.openstreetmap.OsmRouter;
 import org.jvalue.ods.server.openstreetmap.OverpassRouter;
 import org.jvalue.ods.server.pegelonline.PegelOnlineRouter;
 import org.restlet.Restlet;
@@ -50,11 +51,13 @@ public class DataServerMain {
 				DbFactory.createCouchDbAccessor("pegelonline"));
 		Router noRouter = new NominatimRouter();
 		Router ovRouter = new OverpassRouter();
+		Router osmRouter = new OsmRouter();
 
 		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
 		combinedRouter.putAll(poRouter.getRoutes());
 		combinedRouter.putAll(noRouter.getRoutes());
 		combinedRouter.putAll(ovRouter.getRoutes());
+		combinedRouter.putAll(osmRouter.getRoutes());
 
 		// last router, generates api output
 		Router router = new ApiRouter(combinedRouter);

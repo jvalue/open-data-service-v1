@@ -154,7 +154,6 @@ public class PegelOnlineRouter implements Router {
 			}
 		};
 
-
 		Restlet metadataRestlet = new Restlet() {
 			@Override
 			public void handle(Request request, Response response) {
@@ -174,7 +173,7 @@ public class PegelOnlineRouter implements Router {
 				}
 			}
 		};
-		
+
 		// updates the pegelonline data or creates the initial document if
 		// necessary
 		Restlet updateRestlet = new Restlet() {
@@ -186,7 +185,7 @@ public class PegelOnlineRouter implements Router {
 
 				try {
 
-					DataGrabberMain.main(new String[0]);
+					DataGrabberMain.insertPegelOnlineStationsIntoDatabase();
 
 					message += "Database successfully updated.";
 				} catch (IOException e) {
@@ -203,8 +202,7 @@ public class PegelOnlineRouter implements Router {
 		routes.put("/pegelonline/stations/{station}", singleStationRestlet);
 		routes.put("/pegelonline/stations/{station}/measurements",
 				measurementsRestlet);
-		routes.put("/pegelonline/metadata",
-				metadataRestlet);
+		routes.put("/pegelonline/metadata", metadataRestlet);
 		routes.put("/pegelonline/update", updateRestlet);
 
 		return routes;

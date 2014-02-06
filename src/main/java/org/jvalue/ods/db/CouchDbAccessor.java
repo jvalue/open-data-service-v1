@@ -273,11 +273,15 @@ public class CouchDbAccessor implements DbAccessor {
 	@Override
 	public Object executeDocumentQuery(String designDocId, String viewName,
 			String key) {
+
+		checkDbState();
+
 		ViewQuery q = new ViewQuery().designDocId(designDocId)
 				.viewName(viewName).key(key);
 
 		JsonNode ret = null;
-		List<Row> l = db.queryView(q).getRows();
+		ViewResult vq = db.queryView(q);
+		List<Row> l = vq.getRows();
 
 		if (l.isEmpty()) {
 			Logging.info(this.getClass(), "Empty result list.\n" + q.toString());

@@ -44,6 +44,8 @@ import com.fasterxml.jackson.databind.JsonMappingException;
  */
 public class DataGrabberMain {
 
+	private final static String osmSource = "nbgcity.osm";
+
 	/**
 	 * The main method.
 	 * 
@@ -58,49 +60,57 @@ public class DataGrabberMain {
 	 */
 	public static void main(String[] args) throws JsonParseException,
 			JsonMappingException, IOException {
-		insertOsmFilesIntoDatabase("nbgcity.osm");
-		insertPegelOnlineStationsIntoDatabase();		
+		insertOsmFilesIntoDatabase();
+		insertPegelOnlineStationsIntoDatabase();
 	}
 
 	/**
 	 * Insert osm files into database.
-	 *
-	 * @param source the source
+	 * 
+	 * @param source
+	 *            the source
 	 */
-	private static void insertOsmFilesIntoDatabase(String source) {
+	public static void insertOsmFilesIntoDatabase() {
 		XmlGrabber xmlGrabber = new XmlGrabber();
-		GenericValue gv = xmlGrabber.grab(source);
+		GenericValue gv = xmlGrabber.grab(osmSource);
 		MapValue mv = (MapValue) gv;
 		MapValue osm = (MapValue) mv.getMap().get("osm");
-		ListValue nodes = (ListValue) osm.getMap().get("node");
-		ListValue ways = (ListValue) osm.getMap().get("way");
-		ListValue relations = (ListValue) osm.getMap().get("relation");
-		
+
 		DbAccessor accessor = DbFactory.createCouchDbAccessor("osm");
 		accessor.connect();
 		accessor.deleteDatabase();
-		
-		for(GenericValue node: nodes.getList())
-		{
+
+		insertNodeType(accessor, osm, "node");
+		insertNodeType(accessor, osm, "way");
+		insertNodeType(accessor, osm, "relation");
+
+		createView("_design/osm", "getNodeById",
+				"function(doc) { if(doc.type == 'node') emit( doc.id, doc)}",
+				accessor);
+
+		createView("_design/osm", "getWayById",
+				"function(doc) { if(doc.type == 'way') emit( doc.id, doc)}",
+				accessor);
+
+		createView(
+				"_design/osm",
+				"getRelationById",
+				"function(doc) { if(doc.type == 'relation') emit( doc.id, doc)}",
+				accessor);
+
+	}
+
+	private static void insertNodeType(DbAccessor accessor, MapValue osm,
+			String type) {
+
+		ListValue list = (ListValue) osm.getMap().get(type);
+
+		for (GenericValue node : list.getList()) {
 			MapValue map = (MapValue) node;
-			map.getMap().put("type", new StringValue("node"));
-			accessor.insert(map);		
+			map.getMap().put("type", new StringValue(type));
+			accessor.insert(map);
 		}
-		for(GenericValue way: ways.getList())
-		{
-			MapValue map = (MapValue) way;
-			map.getMap().put("type", new StringValue("way"));
-			accessor.insert(map);		
-		}
-		for(GenericValue relation: relations.getList())
-		{
-			MapValue map = (MapValue) relation;
-			map.getMap().put("type", new StringValue("relation"));
-			accessor.insert(relation);		
-		}
-		
-		
-		
+
 	}
 
 	/**
@@ -113,9 +123,9 @@ public class DataGrabberMain {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	private static void insertPegelOnlineStationsIntoDatabase()
-			throws JsonParseException, JsonMappingException, IOException {	
-		
+	public static void insertPegelOnlineStationsIntoDatabase()
+			throws JsonParseException, JsonMappingException, IOException {
+
 		JsonGrabber grabber = new JsonGrabber();
 
 		// generic import
