@@ -26,6 +26,8 @@ import org.ektorp.support.DesignDocumentFactory;
 import org.ektorp.support.StdDesignDocumentFactory;
 import org.jvalue.ods.data.GenericValue;
 import org.jvalue.ods.data.ListValue;
+import org.jvalue.ods.data.MapValue;
+import org.jvalue.ods.data.StringValue;
 import org.jvalue.ods.data.pegelonline.PegelOnlineMetaData;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
@@ -56,8 +58,8 @@ public class DataGrabberMain {
 	 */
 	public static void main(String[] args) throws JsonParseException,
 			JsonMappingException, IOException {
-		insertPegelOnlineStationsIntoDatabase();
-		insertOsmFilesIntoDatabase("monaco.osm");
+		insertOsmFilesIntoDatabase("nbgcity.osm");
+		insertPegelOnlineStationsIntoDatabase();		
 	}
 
 	/**
@@ -68,11 +70,37 @@ public class DataGrabberMain {
 	private static void insertOsmFilesIntoDatabase(String source) {
 		XmlGrabber xmlGrabber = new XmlGrabber();
 		GenericValue gv = xmlGrabber.grab(source);
+		MapValue mv = (MapValue) gv;
+		MapValue osm = (MapValue) mv.getMap().get("osm");
+		ListValue nodes = (ListValue) osm.getMap().get("node");
+		ListValue ways = (ListValue) osm.getMap().get("way");
+		ListValue relations = (ListValue) osm.getMap().get("relation");
 		
 		DbAccessor accessor = DbFactory.createCouchDbAccessor("osm");
 		accessor.connect();
 		accessor.deleteDatabase();
-		accessor.insert(gv);		
+		
+		for(GenericValue node: nodes.getList())
+		{
+			MapValue map = (MapValue) node;
+			map.getMap().put("type", new StringValue("node"));
+			accessor.insert(map);		
+		}
+		for(GenericValue way: ways.getList())
+		{
+			MapValue map = (MapValue) way;
+			map.getMap().put("type", new StringValue("way"));
+			accessor.insert(map);		
+		}
+		for(GenericValue relation: relations.getList())
+		{
+			MapValue map = (MapValue) relation;
+			map.getMap().put("type", new StringValue("relation"));
+			accessor.insert(relation);		
+		}
+		
+		
+		
 	}
 
 	/**
