@@ -31,6 +31,7 @@ import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.grabber.JsonGrabber;
+import org.jvalue.ods.grabber.XmlGrabber;
 import org.jvalue.ods.logger.Logging;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -56,6 +57,22 @@ public class DataGrabberMain {
 	public static void main(String[] args) throws JsonParseException,
 			JsonMappingException, IOException {
 		insertPegelOnlineStationsIntoDatabase();
+		insertOsmFilesIntoDatabase("monaco.osm");
+	}
+
+	/**
+	 * Insert osm files into database.
+	 *
+	 * @param source the source
+	 */
+	private static void insertOsmFilesIntoDatabase(String source) {
+		XmlGrabber xmlGrabber = new XmlGrabber();
+		GenericValue gv = xmlGrabber.grab(source);
+		
+		DbAccessor accessor = DbFactory.createCouchDbAccessor("osm");
+		accessor.connect();
+		accessor.deleteDatabase();
+		accessor.insert(gv);		
 	}
 
 	/**
@@ -69,7 +86,8 @@ public class DataGrabberMain {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	private static void insertPegelOnlineStationsIntoDatabase()
-			throws JsonParseException, JsonMappingException, IOException {
+			throws JsonParseException, JsonMappingException, IOException {	
+		
 		JsonGrabber grabber = new JsonGrabber();
 
 		// generic import
