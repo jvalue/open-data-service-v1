@@ -17,9 +17,58 @@
  */
 package integration.org.jvalue.ods.grabber;
 
+import static org.junit.Assert.*;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.jvalue.ods.data.GenericValue;
+import org.jvalue.ods.grabber.JsonGrabber;
+
 /**
  * The Class JsonGrabberTest.
  */
 public class JsonGrabberTest {
 
+	/** The Test url. */
+	private final String TestUrl = "http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true";
+	
+/** The grabber. */
+private JsonGrabber grabber;
+	
+	/**
+	 * Sets the up.
+	 *
+	 * @throws Exception the exception
+	 */
+	@Before
+	public void setUp() throws Exception {
+		grabber = new JsonGrabber();
+		assertNotNull(grabber);
+	}
+
+	/**
+	 * Test grab.
+	 */
+	@Test
+	public void testGrab() {
+		GenericValue gv = grabber.grab(TestUrl);
+		assertNotNull(gv);			
+	}
+	
+	/**
+	 * Test grab invalid source.
+	 */
+	@Test
+	public void testGrabInvalidSource() {
+		GenericValue gv = grabber.grab("invalidsource");
+		assertNull(gv);			
+	}
+	
+	/**
+	 * Test grab null source.
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testGrabNullSource() {
+		GenericValue gv = grabber.grab(null);				
+	}
 }

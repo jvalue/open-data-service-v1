@@ -46,7 +46,9 @@ public class JsonGrabber {
 	 * @return the generic value
 	 */
 	public GenericValue grab(String source) {
-
+		if (source == null)
+			throw new IllegalArgumentException("source is null");
+		
 		HttpJsonReader httpAdapter = new HttpJsonReader(source);
 		JsonNode rootNode = null;
 		try {
@@ -58,7 +60,7 @@ public class JsonGrabber {
 		} catch (IOException e) {
 			Logging.error(this.getClass(), "Could not grab source.");
 			System.err.println("Could not grab source.");
-			return new StringValue("Could not read source.");
+			return null;
 		}
 
 		GenericValue gv = convertJson(rootNode);
