@@ -139,6 +139,7 @@ public class OsmRouter implements Router<Restlet> {
 
 				List<JsonNode> ret = null;
 				try {
+					dbAccessor.connect();
 					ret = dbAccessor.executeDocumentQuery("_design/osm",
 							"getRelationById", (String) request.getAttributes()
 									.get("id"));
@@ -172,6 +173,7 @@ public class OsmRouter implements Router<Restlet> {
 
 				List<JsonNode> ret = null;
 				try {
+					dbAccessor.connect();
 					ret = dbAccessor.executeDocumentQuery("_design/osm",
 							"getDocumentsByKeyword", (String) request
 									.getAttributes().get("keyword"));
@@ -207,7 +209,7 @@ public class OsmRouter implements Router<Restlet> {
 
 	/**
 	 * Gets the db accessor.
-	 *
+	 * 
 	 * @return the db accessor
 	 */
 	public DbAccessor<JsonNode> getDbAccessor() {
@@ -216,8 +218,9 @@ public class OsmRouter implements Router<Restlet> {
 
 	/**
 	 * Sets the db accessor.
-	 *
-	 * @param dbAccessor the new db accessor
+	 * 
+	 * @param dbAccessor
+	 *            the new db accessor
 	 */
 	public void setDbAccessor(DbAccessor<JsonNode> dbAccessor) {
 		this.dbAccessor = dbAccessor;
