@@ -271,15 +271,15 @@ public class CouchDbAccessor implements DbAccessor {
 	 * java.lang.String, java.lang.String)
 	 */
 	@Override
-	public Object executeDocumentQuery(String designDocId, String viewName,
-			String key) {
+	public List<JsonNode> executeDocumentQuery(String designDocId,
+			String viewName, String key) {
 
 		checkDbState();
 
 		ViewQuery q = new ViewQuery().designDocId(designDocId)
 				.viewName(viewName).key(key);
 
-		JsonNode ret = null;
+		List<JsonNode> ret = new LinkedList<JsonNode>();
 		ViewResult vq = db.queryView(q);
 		List<Row> l = vq.getRows();
 
@@ -287,8 +287,10 @@ public class CouchDbAccessor implements DbAccessor {
 			Logging.info(this.getClass(), "Empty result list.\n" + q.toString());
 			throw new DbException("Empty result list.");
 		} else {
+			for (Row r : l) {
+				ret.add(r.getValueAsNode());
+			}
 
-			ret = l.get(0).getValueAsNode();
 		}
 		return ret;
 	}

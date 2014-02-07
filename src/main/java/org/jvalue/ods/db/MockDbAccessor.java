@@ -174,8 +174,8 @@ public class MockDbAccessor implements DbAccessor {
 	 * java.lang.String, java.lang.String)
 	 */
 	@Override
-	public Object executeDocumentQuery(String designDocId, String viewName,
-			String key) {
+	public List<JsonNode> executeDocumentQuery(String designDocId,
+			String viewName, String key) {
 
 		return null;
 	}

@@ -69,6 +69,6 @@ private JsonGrabber grabber;
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testGrabNullSource() {
-		GenericValue gv = grabber.grab(null);				
+		grabber.grab(null);				
 	}
 }
