@@ -27,7 +27,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.server.pegelonline.PegelOnlineRouter;
+import org.jvalue.ods.main.Router;
+import org.jvalue.ods.main.RouterFactory;
 import org.restlet.Restlet;
 
 /**
@@ -92,8 +93,9 @@ public class RestletServerTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void RestletServerWithIllegalPorts() throws Exception {
 
-		PegelOnlineRouter poRouter = new PegelOnlineRouter(
-				DbFactory.createMockDbAccessor("DbAccessorTest"));
+		Router<Restlet> poRouter = new RouterFactory()
+				.createPegelOnlineRouter(DbFactory
+						.createMockDbAccessor("DbAccessorTest"));
 
 		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
 		combinedRouter.putAll(poRouter.getRoutes());
@@ -110,8 +112,9 @@ public class RestletServerTest {
 	@Test
 	public void testInitialize() throws Exception {
 
-		PegelOnlineRouter poRouter = new PegelOnlineRouter(
-				DbFactory.createMockDbAccessor("DbAccessorTest"));
+		Router<Restlet> poRouter = new RouterFactory()
+				.createPegelOnlineRouter(DbFactory
+						.createMockDbAccessor("DbAccessorTest"));
 
 		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
 		combinedRouter.putAll(poRouter.getRoutes());
@@ -131,8 +134,9 @@ public class RestletServerTest {
 	@Test(expected = BindException.class)
 	public void testDoubleInitialize() throws Exception {
 
-		PegelOnlineRouter poRouter = new PegelOnlineRouter(
-				DbFactory.createMockDbAccessor("DbAccessorTest"));
+		Router<Restlet> poRouter = new RouterFactory()
+				.createPegelOnlineRouter(DbFactory
+						.createMockDbAccessor("DbAccessorTest"));
 
 		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
 		combinedRouter.putAll(poRouter.getRoutes());
@@ -150,8 +154,9 @@ public class RestletServerTest {
 	@Test
 	public void testStopWithoutInit() throws Exception {
 
-		PegelOnlineRouter poRouter = new PegelOnlineRouter(
-				DbFactory.createMockDbAccessor("DbAccessorTest"));
+		Router<Restlet> poRouter = new RouterFactory()
+				.createPegelOnlineRouter(DbFactory
+						.createMockDbAccessor("DbAccessorTest"));
 
 		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
 		combinedRouter.putAll(poRouter.getRoutes());

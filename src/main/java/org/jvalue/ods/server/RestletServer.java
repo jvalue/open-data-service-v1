@@ -73,11 +73,6 @@ public class RestletServer extends Application {
 		this.port = port;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.jvalue.ods.rest.RestServer#initialize()
-	 */
 	public void initialize() throws Exception {
 		component = new Component();
 		component.getServers().add(Protocol.HTTP, port);
@@ -88,11 +83,6 @@ public class RestletServer extends Application {
 		component.start();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.jvalue.ods.rest.RestServer#disconnect()
-	 */
 	public void disconnect() {
 		try {
 			component.stop();

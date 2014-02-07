@@ -27,6 +27,7 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 import org.jvalue.ods.db.DbFactory;
+import org.jvalue.ods.main.RouterFactory;
 import org.restlet.Restlet;
 
 /**
@@ -45,8 +46,8 @@ public class PegelOnlineRouterTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		router = new PegelOnlineRouter(
-				DbFactory.createMockDbAccessor("DbAccessorTest"));
+		router = new RouterFactory().createPegelOnlineRouter(DbFactory
+				.createMockDbAccessor("DbAccessorTest"));
 	}
 
 	/**

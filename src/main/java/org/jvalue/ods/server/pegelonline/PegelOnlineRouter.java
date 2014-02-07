@@ -173,8 +173,6 @@ public class PegelOnlineRouter implements Router<Restlet> {
 			}
 		};
 
-		
-
 		routes.put("/pegelonline/stations", stationsRestlet);
 		routes.put("/pegelonline/stations/{station}", singleStationRestlet);
 		routes.put("/pegelonline/stations/{station}/measurements",

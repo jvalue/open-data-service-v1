@@ -21,12 +21,7 @@ package org.jvalue.ods.main;
 import java.util.HashMap;
 
 import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.server.ApiRouter;
 import org.jvalue.ods.server.RestletServer;
-import org.jvalue.ods.server.openstreetmap.NominatimRouter;
-import org.jvalue.ods.server.openstreetmap.OsmRouter;
-import org.jvalue.ods.server.openstreetmap.OverpassRouter;
-import org.jvalue.ods.server.pegelonline.PegelOnlineRouter;
 import org.restlet.Restlet;
 
 /**
@@ -47,13 +42,15 @@ public class DataServerMain {
 	 */
 	public static void main(String[] args) throws Exception {
 
-		Router<Restlet> poRouter = new PegelOnlineRouter(
-				DbFactory.createCouchDbAccessor("pegelonline"));
-		
-		
-		Router<Restlet> noRouter = new NominatimRouter();
-		Router<Restlet> ovRouter = new OverpassRouter();
-		Router<Restlet> osmRouter = new OsmRouter(DbFactory.createCouchDbAccessor("osm"));
+		RouterFactory rf = new RouterFactory();
+
+		Router<Restlet> poRouter = rf.createPegelOnlineRouter(DbFactory
+				.createCouchDbAccessor("pegelonline"));
+
+		Router<Restlet> noRouter = rf.createNominatimRouter();
+		Router<Restlet> ovRouter = rf.createOverpassRouter();
+		Router<Restlet> osmRouter = rf.createOsmRouter(DbFactory
+				.createCouchDbAccessor("osm"));
 
 		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
 		combinedRouter.putAll(poRouter.getRoutes());
@@ -62,11 +59,10 @@ public class DataServerMain {
 		combinedRouter.putAll(osmRouter.getRoutes());
 
 		// last router, generates api output
-		Router<Restlet> router = new ApiRouter(combinedRouter);
+		Router<Restlet> router = rf.createApiRouter(combinedRouter);
 
 		combinedRouter.putAll(router.getRoutes());
 
 		new RestletServer(combinedRouter, port).initialize();
 	}
-
 }

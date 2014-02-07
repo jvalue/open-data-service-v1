@@ -42,16 +42,13 @@ public class OsmRouter implements Router<Restlet> {
 	/** The routes. */
 	private HashMap<String, Restlet> routes;
 
-	
 	/** The db accessor. */
 	private DbAccessor<JsonNode> dbAccessor;
-	
-	
-	public OsmRouter(DbAccessor<JsonNode> dbAccessor)
-	{
+
+	public OsmRouter(DbAccessor<JsonNode> dbAccessor) {
 		this.dbAccessor = dbAccessor;
 	}
-	
+
 	/**
 	 * Gets the routes.
 	 * 
@@ -69,7 +66,7 @@ public class OsmRouter implements Router<Restlet> {
 				String message = "";
 
 				List<JsonNode> nodes = null;
-				try {					
+				try {
 					dbAccessor.connect();
 					nodes = dbAccessor.executeDocumentQuery("_design/osm",
 							"getNodeById", (String) request.getAttributes()
@@ -103,12 +100,12 @@ public class OsmRouter implements Router<Restlet> {
 				String message = "";
 
 				List<JsonNode> nodes = null;
-				try {					
-					 dbAccessor.connect(); 
-                     nodes = dbAccessor.executeDocumentQuery("_design/osm", 
-                               "getWayById", 
-                               (String) request.getAttributes().get("id")); 
-                     ObjectMapper mapper = new ObjectMapper(); 
+				try {
+					dbAccessor.connect();
+					nodes = dbAccessor.executeDocumentQuery("_design/osm",
+							"getWayById",
+							(String) request.getAttributes().get("id"));
+					ObjectMapper mapper = new ObjectMapper();
 					try {
 						message += mapper.writeValueAsString(nodes);
 					} catch (JsonProcessingException e) {
@@ -137,10 +134,10 @@ public class OsmRouter implements Router<Restlet> {
 				String message = "";
 
 				List<JsonNode> ret = null;
-				try {					
-					 ret = dbAccessor.executeDocumentQuery("_design/osm", 
-                             "getRelationById", (String) request.getAttributes() 
-                                       .get("id")); 
+				try {
+					ret = dbAccessor.executeDocumentQuery("_design/osm",
+							"getRelationById", (String) request.getAttributes()
+									.get("id"));
 					ObjectMapper mapper = new ObjectMapper();
 					try {
 						message += mapper.writeValueAsString(ret);
@@ -170,10 +167,10 @@ public class OsmRouter implements Router<Restlet> {
 				String message = "";
 
 				List<JsonNode> ret = null;
-				try {					
-					ret = dbAccessor.executeDocumentQuery("_design/osm", 
-                            "getDocumentsByKeyword", (String) request 
-                                      .getAttributes().get("keyword")); 
+				try {
+					ret = dbAccessor.executeDocumentQuery("_design/osm",
+							"getDocumentsByKeyword", (String) request
+									.getAttributes().get("keyword"));
 					ObjectMapper mapper = new ObjectMapper();
 
 					try {
@@ -196,13 +193,11 @@ public class OsmRouter implements Router<Restlet> {
 
 		};
 
-		
-
 		routes.put("/osm/nodes/{id}", getNodeByIdRestlet);
 		routes.put("/osm/ways/{id}", getWayByIdRestlet);
 		routes.put("/osm/relations/{id}", getRelationByIdRestlet);
 		routes.put("/osm/keyword/{keyword}", getDocumentsByKeywordRestlet);
-		
+
 		return routes;
 	}
 }
