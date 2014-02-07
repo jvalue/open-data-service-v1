@@ -44,6 +44,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
  */
 public class DataGrabberMain {
 
+	/** The Constant osmSource. */
 	private final static String osmSource = "nbgcity.osm";
 
 	/**
@@ -66,9 +67,7 @@ public class DataGrabberMain {
 
 	/**
 	 * Insert osm files into database.
-	 * 
-	 * @param source
-	 *            the source
+	 *
 	 */
 	public static void insertOsmFilesIntoDatabase() {
 		XmlGrabber xmlGrabber = new XmlGrabber();
@@ -98,8 +97,21 @@ public class DataGrabberMain {
 				"function(doc) { if(doc.type == 'relation') emit( doc.id, doc)}",
 				accessor);
 
+		createView(
+				"_design/osm",
+				"getDocumentsByKeyword",
+				"function(doc) { if(doc.tag){ for (var i in doc.tag) {var tmp = doc.tag[i]; for (var j in tmp) {emit(tmp[j], doc)} } }}",
+				accessor);
+
 	}
 
+	/**
+	 * Insert node type.
+	 *
+	 * @param accessor the accessor
+	 * @param osm the osm
+	 * @param type the type
+	 */
 	private static void insertNodeType(DbAccessor accessor, MapValue osm,
 			String type) {
 

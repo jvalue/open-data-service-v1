@@ -18,6 +18,7 @@
 package org.jvalue.ods.server.openstreetmap;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.jvalue.ods.db.DbAccessor;
@@ -54,17 +55,18 @@ public class OsmRouter implements Router {
 
 		Restlet getNodeByIdRestlet = new Restlet() {
 
+			@SuppressWarnings("unchecked")
 			@Override
 			public void handle(Request request, Response response) {
 				// Print the requested URI path
 				String message = "";
 
-				JsonNode ret = null;
+				List<JsonNode> ret = null;
 				try {
 					DbAccessor accessor = DbFactory
 							.createCouchDbAccessor("osm");
 					accessor.connect();
-					ret = (JsonNode) accessor.executeDocumentQuery(
+					ret = (List<JsonNode>) accessor.executeDocumentQuery(
 							"_design/osm", "getNodeById", (String) request
 									.getAttributes().get("id"));
 					ObjectMapper mapper = new ObjectMapper();
@@ -90,17 +92,18 @@ public class OsmRouter implements Router {
 
 		Restlet getWayByIdRestlet = new Restlet() {
 
+			@SuppressWarnings("unchecked")
 			@Override
 			public void handle(Request request, Response response) {
 				// Print the requested URI path
 				String message = "";
 
-				JsonNode ret = null;
+				List<JsonNode> ret = null;
 				try {
 					DbAccessor accessor = DbFactory
 							.createCouchDbAccessor("osm");
 					accessor.connect();
-					ret = (JsonNode) accessor.executeDocumentQuery(
+					ret = (List<JsonNode>) accessor.executeDocumentQuery(
 							"_design/osm", "getWayById", (String) request
 									.getAttributes().get("id"));
 					ObjectMapper mapper = new ObjectMapper();
@@ -126,17 +129,18 @@ public class OsmRouter implements Router {
 
 		Restlet getRelationByIdRestlet = new Restlet() {
 
+			@SuppressWarnings("unchecked")
 			@Override
 			public void handle(Request request, Response response) {
 				// Print the requested URI path
 				String message = "";
 
-				JsonNode ret = null;
+				List<JsonNode> ret = null;
 				try {
 					DbAccessor accessor = DbFactory
 							.createCouchDbAccessor("osm");
 					accessor.connect();
-					ret = (JsonNode) accessor.executeDocumentQuery(
+					ret = (List<JsonNode>) accessor.executeDocumentQuery(
 							"_design/osm", "getRelationById", (String) request
 									.getAttributes().get("id"));
 					ObjectMapper mapper = new ObjectMapper();
@@ -152,6 +156,44 @@ public class OsmRouter implements Router {
 					Logging.error(this.getClass(), errorMessage);
 					message += "Could not find relation with ID: "
 							+ (String) request.getAttributes().get("id");
+				}
+
+				response.setEntity(message, MediaType.APPLICATION_JSON);
+
+			}
+
+		};
+
+		Restlet getDocumentsByKeywordRestlet = new Restlet() {
+
+			@SuppressWarnings("unchecked")
+			@Override
+			public void handle(Request request, Response response) {
+				// Print the requested URI path
+				String message = "";
+
+				List<JsonNode> ret = null;
+				try {
+					DbAccessor accessor = DbFactory
+							.createCouchDbAccessor("osm");
+					accessor.connect();
+					ret = (List<JsonNode>) accessor.executeDocumentQuery(
+							"_design/osm", "getDocumentsByKeyword",
+							(String) request.getAttributes().get("keyword"));
+					ObjectMapper mapper = new ObjectMapper();
+
+					try {
+						message += mapper.writeValueAsString(ret);
+					} catch (JsonProcessingException e) {
+						Logging.error(this.getClass(), e.getMessage());
+						message += "Internal error";
+					}
+
+				} catch (DbException e) {
+					String errorMessage = "Error during client request: " + e;
+					Logging.error(this.getClass(), errorMessage);
+					message += "Could not find documents for keyword: "
+							+ (String) request.getAttributes().get("keyword");
 				}
 
 				response.setEntity(message, MediaType.APPLICATION_JSON);
@@ -179,6 +221,7 @@ public class OsmRouter implements Router {
 		routes.put("/osm/nodes/{id}", getNodeByIdRestlet);
 		routes.put("/osm/ways/{id}", getWayByIdRestlet);
 		routes.put("/osm/relations/{id}", getRelationByIdRestlet);
+		routes.put("/osm/keyword/{keyword}", getDocumentsByKeywordRestlet);
 		routes.put("/osm/update", updateRestlet);
 
 		return routes;

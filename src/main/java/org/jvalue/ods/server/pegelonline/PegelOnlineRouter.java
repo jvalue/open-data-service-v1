@@ -107,20 +107,21 @@ public class PegelOnlineRouter implements Router {
 
 		// gets the data of a single station
 		Restlet singleStationRestlet = new Restlet() {
+			@SuppressWarnings("unchecked")
 			@Override
 			public void handle(Request request, Response response) {
 
-				JsonNode node = null;
+				List<JsonNode> node = null;
 				dbAccessor.connect();
 
 				String name = (String) request.getAttributes().get("station");
 				name = name.toUpperCase();
 
 				try {
-					node = (JsonNode) dbAccessor.executeDocumentQuery(
+					node = (List<JsonNode>) dbAccessor.executeDocumentQuery(
 							"_design/pegelonline", "getSingleStation", name);
 
-					response.setEntity(node.toString(),
+					response.setEntity(node.get(0).toString(),
 							MediaType.APPLICATION_JSON);
 				} catch (DbException ex) {
 					response.setEntity("Station not found.",
@@ -132,20 +133,21 @@ public class PegelOnlineRouter implements Router {
 		// gets the current measurements of a station including its current
 		// value
 		Restlet measurementsRestlet = new Restlet() {
+			@SuppressWarnings("unchecked")
 			@Override
 			public void handle(Request request, Response response) {
 
-				JsonNode node = null;
+				List<JsonNode> node = null;
 				dbAccessor.connect();
 
 				String name = (String) request.getAttributes().get("station");
 				name = name.toUpperCase();
 
 				try {
-					node = (JsonNode) dbAccessor.executeDocumentQuery(
+					node = (List<JsonNode>) dbAccessor.executeDocumentQuery(
 							"_design/pegelonline", "getMeasurements", name);
 
-					response.setEntity(node.toString(),
+					response.setEntity(node.get(0).toString(),
 							MediaType.APPLICATION_JSON);
 				} catch (DbException ex) {
 					response.setEntity("Station not found.",
@@ -155,17 +157,18 @@ public class PegelOnlineRouter implements Router {
 		};
 
 		Restlet metadataRestlet = new Restlet() {
+			@SuppressWarnings("unchecked")
 			@Override
 			public void handle(Request request, Response response) {
 
-				JsonNode node = null;
+				List<JsonNode> node = null;
 				dbAccessor.connect();
 
 				try {
-					node = (JsonNode) dbAccessor.executeDocumentQuery(
+					node = (List<JsonNode>) dbAccessor.executeDocumentQuery(
 							"_design/pegelonline", "getMetadata", null);
 
-					response.setEntity(node.toString(),
+					response.setEntity(node.get(0).toString(),
 							MediaType.APPLICATION_JSON);
 				} catch (DbException ex) {
 					response.setEntity("Station not found.",

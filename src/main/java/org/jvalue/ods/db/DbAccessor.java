@@ -97,7 +97,7 @@ public interface DbAccessor {
 	 * @param key the key
 	 * @return the object
 	 */
-	public Object executeDocumentQuery(String designDocId, String viewName,
+	public List<?> executeDocumentQuery(String designDocId, String viewName,
 			String key);
 
 }
