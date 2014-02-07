@@ -38,7 +38,7 @@ public class RouterFactory {
 	 *            the routes
 	 * @return the api router
 	 */
-	public ApiRouter createApiRouter(HashMap<String, Restlet> routes) {
+	public static ApiRouter createApiRouter(HashMap<String, Restlet> routes) {
 		return new ApiRouter(routes);
 	}
 
@@ -47,7 +47,7 @@ public class RouterFactory {
 	 * 
 	 * @return the nominatim router
 	 */
-	public NominatimRouter createNominatimRouter() {
+	public static NominatimRouter createNominatimRouter() {
 		return new NominatimRouter();
 	}
 
@@ -58,7 +58,7 @@ public class RouterFactory {
 	 *            the db accessor
 	 * @return the osm router
 	 */
-	public OsmRouter createOsmRouter() {
+	public static OsmRouter createOsmRouter() {
 		return new OsmRouter();
 	}
 
@@ -67,7 +67,7 @@ public class RouterFactory {
 	 * 
 	 * @return the overpass router
 	 */
-	public OverpassRouter createOverpassRouter() {
+	public static OverpassRouter createOverpassRouter() {
 		return new OverpassRouter();
 	}
 
@@ -78,7 +78,7 @@ public class RouterFactory {
 	 *            the db accessor
 	 * @return the pegel online router
 	 */
-	public PegelOnlineRouter createPegelOnlineRouter() {
+	public static PegelOnlineRouter createPegelOnlineRouter() {
 		return new PegelOnlineRouter();
 	}
 }

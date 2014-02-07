@@ -41,13 +41,10 @@ public class DataServerMain {
 	 */
 	public static void main(String[] args) throws Exception {
 
-		RouterFactory rf = new RouterFactory();
-
-		Router<Restlet> poRouter = rf.createPegelOnlineRouter();
-
-		Router<Restlet> noRouter = rf.createNominatimRouter();
-		Router<Restlet> ovRouter = rf.createOverpassRouter();
-		Router<Restlet> osmRouter = rf.createOsmRouter();
+		Router<Restlet> poRouter = RouterFactory.createPegelOnlineRouter();
+		Router<Restlet> noRouter = RouterFactory.createNominatimRouter();
+		Router<Restlet> ovRouter = RouterFactory.createOverpassRouter();
+		Router<Restlet> osmRouter = RouterFactory.createOsmRouter();
 
 		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
 		combinedRouter.putAll(poRouter.getRoutes());
@@ -55,10 +52,9 @@ public class DataServerMain {
 		combinedRouter.putAll(ovRouter.getRoutes());
 		combinedRouter.putAll(osmRouter.getRoutes());
 
-		// last router, generates api output
-		Router<Restlet> router = rf.createApiRouter(combinedRouter);
-
-		combinedRouter.putAll(router.getRoutes());
+		// must be last router, generates api output
+		Router<Restlet> apiRouter = RouterFactory.createApiRouter(combinedRouter);
+		combinedRouter.putAll(apiRouter.getRoutes());
 
 		new RestletServer(combinedRouter, port).initialize();
 	}
