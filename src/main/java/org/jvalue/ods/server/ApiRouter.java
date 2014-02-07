@@ -31,7 +31,7 @@ import org.restlet.data.MediaType;
 /**
  * The Class ApiRouter.
  */
-public class ApiRouter implements Router {
+public class ApiRouter implements Router<Restlet> {
 
 	/** The routes. */
 	private HashMap<String, Restlet> routes;

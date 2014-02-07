@@ -34,7 +34,7 @@ public class DataServerMainTest {
 	@Test
 	public void testMain() throws Exception {
 		try {
-			DataServerMain.main(null);
+			DataServerMain.main(new String[0]);
 		} catch (java.net.BindException ex) {
 			System.err.println("Restlet service already running");
 		}

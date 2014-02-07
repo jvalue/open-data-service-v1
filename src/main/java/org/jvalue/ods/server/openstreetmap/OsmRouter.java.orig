@@ -44,10 +44,10 @@ public class OsmRouter implements Router<Restlet> {
 
 	
 	/** The db accessor. */
-	private DbAccessor<JsonNode> dbAccessor;
+	private DbAccessor dbAccessor;
 	
 	
-	public OsmRouter(DbAccessor<JsonNode> dbAccessor)
+	public OsmRouter(DbAccessor dbAccessor)
 	{
 		this.dbAccessor = dbAccessor;
 	}
@@ -68,12 +68,23 @@ public class OsmRouter implements Router<Restlet> {
 				// Print the requested URI path
 				String message = "";
 
-				List<JsonNode> nodes = null;
+<<<<<<< HEAD
+				List<JsonNode> ret = null;
 				try {					
 					dbAccessor.connect();
-					nodes = dbAccessor.executeDocumentQuery("_design/osm",
+					ret = (List<JsonNode>) dbAccessor.executeDocumentQuery(
+							"_design/osm", "getNodeById", (String) request
+									.getAttributes().get("id"));
+=======
+				List<JsonNode> nodes = null;
+				try {
+					DbAccessor<JsonNode> accessor = DbFactory
+							.createCouchDbAccessor("osm");
+					accessor.connect();
+					nodes = accessor.executeDocumentQuery("_design/osm",
 							"getNodeById", (String) request.getAttributes()
 									.get("id"));
+>>>>>>> c6fd7e90f8b8a0438275fa74d54b169e79dda0a6
 					ObjectMapper mapper = new ObjectMapper();
 					try {
 						message += mapper.writeValueAsString(nodes);
@@ -102,13 +113,24 @@ public class OsmRouter implements Router<Restlet> {
 				// Print the requested URI path
 				String message = "";
 
-				List<JsonNode> nodes = null;
+<<<<<<< HEAD
+				List<JsonNode> ret = null;
 				try {					
-					 dbAccessor.connect(); 
-                     nodes = dbAccessor.executeDocumentQuery("_design/osm", 
-                               "getWayById", 
-                               (String) request.getAttributes().get("id")); 
-                     ObjectMapper mapper = new ObjectMapper(); 
+					dbAccessor.connect();
+					ret = (List<JsonNode>) dbAccessor.executeDocumentQuery(
+							"_design/osm", "getWayById", (String) request
+									.getAttributes().get("id"));
+=======
+				List<JsonNode> nodes = null;
+				try {
+					DbAccessor<JsonNode> accessor = DbFactory
+							.createCouchDbAccessor("osm");
+					accessor.connect();
+					nodes = accessor.executeDocumentQuery("_design/osm",
+							"getWayById",
+							(String) request.getAttributes().get("id"));
+>>>>>>> c6fd7e90f8b8a0438275fa74d54b169e79dda0a6
+					ObjectMapper mapper = new ObjectMapper();
 					try {
 						message += mapper.writeValueAsString(nodes);
 					} catch (JsonProcessingException e) {
@@ -137,10 +159,21 @@ public class OsmRouter implements Router<Restlet> {
 				String message = "";
 
 				List<JsonNode> ret = null;
+<<<<<<< HEAD
 				try {					
-					 ret = dbAccessor.executeDocumentQuery("_design/osm", 
-                             "getRelationById", (String) request.getAttributes() 
-                                       .get("id")); 
+					dbAccessor.connect();
+					ret = (List<JsonNode>) dbAccessor.executeDocumentQuery(
+							"_design/osm", "getRelationById", (String) request
+									.getAttributes().get("id"));
+=======
+				try {
+					DbAccessor<JsonNode> accessor = DbFactory
+							.createCouchDbAccessor("osm");
+					accessor.connect();
+					ret = accessor.executeDocumentQuery("_design/osm",
+							"getRelationById", (String) request.getAttributes()
+									.get("id"));
+>>>>>>> c6fd7e90f8b8a0438275fa74d54b169e79dda0a6
 					ObjectMapper mapper = new ObjectMapper();
 					try {
 						message += mapper.writeValueAsString(ret);
@@ -170,10 +203,21 @@ public class OsmRouter implements Router<Restlet> {
 				String message = "";
 
 				List<JsonNode> ret = null;
+<<<<<<< HEAD
 				try {					
-					ret = dbAccessor.executeDocumentQuery("_design/osm", 
-                            "getDocumentsByKeyword", (String) request 
-                                      .getAttributes().get("keyword")); 
+					dbAccessor.connect();
+					ret = (List<JsonNode>) dbAccessor.executeDocumentQuery(
+							"_design/osm", "getDocumentsByKeyword",
+							(String) request.getAttributes().get("keyword"));
+=======
+				try {
+					DbAccessor<JsonNode> accessor = DbFactory
+							.createCouchDbAccessor("osm");
+					accessor.connect();
+					ret = accessor.executeDocumentQuery("_design/osm",
+							"getDocumentsByKeyword", (String) request
+									.getAttributes().get("keyword"));
+>>>>>>> c6fd7e90f8b8a0438275fa74d54b169e79dda0a6
 					ObjectMapper mapper = new ObjectMapper();
 
 					try {

@@ -38,6 +38,7 @@ import org.jvalue.ods.logger.Logging;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * The Class DataGrabberMain.
@@ -67,7 +68,7 @@ public class DataGrabberMain {
 
 	/**
 	 * Insert osm files into database.
-	 *
+	 * 
 	 */
 	private static void insertOsmFilesIntoDatabase() {
 		XmlGrabber xmlGrabber = new XmlGrabber();
@@ -75,7 +76,7 @@ public class DataGrabberMain {
 		MapValue mv = (MapValue) gv;
 		MapValue osm = (MapValue) mv.getMap().get("osm");
 
-		DbAccessor accessor = DbFactory.createCouchDbAccessor("osm");
+		DbAccessor<JsonNode> accessor = DbFactory.createCouchDbAccessor("osm");
 		accessor.connect();
 		accessor.deleteDatabase();
 
@@ -107,13 +108,16 @@ public class DataGrabberMain {
 
 	/**
 	 * Insert node type.
-	 *
-	 * @param accessor the accessor
-	 * @param osm the osm
-	 * @param type the type
+	 * 
+	 * @param accessor
+	 *            the accessor
+	 * @param osm
+	 *            the osm
+	 * @param type
+	 *            the type
 	 */
-	private static void insertNodeType(DbAccessor accessor, MapValue osm,
-			String type) {
+	private static void insertNodeType(DbAccessor<JsonNode> accessor,
+			MapValue osm, String type) {
 
 		ListValue list = (ListValue) osm.getMap().get(type);
 
@@ -143,7 +147,8 @@ public class DataGrabberMain {
 		// generic import
 		ListValue list = (ListValue) grabber
 				.grab("http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true");
-		DbAccessor accessor = DbFactory.createCouchDbAccessor("pegelonline");
+		DbAccessor<JsonNode> accessor = DbFactory
+				.createCouchDbAccessor("pegelonline");
 		accessor.connect();
 		accessor.deleteDatabase();
 		accessor.insert(new PegelOnlineMetaData());
@@ -177,7 +182,7 @@ public class DataGrabberMain {
 	 *            the accessor
 	 */
 	private static void createView(String idPath, String viewName,
-			String function, DbAccessor accessor) {
+			String function, DbAccessor<JsonNode> accessor) {
 
 		DesignDocument dd = null;
 		boolean update = true;

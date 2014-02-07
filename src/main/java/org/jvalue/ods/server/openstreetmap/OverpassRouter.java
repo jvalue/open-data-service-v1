@@ -35,7 +35,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * The Class OverpassRouter.
  */
-public class OverpassRouter implements Router {
+public class OverpassRouter implements Router<Restlet> {
 
 	/** The routes. */
 	private HashMap<String, Restlet> routes;

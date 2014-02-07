@@ -17,6 +17,8 @@
  */
 package org.jvalue.ods.db;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 /**
  * A factory for creating DbAccessor objects.
  */
@@ -29,7 +31,7 @@ public class DbFactory {
 	 *            the database name
 	 * @return the db accessor
 	 */
-	public static DbAccessor createCouchDbAccessor(String databaseName) {
+	public static DbAccessor<JsonNode> createCouchDbAccessor(String databaseName) {
 		return new CouchDbAccessor(databaseName);
 	}
 
@@ -40,7 +42,7 @@ public class DbFactory {
 	 *            the database name
 	 * @return the db accessor
 	 */
-	public static DbAccessor createMockDbAccessor(String databaseName) {
+	public static DbAccessor<JsonNode> createMockDbAccessor(String databaseName) {
 		return new MockDbAccessor(databaseName);
 	}
 
