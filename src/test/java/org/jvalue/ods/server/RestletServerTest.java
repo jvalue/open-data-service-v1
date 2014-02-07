@@ -27,7 +27,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.main.RestServer;
 import org.jvalue.ods.server.pegelonline.PegelOnlineRouter;
 import org.restlet.Restlet;
 
@@ -117,7 +116,7 @@ public class RestletServerTest {
 		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
 		combinedRouter.putAll(poRouter.getRoutes());
 
-		RestServer ra = new RestletServer(combinedRouter, 8800);
+		RestletServer ra = new RestletServer(combinedRouter, 8800);
 		ra.initialize();
 		ra.disconnect();
 
@@ -157,7 +156,7 @@ public class RestletServerTest {
 		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
 		combinedRouter.putAll(poRouter.getRoutes());
 
-		RestServer ra = new RestletServer(combinedRouter, 8900);
+		RestletServer ra = new RestletServer(combinedRouter, 8900);
 		ra.disconnect();
 
 	}

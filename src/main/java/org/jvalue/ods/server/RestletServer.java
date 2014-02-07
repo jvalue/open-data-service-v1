@@ -23,7 +23,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.jvalue.ods.logger.Logging;
-import org.jvalue.ods.main.RestServer;
 import org.restlet.Application;
 import org.restlet.Component;
 import org.restlet.Restlet;
@@ -33,7 +32,7 @@ import org.restlet.routing.Router;
 /**
  * The Class RestletServer.
  */
-public class RestletServer extends Application implements RestServer {
+public class RestletServer extends Application {
 
 	// Collection of routes for Restlet
 	/** The routes. */
@@ -79,7 +78,6 @@ public class RestletServer extends Application implements RestServer {
 	 * 
 	 * @see org.jvalue.ods.rest.RestServer#initialize()
 	 */
-	@Override
 	public void initialize() throws Exception {
 		component = new Component();
 		component.getServers().add(Protocol.HTTP, port);
@@ -95,7 +93,6 @@ public class RestletServer extends Application implements RestServer {
 	 * 
 	 * @see org.jvalue.ods.rest.RestServer#disconnect()
 	 */
-	@Override
 	public void disconnect() {
 		try {
 			component.stop();
