@@ -21,6 +21,7 @@ import java.util.List;
 
 /**
  * The Interface DbAdapter.
+ * Q is the type of query result
  * 
  */
 public interface DbAccessor<Q> {
@@ -91,14 +92,18 @@ public interface DbAccessor<Q> {
 
 	/**
 	 * Execute document query.
+	 * 
 	 * @param <T>
-	 *
-	 * @param designDocId the design doc id
-	 * @param viewName the view name
-	 * @param key the key
+	 * 
+	 * @param designDocId
+	 *            the design doc id
+	 * @param viewName
+	 *            the view name
+	 * @param key
+	 *            the key
 	 * @return the object
 	 */
-	public  List<Q> executeDocumentQuery(String designDocId, String viewName,
+	public List<Q> executeDocumentQuery(String designDocId, String viewName,
 			String key);
 
 }

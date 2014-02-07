@@ -50,7 +50,7 @@ public class CouchDbAccessorTest {
 	 */
 	@Before
 	public void initialize() {
-		couchDbAdapter = DbFactory.createCouchDbAccessor(testDbName);
+		couchDbAdapter = DbFactory.createDbAccessor(testDbName);
 		assertNotNull(couchDbAdapter);
 		couchDbAdapter.connect();
 	}
@@ -72,7 +72,7 @@ public class CouchDbAccessorTest {
 	public void testCouchDbInserterConstructorEmptyDatabaseName() {
 		String databaseName = "";
 		DbAccessor<JsonNode> couchDbAdapter = DbFactory
-				.createCouchDbAccessor(databaseName);
+				.createDbAccessor(databaseName);
 		assertNotNull(couchDbAdapter);
 	}
 
@@ -83,7 +83,7 @@ public class CouchDbAccessorTest {
 	public void testCouchDbInserterConstructorNullDatabaseName() {
 		String databaseName = null;
 		DbAccessor<JsonNode> couchDbAdapter = DbFactory
-				.createCouchDbAccessor(databaseName);
+				.createDbAccessor(databaseName);
 		assertNotNull(couchDbAdapter);
 	}
 
@@ -93,7 +93,7 @@ public class CouchDbAccessorTest {
 	@Test
 	public void testConnect() {
 		DbAccessor<JsonNode> couchDbAdapter = DbFactory
-				.createCouchDbAccessor(testDbName);
+				.createDbAccessor(testDbName);
 		couchDbAdapter.connect();
 	}
 
@@ -113,7 +113,7 @@ public class CouchDbAccessorTest {
 	 */
 	@Test(expected = IllegalStateException.class)
 	public void testInserWithoutConnect() {
-		couchDbAdapter = DbFactory.createCouchDbAccessor(testDbName);
+		couchDbAdapter = DbFactory.createDbAccessor(testDbName);
 		assertNotNull(couchDbAdapter);
 		couchDbAdapter.insert(data);
 	}
@@ -171,7 +171,7 @@ public class CouchDbAccessorTest {
 	 */
 	@Test(expected = IllegalStateException.class)
 	public void testUpdateWithoutConnect() {
-		couchDbAdapter = DbFactory.createCouchDbAccessor(testDbName);
+		couchDbAdapter = DbFactory.createDbAccessor(testDbName);
 		assertNotNull(couchDbAdapter);
 		couchDbAdapter.update(data);
 	}

@@ -19,15 +19,12 @@ package org.jvalue.ods.main;
 
 import java.util.HashMap;
 
-import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.server.ApiRouter;
 import org.jvalue.ods.server.openstreetmap.NominatimRouter;
 import org.jvalue.ods.server.openstreetmap.OsmRouter;
 import org.jvalue.ods.server.openstreetmap.OverpassRouter;
 import org.jvalue.ods.server.pegelonline.PegelOnlineRouter;
 import org.restlet.Restlet;
-
-import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * A factory for creating Router objects.
@@ -61,8 +58,8 @@ public class RouterFactory {
 	 *            the db accessor
 	 * @return the osm router
 	 */
-	public OsmRouter createOsmRouter(DbAccessor<JsonNode> dbAccessor) {
-		return new OsmRouter(dbAccessor);
+	public OsmRouter createOsmRouter() {
+		return new OsmRouter();
 	}
 
 	/**
@@ -81,8 +78,7 @@ public class RouterFactory {
 	 *            the db accessor
 	 * @return the pegel online router
 	 */
-	public PegelOnlineRouter createPegelOnlineRouter(
-			DbAccessor<JsonNode> dbAccessor) {
-		return new PegelOnlineRouter(dbAccessor);
+	public PegelOnlineRouter createPegelOnlineRouter() {
+		return new PegelOnlineRouter();
 	}
 }

@@ -76,7 +76,7 @@ public class DataGrabberMain {
 		MapValue mv = (MapValue) gv;
 		MapValue osm = (MapValue) mv.getMap().get("osm");
 
-		DbAccessor<JsonNode> accessor = DbFactory.createCouchDbAccessor("osm");
+		DbAccessor<JsonNode> accessor = DbFactory.createDbAccessor("osm");
 		accessor.connect();
 		accessor.deleteDatabase();
 
@@ -148,7 +148,7 @@ public class DataGrabberMain {
 		ListValue list = (ListValue) grabber
 				.grab("http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true");
 		DbAccessor<JsonNode> accessor = DbFactory
-				.createCouchDbAccessor("pegelonline");
+				.createDbAccessor("pegelonline");
 		accessor.connect();
 		accessor.deleteDatabase();
 		accessor.insert(new PegelOnlineMetaData());

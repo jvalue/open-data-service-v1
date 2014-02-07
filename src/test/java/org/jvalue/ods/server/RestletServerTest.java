@@ -27,8 +27,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.main.Router;
 import org.jvalue.ods.main.RouterFactory;
+import org.jvalue.ods.server.pegelonline.PegelOnlineRouter;
 import org.restlet.Restlet;
 
 /**
@@ -93,9 +93,9 @@ public class RestletServerTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void RestletServerWithIllegalPorts() throws Exception {
 
-		Router<Restlet> poRouter = new RouterFactory()
-				.createPegelOnlineRouter(DbFactory
-						.createMockDbAccessor("DbAccessorTest"));
+		PegelOnlineRouter poRouter = new RouterFactory()
+				.createPegelOnlineRouter();
+		poRouter.setDbAccessor(DbFactory.createMockDbAccessor("DbAccessorTest"));
 
 		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
 		combinedRouter.putAll(poRouter.getRoutes());
@@ -112,9 +112,9 @@ public class RestletServerTest {
 	@Test
 	public void testInitialize() throws Exception {
 
-		Router<Restlet> poRouter = new RouterFactory()
-				.createPegelOnlineRouter(DbFactory
-						.createMockDbAccessor("DbAccessorTest"));
+		PegelOnlineRouter poRouter = new RouterFactory()
+				.createPegelOnlineRouter();
+		poRouter.setDbAccessor(DbFactory.createMockDbAccessor("DbAccessorTest"));
 
 		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
 		combinedRouter.putAll(poRouter.getRoutes());
@@ -134,9 +134,9 @@ public class RestletServerTest {
 	@Test(expected = BindException.class)
 	public void testDoubleInitialize() throws Exception {
 
-		Router<Restlet> poRouter = new RouterFactory()
-				.createPegelOnlineRouter(DbFactory
-						.createMockDbAccessor("DbAccessorTest"));
+		PegelOnlineRouter poRouter = new RouterFactory()
+				.createPegelOnlineRouter();
+		poRouter.setDbAccessor(DbFactory.createMockDbAccessor("DbAccessorTest"));
 
 		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
 		combinedRouter.putAll(poRouter.getRoutes());
@@ -154,9 +154,9 @@ public class RestletServerTest {
 	@Test
 	public void testStopWithoutInit() throws Exception {
 
-		Router<Restlet> poRouter = new RouterFactory()
-				.createPegelOnlineRouter(DbFactory
-						.createMockDbAccessor("DbAccessorTest"));
+		PegelOnlineRouter poRouter = new RouterFactory()
+				.createPegelOnlineRouter();
+		poRouter.setDbAccessor(DbFactory.createMockDbAccessor("DbAccessorTest"));
 
 		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
 		combinedRouter.putAll(poRouter.getRoutes());

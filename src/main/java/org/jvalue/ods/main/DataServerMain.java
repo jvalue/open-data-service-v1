@@ -20,7 +20,6 @@ package org.jvalue.ods.main;
 
 import java.util.HashMap;
 
-import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.server.RestletServer;
 import org.restlet.Restlet;
 
@@ -44,13 +43,11 @@ public class DataServerMain {
 
 		RouterFactory rf = new RouterFactory();
 
-		Router<Restlet> poRouter = rf.createPegelOnlineRouter(DbFactory
-				.createCouchDbAccessor("pegelonline"));
+		Router<Restlet> poRouter = rf.createPegelOnlineRouter();
 
 		Router<Restlet> noRouter = rf.createNominatimRouter();
 		Router<Restlet> ovRouter = rf.createOverpassRouter();
-		Router<Restlet> osmRouter = rf.createOsmRouter(DbFactory
-				.createCouchDbAccessor("osm"));
+		Router<Restlet> osmRouter = rf.createOsmRouter();
 
 		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
 		combinedRouter.putAll(poRouter.getRoutes());

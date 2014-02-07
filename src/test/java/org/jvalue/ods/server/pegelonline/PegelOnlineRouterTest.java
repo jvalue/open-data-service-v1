@@ -46,8 +46,8 @@ public class PegelOnlineRouterTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		router = new RouterFactory().createPegelOnlineRouter(DbFactory
-				.createMockDbAccessor("DbAccessorTest"));
+		router = new RouterFactory().createPegelOnlineRouter();
+		router.setDbAccessor(DbFactory.createMockDbAccessor("DbAccessorTest"));
 	}
 
 	/**

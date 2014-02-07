@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.jvalue.ods.db.DbAccessor;
+import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
@@ -45,8 +46,11 @@ public class OsmRouter implements Router<Restlet> {
 	/** The db accessor. */
 	private DbAccessor<JsonNode> dbAccessor;
 
-	public OsmRouter(DbAccessor<JsonNode> dbAccessor) {
-		this.dbAccessor = dbAccessor;
+	/**
+	 * Instantiates a new osm router.
+	 */
+	public OsmRouter() {
+		this.dbAccessor = DbFactory.createDbAccessor("osm");
 	}
 
 	/**
@@ -200,4 +204,23 @@ public class OsmRouter implements Router<Restlet> {
 
 		return routes;
 	}
+
+	/**
+	 * Gets the db accessor.
+	 *
+	 * @return the db accessor
+	 */
+	public DbAccessor<JsonNode> getDbAccessor() {
+		return dbAccessor;
+	}
+
+	/**
+	 * Sets the db accessor.
+	 *
+	 * @param dbAccessor the new db accessor
+	 */
+	public void setDbAccessor(DbAccessor<JsonNode> dbAccessor) {
+		this.dbAccessor = dbAccessor;
+	}
+
 }

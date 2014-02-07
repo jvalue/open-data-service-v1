@@ -31,7 +31,7 @@ public class DbFactory {
 	 *            the database name
 	 * @return the db accessor
 	 */
-	public static DbAccessor<JsonNode> createCouchDbAccessor(String databaseName) {
+	public static DbAccessor<JsonNode> createDbAccessor(String databaseName) {
 		return new CouchDbAccessor(databaseName);
 	}
 

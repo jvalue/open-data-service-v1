@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.jvalue.ods.db.DbAccessor;
+import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
@@ -48,12 +49,10 @@ public class PegelOnlineRouter implements Router<Restlet> {
 
 	/**
 	 * Instantiates a new pegel online router.
-	 * 
-	 * @param dbAccessor
-	 *            the db accessor
+	 *
 	 */
-	public PegelOnlineRouter(DbAccessor<JsonNode> dbAccessor) {
-		this.dbAccessor = dbAccessor;
+	public PegelOnlineRouter() {
+		this.dbAccessor = DbFactory.createDbAccessor("pegelonline");
 	}
 
 	/*
@@ -180,6 +179,24 @@ public class PegelOnlineRouter implements Router<Restlet> {
 		routes.put("/pegelonline/metadata", metadataRestlet);
 
 		return routes;
+	}
+
+	/**
+	 * Gets the db accessor.
+	 *
+	 * @return the db accessor
+	 */
+	public DbAccessor<JsonNode> getDbAccessor() {
+		return dbAccessor;
+	}
+
+	/**
+	 * Sets the db accessor.
+	 *
+	 * @param dbAccessor the new db accessor
+	 */
+	public void setDbAccessor(DbAccessor<JsonNode> dbAccessor) {
+		this.dbAccessor = dbAccessor;
 	}
 
 }
