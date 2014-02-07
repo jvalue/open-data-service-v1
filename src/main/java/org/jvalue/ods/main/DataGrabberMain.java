@@ -69,7 +69,7 @@ public class DataGrabberMain {
 	 * Insert osm files into database.
 	 *
 	 */
-	public static void insertOsmFilesIntoDatabase() {
+	private static void insertOsmFilesIntoDatabase() {
 		XmlGrabber xmlGrabber = new XmlGrabber();
 		GenericValue gv = xmlGrabber.grab(osmSource);
 		MapValue mv = (MapValue) gv;
@@ -135,7 +135,7 @@ public class DataGrabberMain {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public static void insertPegelOnlineStationsIntoDatabase()
+	private static void insertPegelOnlineStationsIntoDatabase()
 			throws JsonParseException, JsonMappingException, IOException {
 
 		JsonGrabber grabber = new JsonGrabber();

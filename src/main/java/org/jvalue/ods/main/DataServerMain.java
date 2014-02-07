@@ -51,7 +51,7 @@ public class DataServerMain {
 				DbFactory.createCouchDbAccessor("pegelonline"));
 		Router noRouter = new NominatimRouter();
 		Router ovRouter = new OverpassRouter();
-		Router osmRouter = new OsmRouter();
+		Router osmRouter = new OsmRouter(DbFactory.createCouchDbAccessor("osm"));
 
 		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
 		combinedRouter.putAll(poRouter.getRoutes());

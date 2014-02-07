@@ -25,7 +25,6 @@ import java.util.Map;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.logger.Logging;
-import org.jvalue.ods.main.DataGrabberMain;
 import org.jvalue.ods.main.Router;
 import org.restlet.Request;
 import org.restlet.Response;
@@ -177,36 +176,13 @@ public class PegelOnlineRouter implements Router {
 			}
 		};
 
-		// updates the pegelonline data or creates the initial document if
-		// necessary
-		Restlet updateRestlet = new Restlet() {
-
-			@Override
-			public void handle(Request request, Response response) {
-				// Print the requested URI path
-				String message = "";
-
-				try {
-
-					DataGrabberMain.insertPegelOnlineStationsIntoDatabase();
-
-					message += "Database successfully updated.";
-				} catch (IOException e) {
-					System.err.println("Error during client request: " + e);
-					message += "Could not update database: " + e.getMessage();
-				}
-
-				response.setEntity(message, MediaType.TEXT_PLAIN);
-
-			}
-		};
+		
 
 		routes.put("/pegelonline/stations", stationsRestlet);
 		routes.put("/pegelonline/stations/{station}", singleStationRestlet);
 		routes.put("/pegelonline/stations/{station}/measurements",
 				measurementsRestlet);
 		routes.put("/pegelonline/metadata", metadataRestlet);
-		routes.put("/pegelonline/update", updateRestlet);
 
 		return routes;
 	}
