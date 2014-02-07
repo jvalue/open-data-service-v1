@@ -38,7 +38,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 /**
  * The Class CouchDbAdapter.
  */
-public class CouchDbAccessor implements DbAccessor {
+public class CouchDbAccessor implements DbAccessor<JsonNode> {
 
 	/** The db. */
 	private CouchDbConnector db;

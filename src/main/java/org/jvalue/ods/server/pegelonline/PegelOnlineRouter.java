@@ -39,13 +39,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * The Class PegelOnlineRouter. defines routes that start with /pegelonline/
  * 
  */
-public class PegelOnlineRouter implements Router {
+public class PegelOnlineRouter implements Router<Restlet> {
 
 	/** The routes. */
 	private HashMap<String, Restlet> routes;
 
 	/** The db accessor. */
-	private DbAccessor dbAccessor;
+	private DbAccessor<JsonNode> dbAccessor;
 
 	/**
 	 * Instantiates a new pegel online router.
@@ -53,7 +53,7 @@ public class PegelOnlineRouter implements Router {
 	 * @param dbAccessor
 	 *            the db accessor
 	 */
-	public PegelOnlineRouter(DbAccessor dbAccessor) {
+	public PegelOnlineRouter(DbAccessor<JsonNode> dbAccessor) {
 		this.dbAccessor = dbAccessor;
 	}
 
@@ -75,7 +75,7 @@ public class PegelOnlineRouter implements Router {
 				String message = "";
 				try {
 
-					List<?> nodes = null;
+					List<JsonNode> nodes = null;
 					ObjectMapper mapper = new ObjectMapper();
 
 					try {
@@ -107,21 +107,20 @@ public class PegelOnlineRouter implements Router {
 
 		// gets the data of a single station
 		Restlet singleStationRestlet = new Restlet() {
-			@SuppressWarnings("unchecked")
 			@Override
 			public void handle(Request request, Response response) {
 
-				List<JsonNode> node = null;
+				List<JsonNode> nodes = null;
 				dbAccessor.connect();
 
 				String name = (String) request.getAttributes().get("station");
 				name = name.toUpperCase();
 
 				try {
-					node = (List<JsonNode>) dbAccessor.executeDocumentQuery(
+					nodes = dbAccessor.executeDocumentQuery(
 							"_design/pegelonline", "getSingleStation", name);
 
-					response.setEntity(node.get(0).toString(),
+					response.setEntity(nodes.get(0).toString(),
 							MediaType.APPLICATION_JSON);
 				} catch (DbException ex) {
 					response.setEntity("Station not found.",
@@ -133,21 +132,20 @@ public class PegelOnlineRouter implements Router {
 		// gets the current measurements of a station including its current
 		// value
 		Restlet measurementsRestlet = new Restlet() {
-			@SuppressWarnings("unchecked")
 			@Override
 			public void handle(Request request, Response response) {
 
-				List<JsonNode> node = null;
+				List<JsonNode> nodes = null;
 				dbAccessor.connect();
 
 				String name = (String) request.getAttributes().get("station");
 				name = name.toUpperCase();
 
 				try {
-					node = (List<JsonNode>) dbAccessor.executeDocumentQuery(
+					nodes = dbAccessor.executeDocumentQuery(
 							"_design/pegelonline", "getMeasurements", name);
 
-					response.setEntity(node.get(0).toString(),
+					response.setEntity(nodes.get(0).toString(),
 							MediaType.APPLICATION_JSON);
 				} catch (DbException ex) {
 					response.setEntity("Station not found.",
@@ -157,7 +155,6 @@ public class PegelOnlineRouter implements Router {
 		};
 
 		Restlet metadataRestlet = new Restlet() {
-			@SuppressWarnings("unchecked")
 			@Override
 			public void handle(Request request, Response response) {
 
@@ -165,7 +162,7 @@ public class PegelOnlineRouter implements Router {
 				dbAccessor.connect();
 
 				try {
-					node = (List<JsonNode>) dbAccessor.executeDocumentQuery(
+					node = dbAccessor.executeDocumentQuery(
 							"_design/pegelonline", "getMetadata", null);
 
 					response.setEntity(node.get(0).toString(),

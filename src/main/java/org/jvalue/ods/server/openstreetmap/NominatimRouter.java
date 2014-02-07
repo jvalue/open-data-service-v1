@@ -35,7 +35,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * The Class NominatimRouter.
  */
-public class NominatimRouter implements Router {
+public class NominatimRouter implements Router<Restlet> {
 
 	/** The routes. */
 	private HashMap<String, Restlet> routes;

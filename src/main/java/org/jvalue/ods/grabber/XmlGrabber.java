@@ -2,17 +2,20 @@
  * 
  */
 package org.jvalue.ods.grabber;
+import java.io.File;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.jvalue.ods.data.GenericValue;
 import org.jvalue.ods.data.ListValue;
 import org.jvalue.ods.data.MapValue;
 import org.jvalue.ods.data.StringValue;
 import org.jvalue.ods.logger.Logging;
-
-import java.io.File;
-
-import org.w3c.dom.*;
-
-import javax.xml.parsers.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * The Class XmlGrabber.

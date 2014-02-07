@@ -23,7 +23,7 @@ import java.util.List;
  * The Interface DbAdapter.
  * 
  */
-public interface DbAccessor {
+public interface DbAccessor<Q> {
 
 	/**
 	 * Gets the document.
@@ -87,17 +87,18 @@ public interface DbAccessor {
 	 * 
 	 * @return the all documents
 	 */
-	public List<?> getAllDocuments();
+	public List<Q> getAllDocuments();
 
 	/**
 	 * Execute document query.
+	 * @param <T>
 	 *
 	 * @param designDocId the design doc id
 	 * @param viewName the view name
 	 * @param key the key
 	 * @return the object
 	 */
-	public List<?> executeDocumentQuery(String designDocId, String viewName,
+	public  List<Q> executeDocumentQuery(String designDocId, String viewName,
 			String key);
 
 }

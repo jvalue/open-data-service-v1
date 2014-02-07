@@ -29,7 +29,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 /**
  * The Class MockDbAdapter.
  */
-public class MockDbAccessor implements DbAccessor {
+public class MockDbAccessor implements DbAccessor<JsonNode> {
 
 	/** The list. */
 	List<SimpleEntry<String, Object>> list = new ArrayList<SimpleEntry<String, Object>>();

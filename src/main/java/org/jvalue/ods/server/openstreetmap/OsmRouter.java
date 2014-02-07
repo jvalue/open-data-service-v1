@@ -39,7 +39,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * The Class OsmRouter.
  */
-public class OsmRouter implements Router {
+public class OsmRouter implements Router<Restlet> {
 
 	/** The routes. */
 	private HashMap<String, Restlet> routes;
@@ -55,23 +55,22 @@ public class OsmRouter implements Router {
 
 		Restlet getNodeByIdRestlet = new Restlet() {
 
-			@SuppressWarnings("unchecked")
 			@Override
 			public void handle(Request request, Response response) {
 				// Print the requested URI path
 				String message = "";
 
-				List<JsonNode> ret = null;
+				List<JsonNode> nodes = null;
 				try {
-					DbAccessor accessor = DbFactory
+					DbAccessor<JsonNode> accessor = DbFactory
 							.createCouchDbAccessor("osm");
 					accessor.connect();
-					ret = (List<JsonNode>) accessor.executeDocumentQuery(
-							"_design/osm", "getNodeById", (String) request
-									.getAttributes().get("id"));
+					nodes = accessor.executeDocumentQuery("_design/osm",
+							"getNodeById", (String) request.getAttributes()
+									.get("id"));
 					ObjectMapper mapper = new ObjectMapper();
 					try {
-						message += mapper.writeValueAsString(ret);
+						message += mapper.writeValueAsString(nodes);
 					} catch (JsonProcessingException e) {
 						Logging.error(this.getClass(), e.getMessage());
 						message += "Internal error";
@@ -92,23 +91,22 @@ public class OsmRouter implements Router {
 
 		Restlet getWayByIdRestlet = new Restlet() {
 
-			@SuppressWarnings("unchecked")
 			@Override
 			public void handle(Request request, Response response) {
 				// Print the requested URI path
 				String message = "";
 
-				List<JsonNode> ret = null;
+				List<JsonNode> nodes = null;
 				try {
-					DbAccessor accessor = DbFactory
+					DbAccessor<JsonNode> accessor = DbFactory
 							.createCouchDbAccessor("osm");
 					accessor.connect();
-					ret = (List<JsonNode>) accessor.executeDocumentQuery(
-							"_design/osm", "getWayById", (String) request
-									.getAttributes().get("id"));
+					nodes = accessor.executeDocumentQuery("_design/osm",
+							"getWayById",
+							(String) request.getAttributes().get("id"));
 					ObjectMapper mapper = new ObjectMapper();
 					try {
-						message += mapper.writeValueAsString(ret);
+						message += mapper.writeValueAsString(nodes);
 					} catch (JsonProcessingException e) {
 						Logging.error(this.getClass(), e.getMessage());
 						message += "Internal error";
@@ -129,7 +127,6 @@ public class OsmRouter implements Router {
 
 		Restlet getRelationByIdRestlet = new Restlet() {
 
-			@SuppressWarnings("unchecked")
 			@Override
 			public void handle(Request request, Response response) {
 				// Print the requested URI path
@@ -137,12 +134,12 @@ public class OsmRouter implements Router {
 
 				List<JsonNode> ret = null;
 				try {
-					DbAccessor accessor = DbFactory
+					DbAccessor<JsonNode> accessor = DbFactory
 							.createCouchDbAccessor("osm");
 					accessor.connect();
-					ret = (List<JsonNode>) accessor.executeDocumentQuery(
-							"_design/osm", "getRelationById", (String) request
-									.getAttributes().get("id"));
+					ret = accessor.executeDocumentQuery("_design/osm",
+							"getRelationById", (String) request.getAttributes()
+									.get("id"));
 					ObjectMapper mapper = new ObjectMapper();
 					try {
 						message += mapper.writeValueAsString(ret);
@@ -166,7 +163,6 @@ public class OsmRouter implements Router {
 
 		Restlet getDocumentsByKeywordRestlet = new Restlet() {
 
-			@SuppressWarnings("unchecked")
 			@Override
 			public void handle(Request request, Response response) {
 				// Print the requested URI path
@@ -174,12 +170,12 @@ public class OsmRouter implements Router {
 
 				List<JsonNode> ret = null;
 				try {
-					DbAccessor accessor = DbFactory
+					DbAccessor<JsonNode> accessor = DbFactory
 							.createCouchDbAccessor("osm");
 					accessor.connect();
-					ret = (List<JsonNode>) accessor.executeDocumentQuery(
-							"_design/osm", "getDocumentsByKeyword",
-							(String) request.getAttributes().get("keyword"));
+					ret = accessor.executeDocumentQuery("_design/osm",
+							"getDocumentsByKeyword", (String) request
+									.getAttributes().get("keyword"));
 					ObjectMapper mapper = new ObjectMapper();
 
 					try {

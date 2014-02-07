@@ -27,6 +27,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.jvalue.ods.db.exception.DbException;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 /**
  * The Class DbAccessorTest.
  */
@@ -39,7 +41,7 @@ public class DbAccessorTest {
 	private final CouchDbDocument data = new CouchDbDocument();
 
 	/** The couch db inserter. */
-	private DbAccessor couchDbAdapter;
+	private DbAccessor<JsonNode> couchDbAdapter;
 
 	/**
 	 * Initialize.
@@ -67,7 +69,7 @@ public class DbAccessorTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testCouchDbInserterConstructorEmptyDatabaseName() {
 		String databaseName = "";
-		DbAccessor couchDbAdapter = DbFactory
+		DbAccessor<JsonNode> couchDbAdapter = DbFactory
 				.createMockDbAccessor(databaseName);
 		assertNotNull(couchDbAdapter);
 	}
@@ -78,7 +80,7 @@ public class DbAccessorTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testCouchDbInserterConstructorNullDatabaseName() {
 		String databaseName = null;
-		DbAccessor couchDbAdapter = DbFactory
+		DbAccessor<JsonNode> couchDbAdapter = DbFactory
 				.createMockDbAccessor(databaseName);
 		assertNotNull(couchDbAdapter);
 	}
@@ -88,7 +90,8 @@ public class DbAccessorTest {
 	 */
 	@Test
 	public void testConnect() {
-		DbAccessor couchDbAdapter = DbFactory.createMockDbAccessor(testDbName);
+		DbAccessor<JsonNode> couchDbAdapter = DbFactory
+				.createMockDbAccessor(testDbName);
 		couchDbAdapter.connect();
 	}
 

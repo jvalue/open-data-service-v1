@@ -19,18 +19,17 @@ package org.jvalue.ods.main;
 
 import java.util.Map;
 
-import org.restlet.Restlet;
-
 /**
  * The Interface RouterInterface.
+ * @param <T>
  */
-public interface Router {
+public interface Router<T> {
 
 	/**
 	 * Gets the routes.
 	 * 
 	 * @return the routes
 	 */
-	public Map<String, Restlet> getRoutes();
+	public Map<String, T> getRoutes();
 
 }
