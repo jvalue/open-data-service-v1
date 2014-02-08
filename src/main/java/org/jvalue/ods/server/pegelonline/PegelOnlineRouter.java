@@ -202,12 +202,12 @@ public class PegelOnlineRouter implements Router<Restlet> {
 											ovRet,
 											new TypeReference<HashMap<String, Object>>() {
 											});
-							@SuppressWarnings("unchecked")
-							List<HashMap<String, Object>> elements = (List<HashMap<String, Object>>) results
+
+							List<?> elements = (List<?>) results
 									.get("elements");
 
 							StringBuffer sb = new StringBuffer();
-							for (HashMap<String, Object> element : elements) {
+							for (Object element : elements) {
 								String elementString = mapper
 										.writeValueAsString(element);
 								if (elementString.contains("tourism")) {
