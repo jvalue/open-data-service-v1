@@ -21,12 +21,14 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
-import org.jvalue.ods.data.GenericValue;
+import org.jvalue.ods.data.osm.OdsNode;
+import org.jvalue.ods.data.osm.OsmData;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.exception.DbException;
-import org.jvalue.ods.grabber.JsonGrabber;
+import org.jvalue.ods.grabber.OsmGrabber;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
 import org.restlet.Request;
@@ -169,7 +171,6 @@ public class PegelOnlineRouter implements Router<Restlet> {
 					nodes = dbAccessor.executeDocumentQuery(
 							"_design/pegelonline", "getSingleStation", name);
 
-					GenericValue gv = null;
 					ObjectMapper mapper = new ObjectMapper();
 					if (nodes.get(0).isObject()) {
 
@@ -185,38 +186,32 @@ public class PegelOnlineRouter implements Router<Restlet> {
 									.get("longitude");
 							double latitude = (double) station.get("latitude");
 
-							JsonGrabber g = new JsonGrabber();
-							String source = "http://overpass.osm.rambler.ru/cgi/interpreter?data=[out:json];node%28"
-									+ (latitude - 0.05)
-									+ "%2C"
+							OsmGrabber g = new OsmGrabber();
+							String source = "http://api.openstreetmap.org/api/0.6/map?bbox="
 									+ (longitude - 0.05)
-									+ "%2C"
-									+ (latitude + 0.05)
-									+ "%2C"
-									+ (longitude + 0.05) + "%29%3Bout%3B";
-							gv = g.grab(source);
-							String ovRet = mapper.writeValueAsString(gv);
+									+ ","
+									+ (latitude - 0.05)
+									+ ","
+									+ (longitude + 0.05)
+									+ ","
+									+ (latitude + 0.05);
+							OsmData data = g.grab(source);
 
-							HashMap<String, Object> results = mapper
-									.readValue(
-											ovRet,
-											new TypeReference<HashMap<String, Object>>() {
-											});
+							StringBuilder sb = new StringBuilder();
 
-							List<?> elements = (List<?>) results
-									.get("elements");
-
-							StringBuffer sb = new StringBuffer();
-							for (Object element : elements) {
-								String elementString = mapper
-										.writeValueAsString(element);
-								if (elementString.contains("tourism")) {
-									sb.append(elementString);
+							for (OdsNode n : data.getNodes()) {
+								for (Entry<String, String> e : n.getTags()
+										.entrySet()) {
+									if (e.getKey().equals("tourism")) {
+										sb.append(mapper.writeValueAsString(n));
+									}
 								}
 							}
+
 							String message = sb.toString();
+
 							if (!message.isEmpty()) {
-								response.setEntity(sb.toString(),
+								response.setEntity(message,
 										MediaType.APPLICATION_JSON);
 							} else {
 								response.setEntity(

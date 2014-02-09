@@ -48,11 +48,11 @@ public class JsonGrabber {
 	public GenericValue grab(String source) {
 		if (source == null)
 			throw new IllegalArgumentException("source is null");
-		
-		HttpJsonReader httpAdapter = new HttpJsonReader(source);
+
+		HttpReader httpAdapter = new HttpReader(source);
 		JsonNode rootNode = null;
 		try {
-			String json = httpAdapter.getJSON("UTF-8");
+			String json = httpAdapter.read("UTF-8");
 
 			ObjectMapper mapper = new ObjectMapper();
 			rootNode = mapper.readTree(json);

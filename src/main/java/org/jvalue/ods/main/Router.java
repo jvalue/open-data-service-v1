@@ -23,6 +23,7 @@ import java.util.Map;
  * The Interface RouterInterface.
  * 
  * @param <T>
+ *            the generic type
  */
 public interface Router<T> {
 

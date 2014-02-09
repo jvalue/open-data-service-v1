@@ -54,8 +54,6 @@ public class RouterFactory {
 	/**
 	 * Creates a new Router object.
 	 * 
-	 * @param dbAccessor
-	 *            the db accessor
 	 * @return the osm router
 	 */
 	public static OsmRouter createOsmRouter() {
@@ -74,8 +72,6 @@ public class RouterFactory {
 	/**
 	 * Creates a new Router object.
 	 * 
-	 * @param dbAccessor
-	 *            the db accessor
 	 * @return the pegel online router
 	 */
 	public static PegelOnlineRouter createPegelOnlineRouter() {

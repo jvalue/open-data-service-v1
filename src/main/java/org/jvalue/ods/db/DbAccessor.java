@@ -17,12 +17,14 @@
  */
 package org.jvalue.ods.db;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
- * The Interface DbAdapter.
- * Q is the type of query result
+ * The Interface DbAdapter. Q is the type of query result
  * 
+ * @param <Q>
+ *            the generic type
  */
 public interface DbAccessor<Q> {
 
@@ -93,8 +95,6 @@ public interface DbAccessor<Q> {
 	/**
 	 * Execute document query.
 	 * 
-	 * @param <T>
-	 * 
 	 * @param designDocId
 	 *            the design doc id
 	 * @param viewName
@@ -105,5 +105,13 @@ public interface DbAccessor<Q> {
 	 */
 	public List<Q> executeDocumentQuery(String designDocId, String viewName,
 			String key);
+
+	/**
+	 * Execute bulk.
+	 * 
+	 * @param objects
+	 *            the objects
+	 */
+	public void executeBulk(Collection<?> objects);
 
 }

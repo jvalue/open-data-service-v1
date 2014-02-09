@@ -17,6 +17,7 @@
  */
 package org.jvalue.ods.db;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -293,6 +294,24 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 
 		}
 		return ret;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.jvalue.ods.db.DbAccessor#executeBulk(java.util.Collection)
+	 */
+	@Override
+	public void executeBulk(Collection<?> objects) {
+		checkDbState();
+		try {
+			db.executeBulk(objects);
+		} catch (Exception ex) {
+			Logging.error(this.getClass(), ex.getMessage());
+			System.err.println("Bulk operation on db failed!\n"
+					+ ex.getMessage());
+			throw new DbException(ex);
+		}
 	}
 
 }

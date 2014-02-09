@@ -18,6 +18,8 @@
 package org.jvalue.ods.main;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.LinkedList;
 
 import org.ektorp.UpdateConflictException;
 import org.ektorp.support.DesignDocument;
@@ -26,14 +28,13 @@ import org.ektorp.support.DesignDocumentFactory;
 import org.ektorp.support.StdDesignDocumentFactory;
 import org.jvalue.ods.data.GenericValue;
 import org.jvalue.ods.data.ListValue;
-import org.jvalue.ods.data.MapValue;
-import org.jvalue.ods.data.StringValue;
+import org.jvalue.ods.data.osm.OsmData;
 import org.jvalue.ods.data.pegelonline.PegelOnlineMetaData;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.grabber.JsonGrabber;
-import org.jvalue.ods.grabber.XmlGrabber;
+import org.jvalue.ods.grabber.OsmGrabber;
 import org.jvalue.ods.logger.Logging;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -71,61 +72,47 @@ public class DataGrabberMain {
 	 * 
 	 */
 	private static void insertOsmFilesIntoDatabase() {
-		XmlGrabber xmlGrabber = new XmlGrabber();
-		GenericValue gv = xmlGrabber.grab(osmSource);
-		MapValue mv = (MapValue) gv;
-		MapValue osm = (MapValue) mv.getMap().get("osm");
+		OsmGrabber grabber = new OsmGrabber();
+		OsmData data = null;
+		try {
+			data = grabber.grab(osmSource);
+		} catch (IOException e) {
+			System.err.println("Could not grab source." + e.getMessage());
+			Logging.error(DataGrabberMain.class,
+					"Could not grab source." + e.getMessage());
+			return;
+		}
 
 		DbAccessor<JsonNode> accessor = DbFactory.createDbAccessor("osm");
 		accessor.connect();
 		accessor.deleteDatabase();
 
-		insertNodeType(accessor, osm, "node");
-		insertNodeType(accessor, osm, "way");
-		insertNodeType(accessor, osm, "relation");
+		Collection<Object> list = new LinkedList<Object>();
+		list.addAll(data.getNodes());
+		list.addAll(data.getWays());
+		list.addAll(data.getRelations());
+
+		accessor.executeBulk(list);
 
 		createView("_design/osm", "getNodeById",
-				"function(doc) { if(doc.type == 'node') emit( doc.id, doc)}",
+				"function(doc) { if(doc.nodeId) emit( doc.nodeId, doc)}",
 				accessor);
 
 		createView("_design/osm", "getWayById",
-				"function(doc) { if(doc.type == 'way') emit( doc.id, doc)}",
+				"function(doc) { if(doc.wayId) emit( doc.wayId, doc)}",
 				accessor);
 
 		createView(
 				"_design/osm",
 				"getRelationById",
-				"function(doc) { if(doc.type == 'relation') emit( doc.id, doc)}",
+				"function(doc) { if(doc.relationId) emit( doc.relationId, doc)}",
 				accessor);
 
 		createView(
 				"_design/osm",
 				"getDocumentsByKeyword",
-				"function(doc) { if(doc.tag){ for (var i in doc.tag) {var tmp = doc.tag[i]; for (var j in tmp) {emit(tmp[j], doc)} } }}",
+				"function(doc) { if(doc.tags){ for (var i in doc.tags) { emit(doc.tags[i], doc) }} }",
 				accessor);
-
-	}
-
-	/**
-	 * Insert node type.
-	 * 
-	 * @param accessor
-	 *            the accessor
-	 * @param osm
-	 *            the osm
-	 * @param type
-	 *            the type
-	 */
-	private static void insertNodeType(DbAccessor<JsonNode> accessor,
-			MapValue osm, String type) {
-
-		ListValue list = (ListValue) osm.getMap().get(type);
-
-		for (GenericValue node : list.getList()) {
-			MapValue map = (MapValue) node;
-			map.getMap().put("type", new StringValue(type));
-			accessor.insert(map);
-		}
 
 	}
 

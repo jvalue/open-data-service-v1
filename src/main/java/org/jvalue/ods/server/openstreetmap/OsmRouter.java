@@ -72,9 +72,9 @@ public class OsmRouter implements Router<Restlet> {
 				List<JsonNode> nodes = null;
 				try {
 					dbAccessor.connect();
+					String s = (String) request.getAttributes().get("id");
 					nodes = dbAccessor.executeDocumentQuery("_design/osm",
-							"getNodeById", (String) request.getAttributes()
-									.get("id"));
+							"getNodeById", s);
 					ObjectMapper mapper = new ObjectMapper();
 					try {
 						message += mapper.writeValueAsString(nodes);

@@ -32,14 +32,15 @@ public class JsonGrabberTest {
 
 	/** The Test url. */
 	private final String TestUrl = "http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true";
-	
-/** The grabber. */
-private JsonGrabber grabber;
-	
+
+	/** The grabber. */
+	private JsonGrabber grabber;
+
 	/**
 	 * Sets the up.
-	 *
-	 * @throws Exception the exception
+	 * 
+	 * @throws Exception
+	 *             the exception
 	 */
 	@Before
 	public void setUp() throws Exception {
@@ -53,23 +54,23 @@ private JsonGrabber grabber;
 	@Test
 	public void testGrab() {
 		GenericValue gv = grabber.grab(TestUrl);
-		assertNotNull(gv);			
+		assertNotNull(gv);
 	}
-	
+
 	/**
 	 * Test grab invalid source.
 	 */
 	@Test
 	public void testGrabInvalidSource() {
 		GenericValue gv = grabber.grab("invalidsource");
-		assertNull(gv);			
+		assertNull(gv);
 	}
-	
+
 	/**
 	 * Test grab null source.
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testGrabNullSource() {
-		grabber.grab(null);				
+		grabber.grab(null);
 	}
 }

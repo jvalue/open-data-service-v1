@@ -19,6 +19,7 @@ package org.jvalue.ods.db;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.ektorp.support.CouchDbDocument;
@@ -178,6 +179,17 @@ public class MockDbAccessor implements DbAccessor<JsonNode> {
 			String viewName, String key) {
 
 		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.jvalue.ods.db.DbAccessor#executeBulk(java.util.Collection)
+	 */
+	@Override
+	public void executeBulk(Collection<?> objects) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

@@ -2,7 +2,9 @@
  * 
  */
 package org.jvalue.ods.grabber;
+
 import java.io.File;
+import java.io.StringReader;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -16,134 +18,138 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 /**
  * The Class XmlGrabber.
  */
 public class XmlGrabber {
 
-	
 	/**
 	 * Grab.
-	 *
-	 * @param source the source
+	 * 
+	 * @param source
+	 *            the source
 	 * @return the generic value
 	 */
 	public GenericValue grab(String source) {
 		if (source == null)
-			throw new IllegalArgumentException("source is null");	
-		
-		try {					 
-			File xmlFile = new File(source);
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			throw new IllegalArgumentException("source is null");
+
+		try {
+
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory
+					.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Document doc = dBuilder.parse(xmlFile);
+
+			Document doc = null;
+			if (!source.startsWith("http")) {
+				File xmlFile = new File(source);
+				doc = dBuilder.parse(xmlFile);
+			} else {
+				HttpReader reader = new HttpReader(source);
+				String data = reader.read("UTF-8");
+				doc = dBuilder.parse(new InputSource(new StringReader(data)));
+			}
+
 			doc.getDocumentElement().normalize();
 			Node rootNode = doc.getFirstChild();
-			
+
 			GenericValue gv = new MapValue();
-			((MapValue)gv).getMap().put(rootNode.getNodeName(), convertXml(rootNode, false));
-						
-			
+			((MapValue) gv).getMap().put(rootNode.getNodeName(),
+					convertXml(rootNode, false));
+
 			return gv;
-		}
-		catch(Exception ex)
-		{
+		} catch (Exception ex) {
 			Logging.info(this.getClass(), ex.getMessage());
 			return null;
 		}
-		
+
 	}
 
 	/**
 	 * Convert xml.
-	 *
-	 * @param node the node
-	 * @param isMultiple the is multiple
+	 * 
+	 * @param node
+	 *            the node
+	 * @param isMultiple
+	 *            the is multiple
 	 * @return the generic value
 	 */
 	private GenericValue convertXml(Node node, boolean isMultiple) {
-		GenericValue gv = null;		
-		
-		if (node.getNodeType() == Node.ELEMENT_NODE)
-		{
-			if (isMultiple || !isMultipleNode(node))
-			{
-				gv = new MapValue();				
-				fillNodeRec(node, (MapValue) gv);				
-			}
-			else
-			{
+		GenericValue gv = null;
+
+		if (node.getNodeType() == Node.ELEMENT_NODE) {
+			if (isMultiple || !isMultipleNode(node)) {
+				gv = new MapValue();
+				fillNodeRec(node, (MapValue) gv);
+			} else {
 				gv = new ListValue();
 				fillMultipleNodes(node, (ListValue) gv);
 			}
-		}
-		else if ((node.getNodeType() == Node.ATTRIBUTE_NODE) || (node.getNodeType() == Node.TEXT_NODE))
-		{			
+		} else if ((node.getNodeType() == Node.ATTRIBUTE_NODE)
+				|| (node.getNodeType() == Node.TEXT_NODE)) {
 			String s = node.getNodeValue();
-			gv = new StringValue(s);			
+			gv = new StringValue(s);
 		}
-		
+
 		return gv;
 	}
 
 	/**
 	 * Fill multiple nodes.
-	 *
-	 * @param node the node
-	 * @param lv the lv
+	 * 
+	 * @param node
+	 *            the node
+	 * @param lv
+	 *            the lv
 	 */
 	private void fillMultipleNodes(Node node, ListValue lv) {
 		Node tmpNode = node;
-		
+
 		String currentNodeName = node.getNodeName();
-		
-		while(tmpNode != null)
-		{
+
+		while (tmpNode != null) {
 			String tempNodeName = tmpNode.getNodeName();
-			if (tempNodeName.equals(currentNodeName))
-			{
+			if (tempNodeName.equals(currentNodeName)) {
 				lv.getList().add(convertXml(tmpNode, true));
 			}
 			tmpNode = tmpNode.getNextSibling();
 		}
-		
+
 		tmpNode = node.getPreviousSibling();
-		while(tmpNode != null)
-		{
+		while (tmpNode != null) {
 			String tempNodeName = tmpNode.getNodeName();
-			if (tempNodeName.equals(currentNodeName))
-			{
+			if (tempNodeName.equals(currentNodeName)) {
 				lv.getList().add(convertXml(tmpNode, true));
 			}
 			tmpNode = tmpNode.getPreviousSibling();
 		}
-		
+
 	}
 
 	/**
 	 * Fill node rec.
-	 *
-	 * @param node the node
-	 * @param mv the mv
+	 * 
+	 * @param node
+	 *            the node
+	 * @param mv
+	 *            the mv
 	 */
 	private void fillNodeRec(Node node, MapValue mv) {
 		if (node.hasAttributes()) {
 			NamedNodeMap map = node.getAttributes();
-			for (int i = 0; i < map.getLength(); i++)
-			{
+			for (int i = 0; i < map.getLength(); i++) {
 				Node n = map.item(i);
 				GenericValue gv = convertXml(n, false);
 				mv.getMap().put(n.getNodeName(), gv);
 			}
 		}
-		
-		if (node.hasChildNodes())
-		{
-			NodeList list = node.getChildNodes();		
-			
-			for (int i = 0; i < list.getLength(); i++)
-			{
+
+		if (node.hasChildNodes()) {
+			NodeList list = node.getChildNodes();
+
+			for (int i = 0; i < list.getLength(); i++) {
 				Node n = list.item(i);
 				if (n.getNodeType() == Node.ELEMENT_NODE) {
 					GenericValue gv = convertXml(n, false);
@@ -155,31 +161,28 @@ public class XmlGrabber {
 
 	/**
 	 * Checks if is multiple node.
-	 *
-	 * @param node the node
+	 * 
+	 * @param node
+	 *            the node
 	 * @return true, if is multiple node
 	 */
-	private boolean isMultipleNode(Node node)
-	{
+	private boolean isMultipleNode(Node node) {
 		String currentNodeName = node.getNodeName();
-		
+
 		Node tmpNode = node;
-		while (tmpNode.getNextSibling() != null)
-		{
+		while (tmpNode.getNextSibling() != null) {
 			String nextNodeName = tmpNode.getNextSibling().getNodeName();
-			if (nextNodeName.equals(currentNodeName))
-			{
+			if (nextNodeName.equals(currentNodeName)) {
 				return true;
 			}
 			tmpNode = tmpNode.getNextSibling();
 		}
-		
+
 		tmpNode = node;
-		while (tmpNode.getPreviousSibling() != null)
-		{
-			String previousNodeName = tmpNode.getPreviousSibling().getNodeName();
-			if (previousNodeName.equals(currentNodeName))
-			{
+		while (tmpNode.getPreviousSibling() != null) {
+			String previousNodeName = tmpNode.getPreviousSibling()
+					.getNodeName();
+			if (previousNodeName.equals(currentNodeName)) {
 				return true;
 			}
 			tmpNode = tmpNode.getPreviousSibling();

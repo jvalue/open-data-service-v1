@@ -53,7 +53,8 @@ public class DataServerMain {
 		combinedRouter.putAll(osmRouter.getRoutes());
 
 		// must be last router, generates api output
-		Router<Restlet> apiRouter = RouterFactory.createApiRouter(combinedRouter);
+		Router<Restlet> apiRouter = RouterFactory
+				.createApiRouter(combinedRouter);
 		combinedRouter.putAll(apiRouter.getRoutes());
 
 		new RestletServer(combinedRouter, port).initialize();
