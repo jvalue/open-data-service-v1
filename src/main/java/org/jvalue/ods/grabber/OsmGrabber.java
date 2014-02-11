@@ -59,9 +59,14 @@ public class OsmGrabber {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public OsmData grab(String source) throws IOException {
-		if (source == null)
+	public OsmData grab(String source) {
+		if (source == null) {
 			throw new IllegalArgumentException("source is null");
+		}
+
+		if (source.length() == 0) {
+			throw new IllegalArgumentException("source is empty");
+		}
 
 		nodes = new LinkedList<Node>();
 		ways = new LinkedList<Way>();
@@ -87,6 +92,7 @@ public class OsmGrabber {
 				file = new File("tmp.txt");
 			} catch (IOException e) {
 				Logging.error(this.getClass(), e.getMessage());
+				// maybe throw another exception here instead of returning null
 				return null;
 			} finally {
 				if (out != null) {
@@ -125,18 +131,20 @@ public class OsmGrabber {
 
 		Thread readerThread = new Thread(reader);
 		readerThread.start();
-
+		
 		while (readerThread.isAlive()) {
 			try {
 				readerThread.join();
 			} catch (InterruptedException e) {
-			}
+				// maybe throw another exception here instead of returning null
+				return null;
+			} 
 		}
 
 		if (file.exists() && source.startsWith("http")) {
 			file.delete();
 		}
-
+		
 		return new OsmData(nodes, ways, relations);
 	}
 }

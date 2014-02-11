@@ -61,8 +61,7 @@ public class DataGrabberMain {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public static void main(String[] args) throws JsonParseException,
-			JsonMappingException, IOException {
+	public static void main(String[] args) {
 		insertOsmFilesIntoDatabase();
 		insertPegelOnlineStationsIntoDatabase();
 	}
@@ -74,12 +73,10 @@ public class DataGrabberMain {
 	private static void insertOsmFilesIntoDatabase() {
 		OsmGrabber grabber = new OsmGrabber();
 		OsmData data = null;
-		try {
-			data = grabber.grab(osmSource);
-		} catch (IOException e) {
-			System.err.println("Could not grab source." + e.getMessage());
-			Logging.error(DataGrabberMain.class,
-					"Could not grab source." + e.getMessage());
+
+		data = grabber.grab(osmSource);
+
+		if (data == null) {
 			return;
 		}
 
@@ -126,8 +123,7 @@ public class DataGrabberMain {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	private static void insertPegelOnlineStationsIntoDatabase()
-			throws JsonParseException, JsonMappingException, IOException {
+	private static void insertPegelOnlineStationsIntoDatabase() {
 
 		JsonGrabber grabber = new JsonGrabber();
 
