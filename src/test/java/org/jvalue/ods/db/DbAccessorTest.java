@@ -17,15 +17,13 @@
  */
 package org.jvalue.ods.db;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
-import org.ektorp.support.CouchDbDocument;
+import java.util.LinkedList;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.jvalue.ods.db.exception.DbException;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -38,7 +36,7 @@ public class DbAccessorTest {
 	private final String testDbName = "DbAccessorTest";
 
 	/** The data. */
-	private final CouchDbDocument data = new CouchDbDocument();
+	private final Object data = new Object();
 
 	/** The couch db inserter. */
 	private DbAccessor<JsonNode> couchDbAdapter;
@@ -110,7 +108,7 @@ public class DbAccessorTest {
 	 * Test insert without connect.
 	 */
 	@Test(expected = IllegalStateException.class)
-	public void testInserWithoutConnect() {
+	public void testInsertWithoutConnect() {
 		couchDbAdapter = DbFactory.createMockDbAccessor(testDbName);
 		assertNotNull(couchDbAdapter);
 		couchDbAdapter.insert(data);
@@ -125,43 +123,11 @@ public class DbAccessorTest {
 	}
 
 	/**
-	 * Test update.
-	 */
-	@Test
-	public void testUpdate() {
-		String id = "42";
-
-		CouchDbDocument doc = new CouchDbDocument();
-		doc.setId(id);
-
-		String rev = doc.getRevision();
-		couchDbAdapter.update(doc);
-
-		// Revision of document should have changed
-		assertNotEquals(doc.getRevision(), rev);
-	}
-
-	/**
 	 * Test update null data.
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testUpdateNullData() {
 		couchDbAdapter.update(null);
-	}
-
-	/**
-	 * Test update invalid revision.
-	 */
-	@Test(expected = DbException.class)
-	public void testUpdateInvalidRevision() {
-		String id = "42";
-		String revision = "invalidRevision";
-
-		CouchDbDocument doc = new CouchDbDocument();
-		doc.setId(id);
-		doc.setRevision(revision);
-
-		couchDbAdapter.update(doc);
 	}
 
 	/**
@@ -175,24 +141,145 @@ public class DbAccessorTest {
 	}
 
 	/**
-	 * Test get last document id.
+	 * Test get document null classname.
 	 */
-	@Test
-	public void testGetLastDocumentId() {
-		couchDbAdapter.insert(data);
-		String id = data.getId();
-
-		String lastId = couchDbAdapter.getLastDocumentId();
-		assertEquals(lastId, id);
+	@Test(expected = IllegalArgumentException.class)
+	public void testGetDocumentNullClassname() {
+		couchDbAdapter.getDocument(null, "");
 	}
 
 	/**
-	 * Test get last document id empty database.
+	 * Test get document null id.
 	 */
-	@Test(expected = DbException.class)
-	public void testGetLastDocumentIdEmptyDatabase() {
+	@Test(expected = IllegalArgumentException.class)
+	public void testGetDocumentNullId() {
+		couchDbAdapter.getDocument(Object.class, null);
+	}
+
+	/**
+	 * Test get document empty id.
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testGetDocumentEmptyId() {
+		couchDbAdapter.getDocument(Object.class, "");
+	}
+
+	/**
+	 * Test get document without connect.
+	 */
+	@Test(expected = IllegalStateException.class)
+	public void testGetDocumentWithoutConnect() {
+		couchDbAdapter = DbFactory.createMockDbAccessor(testDbName);
+		assertNotNull(couchDbAdapter);
+		couchDbAdapter.getDocument(Object.class, "1");
+	}
+
+	/**
+	 * Test delete database without connect.
+	 */
+	@Test(expected = IllegalStateException.class)
+	public void testDeleteDatabaseWithoutConnect() {
+		couchDbAdapter = DbFactory.createMockDbAccessor(testDbName);
+		assertNotNull(couchDbAdapter);
 		couchDbAdapter.deleteDatabase();
-		couchDbAdapter.getLastDocumentId();
+	}
+
+	/**
+	 * Test get all documents without connect.
+	 */
+	@Test(expected = IllegalStateException.class)
+	public void testGetAllDocumentsWithoutConnect() {
+		couchDbAdapter = DbFactory.createMockDbAccessor(testDbName);
+		assertNotNull(couchDbAdapter);
+		couchDbAdapter.getAllDocuments();
+	}
+
+	/**
+	 * Test get all documents new db.
+	 */
+	@Test
+	public void testGetAllDocumentsNewDb() {
+		couchDbAdapter = DbFactory.createMockDbAccessor("foo");
+		assertNotNull(couchDbAdapter);
+		couchDbAdapter.connect();
+		couchDbAdapter.getAllDocuments();
+		couchDbAdapter.deleteDatabase();
+	}
+
+	/**
+	 * Test execute document query without connect.
+	 */
+	@Test(expected = IllegalStateException.class)
+	public void testExecuteDocumentQueryWithoutConnect() {
+		couchDbAdapter = DbFactory.createMockDbAccessor(testDbName);
+		assertNotNull(couchDbAdapter);
+		couchDbAdapter.executeDocumentQuery("xxx", "xxx", null);
+	}
+
+	/**
+	 * Test execute document query null doc id.
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testExecuteDocumentQueryNullDocId() {
+		couchDbAdapter.executeDocumentQuery(null, "xxx", null);
+	}
+
+	/**
+	 * Test execute document query null view name.
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testExecuteDocumentQueryNullViewName() {
+		couchDbAdapter.executeDocumentQuery("xxx", null, null);
+	}
+
+	/**
+	 * Test execute document query empty doc id.
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testExecuteDocumentQueryEmptyDocId() {
+		couchDbAdapter.executeDocumentQuery("", "xxx", null);
+	}
+
+	/**
+	 * Test execute document query empty view name.
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testExecuteDocumentQueryEmptyViewName() {
+		couchDbAdapter.executeDocumentQuery("xxx", "", null);
+	}
+
+	/**
+	 * Test execute document query new db.
+	 */
+	@Test
+	public void testExecuteDocumentQueryNewDb() {
+		couchDbAdapter = DbFactory.createMockDbAccessor("foo");
+		assertNotNull(couchDbAdapter);
+		couchDbAdapter.connect();
+		couchDbAdapter.executeDocumentQuery("xxx", "xxx", null);
+		couchDbAdapter.deleteDatabase();
+	}
+
+	/**
+	 * Test execute bulk without connect.
+	 */
+	@Test(expected = IllegalStateException.class)
+	public void testExecuteBulkWithoutConnect() {
+		couchDbAdapter = DbFactory.createMockDbAccessor(testDbName);
+		assertNotNull(couchDbAdapter);
+		couchDbAdapter.executeBulk(new LinkedList<>());
+	}
+
+	/**
+	 * Test execute bulk new db.
+	 */
+	@Test
+	public void testExecuteBulkNewDb() {
+		couchDbAdapter = DbFactory.createMockDbAccessor("foo");
+		assertNotNull(couchDbAdapter);
+		couchDbAdapter.connect();
+		couchDbAdapter.executeBulk(new LinkedList<>());
+		couchDbAdapter.deleteDatabase();
 	}
 
 }

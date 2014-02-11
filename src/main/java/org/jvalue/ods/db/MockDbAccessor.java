@@ -17,13 +17,13 @@
  */
 package org.jvalue.ods.db;
 
-import java.util.AbstractMap.SimpleEntry;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-
-import org.ektorp.support.CouchDbDocument;
-import org.jvalue.ods.db.exception.DbException;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Random;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -33,10 +33,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 public class MockDbAccessor implements DbAccessor<JsonNode> {
 
 	/** The list. */
-	List<SimpleEntry<String, Object>> list = new ArrayList<SimpleEntry<String, Object>>();
+	Map<String, Object> map = new HashMap<String, Object>();
 
 	/** The is connected. */
 	private boolean isConnected = false;
+
+	Random rn = new Random();
 
 	/**
 	 * Instantiates a new mock db adapter.
@@ -66,21 +68,24 @@ public class MockDbAccessor implements DbAccessor<JsonNode> {
 	 */
 	@Override
 	public <T> T getDocument(Class<T> c, String id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.jvalue.ods.db.DbAdapter#getLastDocumentId()
-	 */
-	@Override
-	public String getLastDocumentId() {
-		if (list.size() == 0)
-			throw new DbException("db is empty");
-		else
-			return list.get(list.size() - 1).getKey();
+		if (id == null) {
+			throw new IllegalArgumentException("id is null");
+		}
+
+		if (c == null) {
+			throw new IllegalArgumentException("c is null");
+		}
+
+		if (id.length() == 0l) {
+			throw new IllegalArgumentException("id is empty");
+		}
+
+		checkDbState();
+
+		T ret = null;
+
+		return ret;
 	}
 
 	/*
@@ -95,15 +100,12 @@ public class MockDbAccessor implements DbAccessor<JsonNode> {
 
 		checkDbState();
 
-		for (SimpleEntry<String, Object> s : list) {
-			if (s.getKey().equals(data.toString()))
+		for (Entry<String, Object> s : map.entrySet()) {
+			if (s.getValue().equals(data))
 				throw new IllegalArgumentException();
 		}
 
-		if (data instanceof CouchDbDocument)
-			((CouchDbDocument) data).setId(data.toString());
-
-		list.add(new SimpleEntry<String, Object>(data.toString(), data));
+		map.put("" + rn.nextInt(1000000), data);
 	}
 
 	/*
@@ -117,14 +119,6 @@ public class MockDbAccessor implements DbAccessor<JsonNode> {
 			throw new IllegalArgumentException("data is null");
 
 		checkDbState();
-
-		if (data instanceof CouchDbDocument) {
-			if (((CouchDbDocument) data).getRevision() == "invalidRevision")
-				throw new DbException("invalid revision");
-
-			((CouchDbDocument) data).setRevision(((CouchDbDocument) data)
-					.getRevision() + "2");
-		}
 	}
 
 	/*
@@ -134,7 +128,8 @@ public class MockDbAccessor implements DbAccessor<JsonNode> {
 	 */
 	@Override
 	public void deleteDatabase() {
-		list.clear();
+		checkDbState();
+		map.clear();
 	}
 
 	/*
@@ -164,8 +159,16 @@ public class MockDbAccessor implements DbAccessor<JsonNode> {
 	 */
 	@Override
 	public List<JsonNode> getAllDocuments() {
-		// TODO Auto-generated method stub
-		return null;
+
+		checkDbState();
+
+		List<JsonNode> ret = new LinkedList<JsonNode>();
+
+		for (Entry<String, Object> e : map.entrySet()) {
+			ret.add((JsonNode) e.getValue());
+		}
+
+		return ret;
 	}
 
 	/*
@@ -178,7 +181,24 @@ public class MockDbAccessor implements DbAccessor<JsonNode> {
 	public List<JsonNode> executeDocumentQuery(String designDocId,
 			String viewName, String key) {
 
-		return null;
+		checkDbState();
+
+		if (designDocId == null) {
+			throw new IllegalArgumentException("designDocId is null");
+		}
+		if (viewName == null) {
+			throw new IllegalArgumentException("viewName is null");
+		}
+		if (designDocId.length() == 0) {
+			throw new IllegalArgumentException("designDocId is empty");
+		}
+		if (viewName.length() == 0) {
+			throw new IllegalArgumentException("viewName is empty");
+		}
+
+		// key may be null
+
+		return new LinkedList<JsonNode>();
 	}
 
 	/*
@@ -188,7 +208,12 @@ public class MockDbAccessor implements DbAccessor<JsonNode> {
 	 */
 	@Override
 	public void executeBulk(Collection<?> objects) {
-		// TODO Auto-generated method stub
+
+		checkDbState();
+
+		if (objects == null) {
+			throw new IllegalArgumentException("objects is null");
+		}
 
 	}
 

@@ -141,6 +141,9 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 		if (id == null) {
 			throw new IllegalArgumentException("id is null");
 		}
+		if (id.length() == 0) {
+			throw new IllegalArgumentException("id is empty");
+		}
 
 		checkDbState();
 
@@ -153,30 +156,6 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 		}
 
 		return ret;
-	}
-
-	/**
-	 * Gets the last document id.
-	 * 
-	 * @return the last document id
-	 */
-	@Override
-	public String getLastDocumentId() {
-		checkDbState();
-
-		try {
-			List<String> allDocs = db.getAllDocIds();
-			if (allDocs.isEmpty()) {
-				String errorMessage = "DB is empty.";
-				Logging.error(this.getClass(), errorMessage);
-				throw new DbException(errorMessage);
-			}
-
-			return allDocs.get(allDocs.size() - 1);
-		} catch (Exception ex) {
-			Logging.error(this.getClass(), ex.getMessage());
-			throw new DbException(ex);
-		}
 	}
 
 	/**
@@ -252,7 +231,9 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 	 */
 	@Override
 	public List<JsonNode> getAllDocuments() {
-
+		
+		checkDbState();
+		
 		ViewQuery q = new ViewQuery().allDocs().includeDocs(true);
 		ViewResult result = db.queryView(q);
 
@@ -275,6 +256,19 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 	public List<JsonNode> executeDocumentQuery(String designDocId,
 			String viewName, String key) {
 
+		if (designDocId == null) {
+			throw new IllegalArgumentException("designDocId is null");
+		}
+		if (viewName == null) {
+			throw new IllegalArgumentException("viewName is null");
+		}
+		if (designDocId.length() == 0) {
+			throw new IllegalArgumentException("designDocId is empty");
+		}
+		if (viewName.length() == 0) {
+			throw new IllegalArgumentException("viewName is empty");
+		}
+		
 		checkDbState();
 
 		ViewQuery q = new ViewQuery().designDocId(designDocId)
@@ -302,6 +296,11 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 	 */
 	@Override
 	public void executeBulk(Collection<?> objects) {
+		
+		if (objects == null) {
+			throw new IllegalArgumentException("objects is null");
+		}
+		
 		checkDbState();
 		try {
 			db.executeBulk(objects);

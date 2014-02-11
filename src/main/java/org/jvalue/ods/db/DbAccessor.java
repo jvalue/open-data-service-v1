@@ -41,12 +41,6 @@ public interface DbAccessor<Q> {
 	 */
 	public <T> T getDocument(Class<T> c, String id);
 
-	/**
-	 * Gets the last document id.
-	 * 
-	 * @return the last document id
-	 */
-	public String getLastDocumentId();
 
 	/**
 	 * Insert.
