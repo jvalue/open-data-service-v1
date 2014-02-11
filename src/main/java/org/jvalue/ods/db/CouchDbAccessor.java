@@ -286,7 +286,6 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 
 		if (l.isEmpty()) {
 			Logging.info(this.getClass(), "Empty result list.\n" + q.toString());
-			throw new DbException("Empty result list.");
 		} else {
 			for (Row r : l) {
 				ret.add(r.getValueAsNode());

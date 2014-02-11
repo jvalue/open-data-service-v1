@@ -87,7 +87,7 @@ public class OsmGrabber {
 				file = new File("tmp.txt");
 			} catch (IOException e) {
 				Logging.error(this.getClass(), e.getMessage());
-				throw e;
+				return null;
 			} finally {
 				if (out != null) {
 					out.close();
@@ -130,8 +130,11 @@ public class OsmGrabber {
 			try {
 				readerThread.join();
 			} catch (InterruptedException e) {
-				/* do nothing */
 			}
+		}
+
+		if (file.exists() && source.startsWith("http")) {
+			file.delete();
 		}
 
 		return new OsmData(nodes, ways, relations);

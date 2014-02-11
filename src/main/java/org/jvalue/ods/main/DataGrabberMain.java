@@ -154,6 +154,11 @@ public class DataGrabberMain {
 				accessor);
 		createView("_design/pegelonline", "getMetadata",
 				"function(doc) { if(doc.title) emit(null, doc)}", accessor);
+
+		createView("_design/pegelonline", "getPoiByStation",
+				"function(doc) { if(doc.poi) emit (doc.longname, doc.poi) }",
+				accessor);
+
 	}
 
 	/**

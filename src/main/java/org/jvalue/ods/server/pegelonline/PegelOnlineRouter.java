@@ -19,6 +19,7 @@ package org.jvalue.ods.server.pegelonline;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -119,16 +120,17 @@ public class PegelOnlineRouter implements Router<Restlet> {
 				String name = (String) request.getAttributes().get("station");
 				name = name.toUpperCase();
 
-				try {
-					nodes = dbAccessor.executeDocumentQuery(
-							"_design/pegelonline", "getSingleStation", name);
+				nodes = dbAccessor.executeDocumentQuery("_design/pegelonline",
+						"getSingleStation", name);
 
+				if (!nodes.isEmpty()) {
 					response.setEntity(nodes.get(0).toString(),
 							MediaType.APPLICATION_JSON);
-				} catch (DbException ex) {
+				} else {
 					response.setEntity("Station not found.",
 							MediaType.TEXT_PLAIN);
 				}
+
 			}
 		};
 
@@ -144,13 +146,13 @@ public class PegelOnlineRouter implements Router<Restlet> {
 				String name = (String) request.getAttributes().get("station");
 				name = name.toUpperCase();
 
-				try {
-					nodes = dbAccessor.executeDocumentQuery(
-							"_design/pegelonline", "getMeasurements", name);
+				nodes = dbAccessor.executeDocumentQuery("_design/pegelonline",
+						"getMeasurements", name);
 
+				if (!nodes.isEmpty()) {
 					response.setEntity(nodes.get(0).toString(),
 							MediaType.APPLICATION_JSON);
-				} catch (DbException ex) {
+				} else {
 					response.setEntity("Station not found.",
 							MediaType.TEXT_PLAIN);
 				}
@@ -167,16 +169,26 @@ public class PegelOnlineRouter implements Router<Restlet> {
 				String name = (String) request.getAttributes().get("station");
 				name = name.toUpperCase();
 
+				ObjectMapper mapper = new ObjectMapper();
+				nodes = dbAccessor.executeDocumentQuery("_design/pegelonline",
+						"getSingleStation", name);
+
+				if (nodes.isEmpty()) {
+					response.setEntity("Station not found.",
+							MediaType.TEXT_PLAIN);
+					return;
+				}
+
+				List<JsonNode> poiList = dbAccessor.executeDocumentQuery(
+						"_design/pegelonline", "getPoiByStation", name);
+
 				try {
-					nodes = dbAccessor.executeDocumentQuery(
-							"_design/pegelonline", "getSingleStation", name);
+					if (poiList.isEmpty()) {
 
-					ObjectMapper mapper = new ObjectMapper();
-					if (nodes.get(0).isObject()) {
+						if (nodes.get(0).isObject()) {
 
-						HashMap<String, Object> station;
+							HashMap<String, Object> station;
 
-						try {
 							station = mapper
 									.readValue(
 											nodes.get(0).toString(),
@@ -188,27 +200,34 @@ public class PegelOnlineRouter implements Router<Restlet> {
 
 							OsmGrabber g = new OsmGrabber();
 							String source = "http://api.openstreetmap.org/api/0.6/map?bbox="
-									+ (longitude - 0.05)
+									+ (longitude - 0.04)
 									+ ","
-									+ (latitude - 0.05)
+									+ (latitude - 0.04)
 									+ ","
-									+ (longitude + 0.05)
+									+ (longitude + 0.04)
 									+ ","
-									+ (latitude + 0.05);
+									+ (latitude + 0.04);
 							OsmData data = g.grab(source);
 
-							StringBuilder sb = new StringBuilder();
+							String message = "";
 
-							for (OdsNode n : data.getNodes()) {
-								for (Entry<String, String> e : n.getTags()
-										.entrySet()) {
-									if (e.getKey().equals("tourism")) {
-										sb.append(mapper.writeValueAsString(n));
+							if (data != null) {
+
+								List<OdsNode> doc = new LinkedList<OdsNode>();
+
+								for (OdsNode n : data.getNodes()) {
+									for (Entry<String, String> e : n.getTags()
+											.entrySet()) {
+										if (e.getKey().equals("tourism")) {
+											doc.add(n);
+										}
 									}
 								}
-							}
 
-							String message = sb.toString();
+								message = mapper.writeValueAsString(doc);
+								station.put("poi", doc);
+								dbAccessor.update(station);
+							}
 
 							if (!message.isEmpty()) {
 								response.setEntity(message,
@@ -222,20 +241,20 @@ public class PegelOnlineRouter implements Router<Restlet> {
 										MediaType.APPLICATION_JSON);
 							}
 
-						} catch (IOException e) {
-							String errorMessage = "Error during client request: "
-									+ e;
-							Logging.error(this.getClass(), errorMessage);
-							System.err.println(errorMessage);
-							response.setEntity("Internal error.",
-									MediaType.TEXT_PLAIN);
 						}
+
+					} else {
+						String message = mapper.writeValueAsString(poiList
+								.get(0));
+						response.setEntity(message, MediaType.APPLICATION_JSON);
 
 					}
 
-				} catch (DbException e) {
-					response.setEntity("Station not found.",
-							MediaType.TEXT_PLAIN);
+				} catch (IOException e) {
+					String errorMessage = "Error during client request: " + e;
+					Logging.error(this.getClass(), errorMessage);
+					System.err.println(errorMessage);
+					response.setEntity("Internal error.", MediaType.TEXT_PLAIN);
 				}
 			}
 		};
