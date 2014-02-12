@@ -24,12 +24,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.jvalue.ods.data.GenericValue;
 import org.jvalue.ods.data.osm.OdsNode;
 import org.jvalue.ods.data.osm.OsmData;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.grabber.OsmGrabber;
+import org.jvalue.ods.grabber.XmlGrabber;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
 import org.restlet.Request;
@@ -259,6 +261,133 @@ public class PegelOnlineRouter implements Router<Restlet> {
 			}
 		};
 
+		final Restlet routeRestlet = new Restlet() {
+			@Override
+			public void handle(Request request, Response response) {
+
+				dbAccessor.connect();
+
+				ObjectMapper mapper = new ObjectMapper();
+
+				String startStation = (String) request.getAttributes().get(
+						"start");
+				startStation = startStation.toUpperCase();
+
+				String endStation = (String) request.getAttributes().get("end");
+				endStation = endStation.toUpperCase();
+
+				List<JsonNode> startNodes = dbAccessor
+						.executeDocumentQuery("_design/pegelonline",
+								"getSingleStation", startStation);
+
+				List<JsonNode> endNodes = dbAccessor.executeDocumentQuery(
+						"_design/pegelonline", "getSingleStation", endStation);
+
+				if (startNodes.isEmpty() || endNodes.isEmpty()) {
+					response.setEntity(
+							"Could not find a route between "
+									+ (String) request.getAttributes().get(
+											"start")
+									+ " and "
+									+ (String) request.getAttributes().get(
+											"end"), MediaType.APPLICATION_JSON);
+					return;
+				}
+
+				try {
+
+					double startLongitude = 0;
+					double startLatitude = 0;
+					double endLongitude = 0;
+					double endLatitude = 0;
+
+					if (startNodes.get(0).isObject()) {
+						HashMap<String, Object> startStationMap;
+						startStationMap = mapper.readValue(startNodes.get(0)
+								.toString(),
+								new TypeReference<HashMap<String, Object>>() {
+								});
+						startLongitude = (double) startStationMap
+								.get("longitude");
+						startLatitude = (double) startStationMap
+								.get("latitude");
+					}
+
+					if (endNodes.get(0).isObject()) {
+						HashMap<String, Object> endStationMap;
+						endStationMap = mapper.readValue(endNodes.get(0)
+								.toString(),
+								new TypeReference<HashMap<String, Object>>() {
+								});
+						endLongitude = (double) endStationMap.get("longitude");
+						endLatitude = (double) endStationMap.get("latitude");
+					}
+
+					String source = "http://www.yournavigation.org/api/1.0/gosmore.php?format=kml&flat="
+							+ startLatitude
+							+ "&flon="
+							+ startLongitude
+							+ "&tlat="
+							+ endLatitude
+							+ "&tlon="
+							+ endLongitude
+							+ "&v=motorcar&fast=1&layer=mapnik";
+
+					XmlGrabber grabber = new XmlGrabber();
+					GenericValue gv = grabber.grab(source);
+
+					String message = mapper.writeValueAsString(gv);
+
+					response.setEntity(message, MediaType.APPLICATION_JSON);
+
+				} catch (IOException e) {
+					String errorMessage = "Error during client request: " + e;
+					Logging.error(this.getClass(), errorMessage);
+					System.err.println(errorMessage);
+					response.setEntity("Internal error.", MediaType.TEXT_PLAIN);
+				}
+			}
+		};
+
+		Restlet routeDistanceRestlet = new Restlet() {
+			@SuppressWarnings("unchecked")
+			@Override
+			public void handle(Request request, Response response) {
+
+				ObjectMapper mapper = new ObjectMapper();
+
+				Response r = routeRestlet.handle(request);
+
+				try {
+					HashMap<String, Object> route = mapper.readValue(
+							r.getEntityAsText(),
+							new TypeReference<HashMap<String, Object>>() {
+							});
+
+					HashMap<String, Object> kml = (HashMap<String, Object>) route
+							.get("kml");
+					HashMap<String, Object> document = (HashMap<String, Object>) kml
+							.get("Document");
+					String distance = (String) document.get("distance");
+
+					response.setEntity(distance, MediaType.TEXT_PLAIN);
+
+				} catch (IOException e) {
+					String errorMessage = "Error during client request: " + e;
+					Logging.error(this.getClass(), errorMessage);
+					System.err.println(errorMessage);
+					response.setEntity(
+							"Could not find a route between "
+									+ (String) request.getAttributes().get(
+											"start")
+									+ " and "
+									+ (String) request.getAttributes().get(
+											"end"), MediaType.TEXT_PLAIN);
+				}
+
+			}
+		};
+
 		Restlet metadataRestlet = new Restlet() {
 			@Override
 			public void handle(Request request, Response response) {
@@ -284,6 +413,9 @@ public class PegelOnlineRouter implements Router<Restlet> {
 		routes.put("/pegelonline/stations/{station}/measurements",
 				measurementsRestlet);
 		routes.put("/pegelonline/stations/{station}/poi", poiRestlet);
+		routes.put("/pegelonline/route/{start}/{end}", routeRestlet);
+		routes.put("/pegelonline/routeDistance/{start}/{end}",
+				routeDistanceRestlet);
 		routes.put("/pegelonline/metadata", metadataRestlet);
 
 		return routes;

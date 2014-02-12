@@ -81,11 +81,10 @@ public class XmlGrabber {
 
 		if (node.getNodeType() == Node.ELEMENT_NODE) {
 			if (isMultiple || !isMultipleNode(node)) {
-				gv = new MapValue();
-				fillNodeRec(node, (MapValue) gv);
+				gv = fillNodeRec(node);
 			} else {
 				gv = new ListValue();
-				fillMultipleNodes(node, (ListValue) gv);
+				gv = fillMultipleNodes(node);
 			}
 		} else if ((node.getNodeType() == Node.ATTRIBUTE_NODE)
 				|| (node.getNodeType() == Node.TEXT_NODE)) {
@@ -104,8 +103,10 @@ public class XmlGrabber {
 	 * @param lv
 	 *            the lv
 	 */
-	private void fillMultipleNodes(Node node, ListValue lv) {
+	private GenericValue fillMultipleNodes(Node node) {
 		Node tmpNode = node;
+
+		ListValue lv = new ListValue();
 
 		String currentNodeName = node.getNodeName();
 
@@ -126,6 +127,7 @@ public class XmlGrabber {
 			tmpNode = tmpNode.getPreviousSibling();
 		}
 
+		return lv;
 	}
 
 	/**
@@ -136,27 +138,39 @@ public class XmlGrabber {
 	 * @param mv
 	 *            the mv
 	 */
-	private void fillNodeRec(Node node, MapValue mv) {
+	private GenericValue fillNodeRec(Node node) {
+
+		GenericValue mv = new MapValue();
+
 		if (node.hasAttributes()) {
 			NamedNodeMap map = node.getAttributes();
 			for (int i = 0; i < map.getLength(); i++) {
 				Node n = map.item(i);
 				GenericValue gv = convertXml(n, false);
-				mv.getMap().put(n.getNodeName(), gv);
+				((MapValue) mv).getMap().put(n.getNodeName(), gv);
 			}
 		}
 
 		if (node.hasChildNodes()) {
 			NodeList list = node.getChildNodes();
 
+			if ((list.getLength() == 1)
+					&& (list.item(0).getNodeType() == Node.TEXT_NODE)) {
+				mv = new StringValue(list.item(0).getNodeValue());
+				return mv;
+			}
+
 			for (int i = 0; i < list.getLength(); i++) {
 				Node n = list.item(i);
 				if (n.getNodeType() == Node.ELEMENT_NODE) {
 					GenericValue gv = convertXml(n, false);
-					mv.getMap().put(n.getNodeName(), gv);
+					((MapValue) mv).getMap().put(n.getNodeName(), gv);
 				}
+
 			}
 		}
+		
+		return mv;
 	}
 
 	/**
