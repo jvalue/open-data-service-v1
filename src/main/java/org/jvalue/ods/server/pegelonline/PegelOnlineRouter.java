@@ -111,6 +111,45 @@ public class PegelOnlineRouter implements Router<Restlet> {
 
 		};
 
+		Restlet stationsFlatRestlet = new Restlet() {
+
+			@Override
+			public void handle(Request request, Response response) {
+				// Print the requested URI path
+				String message = "";
+				try {
+
+					List<JsonNode> nodes = null;
+					ObjectMapper mapper = new ObjectMapper();
+
+					try {
+						dbAccessor.connect();
+
+						nodes = dbAccessor.executeDocumentQuery("_design/pegelonline",
+								"getAllStationsFlat", null);
+
+						message += mapper.writeValueAsString(nodes);
+					} catch (RuntimeException e) {
+						String errorMessage = "Could not retrieve data from db: "
+								+ e;
+						Logging.error(this.getClass(), errorMessage);
+						System.err.println(errorMessage);
+						message += mapper
+								.writeValueAsString("Could not retrieve data. Try to update database via /pegelonline/update.");
+					}
+
+				} catch (IOException e) {
+					String errorMessage = "Error during client request: " + e;
+					Logging.error(this.getClass(), errorMessage);
+					System.err.println(errorMessage);
+				}
+
+				response.setEntity(message, MediaType.APPLICATION_JSON);
+
+			}
+
+		};
+		
 		// gets the data of a single station
 		Restlet singleStationRestlet = new Restlet() {
 			@Override
@@ -409,6 +448,7 @@ public class PegelOnlineRouter implements Router<Restlet> {
 		};
 
 		routes.put("/pegelonline/stations", stationsRestlet);
+		routes.put("/pegelonline/stationsFlat", stationsFlatRestlet);
 		routes.put("/pegelonline/stations/{station}", singleStationRestlet);
 		routes.put("/pegelonline/stations/{station}/measurements",
 				measurementsRestlet);

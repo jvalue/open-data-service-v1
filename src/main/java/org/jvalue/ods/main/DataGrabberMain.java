@@ -154,6 +154,9 @@ public class DataGrabberMain {
 		createView("_design/pegelonline", "getPoiByStation",
 				"function(doc) { if(doc.poi) emit (doc.longname, doc.poi) }",
 				accessor);
+		createView("_design/pegelonline", "getAllStationsFlat",
+				"function(doc) { if(doc.longname) emit (null, doc.longname) }",
+				accessor);
 
 	}
 
