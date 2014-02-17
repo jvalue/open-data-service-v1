@@ -97,10 +97,10 @@ public class JsonGrabber {
 			}
 
 		} catch (ProcessingException e) {
-			Logging.error(this.getClass(), "Could not validate json" + e);
+			Logging.error(this.getClass(), "Could not validate json: " + e);
 			System.err.println("Could not validate json" + e);
 		} catch (IOException e) {
-			Logging.error(this.getClass(), "Could not validate json" + e);
+			Logging.error(this.getClass(), "Could not validate json: " + e);
 			System.err.println("Could not validate json" + e);
 		}
 
