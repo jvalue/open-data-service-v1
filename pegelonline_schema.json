@@ -1,0 +1,107 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "array",
+    "minItems": 601,
+    "maxItems": 601,
+    "items": {
+          "type": "object",
+          "required": [ "uuid", "number", "shortname", "longname", "km", "water", "timeseries" ],
+          "properties": {
+                "uuid": {
+                    "type": "string"
+                },
+                "number": {
+                    "type": "string"
+                },
+                "shortname": {
+                    "type": "string"
+                },
+                "longname": {
+                    "type": "string"
+                },
+                "km": {
+                    "type": "number"
+                },
+                "water": {
+                    "type": "object",
+                    "required": [ "shortname", "longname" ],
+                    "properties": {
+                          "shortname": {
+                                "type": "string"
+                          },
+                          "longname": {
+                                "type": "string"
+                          }
+                    }
+                },
+                "timeseries": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                             "type" : "object",
+                             "required": [ "shortname", "longname", "unit", "equidistance", "currentMeasurement"],
+                             "properties": {
+                                 "shortname": {
+                                      "type": "string"
+                                  },
+                                 "longname": {
+                                      "type": "string"
+                                 },
+                                 "unit": {
+                                      "type": "string"
+                                 },
+                                 "equidistance": {
+                                      "type": "number"
+                                 },
+                                 "currentMeasurement": {
+                                      "type": "object",
+                                      "required": [ "timestamp", "value", "trend"],
+                                      "properties": {
+                                              "timestamp": {
+                                                     "type": "string"
+                                              },
+                                             "value": {
+                                                    "type": "number"
+                                             },
+                                             "trend": {
+                                                   "type": "number"
+                                             },
+                                             "stateMnwMhw": {
+                                                   "type": "string"
+                                            },
+                                             "stateNswHsw": {
+                                                   "type": "string"
+                                            }
+                                      }
+                                 },
+                                 "gaugeZero": {
+                                      "type": "object",
+                                      "required": [ "unit", "value", "validFrom"],
+                                      "properties": {
+                                              "unit": {
+                                                     "type": "string"
+                                              },
+                                             "value": {
+                                                    "type": "number"
+                                             },
+                                             "validFrom": {
+                                                   "type": "string"
+                                             }
+                                      }
+
+                                 }
+                             }
+                    }
+                },
+                "agency": {
+                    "type": "string"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "longitude": {
+                    "type": "number"
+                }
+            }
+        }
+}

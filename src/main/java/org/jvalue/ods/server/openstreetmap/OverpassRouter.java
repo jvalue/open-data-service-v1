@@ -57,10 +57,10 @@ public class OverpassRouter implements Router<Restlet> {
 
 				GenericValue ret = null;
 				try {
-					ret = new JsonGrabber()
-							.grab("http://overpass.osm.rambler.ru/cgi/interpreter?data=[out:json];node[name%3D"
+					ret = new JsonGrabber().grab(
+							"http://overpass.osm.rambler.ru/cgi/interpreter?data=[out:json];node[name%3D"
 									+ (String) request.getAttributes().get(
-											"location") + "]%3Bout%3B");
+											"location") + "]%3Bout%3B", null);
 					ObjectMapper mapper = new ObjectMapper();
 					message += mapper.writeValueAsString(ret);
 

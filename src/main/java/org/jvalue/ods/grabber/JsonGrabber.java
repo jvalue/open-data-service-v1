@@ -17,6 +17,7 @@
  */
 package org.jvalue.ods.grabber;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
@@ -32,6 +33,11 @@ import org.jvalue.ods.logger.Logging;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jackson.JsonLoader;
+import com.github.fge.jsonschema.exceptions.ProcessingException;
+import com.github.fge.jsonschema.main.JsonSchema;
+import com.github.fge.jsonschema.main.JsonSchemaFactory;
+import com.github.fge.jsonschema.report.ProcessingReport;
 
 /**
  * The Class JsonGrabber.
@@ -45,7 +51,7 @@ public class JsonGrabber {
 	 *            the source
 	 * @return the generic value
 	 */
-	public GenericValue grab(String source) {
+	public GenericValue grab(String source, String schemaPath) {
 		if (source == null)
 			throw new IllegalArgumentException("source is null");
 
@@ -57,6 +63,10 @@ public class JsonGrabber {
 			ObjectMapper mapper = new ObjectMapper();
 			rootNode = mapper.readTree(json);
 
+			if (schemaPath != null && schemaPath != "") {
+				validate(rootNode, schemaPath);
+			}
+
 		} catch (IOException e) {
 			Logging.error(this.getClass(), "Could not grab source.");
 			System.err.println("Could not grab source.");
@@ -66,6 +76,33 @@ public class JsonGrabber {
 		GenericValue gv = convertJson(rootNode);
 
 		return gv;
+
+	}
+
+	private void validate(JsonNode rootNode, String schemaPath) {
+		JsonSchemaFactory factory = JsonSchemaFactory.byDefault();
+
+		JsonSchema jsonSchema;
+
+		try {
+
+			JsonNode jn = JsonLoader.fromFile(new File(schemaPath));
+
+			jsonSchema = factory.getJsonSchema(jn);
+			ProcessingReport report;
+			report = jsonSchema.validate(rootNode);
+			if (!report.isSuccess()) {
+				Logging.info(this.getClass(), "Validation error: " + report);
+				System.err.println("Validation error: " + report);
+			}
+
+		} catch (ProcessingException e) {
+			Logging.error(this.getClass(), "Could not validate json" + e);
+			System.err.println("Could not validate json" + e);
+		} catch (IOException e) {
+			Logging.error(this.getClass(), "Could not validate json" + e);
+			System.err.println("Could not validate json" + e);
+		}
 
 	}
 

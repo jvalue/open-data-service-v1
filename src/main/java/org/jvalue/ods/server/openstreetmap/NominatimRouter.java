@@ -64,10 +64,10 @@ public class NominatimRouter implements Router<Restlet> {
 
 					GenericValue ret = null;
 
-					ret = new JsonGrabber()
-							.grab("http://nominatim.openstreetmap.org/search?q="
+					ret = new JsonGrabber().grab(
+							"http://nominatim.openstreetmap.org/search?q="
 									+ (String) request.getAttributes().get(
-											"location") + "&format=json");
+											"location") + "&format=json", null);
 
 					ObjectMapper mapper = new ObjectMapper();
 					message += mapper.writeValueAsString(ret);
@@ -94,10 +94,10 @@ public class NominatimRouter implements Router<Restlet> {
 
 					GenericValue ret = null;
 
-					ret = new JsonGrabber()
-							.grab("http://nominatim.openstreetmap.org/reverse?format=json"
+					ret = new JsonGrabber().grab(
+							"http://nominatim.openstreetmap.org/reverse?format=json"
 									+ (String) request.getAttributes().get(
-											"coordinates"));
+											"coordinates"), null);
 
 					ObjectMapper mapper = new ObjectMapper();
 					message += mapper.writeValueAsString(ret);

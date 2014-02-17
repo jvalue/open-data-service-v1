@@ -53,7 +53,7 @@ public class JsonGrabberTest {
 	 */
 	@Test
 	public void testGrab() {
-		GenericValue gv = grabber.grab(TestUrl);
+		GenericValue gv = grabber.grab(TestUrl, null);
 		assertNotNull(gv);
 	}
 
@@ -62,7 +62,7 @@ public class JsonGrabberTest {
 	 */
 	@Test
 	public void testGrabInvalidSource() {
-		GenericValue gv = grabber.grab("invalidsource");
+		GenericValue gv = grabber.grab("invalidsource", null);
 		assertNull(gv);
 	}
 
@@ -71,6 +71,6 @@ public class JsonGrabberTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testGrabNullSource() {
-		grabber.grab(null);
+		grabber.grab(null, null);
 	}
 }

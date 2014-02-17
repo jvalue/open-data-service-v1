@@ -129,7 +129,8 @@ public class DataGrabberMain {
 
 		// generic import
 		ListValue list = (ListValue) grabber
-				.grab("http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true");
+				.grab("http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true",
+						"pegelonline_schema.json");
 		DbAccessor<JsonNode> accessor = DbFactory
 				.createDbAccessor("pegelonline");
 		accessor.connect();
