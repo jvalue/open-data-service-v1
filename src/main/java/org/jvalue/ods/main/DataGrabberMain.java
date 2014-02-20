@@ -19,15 +19,19 @@ package org.jvalue.ods.main;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import org.ektorp.UpdateConflictException;
 import org.ektorp.support.DesignDocument;
 import org.ektorp.support.DesignDocument.View;
 import org.ektorp.support.DesignDocumentFactory;
 import org.ektorp.support.StdDesignDocumentFactory;
-import org.jvalue.ods.data.GenericValue;
-import org.jvalue.ods.data.ListValue;
+import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.data.generic.GenericValue;
+import org.jvalue.ods.data.generic.ListValue;
 import org.jvalue.ods.data.osm.OsmData;
 import org.jvalue.ods.data.pegelonline.PegelOnlineMetaData;
 import org.jvalue.ods.db.DbAccessor;
@@ -36,6 +40,11 @@ import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.grabber.JsonGrabber;
 import org.jvalue.ods.grabber.OsmGrabber;
 import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.schema.ListSchema;
+import org.jvalue.ods.schema.MapSchema;
+import org.jvalue.ods.schema.NumberSchema;
+import org.jvalue.ods.schema.Schema;
+import org.jvalue.ods.schema.StringSchema;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -51,18 +60,11 @@ public class DataGrabberMain {
 
 	/**
 	 * The main method.
-	 * 
-	 * @param args
-	 *            the arguments
-	 * @throws JsonParseException
-	 *             the json parse exception
-	 * @throws JsonMappingException
-	 *             the json mapping exception
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
-		insertOsmFilesIntoDatabase();
+		//insertOsmFilesIntoDatabase();
 		insertPegelOnlineStationsIntoDatabase();
 	}
 
@@ -115,22 +117,19 @@ public class DataGrabberMain {
 
 	/**
 	 * Insert pegel online stations into database.
-	 * 
-	 * @throws JsonParseException
-	 *             the json parse exception
-	 * @throws JsonMappingException
-	 *             the json mapping exception
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 *
 	 */
 	private static void insertPegelOnlineStationsIntoDatabase() {
 
 		JsonGrabber grabber = new JsonGrabber();
 
-		// generic import
-		ListValue list = (ListValue) grabber
-				.grab("http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true",
-						"src/main/resources/schema/pegelonline_schema.json");
+		//generic import
+//		ListValue list = (ListValue) grabber
+//				.grab("http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true",
+//						"src/main/resources/schema/pegelonline_schema.json");
+		Schema schema = createPegelOnlineSchema();
+		ListValue list = (ListValue) grabber.grab(new DataSource("http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true",schema, null));
+
 		DbAccessor<JsonNode> accessor = DbFactory
 				.createDbAccessor("pegelonline");
 		accessor.connect();
@@ -159,6 +158,72 @@ public class DataGrabberMain {
 				"function(doc) { if(doc.longname) emit (null, doc.longname) }",
 				accessor);
 
+	}
+
+	/**
+	 * Creates the pegel online schema.
+	 *
+	 * @return the schema
+	 */
+	private static Schema createPegelOnlineSchema() {
+		Map<String, Schema> water = new HashMap<String, Schema>();
+		water.put("shortname", new StringSchema());
+		water.put("longname", new StringSchema());
+		MapSchema waterSchema = new MapSchema(water);
+		
+		Map<String, Schema> currentMeasurement = new HashMap<String, Schema>();
+		currentMeasurement.put("timestamp", new StringSchema());
+		currentMeasurement.put("value", new NumberSchema());
+		currentMeasurement.put("trend", new NumberSchema());
+		currentMeasurement.put("stateMnwMhw", new StringSchema());
+		currentMeasurement.put("stateNswHsw", new StringSchema());
+		MapSchema currentMeasurementSchema = new MapSchema(currentMeasurement);
+		
+		Map<String, Schema> gaugeZero = new HashMap<String, Schema>();
+		gaugeZero.put("unit", new StringSchema());
+		gaugeZero.put("value", new NumberSchema());
+		gaugeZero.put("validFrom", new StringSchema());
+		MapSchema gaugeZeroSchema = new MapSchema(gaugeZero);
+		
+		
+		Map<String, Schema> comment = new HashMap<String, Schema>();
+		comment.put("shortDescription", new StringSchema());
+		comment.put("longDescription", new StringSchema());
+		MapSchema commentSchema = new MapSchema(comment);
+		
+		
+		Map<String, Schema> timeSeries = new HashMap<String, Schema>();
+		timeSeries.put("shortname", new StringSchema());
+		timeSeries.put("longname", new StringSchema());
+		timeSeries.put("unit", new StringSchema());
+		timeSeries.put("equidistance", new NumberSchema());		
+		timeSeries.put("currentMeasurement", currentMeasurementSchema);
+		timeSeries.put("gaugeZero", gaugeZeroSchema);
+		timeSeries.put("comment", commentSchema);
+		MapSchema timeSeriesSchema = new MapSchema(timeSeries);
+		
+		List<Schema> timeSeriesList = new LinkedList<Schema>();
+		timeSeriesList.add(timeSeriesSchema);
+		ListSchema timeSeriesListSchema = new ListSchema(timeSeriesList);
+		
+		Map<String, Schema> station = new HashMap<String, Schema>();
+		station.put("uuid", new StringSchema());
+		station.put("number", new StringSchema());
+		station.put("shortname", new StringSchema());
+		station.put("longname", new StringSchema());
+		station.put("km", new NumberSchema());
+		station.put("agency", new StringSchema());
+		station.put("longitude", new NumberSchema());
+		station.put("latitude", new NumberSchema());
+		station.put("water", waterSchema);
+		station.put("timeseries", timeSeriesListSchema);
+		MapSchema stationSchema = new MapSchema(station);
+		
+		List<Schema> stationList = new LinkedList<Schema>();
+		stationList.add(stationSchema);		
+		ListSchema listSchema = new ListSchema(stationList);
+		
+		return listSchema;
 	}
 
 	/**

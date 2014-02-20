@@ -15,69 +15,42 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.data;
+package org.jvalue.ods.data.generic;
 
-import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * The Class GenericValue.
+ * The Class MapValue.
  */
 @JsonInclude(Include.NON_NULL)
-public abstract class GenericValue implements Serializable {
+public class MapValue extends GenericValue {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
-	/** The id. */
-	private String id;
-
-	/** The revision. */
-	private String revision;
+	/** The map. */
+	private Map<String, GenericValue> map = new HashMap<String, GenericValue>();
 
 	/**
-	 * Gets the id.
-	 * 
-	 * @return the id
+	 * Instantiates a new map value.
 	 */
-	@JsonProperty("_id")
-	public String getId() {
-		return id;
+	public MapValue() {
+
 	}
 
 	/**
-	 * Sets the id.
+	 * Gets the map.
 	 * 
-	 * @param s
-	 *            the new id
+	 * @return the map
 	 */
-	@JsonProperty("_id")
-	public void setId(String s) {
-		id = s;
-	}
-
-	/**
-	 * Gets the revision.
-	 * 
-	 * @return the revision
-	 */
-	@JsonProperty("_rev")
-	public String getRevision() {
-		return revision;
-	}
-
-	/**
-	 * Sets the revision.
-	 * 
-	 * @param s
-	 *            the new revision
-	 */
-	@JsonProperty("_rev")
-	public void setRevision(String s) {
-		revision = s;
+	@JsonValue
+	public Map<String, GenericValue> getMap() {
+		return map;
 	}
 
 }

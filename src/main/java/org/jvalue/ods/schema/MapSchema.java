@@ -15,53 +15,41 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.data;
+package org.jvalue.ods.schema;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * The Class ListValue.
+ * The Class MapValue.
  */
-@JsonInclude(Include.NON_NULL)
-public class ListValue extends GenericValue {
+public class MapSchema extends Schema {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
-	/** The list. */
-	private List<GenericValue> list = new LinkedList<GenericValue>();
+	/** The map. */
+	private Map<String, Schema> map = new HashMap<String, Schema>();
 
+	
+	
 	/**
-	 * Instantiates a new list value.
+	 * Instantiates a new map schema.
+	 *
+	 * @param map the map
 	 */
-	public ListValue() {
+	public MapSchema(Map<String, Schema> map) {
+		this.map = map;
 	}
 
 	/**
-	 * Instantiates a new list value.
+	 * Gets the map.
 	 * 
-	 * @param list
-	 *            the list
+	 * @return the map
 	 */
-	@JsonCreator
-	public ListValue(List<GenericValue> list) {
-		this.list = list;
-	}
-
-	/**
-	 * Gets the list.
-	 * 
-	 * @return the list
-	 */
-	@JsonValue
-	public List<GenericValue> getList() {
-		return list;
+	public Map<String, Schema> getMap() {
+		return map;
 	}
 
 }

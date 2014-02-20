@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.jvalue.ods.data.GenericValue;
+import org.jvalue.ods.data.generic.GenericValue;
 import org.jvalue.ods.data.osm.OdsNode;
 import org.jvalue.ods.data.osm.OsmData;
 import org.jvalue.ods.db.DbAccessor;

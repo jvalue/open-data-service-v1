@@ -15,39 +15,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.data;
-
-import com.fasterxml.jackson.annotation.JsonValue;
+package org.jvalue.ods.schema;
 
 /**
- * The Class StringValue.
+ * The Class NumberValue.
  */
-public class StringValue extends GenericValue {
+public class NumberSchema extends Schema {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
-	/** The s. */
-	private String s;
-
-	/**
-	 * Instantiates a new string value.
-	 * 
-	 * @param s
-	 *            the s
-	 */
-	public StringValue(String s) {
-		this.s = s;
-	}
-
-	/**
-	 * Gets the string.
-	 * 
-	 * @return the string
-	 */
-	@JsonValue
-	public String getString() {
-		return s;
-	}
+	
 
 }

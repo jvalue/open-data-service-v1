@@ -22,7 +22,7 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.jvalue.ods.data.GenericValue;
+import org.jvalue.ods.data.generic.GenericValue;
 import org.jvalue.ods.grabber.XmlGrabber;
 
 /**

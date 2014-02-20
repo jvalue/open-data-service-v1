@@ -15,39 +15,18 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.data;
+package org.jvalue.ods.schema;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import java.io.Serializable;
+
 
 /**
- * The Class BoolValue.
+ * The Class GenericValue.
  */
-public class BoolValue extends GenericValue {
+public abstract class Schema implements Serializable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
-	/** The bool. */
-	private boolean bool;
-
-	/**
-	 * Instantiates a new bool value.
-	 * 
-	 * @param bool
-	 *            the bool
-	 */
-	public BoolValue(boolean bool) {
-		this.bool = bool;
-	}
-
-	/**
-	 * Gets the bool.
-	 * 
-	 * @return the bool
-	 */
-	@JsonValue
-	public boolean getBool() {
-		return bool;
-	}
 
 }

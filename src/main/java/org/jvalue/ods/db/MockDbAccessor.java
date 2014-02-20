@@ -38,6 +38,7 @@ public class MockDbAccessor implements DbAccessor<JsonNode> {
 	/** The is connected. */
 	private boolean isConnected = false;
 
+	/** The rn. */
 	Random rn = new Random();
 
 	/**

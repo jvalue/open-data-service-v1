@@ -21,7 +21,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jvalue.ods.data.GenericValue;
+import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.data.generic.GenericValue;
 import org.jvalue.ods.grabber.JsonGrabber;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
@@ -57,10 +58,9 @@ public class OverpassRouter implements Router<Restlet> {
 
 				GenericValue ret = null;
 				try {
-					ret = new JsonGrabber().grab(
-							"http://overpass.osm.rambler.ru/cgi/interpreter?data=[out:json];node[name%3D"
-									+ (String) request.getAttributes().get(
-											"location") + "]%3Bout%3B", null);
+					ret = new JsonGrabber().grab(new DataSource("http://overpass.osm.rambler.ru/cgi/interpreter?data=[out:json];node[name%3D"
+							+ (String) request.getAttributes().get(
+									"location") + "]%3Bout%3B", null, null));
 					ObjectMapper mapper = new ObjectMapper();
 					message += mapper.writeValueAsString(ret);
 

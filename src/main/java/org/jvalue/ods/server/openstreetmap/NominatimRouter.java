@@ -21,7 +21,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jvalue.ods.data.GenericValue;
+import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.data.generic.GenericValue;
 import org.jvalue.ods.grabber.JsonGrabber;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
@@ -64,10 +65,9 @@ public class NominatimRouter implements Router<Restlet> {
 
 					GenericValue ret = null;
 
-					ret = new JsonGrabber().grab(
-							"http://nominatim.openstreetmap.org/search?q="
-									+ (String) request.getAttributes().get(
-											"location") + "&format=json", null);
+					ret = new JsonGrabber().grab(new DataSource("http://nominatim.openstreetmap.org/search?q="
+							+ (String) request.getAttributes().get(
+									"location") + "&format=json", null, null));
 
 					ObjectMapper mapper = new ObjectMapper();
 					message += mapper.writeValueAsString(ret);
@@ -94,10 +94,8 @@ public class NominatimRouter implements Router<Restlet> {
 
 					GenericValue ret = null;
 
-					ret = new JsonGrabber().grab(
-							"http://nominatim.openstreetmap.org/reverse?format=json"
-									+ (String) request.getAttributes().get(
-											"coordinates"), null);
+					ret = new JsonGrabber().grab(new DataSource("http://nominatim.openstreetmap.org/reverse?format=json"
+							+ (String) request.getAttributes().get("coordinates"), null, null));
 
 					ObjectMapper mapper = new ObjectMapper();
 					message += mapper.writeValueAsString(ret);

@@ -22,7 +22,8 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.jvalue.ods.data.GenericValue;
+import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.data.generic.GenericValue;
 import org.jvalue.ods.grabber.JsonGrabber;
 
 /**
@@ -53,7 +54,7 @@ public class JsonGrabberTest {
 	 */
 	@Test
 	public void testGrab() {
-		GenericValue gv = grabber.grab(TestUrl, null);
+		GenericValue gv = grabber.grab(new DataSource(TestUrl, null, null));
 		assertNotNull(gv);
 	}
 
@@ -62,7 +63,7 @@ public class JsonGrabberTest {
 	 */
 	@Test
 	public void testGrabInvalidSource() {
-		GenericValue gv = grabber.grab("invalidsource", null);
+		GenericValue gv = grabber.grab(new DataSource("invalidsource", null, null));
 		assertNull(gv);
 	}
 
@@ -71,6 +72,6 @@ public class JsonGrabberTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testGrabNullSource() {
-		grabber.grab(null, null);
+		grabber.grab(null);
 	}
 }

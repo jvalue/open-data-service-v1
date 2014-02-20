@@ -52,12 +52,9 @@ public class OsmGrabber {
 
 	/**
 	 * Grab.
-	 * 
-	 * @param source
-	 *            the source
+	 *
+	 * @param source the source
 	 * @return the osm data
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
 	 */
 	public OsmData grab(String source) {
 		if (source == null) {

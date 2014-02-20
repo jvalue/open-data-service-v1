@@ -15,31 +15,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.data;
+package org.jvalue.ods.schema;
 
-import javax.lang.model.type.NullType;
-
-import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * The Class NullValue.
  */
-public class NullValue extends GenericValue {
+public class NullSchema extends Schema {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
-
-	/** The n. */
-	private NullType n = null;
-
-	/**
-	 * Gets the null.
-	 * 
-	 * @return the null
-	 */
-	@JsonValue
-	public NullType getNull() {
-		return n;
-	}
 
 }

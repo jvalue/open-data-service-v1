@@ -15,39 +15,41 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.data;
+package org.jvalue.ods.schema;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
- * The Class NumberValue.
+ * The Class ListSchema.
  */
-public class NumberValue extends GenericValue {
+public class ListSchema extends Schema {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
-	/** The number. */
-	private Number number;
+	/** The list. */
+	private List<Schema> list = new LinkedList<Schema>();
+
+	
 
 	/**
-	 * Instantiates a new number value.
+	 * Instantiates a new list value.
 	 * 
-	 * @param number
-	 *            the number
+	 * @param list
+	 *            the list
 	 */
-	public NumberValue(Number number) {
-		this.number = number;
+	public ListSchema(List<Schema> list) {
+		this.list = list;
 	}
 
 	/**
-	 * Gets the number.
+	 * Gets the list.
 	 * 
-	 * @return the number
+	 * @return the list
 	 */
-	@JsonValue
-	public Number getNumber() {
-		return number;
+	public List<Schema> getList() {
+		return list;
 	}
 
 }

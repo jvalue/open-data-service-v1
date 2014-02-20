@@ -9,10 +9,10 @@ import java.io.StringReader;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.jvalue.ods.data.GenericValue;
-import org.jvalue.ods.data.ListValue;
-import org.jvalue.ods.data.MapValue;
-import org.jvalue.ods.data.StringValue;
+import org.jvalue.ods.data.generic.GenericValue;
+import org.jvalue.ods.data.generic.ListValue;
+import org.jvalue.ods.data.generic.MapValue;
+import org.jvalue.ods.data.generic.StringValue;
 import org.jvalue.ods.logger.Logging;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -97,11 +97,9 @@ public class XmlGrabber {
 
 	/**
 	 * Fill multiple nodes.
-	 * 
-	 * @param node
-	 *            the node
-	 * @param lv
-	 *            the lv
+	 *
+	 * @param node the node
+	 * @return the generic value
 	 */
 	private GenericValue fillMultipleNodes(Node node) {
 		Node tmpNode = node;
@@ -132,11 +130,9 @@ public class XmlGrabber {
 
 	/**
 	 * Fill node rec.
-	 * 
-	 * @param node
-	 *            the node
-	 * @param mv
-	 *            the mv
+	 *
+	 * @param node the node
+	 * @return the generic value
 	 */
 	private GenericValue fillNodeRec(Node node) {
 
