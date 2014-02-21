@@ -3,8 +3,6 @@
  */
 package org.jvalue.ods.data;
 
-import java.util.List;
-
 import org.jvalue.ods.data.schema.Schema;
 
 /**
@@ -18,8 +16,6 @@ public class DataSource {
 	/** The schema. */
 	private final Schema schema;
 	
-	/** The attributes. */
-	private final List<String> attributes;
 	
 	/**
 	 * Instantiates a new data source.
@@ -28,11 +24,10 @@ public class DataSource {
 	 * @param schema the schema
 	 * @param attributes the attributes
 	 */
-	public DataSource(String url, Schema schema, List<String> attributes)
+	public DataSource(String url, Schema schema)
 	{
 		this.url = url;
 		this.schema = schema;
-		this.attributes = attributes;
 	}
 
 	/**
@@ -51,14 +46,5 @@ public class DataSource {
 	 */
 	public Schema getSchema() {
 		return schema;
-	}
-
-	/**
-	 * Gets the attributes.
-	 *
-	 * @return the attributes
-	 */
-	public List<String> getAttributes() {
-		return attributes;
 	}
 }

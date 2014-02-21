@@ -17,7 +17,6 @@
  */
 package org.jvalue.ods.main;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -64,7 +63,7 @@ public class DataGrabberMain {
 	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
-		//insertOsmFilesIntoDatabase();
+		insertOsmFilesIntoDatabase();
 		insertPegelOnlineStationsIntoDatabase();
 	}
 
@@ -128,7 +127,7 @@ public class DataGrabberMain {
 //				.grab("http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true",
 //						"src/main/resources/schema/pegelonline_schema.json");
 		Schema schema = createPegelOnlineSchema();
-		ListValue list = (ListValue) grabber.grab(new DataSource("http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true",schema, null));
+		ListValue list = (ListValue) grabber.grab(new DataSource("http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true",schema));
 
 		DbAccessor<JsonNode> accessor = DbFactory
 				.createDbAccessor("pegelonline");
