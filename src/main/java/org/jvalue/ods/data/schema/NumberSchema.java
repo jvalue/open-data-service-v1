@@ -15,13 +15,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.schema;
-
+package org.jvalue.ods.data.schema;
 
 /**
- * The Class BoolValue.
+ * The Class NumberValue.
  */
-public class BoolSchema extends Schema {
+public class NumberSchema extends Schema {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;

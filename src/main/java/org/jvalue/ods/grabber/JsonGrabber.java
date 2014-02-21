@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 
+
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.BoolValue;
 import org.jvalue.ods.data.generic.GenericValue;
@@ -30,13 +31,13 @@ import org.jvalue.ods.data.generic.MapValue;
 import org.jvalue.ods.data.generic.NullValue;
 import org.jvalue.ods.data.generic.NumberValue;
 import org.jvalue.ods.data.generic.StringValue;
+import org.jvalue.ods.data.schema.BoolSchema;
+import org.jvalue.ods.data.schema.ListSchema;
+import org.jvalue.ods.data.schema.MapSchema;
+import org.jvalue.ods.data.schema.NullSchema;
+import org.jvalue.ods.data.schema.Schema;
+import org.jvalue.ods.data.schema.StringSchema;
 import org.jvalue.ods.logger.Logging;
-import org.jvalue.ods.schema.BoolSchema;
-import org.jvalue.ods.schema.ListSchema;
-import org.jvalue.ods.schema.MapSchema;
-import org.jvalue.ods.schema.NullSchema;
-import org.jvalue.ods.schema.Schema;
-import org.jvalue.ods.schema.StringSchema;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -241,7 +242,7 @@ public class JsonGrabber {
 			{
 				if (!containsClass(schema, ListSchema.class))				
 				{
-					//expectes schema not found
+					//expected schema not found
 					return false;
 				}
 				else
@@ -255,7 +256,7 @@ public class JsonGrabber {
 			{
 				if (!containsClass(schema, MapSchema.class))				
 				{
-					//expectes schema not found
+					//expected schema not found
 					return false;
 				}
 				else

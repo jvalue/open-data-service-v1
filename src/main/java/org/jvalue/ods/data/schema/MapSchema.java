@@ -15,41 +15,41 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.schema;
+package org.jvalue.ods.data.schema;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
- * The Class ListSchema.
+ * The Class MapValue.
  */
-public class ListSchema extends Schema {
+public class MapSchema extends Schema {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
-	/** The list. */
-	private List<Schema> list = new LinkedList<Schema>();
+	/** The map. */
+	private Map<String, Schema> map = new HashMap<String, Schema>();
 
 	
-
+	
 	/**
-	 * Instantiates a new list value.
-	 * 
-	 * @param list
-	 *            the list
+	 * Instantiates a new map schema.
+	 *
+	 * @param map the map
 	 */
-	public ListSchema(List<Schema> list) {
-		this.list = list;
+	public MapSchema(Map<String, Schema> map) {
+		this.map = map;
 	}
 
 	/**
-	 * Gets the list.
+	 * Gets the map.
 	 * 
-	 * @return the list
+	 * @return the map
 	 */
-	public List<Schema> getList() {
-		return list;
+	public Map<String, Schema> getMap() {
+		return map;
 	}
 
 }

@@ -15,41 +15,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.schema;
-
-import java.util.HashMap;
-import java.util.Map;
+package org.jvalue.ods.data.schema;
 
 
 /**
- * The Class MapValue.
+ * The Class BoolValue.
  */
-public class MapSchema extends Schema {
+public class BoolSchema extends Schema {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
-	/** The map. */
-	private Map<String, Schema> map = new HashMap<String, Schema>();
-
 	
-	
-	/**
-	 * Instantiates a new map schema.
-	 *
-	 * @param map the map
-	 */
-	public MapSchema(Map<String, Schema> map) {
-		this.map = map;
-	}
-
-	/**
-	 * Gets the map.
-	 * 
-	 * @return the map
-	 */
-	public Map<String, Schema> getMap() {
-		return map;
-	}
 
 }

@@ -5,7 +5,7 @@ package org.jvalue.ods.data;
 
 import java.util.List;
 
-import org.jvalue.ods.schema.Schema;
+import org.jvalue.ods.data.schema.Schema;
 
 /**
  * The Class DataSource.

@@ -15,16 +15,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.schema;
+package org.jvalue.ods.data.schema;
 
 
 /**
- * The Class StringValue.
+ * The Class NullValue.
  */
-public class StringSchema extends Schema {
+public class NullSchema extends Schema {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
-	
 }
