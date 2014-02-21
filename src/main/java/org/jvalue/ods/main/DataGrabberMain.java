@@ -45,8 +45,6 @@ import org.jvalue.ods.grabber.JsonGrabber;
 import org.jvalue.ods.grabber.OsmGrabber;
 import org.jvalue.ods.logger.Logging;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
