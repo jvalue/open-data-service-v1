@@ -84,52 +84,7 @@ public class JsonGrabberTest {
 	public void testGrabNullSource() {
 		grabber.grab(null);
 	}
-	
-	/*
-	{
-   "coord":{
-      "lon":11.07,
-      "lat":49.45
-   },
-   "sys":{
-      "message":0.0405,
-      "country":"DE",
-      "sunrise":1392963176,
-      "sunset":1393001136
-   },
-   "weather":[
-      {
-         "id":500,
-         "main":"Rain",
-         "description":"light rain",
-         "icon":"10d"
-      }
-   ],
-   "base":"cmc stations",
-   "main":{
-      "temp":280.57,
-      "humidity":94,
-      "pressure":1009,
-      "temp_min":279.82,
-      "temp_max":281.15
-   },
-   "wind":{
-      "speed":1.54,
-      "gust":3.6,
-      "deg":186
-   },
-   "rain":{
-      "1h":0.33
-   },
-   "clouds":{
-      "all":92
-   },
-   "dt":1392984565,
-   "id":2861650,
-   "name":"Nuremberg",
-   "cod":200
-}
-	 */
+
 	
 	/**
 	 * Creates the open weather schema.
