@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.GenericValue;
+import org.jvalue.ods.data.metadata.JacksonMetaData;
 import org.jvalue.ods.grabber.JsonGrabber;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
@@ -31,6 +32,7 @@ import org.restlet.Response;
 import org.restlet.Restlet;
 import org.restlet.data.MediaType;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -65,9 +67,12 @@ public class NominatimRouter implements Router<Restlet> {
 
 					GenericValue ret = null;
 
-					ret = new JsonGrabber().grab(new DataSource("http://nominatim.openstreetmap.org/search?q="
-							+ (String) request.getAttributes().get(
-									"location") + "&format=json", null));
+					ret = new JsonGrabber()
+							.grab(new DataSource(
+									"http://nominatim.openstreetmap.org/search?q="
+											+ (String) request.getAttributes()
+													.get("location")
+											+ "&format=json", null));
 
 					ObjectMapper mapper = new ObjectMapper();
 					message += mapper.writeValueAsString(ret);
@@ -94,8 +99,10 @@ public class NominatimRouter implements Router<Restlet> {
 
 					GenericValue ret = null;
 
-					ret = new JsonGrabber().grab(new DataSource("http://nominatim.openstreetmap.org/reverse?format=json"
-							+ (String) request.getAttributes().get("coordinates"), null));
+					ret = new JsonGrabber().grab(new DataSource(
+							"http://nominatim.openstreetmap.org/reverse?format=json"
+									+ (String) request.getAttributes().get(
+											"coordinates"), null));
 
 					ObjectMapper mapper = new ObjectMapper();
 					message += mapper.writeValueAsString(ret);
@@ -115,8 +122,36 @@ public class NominatimRouter implements Router<Restlet> {
 
 		};
 
+		Restlet metadataRestlet = new Restlet() {
+			@Override
+			public void handle(Request request, Response response) {
+
+				try {
+					ObjectMapper mapper = new ObjectMapper();
+
+					String message = mapper
+							.writeValueAsString(new JacksonMetaData(
+									"org-openstreetmap-nominatim",
+									"nominatim",
+									"OpenStreetMap Community",
+									"http://www.openstreetmap.org",
+									"Nominatim is a tool to search OSM data by name and address and to generate synthetic addresses of OSM points (reverse geocoding). Usage policy: http://wiki.openstreetmap.org/wiki/Nominatim_usage_policy",
+									"http://nominatim.openstreetmap.org",
+									"http://www.openstreetmap.org/copyright"));
+
+					response.setEntity(message, MediaType.APPLICATION_JSON);
+				} catch (JsonProcessingException ex) {
+					response.setEntity("OSM Metadata not found.",
+							MediaType.TEXT_PLAIN);
+					Logging.error(this.getClass(), "OSM Metadata not found.");
+					System.err.println("OSM Metadata not found.");
+				}
+			}
+		};
+
 		routes.put("/nominatim/coordinates/{location}", nominatimRestlet);
 		routes.put("/nominatim/reverse{coordinates}", reverseNominatimRestlet);
+		routes.put("/nominatim/metadata", metadataRestlet);
 
 		return routes;
 	}

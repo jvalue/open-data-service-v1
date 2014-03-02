@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.GenericValue;
+import org.jvalue.ods.data.metadata.JacksonMetaData;
 import org.jvalue.ods.grabber.JsonGrabber;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
@@ -31,6 +32,7 @@ import org.restlet.Response;
 import org.restlet.Restlet;
 import org.restlet.data.MediaType;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -58,9 +60,10 @@ public class OverpassRouter implements Router<Restlet> {
 
 				GenericValue ret = null;
 				try {
-					ret = new JsonGrabber().grab(new DataSource("http://overpass.osm.rambler.ru/cgi/interpreter?data=[out:json];node[name%3D"
-							+ (String) request.getAttributes().get(
-									"location") + "]%3Bout%3B", null));
+					ret = new JsonGrabber().grab(new DataSource(
+							"http://overpass.osm.rambler.ru/cgi/interpreter?data=[out:json];node[name%3D"
+									+ (String) request.getAttributes().get(
+											"location") + "]%3Bout%3B", null));
 					ObjectMapper mapper = new ObjectMapper();
 					message += mapper.writeValueAsString(ret);
 
@@ -78,7 +81,35 @@ public class OverpassRouter implements Router<Restlet> {
 
 		};
 
+		Restlet metadataRestlet = new Restlet() {
+			@Override
+			public void handle(Request request, Response response) {
+
+				try {
+					ObjectMapper mapper = new ObjectMapper();
+
+					String message = mapper
+							.writeValueAsString(new JacksonMetaData(
+									"org-openstreetmap-overpass",
+									"overpass",
+									"OpenStreetMap Community",
+									"http://www.openstreetmap.org",
+									"The Overpass API is a read-only API that serves up custom selected parts of the OSM map data. It acts as a database over the web: the client sends a query to the API and gets back the data set that corresponds to the query.",
+									"http://overpass.osm.rambler.ru",
+									"http://www.openstreetmap.org/copyright"));
+
+					response.setEntity(message, MediaType.APPLICATION_JSON);
+				} catch (JsonProcessingException ex) {
+					response.setEntity("OSM Metadata not found.",
+							MediaType.TEXT_PLAIN);
+					Logging.error(this.getClass(), "OSM Metadata not found.");
+					System.err.println("OSM Metadata not found.");
+				}
+			}
+		};
+
 		routes.put("/overpass/{location}", overpassLocationRestlet);
+		routes.put("/overpass/metadata", metadataRestlet);
 
 		return routes;
 	}
