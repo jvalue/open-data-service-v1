@@ -24,6 +24,8 @@ import org.jvalue.ods.server.openstreetmap.NominatimRouter;
 import org.jvalue.ods.server.openstreetmap.OsmRouter;
 import org.jvalue.ods.server.openstreetmap.OverpassRouter;
 import org.jvalue.ods.server.pegelonline.PegelOnlineRouter;
+import org.jvalue.ods.server.poi.PoiRouter;
+import org.jvalue.ods.server.routes.RoutesRouter;
 import org.restlet.Restlet;
 
 /**
@@ -76,5 +78,23 @@ public class RouterFactory {
 	 */
 	public static PegelOnlineRouter createPegelOnlineRouter() {
 		return new PegelOnlineRouter();
+	}
+
+	/**
+	 * Creates a new Router object.
+	 *
+	 * @return the router< restlet>
+	 */
+	public static Router<Restlet> createRoutesRouter() {
+		return new RoutesRouter();
+	}
+
+	/**
+	 * Creates a new Router object.
+	 *
+	 * @return the router< restlet>
+	 */
+	public static Router<Restlet> createPoiRouter() {
+		return new PoiRouter();
 	}
 }

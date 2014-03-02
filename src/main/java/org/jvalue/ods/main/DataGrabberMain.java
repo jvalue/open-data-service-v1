@@ -63,6 +63,21 @@ public class DataGrabberMain {
 	public static void main(String[] args) {
 		insertOsmFilesIntoDatabase();
 		insertPegelOnlineStationsIntoDatabase();
+		insertPoiIntoDatabase();
+	}
+
+	/**
+	 * Insert poi into database.
+	 */
+	private static void insertPoiIntoDatabase() {
+		DbAccessor<JsonNode> accessor = DbFactory.createDbAccessor("poi");
+		accessor.connect();
+		accessor.deleteDatabase();
+		
+		createView("_design/poi", "getPoiByStation",
+				"function(doc) { if(doc.poi) emit (doc.longname, doc.poi) }",
+				accessor);
+		
 	}
 
 	/**
@@ -148,9 +163,6 @@ public class DataGrabberMain {
 		createView("_design/pegelonline", "getMetadata",
 				"function(doc) { if(doc.title) emit(null, doc)}", accessor);
 
-		createView("_design/pegelonline", "getPoiByStation",
-				"function(doc) { if(doc.poi) emit (doc.longname, doc.poi) }",
-				accessor);
 		createView("_design/pegelonline", "getAllStationsFlat",
 				"function(doc) { if(doc.longname) emit (null, doc.longname) }",
 				accessor);

@@ -78,6 +78,7 @@ public class OsmGrabber {
 			PrintWriter out = null;
 
 			try {
+				Logging.info(this.getClass(), "Opening: " + source);
 				HttpReader reader = new HttpReader(source);
 				String data = reader.read("UTF-8");
 				File tmpFile = new File("tmp.txt");

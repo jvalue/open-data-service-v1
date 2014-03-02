@@ -22,7 +22,6 @@ public class DataSource {
 	 *
 	 * @param url the url
 	 * @param schema the schema
-	 * @param attributes the attributes
 	 */
 	public DataSource(String url, Schema schema)
 	{
