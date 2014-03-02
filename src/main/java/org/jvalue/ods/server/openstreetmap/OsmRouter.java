@@ -199,11 +199,33 @@ public class OsmRouter implements Router<Restlet> {
 
 		};
 
+		Restlet metadataRestlet = new Restlet() {
+			@Override
+			public void handle(Request request, Response response) {
+
+				List<JsonNode> node = null;
+				dbAccessor.connect();
+
+				try {
+					node = dbAccessor.executeDocumentQuery(
+							"_design/osm", "getMetadata", null);
+
+					response.setEntity(node.get(0).toString(),
+							MediaType.APPLICATION_JSON);
+				} catch (DbException ex) {
+					response.setEntity("Metadata not found.",
+							MediaType.TEXT_PLAIN);
+				}
+			}
+		};
+		
+		
 		routes.put("/osm/nodes/{id}", getNodeByIdRestlet);
 		routes.put("/osm/ways/{id}", getWayByIdRestlet);
 		routes.put("/osm/relations/{id}", getRelationByIdRestlet);
 		routes.put("/osm/keyword/{keyword}", getDocumentsByKeywordRestlet);
-
+		routes.put("/osm/metadata", metadataRestlet);
+		
 		return routes;
 	}
 
