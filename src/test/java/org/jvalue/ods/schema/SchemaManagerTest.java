@@ -5,10 +5,7 @@ package org.jvalue.ods.schema;
 
 import static org.junit.Assert.*;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,15 +18,10 @@ import org.jvalue.ods.data.schema.MapSchema;
 import org.jvalue.ods.data.schema.NumberSchema;
 import org.jvalue.ods.data.schema.Schema;
 import org.jvalue.ods.data.schema.StringSchema;
-import org.jvalue.ods.logger.Logging;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jackson.JsonLoader;
-import com.github.fge.jsonschema.exceptions.ProcessingException;
-import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.github.fge.jsonschema.processors.syntax.SyntaxValidator;
-import com.github.fge.jsonschema.report.ProcessingReport;
 
 /**
  * The Class SchemaManagerTest.

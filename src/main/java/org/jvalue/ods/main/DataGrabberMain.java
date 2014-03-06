@@ -156,7 +156,7 @@ public class DataGrabberMain {
 		ListValue list = (ListValue) grabber
 				.grab(new DataSource(
 						"http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true",
-						schema));
+						schema, schema));
 
 		DbAccessor<JsonNode> accessor = DbFactory
 				.createDbAccessor("pegelonline");

@@ -72,7 +72,7 @@ public class NominatimRouter implements Router<Restlet> {
 									"http://nominatim.openstreetmap.org/search?q="
 											+ (String) request.getAttributes()
 													.get("location")
-											+ "&format=json", null));
+											+ "&format=json", null, null));
 
 					ObjectMapper mapper = new ObjectMapper();
 					message += mapper.writeValueAsString(ret);
@@ -102,7 +102,7 @@ public class NominatimRouter implements Router<Restlet> {
 					ret = new JsonGrabber().grab(new DataSource(
 							"http://nominatim.openstreetmap.org/reverse?format=json"
 									+ (String) request.getAttributes().get(
-											"coordinates"), null));
+											"coordinates"), null, null));
 
 					ObjectMapper mapper = new ObjectMapper();
 					message += mapper.writeValueAsString(ret);

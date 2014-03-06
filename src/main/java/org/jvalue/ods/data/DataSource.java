@@ -12,21 +12,27 @@ public class DataSource {
 	
 	/** The url. */
 	private final String url;
+
+
+	/** The data source schema. */
+	private final Schema dataSourceSchema;
 	
-	/** The schema. */
-	private final Schema schema;
-	
+	/** The db schema. */
+	private final Schema dbSchema;
+
 	
 	/**
 	 * Instantiates a new data source.
 	 *
 	 * @param url the url
-	 * @param schema the schema
+	 * @param dataSourceSchema the data source schema
+	 * @param dbSchema the db schema
 	 */
-	public DataSource(String url, Schema schema)
+	public DataSource(String url, Schema dataSourceSchema, Schema dbSchema)
 	{
 		this.url = url;
-		this.schema = schema;
+		this.dataSourceSchema = dataSourceSchema;
+		this.dbSchema = dbSchema;
 	}
 
 	/**
@@ -39,11 +45,20 @@ public class DataSource {
 	}
 
 	/**
-	 * Gets the schema.
+	 * Gets the db schema.
 	 *
-	 * @return the schema
+	 * @return the db schema
 	 */
-	public Schema getSchema() {
-		return schema;
+	public Schema getDbSchema() {
+		return dbSchema;
+	}
+
+	/**
+	 * Gets the data source schema.
+	 *
+	 * @return the data source schema
+	 */
+	public Schema getDataSourceSchema() {
+		return dataSourceSchema;
 	}
 }
