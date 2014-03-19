@@ -75,9 +75,16 @@ public class RoutesRouter implements Router<Restlet> {
 
 				Form f = request.getResourceRef().getQueryAsForm();
 				String startStation = f.getFirstValue("start");
-				startStation = startStation.toUpperCase();
-
 				String endStation = f.getFirstValue("end");
+
+				if (startStation == null || endStation == null) {
+					response.setEntity(
+							"You have to specify start + end parameters, for example: .../route?start=rethem&end=eitze",
+							MediaType.TEXT_PLAIN);
+					return;
+				}
+
+				startStation = startStation.toUpperCase();
 				endStation = endStation.toUpperCase();
 
 				DbAccessor<JsonNode> pegelOnlineDbAccessor = DbFactory
@@ -163,6 +170,11 @@ public class RoutesRouter implements Router<Restlet> {
 				Response r = routeRestlet.handle(request);
 
 				try {
+
+					if (r.getEntity().getMediaType() == MediaType.TEXT_PLAIN) {
+						throw new IOException(r.getEntityAsText());
+					}
+
 					HashMap<String, Object> route = mapper.readValue(
 							r.getEntityAsText(),
 							new TypeReference<HashMap<String, Object>>() {
@@ -180,7 +192,7 @@ public class RoutesRouter implements Router<Restlet> {
 					String errorMessage = "Error during client request: " + e;
 					Logging.error(this.getClass(), errorMessage);
 					System.err.println(errorMessage);
-					response = r;
+					response.setEntity(r.getEntity());
 				}
 
 			}
