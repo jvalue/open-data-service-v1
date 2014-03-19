@@ -31,6 +31,7 @@ import org.jvalue.ods.main.Router;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
+import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -47,7 +48,6 @@ public class RoutesRouter implements Router<Restlet> {
 
 	/** The db accessor. */
 	private DbAccessor<JsonNode> dbAccessor;
-
 
 	/**
 	 * Instantiates a new routes router.
@@ -73,30 +73,35 @@ public class RoutesRouter implements Router<Restlet> {
 
 				ObjectMapper mapper = new ObjectMapper();
 
-				String startStation = (String) request.getAttributes().get(
-						"start");
-				startStation = startStation.toUpperCase();
+				Form f = request.getResourceRef().getQueryAsForm();
+				String startStation = f.getFirstValue("start");
+				String endStation = f.getFirstValue("end");
 
-				String endStation = (String) request.getAttributes().get("end");
+				if (startStation == null || endStation == null) {
+					response.setEntity(
+							"You have to specify start + end parameters, for example: .../route?start=rethem&end=eitze",
+							MediaType.TEXT_PLAIN);
+					return;
+				}
+
+				startStation = startStation.toUpperCase();
 				endStation = endStation.toUpperCase();
-				
-				DbAccessor<JsonNode> pegelOnlineDbAccessor = DbFactory.createDbAccessor("pegelonline");
+
+				DbAccessor<JsonNode> pegelOnlineDbAccessor = DbFactory
+						.createDbAccessor("pegelonline");
 				pegelOnlineDbAccessor.connect();
 				List<JsonNode> startNodes = pegelOnlineDbAccessor
 						.executeDocumentQuery("_design/pegelonline",
 								"getSingleStation", startStation);
 
-				List<JsonNode> endNodes = pegelOnlineDbAccessor.executeDocumentQuery(
-						"_design/pegelonline", "getSingleStation", endStation);
+				List<JsonNode> endNodes = pegelOnlineDbAccessor
+						.executeDocumentQuery("_design/pegelonline",
+								"getSingleStation", endStation);
 
 				if (startNodes.isEmpty() || endNodes.isEmpty()) {
-					response.setEntity(
-							"Could not find a route between "
-									+ (String) request.getAttributes().get(
-											"start")
-									+ " and "
-									+ (String) request.getAttributes().get(
-											"end"), MediaType.APPLICATION_JSON);
+					response.setEntity("Could not find a route between "
+							+ startStation + " and " + endStation,
+							MediaType.APPLICATION_JSON);
 					return;
 				}
 
@@ -165,6 +170,11 @@ public class RoutesRouter implements Router<Restlet> {
 				Response r = routeRestlet.handle(request);
 
 				try {
+
+					if (r.getEntity().getMediaType() == MediaType.TEXT_PLAIN) {
+						throw new IOException(r.getEntityAsText());
+					}
+
 					HashMap<String, Object> route = mapper.readValue(
 							r.getEntityAsText(),
 							new TypeReference<HashMap<String, Object>>() {
@@ -182,21 +192,14 @@ public class RoutesRouter implements Router<Restlet> {
 					String errorMessage = "Error during client request: " + e;
 					Logging.error(this.getClass(), errorMessage);
 					System.err.println(errorMessage);
-					response.setEntity(
-							"Could not find a route between "
-									+ (String) request.getAttributes().get(
-											"start")
-									+ " and "
-									+ (String) request.getAttributes().get(
-											"end"), MediaType.TEXT_PLAIN);
+					response.setEntity(r.getEntity());
 				}
 
 			}
 		};
 
-
-		routes.put("/routes/route/{start}/{end}", routeRestlet);
-		routes.put("/routes/routeDistance/{start}/{end}",
+		routes.put("/ods/org/jvalue/konstipatrick/routes/route", routeRestlet);
+		routes.put("/ods/org/jvalue/konstipatrick/routes/routeDistance",
 				routeDistanceRestlet);
 
 		return routes;
