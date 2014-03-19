@@ -18,10 +18,7 @@
 
 package org.jvalue.ods.main;
 
-import java.util.HashMap;
-
 import org.jvalue.ods.server.RestletServer;
-import org.restlet.Restlet;
 
 /**
  * The Class DataServerMain.
@@ -40,27 +37,6 @@ public class DataServerMain {
 	 *             the exception
 	 */
 	public static void main(String[] args) throws Exception {
-		Router<Restlet> poRouter = RouterFactory.createPegelOnlineRouter();
-		Router<Restlet> noRouter = RouterFactory.createNominatimRouter();
-		Router<Restlet> ovRouter = RouterFactory.createOverpassRouter();
-		Router<Restlet> osmRouter = RouterFactory.createOsmRouter();
-		Router<Restlet> routesRouter = RouterFactory.createRoutesRouter();
-		Router<Restlet> poiRouter = RouterFactory.createPoiRouter();
-		
-		
-		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
-		combinedRouter.putAll(poRouter.getRoutes());
-		combinedRouter.putAll(noRouter.getRoutes());
-		combinedRouter.putAll(ovRouter.getRoutes());
-		combinedRouter.putAll(osmRouter.getRoutes());
-		combinedRouter.putAll(routesRouter.getRoutes());
-		combinedRouter.putAll(poiRouter.getRoutes());
-
-		// must be last router, generates api output
-		Router<Restlet> apiRouter = RouterFactory
-				.createApiRouter(combinedRouter);
-		combinedRouter.putAll(apiRouter.getRoutes());
-
-		new RestletServer(combinedRouter, port).initialize();
+		new RestletServer(port).initialize();
 	}
 }

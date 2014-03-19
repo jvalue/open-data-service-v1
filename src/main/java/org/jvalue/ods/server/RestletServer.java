@@ -17,26 +17,15 @@
  */
 package org.jvalue.ods.server;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
 import org.jvalue.ods.logger.Logging;
 import org.restlet.Application;
 import org.restlet.Component;
-import org.restlet.Restlet;
 import org.restlet.data.Protocol;
-import org.restlet.routing.Router;
 
 /**
  * The Class RestletServer.
  */
-public class RestletServer extends Application {
-
-	// Collection of routes for Restlet
-	/** The routes. */
-	private Map<String, Restlet> routes;
+public class RestletServer {
 
 	/** The port. */
 	private int port;
@@ -46,22 +35,13 @@ public class RestletServer extends Application {
 
 	/**
 	 * Instantiates a new restlet adapter.
-	 * 
-	 * @param routes
-	 *            the routes
+	 *
 	 * @param port
 	 *            the port
 	 * @throws Exception
 	 *             the exception
 	 */
-	public RestletServer(Map<String, Restlet> routes, int port)
-			throws Exception {
-		if (routes == null || routes.isEmpty()) {
-			String errorMessage = "routes are null or empty";
-			Logging.error(this.getClass(), errorMessage);
-			throw new IllegalArgumentException(errorMessage);
-		}
-
+	public RestletServer(int port) throws Exception {
 		if (port < 1024 || port > 49151) {
 			String errorMessage = "port not between 1024 and 49151";
 			Logging.error(this.getClass(), errorMessage);
@@ -69,7 +49,6 @@ public class RestletServer extends Application {
 					"port not between 1024 and 49151");
 		}
 
-		this.routes = routes;
 		this.port = port;
 	}
 
@@ -83,7 +62,7 @@ public class RestletServer extends Application {
 		component = new Component();
 		component.getServers().add(Protocol.HTTP, port);
 
-		Application app = this;
+		Application app = new ContainerRestletApp();
 
 		component.getDefaultHost().attach(app);
 		component.start();
@@ -100,30 +79,6 @@ public class RestletServer extends Application {
 			Logging.error(this.getClass(), errorMessage);
 			System.err.println(errorMessage);
 		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.restlet.Application#createInboundRoot()
-	 */
-	@Override
-	public Restlet createInboundRoot() {
-		// Create a root router
-		Router router = new Router(getContext());
-
-		// Get Map in Set interface to get key and value
-		Set<Entry<String, Restlet>> s = routes.entrySet();
-
-		// Move next key and value of Map by iterator
-		Iterator<Entry<String, Restlet>> it = s.iterator();
-
-		while (it.hasNext()) {
-			Entry<String, Restlet> m = it.next();
-			router.attach(m.getKey(), m.getValue());
-		}
-
-		return router;
 	}
 
 }

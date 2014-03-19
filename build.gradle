@@ -1,15 +1,17 @@
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'application'
+apply plugin: 'war'
 
 repositories {
     mavenCentral()
 	mavenRepo url: "http://maven.restlet.org"
 }
 
-jar {
-	version = '0.1'
-    manifest.attributes("Main-Class": "org.jvalue.ods.main.DataServerMain")
+task uberjar(type: Jar) {
+	from files(sourceSets.main.output.classesDir)
+	from files(sourceSets.main.output.resourcesDir)
+	from {configurations.compile.collect {zipTree(it)}}
 }
 
 mainClassName = "org.jvalue.ods.main.DataServerMain"
@@ -18,8 +20,9 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind:2.2.3'
     compile 'com.fasterxml.jackson.core:jackson-core:2.2.3'
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.2.3'
-	compile 'org.restlet.jse:org.restlet:2.1.6'
-	compile 'org.restlet.jse:org.restlet.ext.jackson:2.1.6'
+	compile 'org.restlet.jee:org.restlet:2.1.6'
+	compile 'org.restlet.jee:org.restlet.ext.jackson:2.1.6'
+	compile 'org.restlet.jee:org.restlet.ext.servlet:2.1.6'
 	compile 'org.ektorp:org.ektorp:1.4.1'
 	compile 'org.openstreetmap.osmosis:osmosis-core:0.43.1'
 	compile 'org.openstreetmap.osmosis:osmosis-xml:0.43.1'
@@ -32,6 +35,7 @@ dependencies {
 test {
     systemProperties 'property': 'value'
 }
+
 
 idea.project.ipr {
     withXml { provider ->
