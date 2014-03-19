@@ -220,11 +220,11 @@ public class OsmRouter implements Router<Restlet> {
 		};
 		
 		
-		routes.put("/osm/nodes/{id}", getNodeByIdRestlet);
-		routes.put("/osm/ways/{id}", getWayByIdRestlet);
-		routes.put("/osm/relations/{id}", getRelationByIdRestlet);
-		routes.put("/osm/keyword/{keyword}", getDocumentsByKeywordRestlet);
-		routes.put("/osm/metadata", metadataRestlet);
+		routes.put("/ods/de/osm/nodes/{id}", getNodeByIdRestlet);
+		routes.put("/ods/de/osm/ways/{id}", getWayByIdRestlet);
+		routes.put("/ods/de/osm/relations/{id}", getRelationByIdRestlet);
+		routes.put("/ods/de/osm/keyword/{keyword}", getDocumentsByKeywordRestlet);
+		routes.put("/ods/de/osm/metadata", metadataRestlet);
 		
 		return routes;
 	}

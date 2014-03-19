@@ -195,8 +195,8 @@ public class RoutesRouter implements Router<Restlet> {
 		};
 
 
-		routes.put("/routes/route/{start}/{end}", routeRestlet);
-		routes.put("/routes/routeDistance/{start}/{end}",
+		routes.put("/ods/org/jvalue/konstipatrick/routes/route/{start}/{end}", routeRestlet);
+		routes.put("/ods/org/jvalue/konstipatrick/routes/routeDistance/{start}/{end}",
 				routeDistanceRestlet);
 
 		return routes;

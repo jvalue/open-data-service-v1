@@ -213,12 +213,12 @@ public class PegelOnlineRouter implements Router<Restlet> {
 			}
 		};
 
-		routes.put("/pegelonline/stations", stationsRestlet);
-		routes.put("/pegelonline/stationsFlat", stationsFlatRestlet);
-		routes.put("/pegelonline/stations/{station}", singleStationRestlet);
-		routes.put("/pegelonline/stations/{station}/measurements",
+		routes.put("/ods/de/pegelonline/stations", stationsRestlet);
+		routes.put("/ods/de/pegelonline/stationsFlat", stationsFlatRestlet);
+		routes.put("/ods/de/pegelonline/stations/{station}", singleStationRestlet);
+		routes.put("/ods/de/pegelonline/stations/{station}/measurements",
 				measurementsRestlet);
-		routes.put("/pegelonline/metadata", metadataRestlet);
+		routes.put("/ods/de/pegelonline/metadata", metadataRestlet);
 
 		return routes;
 	}

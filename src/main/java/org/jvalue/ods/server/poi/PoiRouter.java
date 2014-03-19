@@ -170,7 +170,7 @@ public class PoiRouter implements Router<Restlet> {
 		};
 
 
-		routes.put("/poi/{station}", poiRestlet);
+		routes.put("/ods/org/jvalue/konstipatrick/poi/{station}", poiRestlet);
 		
 		return routes;
 	}
