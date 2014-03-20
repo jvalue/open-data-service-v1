@@ -2,15 +2,31 @@ apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'application'
 apply plugin: 'war'
-
+apply plugin: 'cargo'
 
 repositories {
-    mavenCentral()
-    maven {
+	maven {
   		url 'http://maven.restlet.org'
 	}
+	mavenCentral()
 }
 
+
+buildscript {
+    repositories {
+    	jcenter()
+    }
+    dependencies {
+        classpath 'org.gradle.api.plugins:gradle-cargo-plugin:1.4'
+    }
+}
+
+cargo {
+    containerId = 'tomcat7x'
+}
+
+
+//task to create a jar
 task uberjar(type: Jar) {
 	from files(sourceSets.main.output.classesDir)
 	from files(sourceSets.main.output.resourcesDir)
@@ -20,6 +36,8 @@ task uberjar(type: Jar) {
 mainClassName = "org.jvalue.ods.main.DataServerMain"
 
 dependencies {
+    cargo "org.codehaus.cargo:cargo-ant:1.4.5"
+    
     compile 'com.fasterxml.jackson.core:jackson-databind:2.2.3'
     compile 'com.fasterxml.jackson.core:jackson-core:2.2.3'
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.2.3'
