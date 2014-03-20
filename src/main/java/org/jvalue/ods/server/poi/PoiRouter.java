@@ -31,6 +31,7 @@ import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.grabber.OsmGrabber;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
+import org.jvalue.ods.server.restlet.IdAccessRestlet;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
@@ -51,7 +52,6 @@ public class PoiRouter implements Router<Restlet> {
 	/** The db accessor. */
 	private DbAccessor<JsonNode> dbAccessor;
 
-
 	/**
 	 * Instantiates a new routes router.
 	 */
@@ -68,22 +68,22 @@ public class PoiRouter implements Router<Restlet> {
 	public Map<String, Restlet> getRoutes() {
 		routes = new HashMap<String, Restlet>();
 
-
-		Restlet poiRestlet = new Restlet() {
+		final Restlet poiRestlet = new Restlet() {
 			@Override
 			public void handle(Request request, Response response) {
 
 				List<JsonNode> nodes = null;
 				dbAccessor.connect();
-				
+
 				String name = (String) request.getAttributes().get("station");
 				name = name.toUpperCase();
 
-				DbAccessor<JsonNode> pegelOnlineDbAccessor = DbFactory.createDbAccessor("pegelonline");
-				pegelOnlineDbAccessor.connect();				
+				DbAccessor<JsonNode> pegelOnlineDbAccessor = DbFactory
+						.createDbAccessor("pegelonline");
+				pegelOnlineDbAccessor.connect();
 				ObjectMapper mapper = new ObjectMapper();
-				nodes = pegelOnlineDbAccessor.executeDocumentQuery("_design/pegelonline",
-						"getSingleStation", name);
+				nodes = pegelOnlineDbAccessor.executeDocumentQuery(
+						"_design/pegelonline", "getSingleStation", name);
 
 				if (nodes.isEmpty()) {
 					response.setEntity("Station not found.",
@@ -106,8 +106,7 @@ public class PoiRouter implements Router<Restlet> {
 											nodes.get(0).toString(),
 											new TypeReference<HashMap<String, Object>>() {
 											});
-							double longitude = (double) poi
-									.get("longitude");
+							double longitude = (double) poi.get("longitude");
 							double latitude = (double) poi.get("latitude");
 
 							OsmGrabber g = new OsmGrabber();
@@ -169,9 +168,56 @@ public class PoiRouter implements Router<Restlet> {
 			}
 		};
 
+		Restlet idRestlet = new Restlet() {
+
+			@Override
+			public void handle(Request request, Response response) {
+
+				String message = "";
+				try {
+
+					ObjectMapper mapper = new ObjectMapper();
+
+					try {
+						dbAccessor.connect();
+						String name = (String) request.getAttributes().get(
+								"station");
+						name = name.toUpperCase();
+						List<JsonNode> poiList = dbAccessor
+								.executeDocumentQuery("_design/poi",
+										"getPoiIdByStation", name);
+						if (poiList.isEmpty()) {
+							throw new RuntimeException();
+						} else {
+							message += mapper
+									.writeValueAsString(poiList.get(0));
+						}
+
+					} catch (RuntimeException e) {
+						String errorMessage = "Could not retrieve data from db: "
+								+ e;
+						Logging.error(this.getClass(), errorMessage);
+						System.err.println(errorMessage);
+						message += mapper
+								.writeValueAsString("Could not retrieve data.");
+					}
+
+				} catch (IOException e) {
+					String errorMessage = "Error during client request: " + e;
+					Logging.error(this.getClass(), errorMessage);
+					System.err.println(errorMessage);
+				}
+
+				response.setEntity(message, MediaType.APPLICATION_JSON);
+
+			}
+		};
 
 		routes.put("/ods/org/jvalue/konstipatrick/poi/{station}", poiRestlet);
-		
+		routes.put("/ods/org/jvalue/konstipatrick/poi/{station}/$id", idRestlet);
+		routes.put("/ods/org/jvalue/konstipatrick/poi/${id}",
+				new IdAccessRestlet(dbAccessor));
+
 		return routes;
 	}
 

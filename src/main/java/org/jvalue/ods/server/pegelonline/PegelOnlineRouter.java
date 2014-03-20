@@ -21,16 +21,19 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
+import org.jvalue.ods.server.restlet.IdAccessRestlet;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
 import org.restlet.data.MediaType;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -116,8 +119,9 @@ public class PegelOnlineRouter implements Router<Restlet> {
 					try {
 						dbAccessor.connect();
 
-						nodes = dbAccessor.executeDocumentQuery("_design/pegelonline",
-								"getAllStationsFlat", null);
+						nodes = dbAccessor.executeDocumentQuery(
+								"_design/pegelonline", "getAllStationsFlat",
+								null);
 
 						message += mapper.writeValueAsString(nodes);
 					} catch (RuntimeException e) {
@@ -140,7 +144,7 @@ public class PegelOnlineRouter implements Router<Restlet> {
 			}
 
 		};
-		
+
 		// gets the data of a single station
 		Restlet singleStationRestlet = new Restlet() {
 			@Override
@@ -191,8 +195,6 @@ public class PegelOnlineRouter implements Router<Restlet> {
 			}
 		};
 
-		
-
 		Restlet metadataRestlet = new Restlet() {
 			@Override
 			public void handle(Request request, Response response) {
@@ -213,12 +215,99 @@ public class PegelOnlineRouter implements Router<Restlet> {
 			}
 		};
 
+		Restlet metadataIdRestlet = new Restlet() {
+			@Override
+			public void handle(Request request, Response response) {
+
+				ObjectMapper mapper = new ObjectMapper();
+				List<JsonNode> node = null;
+				dbAccessor.connect();
+
+				try {
+					node = dbAccessor.executeDocumentQuery(
+							"_design/pegelonline", "getMetadata", null);
+
+					String id = "";
+					if (node.get(0).isObject()) {
+
+						HashMap<String, Object> metadata;
+
+						try {
+							metadata = mapper
+									.readValue(
+											node.get(0).toString(),
+											new TypeReference<HashMap<String, Object>>() {
+											});
+							id = (String) metadata.get("_id");
+						} catch (IOException e) {
+							response.setEntity("Could not retrieve data.",
+									MediaType.TEXT_PLAIN);
+							return;
+						}
+
+					}
+
+					response.setEntity(id, MediaType.APPLICATION_JSON);
+				} catch (DbException ex) {
+					response.setEntity("Metadata not found.",
+							MediaType.TEXT_PLAIN);
+				}
+			}
+		};
+
+		Restlet idRestlet = new Restlet() {
+
+			@Override
+			public void handle(Request request, Response response) {
+
+				String message = "";
+				try {
+
+					ObjectMapper mapper = new ObjectMapper();
+
+					try {
+						dbAccessor.connect();
+						String name = (String) request.getAttributes().get(
+								"station");
+						name = name.toUpperCase();
+						List<JsonNode> nodes = dbAccessor.executeDocumentQuery(
+								"_design/pegelonline", "getStationId", name);
+						if (nodes.isEmpty()) {
+							throw new RuntimeException();
+						} else {
+							message += mapper.writeValueAsString(nodes.get(0));
+						}
+
+					} catch (RuntimeException e) {
+						String errorMessage = "Could not retrieve data from db: "
+								+ e;
+						Logging.error(this.getClass(), errorMessage);
+						System.err.println(errorMessage);
+						message += mapper
+								.writeValueAsString("Could not retrieve data.");
+					}
+
+				} catch (IOException e) {
+					String errorMessage = "Error during client request: " + e;
+					Logging.error(this.getClass(), errorMessage);
+					System.err.println(errorMessage);
+				}
+
+				response.setEntity(message, MediaType.APPLICATION_JSON);
+
+			}
+		};
+
 		routes.put("/ods/de/pegelonline/stations", stationsRestlet);
 		routes.put("/ods/de/pegelonline/stationsFlat", stationsFlatRestlet);
-		routes.put("/ods/de/pegelonline/stations/{station}", singleStationRestlet);
+		routes.put("/ods/de/pegelonline/stations/{station}",
+				singleStationRestlet);
 		routes.put("/ods/de/pegelonline/stations/{station}/measurements",
 				measurementsRestlet);
 		routes.put("/ods/de/pegelonline/metadata", metadataRestlet);
+		routes.put("/ods/de/pegelonline/metadata/$id", metadataIdRestlet);
+		routes.put("/ods/de/pegelonline/stations/{station}/$id", idRestlet);
+		routes.put("/ods/de/pegelonline/${id}", new IdAccessRestlet(dbAccessor));
 
 		return routes;
 	}
