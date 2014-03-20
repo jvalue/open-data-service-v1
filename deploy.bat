@@ -1,2 +1,2 @@
-gradle buld
+gradle build
 gradle cargoRedeployRemote --stacktrace
