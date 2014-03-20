@@ -75,7 +75,9 @@ public class OsmGrabber {
 		File file = null;
 
 		if (!source.startsWith("http")) {
-			URL sourceUrl = getClass().getResource(source);				
+			URL sourceUrl = getClass().getResource(source);
+			if (sourceUrl == null)
+				return null;
 			try {
 				file = new File(sourceUrl.toURI());
 			} catch (URISyntaxException e) {

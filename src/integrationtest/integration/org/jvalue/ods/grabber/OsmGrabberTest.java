@@ -3,8 +3,7 @@
  */
 package integration.org.jvalue.ods.grabber;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -50,7 +49,7 @@ public class OsmGrabberTest {
 	 */
 	@Test
 	public void testGrabOffline() {
-		OsmData d = grabber.grab("nbgcity.osm");
+		OsmData d = grabber.grab("/nbgcity.osm");
 		assertNotNull(d);
 		DbAccessor<JsonNode> db = DbFactory.createDbAccessor("testOsm");
 		db.connect();
@@ -67,9 +66,7 @@ public class OsmGrabberTest {
 	@Test
 	public void testGrabInvalidSource() {
 		OsmData d = grabber.grab("invalidsource");
-		assertTrue(d.getNodes().isEmpty());
-		assertTrue(d.getWays().isEmpty());
-		assertTrue(d.getRelations().isEmpty());
+		assertNull(d);
 	}
 
 	/**
