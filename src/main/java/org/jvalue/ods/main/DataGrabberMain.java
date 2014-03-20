@@ -78,6 +78,9 @@ public class DataGrabberMain {
 		createView("_design/poi", "getPoiByStation",
 				"function(doc) { if(doc.poi) emit (doc.longname, doc.poi) }",
 				accessor);
+		createView("_design/poi", "getPoiIdByStation",
+				"function(doc) { if(doc.poi) emit (doc.longname, doc._id) }",
+				accessor);
 
 	}
 
@@ -107,7 +110,7 @@ public class DataGrabberMain {
 				"OpenStreetMap ist eine Karte der Welt, erstellt von Menschen wie dir und frei verwendbar unter einer offenen Lizenz.",
 				"http://www.openstreetmap.org",
 				"http://www.openstreetmap.org/copyright"));
-		
+
 		Collection<Object> list = new LinkedList<Object>();
 		list.addAll(data.getNodes());
 		list.addAll(data.getWays());
@@ -131,6 +134,12 @@ public class DataGrabberMain {
 
 		createView(
 				"_design/osm",
+				"getOsmDataById",
+				"function(doc) { if (doc.nodeId) {emit(doc.nodeId, doc)} else if (doc.wayId) { emit(doc.wayId, doc)} else if (doc.relationId) { emit(doc.relationId, doc)}}",
+				accessor);
+
+		createView(
+				"_design/osm",
 				"getDocumentsByKeyword",
 				"function(doc) { if(doc.tags){ for (var i in doc.tags) { emit(doc.tags[i], doc) }} }",
 				accessor);
@@ -138,6 +147,11 @@ public class DataGrabberMain {
 		createView("_design/osm", "getMetadata",
 				"function(doc) { if(doc.title) emit(null, doc)}", accessor);
 
+		createView(
+				"_design/osm",
+				"getCouchIdByOsmId",
+				"function(doc) { if (doc.nodeId) {emit(doc.nodeId, doc._id)} else if (doc.wayId) { emit(doc.wayId, doc._id)} else if (doc.relationId) { emit(doc.relationId, doc._id)}}",
+				accessor);
 	}
 
 	/**
@@ -189,6 +203,11 @@ public class DataGrabberMain {
 
 		createView("_design/pegelonline", "getAllStationsFlat",
 				"function(doc) { if(doc.longname) emit (null, doc.longname) }",
+				accessor);
+		createView(
+				"_design/pegelonline",
+				"getStationId",
+				"function(doc) { if(doc.longname) emit (doc.longname, doc._id) }",
 				accessor);
 
 	}
