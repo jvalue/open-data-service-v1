@@ -20,6 +20,8 @@ package org.jvalue.ods.grabber;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +57,7 @@ public class OsmGrabber {
 	 *
 	 * @param source the source
 	 * @return the osm data
+	 * @throws URISyntaxException 
 	 */
 	public OsmData grab(String source) {
 		if (source == null) {
@@ -72,7 +75,14 @@ public class OsmGrabber {
 		File file = null;
 
 		if (!source.startsWith("http")) {
-			file = new File(source);
+			URL sourceUrl = getClass().getResource(source);				
+			try {
+				file = new File(sourceUrl.toURI());
+			} catch (URISyntaxException e) {
+				Logging.error(this.getClass(), e.getMessage());
+				e.printStackTrace();
+				return null;
+			}
 		} else {
 
 			PrintWriter out = null;

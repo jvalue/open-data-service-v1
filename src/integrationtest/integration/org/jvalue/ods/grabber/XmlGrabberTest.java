@@ -50,7 +50,7 @@ public class XmlGrabberTest {
 	 */
 	@Test
 	public void testGrab() {
-		GenericValue gv = grabber.grab("nbgcity.osm");
+		GenericValue gv = grabber.grab("/nbgcity.osm");
 		assertNotNull(gv);
 	}
 

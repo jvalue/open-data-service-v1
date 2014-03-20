@@ -53,7 +53,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 public class DataGrabberMain {
 
 	/** The Constant osmSource. */
-	private final static String osmSource = "nbgcity.osm";
+	private final static String osmSource = "/nbgcity.osm";
 
 	/**
 	 * The main method.
@@ -87,9 +87,7 @@ public class DataGrabberMain {
 	 */
 	private static void insertOsmFilesIntoDatabase() {
 		OsmGrabber grabber = new OsmGrabber();
-		OsmData data = null;
-
-		data = grabber.grab(osmSource);
+		OsmData data = grabber.grab(osmSource);		
 
 		if (data == null) {
 			return;
@@ -147,11 +145,7 @@ public class DataGrabberMain {
 	private static void insertPegelOnlineStationsIntoDatabase() {
 
 		JsonGrabber grabber = new JsonGrabber();
-
-		// generic import
-		// ListValue list = (ListValue) grabber
-		// .grab("http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true",
-		// "src/main/resources/schema/pegelonline_schema.json");
+		
 		Schema schema = createPegelOnlineSchema();
 		ListValue list = (ListValue) grabber
 				.grab(new DataSource(

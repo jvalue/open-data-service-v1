@@ -5,6 +5,7 @@ package org.jvalue.ods.grabber;
 
 import java.io.File;
 import java.io.StringReader;
+import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -44,7 +45,8 @@ public class XmlGrabber {
 
 			Document doc = null;
 			if (!source.startsWith("http")) {
-				File xmlFile = new File(source);
+				URL sourceUrl = getClass().getResource(source);				
+				File xmlFile = new File(sourceUrl.toURI());
 				doc = dBuilder.parse(xmlFile);
 			} else {
 				HttpReader reader = new HttpReader(source);
