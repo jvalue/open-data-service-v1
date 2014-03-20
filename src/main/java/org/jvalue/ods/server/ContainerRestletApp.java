@@ -23,6 +23,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.main.DataGrabberMain;
 import org.jvalue.ods.main.RouterFactory;
 import org.restlet.Application;
 import org.restlet.Restlet;
@@ -32,7 +33,7 @@ import org.restlet.routing.Router;
 /**
  * The Class ContainerRestletApp.
  */
-public class ContainerRestletApp extends Application {	
+public class ContainerRestletApp extends Application implements Runnable {	
 
 	/*
 	 * (non-Javadoc)
@@ -41,6 +42,7 @@ public class ContainerRestletApp extends Application {
 	 */
 	@Override
 	public Restlet createInboundRoot() {
+		(new Thread(this)).start();
 		
 		org.jvalue.ods.main.Router<Restlet> poRouter = RouterFactory.createPegelOnlineRouter();
 		org.jvalue.ods.main.Router<Restlet> noRouter = RouterFactory.createNominatimRouter();
@@ -85,6 +87,31 @@ public class ContainerRestletApp extends Application {
 		}
 
 		return router;
+	}
+
+	@Override
+	public void run() {
+		while(true)
+		{
+			try
+			{
+				DataGrabberMain.main(null);				
+			}
+			catch (Exception ex)
+			{
+				Logging.error(ContainerRestletApp.class, ex.getMessage());
+				ex.printStackTrace();
+			}
+			finally
+			{
+				try {
+					Thread.sleep(2000000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
 	}
 
 }
