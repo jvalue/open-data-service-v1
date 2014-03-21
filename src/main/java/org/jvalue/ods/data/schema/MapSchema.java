@@ -20,10 +20,14 @@ package org.jvalue.ods.data.schema;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * The Class MapValue.
  */
+@JsonInclude(Include.NON_NULL)
 public class MapSchema extends Schema {
 
 	/** The Constant serialVersionUID. */
@@ -32,12 +36,11 @@ public class MapSchema extends Schema {
 	/** The map. */
 	private Map<String, Schema> map = new HashMap<String, Schema>();
 
-	
-	
 	/**
 	 * Instantiates a new map schema.
-	 *
-	 * @param map the map
+	 * 
+	 * @param map
+	 *            the map
 	 */
 	public MapSchema(Map<String, Schema> map) {
 		this.map = map;
@@ -48,6 +51,7 @@ public class MapSchema extends Schema {
 	 * 
 	 * @return the map
 	 */
+	@JsonValue
 	public Map<String, Schema> getMap() {
 		return map;
 	}

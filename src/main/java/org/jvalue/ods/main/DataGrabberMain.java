@@ -35,6 +35,7 @@ import org.jvalue.ods.data.metadata.JacksonMetaData;
 import org.jvalue.ods.data.osm.OsmData;
 import org.jvalue.ods.data.schema.ListSchema;
 import org.jvalue.ods.data.schema.MapSchema;
+import org.jvalue.ods.data.schema.NullSchema;
 import org.jvalue.ods.data.schema.NumberSchema;
 import org.jvalue.ods.data.schema.Schema;
 import org.jvalue.ods.data.schema.StringSchema;
@@ -90,7 +91,7 @@ public class DataGrabberMain {
 	 */
 	private static void insertOsmFilesIntoDatabase() {
 		OsmGrabber grabber = new OsmGrabber();
-		OsmData data = grabber.grab(osmSource);		
+		OsmData data = grabber.grab(osmSource);
 
 		if (data == null) {
 			return;
@@ -159,7 +160,7 @@ public class DataGrabberMain {
 	private static void insertPegelOnlineStationsIntoDatabase() {
 
 		JsonGrabber grabber = new JsonGrabber();
-		
+
 		Schema schema = createPegelOnlineSchema();
 		ListValue list = (ListValue) grabber
 				.grab(new DataSource(
@@ -179,6 +180,12 @@ public class DataGrabberMain {
 				"PEGELONLINE stellt kostenfrei tagesaktuelle Rohwerte verschiedener gewässerkundlicher Parameter (z.B. Wasserstand) der Binnen- und Küstenpegel der Wasserstraßen des Bundes bis maximal 30 Tage rückwirkend zur Ansicht und zum Download bereit.",
 				"https://www.pegelonline.wsv.de",
 				"http://www.pegelonline.wsv.de/gast/nutzungsbedingungen"));
+
+		// insert schema into db
+		ListSchema ls = (ListSchema) schema;
+		MapSchema stationSchema = (MapSchema) ls.getList().get(0);
+		accessor.insert(stationSchema);
+
 		for (GenericValue gv : list.getList()) {
 			accessor.insert(gv);
 		}
@@ -204,6 +211,12 @@ public class DataGrabberMain {
 				"function(doc) { if(doc.longname) emit (doc.longname, doc._id) }",
 				accessor);
 
+		createView("_design/pegelonline", "getClassObject",
+				"function(doc) { if(doc.isSchema) emit (null, doc) }", accessor);
+
+		createView("_design/pegelonline", "getClassObjectId",
+				"function(doc) { if(doc.isSchema) emit (null, doc._id) }",
+				accessor);
 	}
 
 	/**
@@ -261,6 +274,8 @@ public class DataGrabberMain {
 		station.put("latitude", new NumberSchema());
 		station.put("water", waterSchema);
 		station.put("timeseries", timeSeriesListSchema);
+		// marker for queries, could make problems, must not be "required"
+		station.put("isSchema", new NullSchema());
 		MapSchema stationSchema = new MapSchema(station);
 
 		List<Schema> stationList = new LinkedList<Schema>();

@@ -17,10 +17,13 @@
  */
 package org.jvalue.ods.data.schema;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * The Class NullValue.
  */
+@JsonInclude(Include.NON_NULL)
 public class NullSchema extends Schema {
 
 	/** The Constant serialVersionUID. */

@@ -20,9 +20,14 @@ package org.jvalue.ods.data.schema;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 /**
  * The Class ListSchema.
  */
+@JsonInclude(Include.NON_NULL)
 public class ListSchema extends Schema {
 
 	/** The Constant serialVersionUID. */
@@ -30,8 +35,6 @@ public class ListSchema extends Schema {
 
 	/** The list. */
 	private List<Schema> list = new LinkedList<Schema>();
-
-	
 
 	/**
 	 * Instantiates a new list value.
@@ -48,6 +51,7 @@ public class ListSchema extends Schema {
 	 * 
 	 * @return the list
 	 */
+	@JsonValue
 	public List<Schema> getList() {
 		return list;
 	}

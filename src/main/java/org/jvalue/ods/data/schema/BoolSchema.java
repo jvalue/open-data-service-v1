@@ -17,10 +17,14 @@
  */
 package org.jvalue.ods.data.schema;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 
 /**
  * The Class BoolValue.
  */
+@JsonInclude(Include.NON_NULL)
 public class BoolSchema extends Schema {
 
 	/** The Constant serialVersionUID. */
