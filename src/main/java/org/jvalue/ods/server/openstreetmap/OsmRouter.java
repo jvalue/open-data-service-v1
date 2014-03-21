@@ -27,7 +27,8 @@ import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
-import org.jvalue.ods.server.restlet.IdAccessRestlet;
+import org.jvalue.ods.server.restlet.AccessObjectAttributeByIdRestlet;
+import org.jvalue.ods.server.restlet.AccessObjectByIdRestlet;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
@@ -183,8 +184,8 @@ public class OsmRouter implements Router<Restlet> {
 					ObjectMapper mapper = new ObjectMapper();
 					try {
 						if (!ret.isEmpty()) {
-						message += mapper.writeValueAsString(ret); }
-						else {
+							message += mapper.writeValueAsString(ret);
+						} else {
 							message += "Could not retrieve data.";
 
 						}
@@ -366,9 +367,9 @@ public class OsmRouter implements Router<Restlet> {
 
 			}
 		};
-		
+
 		routes.put("/ods/de/osm/relations/{osm_id}/$id", idRestlet);
-		routes.put("/ods/de/osm/${id}", new IdAccessRestlet(dbAccessor));
+		routes.put("/ods/de/osm/${id}", new AccessObjectByIdRestlet(dbAccessor));
 		routes.put("/ods/de/osm/nodes/{osm_id}", getNodeByIdRestlet);
 		routes.put("/ods/de/osm/ways/{osm_id}", getWayByIdRestlet);
 		routes.put("/ods/de/osm/relations/{osm_id}", getRelationByIdRestlet);
@@ -381,6 +382,8 @@ public class OsmRouter implements Router<Restlet> {
 		routes.put("/ods/de/osm/nodes/{osm_id}/$id", idRestlet);
 		routes.put("/ods/de/osm/ways/{osm_id}/$id", idRestlet);
 		routes.put("/ods/de/osm/relations/{osm_id}/$id", idRestlet);
+		routes.put("/ods/de/osm/${id}/{attribute}",
+				new AccessObjectAttributeByIdRestlet(dbAccessor));
 
 		return routes;
 	}

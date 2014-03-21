@@ -20,7 +20,6 @@ package org.jvalue.ods.data.schema;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-
 /**
  * The Class StringValue.
  */
@@ -30,5 +29,26 @@ public class StringSchema extends Schema {
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
-	
+	/** The type. */
+	private String type = "string";
+
+	/**
+	 * Gets the type.
+	 * 
+	 * @return the type
+	 */
+	public String getType() {
+		return type;
+	}
+
+	/**
+	 * Sets the type.
+	 * 
+	 * @param type
+	 *            the new type
+	 */
+	public void setType(String type) {
+		this.type = type;
+	}
+
 }

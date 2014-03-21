@@ -32,7 +32,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * The Class IdAccessRestlet.
  */
-public class IdAccessRestlet extends Restlet {
+public class AccessObjectByIdRestlet extends Restlet {
 
 	/** The db accessor. */
 	private DbAccessor<JsonNode> dbAccessor;
@@ -43,7 +43,7 @@ public class IdAccessRestlet extends Restlet {
 	 * @param dbAccessor
 	 *            the db accessor
 	 */
-	public IdAccessRestlet(DbAccessor<JsonNode> dbAccessor) {
+	public AccessObjectByIdRestlet(DbAccessor<JsonNode> dbAccessor) {
 		this.dbAccessor = dbAccessor;
 	}
 

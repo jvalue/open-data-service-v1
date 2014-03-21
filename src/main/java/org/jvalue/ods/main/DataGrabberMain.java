@@ -35,7 +35,6 @@ import org.jvalue.ods.data.metadata.JacksonMetaData;
 import org.jvalue.ods.data.osm.OsmData;
 import org.jvalue.ods.data.schema.ListSchema;
 import org.jvalue.ods.data.schema.MapSchema;
-import org.jvalue.ods.data.schema.NullSchema;
 import org.jvalue.ods.data.schema.NumberSchema;
 import org.jvalue.ods.data.schema.Schema;
 import org.jvalue.ods.data.schema.StringSchema;
@@ -212,11 +211,10 @@ public class DataGrabberMain {
 				accessor);
 
 		createView("_design/pegelonline", "getClassObject",
-				"function(doc) { if(doc.isSchema) emit (null, doc) }", accessor);
+				"function(doc) { if(doc.type) emit (null, doc) }", accessor);
 
 		createView("_design/pegelonline", "getClassObjectId",
-				"function(doc) { if(doc.isSchema) emit (null, doc._id) }",
-				accessor);
+				"function(doc) { if(doc.type) emit (null, doc._id) }", accessor);
 	}
 
 	/**
@@ -275,7 +273,10 @@ public class DataGrabberMain {
 		station.put("water", waterSchema);
 		station.put("timeseries", timeSeriesListSchema);
 		// marker for queries, could make problems, must not be "required"
-		station.put("isSchema", new NullSchema());
+		Map<String, Schema> type = new HashMap<String, Schema>();
+		type.put("Station", new StringSchema());
+		MapSchema typeSchema = new MapSchema(type);
+		station.put("type", typeSchema);
 		MapSchema stationSchema = new MapSchema(station);
 
 		List<Schema> stationList = new LinkedList<Schema>();

@@ -29,4 +29,25 @@ public class NullSchema extends Schema {
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
+	/** The type. */
+	private String type = "null";
+
+	/**
+	 * Gets the type.
+	 * 
+	 * @return the type
+	 */
+	public String getType() {
+		return type;
+	}
+
+	/**
+	 * Sets the type.
+	 * 
+	 * @param type
+	 *            the new type
+	 */
+	public void setType(String type) {
+		this.type = type;
+	}
 }

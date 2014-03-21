@@ -31,7 +31,7 @@ import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.grabber.OsmGrabber;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
-import org.jvalue.ods.server.restlet.IdAccessRestlet;
+import org.jvalue.ods.server.restlet.AccessObjectByIdRestlet;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
@@ -216,7 +216,7 @@ public class PoiRouter implements Router<Restlet> {
 		routes.put("/ods/org/jvalue/konstipatrick/poi/{station}", poiRestlet);
 		routes.put("/ods/org/jvalue/konstipatrick/poi/{station}/$id", idRestlet);
 		routes.put("/ods/org/jvalue/konstipatrick/poi/${id}",
-				new IdAccessRestlet(dbAccessor));
+				new AccessObjectByIdRestlet(dbAccessor));
 
 		return routes;
 	}
