@@ -42,8 +42,7 @@ public class OsmGrabberTest {
 		OsmData d = grabber.grab(testUrl);
 		assertNotNull(d);
 	}
-	
-	
+
 	/**
 	 * Test grab.
 	 */
@@ -55,11 +54,10 @@ public class OsmGrabberTest {
 		db.connect();
 		db.executeBulk(d.getNodes());
 		db.executeBulk(d.getRelations());
-		db.executeBulk(d.getWays());	
+		db.executeBulk(d.getWays());
 		db.deleteDatabase();
 	}
 
-	
 	/**
 	 * Test grab invalid source.
 	 */

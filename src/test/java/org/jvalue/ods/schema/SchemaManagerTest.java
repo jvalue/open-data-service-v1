@@ -33,8 +33,9 @@ public class SchemaManagerTest {
 
 	/**
 	 * Sets the up.
-	 *
-	 * @throws Exception the exception
+	 * 
+	 * @throws Exception
+	 *             the exception
 	 */
 	@Before
 	public void setUp() throws Exception {
@@ -44,8 +45,9 @@ public class SchemaManagerTest {
 
 	/**
 	 * Test create json schema.
-	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	@Test
 	public void testCreateJsonSchema() throws IOException {
@@ -53,7 +55,7 @@ public class SchemaManagerTest {
 		String result = schemaManager.createJsonSchema(s);
 		assertNotNull(result);
 
-		//validate schema
+		// validate schema
 		JsonSchemaFactory factory = JsonSchemaFactory.byDefault();
 		JsonNode jn = JsonLoader.fromString(result);
 		SyntaxValidator validator = factory.getSyntaxValidator();
@@ -73,7 +75,7 @@ public class SchemaManagerTest {
 
 	/**
 	 * Creates the schema.
-	 *
+	 * 
 	 * @return the schema
 	 */
 	private Schema createSchema() {

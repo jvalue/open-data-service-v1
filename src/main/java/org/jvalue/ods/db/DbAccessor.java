@@ -41,7 +41,6 @@ public interface DbAccessor<Q> {
 	 */
 	public <T> T getDocument(Class<T> c, String id);
 
-
 	/**
 	 * Insert.
 	 * 

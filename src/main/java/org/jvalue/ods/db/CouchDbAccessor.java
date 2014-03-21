@@ -231,9 +231,9 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 	 */
 	@Override
 	public List<JsonNode> getAllDocuments() {
-		
+
 		checkDbState();
-		
+
 		ViewQuery q = new ViewQuery().allDocs().includeDocs(true);
 		ViewResult result = db.queryView(q);
 
@@ -268,7 +268,7 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 		if (viewName.length() == 0) {
 			throw new IllegalArgumentException("viewName is empty");
 		}
-		
+
 		checkDbState();
 
 		ViewQuery q = new ViewQuery().designDocId(designDocId)
@@ -296,11 +296,11 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 	 */
 	@Override
 	public void executeBulk(Collection<?> objects) {
-		
+
 		if (objects == null) {
 			throw new IllegalArgumentException("objects is null");
 		}
-		
+
 		checkDbState();
 		try {
 			db.executeBulk(objects);

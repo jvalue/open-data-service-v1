@@ -29,11 +29,10 @@ import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.routing.Router;
 
-
 /**
  * The Class ContainerRestletApp.
  */
-public class ContainerRestletApp extends Application implements Runnable {	
+public class ContainerRestletApp extends Application implements Runnable {
 
 	/*
 	 * (non-Javadoc)
@@ -43,15 +42,20 @@ public class ContainerRestletApp extends Application implements Runnable {
 	@Override
 	public Restlet createInboundRoot() {
 		(new Thread(this)).start();
-		
-		org.jvalue.ods.main.Router<Restlet> poRouter = RouterFactory.createPegelOnlineRouter();
-		org.jvalue.ods.main.Router<Restlet> noRouter = RouterFactory.createNominatimRouter();
-		org.jvalue.ods.main.Router<Restlet> ovRouter = RouterFactory.createOverpassRouter();
-		org.jvalue.ods.main.Router<Restlet> osmRouter = RouterFactory.createOsmRouter();
-		org.jvalue.ods.main.Router<Restlet> routesRouter = RouterFactory.createRoutesRouter();
-		org.jvalue.ods.main.Router<Restlet> poiRouter = RouterFactory.createPoiRouter();
-		
-		
+
+		org.jvalue.ods.main.Router<Restlet> poRouter = RouterFactory
+				.createPegelOnlineRouter();
+		org.jvalue.ods.main.Router<Restlet> noRouter = RouterFactory
+				.createNominatimRouter();
+		org.jvalue.ods.main.Router<Restlet> ovRouter = RouterFactory
+				.createOverpassRouter();
+		org.jvalue.ods.main.Router<Restlet> osmRouter = RouterFactory
+				.createOsmRouter();
+		org.jvalue.ods.main.Router<Restlet> routesRouter = RouterFactory
+				.createRoutesRouter();
+		org.jvalue.ods.main.Router<Restlet> poiRouter = RouterFactory
+				.createPoiRouter();
+
 		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
 		combinedRouter.putAll(poRouter.getRoutes());
 		combinedRouter.putAll(noRouter.getRoutes());
@@ -70,8 +74,7 @@ public class ContainerRestletApp extends Application implements Runnable {
 			Logging.error(this.getClass(), errorMessage);
 			throw new IllegalArgumentException(errorMessage);
 		}
-		
-		
+
 		// Create a root router
 		Router router = new Router(getContext());
 
@@ -89,21 +92,20 @@ public class ContainerRestletApp extends Application implements Runnable {
 		return router;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	public void run() {
-		while(true)
-		{
-			try
-			{
-				DataGrabberMain.main(null);				
-			}
-			catch (Exception ex)
-			{
+		while (true) {
+			try {
+				DataGrabberMain.main(null);
+			} catch (Exception ex) {
 				Logging.error(ContainerRestletApp.class, ex.getMessage());
 				ex.printStackTrace();
-			}
-			finally
-			{
+			} finally {
 				try {
 					Thread.sleep(2000000);
 				} catch (InterruptedException e) {
@@ -111,7 +113,7 @@ public class ContainerRestletApp extends Application implements Runnable {
 				}
 			}
 		}
-		
+
 	}
 
 }

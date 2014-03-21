@@ -54,10 +54,10 @@ public class OsmGrabber {
 
 	/**
 	 * Grab.
-	 *
-	 * @param source the source
+	 * 
+	 * @param source
+	 *            the source
 	 * @return the osm data
-	 * @throws URISyntaxException 
 	 */
 	public OsmData grab(String source) {
 		if (source == null) {
@@ -141,20 +141,20 @@ public class OsmGrabber {
 
 		Thread readerThread = new Thread(reader);
 		readerThread.start();
-		
+
 		while (readerThread.isAlive()) {
 			try {
 				readerThread.join();
 			} catch (InterruptedException e) {
 				// maybe throw another exception here instead of returning null
 				return null;
-			} 
+			}
 		}
 
 		if (file.exists() && source.startsWith("http")) {
 			file.delete();
 		}
-		
+
 		return new OsmData(nodes, ways, relations);
 	}
 }

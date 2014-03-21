@@ -35,7 +35,7 @@ public class RestletServer {
 
 	/**
 	 * Instantiates a new restlet adapter.
-	 *
+	 * 
 	 * @param port
 	 *            the port
 	 * @throws Exception

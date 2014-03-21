@@ -317,27 +317,27 @@ public class CouchDbAccessorTest {
 		couchDbAdapter = DbFactory.createDbAccessor("foo");
 		assertNotNull(couchDbAdapter);
 		couchDbAdapter.connect();
-		
+
 		List<Object> list = new LinkedList<>();
 		list.add(new CouchDbDocument());
 		list.add(new CouchDbDocument());
 		list.add(new CouchDbDocument());
-		
+
 		couchDbAdapter.executeBulk(list);
 		couchDbAdapter.deleteDatabase();
 	}
-	
+
 	/**
 	 * Test execute bulk.
 	 */
 	@Test
 	public void testExecuteBulk() {
-		
+
 		List<Object> list = new LinkedList<>();
 		list.add(new CouchDbDocument());
 		list.add(new CouchDbDocument());
 		list.add(new CouchDbDocument());
-		
+
 		couchDbAdapter.executeBulk(list);
 	}
 

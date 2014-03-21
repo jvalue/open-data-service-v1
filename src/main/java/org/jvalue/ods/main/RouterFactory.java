@@ -82,7 +82,7 @@ public class RouterFactory {
 
 	/**
 	 * Creates a new Router object.
-	 *
+	 * 
 	 * @return the router< restlet>
 	 */
 	public static Router<Restlet> createRoutesRouter() {
@@ -91,7 +91,7 @@ public class RouterFactory {
 
 	/**
 	 * Creates a new Router object.
-	 *
+	 * 
 	 * @return the router< restlet>
 	 */
 	public static Router<Restlet> createPoiRouter() {

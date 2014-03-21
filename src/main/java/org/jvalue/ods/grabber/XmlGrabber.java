@@ -45,7 +45,7 @@ public class XmlGrabber {
 
 			Document doc = null;
 			if (!source.startsWith("http")) {
-				URL sourceUrl = getClass().getResource(source);				
+				URL sourceUrl = getClass().getResource(source);
 				File xmlFile = new File(sourceUrl.toURI());
 				doc = dBuilder.parse(xmlFile);
 			} else {
@@ -99,8 +99,9 @@ public class XmlGrabber {
 
 	/**
 	 * Fill multiple nodes.
-	 *
-	 * @param node the node
+	 * 
+	 * @param node
+	 *            the node
 	 * @return the generic value
 	 */
 	private GenericValue fillMultipleNodes(Node node) {
@@ -132,8 +133,9 @@ public class XmlGrabber {
 
 	/**
 	 * Fill node rec.
-	 *
-	 * @param node the node
+	 * 
+	 * @param node
+	 *            the node
 	 * @return the generic value
 	 */
 	private GenericValue fillNodeRec(Node node) {
@@ -167,7 +169,7 @@ public class XmlGrabber {
 
 			}
 		}
-		
+
 		return mv;
 	}
 

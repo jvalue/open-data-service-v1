@@ -73,7 +73,8 @@ public class JsonGrabberTest {
 	 */
 	@Test
 	public void testGrabInvalidSource() {
-		GenericValue gv = grabber.grab(new DataSource("invalidsource", null, null));
+		GenericValue gv = grabber.grab(new DataSource("invalidsource", null,
+				null));
 		assertNull(gv);
 	}
 
@@ -85,10 +86,9 @@ public class JsonGrabberTest {
 		grabber.grab(null);
 	}
 
-	
 	/**
 	 * Creates the open weather schema.
-	 *
+	 * 
 	 * @return the schema
 	 */
 	private static Schema createOpenWeatherSchema() {
@@ -96,14 +96,14 @@ public class JsonGrabberTest {
 		coord.put("lon", new NumberSchema());
 		coord.put("lat", new NumberSchema());
 		MapSchema coordSchema = new MapSchema(coord);
-		
+
 		Map<String, Schema> sys = new HashMap<String, Schema>();
 		sys.put("message", new NumberSchema());
 		sys.put("country", new StringSchema());
 		sys.put("sunrise", new NumberSchema());
 		sys.put("sunset", new NumberSchema());
 		MapSchema sysSchema = new MapSchema(sys);
-		
+
 		Map<String, Schema> weather = new HashMap<String, Schema>();
 		weather.put("id", new NumberSchema());
 		weather.put("main", new StringSchema());
@@ -113,7 +113,7 @@ public class JsonGrabberTest {
 		List<Schema> weatherList = new LinkedList<Schema>();
 		weatherList.add(weatherSchema);
 		ListSchema weatherListSchema = new ListSchema(weatherList);
-		
+
 		Map<String, Schema> main = new HashMap<String, Schema>();
 		main.put("temp", new NumberSchema());
 		main.put("humidity", new NumberSchema());
@@ -121,22 +121,21 @@ public class JsonGrabberTest {
 		main.put("temp_min", new NumberSchema());
 		main.put("temp_max", new NumberSchema());
 		MapSchema mainSchema = new MapSchema(main);
-		
+
 		Map<String, Schema> wind = new HashMap<String, Schema>();
 		wind.put("speed", new NumberSchema());
 		wind.put("gust", new NumberSchema());
-		wind.put("deg", new NumberSchema());		
+		wind.put("deg", new NumberSchema());
 		MapSchema windSchema = new MapSchema(wind);
-		
+
 		Map<String, Schema> rain = new HashMap<String, Schema>();
-		rain.put("1h", new NumberSchema());			
+		rain.put("1h", new NumberSchema());
 		MapSchema rainSchema = new MapSchema(rain);
-		
+
 		Map<String, Schema> clouds = new HashMap<String, Schema>();
-		clouds.put("all", new NumberSchema());			
+		clouds.put("all", new NumberSchema());
 		MapSchema cloudsSchema = new MapSchema(clouds);
-		
-		
+
 		Map<String, Schema> result = new HashMap<String, Schema>();
 		result.put("coord", coordSchema);
 		result.put("sys", sysSchema);
@@ -151,9 +150,10 @@ public class JsonGrabberTest {
 		result.put("name", new StringSchema());
 		result.put("cod", new NumberSchema());
 		MapSchema resultSchema = new MapSchema(result);
-		
+
 		return resultSchema;
 	}
+
 	/**
 	 * Test grab null source.
 	 */
@@ -164,9 +164,5 @@ public class JsonGrabberTest {
 		GenericValue gv = grabber.grab(new DataSource(url, schema, schema));
 		assertNotNull(gv);
 	}
-	
-	
-	
-	
-	
+
 }

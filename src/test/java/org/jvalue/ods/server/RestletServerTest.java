@@ -43,8 +43,6 @@ public class RestletServerTest {
 	public RestletServerTest(int port) {
 		this.port = port;
 	}
-	
-	
 
 	/**
 	 * Data.

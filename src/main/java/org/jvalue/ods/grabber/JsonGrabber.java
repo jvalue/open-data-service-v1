@@ -78,12 +78,11 @@ public class JsonGrabber {
 					System.err.println("Could not validate source.");
 					return null;
 				}
-				
+
 				// if (schemaPath != null && schemaPath != "") {
 				// validate(rootNode, schemaPath);
 				// }
 			}
-			
 
 		} catch (IOException e) {
 			String error = "Could not grab source.";
@@ -104,9 +103,11 @@ public class JsonGrabber {
 
 	/**
 	 * Validate generic valus fits schema.
-	 *
-	 * @param gv the gv
-	 * @param dbSchema the db schema
+	 * 
+	 * @param gv
+	 *            the gv
+	 * @param dbSchema
+	 *            the db schema
 	 * @return true, if successful
 	 */
 	private boolean validateGenericValusFitsSchema(GenericValue gv,
@@ -129,7 +130,7 @@ public class JsonGrabber {
 			JsonSchemaFactory factory = JsonSchemaFactory.byDefault();
 			SchemaManager schemaManager = new SchemaManager();
 			String jsonSchema = schemaManager.createJsonSchema(dbSchema);
-			
+
 			// validate jsonSchema
 			JsonNode jn = JsonLoader.fromString(jsonSchema);
 			SyntaxValidator validator = factory.getSyntaxValidator();
