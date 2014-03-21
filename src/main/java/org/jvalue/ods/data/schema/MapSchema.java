@@ -25,7 +25,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
- * The Class MapValue.
+ * The Class MapSchema.
  */
 @JsonInclude(Include.NON_NULL)
 public class MapSchema extends Schema {

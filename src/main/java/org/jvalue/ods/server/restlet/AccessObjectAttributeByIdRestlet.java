@@ -81,9 +81,28 @@ public class AccessObjectAttributeByIdRestlet extends Restlet {
 							new TypeReference<HashMap<String, Object>>() {
 							});
 
-					Object result = doc.get(attribute);
-					if (result != null) {
-						message = mapper.writeValueAsString(result);
+					Object ret = doc.get(attribute);
+
+					// apart from describing external data, class objects
+					// contain
+					// additional metadata like their internal ods-class-name
+					// (e.g. "Station"), describing these attributes' types
+					// would only be
+					// confusing, so it's deleted here (type: null is a marker
+					// for these attributes)
+					if (ret instanceof HashMap<?, ?>) {
+						HashMap<?, ?> ret_map = (HashMap<?, ?>) ret;
+						HashMap<String, String> value = new HashMap<>();
+						value.put("type", "null");
+						if (ret_map.size() == 1 && ret_map.containsValue(value)) {
+							for (Object key : ret_map.keySet()) {
+								ret = key;
+							}
+						}
+					}
+
+					if (ret != null) {
+						message = mapper.writeValueAsString(ret);
 					} else {
 						message = "No such attribute: " + attribute;
 					}

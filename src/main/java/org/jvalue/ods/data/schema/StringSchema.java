@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
- * The Class StringValue.
+ * The Class StringSchema.
  */
 @JsonInclude(Include.NON_NULL)
 public class StringSchema extends Schema {

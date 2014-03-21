@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
- * The Class BoolValue.
+ * The Class BoolSchema.
  */
 @JsonInclude(Include.NON_NULL)
 public class BoolSchema extends Schema {

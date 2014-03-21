@@ -35,6 +35,7 @@ import org.jvalue.ods.data.metadata.JacksonMetaData;
 import org.jvalue.ods.data.osm.OsmData;
 import org.jvalue.ods.data.schema.ListSchema;
 import org.jvalue.ods.data.schema.MapSchema;
+import org.jvalue.ods.data.schema.NullSchema;
 import org.jvalue.ods.data.schema.NumberSchema;
 import org.jvalue.ods.data.schema.Schema;
 import org.jvalue.ods.data.schema.StringSchema;
@@ -272,11 +273,15 @@ public class DataGrabberMain {
 		station.put("latitude", new NumberSchema());
 		station.put("water", waterSchema);
 		station.put("timeseries", timeSeriesListSchema);
-		// marker for queries, could make problems, must not be "required"
+		// two class object strings, must not be "required"
 		Map<String, Schema> type = new HashMap<String, Schema>();
-		type.put("Station", new StringSchema());
+		type.put("Station", new NullSchema());
 		MapSchema typeSchema = new MapSchema(type);
 		station.put("type", typeSchema);
+		Map<String, Schema> restName = new HashMap<String, Schema>();
+		restName.put("stations", new NullSchema());
+		MapSchema restNameSchema = new MapSchema(restName);
+		station.put("rest_name", restNameSchema);
 		MapSchema stationSchema = new MapSchema(station);
 
 		List<Schema> stationList = new LinkedList<Schema>();

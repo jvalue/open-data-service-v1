@@ -22,7 +22,7 @@ import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * The Class GenericValue.
+ * The Class Schema.
  */
 public abstract class Schema implements Serializable {
 
