@@ -58,10 +58,6 @@ dependencies {
 	testCompile 'junit:junit:4.11'
 }
 
-test {
-    systemProperties 'property': 'value'
-}
-
 
 idea.project.ipr {
     withXml { provider ->
@@ -75,7 +71,6 @@ task grabData(type: JavaExec, dependsOn: 'classes') {
 }
 
 // integration test
-
 sourceSets {
   integrationTest {
     compileClasspath = sourceSets.main.output + configurations.testRuntime
