@@ -26,6 +26,11 @@ cargo {
 }
 
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.10'
+}
+
+
 //task to create a jar
 task uberjar(type: Jar) {
 	from files(sourceSets.main.output.classesDir)
