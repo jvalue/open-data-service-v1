@@ -109,8 +109,8 @@ public class OverpassRouter implements Router<Restlet> {
 			}
 		};
 
-		routes.put("/ods/de/overpass/{location}", overpassLocationRestlet);
-		routes.put("/ods/de/overpass/metadata", metadataRestlet);
+		routes.put("/non-ods/de/overpass/{location}", overpassLocationRestlet);
+		routes.put("/non-ods/de/overpass/metadata", metadataRestlet);
 
 		return routes;
 	}
