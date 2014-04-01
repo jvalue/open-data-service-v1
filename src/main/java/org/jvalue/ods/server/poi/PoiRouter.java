@@ -24,8 +24,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.jvalue.ods.data.osm.OdsNode;
-import org.jvalue.ods.data.osm.OsmData;
+import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.data.generic.GenericValue;
+import org.jvalue.ods.data.generic.ListValue;
+import org.jvalue.ods.data.generic.MapValue;
+import org.jvalue.ods.data.generic.StringValue;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.grabber.OsmGrabber;
@@ -118,21 +121,29 @@ public class PoiRouter implements Router<Restlet> {
 									+ (longitude + 0.04)
 									+ ","
 									+ (latitude + 0.04);
-							OsmData data = g.grab(source);
+							
+							ListValue lv = g.grab(new DataSource(source, null, null));
 
 							String message = "";
 
-							if (data != null) {
-								List<OdsNode> doc = new LinkedList<OdsNode>();
-								for (OdsNode n : data.getNodes()) {
-									for (Entry<String, String> e : n.getTags()
-											.entrySet()) {
-										if (e.getKey().equals("tourism")) {
-											doc.add(n);
+							if (lv != null) {				
+								List<GenericValue> doc = new LinkedList<GenericValue>();
+								for (GenericValue gv : lv.getList()) {									
+										MapValue mv = (MapValue) gv;
+										StringValue sv = (StringValue) mv.getMap().get("type");
+										if (sv.getString() == "Node")
+										{
+											MapValue tagsMap = (MapValue) mv.getMap().get("tags");
+											for(Entry<String, GenericValue> e: tagsMap.getMap().entrySet())
+											{
+												if (e.getKey().equals("tourism")) {
+													doc.add(mv);
+												}												
+											}											
 										}
 									}
-								}
 
+								
 								message = mapper.writeValueAsString(doc);
 								poi.put("poi", doc);
 								dbAccessor.update(poi);

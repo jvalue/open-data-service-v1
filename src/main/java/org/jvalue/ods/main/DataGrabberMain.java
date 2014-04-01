@@ -17,7 +17,6 @@
  */
 package org.jvalue.ods.main;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,7 +31,6 @@ import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.GenericValue;
 import org.jvalue.ods.data.generic.ListValue;
 import org.jvalue.ods.data.metadata.JacksonMetaData;
-import org.jvalue.ods.data.osm.OsmData;
 import org.jvalue.ods.data.schema.ListSchema;
 import org.jvalue.ods.data.schema.MapSchema;
 import org.jvalue.ods.data.schema.NullSchema;
@@ -52,9 +50,6 @@ import com.fasterxml.jackson.databind.JsonNode;
  * The Class DataGrabberMain.
  */
 public class DataGrabberMain {
-
-	/** The Constant osmSource. */
-	private final static String osmSource = "/nbgcity.osm";
 
 	/**
 	 * The main method.
@@ -91,7 +86,9 @@ public class DataGrabberMain {
 	 */
 	private static void insertOsmFilesIntoDatabase() {
 		OsmGrabber grabber = new OsmGrabber();
-		OsmData data = grabber.grab(osmSource);
+		ListValue data = grabber.grab(new DataSource(
+				"/nbgcity.osm",
+				null, null));
 
 		if (data == null) {
 			return;
@@ -110,12 +107,8 @@ public class DataGrabberMain {
 				"http://www.openstreetmap.org",
 				"http://www.openstreetmap.org/copyright"));
 
-		Collection<Object> list = new LinkedList<Object>();
-		list.addAll(data.getNodes());
-		list.addAll(data.getWays());
-		list.addAll(data.getRelations());
 
-		accessor.executeBulk(list);
+		accessor.executeBulk(data.getList());
 
 		createView("_design/osm", "getNodeById",
 				"function(doc) { if(doc.nodeId) emit( doc.nodeId, doc)}",

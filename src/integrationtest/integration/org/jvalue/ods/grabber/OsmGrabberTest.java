@@ -7,7 +7,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.jvalue.ods.data.osm.OsmData;
+import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.data.generic.ListValue;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.grabber.OsmGrabber;
@@ -39,8 +40,8 @@ public class OsmGrabberTest {
 	 */
 	@Test
 	public void testGrab() {
-		OsmData d = grabber.grab(testUrl);
-		assertNotNull(d);
+		ListValue lv = grabber.grab(new DataSource(testUrl, null, null));
+		assertNotNull(lv);
 	}
 
 	/**
@@ -48,13 +49,12 @@ public class OsmGrabberTest {
 	 */
 	@Test
 	public void testGrabOffline() {
-		OsmData d = grabber.grab("/nbgcity.osm");
-		assertNotNull(d);
+		ListValue lv = grabber.grab(new DataSource("/nbgcity.osm", null, null));
+		assertNotNull(lv);
 		DbAccessor<JsonNode> db = DbFactory.createDbAccessor("testOsm");
 		db.connect();
-		db.executeBulk(d.getNodes());
-		db.executeBulk(d.getRelations());
-		db.executeBulk(d.getWays());
+		
+		db.executeBulk(lv.getList());
 		db.deleteDatabase();
 	}
 
@@ -63,8 +63,8 @@ public class OsmGrabberTest {
 	 */
 	@Test
 	public void testGrabInvalidSource() {
-		OsmData d = grabber.grab("invalidsource");
-		assertNull(d);
+		ListValue lv = grabber.grab(new DataSource("invalidsource", null, null));
+		assertNull(lv);
 	}
 
 	/**
