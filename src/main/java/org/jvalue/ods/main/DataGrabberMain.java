@@ -86,9 +86,11 @@ public class DataGrabberMain {
 	 */
 	private static void insertOsmFilesIntoDatabase() {
 		OsmGrabber grabber = new OsmGrabber();
+		
+		Schema schema = createOsmSchema();
 		ListValue data = grabber.grab(new DataSource(
 				"/nbgcity.osm",
-				null, null));
+				schema, schema));
 
 		if (data == null) {
 			return;
@@ -144,6 +146,58 @@ public class DataGrabberMain {
 				"getCouchIdByOsmId",
 				"function(doc) { if (doc.nodeId) {emit(doc.nodeId, doc._id)} else if (doc.wayId) { emit(doc.wayId, doc._id)} else if (doc.relationId) { emit(doc.relationId, doc._id)}}",
 				accessor);
+	}
+
+	private static Schema createOsmSchema() {
+		Map<String, Schema> nodeTagsMap = new HashMap<String, Schema>(); 
+		MapSchema nodeTagsSchema = new MapSchema(nodeTagsMap);
+		
+		Map<String, Schema> nodeMap = new HashMap<String, Schema>();
+		nodeMap.put("type", new StringSchema());
+		nodeMap.put("nodeId", new StringSchema());
+		nodeMap.put("timestamp", new StringSchema());
+		nodeMap.put("uid", new NumberSchema());
+		nodeMap.put("user", new StringSchema());
+		nodeMap.put("changeset", new NumberSchema());
+		nodeMap.put("latitude", new NumberSchema());
+		nodeMap.put("longitude", new NumberSchema());
+		nodeMap.put("tags", nodeTagsSchema);		
+		MapSchema nodeMapSchema = new MapSchema(nodeMap);
+				
+		
+		
+		
+//		Map<String, Schema> wayTagsMap = new HashMap<String, Schema>(); 
+//		MapSchema wayTagsSchema = new MapSchema(wayTagsMap);		
+//		
+//		List<Schema> wayNodesList = new LinkedList<Schema>();
+//		wayNodesList.add(new NumberSchema());
+//		ListSchema wayNodesSchema = new ListSchema(wayNodesList);
+//		
+//		Map<String, Schema> wayMap = new HashMap<String, Schema>();
+//		wayMap.put("type", new StringSchema());
+//		wayMap.put("wayId", new StringSchema());
+//		wayMap.put("timestamp", new StringSchema());
+//		wayMap.put("uid", new NumberSchema());
+//		wayMap.put("user", new StringSchema());
+//		wayMap.put("changeset", new NumberSchema());
+//		wayMap.put("version", new NumberSchema());		
+//		wayMap.put("tags", wayTagsSchema);		
+//		wayMap.put("nd", wayNodesSchema);
+//		MapSchema wayMapSchema = new MapSchema(wayMap);
+//				
+		
+		
+		
+		
+		
+		
+		List<Schema> entityList = new LinkedList<Schema>();		
+		entityList.add(nodeMapSchema);
+		//entityList.add(wayMapSchema);
+		ListSchema listSchema = new ListSchema(entityList);
+		
+		return listSchema;
 	}
 
 	/**

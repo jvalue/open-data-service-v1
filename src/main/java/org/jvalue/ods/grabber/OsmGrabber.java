@@ -32,7 +32,9 @@ import org.jvalue.ods.data.generic.ListValue;
 import org.jvalue.ods.data.generic.MapValue;
 import org.jvalue.ods.data.generic.NumberValue;
 import org.jvalue.ods.data.generic.StringValue;
+import org.jvalue.ods.data.schema.Schema;
 import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.schema.SchemaManager;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
@@ -45,6 +47,16 @@ import org.openstreetmap.osmosis.core.task.v0_6.RunnableSource;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 import org.openstreetmap.osmosis.xml.common.CompressionMethod;
 import org.openstreetmap.osmosis.xml.v0_6.XmlReader;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jackson.JsonLoader;
+import com.github.fge.jsonschema.exceptions.ProcessingException;
+import com.github.fge.jsonschema.main.JsonSchemaFactory;
+import com.github.fge.jsonschema.main.JsonValidator;
+import com.github.fge.jsonschema.processors.syntax.SyntaxValidator;
+import com.github.fge.jsonschema.report.ProcessingReport;
 
 /**
  * The Class OsmGrabber.
@@ -161,7 +173,71 @@ public class OsmGrabber {
 			file.delete();
 		}
 
+		
+		if (source.getDbSchema() != null) {
+			if (!validateGenericValusFitsSchema(lv, source.getDbSchema()))
+				return null;
+		}
+		
+		
 		return lv;
+	}
+
+	private boolean validateGenericValusFitsSchema(GenericValue gv,
+			Schema dbSchema) {
+		ObjectMapper mapper = new ObjectMapper();
+
+		String json;
+		try {
+			json = mapper.writeValueAsString(gv);
+		} catch (JsonProcessingException e) {
+			String error = "Could not convert GenericValue to json"
+					+ e.getMessage();
+			Logging.error(this.getClass(), error);
+			System.err.println(error);
+			return false;
+		}
+
+		try {
+			JsonNode jsonNode = mapper.readTree(json);
+			JsonSchemaFactory factory = JsonSchemaFactory.byDefault();
+			SchemaManager schemaManager = new SchemaManager();
+			String jsonSchema = schemaManager.createJsonSchema(dbSchema);
+
+			// validate jsonSchema
+			JsonNode jn = JsonLoader.fromString(jsonSchema);
+			SyntaxValidator validator = factory.getSyntaxValidator();
+			boolean result = validator.schemaIsValid(jn);
+			if (result == false) {
+				String error = "schema is not valid";
+				Logging.error(this.getClass(), error);
+				System.err.println(error);
+				return false;
+			}
+
+			// validate
+			JsonValidator jsonValidator = factory.getValidator();
+			ProcessingReport report = jsonValidator.validate(jn, jsonNode);
+			result = report.isSuccess();
+			if (result == false) {
+				String error = "Could not validate json";
+				Logging.error(this.getClass(), error);
+				System.err.println(error);
+				return false;
+			}
+
+		} catch (IOException e) {
+			String error = "Could not validate json" + e.getMessage();
+			Logging.error(this.getClass(), error);
+			System.err.println(error);
+			return false;
+		} catch (ProcessingException e) {
+			String error = "Could not validate json" + e.getMessage();
+			Logging.error(this.getClass(), error);
+			System.err.println(error);
+			return false;
+		}
+		return true;
 	}
 
 	private MapValue convertRelationToGenericValue(Relation relation) {
@@ -174,11 +250,6 @@ public class OsmGrabber {
 		map.put("timestamp", new StringValue(relation.getTimestamp().toString()));
 		map.put("uid", new NumberValue(relation.getUser().getId()));
 		map.put("user", new StringValue(relation.getUser().getName()));
-		
-		//ToDo: warum?
-		//map.put("visible", new StringValue("true"));
-		
-		
 		map.put("version", new NumberValue(relation.getVersion()));
 		map.put("changeset", new NumberValue(relation.getChangesetId()));
 
@@ -220,10 +291,6 @@ public class OsmGrabber {
 		map.put("user", new StringValue(w.getUser().getName()));
 		map.put("changeset", new NumberValue(w.getChangesetId()));
 		map.put("version", new NumberValue(w.getVersion()));
-		
-		//ToDo: warum?
-		//map.put("visible", new StringValue("true"));
-				
 		MapValue tagsMapValue = new MapValue();
 		Map<String, GenericValue> tagsMap = tagsMapValue.getMap();
 		Collection<Tag> coll = w.getTags();
