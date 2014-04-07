@@ -27,6 +27,7 @@ import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
+import org.jvalue.ods.server.RouterUtils;
 import org.jvalue.ods.server.restlet.AccessObjectAttributeByIdRestlet;
 import org.jvalue.ods.server.restlet.AccessObjectByIdRestlet;
 import org.restlet.Request;
@@ -368,6 +369,25 @@ public class OsmRouter implements Router<Restlet> {
 			}
 		};
 
+		Restlet osmRestlet = new Restlet() {
+			@Override
+			public void handle(Request request, Response response) {
+
+				String message = "Please specify an argument.";
+
+				// there is an attribute in url
+				if (request.getResourceRef().getQueryAsForm().size() == 1) {
+
+					message = new RouterUtils().getDocumentByAttribute(request, dbAccessor);
+
+				}
+				
+				response.setEntity(message, MediaType.APPLICATION_JSON);
+				
+			}
+		};
+		
+		
 		routes.put("/ods/de/osm/relations/{osm_id}/$id", idRestlet);
 		routes.put("/ods/de/osm/${id}", new AccessObjectByIdRestlet(dbAccessor));
 		routes.put("/ods/de/osm/nodes/{osm_id}", getNodeByIdRestlet);
@@ -385,6 +405,8 @@ public class OsmRouter implements Router<Restlet> {
 		routes.put("/ods/de/osm/${id}/{attribute}",
 				new AccessObjectAttributeByIdRestlet(dbAccessor));
 
+		routes.put("/ods/de/osm", osmRestlet);
+		
 		return routes;
 	}
 

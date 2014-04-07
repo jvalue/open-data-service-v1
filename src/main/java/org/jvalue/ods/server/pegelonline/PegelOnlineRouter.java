@@ -27,10 +27,11 @@ import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
+import org.jvalue.ods.server.RouterUtils;
 import org.jvalue.ods.server.restlet.AccessObjectAttributeByIdRestlet;
+import org.jvalue.ods.server.restlet.AccessObjectByIdRestlet;
 import org.jvalue.ods.server.restlet.ClassObjectIdRestlet;
 import org.jvalue.ods.server.restlet.ClassObjectRestlet;
-import org.jvalue.ods.server.restlet.AccessObjectByIdRestlet;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
@@ -74,32 +75,43 @@ public class PegelOnlineRouter implements Router<Restlet> {
 
 			@Override
 			public void handle(Request request, Response response) {
-				// Print the requested URI path
-				String message = "";
-				try {
 
-					List<JsonNode> nodes = null;
-					ObjectMapper mapper = new ObjectMapper();
+				String message = "";
+
+				// there is an attribute in url
+				if (request.getResourceRef().getQueryAsForm().size() == 1) {
+
+					message = new RouterUtils().getDocumentByAttribute(request, dbAccessor);
+
+				} else {
 
 					try {
-						dbAccessor.connect();
 
-						nodes = dbAccessor.getAllDocuments();
+						List<JsonNode> nodes = null;
+						ObjectMapper mapper = new ObjectMapper();
 
-						message += mapper.writeValueAsString(nodes);
-					} catch (RuntimeException e) {
-						String errorMessage = "Could not retrieve data from db: "
+						try {
+							dbAccessor.connect();
+
+							nodes = dbAccessor.getAllDocuments();
+
+							message += mapper.writeValueAsString(nodes);
+						} catch (RuntimeException e) {
+							String errorMessage = "Could not retrieve data from db: "
+									+ e;
+							Logging.error(this.getClass(), errorMessage);
+							System.err.println(errorMessage);
+							message += mapper
+									.writeValueAsString("Could not retrieve data. Try to update database via /pegelonline/update.");
+						}
+
+					} catch (IOException e) {
+						String errorMessage = "Error during client request: "
 								+ e;
 						Logging.error(this.getClass(), errorMessage);
 						System.err.println(errorMessage);
-						message += mapper
-								.writeValueAsString("Could not retrieve data. Try to update database via /pegelonline/update.");
 					}
 
-				} catch (IOException e) {
-					String errorMessage = "Error during client request: " + e;
-					Logging.error(this.getClass(), errorMessage);
-					System.err.println(errorMessage);
 				}
 
 				response.setEntity(message, MediaType.APPLICATION_JSON);
