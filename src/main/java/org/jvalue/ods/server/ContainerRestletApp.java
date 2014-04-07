@@ -25,6 +25,7 @@ import java.util.Set;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.DataGrabberMain;
 import org.jvalue.ods.main.RouterFactory;
+import org.jvalue.ods.server.restlet.DefaultRestlet;
 import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.routing.Router;
@@ -77,7 +78,9 @@ public class ContainerRestletApp extends Application implements Runnable {
 
 		// Create a root router
 		Router router = new Router(getContext());
-
+		
+		router.attachDefault(new DefaultRestlet());
+		
 		// Get Map in Set interface to get key and value
 		Set<Entry<String, Restlet>> s = combinedRouter.entrySet();
 

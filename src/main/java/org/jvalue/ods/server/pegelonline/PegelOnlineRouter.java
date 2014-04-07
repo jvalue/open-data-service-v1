@@ -185,31 +185,6 @@ public class PegelOnlineRouter implements Router<Restlet> {
 			}
 		};
 
-		// gets the current measurements of a station including its current
-		// value
-		Restlet measurementsRestlet = new Restlet() {
-			@Override
-			public void handle(Request request, Response response) {
-
-				List<JsonNode> nodes = null;
-				dbAccessor.connect();
-
-				String name = (String) request.getAttributes().get("station");
-				name = name.toUpperCase();
-
-				nodes = dbAccessor.executeDocumentQuery("_design/pegelonline",
-						"getMeasurements", name);
-
-				if (!nodes.isEmpty()) {
-					response.setEntity(nodes.get(0).toString(),
-							MediaType.APPLICATION_JSON);
-				} else {
-					response.setEntity("Station not found.",
-							MediaType.TEXT_PLAIN);
-				}
-			}
-		};
-
 		Restlet metadataRestlet = new Restlet() {
 			@Override
 			public void handle(Request request, Response response) {
@@ -312,13 +287,11 @@ public class PegelOnlineRouter implements Router<Restlet> {
 
 			}
 		};
-
+		
 		routes.put("/ods/de/pegelonline/stations", stationsRestlet);
 		routes.put("/ods/de/pegelonline/stationsFlat", stationsFlatRestlet);
 		routes.put("/ods/de/pegelonline/stations/{station}",
 				singleStationRestlet);
-		routes.put("/ods/de/pegelonline/stations/{station}/measurements",
-				measurementsRestlet);
 		routes.put("/ods/de/pegelonline/metadata", metadataRestlet);
 		routes.put("/ods/de/pegelonline/metadata/$id", metadataIdRestlet);
 		routes.put("/ods/de/pegelonline/stations/{station}/$id", idRestlet);
