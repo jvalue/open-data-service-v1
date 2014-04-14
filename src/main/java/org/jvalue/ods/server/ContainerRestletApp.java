@@ -19,15 +19,13 @@ package org.jvalue.ods.server;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.jvalue.ods.data.generic.GenericValue;
+import org.jvalue.ods.data.generic.MapValue;
 import org.jvalue.ods.data.generic.StringValue;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
@@ -124,8 +122,9 @@ public class ContainerRestletApp extends Application implements Runnable {
 				content += "\n";
 
 			
-			GenericValue gv = new StringValue(content);			
-			accessor.insert(gv);		
+			MapValue mv = new MapValue();		
+			mv.getMap().put("log", new StringValue(content));
+			accessor.insert(mv);		
 			
 		}
 		catch (Exception ex)

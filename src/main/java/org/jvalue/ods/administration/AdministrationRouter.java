@@ -31,7 +31,6 @@ import org.restlet.Restlet;
 import org.restlet.data.MediaType;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * The Class PoiRouter.
@@ -48,7 +47,7 @@ public class AdministrationRouter implements Router<Restlet> {
 	 * Instantiates a new routes router.
 	 */
 	public AdministrationRouter() {
-		this.dbAccessor = DbFactory.createDbAccessor("poi");
+		this.dbAccessor = DbFactory.createDbAccessor("adminlog");
 	}
 
 	/*
@@ -70,14 +69,14 @@ public class AdministrationRouter implements Router<Restlet> {
 					dbAccessor.connect();
 
 					List<JsonNode> nodes = dbAccessor.getAllDocuments();
-					ObjectMapper mapper = new ObjectMapper();
-					message += mapper.writeValueAsString(nodes);
-					
-					} catch (Exception ex) {
-						System.err.println(ex.getMessage());
-						Logging.error(this.getClass(), ex.getMessage());
+					for (JsonNode n : nodes) {
+						message += n.get("log").asText();
 					}
-				
+
+				} catch (Exception ex) {
+					System.err.println(ex.getMessage());
+					Logging.error(this.getClass(), ex.getMessage());
+				}
 
 				response.setEntity(message, MediaType.TEXT_PLAIN);
 
