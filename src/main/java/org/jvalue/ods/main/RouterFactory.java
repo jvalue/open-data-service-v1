@@ -19,6 +19,7 @@ package org.jvalue.ods.main;
 
 import java.util.HashMap;
 
+import org.jvalue.ods.administration.AdministrationRouter;
 import org.jvalue.ods.server.ApiRouter;
 import org.jvalue.ods.server.openstreetmap.NominatimRouter;
 import org.jvalue.ods.server.openstreetmap.OsmRouter;
@@ -96,5 +97,9 @@ public class RouterFactory {
 	 */
 	public static Router<Restlet> createPoiRouter() {
 		return new PoiRouter();
+	}
+
+	public static Router<Restlet> createAdministrationRouter() {		
+		return new AdministrationRouter();
 	}
 }

@@ -74,5 +74,8 @@ public abstract class Logging {
 		Logger log = createLogger(c);
 		log.debug(s);
 	}
+	
+	
+	
 
 }

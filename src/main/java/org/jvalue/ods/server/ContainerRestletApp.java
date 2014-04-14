@@ -17,11 +17,20 @@
  */
 package org.jvalue.ods.server;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.jvalue.ods.data.generic.GenericValue;
+import org.jvalue.ods.data.generic.StringValue;
+import org.jvalue.ods.db.DbAccessor;
+import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.DataGrabberMain;
 import org.jvalue.ods.main.RouterFactory;
@@ -29,6 +38,8 @@ import org.jvalue.ods.server.restlet.DefaultRestlet;
 import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.routing.Router;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * The Class ContainerRestletApp.
@@ -56,6 +67,10 @@ public class ContainerRestletApp extends Application implements Runnable {
 				.createRoutesRouter();
 		org.jvalue.ods.main.Router<Restlet> poiRouter = RouterFactory
 				.createPoiRouter();
+		org.jvalue.ods.main.Router<Restlet> administrationRouter = RouterFactory
+				.createAdministrationRouter();
+		
+		
 
 		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
 		combinedRouter.putAll(poRouter.getRoutes());
@@ -64,6 +79,7 @@ public class ContainerRestletApp extends Application implements Runnable {
 		combinedRouter.putAll(osmRouter.getRoutes());
 		combinedRouter.putAll(routesRouter.getRoutes());
 		combinedRouter.putAll(poiRouter.getRoutes());
+		combinedRouter.putAll(administrationRouter.getRoutes());
 
 		// must be last router, generates api output
 		org.jvalue.ods.main.Router<Restlet> apiRouter = RouterFactory
@@ -94,6 +110,32 @@ public class ContainerRestletApp extends Application implements Runnable {
 
 		return router;
 	}
+	
+	
+	
+	private void adminLog(String content)
+	{		
+		try
+		{
+			DbAccessor<JsonNode> accessor = DbFactory.createDbAccessor("adminlog");
+			accessor.connect();
+			
+			if (!content.endsWith("\n"))
+				content += "\n";
+
+			
+			GenericValue gv = new StringValue(content);			
+			accessor.insert(gv);		
+			
+		}
+		catch (Exception ex)
+		{
+			Logging.error(Logging.class, ex.getMessage());
+			System.err.println(ex.getMessage());
+		}
+	}
+	
+	
 
 	/*
 	 * (non-Javadoc)
@@ -104,7 +146,13 @@ public class ContainerRestletApp extends Application implements Runnable {
 	public void run() {
 		while (true) {
 			try {
+				DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+				Date date = new Date();
+				String datetime = dateFormat.format(date);
+				
+				adminLog(datetime + " Update started");
 				DataGrabberMain.main(null);
+				adminLog(datetime + " Update completed");
 			} catch (Exception ex) {
 				Logging.error(ContainerRestletApp.class, ex.getMessage());
 				ex.printStackTrace();
