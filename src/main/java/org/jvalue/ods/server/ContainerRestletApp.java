@@ -151,6 +151,9 @@ public class ContainerRestletApp extends Application implements Runnable {
 				
 				adminLog(datetime + " Update started");
 				DataGrabberMain.main(null);
+				
+				date = new Date();
+				datetime = dateFormat.format(date);
 				adminLog(datetime + " Update completed");
 			} catch (Exception ex) {
 				Logging.error(ContainerRestletApp.class, ex.getMessage());
