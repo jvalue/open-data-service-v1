@@ -21,6 +21,7 @@ import java.util.HashMap;
 
 import org.jvalue.ods.administration.AdministrationRouter;
 import org.jvalue.ods.server.ApiRouter;
+import org.jvalue.ods.server.OdsRouter;
 import org.jvalue.ods.server.openstreetmap.NominatimRouter;
 import org.jvalue.ods.server.openstreetmap.OsmRouter;
 import org.jvalue.ods.server.openstreetmap.OverpassRouter;
@@ -101,5 +102,9 @@ public class RouterFactory {
 
 	public static Router<Restlet> createAdministrationRouter() {		
 		return new AdministrationRouter();
+	}
+
+	public static org.jvalue.ods.main.Router<Restlet> createOdsRouter() {
+		return new OdsRouter();
 	}
 }

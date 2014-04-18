@@ -67,9 +67,8 @@ public class DataGrabberMain {
 	 * Insert poi into database.
 	 */
 	private static void insertPoiIntoDatabase() {
-		DbAccessor<JsonNode> accessor = DbFactory.createDbAccessor("poi");
+		DbAccessor<JsonNode> accessor = DbFactory.createDbAccessor("ods");
 		accessor.connect();
-		accessor.deleteDatabase();
 
 		createView("_design/poi", "getPoiByStation",
 				"function(doc) { if(doc.poi) emit (doc.longname, doc.poi) }",
@@ -86,17 +85,16 @@ public class DataGrabberMain {
 	 */
 	private static void insertOsmFilesIntoDatabase() {
 		OsmGrabber grabber = new OsmGrabber();
-		
+
 		Schema schema = createOsmSchema();
-		ListValue data = grabber.grab(new DataSource(
-				"/nbgcity.osm",
-				schema, schema));
+		ListValue data = grabber.grab(new DataSource("/nbgcity.osm", schema,
+				schema));
 
 		if (data == null) {
 			return;
 		}
 
-		DbAccessor<JsonNode> accessor = DbFactory.createDbAccessor("osm");
+		DbAccessor<JsonNode> accessor = DbFactory.createDbAccessor("ods");
 		accessor.connect();
 		accessor.deleteDatabase();
 
@@ -108,7 +106,6 @@ public class DataGrabberMain {
 				"OpenStreetMap ist eine Karte der Welt, erstellt von Menschen wie dir und frei verwendbar unter einer offenen Lizenz.",
 				"http://www.openstreetmap.org",
 				"http://www.openstreetmap.org/copyright"));
-
 
 		accessor.executeBulk(data.getList());
 
@@ -138,8 +135,11 @@ public class DataGrabberMain {
 				"function(doc) { if(doc.tags){ for (var i in doc.tags) { emit(doc.tags[i], doc) }} }",
 				accessor);
 
-		createView("_design/osm", "getMetadata",
-				"function(doc) { if(doc.title) emit(null, doc)}", accessor);
+		createView(
+				"_design/osm",
+				"getMetadata",
+				"function(doc) { if(doc.title == 'openstreetmap') emit(null, doc)}",
+				accessor);
 
 		createView(
 				"_design/osm",
@@ -149,9 +149,9 @@ public class DataGrabberMain {
 	}
 
 	private static Schema createOsmSchema() {
-		Map<String, Schema> nodeTagsMap = new HashMap<String, Schema>(); 
+		Map<String, Schema> nodeTagsMap = new HashMap<String, Schema>();
 		MapSchema nodeTagsSchema = new MapSchema(nodeTagsMap);
-		
+
 		Map<String, Schema> nodeMap = new HashMap<String, Schema>();
 		nodeMap.put("type", new StringSchema());
 		nodeMap.put("nodeId", new StringSchema());
@@ -161,42 +161,34 @@ public class DataGrabberMain {
 		nodeMap.put("changeset", new NumberSchema());
 		nodeMap.put("latitude", new NumberSchema());
 		nodeMap.put("longitude", new NumberSchema());
-		nodeMap.put("tags", nodeTagsSchema);		
+		nodeMap.put("tags", nodeTagsSchema);
 		MapSchema nodeMapSchema = new MapSchema(nodeMap);
-				
-		
-		
-		
-//		Map<String, Schema> wayTagsMap = new HashMap<String, Schema>(); 
-//		MapSchema wayTagsSchema = new MapSchema(wayTagsMap);		
-//		
-//		List<Schema> wayNodesList = new LinkedList<Schema>();
-//		wayNodesList.add(new NumberSchema());
-//		ListSchema wayNodesSchema = new ListSchema(wayNodesList);
-//		
-//		Map<String, Schema> wayMap = new HashMap<String, Schema>();
-//		wayMap.put("type", new StringSchema());
-//		wayMap.put("wayId", new StringSchema());
-//		wayMap.put("timestamp", new StringSchema());
-//		wayMap.put("uid", new NumberSchema());
-//		wayMap.put("user", new StringSchema());
-//		wayMap.put("changeset", new NumberSchema());
-//		wayMap.put("version", new NumberSchema());		
-//		wayMap.put("tags", wayTagsSchema);		
-//		wayMap.put("nd", wayNodesSchema);
-//		MapSchema wayMapSchema = new MapSchema(wayMap);
-//				
-		
-		
-		
-		
-		
-		
-		List<Schema> entityList = new LinkedList<Schema>();		
+
+		// Map<String, Schema> wayTagsMap = new HashMap<String, Schema>();
+		// MapSchema wayTagsSchema = new MapSchema(wayTagsMap);
+		//
+		// List<Schema> wayNodesList = new LinkedList<Schema>();
+		// wayNodesList.add(new NumberSchema());
+		// ListSchema wayNodesSchema = new ListSchema(wayNodesList);
+		//
+		// Map<String, Schema> wayMap = new HashMap<String, Schema>();
+		// wayMap.put("type", new StringSchema());
+		// wayMap.put("wayId", new StringSchema());
+		// wayMap.put("timestamp", new StringSchema());
+		// wayMap.put("uid", new NumberSchema());
+		// wayMap.put("user", new StringSchema());
+		// wayMap.put("changeset", new NumberSchema());
+		// wayMap.put("version", new NumberSchema());
+		// wayMap.put("tags", wayTagsSchema);
+		// wayMap.put("nd", wayNodesSchema);
+		// MapSchema wayMapSchema = new MapSchema(wayMap);
+		//
+
+		List<Schema> entityList = new LinkedList<Schema>();
 		entityList.add(nodeMapSchema);
-		//entityList.add(wayMapSchema);
+		// entityList.add(wayMapSchema);
 		ListSchema listSchema = new ListSchema(entityList);
-		
+
 		return listSchema;
 	}
 
@@ -214,10 +206,8 @@ public class DataGrabberMain {
 						"http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true",
 						schema, schema));
 
-		DbAccessor<JsonNode> accessor = DbFactory
-				.createDbAccessor("pegelonline");
+		DbAccessor<JsonNode> accessor = DbFactory.createDbAccessor("ods");
 		accessor.connect();
-		accessor.deleteDatabase();
 
 		accessor.insert(new JacksonMetaData(
 				"de-pegelonline",
@@ -246,11 +236,19 @@ public class DataGrabberMain {
 				"getMeasurements",
 				"function(doc) { if(doc.longname) emit( doc.longname, doc.timeseries)}",
 				accessor);
-		createView("_design/pegelonline", "getMetadata",
-				"function(doc) { if(doc.title) emit(null, doc)}", accessor);
+		createView(
+				"_design/pegelonline",
+				"getMetadata",
+				"function(doc) { if(doc.title == 'pegelonline') emit(null, doc)}",
+				accessor);
 
 		createView("_design/pegelonline", "getAllStationsFlat",
 				"function(doc) { if(doc.longname) emit (null, doc.longname) }",
+				accessor);
+		createView(
+				"_design/pegelonline",
+				"getAllStations",
+				"function(doc) { if(doc.longname && doc.type == null) emit (null, doc) }",
 				accessor);
 		createView(
 				"_design/pegelonline",
@@ -259,10 +257,12 @@ public class DataGrabberMain {
 				accessor);
 
 		createView("_design/pegelonline", "getClassObject",
-				"function(doc) { if(doc.type) emit (null, doc) }", accessor);
+				"function(doc) { if(doc.rest_name) emit (null, doc) }",
+				accessor);
 
 		createView("_design/pegelonline", "getClassObjectId",
-				"function(doc) { if(doc.type) emit (null, doc._id) }", accessor);
+				"function(doc) { if(doc.rest_name) emit (null, doc._id) }",
+				accessor);
 	}
 
 	/**

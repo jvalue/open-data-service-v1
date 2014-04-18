@@ -59,7 +59,7 @@ public class PoiRouter implements Router<Restlet> {
 	 * Instantiates a new routes router.
 	 */
 	public PoiRouter() {
-		this.dbAccessor = DbFactory.createDbAccessor("poi");
+		this.dbAccessor = DbFactory.createDbAccessor("ods");
 	}
 
 	/*
@@ -82,7 +82,7 @@ public class PoiRouter implements Router<Restlet> {
 				name = name.toUpperCase();
 
 				DbAccessor<JsonNode> pegelOnlineDbAccessor = DbFactory
-						.createDbAccessor("pegelonline");
+						.createDbAccessor("ods");
 				pegelOnlineDbAccessor.connect();
 				ObjectMapper mapper = new ObjectMapper();
 				nodes = pegelOnlineDbAccessor.executeDocumentQuery(

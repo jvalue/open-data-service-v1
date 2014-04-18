@@ -52,10 +52,52 @@ public class DefaultRestlet extends Restlet {
 		String[] tree = url.split("/");
 		ObjectMapper mapper = new ObjectMapper();
 
-		if (url.contains("/ods/de/pegelonline/stations/")) {
+		if (url.contains("/ods/$")) {
 
-			DbAccessor<JsonNode> dbAccessor = DbFactory
-					.createDbAccessor("pegelonline");
+			DbAccessor<JsonNode> dbAccessor = DbFactory.createDbAccessor("ods");
+			dbAccessor.connect();
+
+			int pos = 0;
+
+			// determine position where intern path begins
+			for (int i = 0; i < tree.length; i++) {
+				if (tree[i].startsWith("$")) {
+					pos = i;
+					break;
+				}
+			}
+
+			try {
+				JsonNode node = null;
+				try {
+					node = dbAccessor.getDocument(JsonNode.class,
+							tree[pos].substring(1));
+				} catch (RuntimeException e) {
+					String errorMessage = "Could not retrieve data from db: "
+							+ e;
+					Logging.error(this.getClass(), errorMessage);
+					System.err.println(errorMessage);
+					message += mapper
+							.writeValueAsString("Could not retrieve data.");
+				}
+				if (node != null) {
+					for (int k = pos + 1; k < tree.length; k++) {
+						node = node.get(tree[k]);
+					}
+
+					message = mapper.writeValueAsString(node);
+				} else {
+					message = "Could not find data matching the input.";
+				}
+			} catch (JsonProcessingException e) {
+				String errorMessage = "Error during client request: " + e;
+				Logging.error(this.getClass(), errorMessage);
+				System.err.println(errorMessage);
+			}
+
+		} else if (url.contains("/ods/de/pegelonline/stations/")) {
+
+			DbAccessor<JsonNode> dbAccessor = DbFactory.createDbAccessor("ods");
 			dbAccessor.connect();
 
 			int pos = 0;
@@ -90,55 +132,6 @@ public class DefaultRestlet extends Restlet {
 					message = mapper.writeValueAsString(result);
 				} else {
 					message = "Could not find data matching the input.";
-				}
-			} catch (JsonProcessingException e) {
-				String errorMessage = "Error during client request: " + e;
-				Logging.error(this.getClass(), errorMessage);
-				System.err.println(errorMessage);
-			}
-
-		} else if (url.contains("/ods/de/osm/$")) {
-			DbAccessor<JsonNode> dbAccessor = DbFactory.createDbAccessor("osm");
-			dbAccessor.connect();
-
-			int pos = 0;
-
-			// determine position where intern path begins
-			for (int i = 0; i < tree.length; i++) {
-				if (tree[i].equals("osm")) {
-					pos = i + 1;
-					break;
-				}
-			}
-
-			try {
-				JsonNode n = null;
-				try {
-					String id = tree[pos].substring(1);
-					n = dbAccessor.getDocument(JsonNode.class, id);
-
-				} catch (RuntimeException e) {
-					String errorMessage = "Could not retrieve data from db: "
-							+ e;
-					Logging.error(this.getClass(), errorMessage);
-					System.err.println(errorMessage);
-					message += mapper
-							.writeValueAsString("Could not retrieve data.");
-					response.setEntity(message, MediaType.APPLICATION_JSON);
-					return;
-				}
-
-				for (int k = pos + 1; k < tree.length; k++) {
-					if (n == null) {
-						message = "No result";
-						break;
-					}
-					n = n.get(tree[k]);
-				}
-				if (n != null) {
-					message = mapper.writeValueAsString(n);
-				} else {
-					message = "No result.";
 				}
 			} catch (JsonProcessingException e) {
 				String errorMessage = "Error during client request: " + e;

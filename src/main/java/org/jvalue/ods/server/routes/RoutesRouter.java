@@ -53,7 +53,7 @@ public class RoutesRouter implements Router<Restlet> {
 	 * Instantiates a new routes router.
 	 */
 	public RoutesRouter() {
-		this.dbAccessor = DbFactory.createDbAccessor("distance");
+		this.dbAccessor = DbFactory.createDbAccessor("ods");
 	}
 
 	/*
@@ -88,7 +88,7 @@ public class RoutesRouter implements Router<Restlet> {
 				endStation = endStation.toUpperCase();
 
 				DbAccessor<JsonNode> pegelOnlineDbAccessor = DbFactory
-						.createDbAccessor("pegelonline");
+						.createDbAccessor("ods");
 				pegelOnlineDbAccessor.connect();
 				List<JsonNode> startNodes = pegelOnlineDbAccessor
 						.executeDocumentQuery("_design/pegelonline",

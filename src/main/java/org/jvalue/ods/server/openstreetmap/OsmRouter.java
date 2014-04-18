@@ -17,7 +17,6 @@
  */
 package org.jvalue.ods.server.openstreetmap;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,15 +27,12 @@ import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
 import org.jvalue.ods.server.RouterUtils;
-import org.jvalue.ods.server.restlet.AccessObjectAttributeByIdRestlet;
-import org.jvalue.ods.server.restlet.AccessObjectByIdRestlet;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
 import org.restlet.data.MediaType;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -55,7 +51,7 @@ public class OsmRouter implements Router<Restlet> {
 	 * Instantiates a new osm router.
 	 */
 	public OsmRouter() {
-		this.dbAccessor = DbFactory.createDbAccessor("osm");
+		this.dbAccessor = DbFactory.createDbAccessor("ods");
 	}
 
 	/**
@@ -263,111 +259,7 @@ public class OsmRouter implements Router<Restlet> {
 			}
 		};
 
-		Restlet metadataIdRestlet = new Restlet() {
-			@Override
-			public void handle(Request request, Response response) {
-
-				ObjectMapper mapper = new ObjectMapper();
-				List<JsonNode> node = null;
-				dbAccessor.connect();
-
-				try {
-					node = dbAccessor.executeDocumentQuery("_design/osm",
-							"getMetadata", null);
-
-					String id = "";
-					if (node.get(0).isObject()) {
-
-						HashMap<String, Object> metadata;
-
-						try {
-							metadata = mapper
-									.readValue(
-											node.get(0).toString(),
-											new TypeReference<HashMap<String, Object>>() {
-											});
-							id = (String) metadata.get("_id");
-						} catch (IOException e) {
-							response.setEntity("Could not retrieve data.",
-									MediaType.TEXT_PLAIN);
-							return;
-						}
-
-					}
-
-					response.setEntity(id, MediaType.APPLICATION_JSON);
-				} catch (DbException ex) {
-					response.setEntity("Metadata not found.",
-							MediaType.TEXT_PLAIN);
-				}
-			}
-		};
-
-		Restlet idRestlet = new Restlet() {
-
-			@Override
-			public void handle(Request request, Response response) {
-
-				String message = "";
-				try {
-
-					ObjectMapper mapper = new ObjectMapper();
-
-					try {
-						dbAccessor.connect();
-						String id = (String) request.getAttributes().get(
-								"osm_id");
-						List<JsonNode> nodes = dbAccessor.executeDocumentQuery(
-								"_design/osm", "getCouchIdByOsmId", id);
-						if (nodes.isEmpty()) {
-							throw new RuntimeException();
-						} else {
-
-							// check if it is really a node/way/relation, query
-							// above matches any type of osm_id
-							if ((request.getOriginalRef().toString()
-									.contains("node") && dbAccessor
-									.executeDocumentQuery("_design/osm",
-											"getNodeById", id).isEmpty())
-									|| (request.getOriginalRef().toString()
-											.contains("way") && dbAccessor
-											.executeDocumentQuery(
-													"_design/osm",
-													"getWayById", id).isEmpty())
-									|| (request.getOriginalRef().toString()
-											.contains("relation") && dbAccessor
-											.executeDocumentQuery(
-													"_design/osm",
-													"getRelationById", id)
-											.isEmpty())) {
-								throw new RuntimeException(
-										"Data exists, but wrong type (node/way/relation)");
-
-							} else {
-
-								message += mapper.writeValueAsString(nodes
-										.get(0));
-							}
-						}
-
-					} catch (RuntimeException e) {
-						String errorMessage = "Could not retrieve data from db: "
-								+ e.getMessage();
-						Logging.error(this.getClass(), errorMessage);
-						System.err.println(errorMessage);
-						message += mapper.writeValueAsString(errorMessage);
-					}
-
-				} catch (IOException e) {
-					String errorMessage = "Error during client request: " + e;
-					Logging.error(this.getClass(), errorMessage);
-					System.err.println(errorMessage);
-				}
-
-				response.setEntity(message, MediaType.APPLICATION_JSON);
-
-			}
-		};
+		
 
 		Restlet osmRestlet = new Restlet() {
 			@Override
@@ -378,18 +270,16 @@ public class OsmRouter implements Router<Restlet> {
 				// there is an attribute in url
 				if (request.getResourceRef().getQueryAsForm().size() == 1) {
 
-					message = new RouterUtils().getDocumentByAttribute(request, dbAccessor);
+					message = new RouterUtils().getDocumentByAttribute(request,
+							dbAccessor);
 
 				}
-				
+
 				response.setEntity(message, MediaType.APPLICATION_JSON);
-				
+
 			}
 		};
-		
-		
-		routes.put("/ods/de/osm/relations/{osm_id}/$id", idRestlet);
-		routes.put("/ods/de/osm/${id}", new AccessObjectByIdRestlet(dbAccessor));
+
 		routes.put("/ods/de/osm/nodes/{osm_id}", getNodeByIdRestlet);
 		routes.put("/ods/de/osm/ways/{osm_id}", getWayByIdRestlet);
 		routes.put("/ods/de/osm/relations/{osm_id}", getRelationByIdRestlet);
@@ -397,16 +287,8 @@ public class OsmRouter implements Router<Restlet> {
 		routes.put("/ods/de/osm/keyword/{osm_keyword}",
 				getDocumentsByKeywordRestlet);
 		routes.put("/ods/de/osm/metadata", metadataRestlet);
-		routes.put("/ods/de/osm/metadata/$id", metadataIdRestlet);
-		routes.put("/ods/de/osm/data/{osm_id}/$id", idRestlet);
-		routes.put("/ods/de/osm/nodes/{osm_id}/$id", idRestlet);
-		routes.put("/ods/de/osm/ways/{osm_id}/$id", idRestlet);
-		routes.put("/ods/de/osm/relations/{osm_id}/$id", idRestlet);
-		routes.put("/ods/de/osm/${id}/{attribute}",
-				new AccessObjectAttributeByIdRestlet(dbAccessor));
-
 		routes.put("/ods/de/osm", osmRestlet);
-		
+
 		return routes;
 	}
 
