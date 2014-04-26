@@ -23,6 +23,7 @@ import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +33,7 @@ import org.jvalue.ods.data.generic.ListValue;
 import org.jvalue.ods.data.generic.MapValue;
 import org.jvalue.ods.data.generic.NumberValue;
 import org.jvalue.ods.data.generic.StringValue;
+import org.jvalue.ods.data.schema.ListSchema;
 import org.jvalue.ods.data.schema.Schema;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.schema.SchemaManager;
@@ -196,10 +198,16 @@ public class OsmGrabber implements Grabber {
 		}
 
 		try {
+			// TODO: must be list atm?
+			List<Schema> entityList = new LinkedList<Schema>();
+			entityList.add(dbSchema);
+			// entityList.add(wayMapSchema);
+			ListSchema listSchema = new ListSchema(entityList);
+			
 			JsonNode jsonNode = mapper.readTree(json);
 			JsonSchemaFactory factory = JsonSchemaFactory.byDefault();
 			SchemaManager schemaManager = new SchemaManager();
-			String jsonSchema = schemaManager.createJsonSchema(dbSchema);
+			String jsonSchema = schemaManager.createJsonSchema(listSchema);
 
 			// validate jsonSchema
 			JsonNode jn = JsonLoader.fromString(jsonSchema);

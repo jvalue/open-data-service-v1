@@ -99,6 +99,8 @@ public class DataGrabberMain {
 		accessor.connect();
 		accessor.deleteDatabase();
 
+		accessor.insert(schema);
+
 		accessor.insert(new JacksonMetaData(
 				"org-openstreetmap",
 				"openstreetmap",
@@ -147,6 +149,13 @@ public class DataGrabberMain {
 				"getCouchIdByOsmId",
 				"function(doc) { if (doc.nodeId) {emit(doc.nodeId, doc._id)} else if (doc.wayId) { emit(doc.wayId, doc._id)} else if (doc.relationId) { emit(doc.relationId, doc._id)}}",
 				accessor);
+		createView("_design/osm", "getClassObject",
+				"function(doc) { if(doc.rest_name) emit (null, doc) }",
+				accessor);
+		
+		createView("_design/osm", "getClassObjectId",
+				"function(doc) { if(doc.rest_name) emit (null, doc._id) }",
+				accessor);
 	}
 
 	private static Schema createOsmSchema() {
@@ -164,6 +173,16 @@ public class DataGrabberMain {
 		nodeMap.put("longitude", new NumberSchema());
 		nodeMap.put("tags", nodeTagsSchema);
 		MapSchema nodeMapSchema = new MapSchema(nodeMap);
+
+		// two class object strings, must not be "required"
+		Map<String, Schema> type = new HashMap<String, Schema>();
+		type.put("OSM", new NullSchema());
+		MapSchema typeSchema = new MapSchema(type);
+		nodeMap.put("objectType", typeSchema);
+		Map<String, Schema> restName = new HashMap<String, Schema>();
+		restName.put("osm", new NullSchema());
+		MapSchema restNameSchema = new MapSchema(restName);
+		nodeMap.put("rest_name", restNameSchema);
 
 		// Map<String, Schema> wayTagsMap = new HashMap<String, Schema>();
 		// MapSchema wayTagsSchema = new MapSchema(wayTagsMap);
@@ -185,12 +204,12 @@ public class DataGrabberMain {
 		// MapSchema wayMapSchema = new MapSchema(wayMap);
 		//
 
-		List<Schema> entityList = new LinkedList<Schema>();
-		entityList.add(nodeMapSchema);
-		// entityList.add(wayMapSchema);
-		ListSchema listSchema = new ListSchema(entityList);
+//		List<Schema> entityList = new LinkedList<Schema>();
+//		entityList.add(nodeMapSchema);
+//		// entityList.add(wayMapSchema);
+//		ListSchema listSchema = new ListSchema(entityList);
 
-		return listSchema;
+		return nodeMapSchema;
 	}
 
 	/**

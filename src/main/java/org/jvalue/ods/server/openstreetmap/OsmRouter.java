@@ -27,6 +27,8 @@ import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
 import org.jvalue.ods.server.RouterUtils;
+import org.jvalue.ods.server.restlet.ClassObjectIdRestlet;
+import org.jvalue.ods.server.restlet.ClassObjectRestlet;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
@@ -259,8 +261,6 @@ public class OsmRouter implements Router<Restlet> {
 			}
 		};
 
-		
-
 		Restlet osmRestlet = new Restlet() {
 			@Override
 			public void handle(Request request, Response response) {
@@ -288,6 +288,10 @@ public class OsmRouter implements Router<Restlet> {
 				getDocumentsByKeywordRestlet);
 		routes.put("/ods/de/osm/metadata", metadataRestlet);
 		routes.put("/ods/de/osm", osmRestlet);
+		routes.put("/ods/de/osm/$class", new ClassObjectRestlet(dbAccessor,
+				"_design/osm", "getClassObject"));
+		routes.put("/ods/de/osm/$class_id", new ClassObjectIdRestlet(dbAccessor,
+				"_design/osm", "getClassObjectId"));
 
 		return routes;
 	}
