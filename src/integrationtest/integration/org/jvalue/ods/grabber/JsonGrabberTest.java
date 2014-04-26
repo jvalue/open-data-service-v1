@@ -65,7 +65,7 @@ public class JsonGrabberTest {
 	 */
 	@Test
 	public void testGrab() {
-		GenericValue gv = grabber.grab(new DataSource(TestUrl, null, null));
+		GenericValue gv = grabber.grab(new DataSource(TestUrl, null));
 		assertNotNull(gv);
 	}
 
@@ -74,8 +74,7 @@ public class JsonGrabberTest {
 	 */
 	@Test
 	public void testGrabInvalidSource() {
-		GenericValue gv = grabber.grab(new DataSource("invalidsource", null,
-				null));
+		GenericValue gv = grabber.grab(new DataSource("invalidsource", null));
 		assertNull(gv);
 	}
 
@@ -162,7 +161,7 @@ public class JsonGrabberTest {
 	public void testGrabWithSchema() {
 		Schema schema = createOpenWeatherSchema();
 		String url = "http://api.openweathermap.org/data/2.5/weather?q=Nuremberg,de";
-		GenericValue gv = grabber.grab(new DataSource(url, schema, schema));
+		GenericValue gv = grabber.grab(new DataSource(url, schema));
 		assertNotNull(gv);
 	}
 

@@ -94,8 +94,9 @@ public class JsonGrabber implements Grabber {
 
 		GenericValue gv = convertJson(rootNode);
 
-		if (dataSource.getDbSchema() != null) {
-			if (!validateGenericValusFitsSchema(gv, dataSource.getDbSchema()))
+		if (dataSource.getDataSourceSchema() != null) {
+			if (!validateGenericValusFitsSchema(gv,
+					dataSource.getDataSourceSchema()))
 				return null;
 		}
 

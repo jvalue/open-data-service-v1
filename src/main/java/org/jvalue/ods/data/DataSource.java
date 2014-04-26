@@ -16,9 +16,6 @@ public class DataSource {
 	/** The data source schema. */
 	private final Schema dataSourceSchema;
 
-	/** The db schema. */
-	private final Schema dbSchema;
-
 	/**
 	 * Instantiates a new data source.
 	 * 
@@ -29,10 +26,9 @@ public class DataSource {
 	 * @param dbSchema
 	 *            the db schema
 	 */
-	public DataSource(String url, Schema dataSourceSchema, Schema dbSchema) {
+	public DataSource(String url, Schema dataSourceSchema) {
 		this.url = url;
 		this.dataSourceSchema = dataSourceSchema;
-		this.dbSchema = dbSchema;
 	}
 
 	/**
@@ -42,15 +38,6 @@ public class DataSource {
 	 */
 	public String getUrl() {
 		return url;
-	}
-
-	/**
-	 * Gets the db schema.
-	 * 
-	 * @return the db schema
-	 */
-	public Schema getDbSchema() {
-		return dbSchema;
 	}
 
 	/**

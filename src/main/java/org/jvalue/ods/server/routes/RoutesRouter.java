@@ -145,7 +145,7 @@ public class RoutesRouter implements Router<Restlet> {
 							+ endLongitude
 							+ "&v=motorcar&fast=1&layer=mapnik";
 
-					DataSource ds = new DataSource(source, null, null);
+					DataSource ds = new DataSource(source, null);
 
 					XmlGrabber grabber = new XmlGrabber();
 					GenericValue gv = grabber.grab(ds);

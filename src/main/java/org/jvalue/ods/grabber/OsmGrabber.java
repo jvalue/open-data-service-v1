@@ -174,8 +174,9 @@ public class OsmGrabber implements Grabber {
 			file.delete();
 		}
 
-		if (source.getDbSchema() != null) {
-			if (!validateGenericValusFitsSchema(lv, source.getDbSchema()))
+		if (source.getDataSourceSchema() != null) {
+			if (!validateGenericValusFitsSchema(lv,
+					source.getDataSourceSchema()))
 				return null;
 		}
 
@@ -203,7 +204,7 @@ public class OsmGrabber implements Grabber {
 			entityList.add(dbSchema);
 			// entityList.add(wayMapSchema);
 			ListSchema listSchema = new ListSchema(entityList);
-			
+
 			JsonNode jsonNode = mapper.readTree(json);
 			JsonSchemaFactory factory = JsonSchemaFactory.byDefault();
 			SchemaManager schemaManager = new SchemaManager();

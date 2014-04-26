@@ -124,7 +124,7 @@ public class PoiRouter implements Router<Restlet> {
 									+ (latitude + 0.04);
 
 							ListValue lv = (ListValue) g.grab(new DataSource(
-									source, null, null));
+									source, null));
 
 							String message = "";
 

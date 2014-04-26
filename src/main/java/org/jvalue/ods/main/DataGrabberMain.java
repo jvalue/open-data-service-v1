@@ -89,7 +89,7 @@ public class DataGrabberMain {
 
 		Schema schema = createOsmSchema();
 		ListValue data = (ListValue) grabber.grab(new DataSource(
-				"/nbgcity.osm", schema, schema));
+				"/nbgcity.osm", schema));
 
 		if (data == null) {
 			return;
@@ -152,7 +152,7 @@ public class DataGrabberMain {
 		createView("_design/osm", "getClassObject",
 				"function(doc) { if(doc.rest_name) emit (null, doc) }",
 				accessor);
-		
+
 		createView("_design/osm", "getClassObjectId",
 				"function(doc) { if(doc.rest_name) emit (null, doc._id) }",
 				accessor);
@@ -204,10 +204,10 @@ public class DataGrabberMain {
 		// MapSchema wayMapSchema = new MapSchema(wayMap);
 		//
 
-//		List<Schema> entityList = new LinkedList<Schema>();
-//		entityList.add(nodeMapSchema);
-//		// entityList.add(wayMapSchema);
-//		ListSchema listSchema = new ListSchema(entityList);
+		// List<Schema> entityList = new LinkedList<Schema>();
+		// entityList.add(nodeMapSchema);
+		// // entityList.add(wayMapSchema);
+		// ListSchema listSchema = new ListSchema(entityList);
 
 		return nodeMapSchema;
 	}
@@ -221,10 +221,13 @@ public class DataGrabberMain {
 		Grabber grabber = new JsonGrabber();
 
 		Schema schema = createPegelOnlineSchema();
+		ListSchema ls = (ListSchema) schema;
+		MapSchema stationSchema = (MapSchema) ls.getList().get(0);
+
 		ListValue list = (ListValue) grabber
 				.grab(new DataSource(
 						"http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true",
-						schema, schema));
+						schema));
 
 		DbAccessor<JsonNode> accessor = DbFactory.createDbAccessor("ods");
 		accessor.connect();
@@ -239,8 +242,7 @@ public class DataGrabberMain {
 				"http://www.pegelonline.wsv.de/gast/nutzungsbedingungen"));
 
 		// insert schema into db
-		ListSchema ls = (ListSchema) schema;
-		MapSchema stationSchema = (MapSchema) ls.getList().get(0);
+
 		accessor.insert(stationSchema);
 
 		for (GenericValue gv : list.getList()) {

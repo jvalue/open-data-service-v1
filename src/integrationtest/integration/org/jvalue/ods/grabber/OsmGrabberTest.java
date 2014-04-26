@@ -40,8 +40,7 @@ public class OsmGrabberTest {
 	 */
 	@Test
 	public void testGrab() {
-		ListValue lv = (ListValue) grabber.grab(new DataSource(testUrl, null,
-				null));
+		ListValue lv = (ListValue) grabber.grab(new DataSource(testUrl, null));
 		assertNotNull(lv);
 	}
 
@@ -51,7 +50,7 @@ public class OsmGrabberTest {
 	@Test
 	public void testGrabOffline() {
 		ListValue lv = (ListValue) grabber.grab(new DataSource("/nbgcity.osm",
-				null, null));
+				null));
 		assertNotNull(lv);
 		DbAccessor<JsonNode> db = DbFactory.createDbAccessor("testOsm");
 		db.connect();
@@ -65,8 +64,8 @@ public class OsmGrabberTest {
 	 */
 	@Test
 	public void testGrabInvalidSource() {
-		ListValue lv = (ListValue) grabber
-				.grab(new DataSource("invalidsource", null, null));
+		ListValue lv = (ListValue) grabber.grab(new DataSource("invalidsource",
+				null));
 		assertNull(lv);
 	}
 

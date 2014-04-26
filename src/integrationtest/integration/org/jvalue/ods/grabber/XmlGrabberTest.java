@@ -51,8 +51,7 @@ public class XmlGrabberTest {
 	 */
 	@Test
 	public void testGrab() {
-		GenericValue gv = grabber.grab(new DataSource("/nbgcity.osm", null,
-				null));
+		GenericValue gv = grabber.grab(new DataSource("/nbgcity.osm", null));
 		assertNotNull(gv);
 	}
 
@@ -61,8 +60,7 @@ public class XmlGrabberTest {
 	 */
 	@Test
 	public void testGrabNotExistingFile() {
-		GenericValue gv = grabber.grab(new DataSource("NotExistingFile", null,
-				null));
+		GenericValue gv = grabber.grab(new DataSource("NotExistingFile", null));
 		assertNull(gv);
 	}
 
