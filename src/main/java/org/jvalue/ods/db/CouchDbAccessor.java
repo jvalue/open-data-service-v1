@@ -31,6 +31,9 @@ import org.ektorp.http.HttpClient;
 import org.ektorp.http.StdHttpClient;
 import org.ektorp.impl.StdCouchDbConnector;
 import org.ektorp.impl.StdCouchDbInstance;
+import org.jvalue.ods.data.generic.MapValue;
+import org.jvalue.ods.data.generic.StringValue;
+import org.jvalue.ods.data.schema.MapSchema;
 import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.logger.Logging;
 
@@ -160,6 +163,8 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 
 	/**
 	 * Insert.
+	 * 
+	 * @param <T>
 	 * 
 	 * @param data
 	 *            the data
@@ -295,14 +300,37 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 	 * @see org.jvalue.ods.db.DbAccessor#executeBulk(java.util.Collection)
 	 */
 	@Override
-	public void executeBulk(Collection<?> objects) {
+	public void executeBulk(Collection<MapValue> objects, MapSchema schema) {
 
 		if (objects == null) {
 			throw new IllegalArgumentException("objects is null");
 		}
 
 		checkDbState();
+
+		if (schema != null) {
+			insert(schema);
+
+			for (MapValue mv : objects) {
+				MapSchema ms = null;
+				try {
+					ms = (MapSchema) schema.getMap().get("objectType");
+					String s = (String) ms.getMap().keySet().toArray()[0];
+
+					mv.getMap().put("dataType", new StringValue(s));
+				} catch (Exception ex) {
+					Logging.error(this.getClass(), ex.getMessage()
+							+ "Schema does not contain objectType.");
+					System.err.println(ex.getMessage()
+							+ "Schema does not contain objectType.");
+					throw ex;
+				}
+
+			}
+
+		}
 		try {
+
 			db.executeBulk(objects);
 		} catch (Exception ex) {
 			Logging.error(this.getClass(), ex.getMessage());

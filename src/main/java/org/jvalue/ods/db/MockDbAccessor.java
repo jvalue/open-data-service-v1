@@ -25,6 +25,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
+import org.jvalue.ods.data.generic.MapValue;
+import org.jvalue.ods.data.schema.MapSchema;
+
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
@@ -89,13 +92,8 @@ public class MockDbAccessor implements DbAccessor<JsonNode> {
 		return ret;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.jvalue.ods.db.DbAdapter#insert(java.lang.Object)
-	 */
 	@Override
-	public <T> void insert(T data) {
+	public void insert(Object data) {
 		if (data == null)
 			throw new IllegalArgumentException("data is null");
 
@@ -208,7 +206,7 @@ public class MockDbAccessor implements DbAccessor<JsonNode> {
 	 * @see org.jvalue.ods.db.DbAccessor#executeBulk(java.util.Collection)
 	 */
 	@Override
-	public void executeBulk(Collection<?> objects) {
+	public void executeBulk(Collection<MapValue> objects, MapSchema schema) {
 
 		checkDbState();
 

@@ -20,6 +20,9 @@ package org.jvalue.ods.db;
 import java.util.Collection;
 import java.util.List;
 
+import org.jvalue.ods.data.generic.MapValue;
+import org.jvalue.ods.data.schema.MapSchema;
+
 /**
  * The Interface DbAdapter. Q is the type of query result
  * 
@@ -41,16 +44,7 @@ public interface DbAccessor<Q> {
 	 */
 	public <T> T getDocument(Class<T> c, String id);
 
-	/**
-	 * Insert.
-	 * 
-	 * @param <T>
-	 *            the generic type
-	 * @param data
-	 *            the data
-	 * @return the string
-	 */
-	public <T> void insert(T data);
+	public void insert(Object data);
 
 	/**
 	 * Update.
@@ -105,6 +99,6 @@ public interface DbAccessor<Q> {
 	 * @param objects
 	 *            the objects
 	 */
-	public void executeBulk(Collection<?> objects);
+	public void executeBulk(Collection<MapValue> objects, MapSchema schema);
 
 }

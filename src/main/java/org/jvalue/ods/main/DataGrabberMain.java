@@ -30,6 +30,7 @@ import org.ektorp.support.StdDesignDocumentFactory;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.GenericValue;
 import org.jvalue.ods.data.generic.ListValue;
+import org.jvalue.ods.data.generic.MapValue;
 import org.jvalue.ods.data.metadata.JacksonMetaData;
 import org.jvalue.ods.data.schema.ListSchema;
 import org.jvalue.ods.data.schema.MapSchema;
@@ -99,8 +100,6 @@ public class DataGrabberMain {
 		accessor.connect();
 		accessor.deleteDatabase();
 
-		accessor.insert(schema);
-
 		accessor.insert(new JacksonMetaData(
 				"org-openstreetmap",
 				"openstreetmap",
@@ -110,32 +109,42 @@ public class DataGrabberMain {
 				"http://www.openstreetmap.org",
 				"http://www.openstreetmap.org/copyright"));
 
-		accessor.executeBulk(data.getList());
+		List<MapValue> list = new LinkedList<MapValue>();
 
-		createView("_design/osm", "getNodeById",
-				"function(doc) { if(doc.nodeId) emit( doc.nodeId, doc)}",
+		for (GenericValue gv : data.getList()) {
+			list.add((MapValue) gv);
+		}
+
+		accessor.executeBulk(list, (MapSchema) schema);
+
+		createView(
+				"_design/osm",
+				"getNodeById",
+				"function(doc) { if(doc.dataType == 'Osm' && doc.nodeId) emit( doc.nodeId, doc)}",
 				accessor);
 
-		createView("_design/osm", "getWayById",
-				"function(doc) { if(doc.wayId) emit( doc.wayId, doc)}",
+		createView(
+				"_design/osm",
+				"getWayById",
+				"function(doc) { if(doc.dataType == 'Osm' && doc.wayId) emit( doc.wayId, doc)}",
 				accessor);
 
 		createView(
 				"_design/osm",
 				"getRelationById",
-				"function(doc) { if(doc.relationId) emit( doc.relationId, doc)}",
+				"function(doc) { if(doc.dataType == 'Osm' && doc.relationId) emit( doc.relationId, doc)}",
 				accessor);
 
 		createView(
 				"_design/osm",
 				"getOsmDataById",
-				"function(doc) { if (doc.nodeId) {emit(doc.nodeId, doc)} else if (doc.wayId) { emit(doc.wayId, doc)} else if (doc.relationId) { emit(doc.relationId, doc)}}",
+				"function(doc) { if (doc.dataType == 'Osm' && doc.nodeId) {emit(doc.nodeId, doc)} else if (doc.wayId) { emit(doc.wayId, doc)} else if (doc.relationId) { emit(doc.relationId, doc)}}",
 				accessor);
 
 		createView(
 				"_design/osm",
 				"getDocumentsByKeyword",
-				"function(doc) { if(doc.tags){ for (var i in doc.tags) { emit(doc.tags[i], doc) }} }",
+				"function(doc) { if(doc.dataType == 'Osm' && doc.tags){ for (var i in doc.tags) { emit(doc.tags[i], doc) }} }",
 				accessor);
 
 		createView(
@@ -147,14 +156,14 @@ public class DataGrabberMain {
 		createView(
 				"_design/osm",
 				"getCouchIdByOsmId",
-				"function(doc) { if (doc.nodeId) {emit(doc.nodeId, doc._id)} else if (doc.wayId) { emit(doc.wayId, doc._id)} else if (doc.relationId) { emit(doc.relationId, doc._id)}}",
+				"function(doc) { if (doc.dataType == 'Osm' && doc.nodeId) {emit(doc.nodeId, doc._id)} else if (doc.wayId) { emit(doc.wayId, doc._id)} else if (doc.relationId) { emit(doc.relationId, doc._id)}}",
 				accessor);
 		createView("_design/osm", "getClassObject",
-				"function(doc) { if(doc.rest_name) emit (null, doc) }",
+				"function(doc) { if(doc.rest_name.osm) emit (null, doc) }",
 				accessor);
 
 		createView("_design/osm", "getClassObjectId",
-				"function(doc) { if(doc.rest_name) emit (null, doc._id) }",
+				"function(doc) { if(doc.rest_name.osm) emit (null, doc._id) }",
 				accessor);
 	}
 
@@ -176,7 +185,7 @@ public class DataGrabberMain {
 
 		// two class object strings, must not be "required"
 		Map<String, Schema> type = new HashMap<String, Schema>();
-		type.put("OSM", new NullSchema());
+		type.put("Osm", new NullSchema());
 		MapSchema typeSchema = new MapSchema(type);
 		nodeMap.put("objectType", typeSchema);
 		Map<String, Schema> restName = new HashMap<String, Schema>();
@@ -241,49 +250,53 @@ public class DataGrabberMain {
 				"https://www.pegelonline.wsv.de",
 				"http://www.pegelonline.wsv.de/gast/nutzungsbedingungen"));
 
-		// insert schema into db
-
-		accessor.insert(stationSchema);
+		List<MapValue> listMap = new LinkedList<MapValue>();
 
 		for (GenericValue gv : list.getList()) {
-			accessor.insert(gv);
+			listMap.add((MapValue) gv);
 		}
 
+		accessor.executeBulk(listMap, stationSchema);
+
 		// ToDo: IdPaths for createDesignDocument in a map, to have unique ids?
-		createView("_design/pegelonline", "getSingleStation",
-				"function(doc) { if(doc.longname) emit( doc.longname, doc)}",
-				accessor);
 		createView(
 				"_design/pegelonline",
-				"getMeasurements",
-				"function(doc) { if(doc.longname) emit( doc.longname, doc.timeseries)}",
+				"getSingleStation",
+				"function(doc) { if(doc.dataType == 'Station') emit(doc.longname, doc)}",
 				accessor);
+
 		createView(
 				"_design/pegelonline",
 				"getMetadata",
 				"function(doc) { if(doc.title == 'pegelonline') emit(null, doc)}",
 				accessor);
 
-		createView("_design/pegelonline", "getAllStationsFlat",
-				"function(doc) { if(doc.longname) emit (null, doc.longname) }",
+		createView(
+				"_design/pegelonline",
+				"getAllStationsFlat",
+				"function(doc) { if(doc.dataType == 'Station') emit (null, doc.longname) }",
 				accessor);
 		createView(
 				"_design/pegelonline",
 				"getAllStations",
-				"function(doc) { if(doc.longname && doc.type == null) emit (null, doc) }",
+				"function(doc) { if(doc.dataType == 'Station')emit (null, doc) }",
 				accessor);
 		createView(
 				"_design/pegelonline",
 				"getStationId",
-				"function(doc) { if(doc.longname) emit (doc.longname, doc._id) }",
+				"function(doc) { if(doc.dataType == 'Station') emit (doc.longname, doc._id) }",
 				accessor);
 
-		createView("_design/pegelonline", "getClassObject",
-				"function(doc) { if(doc.rest_name) emit (null, doc) }",
+		createView(
+				"_design/pegelonline",
+				"getClassObject",
+				"function(doc) { if(doc.rest_name.stations) emit (null, doc) }",
 				accessor);
 
-		createView("_design/pegelonline", "getClassObjectId",
-				"function(doc) { if(doc.rest_name) emit (null, doc._id) }",
+		createView(
+				"_design/pegelonline",
+				"getClassObjectId",
+				"function(doc) { if(doc.rest_name.stations) emit (null, doc._id) }",
 				accessor);
 	}
 
@@ -346,7 +359,7 @@ public class DataGrabberMain {
 		Map<String, Schema> type = new HashMap<String, Schema>();
 		type.put("Station", new NullSchema());
 		MapSchema typeSchema = new MapSchema(type);
-		station.put("type", typeSchema);
+		station.put("objectType", typeSchema);
 		Map<String, Schema> restName = new HashMap<String, Schema>();
 		restName.put("stations", new NullSchema());
 		MapSchema restNameSchema = new MapSchema(restName);

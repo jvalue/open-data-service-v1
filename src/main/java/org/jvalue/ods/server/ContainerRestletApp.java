@@ -69,8 +69,6 @@ public class ContainerRestletApp extends Application implements Runnable {
 				.createPoiRouter();
 		org.jvalue.ods.main.Router<Restlet> administrationRouter = RouterFactory
 				.createAdministrationRouter();
-		
-		
 
 		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
 		combinedRouter.putAll(odsRouter.getRoutes());
@@ -95,9 +93,9 @@ public class ContainerRestletApp extends Application implements Runnable {
 
 		// Create a root router
 		Router router = new Router(getContext());
-		
+
 		router.attachDefault(new DefaultRestlet());
-		
+
 		// Get Map in Set interface to get key and value
 		Set<Entry<String, Restlet>> s = combinedRouter.entrySet();
 
@@ -111,33 +109,25 @@ public class ContainerRestletApp extends Application implements Runnable {
 
 		return router;
 	}
-	
-	
-	
-	private void adminLog(String content)
-	{		
-		try
-		{
-			DbAccessor<JsonNode> accessor = DbFactory.createDbAccessor("adminlog");
+
+	private void adminLog(String content) {
+		try {
+			DbAccessor<JsonNode> accessor = DbFactory
+					.createDbAccessor("adminlog");
 			accessor.connect();
-			
+
 			if (!content.endsWith("\n"))
 				content += "\n";
 
-			
-			MapValue mv = new MapValue();		
+			MapValue mv = new MapValue();
 			mv.getMap().put("log", new StringValue(content));
-			accessor.insert(mv);		
-			
-		}
-		catch (Exception ex)
-		{
+			accessor.insert(mv);
+
+		} catch (Exception ex) {
 			Logging.error(Logging.class, ex.getMessage());
 			System.err.println(ex.getMessage());
 		}
 	}
-	
-	
 
 	/*
 	 * (non-Javadoc)
@@ -148,13 +138,14 @@ public class ContainerRestletApp extends Application implements Runnable {
 	public void run() {
 		while (true) {
 			try {
-				DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+				DateFormat dateFormat = new SimpleDateFormat(
+						"yyyy/MM/dd HH:mm:ss");
 				Date date = new Date();
 				String datetime = dateFormat.format(date);
-				
+
 				adminLog(datetime + " Update started");
 				DataGrabberMain.main(null);
-				
+
 				date = new Date();
 				datetime = dateFormat.format(date);
 				adminLog(datetime + " Update completed");
