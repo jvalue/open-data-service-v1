@@ -34,6 +34,7 @@ import org.jvalue.ods.data.schema.MapSchema;
 import org.jvalue.ods.data.schema.NumberSchema;
 import org.jvalue.ods.data.schema.Schema;
 import org.jvalue.ods.data.schema.StringSchema;
+import org.jvalue.ods.grabber.Grabber;
 import org.jvalue.ods.grabber.JsonGrabber;
 
 /**
@@ -45,7 +46,7 @@ public class JsonGrabberTest {
 	private final String TestUrl = "http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true";
 
 	/** The grabber. */
-	private JsonGrabber grabber;
+	private Grabber grabber;
 
 	/**
 	 * Sets the up.

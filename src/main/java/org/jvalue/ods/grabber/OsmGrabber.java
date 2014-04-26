@@ -61,10 +61,10 @@ import com.github.fge.jsonschema.report.ProcessingReport;
 /**
  * The Class OsmGrabber.
  */
-public class OsmGrabber {
+public class OsmGrabber implements Grabber {
 
 	private ListValue lv = new ListValue();
-	
+
 	/**
 	 * Grab.
 	 * 
@@ -72,18 +72,17 @@ public class OsmGrabber {
 	 *            the source
 	 * @return the osm data
 	 */
-	public ListValue grab(DataSource source) {
+	@Override
+	public GenericValue grab(DataSource source) {
 		if (source == null) {
 			throw new IllegalArgumentException("source is null");
 		}
 
 		String url = source.getUrl();
-		
+
 		if (url == null || url.length() == 0) {
 			throw new IllegalArgumentException("source is empty");
 		}
-
-		
 
 		File file = null;
 
@@ -128,17 +127,17 @@ public class OsmGrabber {
 			public void process(EntityContainer entityContainer) {
 				Entity entity = entityContainer.getEntity();
 				List<GenericValue> list = lv.getList();
-				
+
 				if (entity instanceof Node) {
-					list.add(convertNodeToGenericValue((Node)entity));					
+					list.add(convertNodeToGenericValue((Node) entity));
 				} else if (entity instanceof Way) {
 					list.add(convertWayToGenericValue((Way) entity));
 				} else if (entity instanceof Relation) {
 					list.add(convertRelationToGenericValue((Relation) entity));
 				}
-//				else if (entity instanceof Bound) {
-//					
-//				}
+				// else if (entity instanceof Bound) {
+				//
+				// }
 			}
 
 			public void release() {
@@ -173,13 +172,11 @@ public class OsmGrabber {
 			file.delete();
 		}
 
-		
 		if (source.getDbSchema() != null) {
 			if (!validateGenericValusFitsSchema(lv, source.getDbSchema()))
 				return null;
 		}
-		
-		
+
 		return lv;
 	}
 
@@ -241,13 +238,13 @@ public class OsmGrabber {
 	}
 
 	private MapValue convertRelationToGenericValue(Relation relation) {
-		MapValue mv = new MapValue();		
+		MapValue mv = new MapValue();
 		Map<String, GenericValue> map = mv.getMap();
 		map.put("type", new StringValue("Relation"));
-		
-		 
+
 		map.put("relationId", new StringValue("" + relation.getId()));
-		map.put("timestamp", new StringValue(relation.getTimestamp().toString()));
+		map.put("timestamp",
+				new StringValue(relation.getTimestamp().toString()));
 		map.put("uid", new NumberValue(relation.getUser().getId()));
 		map.put("user", new StringValue(relation.getUser().getName()));
 		map.put("version", new NumberValue(relation.getVersion()));
@@ -256,35 +253,33 @@ public class OsmGrabber {
 		MapValue tagsMapValue = new MapValue();
 		Map<String, GenericValue> tagsMap = tagsMapValue.getMap();
 		Collection<Tag> coll = relation.getTags();
-		for(Tag tag: coll)
-		{
-			tagsMap.put(tag.getKey(), new StringValue(tag.getValue()));			
+		for (Tag tag : coll) {
+			tagsMap.put(tag.getKey(), new StringValue(tag.getValue()));
 		}
 		map.put("tags", tagsMapValue);
-		
-		
-		ListValue memberList = new ListValue();		
+
+		ListValue memberList = new ListValue();
 		for (RelationMember rm : relation.getMembers()) {
 			MapValue membersMapValue = new MapValue();
 			Map<String, GenericValue> membersMap = membersMapValue.getMap();
-			
-			membersMap.put("type", new StringValue(rm.getMemberType().toString()));
+
+			membersMap.put("type", new StringValue(rm.getMemberType()
+					.toString()));
 			membersMap.put("ref", new NumberValue(rm.getMemberId()));
 			membersMap.put("role", new StringValue(rm.getMemberRole()));
 			memberList.getList().add(membersMapValue);
 		}
-		
+
 		map.put("members", memberList);
-		
+
 		return mv;
 	}
 
 	private MapValue convertWayToGenericValue(Way w) {
-		MapValue mv = new MapValue();		
+		MapValue mv = new MapValue();
 		Map<String, GenericValue> map = mv.getMap();
 		map.put("type", new StringValue("Way"));
-		
-		
+
 		map.put("wayId", new StringValue("" + w.getId()));
 		map.put("timestamp", new StringValue(w.getTimestamp().toString()));
 		map.put("uid", new NumberValue(w.getUser().getId()));
@@ -294,27 +289,25 @@ public class OsmGrabber {
 		MapValue tagsMapValue = new MapValue();
 		Map<String, GenericValue> tagsMap = tagsMapValue.getMap();
 		Collection<Tag> coll = w.getTags();
-		for(Tag tag: coll)
-		{
-			tagsMap.put(tag.getKey(), new StringValue(tag.getValue()));			
+		for (Tag tag : coll) {
+			tagsMap.put(tag.getKey(), new StringValue(tag.getValue()));
 		}
 		map.put("tags", tagsMapValue);
-		
 
-		ListValue lv = new  ListValue();		
+		ListValue lv = new ListValue();
 		for (WayNode wn : w.getWayNodes()) {
 			lv.getList().add(new NumberValue(wn.getNodeId()));
-		}		
+		}
 		map.put("nd", lv);
-		
+
 		return mv;
 	}
 
 	private MapValue convertNodeToGenericValue(Node n) {
-		MapValue mv = new MapValue();		
+		MapValue mv = new MapValue();
 		Map<String, GenericValue> map = mv.getMap();
-		map.put("type", new StringValue("Node"));		
-		 
+		map.put("type", new StringValue("Node"));
+
 		map.put("nodeId", new StringValue("" + n.getId()));
 		map.put("timestamp", new StringValue(n.getTimestamp().toString()));
 		map.put("uid", new NumberValue(n.getUser().getId()));
@@ -322,16 +315,15 @@ public class OsmGrabber {
 		map.put("changeset", new NumberValue(n.getChangesetId()));
 		map.put("latitude", new NumberValue(n.getLatitude()));
 		map.put("longitude", new NumberValue(n.getLongitude()));
-		
+
 		MapValue tagsMapValue = new MapValue();
 		Map<String, GenericValue> tagsMap = tagsMapValue.getMap();
 		Collection<Tag> coll = n.getTags();
-		for(Tag tag: coll)
-		{
-			tagsMap.put(tag.getKey(), new StringValue(tag.getValue()));			
+		for (Tag tag : coll) {
+			tagsMap.put(tag.getKey(), new StringValue(tag.getValue()));
 		}
 		map.put("tags", tagsMapValue);
-		
+
 		return mv;
 	}
 }

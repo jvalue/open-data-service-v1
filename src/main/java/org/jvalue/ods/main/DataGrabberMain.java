@@ -40,6 +40,7 @@ import org.jvalue.ods.data.schema.StringSchema;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.exception.DbException;
+import org.jvalue.ods.grabber.Grabber;
 import org.jvalue.ods.grabber.JsonGrabber;
 import org.jvalue.ods.grabber.OsmGrabber;
 import org.jvalue.ods.logger.Logging;
@@ -84,11 +85,11 @@ public class DataGrabberMain {
 	 * 
 	 */
 	private static void insertOsmFilesIntoDatabase() {
-		OsmGrabber grabber = new OsmGrabber();
+		Grabber grabber = new OsmGrabber();
 
 		Schema schema = createOsmSchema();
-		ListValue data = grabber.grab(new DataSource("/nbgcity.osm", schema,
-				schema));
+		ListValue data = (ListValue) grabber.grab(new DataSource(
+				"/nbgcity.osm", schema, schema));
 
 		if (data == null) {
 			return;
@@ -198,7 +199,7 @@ public class DataGrabberMain {
 	 */
 	private static void insertPegelOnlineStationsIntoDatabase() {
 
-		JsonGrabber grabber = new JsonGrabber();
+		Grabber grabber = new JsonGrabber();
 
 		Schema schema = createPegelOnlineSchema();
 		ListValue list = (ListValue) grabber

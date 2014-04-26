@@ -51,7 +51,7 @@ import com.github.fge.jsonschema.report.ProcessingReport;
 /**
  * The Class JsonGrabber.
  */
-public class JsonGrabber {
+public class JsonGrabber implements Grabber {
 
 	/**
 	 * Grab.
@@ -60,6 +60,7 @@ public class JsonGrabber {
 	 *            the data source
 	 * @return the generic value
 	 */
+	@Override
 	public GenericValue grab(DataSource dataSource) {
 		if ((dataSource == null) || (dataSource.getUrl() == null))
 			throw new IllegalArgumentException("source is null");

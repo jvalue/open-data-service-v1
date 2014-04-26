@@ -31,6 +31,7 @@ import org.jvalue.ods.data.generic.MapValue;
 import org.jvalue.ods.data.generic.StringValue;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
+import org.jvalue.ods.grabber.Grabber;
 import org.jvalue.ods.grabber.OsmGrabber;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
@@ -112,7 +113,7 @@ public class PoiRouter implements Router<Restlet> {
 							double longitude = (double) poi.get("longitude");
 							double latitude = (double) poi.get("latitude");
 
-							OsmGrabber g = new OsmGrabber();
+							Grabber g = new OsmGrabber();
 							String source = "http://api.openstreetmap.org/api/0.6/map?bbox="
 									+ (longitude - 0.04)
 									+ ","
@@ -121,29 +122,30 @@ public class PoiRouter implements Router<Restlet> {
 									+ (longitude + 0.04)
 									+ ","
 									+ (latitude + 0.04);
-							
-							ListValue lv = g.grab(new DataSource(source, null, null));
+
+							ListValue lv = (ListValue) g.grab(new DataSource(
+									source, null, null));
 
 							String message = "";
 
-							if (lv != null) {				
+							if (lv != null) {
 								List<GenericValue> doc = new LinkedList<GenericValue>();
-								for (GenericValue gv : lv.getList()) {									
-										MapValue mv = (MapValue) gv;
-										StringValue sv = (StringValue) mv.getMap().get("type");
-										if (sv.getString() == "Node")
-										{
-											MapValue tagsMap = (MapValue) mv.getMap().get("tags");
-											for(Entry<String, GenericValue> e: tagsMap.getMap().entrySet())
-											{
-												if (e.getKey().equals("tourism")) {
-													doc.add(mv);
-												}												
-											}											
+								for (GenericValue gv : lv.getList()) {
+									MapValue mv = (MapValue) gv;
+									StringValue sv = (StringValue) mv.getMap()
+											.get("type");
+									if (sv.getString() == "Node") {
+										MapValue tagsMap = (MapValue) mv
+												.getMap().get("tags");
+										for (Entry<String, GenericValue> e : tagsMap
+												.getMap().entrySet()) {
+											if (e.getKey().equals("tourism")) {
+												doc.add(mv);
+											}
 										}
 									}
+								}
 
-								
 								message = mapper.writeValueAsString(doc);
 								poi.put("poi", doc);
 								dbAccessor.update(poi);

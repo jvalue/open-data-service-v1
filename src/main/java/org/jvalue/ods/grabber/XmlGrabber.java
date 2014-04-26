@@ -10,6 +10,7 @@ import java.net.URL;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.GenericValue;
 import org.jvalue.ods.data.generic.ListValue;
 import org.jvalue.ods.data.generic.MapValue;
@@ -24,7 +25,7 @@ import org.xml.sax.InputSource;
 /**
  * The Class XmlGrabber.
  */
-public class XmlGrabber {
+public class XmlGrabber implements Grabber {
 
 	/**
 	 * Grab.
@@ -33,7 +34,8 @@ public class XmlGrabber {
 	 *            the source
 	 * @return the generic value
 	 */
-	public GenericValue grab(String source) {
+	@Override
+	public GenericValue grab(DataSource source) {
 		if (source == null)
 			throw new IllegalArgumentException("source is null");
 
@@ -44,12 +46,13 @@ public class XmlGrabber {
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 
 			Document doc = null;
-			if (!source.startsWith("http")) {
-				URL sourceUrl = getClass().getResource(source);
+			String sourceUrlString = source.getUrl();
+			if (!sourceUrlString.startsWith("http")) {
+				URL sourceUrl = getClass().getResource(sourceUrlString);
 				File xmlFile = new File(sourceUrl.toURI());
 				doc = dBuilder.parse(xmlFile);
 			} else {
-				HttpReader reader = new HttpReader(source);
+				HttpReader reader = new HttpReader(sourceUrlString);
 				String data = reader.read("UTF-8");
 				doc = dBuilder.parse(new InputSource(new StringReader(data)));
 			}

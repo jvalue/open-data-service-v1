@@ -22,6 +22,7 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.GenericValue;
 import org.jvalue.ods.grabber.XmlGrabber;
 
@@ -50,7 +51,8 @@ public class XmlGrabberTest {
 	 */
 	@Test
 	public void testGrab() {
-		GenericValue gv = grabber.grab("/nbgcity.osm");
+		GenericValue gv = grabber.grab(new DataSource("/nbgcity.osm", null,
+				null));
 		assertNotNull(gv);
 	}
 
@@ -59,7 +61,8 @@ public class XmlGrabberTest {
 	 */
 	@Test
 	public void testGrabNotExistingFile() {
-		GenericValue gv = grabber.grab("NotExistingFile");
+		GenericValue gv = grabber.grab(new DataSource("NotExistingFile", null,
+				null));
 		assertNull(gv);
 	}
 

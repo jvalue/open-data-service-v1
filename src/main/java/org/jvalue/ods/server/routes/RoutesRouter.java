@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.GenericValue;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
@@ -144,8 +145,10 @@ public class RoutesRouter implements Router<Restlet> {
 							+ endLongitude
 							+ "&v=motorcar&fast=1&layer=mapnik";
 
+					DataSource ds = new DataSource(source, null, null);
+
 					XmlGrabber grabber = new XmlGrabber();
-					GenericValue gv = grabber.grab(source);
+					GenericValue gv = grabber.grab(ds);
 
 					String message = mapper.writeValueAsString(gv);
 
