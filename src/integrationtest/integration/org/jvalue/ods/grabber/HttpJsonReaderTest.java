@@ -23,7 +23,7 @@ import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.jvalue.ods.grabber.HttpReader;
+import org.jvalue.ods.translator.HttpReader;
 
 /**
  * The Class HttpJsonReaderTest.

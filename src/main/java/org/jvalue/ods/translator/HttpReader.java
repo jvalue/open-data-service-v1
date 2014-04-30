@@ -15,7 +15,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jvalue.ods.grabber;
+package org.jvalue.ods.translator;
 
 import java.io.BufferedReader;
 import java.io.IOException;

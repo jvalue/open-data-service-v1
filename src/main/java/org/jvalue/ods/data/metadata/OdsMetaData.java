@@ -23,7 +23,7 @@ import java.sql.Timestamp;
 /**
  * The Class OdsMetaData.
  */
-abstract class OdsMetaData implements Serializable {
+public abstract class OdsMetaData implements Serializable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;

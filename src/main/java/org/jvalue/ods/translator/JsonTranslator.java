@@ -15,7 +15,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jvalue.ods.grabber;
+package org.jvalue.ods.translator;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -35,23 +35,17 @@ import org.jvalue.ods.data.schema.MapSchema;
 import org.jvalue.ods.data.schema.NullSchema;
 import org.jvalue.ods.data.schema.Schema;
 import org.jvalue.ods.data.schema.StringSchema;
+import org.jvalue.ods.grabber.Translator;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.schema.SchemaManager;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jackson.JsonLoader;
-import com.github.fge.jsonschema.exceptions.ProcessingException;
-import com.github.fge.jsonschema.main.JsonSchemaFactory;
-import com.github.fge.jsonschema.main.JsonValidator;
-import com.github.fge.jsonschema.processors.syntax.SyntaxValidator;
-import com.github.fge.jsonschema.report.ProcessingReport;
 
 /**
  * The Class JsonGrabber.
  */
-public class JsonGrabber implements Grabber {
+public class JsonTranslator implements Translator {
 
 	/**
 	 * Grab.
@@ -61,7 +55,7 @@ public class JsonGrabber implements Grabber {
 	 * @return the generic value
 	 */
 	@Override
-	public GenericValue grab(DataSource dataSource) {
+	public GenericValue translate(DataSource dataSource) {
 		if ((dataSource == null) || (dataSource.getUrl() == null))
 			throw new IllegalArgumentException("source is null");
 
@@ -95,78 +89,12 @@ public class JsonGrabber implements Grabber {
 		GenericValue gv = convertJson(rootNode);
 
 		if (dataSource.getDataSourceSchema() != null) {
-			if (!validateGenericValusFitsSchema(gv,
+			if (!SchemaManager.validateGenericValusFitsSchema(gv,
 					dataSource.getDataSourceSchema()))
 				return null;
 		}
 
 		return gv;
-	}
-
-	/**
-	 * Validate generic valus fits schema.
-	 * 
-	 * @param gv
-	 *            the gv
-	 * @param dbSchema
-	 *            the db schema
-	 * @return true, if successful
-	 */
-	private boolean validateGenericValusFitsSchema(GenericValue gv,
-			Schema dbSchema) {
-		ObjectMapper mapper = new ObjectMapper();
-
-		String json;
-		try {
-			json = mapper.writeValueAsString(gv);
-		} catch (JsonProcessingException e) {
-			String error = "Could not convert GenericValue to json"
-					+ e.getMessage();
-			Logging.error(this.getClass(), error);
-			System.err.println(error);
-			return false;
-		}
-
-		try {
-			JsonNode jsonNode = mapper.readTree(json);
-			JsonSchemaFactory factory = JsonSchemaFactory.byDefault();
-			SchemaManager schemaManager = new SchemaManager();
-			String jsonSchema = schemaManager.createJsonSchema(dbSchema);
-
-			// validate jsonSchema
-			JsonNode jn = JsonLoader.fromString(jsonSchema);
-			SyntaxValidator validator = factory.getSyntaxValidator();
-			boolean result = validator.schemaIsValid(jn);
-			if (result == false) {
-				String error = "schema is not valid";
-				Logging.error(this.getClass(), error);
-				System.err.println(error);
-				return false;
-			}
-
-			// validate
-			JsonValidator jsonValidator = factory.getValidator();
-			ProcessingReport report = jsonValidator.validate(jn, jsonNode);
-			result = report.isSuccess();
-			if (result == false) {
-				String error = "Could not validate json";
-				Logging.error(this.getClass(), error);
-				System.err.println(error);
-				return false;
-			}
-
-		} catch (IOException e) {
-			String error = "Could not validate json" + e.getMessage();
-			Logging.error(this.getClass(), error);
-			System.err.println(error);
-			return false;
-		} catch (ProcessingException e) {
-			String error = "Could not validate json" + e.getMessage();
-			Logging.error(this.getClass(), error);
-			System.err.println(error);
-			return false;
-		}
-		return true;
 	}
 
 	/**

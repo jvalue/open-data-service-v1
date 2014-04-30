@@ -24,7 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.GenericValue;
-import org.jvalue.ods.grabber.XmlGrabber;
+import org.jvalue.ods.translator.XmlTranslator;
 
 /**
  * The Class XmlGrabberTest.
@@ -32,7 +32,7 @@ import org.jvalue.ods.grabber.XmlGrabber;
 public class XmlGrabberTest {
 
 	/** The grabber. */
-	private XmlGrabber grabber;
+	private XmlTranslator grabber;
 
 	/**
 	 * Sets the up.
@@ -42,7 +42,7 @@ public class XmlGrabberTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		grabber = new XmlGrabber();
+		grabber = new XmlTranslator();
 		assertNotNull(grabber);
 	}
 
@@ -51,7 +51,7 @@ public class XmlGrabberTest {
 	 */
 	@Test
 	public void testGrab() {
-		GenericValue gv = grabber.grab(new DataSource("/nbgcity.osm", null));
+		GenericValue gv = grabber.translate(new DataSource("/nbgcity.osm", null));
 		assertNotNull(gv);
 	}
 
@@ -60,7 +60,7 @@ public class XmlGrabberTest {
 	 */
 	@Test
 	public void testGrabNotExistingFile() {
-		GenericValue gv = grabber.grab(new DataSource("NotExistingFile", null));
+		GenericValue gv = grabber.translate(new DataSource("NotExistingFile", null));
 		assertNull(gv);
 	}
 
@@ -69,6 +69,6 @@ public class XmlGrabberTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testGrabNullSource() {
-		grabber.grab(null);
+		grabber.translate(null);
 	}
 }

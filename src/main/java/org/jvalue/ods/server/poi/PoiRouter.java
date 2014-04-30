@@ -31,11 +31,11 @@ import org.jvalue.ods.data.generic.MapValue;
 import org.jvalue.ods.data.generic.StringValue;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.grabber.Grabber;
-import org.jvalue.ods.grabber.OsmGrabber;
+import org.jvalue.ods.grabber.Translator;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
 import org.jvalue.ods.server.restlet.AccessObjectByIdRestlet;
+import org.jvalue.ods.translator.OsmTranslator;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
@@ -113,7 +113,7 @@ public class PoiRouter implements Router<Restlet> {
 							double longitude = (double) poi.get("longitude");
 							double latitude = (double) poi.get("latitude");
 
-							Grabber g = new OsmGrabber();
+							Translator g = new OsmTranslator();
 							String source = "http://api.openstreetmap.org/api/0.6/map?bbox="
 									+ (longitude - 0.04)
 									+ ","
@@ -123,7 +123,7 @@ public class PoiRouter implements Router<Restlet> {
 									+ ","
 									+ (latitude + 0.04);
 
-							ListValue lv = (ListValue) g.grab(new DataSource(
+							ListValue lv = (ListValue) g.translate(new DataSource(
 									source, null));
 
 							String message = "";

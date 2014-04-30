@@ -1,7 +1,7 @@
 /*
  * 
  */
-package org.jvalue.ods.grabber;
+package org.jvalue.ods.translator;
 
 import java.io.File;
 import java.io.StringReader;
@@ -15,6 +15,7 @@ import org.jvalue.ods.data.generic.GenericValue;
 import org.jvalue.ods.data.generic.ListValue;
 import org.jvalue.ods.data.generic.MapValue;
 import org.jvalue.ods.data.generic.StringValue;
+import org.jvalue.ods.grabber.Translator;
 import org.jvalue.ods.logger.Logging;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -25,7 +26,7 @@ import org.xml.sax.InputSource;
 /**
  * The Class XmlGrabber.
  */
-public class XmlGrabber implements Grabber {
+public class XmlTranslator implements Translator {
 
 	/**
 	 * Grab.
@@ -35,7 +36,7 @@ public class XmlGrabber implements Grabber {
 	 * @return the generic value
 	 */
 	@Override
-	public GenericValue grab(DataSource source) {
+	public GenericValue translate(DataSource source) {
 		if (source == null)
 			throw new IllegalArgumentException("source is null");
 

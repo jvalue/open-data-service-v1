@@ -36,6 +36,7 @@ import org.jvalue.ods.data.generic.StringValue;
 import org.jvalue.ods.data.schema.MapSchema;
 import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.schema.SchemaManager;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -309,9 +310,20 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 		checkDbState();
 
 		if (schema != null) {
-			insert(schema);
 
 			for (MapValue mv : objects) {
+
+				if (!SchemaManager.validateGenericValusFitsSchema(mv, schema)) {
+					Logging.error(this.getClass(),
+							"Data does not fit DB schema.");
+					System.err.println("Data does not fit DB schema.");
+					return;
+				}
+
+			}
+
+			for (MapValue mv : objects) {
+
 				MapSchema ms = null;
 				try {
 					ms = (MapSchema) schema.getMap().get("objectType");
@@ -327,6 +339,8 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 				}
 
 			}
+
+			insert(schema);
 
 		}
 		try {

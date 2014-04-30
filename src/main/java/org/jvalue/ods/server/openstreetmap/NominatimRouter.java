@@ -24,9 +24,9 @@ import java.util.Map;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.GenericValue;
 import org.jvalue.ods.data.metadata.JacksonMetaData;
-import org.jvalue.ods.grabber.JsonGrabber;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
+import org.jvalue.ods.translator.JsonTranslator;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
@@ -67,8 +67,8 @@ public class NominatimRouter implements Router<Restlet> {
 
 					GenericValue ret = null;
 
-					ret = new JsonGrabber()
-							.grab(new DataSource(
+					ret = new JsonTranslator()
+							.translate(new DataSource(
 									"http://nominatim.openstreetmap.org/search?q="
 											+ (String) request.getAttributes()
 													.get("location")
@@ -99,7 +99,7 @@ public class NominatimRouter implements Router<Restlet> {
 
 					GenericValue ret = null;
 
-					ret = new JsonGrabber().grab(new DataSource(
+					ret = new JsonTranslator().translate(new DataSource(
 							"http://nominatim.openstreetmap.org/reverse?format=json"
 									+ (String) request.getAttributes().get(
 											"coordinates"), null));

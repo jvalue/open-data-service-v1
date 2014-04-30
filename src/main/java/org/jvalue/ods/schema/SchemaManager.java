@@ -3,10 +3,12 @@
  */
 package org.jvalue.ods.schema;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.jvalue.ods.data.generic.GenericValue;
 import org.jvalue.ods.data.schema.BoolSchema;
 import org.jvalue.ods.data.schema.ListSchema;
 import org.jvalue.ods.data.schema.MapSchema;
@@ -14,6 +16,17 @@ import org.jvalue.ods.data.schema.NullSchema;
 import org.jvalue.ods.data.schema.NumberSchema;
 import org.jvalue.ods.data.schema.Schema;
 import org.jvalue.ods.data.schema.StringSchema;
+import org.jvalue.ods.logger.Logging;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jackson.JsonLoader;
+import com.github.fge.jsonschema.exceptions.ProcessingException;
+import com.github.fge.jsonschema.main.JsonSchemaFactory;
+import com.github.fge.jsonschema.main.JsonValidator;
+import com.github.fge.jsonschema.processors.syntax.SyntaxValidator;
+import com.github.fge.jsonschema.report.ProcessingReport;
 
 /**
  * The Class SchemaManager.
@@ -27,7 +40,7 @@ public class SchemaManager {
 	 *            the schema
 	 * @return the string
 	 */
-	public String createJsonSchema(Schema schema) {
+	public static String createJsonSchema(Schema schema) {
 		return createJsonSchema(schema, 0);
 	}
 
@@ -40,7 +53,7 @@ public class SchemaManager {
 	 *            the tabs
 	 * @return the string
 	 */
-	private String createJsonSchema(Schema schema, int tabs) {
+	private static String createJsonSchema(Schema schema, int tabs) {
 		String result = "";
 
 		if (schema.getClass().equals(MapSchema.class)) {
@@ -69,7 +82,7 @@ public class SchemaManager {
 	 *            the tab count
 	 * @return the string
 	 */
-	private String createTabs(int tabCount) {
+	private static String createTabs(int tabCount) {
 		String s = "";
 
 		for (int i = 0; i < tabCount; i++)
@@ -87,7 +100,7 @@ public class SchemaManager {
 	 *            the tabs
 	 * @return the string
 	 */
-	private String createJsonSchemaFromElementary(String type, int tabs) {
+	private static String createJsonSchemaFromElementary(String type, int tabs) {
 		/*
 		 * example: { "type" : "string" }
 		 */
@@ -107,7 +120,8 @@ public class SchemaManager {
 	 *            the tabs
 	 * @return the string
 	 */
-	private String createJsonSchemaFromList(ListSchema listSchema, int tabs) {
+	private static String createJsonSchemaFromList(ListSchema listSchema,
+			int tabs) {
 		/*
 		 * example: { "type": "array", "items": { ... } }
 		 */
@@ -141,7 +155,7 @@ public class SchemaManager {
 	 * @return the string
 	 */
 	@SuppressWarnings("unchecked")
-	private String createJsonSchemaFromMap(MapSchema mapSchema, int tabs) {
+	private static String createJsonSchemaFromMap(MapSchema mapSchema, int tabs) {
 		/*
 		 * { "type": "object", "properties": { ... } }
 		 */
@@ -168,6 +182,71 @@ public class SchemaManager {
 		result += createTabs(tabs - 1) + "}";
 
 		return result;
+	}
+
+	/**
+	 * Validate generic valus fits schema.
+	 * 
+	 * @param gv
+	 *            the gv
+	 * @param dbSchema
+	 *            the db schema
+	 * @return true, if successful
+	 */
+	public static boolean validateGenericValusFitsSchema(GenericValue gv,
+			Schema dbSchema) {
+		ObjectMapper mapper = new ObjectMapper();
+
+		String json;
+		try {
+			json = mapper.writeValueAsString(gv);
+		} catch (JsonProcessingException e) {
+			String error = "Could not convert GenericValue to json"
+					+ e.getMessage();
+			Logging.error(SchemaManager.class, error);
+			System.err.println(error);
+			return false;
+		}
+
+		try {
+			JsonNode jsonNode = mapper.readTree(json);
+			JsonSchemaFactory factory = JsonSchemaFactory.byDefault();
+			String jsonSchema = createJsonSchema(dbSchema);
+
+			// validate jsonSchema
+			JsonNode jn = JsonLoader.fromString(jsonSchema);
+			SyntaxValidator validator = factory.getSyntaxValidator();
+			boolean result = validator.schemaIsValid(jn);
+			if (result == false) {
+				String error = "schema is not valid";
+				Logging.error(SchemaManager.class, error);
+				System.err.println(error);
+				return false;
+			}
+
+			// validate
+			JsonValidator jsonValidator = factory.getValidator();
+			ProcessingReport report = jsonValidator.validate(jn, jsonNode);
+			result = report.isSuccess();
+			if (result == false) {
+				String error = "Could not validate json";
+				Logging.error(SchemaManager.class, error);
+				System.err.println(error);
+				return false;
+			}
+
+		} catch (IOException e) {
+			String error = "Could not validate json" + e.getMessage();
+			Logging.error(SchemaManager.class, error);
+			System.err.println(error);
+			return false;
+		} catch (ProcessingException e) {
+			String error = "Could not validate json" + e.getMessage();
+			Logging.error(SchemaManager.class, error);
+			System.err.println(error);
+			return false;
+		}
+		return true;
 	}
 
 }

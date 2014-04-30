@@ -34,8 +34,8 @@ import org.jvalue.ods.data.schema.MapSchema;
 import org.jvalue.ods.data.schema.NumberSchema;
 import org.jvalue.ods.data.schema.Schema;
 import org.jvalue.ods.data.schema.StringSchema;
-import org.jvalue.ods.grabber.Grabber;
-import org.jvalue.ods.grabber.JsonGrabber;
+import org.jvalue.ods.grabber.Translator;
+import org.jvalue.ods.translator.JsonTranslator;
 
 /**
  * The Class JsonGrabberTest.
@@ -46,7 +46,7 @@ public class JsonGrabberTest {
 	private final String TestUrl = "http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true";
 
 	/** The grabber. */
-	private Grabber grabber;
+	private Translator grabber;
 
 	/**
 	 * Sets the up.
@@ -56,7 +56,7 @@ public class JsonGrabberTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		grabber = new JsonGrabber();
+		grabber = new JsonTranslator();
 		assertNotNull(grabber);
 	}
 
@@ -65,7 +65,7 @@ public class JsonGrabberTest {
 	 */
 	@Test
 	public void testGrab() {
-		GenericValue gv = grabber.grab(new DataSource(TestUrl, null));
+		GenericValue gv = grabber.translate(new DataSource(TestUrl, null));
 		assertNotNull(gv);
 	}
 
@@ -74,7 +74,7 @@ public class JsonGrabberTest {
 	 */
 	@Test
 	public void testGrabInvalidSource() {
-		GenericValue gv = grabber.grab(new DataSource("invalidsource", null));
+		GenericValue gv = grabber.translate(new DataSource("invalidsource", null));
 		assertNull(gv);
 	}
 
@@ -83,7 +83,7 @@ public class JsonGrabberTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testGrabNullSource() {
-		grabber.grab(null);
+		grabber.translate(null);
 	}
 
 	/**
@@ -130,6 +130,7 @@ public class JsonGrabberTest {
 
 		Map<String, Schema> rain = new HashMap<String, Schema>();
 		rain.put("1h", new NumberSchema());
+		rain.put("3h", new NumberSchema());
 		MapSchema rainSchema = new MapSchema(rain);
 
 		Map<String, Schema> clouds = new HashMap<String, Schema>();
@@ -161,7 +162,7 @@ public class JsonGrabberTest {
 	public void testGrabWithSchema() {
 		Schema schema = createOpenWeatherSchema();
 		String url = "http://api.openweathermap.org/data/2.5/weather?q=Nuremberg,de";
-		GenericValue gv = grabber.grab(new DataSource(url, schema));
+		GenericValue gv = grabber.translate(new DataSource(url, schema));
 		assertNotNull(gv);
 	}
 

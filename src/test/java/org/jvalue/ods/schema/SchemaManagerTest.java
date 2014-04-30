@@ -52,7 +52,7 @@ public class SchemaManagerTest {
 	@Test
 	public void testCreateJsonSchema() throws IOException {
 		Schema s = createSchema();
-		String result = schemaManager.createJsonSchema(s);
+		String result = SchemaManager.createJsonSchema(s);
 		assertNotNull(result);
 
 		// validate schema

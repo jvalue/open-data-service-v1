@@ -21,9 +21,9 @@ import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.GenericValue;
 
 /**
- * The Interface Grabber.
+ * The Interface Translator.
  */
-public interface Grabber {
+public interface Translator {
 	
 	/**
 	 * Grab.
@@ -31,5 +31,5 @@ public interface Grabber {
 	 * @param dataSource the data source
 	 * @return the generic value
 	 */
-	public GenericValue grab(DataSource dataSource);
+	public GenericValue translate(DataSource dataSource);
 }
