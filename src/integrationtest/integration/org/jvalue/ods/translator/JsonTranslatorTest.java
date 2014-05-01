@@ -15,7 +15,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package integration.org.jvalue.ods.grabber;
+package integration.org.jvalue.ods.translator;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -40,13 +40,13 @@ import org.jvalue.ods.translator.JsonTranslator;
 /**
  * The Class JsonGrabberTest.
  */
-public class JsonGrabberTest {
+public class JsonTranslatorTest {
 
 	/** The Test url. */
 	private final String TestUrl = "http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true";
 
 	/** The grabber. */
-	private Translator grabber;
+	private Translator translator;
 
 	/**
 	 * Sets the up.
@@ -56,8 +56,8 @@ public class JsonGrabberTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		grabber = new JsonTranslator();
-		assertNotNull(grabber);
+		translator = new JsonTranslator();
+		assertNotNull(translator);
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class JsonGrabberTest {
 	 */
 	@Test
 	public void testGrab() {
-		GenericValue gv = grabber.translate(new DataSource(TestUrl, null));
+		GenericValue gv = translator.translate(new DataSource(TestUrl, null));
 		assertNotNull(gv);
 	}
 
@@ -74,7 +74,7 @@ public class JsonGrabberTest {
 	 */
 	@Test
 	public void testGrabInvalidSource() {
-		GenericValue gv = grabber.translate(new DataSource("invalidsource", null));
+		GenericValue gv = translator.translate(new DataSource("invalidsource", null));
 		assertNull(gv);
 	}
 
@@ -83,7 +83,7 @@ public class JsonGrabberTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testGrabNullSource() {
-		grabber.translate(null);
+		translator.translate(null);
 	}
 
 	/**
@@ -162,7 +162,7 @@ public class JsonGrabberTest {
 	public void testGrabWithSchema() {
 		Schema schema = createOpenWeatherSchema();
 		String url = "http://api.openweathermap.org/data/2.5/weather?q=Nuremberg,de";
-		GenericValue gv = grabber.translate(new DataSource(url, schema));
+		GenericValue gv = translator.translate(new DataSource(url, schema));
 		assertNotNull(gv);
 	}
 

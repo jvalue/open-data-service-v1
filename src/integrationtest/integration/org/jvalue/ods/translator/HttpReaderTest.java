@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package integration.org.jvalue.ods.grabber;
+package integration.org.jvalue.ods.translator;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -28,10 +28,10 @@ import org.jvalue.ods.translator.HttpReader;
 /**
  * The Class HttpJsonReaderTest.
  */
-public class HttpJsonReaderTest {
+public class HttpReaderTest {
 
-	/** The adapter. */
-	HttpReader adapter;
+	/** The httpReader. */
+	HttpReader httpReader;
 
 	/** The Test url. */
 	final String TestUrl = "http://www.pegelonline.wsv.de/webservices/rest-api/v2/waters.json?includeStations=true&includeTimeseries=true&includeCurrentMeasurement=true";
@@ -44,7 +44,7 @@ public class HttpJsonReaderTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		adapter = new HttpReader(TestUrl);
+		httpReader = new HttpReader(TestUrl);
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class HttpJsonReaderTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testHttpJsonReaderWithNullUrl() throws IOException {
-		adapter = new HttpReader(null);
+		httpReader = new HttpReader(null);
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class HttpJsonReaderTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testHttpJsonReaderWithEmptyUrl() throws IOException {
-		adapter = new HttpReader("");
+		httpReader = new HttpReader("");
 	}
 
 	/**
@@ -77,9 +77,9 @@ public class HttpJsonReaderTest {
 	 */
 	@Test(expected = IOException.class)
 	public void testHttpJsonReaderWithInvalidUrl() throws IOException {
-		adapter = new HttpReader("invalidUrl");
-		assertNotNull(adapter);
-		adapter.read("");
+		httpReader = new HttpReader("invalidUrl");
+		assertNotNull(httpReader);
+		httpReader.read("");
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class HttpJsonReaderTest {
 	 */
 	@Test()
 	public void testGetJSON() throws IOException {
-		adapter.read("UTF-8");
+		httpReader.read("UTF-8");
 	}
 
 	/**
@@ -101,7 +101,7 @@ public class HttpJsonReaderTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testGetJSONWithEmptyCharset() throws IOException {
-		String json = adapter.read("");
+		String json = httpReader.read("");
 		assertNotNull(json);
 	}
 
@@ -113,7 +113,7 @@ public class HttpJsonReaderTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testGetJSONWithNullCharset() throws IOException {
-		adapter.read(null);
+		httpReader.read(null);
 	}
 
 }

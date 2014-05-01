@@ -1,7 +1,7 @@
 /*
  * 
  */
-package integration.org.jvalue.ods.grabber;
+package integration.org.jvalue.ods.translator;
 
 import static org.junit.Assert.*;
 
@@ -23,10 +23,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 /**
  * The Class OsmGrabberTest.
  */
-public class OsmGrabberTest {
+public class OsmTranslatorTest {
 
 	/** The grabber. */
-	private OsmTranslator grabber;
+	private OsmTranslator translator;
 
 	/** The test url. */
 	private final String testUrl = "http://api.openstreetmap.org/api/0.6/map?bbox=9.382840810129357,52.78909755467678,9.392840810129357,52.79909755467678";
@@ -36,8 +36,8 @@ public class OsmGrabberTest {
 	 */
 	@Before
 	public void setUp() {
-		grabber = new OsmTranslator();
-		assertNotNull(grabber);
+		translator = new OsmTranslator();
+		assertNotNull(translator);
 	}
 
 	/**
@@ -45,7 +45,7 @@ public class OsmGrabberTest {
 	 */
 	@Test
 	public void testGrab() {
-		ListValue lv = (ListValue) grabber.translate(new DataSource(testUrl, null));
+		ListValue lv = (ListValue) translator.translate(new DataSource(testUrl, null));
 		assertNotNull(lv);
 	}
 
@@ -54,7 +54,7 @@ public class OsmGrabberTest {
 	 */
 	@Test
 	public void testGrabOffline() {
-		ListValue lv = (ListValue) grabber.translate(new DataSource("/nbgcity.osm",
+		ListValue lv = (ListValue) translator.translate(new DataSource("/nbgcity.osm",
 				null));
 		assertNotNull(lv);
 		DbAccessor<JsonNode> db = DbFactory.createDbAccessor("testOsm");
@@ -75,7 +75,7 @@ public class OsmGrabberTest {
 	 */
 	@Test
 	public void testGrabInvalidSource() {
-		ListValue lv = (ListValue) grabber.translate(new DataSource("invalidsource",
+		ListValue lv = (ListValue) translator.translate(new DataSource("invalidsource",
 				null));
 		assertNull(lv);
 	}
@@ -85,7 +85,7 @@ public class OsmGrabberTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testGrabNullSource() {
-		grabber.translate(null);
+		translator.translate(null);
 	}
 
 }
