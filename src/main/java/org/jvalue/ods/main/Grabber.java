@@ -8,8 +8,16 @@ import org.jvalue.ods.data.metadata.OdsMetaData;
 import org.jvalue.ods.data.schema.MapSchema;
 import org.jvalue.ods.data.schema.Schema;
 
+/**
+ * The Interface Grabber.
+ */
 public interface Grabber {
 
+	/**
+	 * Gets the data source schema.
+	 *
+	 * @return the data source schema
+	 */
 	public Schema getDataSourceSchema();
 
 	/**
@@ -19,10 +27,25 @@ public interface Grabber {
 	 */
 	public MapSchema getDbSchema();
 
+	/**
+	 * Grab.
+	 *
+	 * @return the generic value
+	 */
 	public GenericValue grab();
 
+	/**
+	 * Gets the meta data.
+	 *
+	 * @return the meta data
+	 */
 	public OdsMetaData getMetaData();
 
+	/**
+	 * Gets the ods views.
+	 *
+	 * @return the ods views
+	 */
 	public List<OdsView> getOdsViews();
 
 }

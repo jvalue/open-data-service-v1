@@ -164,11 +164,8 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 
 	/**
 	 * Insert.
-	 * 
-	 * @param <T>
-	 * 
-	 * @param data
-	 *            the data
+	 *
+	 * @param data the data
 	 * @return the string
 	 */
 	@Override

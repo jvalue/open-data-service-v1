@@ -53,6 +53,7 @@ import org.openstreetmap.osmosis.xml.v0_6.XmlReader;
  */
 public class OsmTranslator implements Translator {
 
+	/** The lv. */
 	private ListValue lv = new ListValue();
 
 	/**
@@ -171,6 +172,12 @@ public class OsmTranslator implements Translator {
 		return lv;
 	}
 
+	/**
+	 * Convert relation to generic value.
+	 *
+	 * @param relation the relation
+	 * @return the map value
+	 */
 	private MapValue convertRelationToGenericValue(Relation relation) {
 		MapValue mv = new MapValue();
 		Map<String, GenericValue> map = mv.getMap();
@@ -209,6 +216,12 @@ public class OsmTranslator implements Translator {
 		return mv;
 	}
 
+	/**
+	 * Convert way to generic value.
+	 *
+	 * @param w the w
+	 * @return the map value
+	 */
 	private MapValue convertWayToGenericValue(Way w) {
 		MapValue mv = new MapValue();
 		Map<String, GenericValue> map = mv.getMap();
@@ -237,6 +250,12 @@ public class OsmTranslator implements Translator {
 		return mv;
 	}
 
+	/**
+	 * Convert node to generic value.
+	 *
+	 * @param n the n
+	 * @return the map value
+	 */
 	private MapValue convertNodeToGenericValue(Node n) {
 		MapValue mv = new MapValue();
 		Map<String, GenericValue> map = mv.getMap();

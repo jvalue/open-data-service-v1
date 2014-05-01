@@ -44,6 +44,11 @@ public interface DbAccessor<Q> {
 	 */
 	public <T> T getDocument(Class<T> c, String id);
 
+	/**
+	 * Insert.
+	 *
+	 * @param data the data
+	 */
 	public void insert(Object data);
 
 	/**
@@ -95,9 +100,9 @@ public interface DbAccessor<Q> {
 
 	/**
 	 * Execute bulk.
-	 * 
-	 * @param objects
-	 *            the objects
+	 *
+	 * @param objects the objects
+	 * @param schema the schema
 	 */
 	public void executeBulk(Collection<MapValue> objects, MapSchema schema);
 

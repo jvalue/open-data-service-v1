@@ -42,6 +42,7 @@ public class PegelOnlineRouterTest {
 	/** The router. */
 	PegelOnlineRouter router;
 
+	/** The mock accessor. */
 	DbAccessor<JsonNode> mockAccessor;
 
 	/**

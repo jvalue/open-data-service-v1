@@ -17,18 +17,11 @@
  */
 package org.jvalue.ods.server;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.jvalue.ods.data.generic.MapValue;
-import org.jvalue.ods.data.generic.StringValue;
-import org.jvalue.ods.db.DbAccessor;
-import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.DataGrabberMain;
 import org.jvalue.ods.main.RouterFactory;
@@ -36,8 +29,6 @@ import org.jvalue.ods.server.restlet.DefaultRestlet;
 import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.routing.Router;
-
-import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * The Class ContainerRestletApp.
@@ -110,25 +101,6 @@ public class ContainerRestletApp extends Application implements Runnable {
 		return router;
 	}
 
-	private void adminLog(String content) {
-		try {
-			DbAccessor<JsonNode> accessor = DbFactory
-					.createDbAccessor("adminlog");
-			accessor.connect();
-
-			if (!content.endsWith("\n"))
-				content += "\n";
-
-			MapValue mv = new MapValue();
-			mv.getMap().put("log", new StringValue(content));
-			accessor.insert(mv);
-
-		} catch (Exception ex) {
-			Logging.error(Logging.class, ex.getMessage());
-			System.err.println(ex.getMessage());
-		}
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -138,19 +110,9 @@ public class ContainerRestletApp extends Application implements Runnable {
 	public void run() {
 		while (true) {
 			try {
-				DateFormat dateFormat = new SimpleDateFormat(
-						"yyyy/MM/dd HH:mm:ss");
-				Date date = new Date();
-				String datetime = dateFormat.format(date);
-
-				adminLog(datetime + " Update started");
 				DataGrabberMain.main(null);
-
-				date = new Date();
-				datetime = dateFormat.format(date);
-				adminLog(datetime + " Update completed");
 			} catch (Exception ex) {
-				Logging.error(ContainerRestletApp.class, ex.getMessage());
+				Logging.error(DataGrabberMain.class, ex.getMessage());
 				ex.printStackTrace();
 			} finally {
 				try {
@@ -160,7 +122,6 @@ public class ContainerRestletApp extends Application implements Runnable {
 				}
 			}
 		}
-
 	}
 
 }

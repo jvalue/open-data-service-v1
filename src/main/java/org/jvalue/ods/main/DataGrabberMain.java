@@ -36,7 +36,6 @@ import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.grabber.OsmGrabber;
 import org.jvalue.ods.grabber.PegelOnlineGrabber;
 import org.jvalue.ods.logger.Logging;
-
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
@@ -44,7 +43,12 @@ import com.fasterxml.jackson.databind.JsonNode;
  */
 public class DataGrabberMain {
 
+	/** The accessor. */
 	private static DbAccessor<JsonNode> accessor;
+	
+	
+	
+	
 
 	/**
 	 * The main method.
@@ -53,12 +57,21 @@ public class DataGrabberMain {
 	 *            the arguments
 	 */
 	public static void main(String[] args) {
+
+		Logging.adminLog("Update started");
+
 		accessor = DbFactory.createDbAccessor("ods");
 		accessor.connect();
 		accessor.deleteDatabase();
+
+		Logging.adminLog("grabbing PegelOnline...");
 		grab(new PegelOnlineGrabber());
+
+		Logging.adminLog("grabbing Osm...");
 		grab(new OsmGrabber());
 		insertPoiIntoDatabase();
+
+		Logging.adminLog("Update completed");
 	}
 
 	/**
@@ -73,6 +86,12 @@ public class DataGrabberMain {
 
 	}
 
+	/**
+	 * Insert db bulk.
+	 *
+	 * @param schema the schema
+	 * @param gv the gv
+	 */
 	private static void insertDbBulk(MapSchema schema, GenericValue gv) {
 		if (gv instanceof ListValue) {
 
@@ -95,6 +114,11 @@ public class DataGrabberMain {
 		}
 	}
 
+	/**
+	 * Grab.
+	 *
+	 * @param grabber the grabber
+	 */
 	private static void grab(Grabber grabber) {
 		GenericValue data = grabber.grab();
 
@@ -109,15 +133,8 @@ public class DataGrabberMain {
 
 	/**
 	 * Creates the pegel online design document.
-	 * 
-	 * @param idPath
-	 *            the id path
-	 * @param viewName
-	 *            the view name
-	 * @param function
-	 *            the function
-	 * @param accessor
-	 *            the accessor
+	 *
+	 * @param view the view
 	 */
 	private static void createView(OdsView view) {
 
