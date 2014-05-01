@@ -96,9 +96,9 @@ public class DataGrabberMain {
 	}
 
 	private static void grab(Grabber grabber) {
-		ListValue list = (ListValue) grabber.grab();
+		GenericValue data = grabber.grab();
 
-		insertDbBulk(grabber.getDbSchema(), list);
+		insertDbBulk(grabber.getDbSchema(), data);
 
 		accessor.insert(grabber.getMetaData());
 
