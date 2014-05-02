@@ -178,7 +178,6 @@ public class PegelOnlineGrabber implements Grabber {
 		station.put("rest_name", restNameSchema);
 		MapSchema stationSchema = new MapSchema(station);
 
-		// ToDo: IdPaths for createDesignDocument in a map, to have unique ids?
 
 		return stationSchema;
 	}
