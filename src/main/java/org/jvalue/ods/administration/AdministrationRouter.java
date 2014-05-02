@@ -17,7 +17,9 @@
  */
 package org.jvalue.ods.administration;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -65,12 +67,19 @@ public class AdministrationRouter implements Router<Restlet> {
 			public void handle(Request request, Response response) {
 
 				String message = "";
+				List<String> logs = new LinkedList<String>();
 				try {
 					dbAccessor.connect();
 
 					List<JsonNode> nodes = dbAccessor.getAllDocuments();
 					for (JsonNode n : nodes) {
-						message += n.get("log").asText();
+						logs.add(n.get("log").asText());						
+					}
+					Collections.sort(logs);
+					
+					for(String s: logs)
+					{
+						message += s;
 					}
 
 				} catch (Exception ex) {

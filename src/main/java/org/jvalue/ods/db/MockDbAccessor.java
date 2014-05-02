@@ -92,6 +92,9 @@ public class MockDbAccessor implements DbAccessor<JsonNode> {
 		return ret;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.jvalue.ods.db.DbAccessor#insert(java.lang.Object)
+	 */
 	@Override
 	public void insert(Object data) {
 		if (data == null)

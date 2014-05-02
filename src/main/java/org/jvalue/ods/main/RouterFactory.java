@@ -100,10 +100,20 @@ public class RouterFactory {
 		return new PoiRouter();
 	}
 
+	/**
+	 * Creates a new Router object.
+	 *
+	 * @return the router< restlet>
+	 */
 	public static Router<Restlet> createAdministrationRouter() {		
 		return new AdministrationRouter();
 	}
 
+	/**
+	 * Creates a new Router object.
+	 *
+	 * @return the router< restlet>
+	 */
 	public static org.jvalue.ods.main.Router<Restlet> createOdsRouter() {
 		return new OdsRouter();
 	}

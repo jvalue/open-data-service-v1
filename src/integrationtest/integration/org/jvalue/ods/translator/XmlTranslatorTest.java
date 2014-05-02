@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package integration.org.jvalue.ods.grabber;
+package integration.org.jvalue.ods.translator;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -29,10 +29,10 @@ import org.jvalue.ods.translator.XmlTranslator;
 /**
  * The Class XmlGrabberTest.
  */
-public class XmlGrabberTest {
+public class XmlTranslatorTest {
 
 	/** The grabber. */
-	private XmlTranslator grabber;
+	private XmlTranslator translator;
 
 	/**
 	 * Sets the up.
@@ -42,8 +42,8 @@ public class XmlGrabberTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		grabber = new XmlTranslator();
-		assertNotNull(grabber);
+		translator = new XmlTranslator();
+		assertNotNull(translator);
 	}
 
 	/**
@@ -51,7 +51,7 @@ public class XmlGrabberTest {
 	 */
 	@Test
 	public void testGrab() {
-		GenericValue gv = grabber.translate(new DataSource("/nbgcity.osm", null));
+		GenericValue gv = translator.translate(new DataSource("/nbgcity.osm", null));
 		assertNotNull(gv);
 	}
 
@@ -60,7 +60,7 @@ public class XmlGrabberTest {
 	 */
 	@Test
 	public void testGrabNotExistingFile() {
-		GenericValue gv = grabber.translate(new DataSource("NotExistingFile", null));
+		GenericValue gv = translator.translate(new DataSource("NotExistingFile", null));
 		assertNull(gv);
 	}
 
@@ -69,6 +69,6 @@ public class XmlGrabberTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testGrabNullSource() {
-		grabber.translate(null);
+		translator.translate(null);
 	}
 }

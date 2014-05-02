@@ -20,8 +20,14 @@ import org.jvalue.ods.data.schema.StringSchema;
 import org.jvalue.ods.main.Grabber;
 import org.jvalue.ods.translator.OsmTranslator;
 
+/**
+ * The Class OsmGrabber.
+ */
 public class OsmGrabber implements Grabber {
 
+	/* (non-Javadoc)
+	 * @see org.jvalue.ods.main.Grabber#grab()
+	 */
 	@Override
 	public GenericValue grab() {
 
@@ -108,6 +114,9 @@ public class OsmGrabber implements Grabber {
 		return nodeMapSchema;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.jvalue.ods.main.Grabber#getMetaData()
+	 */
 	@Override
 	public OdsMetaData getMetaData() {
 		return new JacksonMetaData(
@@ -120,6 +129,9 @@ public class OsmGrabber implements Grabber {
 				"http://www.openstreetmap.org/copyright");
 	}
 
+	/* (non-Javadoc)
+	 * @see org.jvalue.ods.main.Grabber#getOdsViews()
+	 */
 	@Override
 	public List<OdsView> getOdsViews() {
 		List<OdsView> list = new LinkedList<>();

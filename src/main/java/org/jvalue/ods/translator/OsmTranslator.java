@@ -53,6 +53,7 @@ import org.openstreetmap.osmosis.xml.v0_6.XmlReader;
  */
 public class OsmTranslator implements Translator {
 
+	/** The lv. */
 	private ListValue lv = new ListValue();
 
 	/**
@@ -95,6 +96,9 @@ public class OsmTranslator implements Translator {
 				Logging.info(this.getClass(), "Opening: " + url);
 				HttpReader reader = new HttpReader(url);
 				String data = reader.read("UTF-8");
+				
+				//ToDo: Nicht thread-sicher, Problem bei 2 parallelen Anfragen
+				//Schreiben in Dateien nicht ohne weiteres möglich in tomcat
 				File tmpFile = new File("tmp.txt");
 				if (tmpFile.exists()) {
 					tmpFile.delete();
@@ -171,6 +175,12 @@ public class OsmTranslator implements Translator {
 		return lv;
 	}
 
+	/**
+	 * Convert relation to generic value.
+	 *
+	 * @param relation the relation
+	 * @return the map value
+	 */
 	private MapValue convertRelationToGenericValue(Relation relation) {
 		MapValue mv = new MapValue();
 		Map<String, GenericValue> map = mv.getMap();
@@ -209,6 +219,12 @@ public class OsmTranslator implements Translator {
 		return mv;
 	}
 
+	/**
+	 * Convert way to generic value.
+	 *
+	 * @param w the w
+	 * @return the map value
+	 */
 	private MapValue convertWayToGenericValue(Way w) {
 		MapValue mv = new MapValue();
 		Map<String, GenericValue> map = mv.getMap();
@@ -237,6 +253,12 @@ public class OsmTranslator implements Translator {
 		return mv;
 	}
 
+	/**
+	 * Convert node to generic value.
+	 *
+	 * @param n the n
+	 * @return the map value
+	 */
 	private MapValue convertNodeToGenericValue(Node n) {
 		MapValue mv = new MapValue();
 		Map<String, GenericValue> map = mv.getMap();

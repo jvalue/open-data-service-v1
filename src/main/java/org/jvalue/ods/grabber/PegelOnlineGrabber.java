@@ -20,8 +20,14 @@ import org.jvalue.ods.data.schema.StringSchema;
 import org.jvalue.ods.main.Grabber;
 import org.jvalue.ods.translator.JsonTranslator;
 
+/**
+ * The Class PegelOnlineGrabber.
+ */
 public class PegelOnlineGrabber implements Grabber {
 
+	/* (non-Javadoc)
+	 * @see org.jvalue.ods.main.Grabber#grab()
+	 */
 	@Override
 	public GenericValue grab() {
 
@@ -182,6 +188,9 @@ public class PegelOnlineGrabber implements Grabber {
 		return stationSchema;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.jvalue.ods.main.Grabber#getMetaData()
+	 */
 	@Override
 	public OdsMetaData getMetaData() {
 		return new JacksonMetaData(
@@ -194,6 +203,9 @@ public class PegelOnlineGrabber implements Grabber {
 				"http://www.pegelonline.wsv.de/gast/nutzungsbedingungen");
 	}
 
+	/* (non-Javadoc)
+	 * @see org.jvalue.ods.main.Grabber#getOdsViews()
+	 */
 	@Override
 	public List<OdsView> getOdsViews() {
 		List<OdsView> list = new LinkedList<>();
