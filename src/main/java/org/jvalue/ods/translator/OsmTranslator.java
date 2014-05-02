@@ -96,6 +96,9 @@ public class OsmTranslator implements Translator {
 				Logging.info(this.getClass(), "Opening: " + url);
 				HttpReader reader = new HttpReader(url);
 				String data = reader.read("UTF-8");
+				
+				//ToDo: Nicht thread-sicher, Problem bei 2 parallelen Anfragen
+				//Schreiben in Dateien nicht ohne weiteres möglich in tomcat
 				File tmpFile = new File("tmp.txt");
 				if (tmpFile.exists()) {
 					tmpFile.delete();
