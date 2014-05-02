@@ -40,16 +40,16 @@ public class DbAccessorTest {
 	private final Object data = new Object();
 
 	/** The couch db inserter. */
-	private DbAccessor<JsonNode> couchDbAdapter;
+	private DbAccessor<JsonNode> couchDbAccessor;
 
 	/**
 	 * Initialize.
 	 */
 	@Before
 	public void initialize() {
-		couchDbAdapter = DbFactory.createMockDbAccessor(testDbName);
-		assertNotNull(couchDbAdapter);
-		couchDbAdapter.connect();
+		couchDbAccessor = DbFactory.createMockDbAccessor(testDbName);
+		assertNotNull(couchDbAccessor);
+		couchDbAccessor.connect();
 	}
 
 	/**
@@ -57,10 +57,10 @@ public class DbAccessorTest {
 	 */
 	@After
 	public void cleanUp() {
-		couchDbAdapter.connect();
-		if (couchDbAdapter.isConnected()) {
+		couchDbAccessor.connect();
+		if (couchDbAccessor.isConnected()) {
 
-			couchDbAdapter.deleteDatabase();
+			couchDbAccessor.deleteDatabase();
 		}
 	}
 
@@ -71,9 +71,7 @@ public class DbAccessorTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testCouchDbInserterConstructorEmptyDatabaseName() {
 		String databaseName = "";
-		DbAccessor<JsonNode> couchDbAdapter = DbFactory
-				.createMockDbAccessor(databaseName);
-		assertNotNull(couchDbAdapter);
+		DbFactory.createMockDbAccessor(databaseName);
 	}
 
 	/**
@@ -82,9 +80,7 @@ public class DbAccessorTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testCouchDbInserterConstructorNullDatabaseName() {
 		String databaseName = null;
-		DbAccessor<JsonNode> couchDbAdapter = DbFactory
-				.createMockDbAccessor(databaseName);
-		assertNotNull(couchDbAdapter);
+		DbFactory.createMockDbAccessor(databaseName);
 	}
 
 	/**
@@ -104,8 +100,8 @@ public class DbAccessorTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testInsertTwiceSameData() {
-		couchDbAdapter.insert(data);
-		couchDbAdapter.insert(data);
+		couchDbAccessor.insert(data);
+		couchDbAccessor.insert(data);
 	}
 
 	/**
@@ -113,9 +109,8 @@ public class DbAccessorTest {
 	 */
 	@Test(expected = IllegalStateException.class)
 	public void testInsertWithoutConnect() {
-		couchDbAdapter = DbFactory.createMockDbAccessor(testDbName);
-		assertNotNull(couchDbAdapter);
-		couchDbAdapter.insert(data);
+		DbAccessor<JsonNode> couchDbFooAccessor = DbFactory.createMockDbAccessor("foo");
+		couchDbFooAccessor.insert(data);
 	}
 
 	/**
@@ -123,7 +118,7 @@ public class DbAccessorTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testInsertNullData() {
-		couchDbAdapter.insert(null);
+		couchDbAccessor.insert(null);
 	}
 
 	/**
@@ -131,7 +126,7 @@ public class DbAccessorTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testUpdateNullData() {
-		couchDbAdapter.update(null);
+		couchDbAccessor.update(null);
 	}
 
 	/**
@@ -139,9 +134,8 @@ public class DbAccessorTest {
 	 */
 	@Test(expected = IllegalStateException.class)
 	public void testUpdateWithoutConnect() {
-		couchDbAdapter = DbFactory.createMockDbAccessor(testDbName);
-		assertNotNull(couchDbAdapter);
-		couchDbAdapter.update(data);
+		DbAccessor<JsonNode> couchDbFooAccessor = DbFactory.createMockDbAccessor("foo");
+		couchDbFooAccessor.update(data);
 	}
 
 	/**
@@ -149,7 +143,7 @@ public class DbAccessorTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testGetDocumentNullClassname() {
-		couchDbAdapter.getDocument(null, "");
+		couchDbAccessor.getDocument(null, "");
 	}
 
 	/**
@@ -157,7 +151,7 @@ public class DbAccessorTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testGetDocumentNullId() {
-		couchDbAdapter.getDocument(Object.class, null);
+		couchDbAccessor.getDocument(Object.class, null);
 	}
 
 	/**
@@ -165,7 +159,7 @@ public class DbAccessorTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testGetDocumentEmptyId() {
-		couchDbAdapter.getDocument(Object.class, "");
+		couchDbAccessor.getDocument(Object.class, "");
 	}
 
 	/**
@@ -173,9 +167,8 @@ public class DbAccessorTest {
 	 */
 	@Test(expected = IllegalStateException.class)
 	public void testGetDocumentWithoutConnect() {
-		couchDbAdapter = DbFactory.createMockDbAccessor(testDbName);
-		assertNotNull(couchDbAdapter);
-		couchDbAdapter.getDocument(Object.class, "1");
+		DbAccessor<JsonNode> couchDbFooAccessor = DbFactory.createMockDbAccessor("foo");
+		couchDbFooAccessor.getDocument(Object.class, "1");
 	}
 
 	/**
@@ -183,9 +176,9 @@ public class DbAccessorTest {
 	 */
 	@Test(expected = IllegalStateException.class)
 	public void testDeleteDatabaseWithoutConnect() {
-		couchDbAdapter = DbFactory.createMockDbAccessor(testDbName);
-		assertNotNull(couchDbAdapter);
-		couchDbAdapter.deleteDatabase();
+		/** The couch db inserter. */
+		DbAccessor<JsonNode> couchDbFooAccessor = DbFactory.createMockDbAccessor("foo");
+		couchDbFooAccessor.deleteDatabase();
 	}
 
 	/**
@@ -193,9 +186,8 @@ public class DbAccessorTest {
 	 */
 	@Test(expected = IllegalStateException.class)
 	public void testGetAllDocumentsWithoutConnect() {
-		couchDbAdapter = DbFactory.createMockDbAccessor(testDbName);
-		assertNotNull(couchDbAdapter);
-		couchDbAdapter.getAllDocuments();
+		DbAccessor<JsonNode> couchDbFooAccessor = DbFactory.createMockDbAccessor("foo");
+		couchDbFooAccessor.getAllDocuments();
 	}
 
 	/**
@@ -203,11 +195,11 @@ public class DbAccessorTest {
 	 */
 	@Test
 	public void testGetAllDocumentsNewDb() {
-		couchDbAdapter = DbFactory.createMockDbAccessor("foo");
-		assertNotNull(couchDbAdapter);
-		couchDbAdapter.connect();
-		couchDbAdapter.getAllDocuments();
-		couchDbAdapter.deleteDatabase();
+		DbAccessor<JsonNode> couchDbFooAccessor = DbFactory.createMockDbAccessor("foo");
+		assertNotNull(couchDbFooAccessor);
+		couchDbFooAccessor.connect();
+		couchDbFooAccessor.getAllDocuments();
+		couchDbFooAccessor.deleteDatabase();
 	}
 
 	/**
@@ -215,9 +207,8 @@ public class DbAccessorTest {
 	 */
 	@Test(expected = IllegalStateException.class)
 	public void testExecuteDocumentQueryWithoutConnect() {
-		couchDbAdapter = DbFactory.createMockDbAccessor(testDbName);
-		assertNotNull(couchDbAdapter);
-		couchDbAdapter.executeDocumentQuery("xxx", "xxx", null);
+		DbAccessor<JsonNode> couchDbFooAccessor = DbFactory.createMockDbAccessor("foo");
+		couchDbFooAccessor.executeDocumentQuery("xxx", "xxx", null);
 	}
 
 	/**
@@ -225,7 +216,7 @@ public class DbAccessorTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testExecuteDocumentQueryNullDocId() {
-		couchDbAdapter.executeDocumentQuery(null, "xxx", null);
+		couchDbAccessor.executeDocumentQuery(null, "xxx", null);
 	}
 
 	/**
@@ -233,7 +224,7 @@ public class DbAccessorTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testExecuteDocumentQueryNullViewName() {
-		couchDbAdapter.executeDocumentQuery("xxx", null, null);
+		couchDbAccessor.executeDocumentQuery("xxx", null, null);
 	}
 
 	/**
@@ -241,7 +232,7 @@ public class DbAccessorTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testExecuteDocumentQueryEmptyDocId() {
-		couchDbAdapter.executeDocumentQuery("", "xxx", null);
+		couchDbAccessor.executeDocumentQuery("", "xxx", null);
 	}
 
 	/**
@@ -249,7 +240,7 @@ public class DbAccessorTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testExecuteDocumentQueryEmptyViewName() {
-		couchDbAdapter.executeDocumentQuery("xxx", "", null);
+		couchDbAccessor.executeDocumentQuery("xxx", "", null);
 	}
 
 	/**
@@ -257,11 +248,11 @@ public class DbAccessorTest {
 	 */
 	@Test
 	public void testExecuteDocumentQueryNewDb() {
-		couchDbAdapter = DbFactory.createMockDbAccessor("foo");
-		assertNotNull(couchDbAdapter);
-		couchDbAdapter.connect();
-		couchDbAdapter.executeDocumentQuery("xxx", "xxx", null);
-		couchDbAdapter.deleteDatabase();
+		DbAccessor<JsonNode> couchDbFooAccessor = DbFactory.createMockDbAccessor("foo");
+		assertNotNull(couchDbFooAccessor);
+		couchDbFooAccessor.connect();
+		couchDbFooAccessor.executeDocumentQuery("xxx", "xxx", null);
+		couchDbFooAccessor.deleteDatabase();
 	}
 
 	/**
@@ -269,9 +260,8 @@ public class DbAccessorTest {
 	 */
 	@Test(expected = IllegalStateException.class)
 	public void testExecuteBulkWithoutConnect() {
-		couchDbAdapter = DbFactory.createMockDbAccessor(testDbName);
-		assertNotNull(couchDbAdapter);
-		couchDbAdapter.executeBulk(new LinkedList<MapValue>(), null);
+		DbAccessor<JsonNode> couchDbFooAccessor = DbFactory.createMockDbAccessor("foo");
+		couchDbFooAccessor.executeBulk(new LinkedList<MapValue>(), null);
 	}
 
 	/**
@@ -279,11 +269,11 @@ public class DbAccessorTest {
 	 */
 	@Test
 	public void testExecuteBulkNewDb() {
-		couchDbAdapter = DbFactory.createMockDbAccessor("foo");
-		assertNotNull(couchDbAdapter);
-		couchDbAdapter.connect();
-		couchDbAdapter.executeBulk(new LinkedList<MapValue>(), null);
-		couchDbAdapter.deleteDatabase();
+		DbAccessor<JsonNode> couchDbFooAccessor = DbFactory.createMockDbAccessor("foo");
+		assertNotNull(couchDbFooAccessor);
+		couchDbFooAccessor.connect();
+		couchDbFooAccessor.executeBulk(new LinkedList<MapValue>(), null);
+		couchDbFooAccessor.deleteDatabase();
 	}
 
 }

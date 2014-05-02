@@ -19,6 +19,7 @@
 package org.jvalue.ods.main;
 
 import org.junit.Test;
+import org.jvalue.ods.logger.Logging;
 
 /**
  * The Class DataServerMainTest.
@@ -33,11 +34,27 @@ public class DataServerMainTest {
 	 */
 	@Test
 	public void testMain() throws Exception {
-		try {
+		try
+		{
 			DataServerMain.main(new String[0]);
-		} catch (java.net.BindException ex) {
-			System.err.println("Restlet service already running");
 		}
+		catch (java.net.BindException ex)
+		{
+			Logging.error(this.getClass(), "Address already binded");
+		}
+	}
+	
+	
+	/**
+	 * Test main.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
+	@Test(expected = java.net.BindException.class)
+	public void testMainDouble() throws Exception {
+		DataServerMain.main(null);		 
+		DataServerMain.main(null);		 
 	}
 
 }
