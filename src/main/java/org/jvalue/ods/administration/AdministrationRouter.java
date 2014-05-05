@@ -73,12 +73,11 @@ public class AdministrationRouter implements Router<Restlet> {
 
 					List<JsonNode> nodes = dbAccessor.getAllDocuments();
 					for (JsonNode n : nodes) {
-						logs.add(n.get("log").asText());						
+						logs.add(n.get("log").asText());
 					}
 					Collections.sort(logs);
-					
-					for(String s: logs)
-					{
+
+					for (String s : logs) {
 						message += s;
 					}
 

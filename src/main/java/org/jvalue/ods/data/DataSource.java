@@ -18,9 +18,11 @@ public class DataSource {
 
 	/**
 	 * Instantiates a new data source.
-	 *
-	 * @param url the url
-	 * @param dataSourceSchema the data source schema
+	 * 
+	 * @param url
+	 *            the url
+	 * @param dataSourceSchema
+	 *            the data source schema
 	 */
 	public DataSource(String url, Schema dataSourceSchema) {
 		this.url = url;

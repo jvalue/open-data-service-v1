@@ -49,7 +49,7 @@ import org.openstreetmap.osmosis.xml.common.CompressionMethod;
 import org.openstreetmap.osmosis.xml.v0_6.XmlReader;
 
 /**
- * The Class OsmGrabber.
+ * The Class OsmTranslator.
  */
 public class OsmTranslator implements Translator {
 
@@ -57,7 +57,7 @@ public class OsmTranslator implements Translator {
 	private ListValue lv = new ListValue();
 
 	/**
-	 * Grab.
+	 * Translate.
 	 * 
 	 * @param source
 	 *            the source
@@ -96,9 +96,9 @@ public class OsmTranslator implements Translator {
 				Logging.info(this.getClass(), "Opening: " + url);
 				HttpReader reader = new HttpReader(url);
 				String data = reader.read("UTF-8");
-				
-				//ToDo: Nicht thread-sicher, Problem bei 2 parallelen Anfragen
-				//Schreiben in Dateien nicht ohne weiteres möglich in tomcat
+
+				// ToDo: Nicht thread-sicher, Problem bei 2 parallelen Anfragen
+				// Schreiben in Dateien nicht ohne weiteres mï¿½glich in tomcat
 				File tmpFile = new File("tmp.txt");
 				if (tmpFile.exists()) {
 					tmpFile.delete();
@@ -177,8 +177,9 @@ public class OsmTranslator implements Translator {
 
 	/**
 	 * Convert relation to generic value.
-	 *
-	 * @param relation the relation
+	 * 
+	 * @param relation
+	 *            the relation
 	 * @return the map value
 	 */
 	private MapValue convertRelationToGenericValue(Relation relation) {
@@ -221,8 +222,9 @@ public class OsmTranslator implements Translator {
 
 	/**
 	 * Convert way to generic value.
-	 *
-	 * @param w the w
+	 * 
+	 * @param w
+	 *            the w
 	 * @return the map value
 	 */
 	private MapValue convertWayToGenericValue(Way w) {
@@ -255,8 +257,9 @@ public class OsmTranslator implements Translator {
 
 	/**
 	 * Convert node to generic value.
-	 *
-	 * @param n the n
+	 * 
+	 * @param n
+	 *            the n
 	 * @return the map value
 	 */
 	private MapValue convertNodeToGenericValue(Node n) {

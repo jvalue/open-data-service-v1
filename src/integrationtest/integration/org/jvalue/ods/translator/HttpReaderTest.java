@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.jvalue.ods.translator.HttpReader;
 
 /**
- * The Class HttpJsonReaderTest.
+ * The Class HttpReaderTest.
  */
 public class HttpReaderTest {
 

@@ -46,8 +46,9 @@ public interface DbAccessor<Q> {
 
 	/**
 	 * Insert.
-	 *
-	 * @param data the data
+	 * 
+	 * @param data
+	 *            the data
 	 */
 	public void insert(Object data);
 
@@ -100,9 +101,11 @@ public interface DbAccessor<Q> {
 
 	/**
 	 * Execute bulk.
-	 *
-	 * @param objects the objects
-	 * @param schema the schema
+	 * 
+	 * @param objects
+	 *            the objects
+	 * @param schema
+	 *            the schema
 	 */
 	public void executeBulk(Collection<MapValue> objects, MapSchema schema);
 

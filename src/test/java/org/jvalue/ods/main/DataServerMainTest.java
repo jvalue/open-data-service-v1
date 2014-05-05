@@ -34,17 +34,13 @@ public class DataServerMainTest {
 	 */
 	@Test
 	public void testMain() throws Exception {
-		try
-		{
+		try {
 			DataServerMain.main(new String[0]);
-		}
-		catch (java.net.BindException ex)
-		{
-			Logging.error(this.getClass(), "Address already binded");
+		} catch (java.net.BindException ex) {
+			Logging.error(this.getClass(), "Address already bound");
 		}
 	}
-	
-	
+
 	/**
 	 * Test main.
 	 * 
@@ -53,8 +49,8 @@ public class DataServerMainTest {
 	 */
 	@Test(expected = java.net.BindException.class)
 	public void testMainDouble() throws Exception {
-		DataServerMain.main(null);		 
-		DataServerMain.main(null);		 
+		DataServerMain.main(null);
+		DataServerMain.main(null);
 	}
 
 }

@@ -14,7 +14,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
-*/
+ */
 package org.jvalue.ods.grabber;
 
 import org.jvalue.ods.data.DataSource;
@@ -24,11 +24,12 @@ import org.jvalue.ods.data.generic.GenericValue;
  * The Interface Translator.
  */
 public interface Translator {
-	
+
 	/**
 	 * Grab.
-	 *
-	 * @param dataSource the data source
+	 * 
+	 * @param dataSource
+	 *            the data source
 	 * @return the generic value
 	 */
 	public GenericValue translate(DataSource dataSource);

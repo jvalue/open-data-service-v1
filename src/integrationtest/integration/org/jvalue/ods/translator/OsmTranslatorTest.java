@@ -21,11 +21,11 @@ import org.jvalue.ods.translator.OsmTranslator;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
- * The Class OsmGrabberTest.
+ * The Class OsmTranslatorTest.
  */
 public class OsmTranslatorTest {
 
-	/** The grabber. */
+	/** The translator. */
 	private OsmTranslator translator;
 
 	/** The test url. */
@@ -41,21 +41,22 @@ public class OsmTranslatorTest {
 	}
 
 	/**
-	 * Test grab.
+	 * Test Translate.
 	 */
 	@Test
-	public void testGrab() {
-		ListValue lv = (ListValue) translator.translate(new DataSource(testUrl, null));
+	public void testTranslate() {
+		ListValue lv = (ListValue) translator.translate(new DataSource(testUrl,
+				null));
 		assertNotNull(lv);
 	}
 
 	/**
-	 * Test grab.
+	 * Test Translate.
 	 */
 	@Test
-	public void testGrabOffline() {
-		ListValue lv = (ListValue) translator.translate(new DataSource("/nbgcity.osm",
-				null));
+	public void testTranslateOffline() {
+		ListValue lv = (ListValue) translator.translate(new DataSource(
+				"/nbgcity.osm", null));
 		assertNotNull(lv);
 		DbAccessor<JsonNode> db = DbFactory.createDbAccessor("testOsm");
 		db.connect();
@@ -71,20 +72,20 @@ public class OsmTranslatorTest {
 	}
 
 	/**
-	 * Test grab invalid source.
+	 * Test Translate invalid source.
 	 */
 	@Test
-	public void testGrabInvalidSource() {
-		ListValue lv = (ListValue) translator.translate(new DataSource("invalidsource",
-				null));
+	public void testTranslateInvalidSource() {
+		ListValue lv = (ListValue) translator.translate(new DataSource(
+				"invalidsource", null));
 		assertNull(lv);
 	}
 
 	/**
-	 * Test grab null source.
+	 * Test Translate null source.
 	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void testGrabNullSource() {
+	public void testTranslateNullSource() {
 		translator.translate(null);
 	}
 

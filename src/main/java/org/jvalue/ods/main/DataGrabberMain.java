@@ -45,10 +45,6 @@ public class DataGrabberMain {
 
 	/** The accessor. */
 	private static DbAccessor<JsonNode> accessor;
-	
-	
-	
-	
 
 	/**
 	 * The main method.
@@ -88,9 +84,11 @@ public class DataGrabberMain {
 
 	/**
 	 * Insert db bulk.
-	 *
-	 * @param schema the schema
-	 * @param gv the gv
+	 * 
+	 * @param schema
+	 *            the schema
+	 * @param gv
+	 *            the gv
 	 */
 	private static void insertDbBulk(MapSchema schema, GenericValue gv) {
 		if (gv instanceof ListValue) {
@@ -116,8 +114,9 @@ public class DataGrabberMain {
 
 	/**
 	 * Grab.
-	 *
-	 * @param grabber the grabber
+	 * 
+	 * @param grabber
+	 *            the grabber
 	 */
 	private static void grab(Grabber grabber) {
 		GenericValue data = grabber.grab();
@@ -133,8 +132,9 @@ public class DataGrabberMain {
 
 	/**
 	 * Creates the pegel online design document.
-	 *
-	 * @param view the view
+	 * 
+	 * @param view
+	 *            the view
 	 */
 	private static void createView(OdsView view) {
 

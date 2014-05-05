@@ -78,7 +78,8 @@ public class PegelOnlineRouter implements Router<Restlet> {
 				// there is an attribute in url
 				if (request.getResourceRef().getQueryAsForm().size() == 1) {
 
-					message = new RouterUtils().getDocumentByAttribute(request, dbAccessor);
+					message = new RouterUtils().getDocumentByAttribute(request,
+							dbAccessor);
 
 				} else {
 
@@ -204,7 +205,6 @@ public class PegelOnlineRouter implements Router<Restlet> {
 			}
 		};
 
-		
 		routes.put("/ods/de/pegelonline/stations", stationsRestlet);
 		routes.put("/ods/de/pegelonline/stationsFlat", stationsFlatRestlet);
 		routes.put("/ods/de/pegelonline/stations/{station}",

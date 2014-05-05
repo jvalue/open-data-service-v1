@@ -290,8 +290,8 @@ public class OsmRouter implements Router<Restlet> {
 		routes.put("/ods/de/osm", osmRestlet);
 		routes.put("/ods/de/osm/$class", new ClassObjectRestlet(dbAccessor,
 				"_design/osm", "getClassObject"));
-		routes.put("/ods/de/osm/$class_id", new ClassObjectIdRestlet(dbAccessor,
-				"_design/osm", "getClassObjectId"));
+		routes.put("/ods/de/osm/$class_id", new ClassObjectIdRestlet(
+				dbAccessor, "_design/osm", "getClassObjectId"));
 
 		return routes;
 	}

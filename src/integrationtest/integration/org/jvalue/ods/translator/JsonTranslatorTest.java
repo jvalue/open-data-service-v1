@@ -38,14 +38,14 @@ import org.jvalue.ods.grabber.Translator;
 import org.jvalue.ods.translator.JsonTranslator;
 
 /**
- * The Class JsonGrabberTest.
+ * The Class JsonTranslatorTest.
  */
 public class JsonTranslatorTest {
 
 	/** The Test url. */
 	private final String TestUrl = "http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true";
 
-	/** The grabber. */
+	/** The translator. */
 	private Translator translator;
 
 	/**
@@ -61,28 +61,29 @@ public class JsonTranslatorTest {
 	}
 
 	/**
-	 * Test grab.
+	 * Test Translate.
 	 */
 	@Test
-	public void testGrab() {
+	public void testTranslate() {
 		GenericValue gv = translator.translate(new DataSource(TestUrl, null));
 		assertNotNull(gv);
 	}
 
 	/**
-	 * Test grab invalid source.
+	 * Test Translate invalid source.
 	 */
 	@Test
-	public void testGrabInvalidSource() {
-		GenericValue gv = translator.translate(new DataSource("invalidsource", null));
+	public void testTranslateInvalidSource() {
+		GenericValue gv = translator.translate(new DataSource("invalidsource",
+				null));
 		assertNull(gv);
 	}
 
 	/**
-	 * Test grab null source.
+	 * Test Translate null source.
 	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void testGrabNullSource() {
+	public void testTranslateNullSource() {
 		translator.translate(null);
 	}
 
@@ -156,10 +157,10 @@ public class JsonTranslatorTest {
 	}
 
 	/**
-	 * Test grab null source.
+	 * Test Translate null source.
 	 */
 	@Test()
-	public void testGrabWithSchema() {
+	public void testTranslateWithSchema() {
 		Schema schema = createOpenWeatherSchema();
 		String url = "http://api.openweathermap.org/data/2.5/weather?q=Nuremberg,de";
 		GenericValue gv = translator.translate(new DataSource(url, schema));

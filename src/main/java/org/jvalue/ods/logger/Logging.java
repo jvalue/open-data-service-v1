@@ -84,12 +84,12 @@ public abstract class Logging {
 		Logger log = createLogger(c);
 		log.debug(s);
 	}
-	
-	
+
 	/**
 	 * Admin log.
-	 *
-	 * @param content the content
+	 * 
+	 * @param content
+	 *            the content
 	 */
 	public static void adminLog(String content) {
 		try {
@@ -97,17 +97,14 @@ public abstract class Logging {
 					.createDbAccessor("adminlog");
 			accessor.connect();
 
-			
-			DateFormat dateFormat = new SimpleDateFormat(
-					"yyyy/MM/dd HH:mm:ss");
+			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 			String datetime = dateFormat.format(new Date());
-			
-			
+
 			if (!content.endsWith("\n"))
 				content += "\n";
 
 			MapValue mv = new MapValue();
-			mv.getMap().put("log", new StringValue(datetime + " " +content));
+			mv.getMap().put("log", new StringValue(datetime + " " + content));
 			accessor.insert(mv);
 
 		} catch (Exception ex) {
@@ -115,6 +112,5 @@ public abstract class Logging {
 			System.err.println(ex.getMessage());
 		}
 	}
-	
 
 }

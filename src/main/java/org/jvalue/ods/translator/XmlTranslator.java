@@ -24,12 +24,12 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 /**
- * The Class XmlGrabber.
+ * The Class XmlTranslator.
  */
 public class XmlTranslator implements Translator {
 
 	/**
-	 * Grab.
+	 * Translate.
 	 * 
 	 * @param source
 	 *            the source

@@ -43,12 +43,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * The Class JsonGrabber.
+ * The Class JsonTranslator.
  */
 public class JsonTranslator implements Translator {
 
 	/**
-	 * Grab.
+	 * Translate.
 	 * 
 	 * @param dataSource
 	 *            the data source
