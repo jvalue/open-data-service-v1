@@ -149,11 +149,11 @@ public class NominatimRouter implements Router<Restlet> {
 			}
 		};
 
-		routes.put("/non-ods/de/nominatim/coordinates/{location}",
+		routes.put("/services/de/nominatim/coordinates/{location}",
 				nominatimRestlet);
-		routes.put("/non-ods/de/nominatim/reverse{coordinates}",
+		routes.put("/services/de/nominatim/reverse{coordinates}",
 				reverseNominatimRestlet);
-		routes.put("/non-ods/de/nominatim/metadata", metadataRestlet);
+		routes.put("/services/de/nominatim/metadata", metadataRestlet);
 
 		return routes;
 	}

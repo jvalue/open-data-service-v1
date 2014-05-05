@@ -56,8 +56,6 @@ public class ContainerRestletApp extends Application implements Runnable {
 				.createOsmRouter();
 		org.jvalue.ods.main.Router<Restlet> routesRouter = RouterFactory
 				.createRoutesRouter();
-		org.jvalue.ods.main.Router<Restlet> poiRouter = RouterFactory
-				.createPoiRouter();
 		org.jvalue.ods.main.Router<Restlet> administrationRouter = RouterFactory
 				.createAdministrationRouter();
 
@@ -68,7 +66,6 @@ public class ContainerRestletApp extends Application implements Runnable {
 		combinedRouter.putAll(ovRouter.getRoutes());
 		combinedRouter.putAll(osmRouter.getRoutes());
 		combinedRouter.putAll(routesRouter.getRoutes());
-		combinedRouter.putAll(poiRouter.getRoutes());
 		combinedRouter.putAll(administrationRouter.getRoutes());
 
 		// must be last router, generates api output
