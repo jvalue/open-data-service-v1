@@ -17,7 +17,6 @@
  */
 package org.jvalue.ods.filter;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -44,11 +43,7 @@ public class CombineFilter implements OdsFilter {
 	/** The schema. */
 	private MapSchema schema;
 
-	/** The combined name. */
-	private String combinedName;
-
-	/** The combined map. */
-	private Map<String, GenericValue> combinedMap = new HashMap<String, GenericValue>();
+	private MapSchema combinedSchema;
 
 	/**
 	 * Instantiates a new combine filter.
@@ -60,10 +55,11 @@ public class CombineFilter implements OdsFilter {
 	 * @param combinedName
 	 *            the combined name
 	 */
-	public CombineFilter(MapValue data, MapSchema schema, String combinedName) {
+	public CombineFilter(MapValue data, MapSchema schema,
+			MapSchema combinedSchema) {
 		this.data = data;
 		this.schema = schema;
-		this.combinedName = combinedName;
+		this.combinedSchema = combinedSchema;
 	}
 
 	/**
@@ -79,11 +75,11 @@ public class CombineFilter implements OdsFilter {
 			return data;
 		}
 
-		traverseSchema(schema, data);
-
 		MapValue mv = new MapValue();
-		mv.getMap().putAll(combinedMap);
-		data.getMap().put(combinedName, mv);
+
+		traverseSchema(schema, data, mv.getMap());
+
+		insertCombinedValue(data, mv, combinedSchema);
 
 		return data;
 	}
@@ -91,16 +87,18 @@ public class CombineFilter implements OdsFilter {
 	/**
 	 * Traverse schema.
 	 * 
-	 * @param schema
+	 * @param sourceStructure
 	 *            the schema
 	 * @param data
 	 *            the data
+	 * @param combinedMap
 	 */
-	private void traverseSchema(Schema schema, GenericValue data) {
+	private void traverseSchema(Schema sourceStructure, GenericValue data,
+			Map<String, GenericValue> combinedMap) {
 
-		if (schema instanceof MapSchema) {
+		if (sourceStructure instanceof MapSchema) {
 
-			for (Entry<String, Schema> e : ((MapSchema) schema).getMap()
+			for (Entry<String, Schema> e : ((MapSchema) sourceStructure).getMap()
 					.entrySet()) {
 
 				if (e.getValue() instanceof NumberSchema
@@ -112,18 +110,68 @@ public class CombineFilter implements OdsFilter {
 
 				} else {
 					traverseSchema(e.getValue(), ((MapValue) data).getMap()
-							.get(e.getKey()));
+							.get(e.getKey()), combinedMap);
 				}
 			}
-		} else if (schema instanceof ListSchema) {
+		} else if (sourceStructure instanceof ListSchema) {
 
 			for (GenericValue gv : ((ListValue) data).getList()) {
 
-				traverseSchema(((ListSchema) schema).getList().get(0), gv);
+				traverseSchema(((ListSchema) sourceStructure).getList().get(0), gv,
+						combinedMap);
 
 			}
 
 		}
 	}
 
+	private void insertCombinedValue(GenericValue data, MapValue mv,
+			Schema destinationStructure) {
+
+		if (destinationStructure instanceof MapSchema) {
+
+			for (Entry<String, Schema> e : ((MapSchema) destinationStructure)
+					.getMap().entrySet()) {
+
+				if (e.getValue() == null) {
+
+					if (data instanceof MapValue) {
+						((MapValue) data).getMap().put(e.getKey(), mv);
+					} else {
+						String errmsg = "Invalid combinedSchema.";
+						Logging.error(this.getClass(), errmsg);
+						System.err.println(errmsg);
+						throw new RuntimeException(errmsg);
+					}
+
+				} else {
+
+					if (((MapValue) data).getMap().get(e.getKey()) == null) {
+						((MapValue) data).getMap().put(e.getKey(),
+								new MapValue());
+					}
+
+					insertCombinedValue(
+							((MapValue) data).getMap().get(e.getKey()), mv,
+							e.getValue());
+				}
+			}
+		} else if (destinationStructure instanceof ListSchema) {
+
+			if (!(data instanceof ListValue)) {
+				String errmsg = "Invalid combinedSchema.";
+				Logging.error(this.getClass(), errmsg);
+				System.err.println(errmsg);
+				throw new RuntimeException(errmsg);
+			}
+
+			for (GenericValue gv : ((ListValue) data).getList()) {
+
+				insertCombinedValue(gv, mv, ((ListSchema) destinationStructure)
+						.getList().get(0));
+			}
+
+		}
+
+	}
 }
