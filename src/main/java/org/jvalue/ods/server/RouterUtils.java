@@ -79,9 +79,9 @@ public class RouterUtils {
 
 		List<HashMap<String, Object>> result = new LinkedList<>();
 
-		for (JsonNode n : nodes) {
+		try {
 
-			try {
+			for (JsonNode n : nodes) {
 
 				if (n.isObject()) {
 
@@ -107,21 +107,23 @@ public class RouterUtils {
 											.equals(value))) {
 
 								result.add(doc);
+
 								break;
 
 							}
 						}
 					}
 				}
-				if (!result.isEmpty()) {
-					message = mapper.writeValueAsString(result);
-				}
-			} catch (IOException e) {
-				String errorMessage = "Error during client request: " + e;
-				Logging.error(this.getClass(), errorMessage);
-				System.err.println(errorMessage);
+
 			}
 
+			if (!result.isEmpty()) {
+				message = mapper.writeValueAsString(result);
+			}
+		} catch (IOException e) {
+			String errorMessage = "Error during client request: " + e;
+			Logging.error(this.getClass(), errorMessage);
+			System.err.println(errorMessage);
 		}
 
 		return message;
