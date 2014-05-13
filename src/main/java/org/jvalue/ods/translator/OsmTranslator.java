@@ -98,7 +98,7 @@ public class OsmTranslator implements Translator {
 				String data = reader.read("UTF-8");
 
 				// ToDo: Nicht thread-sicher, Problem bei 2 parallelen Anfragen
-				// Schreiben in Dateien nicht ohne weiteres m�glich in tomcat
+				// Schreiben in Dateien nicht ohne weiteres moeglich in tomcat
 				File tmpFile = new File("tmp.txt");
 				if (tmpFile.exists()) {
 					tmpFile.delete();
