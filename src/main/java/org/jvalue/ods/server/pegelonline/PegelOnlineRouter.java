@@ -28,8 +28,7 @@ import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
 import org.jvalue.ods.server.RouterUtils;
-import org.jvalue.ods.server.restlet.ClassObjectIdRestlet;
-import org.jvalue.ods.server.restlet.ClassObjectRestlet;
+import org.jvalue.ods.server.restlet.ExecuteQueryRestlet;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
@@ -211,10 +210,10 @@ public class PegelOnlineRouter implements Router<Restlet> {
 				singleStationRestlet);
 		routes.put("/ods/de/pegelonline/metadata", metadataRestlet);
 		routes.put("/ods/de/pegelonline/stations/$class",
-				new ClassObjectRestlet(dbAccessor, "_design/pegelonline",
+				new ExecuteQueryRestlet(dbAccessor, "_design/pegelonline",
 						"getClassObject"));
 		routes.put("/ods/de/pegelonline/stations/$class_id",
-				new ClassObjectIdRestlet(dbAccessor, "_design/pegelonline",
+				new ExecuteQueryRestlet(dbAccessor, "_design/pegelonline",
 						"getClassObjectId"));
 		return routes;
 	}

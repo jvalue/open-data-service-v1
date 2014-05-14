@@ -27,8 +27,7 @@ import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
 import org.jvalue.ods.server.RouterUtils;
-import org.jvalue.ods.server.restlet.ClassObjectIdRestlet;
-import org.jvalue.ods.server.restlet.ClassObjectRestlet;
+import org.jvalue.ods.server.restlet.ExecuteQueryRestlet;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
@@ -288,9 +287,9 @@ public class OsmRouter implements Router<Restlet> {
 				getDocumentsByKeywordRestlet);
 		routes.put("/ods/de/osm/metadata", metadataRestlet);
 		routes.put("/ods/de/osm", osmRestlet);
-		routes.put("/ods/de/osm/$class", new ClassObjectRestlet(dbAccessor,
+		routes.put("/ods/de/osm/$class", new ExecuteQueryRestlet(dbAccessor,
 				"_design/osm", "getClassObject"));
-		routes.put("/ods/de/osm/$class_id", new ClassObjectIdRestlet(
+		routes.put("/ods/de/osm/$class_id", new ExecuteQueryRestlet(
 				dbAccessor, "_design/osm", "getClassObjectId"));
 
 		return routes;

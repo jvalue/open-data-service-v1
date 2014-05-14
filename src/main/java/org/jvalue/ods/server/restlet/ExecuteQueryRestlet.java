@@ -31,9 +31,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * The Class ClassObjectIdRestlet.
+ * The Class ClassObjectRestlet.
  */
-public class ClassObjectIdRestlet extends Restlet {
+public class ExecuteQueryRestlet extends Restlet {
 
 	/** The db accessor. */
 	private DbAccessor<JsonNode> dbAccessor;
@@ -45,7 +45,7 @@ public class ClassObjectIdRestlet extends Restlet {
 	private String viewName;
 
 	/**
-	 * Instantiates a new class object id restlet.
+	 * Instantiates a new class object restlet.
 	 * 
 	 * @param dbAccessor
 	 *            the db accessor
@@ -54,7 +54,7 @@ public class ClassObjectIdRestlet extends Restlet {
 	 * @param viewName
 	 *            the view name
 	 */
-	public ClassObjectIdRestlet(DbAccessor<JsonNode> dbAccessor,
+	public ExecuteQueryRestlet(DbAccessor<JsonNode> dbAccessor,
 			String designDocId, String viewName) {
 		this.dbAccessor = dbAccessor;
 		this.designDocId = designDocId;
@@ -104,4 +104,5 @@ public class ClassObjectIdRestlet extends Restlet {
 		response.setEntity(message, MediaType.APPLICATION_JSON);
 
 	}
+
 }
