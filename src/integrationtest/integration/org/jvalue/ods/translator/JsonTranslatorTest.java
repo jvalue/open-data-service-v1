@@ -121,6 +121,8 @@ public class JsonTranslatorTest {
 		main.put("pressure", new NumberSchema());
 		main.put("temp_min", new NumberSchema());
 		main.put("temp_max", new NumberSchema());
+		main.put("sea_level", new NumberSchema());
+		main.put("grnd_level", new NumberSchema());
 		MapSchema mainSchema = new MapSchema(main);
 
 		Map<String, Schema> wind = new HashMap<String, Schema>();

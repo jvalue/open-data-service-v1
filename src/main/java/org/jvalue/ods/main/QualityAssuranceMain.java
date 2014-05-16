@@ -22,6 +22,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.jvalue.EnumType;
+import org.jvalue.ExactValueRestriction;
+import org.jvalue.ValueType;
+import org.jvalue.numbers.Range;
+import org.jvalue.numbers.RangeBound;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.GenericValue;
 import org.jvalue.ods.data.generic.MapValue;
@@ -33,16 +38,24 @@ import org.jvalue.ods.data.schema.Schema;
 import org.jvalue.ods.data.schema.StringSchema;
 import org.jvalue.ods.filter.CombineFilter;
 import org.jvalue.ods.grabber.Translator;
+import org.jvalue.ods.qa.PegelOnlineQualityAssurance;
 import org.jvalue.ods.schema.SchemaManager;
 import org.jvalue.ods.translator.JsonTranslator;
+import org.jvalue.si.QuantityUnitType;
+import org.jvalue.si.SiUnit;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * The Class QualityAssuranceMain.
  */
 public class QualityAssuranceMain {
+
+	private static Map <String, ValueType<?>> valueTypes;
+	
+	public static Map<String, ValueType<?>> getValueTypes() {
+		return valueTypes;
+	}
 
 	/**
 	 * The main method.
@@ -54,6 +67,12 @@ public class QualityAssuranceMain {
 	 */
 	public static void main(String[] args) throws JsonProcessingException {
 
+		valueTypes = new HashMap<>();
+		valueTypes.put("waterLevelTrend", createWaterLevelTrendType());
+		valueTypes.put("waterLevel", createWaterLevelType());
+		valueTypes.put("temperature", createTemperatureType());
+		valueTypes.put("electricalConductivity", createElectricalConductivityType());
+		
 		Translator jt = new JsonTranslator();
 
 		GenericValue gv = jt
@@ -73,8 +92,10 @@ public class QualityAssuranceMain {
 			System.err.println("Validation of quality-enhanced data failed.");
 		}
 
-		System.out.println(new ObjectMapper().writeValueAsString(mv));
+		//System.out.println(new ObjectMapper().writeValueAsString(mv));
 
+		new PegelOnlineQualityAssurance().checkValueTypes();
+		
 	}
 
 	private static MapSchema createCombinedSchema() {
@@ -171,4 +192,41 @@ public class QualityAssuranceMain {
 		return coordinateSchema;
 	}
 
+	private static EnumType createWaterLevelTrendType() {
+		ExactValueRestriction<String> a = new ExactValueRestriction<String>(
+				"-1");
+		ExactValueRestriction<String> b = new ExactValueRestriction<String>("0");
+		ExactValueRestriction<String> c = new ExactValueRestriction<String>("1");
+		ExactValueRestriction<String> d = new ExactValueRestriction<String>(
+				"-999");
+
+		EnumType trendType = new EnumType(a.or(b).or(c).or(d));
+		return trendType;
+	}
+
+	private static QuantityUnitType createWaterLevelType() {
+
+		RangeBound<Double> low = new RangeBound<Double>(0.0);
+		RangeBound<Double> high = new RangeBound<Double>(Double.MAX_VALUE);
+		Range<Double> range = new Range<Double>(low, high);
+		return new QuantityUnitType(range, SiUnit.m);
+	}
+
+
+	private static QuantityUnitType createTemperatureType() {
+
+		RangeBound<Double> low = new RangeBound<Double>(0.0);
+		RangeBound<Double> high = new RangeBound<Double>(Double.MAX_VALUE);
+		Range<Double> range = new Range<Double>(low, high);
+		return new QuantityUnitType(range, SiUnit.K);
+	}
+
+	private static QuantityUnitType createElectricalConductivityType() {
+
+		RangeBound<Double> low = new RangeBound<Double>(0.0);
+		RangeBound<Double> high = new RangeBound<Double>(Double.MAX_VALUE);
+		Range<Double> range = new Range<Double>(low, high);
+		return new QuantityUnitType(range, SiUnit.s.divide(SiUnit.m));
+	}
+	
 }
