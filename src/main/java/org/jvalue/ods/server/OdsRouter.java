@@ -18,18 +18,23 @@
 package org.jvalue.ods.server;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
+import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
 import org.jvalue.ods.server.restlet.AccessObjectByIdRestlet;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
+import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * The Class OdsRouter.
@@ -78,8 +83,75 @@ public class OdsRouter implements Router<Restlet> {
 			}
 		};
 
+		Restlet odsSchemaRestlet = new Restlet() {
+			@Override
+			public void handle(Request request, Response response) {
+
+				String message = "Please specify an argument.";
+
+				// there is an attribute in url
+				if (request.getResourceRef().getQueryAsForm().size() == 1) {
+
+					Form f = request.getResourceRef().getQueryAsForm();
+					String key = f.get(0).getName();
+					String value = f.get(0).getValue();
+
+					if (key.equals("name")) {
+						String[] parts = value.split("/");
+
+						String dbKey = parts[parts.length - 1];
+
+						dbAccessor.connect();
+
+						List<JsonNode> nodes = dbAccessor.executeDocumentQuery(
+								"_design/ods", "getClassObjectByType", dbKey);
+
+						if (nodes != null && !nodes.isEmpty()) {
+							try {
+								message = new ObjectMapper()
+										.writeValueAsString(nodes.get(0));
+							} catch (JsonProcessingException e) {
+								String errorMessage = "Error during client request: "
+										+ e;
+								Logging.error(this.getClass(), errorMessage);
+								System.err.println(errorMessage);
+							}
+						}
+
+					}
+
+					message = new RouterUtils().getDocumentByAttribute(request,
+							dbAccessor);
+
+				} else {
+
+					dbAccessor.connect();
+
+					List<JsonNode> nodes = dbAccessor.executeDocumentQuery(
+							"_design/ods", "getAllClassObjects", null);
+
+					if (nodes != null && !nodes.isEmpty()) {
+						try {
+							message = new ObjectMapper()
+									.writeValueAsString(nodes);
+						} catch (JsonProcessingException e) {
+							String errorMessage = "Error during client request: "
+									+ e;
+							Logging.error(this.getClass(), errorMessage);
+							System.err.println(errorMessage);
+						}
+					}
+
+				}
+
+				response.setEntity(message, MediaType.APPLICATION_JSON);
+
+			}
+		};
+
 		routes.put("/ods/${id}", new AccessObjectByIdRestlet(dbAccessor));
 		routes.put("/ods", odsRestlet);
+		routes.put("/ods/schema", odsSchemaRestlet);
 
 		return routes;
 	}

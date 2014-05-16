@@ -67,7 +67,16 @@ public class DataGrabberMain {
 		grab(new OsmGrabber());
 		insertPoiIntoDatabase();
 
+		createCommonViews();
+		
 		Logging.adminLog("Update completed");
+	}
+
+	private static void createCommonViews() {
+		createView(new OdsView("_design/ods", "getClassObjectByType",
+				"function(doc) { if(doc.objectType) emit (doc.objectType, doc) }"));	
+		createView(new OdsView("_design/ods", "getAllClassObjects", 
+                "function(doc) { if(doc.objectType) emit (null, doc) }"));          
 	}
 
 	/**
