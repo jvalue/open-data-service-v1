@@ -109,7 +109,7 @@ public class CouchDbAccessorTest {
 	/**
 	 * Test insert twice same data.
 	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = DbException.class)
 	public void testInsertTwiceSameData() {
 		couchDbAdapter.insert(data);
 		couchDbAdapter.insert(data);
