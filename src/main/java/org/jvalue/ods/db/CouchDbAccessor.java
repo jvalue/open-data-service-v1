@@ -179,7 +179,11 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 
 		checkDbState();
 
-		db.create(data);
+		try {
+			db.create(data);
+		} catch (Exception ex) {
+			throw new DbException(ex);
+		}
 	}
 
 	/**

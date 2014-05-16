@@ -43,7 +43,6 @@ public class CombineFilter implements OdsFilter {
 	/** The schema. */
 	private MapSchema schema;
 
-	/** The combined schema. */
 	private MapSchema combinedSchema;
 
 	/**
@@ -53,8 +52,8 @@ public class CombineFilter implements OdsFilter {
 	 *            the data
 	 * @param schema
 	 *            the schema
-	 * @param combinedSchema
-	 *            the combined schema
+	 * @param combinedName
+	 *            the combined name
 	 */
 	public CombineFilter(MapValue data, MapSchema schema,
 			MapSchema combinedSchema) {
@@ -93,7 +92,6 @@ public class CombineFilter implements OdsFilter {
 	 * @param data
 	 *            the data
 	 * @param combinedMap
-	 *            the combined map
 	 */
 	private void traverseSchema(Schema sourceStructure, GenericValue data,
 			Map<String, GenericValue> combinedMap) {
@@ -127,16 +125,6 @@ public class CombineFilter implements OdsFilter {
 		}
 	}
 
-	/**
-	 * Insert combined value.
-	 * 
-	 * @param data
-	 *            the data
-	 * @param mv
-	 *            the mv
-	 * @param destinationStructure
-	 *            the destination structure
-	 */
 	private void insertCombinedValue(GenericValue data, MapValue mv,
 			Schema destinationStructure) {
 
@@ -148,6 +136,9 @@ public class CombineFilter implements OdsFilter {
 				if (e.getValue() == null) {
 
 					if (data instanceof MapValue) {
+
+						// check for correct value here
+
 						((MapValue) data).getMap().put(e.getKey(), mv);
 					} else {
 						String errmsg = "Invalid combinedSchema.";

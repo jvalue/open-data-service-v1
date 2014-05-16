@@ -292,7 +292,7 @@ public class JsonTranslator implements Translator {
 	 *            the root node
 	 * @return the generic value
 	 */
-	private GenericValue convertJson(JsonNode rootNode) {
+	public GenericValue convertJson(JsonNode rootNode) {
 
 		GenericValue gv = null;
 

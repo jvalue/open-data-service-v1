@@ -27,7 +27,6 @@ import org.jvalue.ExactValueRestriction;
 import org.jvalue.ValueType;
 import org.jvalue.numbers.Range;
 import org.jvalue.numbers.RangeBound;
-import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.GenericValue;
 import org.jvalue.ods.data.generic.MapValue;
 import org.jvalue.ods.data.schema.ListSchema;
@@ -36,8 +35,11 @@ import org.jvalue.ods.data.schema.NullSchema;
 import org.jvalue.ods.data.schema.NumberSchema;
 import org.jvalue.ods.data.schema.Schema;
 import org.jvalue.ods.data.schema.StringSchema;
+import org.jvalue.ods.db.DbAccessor;
+import org.jvalue.ods.db.DbFactory;
+import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.filter.CombineFilter;
-import org.jvalue.ods.grabber.Translator;
+import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.qa.PegelOnlineQualityAssurance;
 import org.jvalue.ods.schema.SchemaManager;
 import org.jvalue.ods.translator.JsonTranslator;
@@ -45,6 +47,7 @@ import org.jvalue.si.QuantityUnitType;
 import org.jvalue.si.SiUnit;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * The Class QualityAssuranceMain.
@@ -53,6 +56,11 @@ public class QualityAssuranceMain {
 
 	/** The value types. */
 	private static Map<String, ValueType<?>> valueTypes;
+
+	/** The accessor. */
+	private static DbAccessor<JsonNode> accessor;
+
+	private static DbAccessor<JsonNode> qaAccessor;
 
 	/**
 	 * Gets the value types.
@@ -80,25 +88,55 @@ public class QualityAssuranceMain {
 		valueTypes.put("electricalConductivity",
 				createElectricalConductivityType());
 
-		Translator jt = new JsonTranslator();
-
-		GenericValue gv = jt
-				.translate(new DataSource(
-						"http://faui2o2f.cs.fau.de:8080/open-data-service/ods/de/pegelonline/stations/rethem",
-						null));
-
 		MapSchema sourceCoordinateStructure = createSourceCoordinateStructure();
 		MapSchema destinationCoordinateStructure = createDestinationCoordinateStructure();
 		MapSchema combinedSchema = createCombinedSchema();
 
-		MapValue mv = new CombineFilter((MapValue) gv,
-				sourceCoordinateStructure, destinationCoordinateStructure)
-				.filter();
+		try {
+			accessor = DbFactory.createDbAccessor("ods");
+			accessor.connect();
+			qaAccessor = DbFactory.createDbAccessor("ods_qa");
+			qaAccessor.connect();
+			qaAccessor.deleteDatabase();
 
-		if (!SchemaManager.validateGenericValusFitsSchema(mv, combinedSchema)) {
-			System.err.println("Validation of quality-enhanced data failed.");
+			List<JsonNode> nodes = accessor.executeDocumentQuery(
+					"_design/pegelonline", "getAllStationsFlat", null);
+
+			for (JsonNode node : nodes) {
+				if (node.isTextual()) {
+					List<JsonNode> station = accessor.executeDocumentQuery(
+							"_design/pegelonline", "getSingleStation",
+							node.asText());
+					if (station == null || station.isEmpty()) {
+						continue;
+					}
+					GenericValue gv = new JsonTranslator().convertJson(station
+							.get(0));
+
+					MapValue mv = new CombineFilter((MapValue) gv,
+							sourceCoordinateStructure,
+							destinationCoordinateStructure).filter();
+
+					if (!SchemaManager.validateGenericValusFitsSchema(mv,
+							combinedSchema)) {
+						System.err
+								.println("Validation of quality-enhanced data failed.");
+					}
+
+					qaAccessor.insert(mv);
+
+				}
+			}
+			qaAccessor.insert(combinedSchema);
+
+		} catch (DbException e) {
+
+			String errmsg = "Error during Quality Assurance. " + e.getMessage();
+			System.err.println(errmsg);
+			Logging.error(QualityAssuranceMain.class, errmsg);
+			throw new RuntimeException(errmsg);
+
 		}
-
 		// System.out.println(new ObjectMapper().writeValueAsString(mv));
 
 		new PegelOnlineQualityAssurance().checkValueTypes();
