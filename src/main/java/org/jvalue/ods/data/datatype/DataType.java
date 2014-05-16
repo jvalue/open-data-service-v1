@@ -24,25 +24,26 @@ public class DataType {
 
 	/** The name. */
 	private String name;
-	
+
 	/** The data type. */
 	private DataTypeEnum dataType;
 
 	/**
 	 * Instantiates a new data type.
-	 *
-	 * @param name the name
-	 * @param dataType the data type
+	 * 
+	 * @param name
+	 *            the name
+	 * @param dataType
+	 *            the data type
 	 */
-	protected DataType(String name, DataTypeEnum dataType)
-	{
+	protected DataType(String name, DataTypeEnum dataType) {
 		this.setName(name);
 		this.setDataType(dataType);
 	}
 
 	/**
 	 * Gets the name.
-	 *
+	 * 
 	 * @return the name
 	 */
 	public String getName() {
@@ -51,8 +52,9 @@ public class DataType {
 
 	/**
 	 * Sets the name.
-	 *
-	 * @param name the new name
+	 * 
+	 * @param name
+	 *            the new name
 	 */
 	private void setName(String name) {
 		this.name = name;
@@ -60,7 +62,7 @@ public class DataType {
 
 	/**
 	 * Gets the data type.
-	 *
+	 * 
 	 * @return the data type
 	 */
 	public DataTypeEnum getDataType() {
@@ -69,11 +71,12 @@ public class DataType {
 
 	/**
 	 * Sets the data type.
-	 *
-	 * @param dataType the new data type
+	 * 
+	 * @param dataType
+	 *            the new data type
 	 */
 	private void setDataType(DataTypeEnum dataType) {
 		this.dataType = dataType;
 	}
-	
+
 }

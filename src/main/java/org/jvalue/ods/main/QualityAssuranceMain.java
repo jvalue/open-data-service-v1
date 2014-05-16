@@ -51,8 +51,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
  */
 public class QualityAssuranceMain {
 
-	private static Map <String, ValueType<?>> valueTypes;
-	
+	/** The value types. */
+	private static Map<String, ValueType<?>> valueTypes;
+
+	/**
+	 * Gets the value types.
+	 * 
+	 * @return the value types
+	 */
 	public static Map<String, ValueType<?>> getValueTypes() {
 		return valueTypes;
 	}
@@ -71,8 +77,9 @@ public class QualityAssuranceMain {
 		valueTypes.put("waterLevelTrend", createWaterLevelTrendType());
 		valueTypes.put("waterLevel", createWaterLevelType());
 		valueTypes.put("temperature", createTemperatureType());
-		valueTypes.put("electricalConductivity", createElectricalConductivityType());
-		
+		valueTypes.put("electricalConductivity",
+				createElectricalConductivityType());
+
 		Translator jt = new JsonTranslator();
 
 		GenericValue gv = jt
@@ -92,12 +99,17 @@ public class QualityAssuranceMain {
 			System.err.println("Validation of quality-enhanced data failed.");
 		}
 
-		//System.out.println(new ObjectMapper().writeValueAsString(mv));
+		// System.out.println(new ObjectMapper().writeValueAsString(mv));
 
 		new PegelOnlineQualityAssurance().checkValueTypes();
-		
+
 	}
 
+	/**
+	 * Creates the combined schema.
+	 * 
+	 * @return the map schema
+	 */
 	private static MapSchema createCombinedSchema() {
 		Map<String, Schema> water = new HashMap<String, Schema>();
 		water.put("shortname", new StringSchema());
@@ -182,6 +194,11 @@ public class QualityAssuranceMain {
 		return stationSchema;
 	}
 
+	/**
+	 * Creates the destination coordinate structure.
+	 * 
+	 * @return the map schema
+	 */
 	private static MapSchema createDestinationCoordinateStructure() {
 
 		Map<String, Schema> coordinate = new HashMap<String, Schema>();
@@ -192,6 +209,11 @@ public class QualityAssuranceMain {
 		return coordinateSchema;
 	}
 
+	/**
+	 * Creates the water level trend type.
+	 * 
+	 * @return the enum type
+	 */
 	private static EnumType createWaterLevelTrendType() {
 		ExactValueRestriction<String> a = new ExactValueRestriction<String>(
 				"-1");
@@ -204,6 +226,11 @@ public class QualityAssuranceMain {
 		return trendType;
 	}
 
+	/**
+	 * Creates the water level type.
+	 * 
+	 * @return the quantity unit type
+	 */
 	private static QuantityUnitType createWaterLevelType() {
 
 		RangeBound<Double> low = new RangeBound<Double>(0.0);
@@ -212,7 +239,11 @@ public class QualityAssuranceMain {
 		return new QuantityUnitType(range, SiUnit.m);
 	}
 
-
+	/**
+	 * Creates the temperature type.
+	 * 
+	 * @return the quantity unit type
+	 */
 	private static QuantityUnitType createTemperatureType() {
 
 		RangeBound<Double> low = new RangeBound<Double>(0.0);
@@ -221,6 +252,11 @@ public class QualityAssuranceMain {
 		return new QuantityUnitType(range, SiUnit.K);
 	}
 
+	/**
+	 * Creates the electrical conductivity type.
+	 * 
+	 * @return the quantity unit type
+	 */
 	private static QuantityUnitType createElectricalConductivityType() {
 
 		RangeBound<Double> low = new RangeBound<Double>(0.0);
@@ -228,5 +264,5 @@ public class QualityAssuranceMain {
 		Range<Double> range = new Range<Double>(low, high);
 		return new QuantityUnitType(range, SiUnit.s.divide(SiUnit.m));
 	}
-	
+
 }

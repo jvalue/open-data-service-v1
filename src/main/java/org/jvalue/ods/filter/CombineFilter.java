@@ -43,6 +43,7 @@ public class CombineFilter implements OdsFilter {
 	/** The schema. */
 	private MapSchema schema;
 
+	/** The combined schema. */
 	private MapSchema combinedSchema;
 
 	/**
@@ -52,8 +53,8 @@ public class CombineFilter implements OdsFilter {
 	 *            the data
 	 * @param schema
 	 *            the schema
-	 * @param combinedName
-	 *            the combined name
+	 * @param combinedSchema
+	 *            the combined schema
 	 */
 	public CombineFilter(MapValue data, MapSchema schema,
 			MapSchema combinedSchema) {
@@ -92,14 +93,15 @@ public class CombineFilter implements OdsFilter {
 	 * @param data
 	 *            the data
 	 * @param combinedMap
+	 *            the combined map
 	 */
 	private void traverseSchema(Schema sourceStructure, GenericValue data,
 			Map<String, GenericValue> combinedMap) {
 
 		if (sourceStructure instanceof MapSchema) {
 
-			for (Entry<String, Schema> e : ((MapSchema) sourceStructure).getMap()
-					.entrySet()) {
+			for (Entry<String, Schema> e : ((MapSchema) sourceStructure)
+					.getMap().entrySet()) {
 
 				if (e.getValue() instanceof NumberSchema
 						|| e.getValue() instanceof StringSchema
@@ -117,14 +119,24 @@ public class CombineFilter implements OdsFilter {
 
 			for (GenericValue gv : ((ListValue) data).getList()) {
 
-				traverseSchema(((ListSchema) sourceStructure).getList().get(0), gv,
-						combinedMap);
+				traverseSchema(((ListSchema) sourceStructure).getList().get(0),
+						gv, combinedMap);
 
 			}
 
 		}
 	}
 
+	/**
+	 * Insert combined value.
+	 * 
+	 * @param data
+	 *            the data
+	 * @param mv
+	 *            the mv
+	 * @param destinationStructure
+	 *            the destination structure
+	 */
 	private void insertCombinedValue(GenericValue data, MapValue mv,
 			Schema destinationStructure) {
 

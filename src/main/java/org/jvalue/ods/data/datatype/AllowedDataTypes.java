@@ -28,32 +28,33 @@ public class AllowedDataTypes {
 
 	/** The Constant dataTypeMap. */
 	private final static Map<String, DataType> dataTypeMap = createMap();
-	
+
 	/**
 	 * Gets the data type.
-	 *
-	 * @param name the name
+	 * 
+	 * @param name
+	 *            the name
 	 * @return the data type
 	 */
-	public static DataType getDataType(String name)
-	{
-		return dataTypeMap.get(name);		
+	public static DataType getDataType(String name) {
+		return dataTypeMap.get(name);
 	}
 
 	/**
 	 * Creates the map.
-	 *
+	 * 
 	 * @return the map
 	 */
 	private static Map<String, DataType> createMap() {
 		Map<String, DataType> result = new HashMap<String, DataType>();
-		result.put("Coordinate", new DataType("Coordinate", DataTypeEnum.Domain));
-        
-        result.put("String", new DataType("String", DataTypeEnum.Builtin));
-        result.put("Number", new DataType("Number", DataTypeEnum.Builtin));
-        result.put("Bool", new DataType("Bool", DataTypeEnum.Builtin));
-        
-        return Collections.unmodifiableMap(result);
+		result.put("Coordinate",
+				new DataType("Coordinate", DataTypeEnum.Domain));
+
+		result.put("String", new DataType("String", DataTypeEnum.Builtin));
+		result.put("Number", new DataType("Number", DataTypeEnum.Builtin));
+		result.put("Bool", new DataType("Bool", DataTypeEnum.Builtin));
+
+		return Collections.unmodifiableMap(result);
 	}
-	
+
 }
