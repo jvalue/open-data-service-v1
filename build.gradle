@@ -25,6 +25,8 @@ cargo {
     containerId = 'tomcat7x'
 }
 
+cargoRedeployRemote.dependsOn('war')
+cargoRunLocal.dependsOn('war')
 
 task wrapper(type: Wrapper) {
     gradleVersion = '1.10'
