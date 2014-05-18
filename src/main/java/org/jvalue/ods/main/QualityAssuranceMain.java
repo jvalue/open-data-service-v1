@@ -92,6 +92,8 @@ public class QualityAssuranceMain {
 		MapSchema destinationCoordinateStructure = createDestinationCoordinateStructure();
 		MapSchema combinedSchema = createCombinedSchema();
 
+		MapValue mv = null;
+
 		try {
 			accessor = DbFactory.createDbAccessor("ods");
 			accessor.connect();
@@ -100,20 +102,14 @@ public class QualityAssuranceMain {
 			qaAccessor.deleteDatabase();
 
 			List<JsonNode> nodes = accessor.executeDocumentQuery(
-					"_design/pegelonline", "getAllStationsFlat", null);
+					"_design/pegelonline", "getAllStations", null);
 
-			for (JsonNode node : nodes) {
-				if (node.isTextual()) {
-					List<JsonNode> station = accessor.executeDocumentQuery(
-							"_design/pegelonline", "getSingleStation",
-							node.asText());
-					if (station == null || station.isEmpty()) {
-						continue;
-					}
-					GenericValue gv = new JsonTranslator().convertJson(station
-							.get(0));
+			for (JsonNode station : nodes) {
+				if (station.isObject()) {
 
-					MapValue mv = new CombineFilter((MapValue) gv,
+					GenericValue gv = new JsonTranslator().convertJson(station);
+
+					mv = new CombineFilter((MapValue) gv,
 							sourceCoordinateStructure,
 							destinationCoordinateStructure).filter();
 
@@ -123,7 +119,17 @@ public class QualityAssuranceMain {
 								.println("Validation of quality-enhanced data failed.");
 					}
 
-					qaAccessor.insert(mv);
+					try {
+
+						qaAccessor.insert(mv);
+
+					} catch (Exception ex) {
+						String errmsg = "Could not insert MapValue: "
+								+ ex.getMessage();
+						System.err.println(errmsg);
+						Logging.error(QualityAssuranceMain.class, errmsg);
+						throw new RuntimeException(errmsg);
+					}
 
 				}
 			}
@@ -137,8 +143,6 @@ public class QualityAssuranceMain {
 			throw new RuntimeException(errmsg);
 
 		}
-		// System.out.println(new ObjectMapper().writeValueAsString(mv));
-
 		new PegelOnlineQualityAssurance().checkValueTypes();
 
 	}

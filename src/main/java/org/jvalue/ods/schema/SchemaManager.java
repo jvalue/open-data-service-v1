@@ -229,7 +229,7 @@ public class SchemaManager {
 			ProcessingReport report = jsonValidator.validate(jn, jsonNode);
 			result = report.isSuccess();
 			if (result == false) {
-				String error = "Could not validate json";
+				String error = "Could not validate json: " + report;
 				Logging.error(SchemaManager.class, error);
 				System.err.println(error);
 				return false;

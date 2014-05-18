@@ -36,6 +36,7 @@ import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.grabber.OsmGrabber;
 import org.jvalue.ods.grabber.PegelOnlineGrabber;
 import org.jvalue.ods.logger.Logging;
+
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
@@ -65,30 +66,17 @@ public class DataGrabberMain {
 
 		Logging.adminLog("grabbing Osm...");
 		grab(new OsmGrabber());
-		insertPoiIntoDatabase();
 
 		createCommonViews();
-		
+
 		Logging.adminLog("Update completed");
 	}
 
 	private static void createCommonViews() {
 		createView(new OdsView("_design/ods", "getClassObjectByType",
-				"function(doc) { if(doc.objectType) emit (doc.objectType, doc) }"));	
-		createView(new OdsView("_design/ods", "getAllClassObjects", 
-                "function(doc) { if(doc.objectType) emit (null, doc) }"));          
-	}
-
-	/**
-	 * Insert poi into database.
-	 */
-	private static void insertPoiIntoDatabase() {
-
-		createView(new OdsView("_design/poi", "getPoiByStation",
-				"function(doc) { if(doc.poi) emit (doc.longname, doc.poi) }"));
-		createView(new OdsView("_design/poi", "getPoiIdByStation",
-				"function(doc) { if(doc.poi) emit (doc.longname, doc._id) }"));
-
+				"function(doc) { if(doc.objectType) emit (doc.objectType, doc) }"));
+		createView(new OdsView("_design/ods", "getAllClassObjects",
+				"function(doc) { if(doc.objectType) emit (null, doc) }"));
 	}
 
 	/**
@@ -104,6 +92,7 @@ public class DataGrabberMain {
 
 			ListValue lv = (ListValue) gv;
 			List<MapValue> list = new LinkedList<>();
+
 			for (GenericValue i : lv.getList()) {
 				list.add((MapValue) i);
 			}

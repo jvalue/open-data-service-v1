@@ -93,7 +93,7 @@ public class JsonTranslator implements Translator {
 					dataSource.getDataSourceSchema()))
 				return null;
 		}
-
+		
 		return gv;
 	}
 

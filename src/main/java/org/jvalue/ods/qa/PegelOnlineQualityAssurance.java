@@ -88,9 +88,8 @@ public class PegelOnlineQualityAssurance {
 
 						try {
 
-							new Coordinate(Double.parseDouble(latitude
-									.toString()), Double.parseDouble(longitude
-									.toString()));
+							new Coordinate(latitude.asDouble(),
+									longitude.asDouble());
 						} catch (IllegalArgumentException e) {
 							String errmsg = "Invalid coordinate: " + latitude
 									+ "," + longitude;
