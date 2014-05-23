@@ -28,10 +28,10 @@ import org.jvalue.ValueType;
  * @param <E>
  *            the element type
  */
-public class MapType extends ValueType<Map<String, ValueType<?>>> {
+public class MapType<E> extends ValueType<Map<String, E>> {
 
 	/** The type map. */
-	private Map<String, ValueType<?>> typeMap;
+	private Map<String, ValueType<E>> typeMap;
 
 	/**
 	 * Instantiates a new map type.
@@ -39,7 +39,7 @@ public class MapType extends ValueType<Map<String, ValueType<?>>> {
 	 * @param typeMap
 	 *            the type map
 	 */
-	public MapType(Map<String, ValueType<?>> typeMap) {
+	public MapType(Map<String, ValueType<E>> typeMap) {
 		this.typeMap = typeMap;
 	}
 
@@ -49,11 +49,11 @@ public class MapType extends ValueType<Map<String, ValueType<?>>> {
 	 * @see org.jvalue.ValueType#isValidInstance(java.lang.Object)
 	 */
 	@Override
-	public boolean isValidInstance(Map<String, ValueType<?>> map) {
+	public boolean isValidInstance(Map<String, E> map) {
 
-		for (Entry<String, ValueType<?>> e : map.entrySet()) {
+		for (Entry<String, E> e : map.entrySet()) {
 
-			ValueType<?> k = typeMap.get(e.getKey());
+			ValueType<E> k = typeMap.get(e.getKey());
 
 			if (k == null) {
 				continue;
@@ -67,5 +67,4 @@ public class MapType extends ValueType<Map<String, ValueType<?>>> {
 
 		return true;
 	}
-
 }
