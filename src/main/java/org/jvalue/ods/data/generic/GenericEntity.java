@@ -17,37 +17,67 @@
  */
 package org.jvalue.ods.data.generic;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * The Class StringValue.
+ * The Class GenericEntity.
  */
-public class StringValue extends GenericValue {
+@JsonInclude(Include.NON_NULL)
+public abstract class GenericEntity implements Serializable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
-	/** The s. */
-	private String s;
+	/** The id. */
+	private String id;
+
+	/** The revision. */
+	private String revision;
 
 	/**
-	 * Instantiates a new string value.
+	 * Gets the id.
 	 * 
-	 * @param s
-	 *            the s
+	 * @return the id
 	 */
-	public StringValue(String s) {
-		this.s = s;
+	@JsonProperty("_id")
+	public String getId() {
+		return id;
 	}
 
 	/**
-	 * Gets the string.
+	 * Sets the id.
 	 * 
-	 * @return the string
+	 * @param s
+	 *            the new id
 	 */
-	@JsonValue
-	public String getString() {
-		return s;
+	@JsonProperty("_id")
+	public void setId(String s) {
+		id = s;
+	}
+
+	/**
+	 * Gets the revision.
+	 * 
+	 * @return the revision
+	 */
+	@JsonProperty("_rev")
+	public String getRevision() {
+		return revision;
+	}
+
+	/**
+	 * Sets the revision.
+	 * 
+	 * @param s
+	 *            the new revision
+	 */
+	@JsonProperty("_rev")
+	public void setRevision(String s) {
+		revision = s;
 	}
 
 }

@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.data.generic.GenericValue;
+import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.metadata.JacksonMetaData;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
@@ -65,7 +65,7 @@ public class NominatimRouter implements Router<Restlet> {
 				String message = "";
 				try {
 
-					GenericValue ret = null;
+					GenericEntity ret = null;
 
 					ret = new JsonTranslator()
 							.translate(new DataSource(
@@ -97,7 +97,7 @@ public class NominatimRouter implements Router<Restlet> {
 				String message = "";
 				try {
 
-					GenericValue ret = null;
+					GenericEntity ret = null;
 
 					ret = new JsonTranslator().translate(new DataSource(
 							"http://nominatim.openstreetmap.org/reverse?format=json"

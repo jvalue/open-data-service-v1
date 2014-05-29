@@ -27,8 +27,8 @@ import org.jvalue.ExactValueRestriction;
 import org.jvalue.ValueType;
 import org.jvalue.numbers.Range;
 import org.jvalue.numbers.RangeBound;
-import org.jvalue.ods.data.generic.GenericValue;
-import org.jvalue.ods.data.generic.MapValue;
+import org.jvalue.ods.data.generic.GenericEntity;
+import org.jvalue.ods.data.generic.MapObject;
 import org.jvalue.ods.data.schema.ListSchema;
 import org.jvalue.ods.data.schema.MapSchema;
 import org.jvalue.ods.data.schema.NullSchema;
@@ -92,7 +92,7 @@ public class QualityAssuranceMain {
 		MapSchema destinationCoordinateStructure = createDestinationCoordinateStructure();
 		MapSchema combinedSchema = createCombinedSchema();
 
-		MapValue mv = null;
+		MapObject mv = null;
 
 		try {
 			accessor = DbFactory.createDbAccessor("ods");
@@ -107,9 +107,9 @@ public class QualityAssuranceMain {
 			for (JsonNode station : nodes) {
 				if (station.isObject()) {
 
-					GenericValue gv = new JsonTranslator().convertJson(station);
+					GenericEntity gv = new JsonTranslator().convertJson(station);
 
-					mv = new CombineFilter((MapValue) gv,
+					mv = new CombineFilter((MapObject) gv,
 							sourceCoordinateStructure,
 							destinationCoordinateStructure).filter();
 

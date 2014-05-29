@@ -17,12 +17,13 @@
  */
 package org.jvalue.ods.filter;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.jvalue.ods.data.generic.GenericValue;
-import org.jvalue.ods.data.generic.ListValue;
-import org.jvalue.ods.data.generic.MapValue;
+import org.jvalue.ods.data.generic.GenericEntity;
+import org.jvalue.ods.data.generic.ListObject;
+import org.jvalue.ods.data.generic.MapObject;
 import org.jvalue.ods.data.schema.BoolSchema;
 import org.jvalue.ods.data.schema.ListSchema;
 import org.jvalue.ods.data.schema.MapSchema;
@@ -38,7 +39,7 @@ import org.jvalue.ods.schema.SchemaManager;
 public class CombineFilter implements OdsFilter {
 
 	/** The data. */
-	protected MapValue data;
+	protected MapObject data;
 
 	/** The schema. */
 	private MapSchema schema;
@@ -55,7 +56,7 @@ public class CombineFilter implements OdsFilter {
 	 * @param combinedName
 	 *            the combined name
 	 */
-	public CombineFilter(MapValue data, MapSchema schema,
+	public CombineFilter(MapObject data, MapSchema schema,
 			MapSchema combinedSchema) {
 		this.data = data;
 		this.schema = schema;
@@ -67,7 +68,7 @@ public class CombineFilter implements OdsFilter {
 	 * 
 	 * @return the map value
 	 */
-	public MapValue filter() {
+	public MapObject filter() {
 
 		if (!SchemaManager.validateGenericValusFitsSchema(data, schema)) {
 			Logging.info(this.getClass(),
@@ -75,7 +76,7 @@ public class CombineFilter implements OdsFilter {
 			return data;
 		}
 
-		MapValue mv = new MapValue();
+		MapObject mv = new MapObject();
 
 		traverseSchema(schema, data, mv.getMap());
 
@@ -89,12 +90,12 @@ public class CombineFilter implements OdsFilter {
 	 * 
 	 * @param sourceStructure
 	 *            the schema
-	 * @param data
+	 * @param serializable
 	 *            the data
-	 * @param combinedMap
+	 * @param map
 	 */
-	private void traverseSchema(Schema sourceStructure, GenericValue data,
-			Map<String, GenericValue> combinedMap) {
+	private void traverseSchema(Schema sourceStructure, Serializable serializable,
+			Map<String, Serializable> map) {
 
 		if (sourceStructure instanceof MapSchema) {
 
@@ -105,27 +106,27 @@ public class CombineFilter implements OdsFilter {
 						|| e.getValue() instanceof StringSchema
 						|| e.getValue() instanceof BoolSchema) {
 
-					combinedMap.put(e.getKey(), ((MapValue) data).getMap()
+					map.put(e.getKey(), ((MapObject) serializable).getMap()
 							.remove(e.getKey()));
 
 				} else {
-					traverseSchema(e.getValue(), ((MapValue) data).getMap()
-							.get(e.getKey()), combinedMap);
+					traverseSchema(e.getValue(), ((MapObject) serializable).getMap()
+							.get(e.getKey()), map);
 				}
 			}
 		} else if (sourceStructure instanceof ListSchema) {
 
-			for (GenericValue gv : ((ListValue) data).getList()) {
+			for (GenericEntity gv : ((ListObject) serializable).getList()) {
 
 				traverseSchema(((ListSchema) sourceStructure).getList().get(0),
-						gv, combinedMap);
+						gv, map);
 
 			}
 
 		}
 	}
 
-	private void insertCombinedValue(GenericValue data, MapValue mv,
+	private void insertCombinedValue(Serializable serializable, MapObject mv,
 			Schema destinationStructure) {
 
 		if (destinationStructure instanceof MapSchema) {
@@ -135,11 +136,10 @@ public class CombineFilter implements OdsFilter {
 
 				if (e.getValue() == null) {
 
-					if (data instanceof MapValue) {
+					if (serializable instanceof MapObject) {
 
 						// check for correct value here
-
-						((MapValue) data).getMap().put(e.getKey(), mv);
+						((MapObject) serializable).getMap().put(e.getKey(), mv);
 					} else {
 						String errmsg = "Invalid combinedSchema.";
 						Logging.error(this.getClass(), errmsg);
@@ -149,26 +149,26 @@ public class CombineFilter implements OdsFilter {
 
 				} else {
 
-					if (((MapValue) data).getMap().get(e.getKey()) == null) {
-						((MapValue) data).getMap().put(e.getKey(),
-								new MapValue());
+					if (((MapObject) serializable).getMap().get(e.getKey()) == null) {
+						((MapObject) serializable).getMap().put(e.getKey(),
+								new MapObject());
 					}
 
 					insertCombinedValue(
-							((MapValue) data).getMap().get(e.getKey()), mv,
+							((MapObject) serializable).getMap().get(e.getKey()), mv,
 							e.getValue());
 				}
 			}
 		} else if (destinationStructure instanceof ListSchema) {
 
-			if (!(data instanceof ListValue)) {
+			if (!(serializable instanceof ListObject)) {
 				String errmsg = "Invalid combinedSchema.";
 				Logging.error(this.getClass(), errmsg);
 				System.err.println(errmsg);
 				throw new RuntimeException(errmsg);
 			}
 
-			for (GenericValue gv : ((ListValue) data).getList()) {
+			for (GenericEntity gv : ((ListObject) serializable).getList()) {
 
 				insertCombinedValue(gv, mv, ((ListSchema) destinationStructure)
 						.getList().get(0));

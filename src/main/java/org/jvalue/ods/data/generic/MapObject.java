@@ -17,6 +17,7 @@
  */
 package org.jvalue.ods.data.generic;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,18 +29,18 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * The Class MapValue.
  */
 @JsonInclude(Include.NON_NULL)
-public class MapValue extends GenericValue {
+public class MapObject extends GenericEntity implements Serializable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
 	/** The map. */
-	private Map<String, GenericValue> map = new HashMap<String, GenericValue>();
+	private Map<String, Serializable> map = new HashMap<String, Serializable>();
 
 	/**
 	 * Instantiates a new map value.
 	 */
-	public MapValue() {
+	public MapObject() {
 
 	}
 
@@ -49,7 +50,7 @@ public class MapValue extends GenericValue {
 	 * @return the map
 	 */
 	@JsonValue
-	public Map<String, GenericValue> getMap() {
+	public Map<String, Serializable> getMap() {
 		return map;
 	}
 

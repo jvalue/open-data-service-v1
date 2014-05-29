@@ -28,7 +28,7 @@ import org.ektorp.support.CouchDbDocument;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.jvalue.ods.data.generic.MapValue;
+import org.jvalue.ods.data.generic.MapObject;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.exception.DbException;
@@ -310,7 +310,7 @@ public class CouchDbAccessorTest {
 	public void testExecuteBulkWithoutConnect() {
 		couchDbAdapter = DbFactory.createDbAccessor(testDbName);
 		assertNotNull(couchDbAdapter);
-		couchDbAdapter.executeBulk(new LinkedList<MapValue>(), null);
+		couchDbAdapter.executeBulk(new LinkedList<MapObject>(), null);
 	}
 
 	/**
@@ -322,10 +322,10 @@ public class CouchDbAccessorTest {
 		assertNotNull(couchDbAdapter);
 		couchDbAdapter.connect();
 
-		List<MapValue> list = new LinkedList<>();
-		list.add(new MapValue());
-		list.add(new MapValue());
-		list.add(new MapValue());
+		List<MapObject> list = new LinkedList<>();
+		list.add(new MapObject());
+		list.add(new MapObject());
+		list.add(new MapObject());
 
 		couchDbAdapter.executeBulk(list, null);
 		couchDbAdapter.deleteDatabase();
@@ -337,10 +337,10 @@ public class CouchDbAccessorTest {
 	@Test
 	public void testExecuteBulk() {
 
-		List<MapValue> list = new LinkedList<>();
-		list.add(new MapValue());
-		list.add(new MapValue());
-		list.add(new MapValue());
+		List<MapObject> list = new LinkedList<>();
+		list.add(new MapObject());
+		list.add(new MapObject());
+		list.add(new MapObject());
 
 		couchDbAdapter.executeBulk(list, null);
 	}

@@ -20,7 +20,7 @@ package org.jvalue.ods.db;
 import java.util.Collection;
 import java.util.List;
 
-import org.jvalue.ods.data.generic.MapValue;
+import org.jvalue.ods.data.generic.MapObject;
 import org.jvalue.ods.data.schema.MapSchema;
 
 /**
@@ -107,6 +107,6 @@ public interface DbAccessor<Q> {
 	 * @param schema
 	 *            the schema
 	 */
-	public void executeBulk(Collection<MapValue> objects, MapSchema schema);
+	public void executeBulk(Collection<MapObject> objects, MapSchema schema);
 
 }

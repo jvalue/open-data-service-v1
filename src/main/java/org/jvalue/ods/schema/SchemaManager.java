@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.jvalue.ods.data.generic.GenericValue;
+import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.schema.BoolSchema;
 import org.jvalue.ods.data.schema.ListSchema;
 import org.jvalue.ods.data.schema.MapSchema;
@@ -193,7 +193,7 @@ public class SchemaManager {
 	 *            the db schema
 	 * @return true, if successful
 	 */
-	public static boolean validateGenericValusFitsSchema(GenericValue gv,
+	public static boolean validateGenericValusFitsSchema(GenericEntity gv,
 			Schema dbSchema) {
 		ObjectMapper mapper = new ObjectMapper();
 

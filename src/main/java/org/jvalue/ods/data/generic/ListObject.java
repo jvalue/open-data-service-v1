@@ -17,29 +17,52 @@
  */
 package org.jvalue.ods.data.generic;
 
-import javax.lang.model.type.NullType;
+import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * The Class NullValue.
+ * The Class ListObject.
  */
-public class NullValue extends GenericValue {
+@JsonInclude(Include.NON_NULL)
+public class ListObject extends GenericEntity implements Serializable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
-	/** The n. */
-	private NullType n = null;
+	/** The list. */
+	private List<GenericEntity> list = new LinkedList<GenericEntity>();
 
 	/**
-	 * Gets the null.
+	 * Instantiates a new list object.
+	 */
+	public ListObject() {
+	}
+
+	/**
+	 * Instantiates a new list object.
 	 * 
-	 * @return the null
+	 * @param list
+	 *            the list
+	 */
+	@JsonCreator
+	public ListObject(List<GenericEntity> list) {
+		this.list = list;
+	}
+
+	/**
+	 * Gets the list.
+	 * 
+	 * @return the list
 	 */
 	@JsonValue
-	public NullType getNull() {
-		return n;
+	public List<GenericEntity> getList() {
+		return list;
 	}
 
 }

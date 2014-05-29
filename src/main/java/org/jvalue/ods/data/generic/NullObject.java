@@ -19,65 +19,29 @@ package org.jvalue.ods.data.generic;
 
 import java.io.Serializable;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.lang.model.type.NullType;
+
+import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * The Class GenericValue.
+ * The Class NullValue.
  */
-@JsonInclude(Include.NON_NULL)
-public abstract class GenericValue implements Serializable {
+public class NullObject extends GenericEntity implements Serializable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
-	/** The id. */
-	private String id;
-
-	/** The revision. */
-	private String revision;
+	/** The n. */
+	private NullType n = null;
 
 	/**
-	 * Gets the id.
+	 * Gets the null.
 	 * 
-	 * @return the id
+	 * @return the null
 	 */
-	@JsonProperty("_id")
-	public String getId() {
-		return id;
-	}
-
-	/**
-	 * Sets the id.
-	 * 
-	 * @param s
-	 *            the new id
-	 */
-	@JsonProperty("_id")
-	public void setId(String s) {
-		id = s;
-	}
-
-	/**
-	 * Gets the revision.
-	 * 
-	 * @return the revision
-	 */
-	@JsonProperty("_rev")
-	public String getRevision() {
-		return revision;
-	}
-
-	/**
-	 * Sets the revision.
-	 * 
-	 * @param s
-	 *            the new revision
-	 */
-	@JsonProperty("_rev")
-	public void setRevision(String s) {
-		revision = s;
+	@JsonValue
+	public NullType getNull() {
+		return n;
 	}
 
 }

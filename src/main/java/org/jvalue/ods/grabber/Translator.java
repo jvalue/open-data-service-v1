@@ -18,7 +18,7 @@
 package org.jvalue.ods.grabber;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.data.generic.GenericValue;
+import org.jvalue.ods.data.generic.GenericEntity;
 
 /**
  * The Interface Translator.
@@ -32,5 +32,5 @@ public interface Translator {
 	 *            the data source
 	 * @return the generic value
 	 */
-	public GenericValue translate(DataSource dataSource);
+	public GenericEntity translate(DataSource dataSource);
 }

@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
-import org.jvalue.ods.data.generic.MapValue;
+import org.jvalue.ods.data.generic.MapObject;
 import org.jvalue.ods.data.schema.MapSchema;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -211,7 +211,7 @@ public class MockDbAccessor implements DbAccessor<JsonNode> {
 	 * @see org.jvalue.ods.db.DbAccessor#executeBulk(java.util.Collection)
 	 */
 	@Override
-	public void executeBulk(Collection<MapValue> objects, MapSchema schema) {
+	public void executeBulk(Collection<MapObject> objects, MapSchema schema) {
 
 		checkDbState();
 

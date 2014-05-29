@@ -11,10 +11,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.data.generic.GenericValue;
-import org.jvalue.ods.data.generic.ListValue;
-import org.jvalue.ods.data.generic.MapValue;
-import org.jvalue.ods.data.generic.StringValue;
+import org.jvalue.ods.data.generic.GenericEntity;
+import org.jvalue.ods.data.generic.ListObject;
+import org.jvalue.ods.data.generic.MapObject;
+import org.jvalue.ods.data.generic.StringObject;
 import org.jvalue.ods.grabber.Translator;
 import org.jvalue.ods.logger.Logging;
 import org.w3c.dom.Document;
@@ -36,7 +36,7 @@ public class XmlTranslator implements Translator {
 	 * @return the generic value
 	 */
 	@Override
-	public GenericValue translate(DataSource source) {
+	public GenericEntity translate(DataSource source) {
 		if (source == null)
 			throw new IllegalArgumentException("source is null");
 
@@ -61,8 +61,8 @@ public class XmlTranslator implements Translator {
 			doc.getDocumentElement().normalize();
 			Node rootNode = doc.getFirstChild();
 
-			GenericValue gv = new MapValue();
-			((MapValue) gv).getMap().put(rootNode.getNodeName(),
+			GenericEntity gv = new MapObject();
+			((MapObject) gv).getMap().put(rootNode.getNodeName(),
 					convertXml(rootNode, false));
 
 			return gv;
@@ -82,20 +82,20 @@ public class XmlTranslator implements Translator {
 	 *            the is multiple
 	 * @return the generic value
 	 */
-	private GenericValue convertXml(Node node, boolean isMultiple) {
-		GenericValue gv = null;
+	private GenericEntity convertXml(Node node, boolean isMultiple) {
+		GenericEntity gv = null;
 
 		if (node.getNodeType() == Node.ELEMENT_NODE) {
 			if (isMultiple || !isMultipleNode(node)) {
 				gv = fillNodeRec(node);
 			} else {
-				gv = new ListValue();
+				gv = new ListObject();
 				gv = fillMultipleNodes(node);
 			}
 		} else if ((node.getNodeType() == Node.ATTRIBUTE_NODE)
 				|| (node.getNodeType() == Node.TEXT_NODE)) {
 			String s = node.getNodeValue();
-			gv = new StringValue(s);
+			gv = new StringObject(s);
 		}
 
 		return gv;
@@ -108,10 +108,10 @@ public class XmlTranslator implements Translator {
 	 *            the node
 	 * @return the generic value
 	 */
-	private GenericValue fillMultipleNodes(Node node) {
+	private GenericEntity fillMultipleNodes(Node node) {
 		Node tmpNode = node;
 
-		ListValue lv = new ListValue();
+		ListObject lv = new ListObject();
 
 		String currentNodeName = node.getNodeName();
 
@@ -142,16 +142,16 @@ public class XmlTranslator implements Translator {
 	 *            the node
 	 * @return the generic value
 	 */
-	private GenericValue fillNodeRec(Node node) {
+	private GenericEntity fillNodeRec(Node node) {
 
-		GenericValue mv = new MapValue();
+		GenericEntity mv = new MapObject();
 
 		if (node.hasAttributes()) {
 			NamedNodeMap map = node.getAttributes();
 			for (int i = 0; i < map.getLength(); i++) {
 				Node n = map.item(i);
-				GenericValue gv = convertXml(n, false);
-				((MapValue) mv).getMap().put(n.getNodeName(), gv);
+				GenericEntity gv = convertXml(n, false);
+				((MapObject) mv).getMap().put(n.getNodeName(), gv);
 			}
 		}
 
@@ -160,15 +160,15 @@ public class XmlTranslator implements Translator {
 
 			if ((list.getLength() == 1)
 					&& (list.item(0).getNodeType() == Node.TEXT_NODE)) {
-				mv = new StringValue(list.item(0).getNodeValue());
+				mv = new StringObject(list.item(0).getNodeValue());
 				return mv;
 			}
 
 			for (int i = 0; i < list.getLength(); i++) {
 				Node n = list.item(i);
 				if (n.getNodeType() == Node.ELEMENT_NODE) {
-					GenericValue gv = convertXml(n, false);
-					((MapValue) mv).getMap().put(n.getNodeName(), gv);
+					GenericEntity gv = convertXml(n, false);
+					((MapObject) mv).getMap().put(n.getNodeName(), gv);
 				}
 
 			}

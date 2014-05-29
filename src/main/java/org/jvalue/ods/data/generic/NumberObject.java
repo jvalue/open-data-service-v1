@@ -17,51 +17,37 @@
  */
 package org.jvalue.ods.data.generic;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * The Class ListValue.
+ * The Class NumberObject.
  */
-@JsonInclude(Include.NON_NULL)
-public class ListValue extends GenericValue {
+public class NumberObject extends GenericEntity {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
-	/** The list. */
-	private List<GenericValue> list = new LinkedList<GenericValue>();
+	/** The number. */
+	private Number number;
 
 	/**
-	 * Instantiates a new list value.
+	 * Instantiates a new number value.
+	 * 
+	 * @param number
+	 *            the number
 	 */
-	public ListValue() {
+	public NumberObject(Number number) {
+		this.number = number;
 	}
 
 	/**
-	 * Instantiates a new list value.
+	 * Gets the number.
 	 * 
-	 * @param list
-	 *            the list
-	 */
-	@JsonCreator
-	public ListValue(List<GenericValue> list) {
-		this.list = list;
-	}
-
-	/**
-	 * Gets the list.
-	 * 
-	 * @return the list
+	 * @return the number
 	 */
 	@JsonValue
-	public List<GenericValue> getList() {
-		return list;
+	public Number getNumber() {
+		return number;
 	}
 
 }

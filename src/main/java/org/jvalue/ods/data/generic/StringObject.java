@@ -17,37 +17,39 @@
  */
 package org.jvalue.ods.data.generic;
 
+import java.io.Serializable;
+
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * The Class BoolValue.
+ * The Class StringObject.
  */
-public class BoolValue extends GenericValue {
+public class StringObject extends GenericEntity implements Serializable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
-	/** The bool. */
-	private boolean bool;
+	/** The s. */
+	private String s;
 
 	/**
-	 * Instantiates a new bool value.
+	 * Instantiates a new string value.
 	 * 
-	 * @param bool
-	 *            the bool
+	 * @param s
+	 *            the s
 	 */
-	public BoolValue(boolean bool) {
-		this.bool = bool;
+	public StringObject(String s) {
+		this.s = s;
 	}
 
 	/**
-	 * Gets the bool.
+	 * Gets the string.
 	 * 
-	 * @return the bool
+	 * @return the string
 	 */
 	@JsonValue
-	public boolean getBool() {
-		return bool;
+	public String getString() {
+		return s;
 	}
 
 }

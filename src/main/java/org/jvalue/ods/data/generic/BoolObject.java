@@ -17,37 +17,39 @@
  */
 package org.jvalue.ods.data.generic;
 
+import java.io.Serializable;
+
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * The Class NumberValue.
+ * The Class BoolObject.
  */
-public class NumberValue extends GenericValue {
+public class BoolObject extends GenericEntity implements Serializable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
-	/** The number. */
-	private Number number;
+	/** The bool. */
+	private boolean bool;
 
 	/**
-	 * Instantiates a new number value.
+	 * Instantiates a new bool value.
 	 * 
-	 * @param number
-	 *            the number
+	 * @param bool
+	 *            the bool
 	 */
-	public NumberValue(Number number) {
-		this.number = number;
+	public BoolObject(boolean bool) {
+		this.bool = bool;
 	}
 
 	/**
-	 * Gets the number.
+	 * Gets the bool.
 	 * 
-	 * @return the number
+	 * @return the bool
 	 */
 	@JsonValue
-	public Number getNumber() {
-		return number;
+	public boolean getBool() {
+		return bool;
 	}
 
 }

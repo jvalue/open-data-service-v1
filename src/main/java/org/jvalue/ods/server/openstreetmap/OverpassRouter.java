@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.data.generic.GenericValue;
+import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.metadata.JacksonMetaData;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
@@ -58,7 +58,7 @@ public class OverpassRouter implements Router<Restlet> {
 				// Print the requested URI path
 				String message = "";
 
-				GenericValue ret = null;
+				GenericEntity ret = null;
 				try {
 					ret = new JsonTranslator().translate(new DataSource(
 							"http://overpass.osm.rambler.ru/cgi/interpreter?data=[out:json];node[name%3D"

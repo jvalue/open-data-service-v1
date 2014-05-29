@@ -22,13 +22,13 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.data.generic.BoolValue;
-import org.jvalue.ods.data.generic.GenericValue;
-import org.jvalue.ods.data.generic.ListValue;
-import org.jvalue.ods.data.generic.MapValue;
-import org.jvalue.ods.data.generic.NullValue;
-import org.jvalue.ods.data.generic.NumberValue;
-import org.jvalue.ods.data.generic.StringValue;
+import org.jvalue.ods.data.generic.BoolObject;
+import org.jvalue.ods.data.generic.GenericEntity;
+import org.jvalue.ods.data.generic.ListObject;
+import org.jvalue.ods.data.generic.MapObject;
+import org.jvalue.ods.data.generic.NullObject;
+import org.jvalue.ods.data.generic.NumberObject;
+import org.jvalue.ods.data.generic.StringObject;
 import org.jvalue.ods.data.schema.BoolSchema;
 import org.jvalue.ods.data.schema.ListSchema;
 import org.jvalue.ods.data.schema.MapSchema;
@@ -55,7 +55,7 @@ public class JsonTranslator implements Translator {
 	 * @return the generic value
 	 */
 	@Override
-	public GenericValue translate(DataSource dataSource) {
+	public GenericEntity translate(DataSource dataSource) {
 		if ((dataSource == null) || (dataSource.getUrl() == null))
 			throw new IllegalArgumentException("source is null");
 
@@ -86,7 +86,7 @@ public class JsonTranslator implements Translator {
 			return null;
 		}
 
-		GenericValue gv = convertJson(rootNode);
+		GenericEntity gv = convertJson(rootNode);
 
 		if (dataSource.getDataSourceSchema() != null) {
 			if (!SchemaManager.validateGenericValusFitsSchema(gv,
@@ -292,24 +292,24 @@ public class JsonTranslator implements Translator {
 	 *            the root node
 	 * @return the generic value
 	 */
-	public GenericValue convertJson(JsonNode rootNode) {
+	public GenericEntity convertJson(JsonNode rootNode) {
 
-		GenericValue gv = null;
+		GenericEntity gv = null;
 
 		if (rootNode.isBoolean()) {
-			gv = new BoolValue(rootNode.asBoolean());
+			gv = new BoolObject(rootNode.asBoolean());
 		} else if (rootNode.isArray()) {
-			gv = new ListValue();
-			fillListRec(rootNode, (ListValue) gv);
+			gv = new ListObject();
+			fillListRec(rootNode, (ListObject) gv);
 		} else if (rootNode.isObject()) {
-			gv = new MapValue();
-			fillMapRec(rootNode, (MapValue) gv);
+			gv = new MapObject();
+			fillMapRec(rootNode, (MapObject) gv);
 		} else if (rootNode.isNull()) {
-			gv = new NullValue();
+			gv = new NullObject();
 		} else if (rootNode.isNumber()) {
-			gv = new NumberValue(rootNode.numberValue());
+			gv = new NumberObject(rootNode.numberValue());
 		} else if (rootNode.isTextual()) {
-			gv = new StringValue(rootNode.asText());
+			gv = new StringObject(rootNode.asText());
 		}
 
 		return gv;
@@ -323,9 +323,9 @@ public class JsonTranslator implements Translator {
 	 * @param lv
 	 *            the lv
 	 */
-	private void fillListRec(JsonNode node, ListValue lv) {
+	private void fillListRec(JsonNode node, ListObject lv) {
 		for (JsonNode n : node) {
-			GenericValue gv = convertJson(n);
+			GenericEntity gv = convertJson(n);
 			lv.getList().add(gv);
 		}
 	}
@@ -338,12 +338,12 @@ public class JsonTranslator implements Translator {
 	 * @param mv
 	 *            the mv
 	 */
-	private void fillMapRec(JsonNode node, MapValue mv) {
+	private void fillMapRec(JsonNode node, MapObject mv) {
 
 		Iterator<Map.Entry<String, JsonNode>> fields = node.fields();
 		while (fields.hasNext()) {
 			Map.Entry<String, JsonNode> field = fields.next();
-			GenericValue gv = convertJson(field.getValue());
+			GenericEntity gv = convertJson(field.getValue());
 			mv.getMap().put(field.getKey(), gv);
 		}
 	}

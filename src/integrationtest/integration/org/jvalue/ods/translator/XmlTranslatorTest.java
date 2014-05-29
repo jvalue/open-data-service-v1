@@ -23,7 +23,7 @@ import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.data.generic.GenericValue;
+import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.translator.XmlTranslator;
 
 /**
@@ -51,7 +51,7 @@ public class XmlTranslatorTest {
 	 */
 	@Test
 	public void testTranslate() {
-		GenericValue gv = translator.translate(new DataSource("/nbgcity.osm",
+		GenericEntity gv = translator.translate(new DataSource("/nbgcity.osm",
 				null));
 		assertNotNull(gv);
 	}
@@ -61,7 +61,7 @@ public class XmlTranslatorTest {
 	 */
 	@Test
 	public void testTranslateNotExistingFile() {
-		GenericValue gv = translator.translate(new DataSource(
+		GenericEntity gv = translator.translate(new DataSource(
 				"NotExistingFile", null));
 		assertNull(gv);
 	}

@@ -24,8 +24,8 @@ import java.util.Map;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.OdsView;
-import org.jvalue.ods.data.generic.GenericValue;
-import org.jvalue.ods.data.generic.ListValue;
+import org.jvalue.ods.data.generic.GenericEntity;
+import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.metadata.JacksonMetaData;
 import org.jvalue.ods.data.metadata.OdsMetaData;
 import org.jvalue.ods.data.schema.ListSchema;
@@ -48,13 +48,13 @@ public class PegelOnlineGrabber implements Grabber {
 	 * @see org.jvalue.ods.main.Grabber#grab()
 	 */
 	@Override
-	public GenericValue grab() {
+	public GenericEntity grab() {
 
 		Translator translator = new JsonTranslator();
 
 		Schema schema = getDataSourceSchema();
 
-		ListValue list = (ListValue) translator
+		ListObject list = (ListObject) translator
 				.translate(new DataSource(
 						"http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true",
 						schema));

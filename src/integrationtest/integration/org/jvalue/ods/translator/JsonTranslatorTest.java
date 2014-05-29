@@ -28,7 +28,7 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.data.generic.GenericValue;
+import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.schema.ListSchema;
 import org.jvalue.ods.data.schema.MapSchema;
 import org.jvalue.ods.data.schema.NumberSchema;
@@ -65,7 +65,7 @@ public class JsonTranslatorTest {
 	 */
 	@Test
 	public void testTranslate() {
-		GenericValue gv = translator.translate(new DataSource(TestUrl, null));
+		GenericEntity gv = translator.translate(new DataSource(TestUrl, null));
 		assertNotNull(gv);
 	}
 
@@ -74,7 +74,7 @@ public class JsonTranslatorTest {
 	 */
 	@Test
 	public void testTranslateInvalidSource() {
-		GenericValue gv = translator.translate(new DataSource("invalidsource",
+		GenericEntity gv = translator.translate(new DataSource("invalidsource",
 				null));
 		assertNull(gv);
 	}
@@ -165,7 +165,7 @@ public class JsonTranslatorTest {
 	public void testTranslateWithSchema() {
 		Schema schema = createOpenWeatherSchema();
 		String url = "http://api.openweathermap.org/data/2.5/weather?q=Nuremberg,de";
-		GenericValue gv = translator.translate(new DataSource(url, schema));
+		GenericEntity gv = translator.translate(new DataSource(url, schema));
 		assertNotNull(gv);
 	}
 

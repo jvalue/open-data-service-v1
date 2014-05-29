@@ -24,7 +24,7 @@ import java.util.LinkedList;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.jvalue.ods.data.generic.MapValue;
+import org.jvalue.ods.data.generic.MapObject;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -270,7 +270,7 @@ public class DbAccessorTest {
 	public void testExecuteBulkWithoutConnect() {
 		DbAccessor<JsonNode> couchDbFooAccessor = DbFactory
 				.createMockDbAccessor("foo");
-		couchDbFooAccessor.executeBulk(new LinkedList<MapValue>(), null);
+		couchDbFooAccessor.executeBulk(new LinkedList<MapObject>(), null);
 	}
 
 	/**
@@ -282,7 +282,7 @@ public class DbAccessorTest {
 				.createMockDbAccessor("foo");
 		assertNotNull(couchDbFooAccessor);
 		couchDbFooAccessor.connect();
-		couchDbFooAccessor.executeBulk(new LinkedList<MapValue>(), null);
+		couchDbFooAccessor.executeBulk(new LinkedList<MapObject>(), null);
 		couchDbFooAccessor.deleteDatabase();
 	}
 

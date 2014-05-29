@@ -26,9 +26,9 @@ import org.ektorp.support.DesignDocument.View;
 import org.ektorp.support.DesignDocumentFactory;
 import org.ektorp.support.StdDesignDocumentFactory;
 import org.jvalue.ods.data.OdsView;
-import org.jvalue.ods.data.generic.GenericValue;
-import org.jvalue.ods.data.generic.ListValue;
-import org.jvalue.ods.data.generic.MapValue;
+import org.jvalue.ods.data.generic.GenericEntity;
+import org.jvalue.ods.data.generic.ListObject;
+import org.jvalue.ods.data.generic.MapObject;
 import org.jvalue.ods.data.schema.MapSchema;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
@@ -87,20 +87,20 @@ public class DataGrabberMain {
 	 * @param gv
 	 *            the gv
 	 */
-	private static void insertDbBulk(MapSchema schema, GenericValue gv) {
-		if (gv instanceof ListValue) {
+	private static void insertDbBulk(MapSchema schema, GenericEntity gv) {
+		if (gv instanceof ListObject) {
 
-			ListValue lv = (ListValue) gv;
-			List<MapValue> list = new LinkedList<>();
+			ListObject lv = (ListObject) gv;
+			List<MapObject> list = new LinkedList<>();
 
-			for (GenericValue i : lv.getList()) {
-				list.add((MapValue) i);
+			for (GenericEntity i : lv.getList()) {
+				list.add((MapObject) i);
 			}
 
 			accessor.executeBulk(list, schema);
-		} else if (gv instanceof MapValue) {
-			LinkedList<MapValue> list = new LinkedList<>();
-			list.add((MapValue) gv);
+		} else if (gv instanceof MapObject) {
+			LinkedList<MapObject> list = new LinkedList<>();
+			list.add((MapObject) gv);
 			accessor.executeBulk(list, schema);
 		} else {
 			String errmsg = "GenericValue must be ListValue or MapValue.";
@@ -117,7 +117,7 @@ public class DataGrabberMain {
 	 *            the grabber
 	 */
 	private static void grab(Grabber grabber) {
-		GenericValue data = grabber.grab();
+		GenericEntity data = grabber.grab();
 
 		insertDbBulk(grabber.getDbSchema(), data);
 

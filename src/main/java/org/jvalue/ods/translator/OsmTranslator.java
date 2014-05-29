@@ -20,6 +20,7 @@ package org.jvalue.ods.translator;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
@@ -27,11 +28,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.data.generic.GenericValue;
-import org.jvalue.ods.data.generic.ListValue;
-import org.jvalue.ods.data.generic.MapValue;
-import org.jvalue.ods.data.generic.NumberValue;
-import org.jvalue.ods.data.generic.StringValue;
+import org.jvalue.ods.data.generic.GenericEntity;
+import org.jvalue.ods.data.generic.ListObject;
+import org.jvalue.ods.data.generic.MapObject;
+import org.jvalue.ods.data.generic.NumberObject;
+import org.jvalue.ods.data.generic.StringObject;
 import org.jvalue.ods.grabber.Translator;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.schema.SchemaManager;
@@ -54,7 +55,7 @@ import org.openstreetmap.osmosis.xml.v0_6.XmlReader;
 public class OsmTranslator implements Translator {
 
 	/** The lv. */
-	private ListValue lv = new ListValue();
+	private ListObject lv = new ListObject();
 
 	/**
 	 * Translate.
@@ -64,7 +65,7 @@ public class OsmTranslator implements Translator {
 	 * @return the osm data
 	 */
 	@Override
-	public GenericValue translate(DataSource source) {
+	public GenericEntity translate(DataSource source) {
 		if (source == null) {
 			throw new IllegalArgumentException("source is null");
 		}
@@ -120,7 +121,7 @@ public class OsmTranslator implements Translator {
 		Sink sinkImplementation = new Sink() {
 			public void process(EntityContainer entityContainer) {
 				Entity entity = entityContainer.getEntity();
-				List<GenericValue> list = lv.getList();
+				List<GenericEntity> list = lv.getList();
 
 				if (entity instanceof Node) {
 					list.add(convertNodeToGenericValue((Node) entity));
@@ -182,36 +183,36 @@ public class OsmTranslator implements Translator {
 	 *            the relation
 	 * @return the map value
 	 */
-	private MapValue convertRelationToGenericValue(Relation relation) {
-		MapValue mv = new MapValue();
-		Map<String, GenericValue> map = mv.getMap();
-		map.put("type", new StringValue("Relation"));
+	private MapObject convertRelationToGenericValue(Relation relation) {
+		MapObject mv = new MapObject();
+		Map<String, Serializable> map = mv.getMap();
+		map.put("type", new StringObject("Relation"));
 
-		map.put("relationId", new StringValue("" + relation.getId()));
+		map.put("relationId", new StringObject("" + relation.getId()));
 		map.put("timestamp",
-				new StringValue(relation.getTimestamp().toString()));
-		map.put("uid", new NumberValue(relation.getUser().getId()));
-		map.put("user", new StringValue(relation.getUser().getName()));
-		map.put("version", new NumberValue(relation.getVersion()));
-		map.put("changeset", new NumberValue(relation.getChangesetId()));
+				new StringObject(relation.getTimestamp().toString()));
+		map.put("uid", new NumberObject(relation.getUser().getId()));
+		map.put("user", new StringObject(relation.getUser().getName()));
+		map.put("version", new NumberObject(relation.getVersion()));
+		map.put("changeset", new NumberObject(relation.getChangesetId()));
 
-		MapValue tagsMapValue = new MapValue();
-		Map<String, GenericValue> tagsMap = tagsMapValue.getMap();
+		MapObject tagsMapValue = new MapObject();
+		Map<String, Serializable> tagsMap = tagsMapValue.getMap();
 		Collection<Tag> coll = relation.getTags();
 		for (Tag tag : coll) {
-			tagsMap.put(tag.getKey(), new StringValue(tag.getValue()));
+			tagsMap.put(tag.getKey(), new StringObject(tag.getValue()));
 		}
 		map.put("tags", tagsMapValue);
 
-		ListValue memberList = new ListValue();
+		ListObject memberList = new ListObject();
 		for (RelationMember rm : relation.getMembers()) {
-			MapValue membersMapValue = new MapValue();
-			Map<String, GenericValue> membersMap = membersMapValue.getMap();
+			MapObject membersMapValue = new MapObject();
+			Map<String, Serializable> membersMap = membersMapValue.getMap();
 
-			membersMap.put("type", new StringValue(rm.getMemberType()
+			membersMap.put("type", new StringObject(rm.getMemberType()
 					.toString()));
-			membersMap.put("ref", new NumberValue(rm.getMemberId()));
-			membersMap.put("role", new StringValue(rm.getMemberRole()));
+			membersMap.put("ref", new NumberObject(rm.getMemberId()));
+			membersMap.put("role", new StringObject(rm.getMemberRole()));
 			memberList.getList().add(membersMapValue);
 		}
 
@@ -227,28 +228,28 @@ public class OsmTranslator implements Translator {
 	 *            the w
 	 * @return the map value
 	 */
-	private MapValue convertWayToGenericValue(Way w) {
-		MapValue mv = new MapValue();
-		Map<String, GenericValue> map = mv.getMap();
-		map.put("type", new StringValue("Way"));
+	private MapObject convertWayToGenericValue(Way w) {
+		MapObject mv = new MapObject();
+		Map<String, Serializable> map = mv.getMap();
+		map.put("type", new StringObject("Way"));
 
-		map.put("wayId", new StringValue("" + w.getId()));
-		map.put("timestamp", new StringValue(w.getTimestamp().toString()));
-		map.put("uid", new NumberValue(w.getUser().getId()));
-		map.put("user", new StringValue(w.getUser().getName()));
-		map.put("changeset", new NumberValue(w.getChangesetId()));
-		map.put("version", new NumberValue(w.getVersion()));
-		MapValue tagsMapValue = new MapValue();
-		Map<String, GenericValue> tagsMap = tagsMapValue.getMap();
+		map.put("wayId", new StringObject("" + w.getId()));
+		map.put("timestamp", new StringObject(w.getTimestamp().toString()));
+		map.put("uid", new NumberObject(w.getUser().getId()));
+		map.put("user", new StringObject(w.getUser().getName()));
+		map.put("changeset", new NumberObject(w.getChangesetId()));
+		map.put("version", new NumberObject(w.getVersion()));
+		MapObject tagsMapValue = new MapObject();
+		Map<String, Serializable> tagsMap = tagsMapValue.getMap();
 		Collection<Tag> coll = w.getTags();
 		for (Tag tag : coll) {
-			tagsMap.put(tag.getKey(), new StringValue(tag.getValue()));
+			tagsMap.put(tag.getKey(), new StringObject(tag.getValue()));
 		}
 		map.put("tags", tagsMapValue);
 
-		ListValue lv = new ListValue();
+		ListObject lv = new ListObject();
 		for (WayNode wn : w.getWayNodes()) {
-			lv.getList().add(new NumberValue(wn.getNodeId()));
+			lv.getList().add(new NumberObject(wn.getNodeId()));
 		}
 		map.put("nd", lv);
 
@@ -262,24 +263,24 @@ public class OsmTranslator implements Translator {
 	 *            the n
 	 * @return the map value
 	 */
-	private MapValue convertNodeToGenericValue(Node n) {
-		MapValue mv = new MapValue();
-		Map<String, GenericValue> map = mv.getMap();
-		map.put("type", new StringValue("Node"));
+	private MapObject convertNodeToGenericValue(Node n) {
+		MapObject mv = new MapObject();
+		Map<String, Serializable> map = mv.getMap();
+		map.put("type", new StringObject("Node"));
 
-		map.put("nodeId", new StringValue("" + n.getId()));
-		map.put("timestamp", new StringValue(n.getTimestamp().toString()));
-		map.put("uid", new NumberValue(n.getUser().getId()));
-		map.put("user", new StringValue(n.getUser().getName()));
-		map.put("changeset", new NumberValue(n.getChangesetId()));
-		map.put("latitude", new NumberValue(n.getLatitude()));
-		map.put("longitude", new NumberValue(n.getLongitude()));
+		map.put("nodeId", new StringObject("" + n.getId()));
+		map.put("timestamp", new StringObject(n.getTimestamp().toString()));
+		map.put("uid", new NumberObject(n.getUser().getId()));
+		map.put("user", new StringObject(n.getUser().getName()));
+		map.put("changeset", new NumberObject(n.getChangesetId()));
+		map.put("latitude", new NumberObject(n.getLatitude()));
+		map.put("longitude", new NumberObject(n.getLongitude()));
 
-		MapValue tagsMapValue = new MapValue();
-		Map<String, GenericValue> tagsMap = tagsMapValue.getMap();
+		MapObject tagsMapValue = new MapObject();
+		Map<String, Serializable> tagsMap = tagsMapValue.getMap();
 		Collection<Tag> coll = n.getTags();
 		for (Tag tag : coll) {
-			tagsMap.put(tag.getKey(), new StringValue(tag.getValue()));
+			tagsMap.put(tag.getKey(), new StringObject(tag.getValue()));
 		}
 		map.put("tags", tagsMapValue);
 
