@@ -73,6 +73,9 @@ public class DataGrabberMain {
 		Logging.adminLog("Update completed");
 	}
 
+	/**
+	 * Creates the common views.
+	 */
 	private static void createCommonViews() {
 		createView(new OdsView("_design/ods", "getClassObjectByType",
 				"function(doc) { if(doc.objectType) emit (doc.objectType, doc) }"));

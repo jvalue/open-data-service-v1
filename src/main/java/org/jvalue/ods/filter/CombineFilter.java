@@ -43,17 +43,15 @@ public class CombineFilter implements OdsFilter {
 	/** The schema. */
 	private MapSchema schema;
 
+	/** The combined schema. */
 	private MapSchema combinedSchema;
 
 	/**
 	 * Instantiates a new combine filter.
-	 * 
-	 * @param data
-	 *            the data
-	 * @param schema
-	 *            the schema
-	 * @param combinedName
-	 *            the combined name
+	 *
+	 * @param data the data
+	 * @param schema the schema
+	 * @param combinedSchema the combined schema
 	 */
 	public CombineFilter(MapObject data, MapSchema schema,
 			MapSchema combinedSchema) {
@@ -86,12 +84,10 @@ public class CombineFilter implements OdsFilter {
 
 	/**
 	 * Traverse schema.
-	 * 
-	 * @param sourceStructure
-	 *            the schema
-	 * @param serializable
-	 *            the data
-	 * @param map
+	 *
+	 * @param sourceStructure the schema
+	 * @param serializable the data
+	 * @param map the map
 	 */
 	private void traverseSchema(Schema sourceStructure, Serializable serializable,
 			Map<String, Serializable> map) {
@@ -125,6 +121,13 @@ public class CombineFilter implements OdsFilter {
 		}
 	}
 
+	/**
+	 * Insert combined value.
+	 *
+	 * @param serializable the serializable
+	 * @param mv the mv
+	 * @param destinationStructure the destination structure
+	 */
 	private void insertCombinedValue(Serializable serializable, MapObject mv,
 			Schema destinationStructure) {
 

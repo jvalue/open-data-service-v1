@@ -60,6 +60,7 @@ public class QualityAssuranceMain {
 	/** The accessor. */
 	private static DbAccessor<JsonNode> accessor;
 
+	/** The qa accessor. */
 	private static DbAccessor<JsonNode> qaAccessor;
 
 	/**
