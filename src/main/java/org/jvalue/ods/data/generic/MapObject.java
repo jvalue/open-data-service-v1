@@ -29,7 +29,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * The Class MapValue.
  */
 @JsonInclude(Include.NON_NULL)
-public class MapObject extends GenericEntity implements Serializable {
+public class MapObject extends GenericEntity {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;

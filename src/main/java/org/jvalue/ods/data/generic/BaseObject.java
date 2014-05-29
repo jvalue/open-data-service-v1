@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 /**
  * The Class BaseObject.
  */
-public class BaseObject extends GenericEntity implements Serializable {
+public class BaseObject extends GenericEntity {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
