@@ -11,10 +11,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.data.generic.BaseObject;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
-import org.jvalue.ods.data.generic.StringObject;
 import org.jvalue.ods.grabber.Translator;
 import org.jvalue.ods.logger.Logging;
 import org.w3c.dom.Document;
@@ -95,7 +95,7 @@ public class XmlTranslator implements Translator {
 		} else if ((node.getNodeType() == Node.ATTRIBUTE_NODE)
 				|| (node.getNodeType() == Node.TEXT_NODE)) {
 			String s = node.getNodeValue();
-			gv = new StringObject(s);
+			gv = new BaseObject(s);
 		}
 
 		return gv;
@@ -160,7 +160,7 @@ public class XmlTranslator implements Translator {
 
 			if ((list.getLength() == 1)
 					&& (list.item(0).getNodeType() == Node.TEXT_NODE)) {
-				mv = new StringObject(list.item(0).getNodeValue());
+				mv = new BaseObject(list.item(0).getNodeValue());
 				return mv;
 			}
 

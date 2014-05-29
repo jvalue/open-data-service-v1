@@ -15,33 +15,43 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.data.generic;
+package org.jvalue.ods.qa.valueTypes;
 
-import java.io.Serializable;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.lang.model.type.NullType;
-
-import com.fasterxml.jackson.annotation.JsonValue;
+import org.jvalue.ValueType;
 
 /**
- * The Class NullValue.
+ * The Class AllowedDataTypes.
  */
-public class NullObject extends GenericEntity implements Serializable {
+public class AllowedValueTypes {
 
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = 1L;
-
-	/** The n. */
-	private NullType n = null;
+	/** The Constant dataTypeMap. */
+	private final static Map<String, ValueType> valueTypeMap = createMap();
 
 	/**
-	 * Gets the null.
+	 * Gets the data type.
 	 * 
-	 * @return the null
+	 * @param name
+	 *            the name
+	 * @return the data type
 	 */
-	@JsonValue
-	public NullType getNull() {
-		return n;
+	public static ValueType getValueType(String name) {
+		return valueTypeMap.get(name);
+	}
+
+	/**
+	 * Creates the map.
+	 * 
+	 * @return the map
+	 */
+	private static Map<String, ValueType> createMap() {
+		Map<String, ValueType> result = new HashMap<String, ValueType>();
+		//result.put("Coordinate", ...
+				
+		return Collections.unmodifiableMap(result);
 	}
 
 }

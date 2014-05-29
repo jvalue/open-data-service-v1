@@ -28,11 +28,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.data.generic.BaseObject;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
-import org.jvalue.ods.data.generic.NumberObject;
-import org.jvalue.ods.data.generic.StringObject;
 import org.jvalue.ods.grabber.Translator;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.schema.SchemaManager;
@@ -186,21 +185,21 @@ public class OsmTranslator implements Translator {
 	private MapObject convertRelationToGenericValue(Relation relation) {
 		MapObject mv = new MapObject();
 		Map<String, Serializable> map = mv.getMap();
-		map.put("type", new StringObject("Relation"));
+		map.put("type", new BaseObject("Relation"));
 
-		map.put("relationId", new StringObject("" + relation.getId()));
+		map.put("relationId", new BaseObject("" + relation.getId()));
 		map.put("timestamp",
-				new StringObject(relation.getTimestamp().toString()));
-		map.put("uid", new NumberObject(relation.getUser().getId()));
-		map.put("user", new StringObject(relation.getUser().getName()));
-		map.put("version", new NumberObject(relation.getVersion()));
-		map.put("changeset", new NumberObject(relation.getChangesetId()));
+				new BaseObject(relation.getTimestamp().toString()));
+		map.put("uid", new BaseObject(relation.getUser().getId()));
+		map.put("user", new BaseObject(relation.getUser().getName()));
+		map.put("version", new BaseObject(relation.getVersion()));
+		map.put("changeset", new BaseObject(relation.getChangesetId()));
 
 		MapObject tagsMapValue = new MapObject();
 		Map<String, Serializable> tagsMap = tagsMapValue.getMap();
 		Collection<Tag> coll = relation.getTags();
 		for (Tag tag : coll) {
-			tagsMap.put(tag.getKey(), new StringObject(tag.getValue()));
+			tagsMap.put(tag.getKey(), new BaseObject(tag.getValue()));
 		}
 		map.put("tags", tagsMapValue);
 
@@ -209,10 +208,10 @@ public class OsmTranslator implements Translator {
 			MapObject membersMapValue = new MapObject();
 			Map<String, Serializable> membersMap = membersMapValue.getMap();
 
-			membersMap.put("type", new StringObject(rm.getMemberType()
+			membersMap.put("type", new BaseObject(rm.getMemberType()
 					.toString()));
-			membersMap.put("ref", new NumberObject(rm.getMemberId()));
-			membersMap.put("role", new StringObject(rm.getMemberRole()));
+			membersMap.put("ref", new BaseObject(rm.getMemberId()));
+			membersMap.put("role", new BaseObject(rm.getMemberRole()));
 			memberList.getList().add(membersMapValue);
 		}
 
@@ -231,25 +230,25 @@ public class OsmTranslator implements Translator {
 	private MapObject convertWayToGenericValue(Way w) {
 		MapObject mv = new MapObject();
 		Map<String, Serializable> map = mv.getMap();
-		map.put("type", new StringObject("Way"));
+		map.put("type", new BaseObject("Way"));
 
-		map.put("wayId", new StringObject("" + w.getId()));
-		map.put("timestamp", new StringObject(w.getTimestamp().toString()));
-		map.put("uid", new NumberObject(w.getUser().getId()));
-		map.put("user", new StringObject(w.getUser().getName()));
-		map.put("changeset", new NumberObject(w.getChangesetId()));
-		map.put("version", new NumberObject(w.getVersion()));
+		map.put("wayId", new BaseObject("" + w.getId()));
+		map.put("timestamp", new BaseObject(w.getTimestamp().toString()));
+		map.put("uid", new BaseObject(w.getUser().getId()));
+		map.put("user", new BaseObject(w.getUser().getName()));
+		map.put("changeset", new BaseObject(w.getChangesetId()));
+		map.put("version", new BaseObject(w.getVersion()));
 		MapObject tagsMapValue = new MapObject();
 		Map<String, Serializable> tagsMap = tagsMapValue.getMap();
 		Collection<Tag> coll = w.getTags();
 		for (Tag tag : coll) {
-			tagsMap.put(tag.getKey(), new StringObject(tag.getValue()));
+			tagsMap.put(tag.getKey(), new BaseObject(tag.getValue()));
 		}
 		map.put("tags", tagsMapValue);
 
 		ListObject lv = new ListObject();
 		for (WayNode wn : w.getWayNodes()) {
-			lv.getList().add(new NumberObject(wn.getNodeId()));
+			lv.getList().add(new BaseObject(wn.getNodeId()));
 		}
 		map.put("nd", lv);
 
@@ -266,21 +265,21 @@ public class OsmTranslator implements Translator {
 	private MapObject convertNodeToGenericValue(Node n) {
 		MapObject mv = new MapObject();
 		Map<String, Serializable> map = mv.getMap();
-		map.put("type", new StringObject("Node"));
+		map.put("type", new BaseObject("Node"));
 
-		map.put("nodeId", new StringObject("" + n.getId()));
-		map.put("timestamp", new StringObject(n.getTimestamp().toString()));
-		map.put("uid", new NumberObject(n.getUser().getId()));
-		map.put("user", new StringObject(n.getUser().getName()));
-		map.put("changeset", new NumberObject(n.getChangesetId()));
-		map.put("latitude", new NumberObject(n.getLatitude()));
-		map.put("longitude", new NumberObject(n.getLongitude()));
+		map.put("nodeId", new BaseObject("" + n.getId()));
+		map.put("timestamp", new BaseObject(n.getTimestamp().toString()));
+		map.put("uid", new BaseObject(n.getUser().getId()));
+		map.put("user", new BaseObject(n.getUser().getName()));
+		map.put("changeset", new BaseObject(n.getChangesetId()));
+		map.put("latitude", new BaseObject(n.getLatitude()));
+		map.put("longitude", new BaseObject(n.getLongitude()));
 
 		MapObject tagsMapValue = new MapObject();
 		Map<String, Serializable> tagsMap = tagsMapValue.getMap();
 		Collection<Tag> coll = n.getTags();
 		for (Tag tag : coll) {
-			tagsMap.put(tag.getKey(), new StringObject(tag.getValue()));
+			tagsMap.put(tag.getKey(), new BaseObject(tag.getValue()));
 		}
 		map.put("tags", tagsMapValue);
 

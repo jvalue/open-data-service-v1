@@ -31,8 +31,8 @@ import org.ektorp.http.HttpClient;
 import org.ektorp.http.StdHttpClient;
 import org.ektorp.impl.StdCouchDbConnector;
 import org.ektorp.impl.StdCouchDbInstance;
+import org.jvalue.ods.data.generic.BaseObject;
 import org.jvalue.ods.data.generic.MapObject;
-import org.jvalue.ods.data.generic.StringObject;
 import org.jvalue.ods.data.schema.MapSchema;
 import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.logger.Logging;
@@ -331,7 +331,7 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 					ms = (MapSchema) schema.getMap().get("objectType");
 					String s = (String) ms.getMap().keySet().toArray()[0];
 
-					mv.getMap().put("dataType", new StringObject(s));
+					mv.getMap().put("dataType", new BaseObject(s));
 				} catch (Exception ex) {
 					Logging.error(this.getClass(), ex.getMessage()
 							+ "Schema does not contain objectType.");

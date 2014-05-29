@@ -21,8 +21,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.jvalue.ods.data.generic.BaseObject;
 import org.jvalue.ods.data.generic.MapObject;
-import org.jvalue.ods.data.generic.StringObject;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.slf4j.Logger;
@@ -104,7 +104,7 @@ public abstract class Logging {
 				content += "\n";
 
 			MapObject mv = new MapObject();
-			mv.getMap().put("log", new StringObject(datetime + " " + content));
+			mv.getMap().put("log", new BaseObject(datetime + " " + content));
 			accessor.insert(mv);
 
 		} catch (Exception ex) {

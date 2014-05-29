@@ -22,13 +22,10 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.data.generic.BoolObject;
+import org.jvalue.ods.data.generic.BaseObject;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
-import org.jvalue.ods.data.generic.NullObject;
-import org.jvalue.ods.data.generic.NumberObject;
-import org.jvalue.ods.data.generic.StringObject;
 import org.jvalue.ods.data.schema.BoolSchema;
 import org.jvalue.ods.data.schema.ListSchema;
 import org.jvalue.ods.data.schema.MapSchema;
@@ -297,7 +294,7 @@ public class JsonTranslator implements Translator {
 		GenericEntity gv = null;
 
 		if (rootNode.isBoolean()) {
-			gv = new BoolObject(rootNode.asBoolean());
+			gv = new BaseObject(rootNode.asBoolean());
 		} else if (rootNode.isArray()) {
 			gv = new ListObject();
 			fillListRec(rootNode, (ListObject) gv);
@@ -305,11 +302,11 @@ public class JsonTranslator implements Translator {
 			gv = new MapObject();
 			fillMapRec(rootNode, (MapObject) gv);
 		} else if (rootNode.isNull()) {
-			gv = new NullObject();
+			gv = new BaseObject(null);
 		} else if (rootNode.isNumber()) {
-			gv = new NumberObject(rootNode.numberValue());
+			gv = new BaseObject(rootNode.numberValue());
 		} else if (rootNode.isTextual()) {
-			gv = new StringObject(rootNode.asText());
+			gv = new BaseObject(rootNode.asText());
 		}
 
 		return gv;
