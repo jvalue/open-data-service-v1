@@ -36,7 +36,7 @@ public class ListObject extends GenericEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** The list. */
-	private List<GenericEntity> list = new LinkedList<GenericEntity>();
+	private List<Serializable> list = new LinkedList<Serializable>();
 
 	/**
 	 * Instantiates a new list object.
@@ -51,7 +51,7 @@ public class ListObject extends GenericEntity implements Serializable {
 	 *            the list
 	 */
 	@JsonCreator
-	public ListObject(List<GenericEntity> list) {
+	public ListObject(List<Serializable> list) {
 		this.list = list;
 	}
 
@@ -61,7 +61,7 @@ public class ListObject extends GenericEntity implements Serializable {
 	 * @return the list
 	 */
 	@JsonValue
-	public List<GenericEntity> getList() {
+	public List<Serializable> getList() {
 		return list;
 	}
 

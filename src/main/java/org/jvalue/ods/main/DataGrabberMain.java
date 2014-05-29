@@ -17,6 +17,7 @@
  */
 package org.jvalue.ods.main;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -93,7 +94,7 @@ public class DataGrabberMain {
 			ListObject lv = (ListObject) gv;
 			List<MapObject> list = new LinkedList<>();
 
-			for (GenericEntity i : lv.getList()) {
+			for (Serializable i : lv.getList()) {
 				list.add((MapObject) i);
 			}
 

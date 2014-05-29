@@ -21,7 +21,6 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
 import org.jvalue.ods.data.schema.BoolSchema;
@@ -116,7 +115,7 @@ public class CombineFilter implements OdsFilter {
 			}
 		} else if (sourceStructure instanceof ListSchema) {
 
-			for (GenericEntity gv : ((ListObject) serializable).getList()) {
+			for (Serializable gv : ((ListObject) serializable).getList()) {
 
 				traverseSchema(((ListSchema) sourceStructure).getList().get(0),
 						gv, map);
@@ -168,7 +167,7 @@ public class CombineFilter implements OdsFilter {
 				throw new RuntimeException(errmsg);
 			}
 
-			for (GenericEntity gv : ((ListObject) serializable).getList()) {
+			for (Serializable gv : ((ListObject) serializable).getList()) {
 
 				insertCombinedValue(gv, mv, ((ListSchema) destinationStructure)
 						.getList().get(0));

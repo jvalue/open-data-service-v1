@@ -120,7 +120,7 @@ public class OsmTranslator implements Translator {
 		Sink sinkImplementation = new Sink() {
 			public void process(EntityContainer entityContainer) {
 				Entity entity = entityContainer.getEntity();
-				List<GenericEntity> list = lv.getList();
+				List<Serializable> list = lv.getList();
 
 				if (entity instanceof Node) {
 					list.add(convertNodeToGenericValue((Node) entity));
