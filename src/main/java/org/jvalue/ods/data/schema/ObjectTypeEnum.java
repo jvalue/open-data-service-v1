@@ -17,38 +17,17 @@
  */
 package org.jvalue.ods.data.schema;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 /**
- * The Class NumberSchema.
+ * The Enum DataTypeEnum.
  */
-@JsonInclude(Include.NON_NULL)
-public class NumberSchema extends Schema {
+public enum ObjectTypeEnum {
 
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = 1L;
+	/** The Builtin. */
+	Builtin,
 
-	/** The type. */
-	private String type = "number";
+	/** The Domain. */
+	Domain,
 
-	/**
-	 * Gets the type.
-	 * 
-	 * @return the type
-	 */
-	public String getType() {
-		return type;
-	}
-
-	/**
-	 * Sets the type.
-	 * 
-	 * @param type
-	 *            the new type
-	 */
-	public void setType(String type) {
-		this.type = type;
-	}
-
+	/** The Reference. */
+	Reference
 }

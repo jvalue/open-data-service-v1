@@ -28,12 +28,10 @@ import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.metadata.JacksonMetaData;
 import org.jvalue.ods.data.metadata.OdsMetaData;
-import org.jvalue.ods.data.schema.ListSchema;
-import org.jvalue.ods.data.schema.MapSchema;
-import org.jvalue.ods.data.schema.NullSchema;
-import org.jvalue.ods.data.schema.NumberSchema;
-import org.jvalue.ods.data.schema.Schema;
-import org.jvalue.ods.data.schema.StringSchema;
+import org.jvalue.ods.data.schema.AllowedBaseObjectTypes;
+import org.jvalue.ods.data.schema.ListObjectType;
+import org.jvalue.ods.data.schema.MapObjectType;
+import org.jvalue.ods.data.schema.GenericObjectType;
 import org.jvalue.ods.main.Grabber;
 import org.jvalue.ods.translator.OsmTranslator;
 
@@ -52,10 +50,10 @@ public class OsmGrabber implements Grabber {
 
 		Translator translator = new OsmTranslator();
 
-		Schema schema = getDataSourceSchema();
+		GenericObjectType genericObjectType = getDataSourceSchema();
 
 		ListObject list = (ListObject) translator.translate(new DataSource(
-				"/nbgcity.osm", schema));
+				"/nbgcity.osm", genericObjectType));
 
 		return list;
 	}
@@ -66,37 +64,37 @@ public class OsmGrabber implements Grabber {
 	 * @see org.jvalue.ods.grabber.Grabber#getDataSourceSchema()
 	 */
 	@Override
-	public Schema getDataSourceSchema() {
-		Map<String, Schema> nodeTagsMap = new HashMap<String, Schema>();
-		MapSchema nodeTagsSchema = new MapSchema(nodeTagsMap);
+	public GenericObjectType getDataSourceSchema() {
+		Map<String, GenericObjectType> nodeTagsMap = new HashMap<String, GenericObjectType>();
+		MapObjectType nodeTagsSchema = new MapObjectType(nodeTagsMap);
 
-		Map<String, Schema> nodeMap = new HashMap<String, Schema>();
-		nodeMap.put("type", new StringSchema());
-		nodeMap.put("nodeId", new StringSchema());
-		nodeMap.put("timestamp", new StringSchema());
-		nodeMap.put("uid", new NumberSchema());
-		nodeMap.put("user", new StringSchema());
-		nodeMap.put("changeset", new NumberSchema());
-		nodeMap.put("latitude", new NumberSchema());
-		nodeMap.put("longitude", new NumberSchema());
+		Map<String, GenericObjectType> nodeMap = new HashMap<String, GenericObjectType>();
+		nodeMap.put("type", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
+		nodeMap.put("nodeId", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
+		nodeMap.put("timestamp", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
+		nodeMap.put("uid", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
+		nodeMap.put("user", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
+		nodeMap.put("changeset", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
+		nodeMap.put("latitude", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
+		nodeMap.put("longitude", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
 		nodeMap.put("tags", nodeTagsSchema);
-		MapSchema nodeMapSchema = new MapSchema(nodeMap);
+		MapObjectType nodeMapSchema = new MapObjectType(nodeMap);
 
 		// two class object strings, must not be "required"
-		Map<String, Schema> type = new HashMap<String, Schema>();
-		type.put("Osm", new NullSchema());
-		MapSchema typeSchema = new MapSchema(type);
+		Map<String, GenericObjectType> type = new HashMap<String, GenericObjectType>();
+		type.put("Osm", AllowedBaseObjectTypes.getBaseObjectType("Null"));
+		MapObjectType typeSchema = new MapObjectType(type);
 		nodeMap.put("objectType", typeSchema);
-		Map<String, Schema> restName = new HashMap<String, Schema>();
-		restName.put("osm", new NullSchema());
-		MapSchema restNameSchema = new MapSchema(restName);
+		Map<String, GenericObjectType> restName = new HashMap<String, GenericObjectType>();
+		restName.put("osm", AllowedBaseObjectTypes.getBaseObjectType("Null"));
+		MapObjectType restNameSchema = new MapObjectType(restName);
 		nodeMap.put("rest_name", restNameSchema);
 
-		List<Schema> entityList = new LinkedList<Schema>();
+		List<GenericObjectType> entityList = new LinkedList<GenericObjectType>();
 		entityList.add(nodeMapSchema);
-		ListSchema listSchema = new ListSchema(entityList);
+		ListObjectType listObjectType = new ListObjectType(entityList);
 
-		return listSchema;
+		return listObjectType;
 	}
 
 	/*
@@ -105,30 +103,30 @@ public class OsmGrabber implements Grabber {
 	 * @see org.jvalue.ods.grabber.Grabber#getDbSchema()
 	 */
 	@Override
-	public MapSchema getDbSchema() {
-		Map<String, Schema> nodeMap = new HashMap<String, Schema>();
-		nodeMap.put("type", new StringSchema());
-		nodeMap.put("nodeId", new StringSchema());
-		nodeMap.put("timestamp", new StringSchema());
-		nodeMap.put("uid", new NumberSchema());
-		nodeMap.put("user", new StringSchema());
-		nodeMap.put("changeset", new NumberSchema());
-		nodeMap.put("latitude", new NumberSchema());
-		nodeMap.put("longitude", new NumberSchema());
-		Map<String, Schema> nodeTagsMap = new HashMap<String, Schema>();
-		MapSchema nodeTagsSchema = new MapSchema(nodeTagsMap);
+	public MapObjectType getDbSchema() {
+		Map<String, GenericObjectType> nodeMap = new HashMap<String, GenericObjectType>();
+		nodeMap.put("type", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
+		nodeMap.put("nodeId", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
+		nodeMap.put("timestamp", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
+		nodeMap.put("uid", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
+		nodeMap.put("user", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
+		nodeMap.put("changeset", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
+		nodeMap.put("latitude", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
+		nodeMap.put("longitude", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
+		Map<String, GenericObjectType> nodeTagsMap = new HashMap<String, GenericObjectType>();
+		MapObjectType nodeTagsSchema = new MapObjectType(nodeTagsMap);
 		nodeMap.put("tags", nodeTagsSchema);
 
 		// two class object strings, must not be "required"
-		Map<String, Schema> type = new HashMap<String, Schema>();
-		type.put("Osm", new NullSchema());
-		MapSchema typeSchema = new MapSchema(type);
+		Map<String, GenericObjectType> type = new HashMap<String, GenericObjectType>();
+		type.put("Osm", AllowedBaseObjectTypes.getBaseObjectType("Null"));
+		MapObjectType typeSchema = new MapObjectType(type);
 		nodeMap.put("objectType", typeSchema);
-		Map<String, Schema> restName = new HashMap<String, Schema>();
-		restName.put("osm", new NullSchema());
-		MapSchema restNameSchema = new MapSchema(restName);
+		Map<String, GenericObjectType> restName = new HashMap<String, GenericObjectType>();
+		restName.put("osm", AllowedBaseObjectTypes.getBaseObjectType("Null"));
+		MapObjectType restNameSchema = new MapObjectType(restName);
 		nodeMap.put("rest_name", restNameSchema);
-		MapSchema nodeMapSchema = new MapSchema(nodeMap);
+		MapObjectType nodeMapSchema = new MapObjectType(nodeMap);
 
 		return nodeMapSchema;
 	}

@@ -9,13 +9,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.jvalue.ods.data.generic.GenericEntity;
-import org.jvalue.ods.data.schema.BoolSchema;
-import org.jvalue.ods.data.schema.ListSchema;
-import org.jvalue.ods.data.schema.MapSchema;
-import org.jvalue.ods.data.schema.NullSchema;
-import org.jvalue.ods.data.schema.NumberSchema;
-import org.jvalue.ods.data.schema.Schema;
-import org.jvalue.ods.data.schema.StringSchema;
+import org.jvalue.ods.data.schema.BaseObjectType;
+import org.jvalue.ods.data.schema.ListObjectType;
+import org.jvalue.ods.data.schema.MapObjectType;
+import org.jvalue.ods.data.schema.GenericObjectType;
 import org.jvalue.ods.logger.Logging;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -36,40 +33,51 @@ public class SchemaManager {
 	/**
 	 * Creates the json schema.
 	 * 
-	 * @param schema
+	 * @param genericObjectType
 	 *            the schema
 	 * @return the string
 	 */
-	public static String createJsonSchema(Schema schema) {
-		return createJsonSchema(schema, 0);
+	public static String createJsonSchema(GenericObjectType genericObjectType) {
+		return createJsonSchema(genericObjectType, 0);
 	}
 
 	/**
 	 * Creates the json schema.
 	 * 
-	 * @param schema
+	 * @param genericObjectType
 	 *            the schema
 	 * @param tabs
 	 *            the tabs
 	 * @return the string
 	 */
-	private static String createJsonSchema(Schema schema, int tabs) {
+	private static String createJsonSchema(GenericObjectType genericObjectType, int tabs) {
 		String result = "";
 
-		if (schema.getClass().equals(MapSchema.class)) {
-			MapSchema map = (MapSchema) schema;
+		if (genericObjectType.getClass().equals(MapObjectType.class)) {
+			MapObjectType map = (MapObjectType) genericObjectType;
 			result = createJsonSchemaFromMap(map, tabs + 1);
-		} else if (schema.getClass().equals(ListSchema.class)) {
-			ListSchema list = (ListSchema) schema;
+		} else if (genericObjectType.getClass().equals(ListObjectType.class)) {
+			ListObjectType list = (ListObjectType) genericObjectType;
 			result = createJsonSchemaFromList(list, tabs + 1);
-		} else if (schema.getClass().equals(BoolSchema.class)) {
-			result = createJsonSchemaFromElementary("boolean", tabs + 1);
-		} else if (schema.getClass().equals(NullSchema.class)) {
-			result = createJsonSchemaFromElementary("null", tabs + 1);
-		} else if (schema.getClass().equals(NumberSchema.class)) {
-			result = createJsonSchemaFromElementary("number", tabs + 1);
-		} else if (schema.getClass().equals(StringSchema.class)) {
-			result = createJsonSchemaFromElementary("string", tabs + 1);
+		} else if (genericObjectType.getClass().equals(BaseObjectType.class)) {
+			BaseObjectType bot = (BaseObjectType) genericObjectType;			
+			if (bot.getName() == "java.lang.Boolean")
+			{
+				result = createJsonSchemaFromElementary("boolean", tabs + 1);
+			}
+			else if (bot.getName() == "Null") 
+			{
+				result = createJsonSchemaFromElementary("null", tabs + 1);
+			}
+			else if (bot.getName() == "java.lang.Number") 
+			{
+				result = createJsonSchemaFromElementary("number", tabs + 1);
+			}
+			else if (bot.getName() == "java.lang.String")
+			{
+				result = createJsonSchemaFromElementary("string", tabs + 1);
+			}
+			
 		}
 
 		return result;
@@ -114,13 +122,13 @@ public class SchemaManager {
 	/**
 	 * Creates the json schema from list.
 	 * 
-	 * @param listSchema
+	 * @param listObjectType
 	 *            the list schema
 	 * @param tabs
 	 *            the tabs
 	 * @return the string
 	 */
-	private static String createJsonSchemaFromList(ListSchema listSchema,
+	private static String createJsonSchemaFromList(ListObjectType listObjectType,
 			int tabs) {
 		/*
 		 * example: { "type": "array", "items": { ... } }
@@ -129,14 +137,14 @@ public class SchemaManager {
 		result += createTabs(tabs) + "\"type\": \"array\"," + "\n";
 		result += createTabs(tabs) + "\"items\": ";
 
-		List<Schema> list = listSchema.getList();
+		List<GenericObjectType> list = listObjectType.getList();
 		for (int i = 0; i < list.size(); i++) {
-			Schema schema = list.get(i);
+			GenericObjectType genericObjectType = list.get(i);
 
 			if (i != list.size() - 1) {
-				result += createJsonSchema(schema, tabs) + "," + "\n";
+				result += createJsonSchema(genericObjectType, tabs) + "," + "\n";
 			} else {
-				result += createJsonSchema(schema, tabs) + "\n";
+				result += createJsonSchema(genericObjectType, tabs) + "\n";
 			}
 		}
 
@@ -148,14 +156,14 @@ public class SchemaManager {
 	/**
 	 * Creates the json schema from map.
 	 * 
-	 * @param mapSchema
+	 * @param mapObjectType
 	 *            the map schema
 	 * @param tabs
 	 *            the tabs
 	 * @return the string
 	 */
 	@SuppressWarnings("unchecked")
-	private static String createJsonSchemaFromMap(MapSchema mapSchema, int tabs) {
+	private static String createJsonSchemaFromMap(MapObjectType mapObjectType, int tabs) {
 		/*
 		 * { "type": "object", "properties": { ... } }
 		 */
@@ -164,10 +172,10 @@ public class SchemaManager {
 		result += createTabs(tabs) + "\"type\": \"object\"," + "\n";
 		result += createTabs(tabs) + "\"properties\": {" + "\n";
 
-		Map<String, Schema> map = mapSchema.getMap();
+		Map<String, GenericObjectType> map = mapObjectType.getMap();
 		Object[] arr = map.entrySet().toArray();
 		for (int i = 0; i < arr.length; i++) {
-			Entry<String, Schema> entry = (Entry<String, Schema>) arr[i];
+			Entry<String, GenericObjectType> entry = (Entry<String, GenericObjectType>) arr[i];
 			if (i != arr.length - 1) {
 				result += createTabs(tabs + 1) + "\"" + entry.getKey() + "\": "
 						+ createJsonSchema(entry.getValue(), tabs + 1) + ","
@@ -194,7 +202,7 @@ public class SchemaManager {
 	 * @return true, if successful
 	 */
 	public static boolean validateGenericValusFitsSchema(GenericEntity gv,
-			Schema dbSchema) {
+			GenericObjectType dbSchema) {
 		ObjectMapper mapper = new ObjectMapper();
 
 		String json;

@@ -17,38 +17,43 @@
  */
 package org.jvalue.ods.data.schema;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
- * The Class StringSchema.
+ * The Class MapSchema.
  */
 @JsonInclude(Include.NON_NULL)
-public class StringSchema extends Schema {
+public class MapObjectType extends GenericObjectType {
 
 	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = 1L;
-
-	/** The type. */
-	private String type = "string";
+	private static final long serialVersionUID = 1975312956045824117L;
+	
+	/** The map. */
+	private Map<String, GenericObjectType> map = new HashMap<String, GenericObjectType>();
 
 	/**
-	 * Gets the type.
+	 * Instantiates a new map schema.
 	 * 
-	 * @return the type
+	 * @param map
+	 *            the map
 	 */
-	public String getType() {
-		return type;
+	public MapObjectType(Map<String, GenericObjectType> map) {
+		this.map = map;
 	}
 
 	/**
-	 * Sets the type.
+	 * Gets the map.
 	 * 
-	 * @param type
-	 *            the new type
+	 * @return the map
 	 */
-	public void setType(String type) {
-		this.type = type;
+	@JsonValue
+	public Map<String, GenericObjectType> getMap() {
+		return map;
 	}
 
 }

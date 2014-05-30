@@ -30,7 +30,7 @@ import org.jvalue.ods.data.OdsView;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
-import org.jvalue.ods.data.schema.MapSchema;
+import org.jvalue.ods.data.schema.MapObjectType;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.exception.DbException;
@@ -91,7 +91,7 @@ public class DataGrabberMain {
 	 * @param gv
 	 *            the gv
 	 */
-	private static void insertDbBulk(MapSchema schema, GenericEntity gv) {
+	private static void insertDbBulk(MapObjectType schema, GenericEntity gv) {
 		if (gv instanceof ListObject) {
 
 			ListObject lv = (ListObject) gv;

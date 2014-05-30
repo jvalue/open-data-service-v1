@@ -33,7 +33,7 @@ import org.ektorp.impl.StdCouchDbConnector;
 import org.ektorp.impl.StdCouchDbInstance;
 import org.jvalue.ods.data.generic.BaseObject;
 import org.jvalue.ods.data.generic.MapObject;
-import org.jvalue.ods.data.schema.MapSchema;
+import org.jvalue.ods.data.schema.MapObjectType;
 import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.schema.SchemaManager;
@@ -303,7 +303,7 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 	 * @see org.jvalue.ods.db.DbAccessor#executeBulk(java.util.Collection)
 	 */
 	@Override
-	public void executeBulk(Collection<MapObject> objects, MapSchema schema) {
+	public void executeBulk(Collection<MapObject> objects, MapObjectType schema) {
 
 		if (objects == null) {
 			throw new IllegalArgumentException("objects is null");
@@ -326,9 +326,9 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 
 			for (MapObject mv : objects) {
 
-				MapSchema ms = null;
+				MapObjectType ms = null;
 				try {
-					ms = (MapSchema) schema.getMap().get("objectType");
+					ms = (MapObjectType) schema.getMap().get("objectType");
 					String s = (String) ms.getMap().keySet().toArray()[0];
 
 					mv.getMap().put("dataType", new BaseObject(s));

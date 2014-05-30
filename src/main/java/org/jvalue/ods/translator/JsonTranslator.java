@@ -26,12 +26,10 @@ import org.jvalue.ods.data.generic.BaseObject;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
-import org.jvalue.ods.data.schema.BoolSchema;
-import org.jvalue.ods.data.schema.ListSchema;
-import org.jvalue.ods.data.schema.MapSchema;
-import org.jvalue.ods.data.schema.NullSchema;
-import org.jvalue.ods.data.schema.Schema;
-import org.jvalue.ods.data.schema.StringSchema;
+import org.jvalue.ods.data.schema.BaseObjectType;
+import org.jvalue.ods.data.schema.ListObjectType;
+import org.jvalue.ods.data.schema.MapObjectType;
+import org.jvalue.ods.data.schema.GenericObjectType;
 import org.jvalue.ods.grabber.Translator;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.schema.SchemaManager;
@@ -97,17 +95,17 @@ public class JsonTranslator implements Translator {
 	/**
 	 * Checks if is class of.
 	 * 
-	 * @param schema
+	 * @param genericObjectType
 	 *            the schema
 	 * @param c
 	 *            the c
 	 * @return true, if is class of
 	 */
-	private boolean isClassOf(Schema schema, Class<?> c) {
-		boolean result = schema.getClass().equals(c);
+	private boolean isClassOf(GenericObjectType genericObjectType, Class<?> c) {
+		boolean result = genericObjectType.getClass().equals(c);
 		if (result == false) {
 			String error = "Validation error: Expected: "
-					+ schema.getClass().getName() + " Actual: "
+					+ genericObjectType.getClass().getName() + " Actual: "
 					+ c.getClass().getName();
 			Logging.info(this.getClass(), error);
 			System.err.println(error);
@@ -122,39 +120,39 @@ public class JsonTranslator implements Translator {
 	 * 
 	 * @param node
 	 *            the node
-	 * @param schema
+	 * @param genericObjectType
 	 *            the schema
 	 * @return true, if successful
 	 */
-	private boolean validate(JsonNode node, Schema schema) {
+	private boolean validate(JsonNode node, GenericObjectType genericObjectType) {
 		if (node.isBoolean()) {
-			if (!isClassOf(schema, BoolSchema.class)) {
+			if (!isClassOf(genericObjectType, BaseObjectType.class) || (((BaseObjectType)genericObjectType).getName() != "java.lang.Boolean")) {
 				// not boolean
 				return false;
 			}
 		} else if (node.isNull()) {
-			if (!isClassOf(schema, NullSchema.class)) {
+			if (!isClassOf(genericObjectType, BaseObjectType.class) || (((BaseObjectType)genericObjectType).getName() != "java.lang.Number")) {
 				// not null
 				return false;
 			}
 		} else if (node.isTextual()) {
-			if (!isClassOf(schema, StringSchema.class)) {
+			if (!isClassOf(genericObjectType, BaseObjectType.class) || (((BaseObjectType)genericObjectType).getName() != "java.lang.String")) {
 				// not string
 				return false;
 			}
 		} else if (node.isArray()) {
-			if (!isClassOf(schema, ListSchema.class)) {
+			if (!isClassOf(genericObjectType, ListObjectType.class)) {
 				// not list
 				return false;
 			} else {
-				return validateList(node, (ListSchema) schema);
+				return validateList(node, (ListObjectType) genericObjectType);
 			}
 		} else if (node.isObject()) {
-			if (!isClassOf(schema, MapSchema.class)) {
+			if (!isClassOf(genericObjectType, MapObjectType.class)) {
 				// not map
 				return false;
 			} else {
-				return validateMap(node, (MapSchema) schema);
+				return validateMap(node, (MapObjectType) genericObjectType);
 			}
 		}
 		return true;
@@ -169,8 +167,8 @@ public class JsonTranslator implements Translator {
 	 *            the schema
 	 * @return true, if successful
 	 */
-	private boolean validateMap(JsonNode node, MapSchema schema) {
-		Map<String, Schema> map = schema.getMap();
+	private boolean validateMap(JsonNode node, MapObjectType schema) {
+		Map<String, GenericObjectType> map = schema.getMap();
 
 		Iterator<Map.Entry<String, JsonNode>> fields = node.fields();
 		while (fields.hasNext()) {
@@ -201,40 +199,47 @@ public class JsonTranslator implements Translator {
 	 *            the schema
 	 * @return true, if successful
 	 */
-	private boolean validateList(JsonNode node, ListSchema schema) {
+	private boolean validateList(JsonNode node, ListObjectType schema) {
 		for (JsonNode n : node) {
 			if (n.isBoolean()) {
-				if (!containsClass(schema, BoolSchema.class)) {
+				if (!containsBaseObjectType(schema, "java.lang.Boolean")) {
 					// expected schema not found
 					return false;
 				}
 			} else if (n.isNull()) {
-				if (!containsClass(schema, NullSchema.class)) {
+				if (!containsBaseObjectType(schema, "Null")) {
 					// expected schema not found
 					return false;
 				}
 			} else if (n.isTextual()) {
-				if (!containsClass(schema, StringSchema.class)) {
+				if (!containsBaseObjectType(schema, "java.lang.String")) {
 					// expected schema not found
 					return false;
 				}
 			}
+			 else if (n.isNumber()) {
+					if (!containsBaseObjectType(schema, "java.lang.Number")) {
+						// expected schema not found
+						return false;
+					}
+				}
+			
 
 			else if (n.isArray()) {
-				if (!containsClass(schema, ListSchema.class)) {
+				if (!containsClass(schema, ListObjectType.class)) {
 					// expected schema not found
 					return false;
 				} else {
-					boolean result = findValidation(n, schema, ListSchema.class);
+					boolean result = findValidation(n, schema, ListObjectType.class);
 					if (result == false)
 						return false;
 				}
 			} else if (n.isObject()) {
-				if (!containsClass(schema, MapSchema.class)) {
+				if (!containsClass(schema, MapObjectType.class)) {
 					// expected schema not found
 					return false;
 				} else {
-					boolean result = findValidation(n, schema, MapSchema.class);
+					boolean result = findValidation(n, schema, MapObjectType.class);
 					if (result == false)
 						return false;
 				}
@@ -254,8 +259,8 @@ public class JsonTranslator implements Translator {
 	 *            the c
 	 * @return true, if successful
 	 */
-	private boolean findValidation(JsonNode n, ListSchema schema, Class<?> c) {
-		for (Schema s : schema.getList()) {
+	private boolean findValidation(JsonNode n, ListObjectType schema, Class<?> c) {
+		for (GenericObjectType s : schema.getList()) {
 			if (s.getClass().equals(c)) {
 				boolean result = validate(n, s);
 				if (result == true)
@@ -265,23 +270,43 @@ public class JsonTranslator implements Translator {
 		return false;
 	}
 
+	
 	/**
-	 * Contains class.
-	 * 
-	 * @param schema
-	 *            the schema
-	 * @param c
-	 *            the c
+	 * Contains base object type.
+	 *
+	 * @param schema the schema
+	 * @param name the name
 	 * @return true, if successful
 	 */
-	private boolean containsClass(ListSchema schema, Class<?> c) {
-		for (Schema s : schema.getList()) {
+	private boolean containsBaseObjectType(ListObjectType schema, String name) {
+		for (GenericObjectType s : schema.getList()) {
+			if (s.getClass().equals(BaseObjectType.class))
+			{
+				if (((BaseObjectType) s).getName() == name)
+					return true;
+			}
+		}
+		return false;
+	}
+
+	
+	/**
+	 * Contains class.
+	 *
+	 * @param schema the schema
+	 * @param c the c
+	 * @return true, if successful
+	 */
+	private boolean containsClass(ListObjectType schema, Class<?> c) {
+		for (GenericObjectType s : schema.getList()) {
 			if (s.getClass().equals(c))
 				return true;
 		}
 		return false;
 	}
-
+	
+	
+	
 	/**
 	 * Convert json.
 	 * 
@@ -344,30 +369,4 @@ public class JsonTranslator implements Translator {
 			mv.getMap().put(field.getKey(), gv);
 		}
 	}
-
-	// private void validate(JsonNode rootNode, String schemaPath) {
-	// JsonSchemaFactory factory = JsonSchemaFactory.byDefault();
-	//
-	// JsonSchema jsonSchema;
-	//
-	// try {
-	//
-	// JsonNode jn = JsonLoader.fromFile(new File(schemaPath));
-	//
-	// jsonSchema = factory.getJsonSchema(jn);
-	// ProcessingReport report;
-	// report = jsonSchema.validate(rootNode);
-	// if (!report.isSuccess()) {
-	// Logging.info(this.getClass(), "Validation error: " + report);
-	// System.err.println("Validation error: " + report);
-	// }
-	//
-	// } catch (ProcessingException e) {
-	// Logging.error(this.getClass(), "Could not validate json: " + e);
-	// System.err.println("Could not validate json" + e);
-	// } catch (IOException e) {
-	// Logging.error(this.getClass(), "Could not validate json: " + e);
-	// System.err.println("Could not validate json" + e);
-	// }
-	// }
 }

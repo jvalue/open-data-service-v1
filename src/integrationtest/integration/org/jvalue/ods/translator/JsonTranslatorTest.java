@@ -29,11 +29,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
-import org.jvalue.ods.data.schema.ListSchema;
-import org.jvalue.ods.data.schema.MapSchema;
-import org.jvalue.ods.data.schema.NumberSchema;
-import org.jvalue.ods.data.schema.Schema;
-import org.jvalue.ods.data.schema.StringSchema;
+import org.jvalue.ods.data.schema.AllowedBaseObjectTypes;
+import org.jvalue.ods.data.schema.ListObjectType;
+import org.jvalue.ods.data.schema.MapObjectType;
+import org.jvalue.ods.data.schema.GenericObjectType;
 import org.jvalue.ods.grabber.Translator;
 import org.jvalue.ods.translator.JsonTranslator;
 
@@ -92,68 +91,68 @@ public class JsonTranslatorTest {
 	 * 
 	 * @return the schema
 	 */
-	private static Schema createOpenWeatherSchema() {
-		Map<String, Schema> coord = new HashMap<String, Schema>();
-		coord.put("lon", new NumberSchema());
-		coord.put("lat", new NumberSchema());
-		MapSchema coordSchema = new MapSchema(coord);
+	private static GenericObjectType createOpenWeatherSchema() {
+		Map<String, GenericObjectType> coord = new HashMap<String, GenericObjectType>();
+		coord.put("lon", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
+		coord.put("lat", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
+		MapObjectType coordSchema = new MapObjectType(coord);
 
-		Map<String, Schema> sys = new HashMap<String, Schema>();
-		sys.put("message", new NumberSchema());
-		sys.put("country", new StringSchema());
-		sys.put("sunrise", new NumberSchema());
-		sys.put("sunset", new NumberSchema());
-		MapSchema sysSchema = new MapSchema(sys);
+		Map<String, GenericObjectType> sys = new HashMap<String, GenericObjectType>();
+		sys.put("message", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
+		sys.put("country", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
+		sys.put("sunrise", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
+		sys.put("sunset", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
+		MapObjectType sysSchema = new MapObjectType(sys);
 
-		Map<String, Schema> weather = new HashMap<String, Schema>();
-		weather.put("id", new NumberSchema());
-		weather.put("main", new StringSchema());
-		weather.put("description", new StringSchema());
-		weather.put("icon", new StringSchema());
-		MapSchema weatherSchema = new MapSchema(weather);
-		List<Schema> weatherList = new LinkedList<Schema>();
+		Map<String, GenericObjectType> weather = new HashMap<String, GenericObjectType>();
+		weather.put("id", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
+		weather.put("main", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
+		weather.put("description", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
+		weather.put("icon", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
+		MapObjectType weatherSchema = new MapObjectType(weather);
+		List<GenericObjectType> weatherList = new LinkedList<GenericObjectType>();
 		weatherList.add(weatherSchema);
-		ListSchema weatherListSchema = new ListSchema(weatherList);
+		ListObjectType weatherListSchema = new ListObjectType(weatherList);
 
-		Map<String, Schema> main = new HashMap<String, Schema>();
-		main.put("temp", new NumberSchema());
-		main.put("humidity", new NumberSchema());
-		main.put("pressure", new NumberSchema());
-		main.put("temp_min", new NumberSchema());
-		main.put("temp_max", new NumberSchema());
-		main.put("sea_level", new NumberSchema());
-		main.put("grnd_level", new NumberSchema());
-		MapSchema mainSchema = new MapSchema(main);
+		Map<String, GenericObjectType> main = new HashMap<String, GenericObjectType>();
+		main.put("temp", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
+		main.put("humidity", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
+		main.put("pressure", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
+		main.put("temp_min", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
+		main.put("temp_max", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
+		main.put("sea_level", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
+		main.put("grnd_level", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
+		MapObjectType mainSchema = new MapObjectType(main);
 
-		Map<String, Schema> wind = new HashMap<String, Schema>();
-		wind.put("speed", new NumberSchema());
-		wind.put("gust", new NumberSchema());
-		wind.put("deg", new NumberSchema());
-		MapSchema windSchema = new MapSchema(wind);
+		Map<String, GenericObjectType> wind = new HashMap<String, GenericObjectType>();
+		wind.put("speed", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
+		wind.put("gust", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
+		wind.put("deg", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
+		MapObjectType windSchema = new MapObjectType(wind);
 
-		Map<String, Schema> rain = new HashMap<String, Schema>();
-		rain.put("1h", new NumberSchema());
-		rain.put("3h", new NumberSchema());
-		MapSchema rainSchema = new MapSchema(rain);
+		Map<String, GenericObjectType> rain = new HashMap<String, GenericObjectType>();
+		rain.put("1h", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
+		rain.put("3h", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
+		MapObjectType rainSchema = new MapObjectType(rain);
 
-		Map<String, Schema> clouds = new HashMap<String, Schema>();
-		clouds.put("all", new NumberSchema());
-		MapSchema cloudsSchema = new MapSchema(clouds);
+		Map<String, GenericObjectType> clouds = new HashMap<String, GenericObjectType>();
+		clouds.put("all", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
+		MapObjectType cloudsSchema = new MapObjectType(clouds);
 
-		Map<String, Schema> result = new HashMap<String, Schema>();
+		Map<String, GenericObjectType> result = new HashMap<String, GenericObjectType>();
 		result.put("coord", coordSchema);
 		result.put("sys", sysSchema);
 		result.put("weather", weatherListSchema);
-		result.put("base", new StringSchema());
+		result.put("base", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
 		result.put("main", mainSchema);
 		result.put("wind", windSchema);
 		result.put("rain", rainSchema);
 		result.put("clouds", cloudsSchema);
-		result.put("dt", new NumberSchema());
-		result.put("id", new NumberSchema());
-		result.put("name", new StringSchema());
-		result.put("cod", new NumberSchema());
-		MapSchema resultSchema = new MapSchema(result);
+		result.put("dt", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
+		result.put("id", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
+		result.put("name", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
+		result.put("cod", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
+		MapObjectType resultSchema = new MapObjectType(result);
 
 		return resultSchema;
 	}
@@ -163,9 +162,9 @@ public class JsonTranslatorTest {
 	 */
 	@Test()
 	public void testTranslateWithSchema() {
-		Schema schema = createOpenWeatherSchema();
+		GenericObjectType genericObjectType = createOpenWeatherSchema();
 		String url = "http://api.openweathermap.org/data/2.5/weather?q=Nuremberg,de";
-		GenericEntity gv = translator.translate(new DataSource(url, schema));
+		GenericEntity gv = translator.translate(new DataSource(url, genericObjectType));
 		assertNotNull(gv);
 	}
 
