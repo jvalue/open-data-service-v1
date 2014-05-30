@@ -35,19 +35,7 @@ public class AllowedBaseObjectTypes {
 	 *            the name
 	 * @return the data type
 	 */
-	public static BaseObjectType getBaseObjectType(String name) {
-		if (!map.containsKey("Coordinate"))
-			addBaseObjectType("Coordinate", new BaseObjectType("Coordinate", ObjectTypeEnum.Reference));		
-		if (!map.containsKey("java.lang.String"))
-			addBaseObjectType("java.lang.String", new BaseObjectType("java.lang.String", ObjectTypeEnum.Domain));
-		if (!map.containsKey("java.lang.Number"))
-			addBaseObjectType("java.lang.Number", new BaseObjectType("java.lang.Number", ObjectTypeEnum.Domain));
-		if (!map.containsKey("java.lang.Boolean"))
-			addBaseObjectType("java.lang.Boolean", new BaseObjectType("java.lang.Boolean", ObjectTypeEnum.Domain));
-		if (!map.containsKey("Null"))
-			addBaseObjectType("Null", new BaseObjectType("Null", ObjectTypeEnum.Domain));
-		
-		
+	public static BaseObjectType getBaseObjectType(String name) {		
 		return map.get(name);
 	}
 	

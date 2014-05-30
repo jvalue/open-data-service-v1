@@ -30,9 +30,11 @@ import org.jvalue.numbers.RangeBound;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.MapObject;
 import org.jvalue.ods.data.schema.AllowedBaseObjectTypes;
+import org.jvalue.ods.data.schema.BaseObjectType;
 import org.jvalue.ods.data.schema.ListObjectType;
 import org.jvalue.ods.data.schema.MapObjectType;
 import org.jvalue.ods.data.schema.GenericObjectType;
+import org.jvalue.ods.data.schema.ObjectTypeEnum;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.exception.DbException;
@@ -80,6 +82,14 @@ public class QualityAssuranceMain {
 	 */
 	public static void main(String[] args) throws JsonProcessingException {
 
+		AllowedBaseObjectTypes.addBaseObjectType("Coordinate", new BaseObjectType("Coordinate", ObjectTypeEnum.Reference));		
+		AllowedBaseObjectTypes.addBaseObjectType("java.lang.String", new BaseObjectType("java.lang.String", ObjectTypeEnum.Domain));
+		AllowedBaseObjectTypes.addBaseObjectType("java.lang.Number", new BaseObjectType("java.lang.Number", ObjectTypeEnum.Domain));
+		AllowedBaseObjectTypes.addBaseObjectType("java.lang.Boolean", new BaseObjectType("java.lang.Boolean", ObjectTypeEnum.Domain));
+		AllowedBaseObjectTypes.addBaseObjectType("Null", new BaseObjectType("Null", ObjectTypeEnum.Domain));
+		
+		
+		
 		valueTypes = new HashMap<>();
 		valueTypes.put("waterLevelTrend", createWaterLevelTrendType());
 		valueTypes.put("waterLevel", createWaterLevelType());
