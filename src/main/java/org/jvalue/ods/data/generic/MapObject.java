@@ -31,9 +31,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 @JsonInclude(Include.NON_NULL)
 public class MapObject extends GenericEntity {
 
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = 1L;
-
+	private static final long serialVersionUID = -7476268653001753943L;
+	
 	/** The map. */
 	private Map<String, Serializable> map = new HashMap<String, Serializable>();
 

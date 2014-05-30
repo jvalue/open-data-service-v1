@@ -32,9 +32,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 @JsonInclude(Include.NON_NULL)
 public class ListObject extends GenericEntity {
 
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = 1L;
-
+	private static final long serialVersionUID = 3269881048191211570L;
+	
 	/** The list. */
 	private List<Serializable> list = new LinkedList<Serializable>();
 

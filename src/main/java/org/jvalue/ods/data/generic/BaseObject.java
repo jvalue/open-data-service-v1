@@ -9,10 +9,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public class BaseObject extends GenericEntity {
 
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 5642565077433654663L;
 	
-
 	/** The object. */
 	private Serializable object;
 	
