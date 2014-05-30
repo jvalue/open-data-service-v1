@@ -30,9 +30,11 @@ import org.junit.Test;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.schema.AllowedBaseObjectTypes;
+import org.jvalue.ods.data.schema.BaseObjectType;
 import org.jvalue.ods.data.schema.ListObjectType;
 import org.jvalue.ods.data.schema.MapObjectType;
 import org.jvalue.ods.data.schema.GenericObjectType;
+import org.jvalue.ods.data.schema.ObjectTypeEnum;
 import org.jvalue.ods.grabber.Translator;
 import org.jvalue.ods.translator.JsonTranslator;
 
@@ -162,6 +164,12 @@ public class JsonTranslatorTest {
 	 */
 	@Test()
 	public void testTranslateWithSchema() {
+		AllowedBaseObjectTypes.addBaseObjectType("java.lang.String", new BaseObjectType("java.lang.String", ObjectTypeEnum.Domain));
+		AllowedBaseObjectTypes.addBaseObjectType("java.lang.Number", new BaseObjectType("java.lang.Number", ObjectTypeEnum.Domain));
+		AllowedBaseObjectTypes.addBaseObjectType("java.lang.Boolean", new BaseObjectType("java.lang.Boolean", ObjectTypeEnum.Domain));
+		AllowedBaseObjectTypes.addBaseObjectType("Null", new BaseObjectType("Null", ObjectTypeEnum.Domain));
+		
+		
 		GenericObjectType genericObjectType = createOpenWeatherSchema();
 		String url = "http://api.openweathermap.org/data/2.5/weather?q=Nuremberg,de";
 		GenericEntity gv = translator.translate(new DataSource(url, genericObjectType));

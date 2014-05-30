@@ -14,9 +14,11 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import org.jvalue.ods.data.schema.AllowedBaseObjectTypes;
+import org.jvalue.ods.data.schema.BaseObjectType;
 import org.jvalue.ods.data.schema.ListObjectType;
 import org.jvalue.ods.data.schema.MapObjectType;
 import org.jvalue.ods.data.schema.GenericObjectType;
+import org.jvalue.ods.data.schema.ObjectTypeEnum;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jackson.JsonLoader;
@@ -51,6 +53,12 @@ public class SchemaManagerTest {
 	 */
 	@Test
 	public void testCreateJsonSchema() throws IOException {
+		AllowedBaseObjectTypes.addBaseObjectType("Null", new BaseObjectType("Null", ObjectTypeEnum.Domain));
+		AllowedBaseObjectTypes.addBaseObjectType("java.lang.String", new BaseObjectType("java.lang.String", ObjectTypeEnum.Domain));
+		AllowedBaseObjectTypes.addBaseObjectType("java.lang.Number", new BaseObjectType("java.lang.Number", ObjectTypeEnum.Domain));
+		AllowedBaseObjectTypes.addBaseObjectType("java.lang.Boolean", new BaseObjectType("java.lang.Boolean", ObjectTypeEnum.Domain));
+		
+		
 		GenericObjectType s = createSchema();
 		String result = SchemaManager.createJsonSchema(s);
 		assertNotNull(result);
