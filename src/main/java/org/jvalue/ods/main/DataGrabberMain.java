@@ -30,9 +30,9 @@ import org.jvalue.ods.data.OdsView;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
-import org.jvalue.ods.data.schema.AllowedBaseObjectTypes;
-import org.jvalue.ods.data.schema.BaseObjectType;
-import org.jvalue.ods.data.schema.MapObjectType;
+import org.jvalue.ods.data.schema.AllowedValueTypes;
+import org.jvalue.ods.data.schema.SimpleValueType;
+import org.jvalue.ods.data.schema.MapComplexValueType;
 import org.jvalue.ods.data.schema.ObjectTypeEnum;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
@@ -58,11 +58,11 @@ public class DataGrabberMain {
 	 *            the arguments
 	 */
 	public static void main(String[] args) {		
-		AllowedBaseObjectTypes.addBaseObjectType("Coordinate", new BaseObjectType("Coordinate", ObjectTypeEnum.Reference));		
-		AllowedBaseObjectTypes.addBaseObjectType("java.lang.String", new BaseObjectType("java.lang.String", ObjectTypeEnum.Domain));
-		AllowedBaseObjectTypes.addBaseObjectType("java.lang.Number", new BaseObjectType("java.lang.Number", ObjectTypeEnum.Domain));
-		AllowedBaseObjectTypes.addBaseObjectType("java.lang.Boolean", new BaseObjectType("java.lang.Boolean", ObjectTypeEnum.Domain));
-		AllowedBaseObjectTypes.addBaseObjectType("Null", new BaseObjectType("Null", ObjectTypeEnum.Domain));
+		AllowedValueTypes.addBaseObjectType("Coordinate", new SimpleValueType("Coordinate", ObjectTypeEnum.Reference));		
+		AllowedValueTypes.addBaseObjectType("java.lang.String", new SimpleValueType("java.lang.String", ObjectTypeEnum.Domain));
+		AllowedValueTypes.addBaseObjectType("java.lang.Number", new SimpleValueType("java.lang.Number", ObjectTypeEnum.Domain));
+		AllowedValueTypes.addBaseObjectType("java.lang.Boolean", new SimpleValueType("java.lang.Boolean", ObjectTypeEnum.Domain));
+		AllowedValueTypes.addBaseObjectType("Null", new SimpleValueType("Null", ObjectTypeEnum.Domain));
 		
 		
 		Logging.adminLog("Update started");
@@ -100,7 +100,7 @@ public class DataGrabberMain {
 	 * @param gv
 	 *            the gv
 	 */
-	private static void insertDbBulk(MapObjectType schema, GenericEntity gv) {
+	private static void insertDbBulk(MapComplexValueType schema, GenericEntity gv) {
 		if (gv instanceof ListObject) {
 
 			ListObject lv = (ListObject) gv;

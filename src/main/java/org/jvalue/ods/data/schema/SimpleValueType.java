@@ -4,9 +4,9 @@
 package org.jvalue.ods.data.schema;
 
 /**
- * The Class BaseObjectType.
+ * The Class SimpleObjectType.
  */
-public class BaseObjectType extends GenericObjectType {
+public class SimpleValueType extends GenericValueType {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -2148204345426479777L;
@@ -18,12 +18,12 @@ public class BaseObjectType extends GenericObjectType {
 	private ObjectTypeEnum type;
 	
 	/**
-	 * Instantiates a new base object type.
+	 * Instantiates a new simple value type.
 	 *
 	 * @param name the name
 	 * @param type the type
 	 */
-	public BaseObjectType(String name, ObjectTypeEnum type) {
+	public SimpleValueType(String name, ObjectTypeEnum type) {
 		this.setName(name);
 		this.setType(type);
 	}

@@ -26,10 +26,10 @@ import org.jvalue.ods.data.generic.BaseObject;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
-import org.jvalue.ods.data.schema.BaseObjectType;
-import org.jvalue.ods.data.schema.ListObjectType;
-import org.jvalue.ods.data.schema.MapObjectType;
-import org.jvalue.ods.data.schema.GenericObjectType;
+import org.jvalue.ods.data.schema.SimpleValueType;
+import org.jvalue.ods.data.schema.ListComplexValueType;
+import org.jvalue.ods.data.schema.MapComplexValueType;
+import org.jvalue.ods.data.schema.GenericValueType;
 import org.jvalue.ods.grabber.Translator;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.schema.SchemaManager;
@@ -101,7 +101,7 @@ public class JsonTranslator implements Translator {
 	 *            the c
 	 * @return true, if is class of
 	 */
-	private boolean isClassOf(GenericObjectType genericObjectType, Class<?> c) {
+	private boolean isClassOf(GenericValueType genericObjectType, Class<?> c) {
 		boolean result = genericObjectType.getClass().equals(c);
 		if (result == false) {
 			String error = "Validation error: Expected: "
@@ -124,35 +124,35 @@ public class JsonTranslator implements Translator {
 	 *            the schema
 	 * @return true, if successful
 	 */
-	private boolean validate(JsonNode node, GenericObjectType genericObjectType) {
+	private boolean validate(JsonNode node, GenericValueType genericObjectType) {
 		if (node.isBoolean()) {
-			if (!isClassOf(genericObjectType, BaseObjectType.class) || (((BaseObjectType)genericObjectType).getName() != "java.lang.Boolean")) {
+			if (!isClassOf(genericObjectType, SimpleValueType.class) || (((SimpleValueType)genericObjectType).getName() != "java.lang.Boolean")) {
 				// not boolean
 				return false;
 			}
 		} else if (node.isNull()) {
-			if (!isClassOf(genericObjectType, BaseObjectType.class) || (((BaseObjectType)genericObjectType).getName() != "java.lang.Number")) {
+			if (!isClassOf(genericObjectType, SimpleValueType.class) || (((SimpleValueType)genericObjectType).getName() != "java.lang.Number")) {
 				// not null
 				return false;
 			}
 		} else if (node.isTextual()) {
-			if (!isClassOf(genericObjectType, BaseObjectType.class) || (((BaseObjectType)genericObjectType).getName() != "java.lang.String")) {
+			if (!isClassOf(genericObjectType, SimpleValueType.class) || (((SimpleValueType)genericObjectType).getName() != "java.lang.String")) {
 				// not string
 				return false;
 			}
 		} else if (node.isArray()) {
-			if (!isClassOf(genericObjectType, ListObjectType.class)) {
+			if (!isClassOf(genericObjectType, ListComplexValueType.class)) {
 				// not list
 				return false;
 			} else {
-				return validateList(node, (ListObjectType) genericObjectType);
+				return validateList(node, (ListComplexValueType) genericObjectType);
 			}
 		} else if (node.isObject()) {
-			if (!isClassOf(genericObjectType, MapObjectType.class)) {
+			if (!isClassOf(genericObjectType, MapComplexValueType.class)) {
 				// not map
 				return false;
 			} else {
-				return validateMap(node, (MapObjectType) genericObjectType);
+				return validateMap(node, (MapComplexValueType) genericObjectType);
 			}
 		}
 		return true;
@@ -167,8 +167,8 @@ public class JsonTranslator implements Translator {
 	 *            the schema
 	 * @return true, if successful
 	 */
-	private boolean validateMap(JsonNode node, MapObjectType schema) {
-		Map<String, GenericObjectType> map = schema.getMap();
+	private boolean validateMap(JsonNode node, MapComplexValueType schema) {
+		Map<String, GenericValueType> map = schema.getMap();
 
 		Iterator<Map.Entry<String, JsonNode>> fields = node.fields();
 		while (fields.hasNext()) {
@@ -199,7 +199,7 @@ public class JsonTranslator implements Translator {
 	 *            the schema
 	 * @return true, if successful
 	 */
-	private boolean validateList(JsonNode node, ListObjectType schema) {
+	private boolean validateList(JsonNode node, ListComplexValueType schema) {
 		for (JsonNode n : node) {
 			if (n.isBoolean()) {
 				if (!containsBaseObjectType(schema, "java.lang.Boolean")) {
@@ -226,20 +226,20 @@ public class JsonTranslator implements Translator {
 			
 
 			else if (n.isArray()) {
-				if (!containsClass(schema, ListObjectType.class)) {
+				if (!containsClass(schema, ListComplexValueType.class)) {
 					// expected schema not found
 					return false;
 				} else {
-					boolean result = findValidation(n, schema, ListObjectType.class);
+					boolean result = findValidation(n, schema, ListComplexValueType.class);
 					if (result == false)
 						return false;
 				}
 			} else if (n.isObject()) {
-				if (!containsClass(schema, MapObjectType.class)) {
+				if (!containsClass(schema, MapComplexValueType.class)) {
 					// expected schema not found
 					return false;
 				} else {
-					boolean result = findValidation(n, schema, MapObjectType.class);
+					boolean result = findValidation(n, schema, MapComplexValueType.class);
 					if (result == false)
 						return false;
 				}
@@ -259,8 +259,8 @@ public class JsonTranslator implements Translator {
 	 *            the c
 	 * @return true, if successful
 	 */
-	private boolean findValidation(JsonNode n, ListObjectType schema, Class<?> c) {
-		for (GenericObjectType s : schema.getList()) {
+	private boolean findValidation(JsonNode n, ListComplexValueType schema, Class<?> c) {
+		for (GenericValueType s : schema.getList()) {
 			if (s.getClass().equals(c)) {
 				boolean result = validate(n, s);
 				if (result == true)
@@ -278,11 +278,11 @@ public class JsonTranslator implements Translator {
 	 * @param name the name
 	 * @return true, if successful
 	 */
-	private boolean containsBaseObjectType(ListObjectType schema, String name) {
-		for (GenericObjectType s : schema.getList()) {
-			if (s.getClass().equals(BaseObjectType.class))
+	private boolean containsBaseObjectType(ListComplexValueType schema, String name) {
+		for (GenericValueType s : schema.getList()) {
+			if (s.getClass().equals(SimpleValueType.class))
 			{
-				if (((BaseObjectType) s).getName() == name)
+				if (((SimpleValueType) s).getName() == name)
 					return true;
 			}
 		}
@@ -297,8 +297,8 @@ public class JsonTranslator implements Translator {
 	 * @param c the c
 	 * @return true, if successful
 	 */
-	private boolean containsClass(ListObjectType schema, Class<?> c) {
-		for (GenericObjectType s : schema.getList()) {
+	private boolean containsClass(ListComplexValueType schema, Class<?> c) {
+		for (GenericValueType s : schema.getList()) {
 			if (s.getClass().equals(c))
 				return true;
 		}

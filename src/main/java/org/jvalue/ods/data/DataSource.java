@@ -17,7 +17,7 @@
  */
 package org.jvalue.ods.data;
 
-import org.jvalue.ods.data.schema.GenericObjectType;
+import org.jvalue.ods.data.schema.GenericValueType;
 
 /**
  * The Class DataSource.
@@ -28,7 +28,7 @@ public class DataSource {
 	private final String url;
 
 	/** The data source schema. */
-	private final GenericObjectType dataSourceSchema;
+	private final GenericValueType dataSourceSchema;
 
 	/**
 	 * Instantiates a new data source.
@@ -38,7 +38,7 @@ public class DataSource {
 	 * @param dataSourceSchema
 	 *            the data source schema
 	 */
-	public DataSource(String url, GenericObjectType dataSourceSchema) {
+	public DataSource(String url, GenericValueType dataSourceSchema) {
 		this.url = url;
 		this.dataSourceSchema = dataSourceSchema;
 	}
@@ -57,7 +57,7 @@ public class DataSource {
 	 * 
 	 * @return the data source schema
 	 */
-	public GenericObjectType getDataSourceSchema() {
+	public GenericValueType getDataSourceSchema() {
 		return dataSourceSchema;
 	}
 }

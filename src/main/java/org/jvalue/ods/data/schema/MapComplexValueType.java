@@ -20,37 +20,40 @@ package org.jvalue.ods.data.schema;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 /**
- * The Class AllowedDataTypes.
+ * The Class MapSchema.
  */
-public class AllowedBaseObjectTypes {
+@JsonInclude(Include.NON_NULL)
+public class MapComplexValueType extends GenericValueType {
 
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 1975312956045824117L;
+	
 	/** The map. */
-	private static Map<String, BaseObjectType> map = new HashMap<String, BaseObjectType>();
+	private Map<String, GenericValueType> map = new HashMap<String, GenericValueType>();
 
 	/**
-	 * Gets the data type.
+	 * Instantiates a new map schema.
 	 * 
-	 * @param name
-	 *            the name
-	 * @return the data type
+	 * @param map
+	 *            the map
 	 */
-	public static BaseObjectType getBaseObjectType(String name) {		
-		return map.get(name);
+	public MapComplexValueType(Map<String, GenericValueType> map) {
+		this.map = map;
 	}
-	
-	
+
 	/**
-	 * Adds the base object type.
-	 *
-	 * @param name the name
-	 * @param baseObjectType the base object type
+	 * Gets the map.
+	 * 
+	 * @return the map
 	 */
-	public static void addBaseObjectType(String name, BaseObjectType baseObjectType) {
-		if (map.containsKey(name))
-			throw new RuntimeException("A BaseObjectType with name " + name + " already exists!");
-		
-		map.put(name, baseObjectType);
+	@JsonValue
+	public Map<String, GenericValueType> getMap() {
+		return map;
 	}
 
 }

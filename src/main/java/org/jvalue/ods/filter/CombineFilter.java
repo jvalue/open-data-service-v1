@@ -23,10 +23,10 @@ import java.util.Map.Entry;
 
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
-import org.jvalue.ods.data.schema.BaseObjectType;
-import org.jvalue.ods.data.schema.ListObjectType;
-import org.jvalue.ods.data.schema.MapObjectType;
-import org.jvalue.ods.data.schema.GenericObjectType;
+import org.jvalue.ods.data.schema.SimpleValueType;
+import org.jvalue.ods.data.schema.ListComplexValueType;
+import org.jvalue.ods.data.schema.MapComplexValueType;
+import org.jvalue.ods.data.schema.GenericValueType;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.schema.SchemaManager;
 
@@ -39,10 +39,10 @@ public class CombineFilter implements OdsFilter {
 	protected MapObject data;
 
 	/** The schema. */
-	private MapObjectType schema;
+	private MapComplexValueType schema;
 
 	/** The combined schema. */
-	private MapObjectType combinedSchema;
+	private MapComplexValueType combinedSchema;
 
 	/**
 	 * Instantiates a new combine filter.
@@ -51,8 +51,8 @@ public class CombineFilter implements OdsFilter {
 	 * @param schema the schema
 	 * @param combinedSchema the combined schema
 	 */
-	public CombineFilter(MapObject data, MapObjectType schema,
-			MapObjectType combinedSchema) {
+	public CombineFilter(MapObject data, MapComplexValueType schema,
+			MapComplexValueType combinedSchema) {
 		this.data = data;
 		this.schema = schema;
 		this.combinedSchema = combinedSchema;
@@ -87,15 +87,15 @@ public class CombineFilter implements OdsFilter {
 	 * @param serializable the data
 	 * @param map the map
 	 */
-	private void traverseSchema(GenericObjectType sourceStructure, Serializable serializable,
+	private void traverseSchema(GenericValueType sourceStructure, Serializable serializable,
 			Map<String, Serializable> map) {
 
-		if (sourceStructure instanceof MapObjectType) {
+		if (sourceStructure instanceof MapComplexValueType) {
 
-			for (Entry<String, GenericObjectType> e : ((MapObjectType) sourceStructure)
+			for (Entry<String, GenericValueType> e : ((MapComplexValueType) sourceStructure)
 					.getMap().entrySet()) {
 
-				if ((e.getValue() instanceof BaseObjectType) && (((BaseObjectType)e.getValue()).getName() != "Null")) {
+				if ((e.getValue() instanceof SimpleValueType) && (((SimpleValueType)e.getValue()).getName() != "Null")) {
 					
 					map.put(e.getKey(), ((MapObject) serializable).getMap()
 							.remove(e.getKey()));
@@ -105,11 +105,11 @@ public class CombineFilter implements OdsFilter {
 							.get(e.getKey()), map);
 				}
 			}
-		} else if (sourceStructure instanceof ListObjectType) {
+		} else if (sourceStructure instanceof ListComplexValueType) {
 
 			for (Serializable gv : ((ListObject) serializable).getList()) {
 
-				traverseSchema(((ListObjectType) sourceStructure).getList().get(0),
+				traverseSchema(((ListComplexValueType) sourceStructure).getList().get(0),
 						gv, map);
 
 			}
@@ -125,11 +125,11 @@ public class CombineFilter implements OdsFilter {
 	 * @param destinationStructure the destination structure
 	 */
 	private void insertCombinedValue(Serializable serializable, MapObject mv,
-			GenericObjectType destinationStructure) {
+			GenericValueType destinationStructure) {
 
-		if (destinationStructure instanceof MapObjectType) {
+		if (destinationStructure instanceof MapComplexValueType) {
 
-			for (Entry<String, GenericObjectType> e : ((MapObjectType) destinationStructure)
+			for (Entry<String, GenericValueType> e : ((MapComplexValueType) destinationStructure)
 					.getMap().entrySet()) {
 
 				if (e.getValue() == null) {
@@ -157,7 +157,7 @@ public class CombineFilter implements OdsFilter {
 							e.getValue());
 				}
 			}
-		} else if (destinationStructure instanceof ListObjectType) {
+		} else if (destinationStructure instanceof ListComplexValueType) {
 
 			if (!(serializable instanceof ListObject)) {
 				String errmsg = "Invalid combinedSchema.";
@@ -168,7 +168,7 @@ public class CombineFilter implements OdsFilter {
 
 			for (Serializable gv : ((ListObject) serializable).getList()) {
 
-				insertCombinedValue(gv, mv, ((ListObjectType) destinationStructure)
+				insertCombinedValue(gv, mv, ((ListComplexValueType) destinationStructure)
 						.getList().get(0));
 			}
 

@@ -29,11 +29,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
-import org.jvalue.ods.data.schema.AllowedBaseObjectTypes;
-import org.jvalue.ods.data.schema.BaseObjectType;
-import org.jvalue.ods.data.schema.ListObjectType;
-import org.jvalue.ods.data.schema.MapObjectType;
-import org.jvalue.ods.data.schema.GenericObjectType;
+import org.jvalue.ods.data.schema.AllowedValueTypes;
+import org.jvalue.ods.data.schema.SimpleValueType;
+import org.jvalue.ods.data.schema.ListComplexValueType;
+import org.jvalue.ods.data.schema.MapComplexValueType;
+import org.jvalue.ods.data.schema.GenericValueType;
 import org.jvalue.ods.data.schema.ObjectTypeEnum;
 import org.jvalue.ods.grabber.Translator;
 import org.jvalue.ods.translator.JsonTranslator;
@@ -93,68 +93,68 @@ public class JsonTranslatorTest {
 	 * 
 	 * @return the schema
 	 */
-	private static GenericObjectType createOpenWeatherSchema() {
-		Map<String, GenericObjectType> coord = new HashMap<String, GenericObjectType>();
-		coord.put("lon", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
-		coord.put("lat", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
-		MapObjectType coordSchema = new MapObjectType(coord);
+	private static GenericValueType createOpenWeatherSchema() {
+		Map<String, GenericValueType> coord = new HashMap<String, GenericValueType>();
+		coord.put("lon", AllowedValueTypes.getGenericValueType("java.lang.Number"));
+		coord.put("lat", AllowedValueTypes.getGenericValueType("java.lang.Number"));
+		MapComplexValueType coordSchema = new MapComplexValueType(coord);
 
-		Map<String, GenericObjectType> sys = new HashMap<String, GenericObjectType>();
-		sys.put("message", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
-		sys.put("country", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
-		sys.put("sunrise", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
-		sys.put("sunset", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
-		MapObjectType sysSchema = new MapObjectType(sys);
+		Map<String, GenericValueType> sys = new HashMap<String, GenericValueType>();
+		sys.put("message", AllowedValueTypes.getGenericValueType("java.lang.Number"));
+		sys.put("country", AllowedValueTypes.getGenericValueType("java.lang.String"));
+		sys.put("sunrise", AllowedValueTypes.getGenericValueType("java.lang.Number"));
+		sys.put("sunset", AllowedValueTypes.getGenericValueType("java.lang.Number"));
+		MapComplexValueType sysSchema = new MapComplexValueType(sys);
 
-		Map<String, GenericObjectType> weather = new HashMap<String, GenericObjectType>();
-		weather.put("id", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
-		weather.put("main", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
-		weather.put("description", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
-		weather.put("icon", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
-		MapObjectType weatherSchema = new MapObjectType(weather);
-		List<GenericObjectType> weatherList = new LinkedList<GenericObjectType>();
+		Map<String, GenericValueType> weather = new HashMap<String, GenericValueType>();
+		weather.put("id", AllowedValueTypes.getGenericValueType("java.lang.Number"));
+		weather.put("main", AllowedValueTypes.getGenericValueType("java.lang.String"));
+		weather.put("description", AllowedValueTypes.getGenericValueType("java.lang.String"));
+		weather.put("icon", AllowedValueTypes.getGenericValueType("java.lang.String"));
+		MapComplexValueType weatherSchema = new MapComplexValueType(weather);
+		List<GenericValueType> weatherList = new LinkedList<GenericValueType>();
 		weatherList.add(weatherSchema);
-		ListObjectType weatherListSchema = new ListObjectType(weatherList);
+		ListComplexValueType weatherListSchema = new ListComplexValueType(weatherList);
 
-		Map<String, GenericObjectType> main = new HashMap<String, GenericObjectType>();
-		main.put("temp", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
-		main.put("humidity", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
-		main.put("pressure", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
-		main.put("temp_min", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
-		main.put("temp_max", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
-		main.put("sea_level", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
-		main.put("grnd_level", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
-		MapObjectType mainSchema = new MapObjectType(main);
+		Map<String, GenericValueType> main = new HashMap<String, GenericValueType>();
+		main.put("temp", AllowedValueTypes.getGenericValueType("java.lang.Number"));
+		main.put("humidity", AllowedValueTypes.getGenericValueType("java.lang.Number"));
+		main.put("pressure", AllowedValueTypes.getGenericValueType("java.lang.Number"));
+		main.put("temp_min", AllowedValueTypes.getGenericValueType("java.lang.Number"));
+		main.put("temp_max", AllowedValueTypes.getGenericValueType("java.lang.Number"));
+		main.put("sea_level", AllowedValueTypes.getGenericValueType("java.lang.Number"));
+		main.put("grnd_level", AllowedValueTypes.getGenericValueType("java.lang.Number"));
+		MapComplexValueType mainSchema = new MapComplexValueType(main);
 
-		Map<String, GenericObjectType> wind = new HashMap<String, GenericObjectType>();
-		wind.put("speed", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
-		wind.put("gust", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
-		wind.put("deg", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
-		MapObjectType windSchema = new MapObjectType(wind);
+		Map<String, GenericValueType> wind = new HashMap<String, GenericValueType>();
+		wind.put("speed", AllowedValueTypes.getGenericValueType("java.lang.Number"));
+		wind.put("gust", AllowedValueTypes.getGenericValueType("java.lang.Number"));
+		wind.put("deg", AllowedValueTypes.getGenericValueType("java.lang.Number"));
+		MapComplexValueType windSchema = new MapComplexValueType(wind);
 
-		Map<String, GenericObjectType> rain = new HashMap<String, GenericObjectType>();
-		rain.put("1h", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
-		rain.put("3h", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
-		MapObjectType rainSchema = new MapObjectType(rain);
+		Map<String, GenericValueType> rain = new HashMap<String, GenericValueType>();
+		rain.put("1h", AllowedValueTypes.getGenericValueType("java.lang.Number"));
+		rain.put("3h", AllowedValueTypes.getGenericValueType("java.lang.Number"));
+		MapComplexValueType rainSchema = new MapComplexValueType(rain);
 
-		Map<String, GenericObjectType> clouds = new HashMap<String, GenericObjectType>();
-		clouds.put("all", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
-		MapObjectType cloudsSchema = new MapObjectType(clouds);
+		Map<String, GenericValueType> clouds = new HashMap<String, GenericValueType>();
+		clouds.put("all", AllowedValueTypes.getGenericValueType("java.lang.Number"));
+		MapComplexValueType cloudsSchema = new MapComplexValueType(clouds);
 
-		Map<String, GenericObjectType> result = new HashMap<String, GenericObjectType>();
+		Map<String, GenericValueType> result = new HashMap<String, GenericValueType>();
 		result.put("coord", coordSchema);
 		result.put("sys", sysSchema);
 		result.put("weather", weatherListSchema);
-		result.put("base", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
+		result.put("base", AllowedValueTypes.getGenericValueType("java.lang.String"));
 		result.put("main", mainSchema);
 		result.put("wind", windSchema);
 		result.put("rain", rainSchema);
 		result.put("clouds", cloudsSchema);
-		result.put("dt", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
-		result.put("id", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
-		result.put("name", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
-		result.put("cod", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
-		MapObjectType resultSchema = new MapObjectType(result);
+		result.put("dt", AllowedValueTypes.getGenericValueType("java.lang.Number"));
+		result.put("id", AllowedValueTypes.getGenericValueType("java.lang.Number"));
+		result.put("name", AllowedValueTypes.getGenericValueType("java.lang.String"));
+		result.put("cod", AllowedValueTypes.getGenericValueType("java.lang.Number"));
+		MapComplexValueType resultSchema = new MapComplexValueType(result);
 
 		return resultSchema;
 	}
@@ -164,13 +164,13 @@ public class JsonTranslatorTest {
 	 */
 	@Test()
 	public void testTranslateWithSchema() {
-		AllowedBaseObjectTypes.addBaseObjectType("java.lang.String", new BaseObjectType("java.lang.String", ObjectTypeEnum.Domain));
-		AllowedBaseObjectTypes.addBaseObjectType("java.lang.Number", new BaseObjectType("java.lang.Number", ObjectTypeEnum.Domain));
-		AllowedBaseObjectTypes.addBaseObjectType("java.lang.Boolean", new BaseObjectType("java.lang.Boolean", ObjectTypeEnum.Domain));
-		AllowedBaseObjectTypes.addBaseObjectType("Null", new BaseObjectType("Null", ObjectTypeEnum.Domain));
+		AllowedValueTypes.addBaseObjectType("java.lang.String", new SimpleValueType("java.lang.String", ObjectTypeEnum.Domain));
+		AllowedValueTypes.addBaseObjectType("java.lang.Number", new SimpleValueType("java.lang.Number", ObjectTypeEnum.Domain));
+		AllowedValueTypes.addBaseObjectType("java.lang.Boolean", new SimpleValueType("java.lang.Boolean", ObjectTypeEnum.Domain));
+		AllowedValueTypes.addBaseObjectType("Null", new SimpleValueType("Null", ObjectTypeEnum.Domain));
 		
 		
-		GenericObjectType genericObjectType = createOpenWeatherSchema();
+		GenericValueType genericObjectType = createOpenWeatherSchema();
 		String url = "http://api.openweathermap.org/data/2.5/weather?q=Nuremberg,de";
 		GenericEntity gv = translator.translate(new DataSource(url, genericObjectType));
 		assertNotNull(gv);

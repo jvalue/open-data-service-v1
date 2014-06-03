@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.jvalue.ods.data.generic.MapObject;
-import org.jvalue.ods.data.schema.MapObjectType;
+import org.jvalue.ods.data.schema.MapComplexValueType;
 
 /**
  * The Interface DbAdapter. Q is the type of query result
@@ -107,6 +107,6 @@ public interface DbAccessor<Q> {
 	 * @param schema
 	 *            the schema
 	 */
-	public void executeBulk(Collection<MapObject> objects, MapObjectType schema);
+	public void executeBulk(Collection<MapObject> objects, MapComplexValueType schema);
 
 }

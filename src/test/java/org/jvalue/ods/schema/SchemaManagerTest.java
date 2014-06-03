@@ -13,11 +13,11 @@ import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.jvalue.ods.data.schema.AllowedBaseObjectTypes;
-import org.jvalue.ods.data.schema.BaseObjectType;
-import org.jvalue.ods.data.schema.ListObjectType;
-import org.jvalue.ods.data.schema.MapObjectType;
-import org.jvalue.ods.data.schema.GenericObjectType;
+import org.jvalue.ods.data.schema.AllowedValueTypes;
+import org.jvalue.ods.data.schema.SimpleValueType;
+import org.jvalue.ods.data.schema.ListComplexValueType;
+import org.jvalue.ods.data.schema.MapComplexValueType;
+import org.jvalue.ods.data.schema.GenericValueType;
 import org.jvalue.ods.data.schema.ObjectTypeEnum;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -53,13 +53,13 @@ public class SchemaManagerTest {
 	 */
 	@Test
 	public void testCreateJsonSchema() throws IOException {
-		AllowedBaseObjectTypes.addBaseObjectType("Null", new BaseObjectType("Null", ObjectTypeEnum.Domain));
-		AllowedBaseObjectTypes.addBaseObjectType("java.lang.String", new BaseObjectType("java.lang.String", ObjectTypeEnum.Domain));
-		AllowedBaseObjectTypes.addBaseObjectType("java.lang.Number", new BaseObjectType("java.lang.Number", ObjectTypeEnum.Domain));
-		AllowedBaseObjectTypes.addBaseObjectType("java.lang.Boolean", new BaseObjectType("java.lang.Boolean", ObjectTypeEnum.Domain));
+		AllowedValueTypes.addBaseObjectType("Null", new SimpleValueType("Null", ObjectTypeEnum.Domain));
+		AllowedValueTypes.addBaseObjectType("java.lang.String", new SimpleValueType("java.lang.String", ObjectTypeEnum.Domain));
+		AllowedValueTypes.addBaseObjectType("java.lang.Number", new SimpleValueType("java.lang.Number", ObjectTypeEnum.Domain));
+		AllowedValueTypes.addBaseObjectType("java.lang.Boolean", new SimpleValueType("java.lang.Boolean", ObjectTypeEnum.Domain));
 		
 		
-		GenericObjectType s = createSchema();
+		GenericValueType s = createSchema();
 		String result = SchemaManager.createJsonSchema(s);
 		assertNotNull(result);
 
@@ -86,61 +86,61 @@ public class SchemaManagerTest {
 	 * 
 	 * @return the schema
 	 */
-	private GenericObjectType createSchema() {
-		Map<String, GenericObjectType> water = new HashMap<String, GenericObjectType>();
-		water.put("shortname", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
-		water.put("longname", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
-		MapObjectType waterSchema = new MapObjectType(water);
+	private GenericValueType createSchema() {
+		Map<String, GenericValueType> water = new HashMap<String, GenericValueType>();
+		water.put("shortname", AllowedValueTypes.getGenericValueType("java.lang.String"));
+		water.put("longname", AllowedValueTypes.getGenericValueType("java.lang.String"));
+		MapComplexValueType waterSchema = new MapComplexValueType(water);
 
-		Map<String, GenericObjectType> currentMeasurement = new HashMap<String, GenericObjectType>();
-		currentMeasurement.put("timestamp", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
-		currentMeasurement.put("value", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
-		currentMeasurement.put("trend", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
-		currentMeasurement.put("stateMnwMhw", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
-		currentMeasurement.put("stateNswHsw", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
-		MapObjectType currentMeasurementSchema = new MapObjectType(currentMeasurement);
+		Map<String, GenericValueType> currentMeasurement = new HashMap<String, GenericValueType>();
+		currentMeasurement.put("timestamp", AllowedValueTypes.getGenericValueType("java.lang.String"));
+		currentMeasurement.put("value", AllowedValueTypes.getGenericValueType("java.lang.Number"));
+		currentMeasurement.put("trend", AllowedValueTypes.getGenericValueType("java.lang.Number"));
+		currentMeasurement.put("stateMnwMhw", AllowedValueTypes.getGenericValueType("java.lang.String"));
+		currentMeasurement.put("stateNswHsw", AllowedValueTypes.getGenericValueType("java.lang.String"));
+		MapComplexValueType currentMeasurementSchema = new MapComplexValueType(currentMeasurement);
 
-		Map<String, GenericObjectType> gaugeZero = new HashMap<String, GenericObjectType>();
-		gaugeZero.put("unit", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
-		gaugeZero.put("value", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
-		gaugeZero.put("validFrom", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
-		MapObjectType gaugeZeroSchema = new MapObjectType(gaugeZero);
+		Map<String, GenericValueType> gaugeZero = new HashMap<String, GenericValueType>();
+		gaugeZero.put("unit", AllowedValueTypes.getGenericValueType("java.lang.String"));
+		gaugeZero.put("value", AllowedValueTypes.getGenericValueType("java.lang.Number"));
+		gaugeZero.put("validFrom", AllowedValueTypes.getGenericValueType("java.lang.String"));
+		MapComplexValueType gaugeZeroSchema = new MapComplexValueType(gaugeZero);
 
-		Map<String, GenericObjectType> comment = new HashMap<String, GenericObjectType>();
-		comment.put("shortDescription", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
-		comment.put("longDescription", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
-		MapObjectType commentSchema = new MapObjectType(comment);
+		Map<String, GenericValueType> comment = new HashMap<String, GenericValueType>();
+		comment.put("shortDescription", AllowedValueTypes.getGenericValueType("java.lang.String"));
+		comment.put("longDescription", AllowedValueTypes.getGenericValueType("java.lang.String"));
+		MapComplexValueType commentSchema = new MapComplexValueType(comment);
 
-		Map<String, GenericObjectType> timeSeries = new HashMap<String, GenericObjectType>();
-		timeSeries.put("shortname", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
-		timeSeries.put("longname", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
-		timeSeries.put("unit", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
-		timeSeries.put("equidistance", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
+		Map<String, GenericValueType> timeSeries = new HashMap<String, GenericValueType>();
+		timeSeries.put("shortname", AllowedValueTypes.getGenericValueType("java.lang.String"));
+		timeSeries.put("longname", AllowedValueTypes.getGenericValueType("java.lang.String"));
+		timeSeries.put("unit", AllowedValueTypes.getGenericValueType("java.lang.String"));
+		timeSeries.put("equidistance", AllowedValueTypes.getGenericValueType("java.lang.Number"));
 		timeSeries.put("currentMeasurement", currentMeasurementSchema);
 		timeSeries.put("gaugeZero", gaugeZeroSchema);
 		timeSeries.put("comment", commentSchema);
-		MapObjectType timeSeriesSchema = new MapObjectType(timeSeries);
+		MapComplexValueType timeSeriesSchema = new MapComplexValueType(timeSeries);
 
-		List<GenericObjectType> timeSeriesList = new LinkedList<GenericObjectType>();
+		List<GenericValueType> timeSeriesList = new LinkedList<GenericValueType>();
 		timeSeriesList.add(timeSeriesSchema);
-		ListObjectType timeSeriesListSchema = new ListObjectType(timeSeriesList);
+		ListComplexValueType timeSeriesListSchema = new ListComplexValueType(timeSeriesList);
 
-		Map<String, GenericObjectType> station = new HashMap<String, GenericObjectType>();
-		station.put("uuid", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
-		station.put("number", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
-		station.put("shortname", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
-		station.put("longname", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
-		station.put("km", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
-		station.put("agency", AllowedBaseObjectTypes.getBaseObjectType("java.lang.String"));
-		station.put("longitude", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
-		station.put("latitude", AllowedBaseObjectTypes.getBaseObjectType("java.lang.Number"));
+		Map<String, GenericValueType> station = new HashMap<String, GenericValueType>();
+		station.put("uuid", AllowedValueTypes.getGenericValueType("java.lang.String"));
+		station.put("number", AllowedValueTypes.getGenericValueType("java.lang.String"));
+		station.put("shortname", AllowedValueTypes.getGenericValueType("java.lang.String"));
+		station.put("longname", AllowedValueTypes.getGenericValueType("java.lang.String"));
+		station.put("km", AllowedValueTypes.getGenericValueType("java.lang.Number"));
+		station.put("agency", AllowedValueTypes.getGenericValueType("java.lang.String"));
+		station.put("longitude", AllowedValueTypes.getGenericValueType("java.lang.Number"));
+		station.put("latitude", AllowedValueTypes.getGenericValueType("java.lang.Number"));
 		station.put("water", waterSchema);
 		station.put("timeseries", timeSeriesListSchema);
-		MapObjectType stationSchema = new MapObjectType(station);
+		MapComplexValueType stationSchema = new MapComplexValueType(station);
 
-		List<GenericObjectType> stationList = new LinkedList<GenericObjectType>();
+		List<GenericValueType> stationList = new LinkedList<GenericValueType>();
 		stationList.add(stationSchema);
-		ListObjectType listObjectType = new ListObjectType(stationList);
+		ListComplexValueType listObjectType = new ListComplexValueType(stationList);
 
 		return listObjectType;
 	}

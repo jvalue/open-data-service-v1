@@ -17,43 +17,64 @@
  */
 package org.jvalue.ods.data.schema;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.io.Serializable;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * The Class ListSchema.
+ * The Class Schema.
  */
-@JsonInclude(Include.NON_NULL)
-public class ListObjectType extends GenericObjectType {
+public abstract class GenericValueType implements Serializable {
 
 	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = -8492689528411698541L;
-	
-	/** The list. */
-	private List<GenericObjectType> list = new LinkedList<GenericObjectType>();
+	private static final long serialVersionUID = 1L;
+
+	/** The id. */
+	private String id;
+
+	/** The revision. */
+	private String revision;
 
 	/**
-	 * Instantiates a new list value.
+	 * Gets the id.
 	 * 
-	 * @param list
-	 *            the list
+	 * @return the id
 	 */
-	public ListObjectType(List<GenericObjectType> list) {
-		this.list = list;
+	@JsonProperty("_id")
+	public String getId() {
+		return id;
 	}
 
 	/**
-	 * Gets the list.
+	 * Sets the id.
 	 * 
-	 * @return the list
+	 * @param s
+	 *            the new id
 	 */
-	@JsonValue
-	public List<GenericObjectType> getList() {
-		return list;
+	@JsonProperty("_id")
+	public void setId(String s) {
+		id = s;
+	}
+
+	/**
+	 * Gets the revision.
+	 * 
+	 * @return the revision
+	 */
+	@JsonProperty("_rev")
+	public String getRevision() {
+		return revision;
+	}
+
+	/**
+	 * Sets the revision.
+	 * 
+	 * @param s
+	 *            the new revision
+	 */
+	@JsonProperty("_rev")
+	public void setRevision(String s) {
+		revision = s;
 	}
 
 }
