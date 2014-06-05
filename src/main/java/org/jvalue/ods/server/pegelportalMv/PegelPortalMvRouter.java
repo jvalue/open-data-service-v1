@@ -17,7 +17,7 @@
  */
 package org.jvalue.ods.server.pegelportalMv;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.jvalue.ods.db.DbAccessor;
@@ -46,7 +46,7 @@ public class PegelPortalMvRouter implements Router<Restlet> {
 	 */
 	@Override
 	public Map<String, Restlet> getRoutes() {
-		Map<String, Restlet> routes = new HashMap<String, Restlet>();
+		Map<String, Restlet> routes = new LinkedHashMap<String, Restlet>();
 
 		// all stations
 		routes.put(
@@ -68,6 +68,28 @@ public class PegelPortalMvRouter implements Router<Restlet> {
 					.errorMsg(CLIENT_ERROR_MSG)
 					.build());
 
+		// value types 
+		routes.put(
+				"/ods/de/pegelportal-mv/stations/$class", 
+				new ExecuteQueryRestlet.Builder(
+						dbAccessor, 
+						"_design/pegelportal-mv", 
+						"getClassObject")
+					.errorMsg(CLIENT_ERROR_MSG)
+					.fetchAllDbEntries(false)
+					.build());
+
+		// value types id
+		routes.put(
+				"/ods/de/pegelportal-mv/stations/$class_id",
+				new ExecuteQueryRestlet.Builder(
+						dbAccessor, 
+						"_design/pegelportal-mv", 
+						"getClassObjectId")
+					.errorMsg(CLIENT_ERROR_MSG)
+					.fetchAllDbEntries(false)
+					.build());
+
 		// get single station
 		routes.put(
 				"/ods/de/pegelportal-mv/stations/{station}", 
@@ -87,17 +109,6 @@ public class PegelPortalMvRouter implements Router<Restlet> {
 						dbAccessor, 
 						"_design/pegelportal-mv", 
 						"getMetadata")
-					.errorMsg(CLIENT_ERROR_MSG)
-					.fetchAllDbEntries(false)
-					.build());
-
-		// value types 
-		routes.put(
-				"/ods/de/pegelportal-mv/stations/$class", 
-				new ExecuteQueryRestlet.Builder(
-						dbAccessor, 
-						"_design/pegelportal-mv", 
-						"getClassObject")
 					.errorMsg(CLIENT_ERROR_MSG)
 					.fetchAllDbEntries(false)
 					.build());

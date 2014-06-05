@@ -19,6 +19,7 @@ package org.jvalue.ods.server;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -61,7 +62,7 @@ public class ContainerRestletApp extends Application implements Runnable {
 		org.jvalue.ods.main.Router<Restlet> administrationRouter = RouterFactory
 				.createAdministrationRouter();
 
-		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
+		HashMap<String, Restlet> combinedRouter = new LinkedHashMap<String, Restlet>();
 		combinedRouter.putAll(odsRouter.getRoutes());
 		combinedRouter.putAll(poRouter.getRoutes());
 		combinedRouter.putAll(ppRouter.getRoutes());

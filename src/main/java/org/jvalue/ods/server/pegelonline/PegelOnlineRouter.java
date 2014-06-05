@@ -17,7 +17,7 @@
  */
 package org.jvalue.ods.server.pegelonline;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.jvalue.ods.db.DbAccessor;
@@ -54,7 +54,7 @@ public class PegelOnlineRouter implements Router<Restlet> {
 	 */
 	@Override
 	public Map<String, Restlet> getRoutes() {
-		Map<String, Restlet> routes = new HashMap<String, Restlet>();
+		Map<String, Restlet> routes = new LinkedHashMap<String, Restlet>();
 
 		// all stations
 		routes.put(
@@ -74,6 +74,27 @@ public class PegelOnlineRouter implements Router<Restlet> {
 						"_design/pegelonline",
 						"getAllStationsFlat")
 					.errorMsg(CLIENT_ERROR_MSG)
+					.build());
+
+		// value types
+		routes.put(
+				"/ods/de/pegelonline/stations/$class",
+				new ExecuteQueryRestlet.Builder(
+						dbAccessor, 
+						"_design/pegelonline",
+						"getClassObject")
+					.errorMsg(CLIENT_ERROR_MSG)
+					.fetchAllDbEntries(false)
+					.build());
+
+		// value types id
+		routes.put("/ods/de/pegelonline/stations/$class_id",
+				new ExecuteQueryRestlet.Builder(
+						dbAccessor, 
+						"_design/pegelonline",
+						"getClassObjectId")
+					.errorMsg(CLIENT_ERROR_MSG)
+					.fetchAllDbEntries(false)
 					.build());
 
 		// get single station
@@ -97,27 +118,6 @@ public class PegelOnlineRouter implements Router<Restlet> {
 						"getMetadata")
 					.fetchAllDbEntries(false)
 					.errorMsg(CLIENT_ERROR_MSG)
-					.build());
-
-		// value types
-		routes.put(
-				"/ods/de/pegelonline/stations/$class",
-				new ExecuteQueryRestlet.Builder(
-						dbAccessor, 
-						"_design/pegelonline",
-						"getClassObject")
-					.errorMsg(CLIENT_ERROR_MSG)
-					.fetchAllDbEntries(false)
-					.build());
-
-		// value types id
-		routes.put("/ods/de/pegelonline/stations/$class_id",
-				new ExecuteQueryRestlet.Builder(
-						dbAccessor, 
-						"_design/pegelonline",
-						"getClassObjectId")
-					.errorMsg(CLIENT_ERROR_MSG)
-					.fetchAllDbEntries(false)
 					.build());
 
 		return routes;
