@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
@@ -227,7 +228,7 @@ public class PegelPortalMvGrabber implements Grabber {
 
 
 		private Serializable createValue(String value, String type) {
-			if (type.equals("java.lang.String")) return value;
+			if (type.equals("java.lang.String")) return StringEscapeUtils.unescapeHtml4(value);
 			else if (type.equals("java.lang.Number")) return new Double(value);
 			else throw new IllegalArgumentException("Unknown type " + type);
 		}
