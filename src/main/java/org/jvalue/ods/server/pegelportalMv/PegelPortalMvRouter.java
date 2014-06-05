@@ -55,7 +55,7 @@ public class PegelPortalMvRouter implements Router<Restlet> {
 						dbAccessor, 
 						"_design/pegelportal-mv", 
 						"getAllStations")
-					.customErrorMsg(CLIENT_ERROR_MSG)
+					.errorMsg(CLIENT_ERROR_MSG)
 					.build());
 
 		// all stations flat
@@ -65,7 +65,7 @@ public class PegelPortalMvRouter implements Router<Restlet> {
 						dbAccessor, 
 						"_design/pegelportal-mv", 
 						"getAllStationsFlat")
-					.customErrorMsg(CLIENT_ERROR_MSG)
+					.errorMsg(CLIENT_ERROR_MSG)
 					.build());
 
 		// get single station
@@ -75,7 +75,7 @@ public class PegelPortalMvRouter implements Router<Restlet> {
 						dbAccessor, 
 						"_design/pegelportal-mv", 
 						"getSingleStation")
-					.customErrorMsg(CLIENT_ERROR_MSG)
+					.errorMsg(CLIENT_ERROR_MSG)
 					.fetchAllDbEntries(false)
 					.attributeName("station")
 					.build());
@@ -87,7 +87,7 @@ public class PegelPortalMvRouter implements Router<Restlet> {
 						dbAccessor, 
 						"_design/pegelportal-mv", 
 						"getMetadata")
-					.customErrorMsg(CLIENT_ERROR_MSG)
+					.errorMsg(CLIENT_ERROR_MSG)
 					.fetchAllDbEntries(false)
 					.build());
 
@@ -98,7 +98,7 @@ public class PegelPortalMvRouter implements Router<Restlet> {
 						dbAccessor, 
 						"_design/pegelportal-mv", 
 						"getClassObject")
-					.customErrorMsg(CLIENT_ERROR_MSG)
+					.errorMsg(CLIENT_ERROR_MSG)
 					.fetchAllDbEntries(false)
 					.build());
 		return routes;

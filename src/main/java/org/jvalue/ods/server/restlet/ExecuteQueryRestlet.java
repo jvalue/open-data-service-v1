@@ -39,7 +39,7 @@ public class ExecuteQueryRestlet extends Restlet {
 	private final String designDocId;
 	private final String viewName;
 	private final boolean fetchAllDbEntries;
-	private final String customErrorMsg;
+	private final String errorMsg;
 	private final String attributeName;
 	private final ObjectMapper mapper = new ObjectMapper();
 
@@ -49,14 +49,14 @@ public class ExecuteQueryRestlet extends Restlet {
 			String designDocId, 
 			String viewName,
 			boolean fetchAllDbEntries,
-			String customErrorMsg,
+			String errorMsg,
 			String attributeName) {
 
 		this.dbAccessor = dbAccessor;
 		this.designDocId = designDocId;
 		this.viewName = viewName;
 		this.fetchAllDbEntries = fetchAllDbEntries;
-		this.customErrorMsg = customErrorMsg;
+		this.errorMsg = errorMsg;
 		this.attributeName = attributeName;
 	}
 
@@ -89,7 +89,7 @@ public class ExecuteQueryRestlet extends Restlet {
 				String errorMessage = "Could not retrieve data from db: " + e;
 				Logging.error(this.getClass(), errorMessage);
 				System.err.println(errorMessage);
-				message = customErrorMsg;
+				message = errorMsg;
 			}
 
 		} catch (IOException e) {
@@ -107,7 +107,7 @@ public class ExecuteQueryRestlet extends Restlet {
 		private final DbAccessor<JsonNode> dbAccessor;
 		private final String designDocId, viewName;
 		private boolean fetchAllDbEntries = true;
-		private String customErrorMsg = "Could not retrieve data.";
+		private String errorMsg = "Could not retrieve data.";
 		private String attributeName = null;
 
 		public Builder(DbAccessor<JsonNode> dbAccessor, String designDocId, String viewName) {
@@ -126,9 +126,9 @@ public class ExecuteQueryRestlet extends Restlet {
 			return this;
 		}
 
-		public Builder customErrorMsg(String customErrorMsg) {
-			if (customErrorMsg == null) throw new NullPointerException("param cannot be null");
-			this.customErrorMsg = customErrorMsg;
+		public Builder errorMsg(String customErrorMsg) {
+			if (errorMsg == null) throw new NullPointerException("param cannot be null");
+			this.errorMsg = customErrorMsg;
 			return this;
 		}
 
@@ -144,7 +144,7 @@ public class ExecuteQueryRestlet extends Restlet {
 					designDocId,
 					viewName,
 					fetchAllDbEntries,
-					customErrorMsg,
+					errorMsg,
 					attributeName);
 		}
 	}

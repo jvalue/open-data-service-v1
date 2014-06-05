@@ -63,7 +63,7 @@ public class PegelOnlineRouter implements Router<Restlet> {
 						dbAccessor,
 						"_design/pegelonline",
 						"getAllStations")
-					.customErrorMsg(CLIENT_ERROR_MSG)
+					.errorMsg(CLIENT_ERROR_MSG)
 					.build());
 
 		// all stations flat
@@ -73,7 +73,7 @@ public class PegelOnlineRouter implements Router<Restlet> {
 						dbAccessor,
 						"_design/pegelonline",
 						"getAllStationsFlat")
-					.customErrorMsg(CLIENT_ERROR_MSG)
+					.errorMsg(CLIENT_ERROR_MSG)
 					.build());
 
 		// get single station
@@ -85,7 +85,7 @@ public class PegelOnlineRouter implements Router<Restlet> {
 						"getSingleStation")
 					.fetchAllDbEntries(false)
 					.attributeName("station")
-					.customErrorMsg(CLIENT_ERROR_MSG)
+					.errorMsg(CLIENT_ERROR_MSG)
 					.build());
 
 		// metadata
@@ -96,7 +96,7 @@ public class PegelOnlineRouter implements Router<Restlet> {
 						"_design/pegelonline",
 						"getMetadata")
 					.fetchAllDbEntries(false)
-					.customErrorMsg(CLIENT_ERROR_MSG)
+					.errorMsg(CLIENT_ERROR_MSG)
 					.build());
 
 		// value types
@@ -106,7 +106,7 @@ public class PegelOnlineRouter implements Router<Restlet> {
 						dbAccessor, 
 						"_design/pegelonline",
 						"getClassObject")
-					.customErrorMsg(CLIENT_ERROR_MSG)
+					.errorMsg(CLIENT_ERROR_MSG)
 					.fetchAllDbEntries(false)
 					.build());
 
@@ -116,7 +116,7 @@ public class PegelOnlineRouter implements Router<Restlet> {
 						dbAccessor, 
 						"_design/pegelonline",
 						"getClassObjectId")
-					.customErrorMsg(CLIENT_ERROR_MSG)
+					.errorMsg(CLIENT_ERROR_MSG)
 					.fetchAllDbEntries(false)
 					.build());
 
