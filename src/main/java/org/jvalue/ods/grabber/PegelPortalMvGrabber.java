@@ -213,6 +213,9 @@ public class PegelPortalMvGrabber implements Grabber {
 						objectMap.getMap().put(key, new BaseObject(createValue(value, type.getName())));
 					}
 
+					objectMap.getMap().put(KEY_LEVEL_UNIT, new BaseObject("cm ü PNP"));
+					objectMap.getMap().put(KEY_EFFLUENT_UNIT, new BaseObject("m³/s"));
+
 					objectList.add(objectMap);
 				}
 
