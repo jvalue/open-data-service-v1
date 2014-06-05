@@ -35,30 +35,26 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class ExecuteQueryRestlet extends Restlet {
 
-	/** The db accessor. */
-	private DbAccessor<JsonNode> dbAccessor;
+	private final DbAccessor<JsonNode> dbAccessor;
+	private final String designDocId;
+	private final String viewName;
+	private final boolean fetchAllDbEntries;
+	private final String customErrorMsg;
+	private final ObjectMapper mapper = new ObjectMapper();
 
-	/** The design doc id. */
-	private String designDocId;
 
-	/** The view name. */
-	private String viewName;
+	private ExecuteQueryRestlet(
+			DbAccessor<JsonNode> dbAccessor,
+			String designDocId, 
+			String viewName,
+			boolean fetchAllDbEntries,
+			String customErrorMsg) {
 
-	/**
-	 * Instantiates a new class object restlet.
-	 * 
-	 * @param dbAccessor
-	 *            the db accessor
-	 * @param designDocId
-	 *            the design doc id
-	 * @param viewName
-	 *            the view name
-	 */
-	public ExecuteQueryRestlet(DbAccessor<JsonNode> dbAccessor,
-			String designDocId, String viewName) {
 		this.dbAccessor = dbAccessor;
 		this.designDocId = designDocId;
 		this.viewName = viewName;
+		this.fetchAllDbEntries = fetchAllDbEntries;
+		this.customErrorMsg = customErrorMsg;
 	}
 
 	/*
@@ -69,30 +65,24 @@ public class ExecuteQueryRestlet extends Restlet {
 	 */
 	@Override
 	public void handle(Request request, Response response) {
-
-		String message = "";
+		String message =  null;
 		try {
-
-			ObjectMapper mapper = new ObjectMapper();
-
 			try {
 				dbAccessor.connect();
 
-				List<JsonNode> n = dbAccessor.executeDocumentQuery(designDocId,
-						viewName, null);
+				List<JsonNode> nodes = dbAccessor.executeDocumentQuery(
+						designDocId, 
+						viewName, 
+						null);
 
-				if (n.isEmpty()) {
-					throw new RuntimeException();
-				} else {
-					message += mapper.writeValueAsString(n.get(0));
-				}
+				if (fetchAllDbEntries) message = mapper.writeValueAsString(nodes);
+				else message = mapper.writeValueAsString(nodes.get(0));
 
 			} catch (RuntimeException e) {
 				String errorMessage = "Could not retrieve data from db: " + e;
 				Logging.error(this.getClass(), errorMessage);
 				System.err.println(errorMessage);
-				message += mapper
-						.writeValueAsString("Could not retrieve data.");
+				message = customErrorMsg;
 			}
 
 		} catch (IOException e) {
@@ -102,7 +92,45 @@ public class ExecuteQueryRestlet extends Restlet {
 		}
 
 		response.setEntity(message, MediaType.APPLICATION_JSON);
-
 	}
 
+
+	public static final class Builder {
+		
+		private final DbAccessor<JsonNode> dbAccessor;
+		private final String designDocId, viewName;
+		private boolean fetchAllDbEntries = true;
+		private String customErrorMsg = "Could not retrieve data.";
+
+		public Builder(DbAccessor<JsonNode> dbAccessor, String designDocId, String viewName) {
+			if (dbAccessor == null || designDocId == null || viewName == null)
+				throw new NullPointerException("params cannot be null");
+			this.dbAccessor = dbAccessor;
+			this.designDocId = designDocId;
+			this.viewName = viewName;
+		}
+
+
+		/** Whether all entries should be fetched from the db. If false only
+		* the first entry will be fetched. */
+		public Builder fetchAllDbEntries(boolean fetchAllDbEntries) {
+			this.fetchAllDbEntries = fetchAllDbEntries;
+			return this;
+		}
+
+		public Builder customErrorMsg(String customErrorMsg) {
+			if (customErrorMsg == null) throw new NullPointerException("param cannot be null");
+			this.customErrorMsg = customErrorMsg;
+			return this;
+		}
+
+		public ExecuteQueryRestlet build() {
+			return new ExecuteQueryRestlet(
+					dbAccessor,
+					designDocId,
+					viewName,
+					fetchAllDbEntries,
+					customErrorMsg);
+		}
+	}
 }

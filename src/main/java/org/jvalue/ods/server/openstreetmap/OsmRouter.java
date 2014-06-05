@@ -287,10 +287,18 @@ public class OsmRouter implements Router<Restlet> {
 				getDocumentsByKeywordRestlet);
 		routes.put("/ods/de/osm/metadata", metadataRestlet);
 		routes.put("/ods/de/osm", osmRestlet);
-		routes.put("/ods/de/osm/$class", new ExecuteQueryRestlet(dbAccessor,
-				"_design/osm", "getClassObject"));
-		routes.put("/ods/de/osm/$class_id", new ExecuteQueryRestlet(dbAccessor,
-				"_design/osm", "getClassObjectId"));
+		routes.put("/ods/de/osm/$class", new ExecuteQueryRestlet.Builder(
+					dbAccessor, 
+					"_design/osm", 
+					"getClassObject")
+				.fetchAllDbEntries(false)
+				.build());
+		routes.put("/ods/de/osm/$class_id", new ExecuteQueryRestlet.Builder(
+					dbAccessor, 
+					"_design/osm", 
+					"getClassObjectId")
+				.fetchAllDbEntries(false)
+				.build());
 
 		return routes;
 	}

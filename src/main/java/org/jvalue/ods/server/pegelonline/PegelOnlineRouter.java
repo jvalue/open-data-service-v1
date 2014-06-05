@@ -210,11 +210,19 @@ public class PegelOnlineRouter implements Router<Restlet> {
 				singleStationRestlet);
 		routes.put("/ods/de/pegelonline/metadata", metadataRestlet);
 		routes.put("/ods/de/pegelonline/stations/$class",
-				new ExecuteQueryRestlet(dbAccessor, "_design/pegelonline",
-						"getClassObject"));
+				new ExecuteQueryRestlet.Builder(
+						dbAccessor, 
+						"_design/pegelonline",
+						"getClassObject")
+					.fetchAllDbEntries(false)
+					.build());
 		routes.put("/ods/de/pegelonline/stations/$class_id",
-				new ExecuteQueryRestlet(dbAccessor, "_design/pegelonline",
-						"getClassObjectId"));
+				new ExecuteQueryRestlet.Builder(
+						dbAccessor, 
+						"_design/pegelonline",
+						"getClassObjectId")
+					.fetchAllDbEntries(false)
+					.build());
 		return routes;
 	}
 

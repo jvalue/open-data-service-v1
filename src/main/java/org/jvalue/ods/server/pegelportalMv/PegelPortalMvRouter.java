@@ -17,38 +17,24 @@
  */
 package org.jvalue.ods.server.pegelportalMv;
 
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.db.exception.DbException;
-import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
-import org.jvalue.ods.server.RouterUtils;
-import org.restlet.Request;
-import org.restlet.Response;
+import org.jvalue.ods.server.restlet.ExecuteQueryRestlet;
 import org.restlet.Restlet;
-import org.restlet.data.MediaType;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 public class PegelPortalMvRouter implements Router<Restlet> {
+	
+	private final static String CLIENT_ERROR_MSG = "Could not retrieve data. Try to update database via /pegelportal-mv/update.";
 
-	/** The routes. */
-	private HashMap<String, Restlet> routes;
-
-	/** The db accessor. */
 	private DbAccessor<JsonNode> dbAccessor;
 
-	/**
-	 * Instantiates a new pegel online router.
-	 * 
-	 */
 	public PegelPortalMvRouter() {
 		this.dbAccessor = DbFactory.createDbAccessor("ods");
 	}
@@ -60,61 +46,6 @@ public class PegelPortalMvRouter implements Router<Restlet> {
 	 */
 	@Override
 	public Map<String, Restlet> getRoutes() {
-		routes = new HashMap<String, Restlet>();
-
-		// gets data from all stations
-		Restlet stationsRestlet = new Restlet() {
-
-			@Override
-			public void handle(Request request, Response response) {
-
-				String message = "";
-
-				// there is an attribute in url
-				if (request.getResourceRef().getQueryAsForm().size() == 1) {
-
-					message = new RouterUtils().getDocumentByAttribute(request,
-							dbAccessor);
-
-				} else {
-
-					try {
-
-						List<JsonNode> nodes = null;
-						ObjectMapper mapper = new ObjectMapper();
-
-						try {
-							dbAccessor.connect();
-
-							nodes = dbAccessor.executeDocumentQuery(
-									"_design/pegelportal-mv", "getAllStations",
-									null);
-
-							message += mapper.writeValueAsString(nodes);
-						} catch (RuntimeException e) {
-							String errorMessage = "Could not retrieve data from db: "
-									+ e;
-							Logging.error(this.getClass(), errorMessage);
-							System.err.println(errorMessage);
-							message += mapper
-									.writeValueAsString("Could not retrieve data. Try to update database via /pegelportal-mv/update.");
-						}
-
-					} catch (IOException e) {
-						String errorMessage = "Error during client request: "
-								+ e;
-						Logging.error(this.getClass(), errorMessage);
-						System.err.println(errorMessage);
-					}
-
-				}
-
-				response.setEntity(message, MediaType.APPLICATION_JSON);
-
-			}
-
-		};
-
 		/*
 		Restlet stationsFlatRestlet = new Restlet() {
 
@@ -182,26 +113,6 @@ public class PegelPortalMvRouter implements Router<Restlet> {
 		};
 		*/
 
-		Restlet metadataRestlet = new Restlet() {
-			@Override
-			public void handle(Request request, Response response) {
-
-				List<JsonNode> node = null;
-				dbAccessor.connect();
-
-				try {
-					node = dbAccessor.executeDocumentQuery(
-							"_design/pegelportal-mv", "getMetadata", null);
-
-					response.setEntity(node.get(0).toString(),
-							MediaType.APPLICATION_JSON);
-				} catch (DbException ex) {
-					response.setEntity("Station not found.",
-							MediaType.TEXT_PLAIN);
-				}
-			}
-		};
-
 		/*
 		routes.put("/ods/de/pegelonline/stationsFlat", stationsFlatRestlet);
 		routes.put("/ods/de/pegelonline/stations/{station}", singleStationRestlet);
@@ -213,8 +124,27 @@ public class PegelPortalMvRouter implements Router<Restlet> {
 						"getClassObjectId"));
 						*/
 
-		routes.put("/ods/de/pegelportal-mv/stations", stationsRestlet);
-		routes.put("/ods/de/pegelportal-mv/metadata", metadataRestlet);
+		// routes.put("/ods/de/pegelportal-mv/stations", stationsRestlet);
+		
+
+		Map<String, Restlet> routes = new HashMap<String, Restlet>();
+		routes.put(
+				"/ods/de/pegelportal-mv/stations", 
+				new ExecuteQueryRestlet.Builder(
+						dbAccessor, 
+						"_design/pegelportal-mv", 
+						"getAllStations")
+					.customErrorMsg(CLIENT_ERROR_MSG)
+					.build());
+		routes.put(
+				"/ods/de/pegelportal-mv/metadata", 
+				new ExecuteQueryRestlet.Builder(
+						dbAccessor, 
+						"_design/pegelportal-mv", 
+						"getMetadata")
+					.customErrorMsg(CLIENT_ERROR_MSG)
+					.fetchAllDbEntries(false)
+					.build());
 		return routes;
 	}
 
