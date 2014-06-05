@@ -5,6 +5,7 @@
 *.iml
 *.ipr
 *.iws
+*.swp
 /target
 /bin
 /build
