@@ -48,6 +48,8 @@ public class ContainerRestletApp extends Application implements Runnable {
 				.createOdsRouter();
 		org.jvalue.ods.main.Router<Restlet> poRouter = RouterFactory
 				.createPegelOnlineRouter();
+		org.jvalue.ods.main.Router<Restlet> ppRouter = RouterFactory
+				.createPegelPortalMvRouter();
 		org.jvalue.ods.main.Router<Restlet> noRouter = RouterFactory
 				.createNominatimRouter();
 		org.jvalue.ods.main.Router<Restlet> ovRouter = RouterFactory
@@ -62,6 +64,7 @@ public class ContainerRestletApp extends Application implements Runnable {
 		HashMap<String, Restlet> combinedRouter = new HashMap<String, Restlet>();
 		combinedRouter.putAll(odsRouter.getRoutes());
 		combinedRouter.putAll(poRouter.getRoutes());
+		combinedRouter.putAll(ppRouter.getRoutes());
 		combinedRouter.putAll(noRouter.getRoutes());
 		combinedRouter.putAll(ovRouter.getRoutes());
 		combinedRouter.putAll(osmRouter.getRoutes());

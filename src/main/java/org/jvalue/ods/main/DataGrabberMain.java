@@ -31,12 +31,13 @@ import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
 import org.jvalue.ods.data.schema.AllowedValueTypes;
-import org.jvalue.ods.data.schema.SimpleValueType;
 import org.jvalue.ods.data.schema.MapComplexValueType;
 import org.jvalue.ods.data.schema.ObjectTypeEnum;
+import org.jvalue.ods.data.schema.SimpleValueType;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.exception.DbException;
+import org.jvalue.ods.grabber.PegelPortalMvGrabber;
 import org.jvalue.ods.grabber.OsmGrabber;
 import org.jvalue.ods.grabber.PegelOnlineGrabber;
 import org.jvalue.ods.logger.Logging;
@@ -76,6 +77,9 @@ public class DataGrabberMain {
 
 		Logging.adminLog("grabbing Osm...");
 		grab(new OsmGrabber());
+
+		Logging.adminLog("grapping PegelPortal MV...");
+		grab(new PegelPortalMvGrabber());
 
 		createCommonViews();
 
