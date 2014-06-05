@@ -68,17 +68,17 @@ public class PegelPortalMvRouter implements Router<Restlet> {
 					.customErrorMsg(CLIENT_ERROR_MSG)
 					.build());
 
-		/*
 		// get single station
 		routes.put(
 				"/ods/de/pegelportal-mv/stations/{station}", 
 				new ExecuteQueryRestlet.Builder(
 						dbAccessor, 
 						"_design/pegelportal-mv", 
-						"getAllStationsFlat")
+						"getSingleStation")
 					.customErrorMsg(CLIENT_ERROR_MSG)
+					.fetchAllDbEntries(false)
+					.attributeName("station")
 					.build());
-					*/
 
 		// meta data
 		routes.put(

@@ -40,6 +40,7 @@ public class ExecuteQueryRestlet extends Restlet {
 	private final String viewName;
 	private final boolean fetchAllDbEntries;
 	private final String customErrorMsg;
+	private final String attributeName;
 	private final ObjectMapper mapper = new ObjectMapper();
 
 
@@ -48,13 +49,15 @@ public class ExecuteQueryRestlet extends Restlet {
 			String designDocId, 
 			String viewName,
 			boolean fetchAllDbEntries,
-			String customErrorMsg) {
+			String customErrorMsg,
+			String attributeName) {
 
 		this.dbAccessor = dbAccessor;
 		this.designDocId = designDocId;
 		this.viewName = viewName;
 		this.fetchAllDbEntries = fetchAllDbEntries;
 		this.customErrorMsg = customErrorMsg;
+		this.attributeName = attributeName;
 	}
 
 	/*
@@ -70,10 +73,14 @@ public class ExecuteQueryRestlet extends Restlet {
 			try {
 				dbAccessor.connect();
 
+				String attributeValue = null;
+				if (attributeName != null) 
+					attributeValue = request.getAttributes().get(attributeName).toString();
+
 				List<JsonNode> nodes = dbAccessor.executeDocumentQuery(
 						designDocId, 
 						viewName, 
-						null);
+						attributeValue);
 
 				if (fetchAllDbEntries) message = mapper.writeValueAsString(nodes);
 				else message = mapper.writeValueAsString(nodes.get(0));
@@ -101,6 +108,7 @@ public class ExecuteQueryRestlet extends Restlet {
 		private final String designDocId, viewName;
 		private boolean fetchAllDbEntries = true;
 		private String customErrorMsg = "Could not retrieve data.";
+		private String attributeName = null;
 
 		public Builder(DbAccessor<JsonNode> dbAccessor, String designDocId, String viewName) {
 			if (dbAccessor == null || designDocId == null || viewName == null)
@@ -124,13 +132,20 @@ public class ExecuteQueryRestlet extends Restlet {
 			return this;
 		}
 
+		/** Set this value if you wish to specify a attribute value to be used during querying. */
+		public Builder attributeName(String attributeName) {
+			this.attributeName = attributeName;
+			return this;
+		}
+
 		public ExecuteQueryRestlet build() {
 			return new ExecuteQueryRestlet(
 					dbAccessor,
 					designDocId,
 					viewName,
 					fetchAllDbEntries,
-					customErrorMsg);
+					customErrorMsg,
+					attributeName);
 		}
 	}
 }
