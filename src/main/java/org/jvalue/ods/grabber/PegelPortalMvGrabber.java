@@ -164,10 +164,10 @@ public class PegelPortalMvGrabber implements Grabber {
 				"function(doc) { if(doc.dataType == 'MV-Station') emit (doc.station, doc._id) }"));
 
 		list.add(new OdsView("_design/pegelportal-mv", "getClassObject",
-				"function(doc) { if(doc.rest_name.mv-stations) emit (null, doc) }"));
+				"function(doc) { if(doc.rest_name[\"mv-stations\"]) emit (null, doc) }"));
 
 		list.add(new OdsView("_design/pegelportal-mv", "getClassObjectId",
-				"function(doc) { if(doc.rest_name.mv-stations) emit (null, doc._id) }"));
+				"function(doc) { if(doc.rest_name[\"mv-stations\"]) emit (null, doc._id) }"));
 
 		return list;
 	}
