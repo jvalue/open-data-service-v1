@@ -8,3 +8,4 @@ log4j - Apache 2.0
 jsoup 1.73 - MIT License
 commons-lang3 - Apache 2.0
 JUnit 4.11
+gcm-server - Apache 2.0
