@@ -13,7 +13,9 @@
 /.settings
 .classpath
 .project
+googleApi.key
 
 # Allow #
 logging.log
 gradle.properties
+
