@@ -102,7 +102,7 @@ public final class ClientDatastore {
 
 	public Map<String,Set<String>> getRegisteredClients() {
 		Map<String, Set<String>> ret = new HashMap<String, Set<String>>();
-		for (Map.Entry<String, Set<String>> e : ret.entrySet()) {
+		for (Map.Entry<String, Set<String>> e : registeredClients.entrySet()) {
 			ret.put(e.getKey(), new HashSet<String>(e.getValue()));
 		}
 		return ret;
