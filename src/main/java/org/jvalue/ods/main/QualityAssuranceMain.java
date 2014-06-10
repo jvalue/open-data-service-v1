@@ -30,11 +30,9 @@ import org.jvalue.numbers.RangeBound;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.MapObject;
 import org.jvalue.ods.data.schema.AllowedValueTypes;
-import org.jvalue.ods.data.schema.SimpleValueType;
+import org.jvalue.ods.data.schema.GenericValueType;
 import org.jvalue.ods.data.schema.ListComplexValueType;
 import org.jvalue.ods.data.schema.MapComplexValueType;
-import org.jvalue.ods.data.schema.GenericValueType;
-import org.jvalue.ods.data.schema.ObjectTypeEnum;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.exception.DbException;
@@ -81,15 +79,6 @@ public class QualityAssuranceMain {
 	 *             the json processing exception
 	 */
 	public static void main(String[] args) throws JsonProcessingException {
-
-		AllowedValueTypes.addBaseObjectType("Coordinate", new SimpleValueType("Coordinate", ObjectTypeEnum.Reference));		
-		AllowedValueTypes.addBaseObjectType("java.lang.String", new SimpleValueType("java.lang.String", ObjectTypeEnum.Domain));
-		AllowedValueTypes.addBaseObjectType("java.lang.Number", new SimpleValueType("java.lang.Number", ObjectTypeEnum.Domain));
-		AllowedValueTypes.addBaseObjectType("java.lang.Boolean", new SimpleValueType("java.lang.Boolean", ObjectTypeEnum.Domain));
-		AllowedValueTypes.addBaseObjectType("Null", new SimpleValueType("Null", ObjectTypeEnum.Domain));
-		
-		
-		
 		valueTypes = new HashMap<>();
 		valueTypes.put("waterLevelTrend", createWaterLevelTrendType());
 		valueTypes.put("waterLevel", createWaterLevelType());

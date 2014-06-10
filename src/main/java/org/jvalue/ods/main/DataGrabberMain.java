@@ -30,16 +30,13 @@ import org.jvalue.ods.data.OdsView;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
-import org.jvalue.ods.data.schema.AllowedValueTypes;
 import org.jvalue.ods.data.schema.MapComplexValueType;
-import org.jvalue.ods.data.schema.ObjectTypeEnum;
-import org.jvalue.ods.data.schema.SimpleValueType;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.exception.DbException;
-import org.jvalue.ods.grabber.PegelPortalMvGrabber;
 import org.jvalue.ods.grabber.OsmGrabber;
 import org.jvalue.ods.grabber.PegelOnlineGrabber;
+import org.jvalue.ods.grabber.PegelPortalMvGrabber;
 import org.jvalue.ods.logger.Logging;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -59,13 +56,6 @@ public class DataGrabberMain {
 	 *            the arguments
 	 */
 	public static void main(String[] args) {		
-		AllowedValueTypes.addBaseObjectType("Coordinate", new SimpleValueType("Coordinate", ObjectTypeEnum.Reference));		
-		AllowedValueTypes.addBaseObjectType("java.lang.String", new SimpleValueType("java.lang.String", ObjectTypeEnum.Domain));
-		AllowedValueTypes.addBaseObjectType("java.lang.Number", new SimpleValueType("java.lang.Number", ObjectTypeEnum.Domain));
-		AllowedValueTypes.addBaseObjectType("java.lang.Boolean", new SimpleValueType("java.lang.Boolean", ObjectTypeEnum.Domain));
-		AllowedValueTypes.addBaseObjectType("Null", new SimpleValueType("Null", ObjectTypeEnum.Domain));
-		
-		
 		Logging.adminLog("Update started");
 
 		accessor = DbFactory.createDbAccessor("ods");

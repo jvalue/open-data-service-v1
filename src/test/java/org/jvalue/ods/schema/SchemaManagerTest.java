@@ -3,7 +3,8 @@
  */
 package org.jvalue.ods.schema;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -14,11 +15,9 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import org.jvalue.ods.data.schema.AllowedValueTypes;
-import org.jvalue.ods.data.schema.SimpleValueType;
+import org.jvalue.ods.data.schema.GenericValueType;
 import org.jvalue.ods.data.schema.ListComplexValueType;
 import org.jvalue.ods.data.schema.MapComplexValueType;
-import org.jvalue.ods.data.schema.GenericValueType;
-import org.jvalue.ods.data.schema.ObjectTypeEnum;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jackson.JsonLoader;
@@ -53,12 +52,6 @@ public class SchemaManagerTest {
 	 */
 	@Test
 	public void testCreateJsonSchema() throws IOException {
-		AllowedValueTypes.addBaseObjectType("Null", new SimpleValueType("Null", ObjectTypeEnum.Domain));
-		AllowedValueTypes.addBaseObjectType("java.lang.String", new SimpleValueType("java.lang.String", ObjectTypeEnum.Domain));
-		AllowedValueTypes.addBaseObjectType("java.lang.Number", new SimpleValueType("java.lang.Number", ObjectTypeEnum.Domain));
-		AllowedValueTypes.addBaseObjectType("java.lang.Boolean", new SimpleValueType("java.lang.Boolean", ObjectTypeEnum.Domain));
-		
-		
 		GenericValueType s = createSchema();
 		String result = SchemaManager.createJsonSchema(s);
 		assertNotNull(result);

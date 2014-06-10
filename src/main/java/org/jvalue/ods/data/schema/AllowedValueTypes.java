@@ -27,6 +27,15 @@ public class AllowedValueTypes {
 
 	/** The map. */
 	private static Map<String, GenericValueType> map = new HashMap<String, GenericValueType>();
+	static {
+		map.put("Coordinate", new SimpleValueType("Coordinate", ObjectTypeEnum.Reference));
+		map.put("java.lang.String", new SimpleValueType("java.lang.String", ObjectTypeEnum.Domain));
+		map.put("java.lang.Number", new SimpleValueType("java.lang.Number", ObjectTypeEnum.Domain));
+		map.put("java.lang.Boolean", new SimpleValueType("java.lang.Boolean", ObjectTypeEnum.Domain));
+		map.put("Null", new SimpleValueType("Null", ObjectTypeEnum.Domain));
+	}
+
+
 
 	/**
 	 * Gets the data type.
@@ -39,19 +48,4 @@ public class AllowedValueTypes {
 		return map.get(name);
 	}
 
-	/**
-	 * Adds the base object type.
-	 * 
-	 * @param name
-	 *            the name
-	 * @param baseObjectType
-	 *            the base object type
-	 */
-	public static void addBaseObjectType(String name,
-			GenericValueType baseObjectType) {
-
-		if (!map.containsKey(name)) {
-			map.put(name, baseObjectType);
-		}
-	}
 }
