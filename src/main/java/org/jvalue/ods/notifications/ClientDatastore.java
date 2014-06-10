@@ -41,12 +41,12 @@ public final class ClientDatastore {
 		if (clientId == null || source == null) 
 			throw new NullPointerException("params cannot be null");
 
-		Set<String> sources = registeredClients.get(clientId);
-		if (sources == null) {
-			sources = new HashSet<String>();
-			registeredClients.put(clientId, sources);
+		Set<String> clients = registeredClients.get(source);
+		if (clients == null) {
+			clients = new HashSet<String>();
+			registeredClients.put(source, clients);
 		}
-		sources.add(source);
+		clients.add(clientId);
 	}
 
 
@@ -54,9 +54,9 @@ public final class ClientDatastore {
 		if (clientId == null || source == null) 
 			throw new NullPointerException("params cannot be null");
 
-		Set<String> sources = registeredClients.get(clientId);
-		boolean ret = sources.remove(source);
-		if (sources.size() == 0) registeredClients.remove(clientId);
+		Set<String> clients = registeredClients.get(source);
+		boolean ret = clients.remove(clientId);
+		if (clients.size() == 0) registeredClients.remove(source);
 		return ret;
 	}
 
@@ -65,8 +65,8 @@ public final class ClientDatastore {
 		if (clientId == null || source == null) 
 			throw new NullPointerException("params cannot be null");
 
-		if (registeredClients.get(clientId) == null) return false;
-		else return registeredClients.get(clientId).contains(source);
+		if (registeredClients.get(source) == null) return false;
+		else return registeredClients.get(source).contains(clientId);
 	}
 
 
