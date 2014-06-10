@@ -20,6 +20,7 @@ package org.jvalue.ods.main;
 import java.util.HashMap;
 
 import org.jvalue.ods.administration.AdministrationRouter;
+import org.jvalue.ods.notifications.NotificationRouter;
 import org.jvalue.ods.server.ApiRouter;
 import org.jvalue.ods.server.OdsRouter;
 import org.jvalue.ods.server.openstreetmap.NominatimRouter;
@@ -116,5 +117,10 @@ public class RouterFactory {
 	 */
 	public static org.jvalue.ods.main.Router<Restlet> createOdsRouter() {
 		return new OdsRouter();
+	}
+
+
+	public static org.jvalue.ods.main.Router<Restlet> createNotificationRouter() {
+		return new NotificationRouter();
 	}
 }
