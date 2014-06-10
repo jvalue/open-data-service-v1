@@ -19,6 +19,7 @@ package org.jvalue.ods.notifications;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -61,12 +62,41 @@ public final class ClientDatastore {
 	}
 
 
+	public boolean unregisterClient(String clientId) {
+		if (clientId == null) throw new NullPointerException("param cannot be null");
+
+		boolean modified = false;
+
+		Iterator<Map.Entry<String, Set<String>>> iter = registeredClients.entrySet().iterator();
+		while (iter.hasNext()) {
+			Set<String> clients = iter.next().getValue();
+			if (clients.contains(clientId)) {
+				modified = true;
+				clients.remove(clientId);
+				if (clients.size() == 0) iter.remove();
+			}
+		}
+
+		return modified;
+	}
+
+
 	public boolean isClientRegistered(String clientId, String source) {
 		if (clientId == null || source == null) 
 			throw new NullPointerException("params cannot be null");
 
 		if (registeredClients.get(source) == null) return false;
 		else return registeredClients.get(source).contains(clientId);
+	}
+
+	
+	public void updateClientId(String oldId, String newId) {
+		for (Set<String> clients : registeredClients.values()) {
+			if (clients.contains(oldId)) {
+				clients.remove(oldId);
+				clients.add(newId);
+			}
+		}
 	}
 
 
