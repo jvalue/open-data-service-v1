@@ -17,9 +17,44 @@
  */
 package org.jvalue.ods.filter;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * The Interface OdsFilter.
  */
-public interface OdsFilter {
+public abstract class OdsFilter<P,R> {
 
+	private final List<OdsFilter<R,?>> filterChain = new LinkedList<OdsFilter<R,?>>();
+
+
+	public final void addFilter(OdsFilter<R,?> filter) {
+		if (filter == null) throw new NullPointerException("filter cannot be null");
+		filterChain.add(filter);
+	}
+
+
+	public final boolean removeFilter(OdsFilter<R,?> filter) {
+		if (filter == null) throw new NullPointerException("filter cannot be null");
+		return filterChain.remove(filter);
+	}
+
+
+	public final boolean containsFilter(OdsFilter<R,?> filter) {
+		return filterChain.contains(filter);
+	}
+
+
+	public final R filter(P param) {
+		R ret = filterHelper(param);
+
+		for (OdsFilter<R,?> filter : filterChain) {
+			filter.filter(ret);
+		}
+
+		return ret;
+	}
+
+	
+	protected abstract R filterHelper(P param);
 }

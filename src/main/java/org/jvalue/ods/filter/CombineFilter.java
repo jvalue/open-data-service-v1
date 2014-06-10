@@ -33,7 +33,7 @@ import org.jvalue.ods.schema.SchemaManager;
 /**
  * The Class CombineFilter.
  */
-public class CombineFilter implements OdsFilter {
+public class CombineFilter extends OdsFilter<Void, MapObject> {
 
 	/** The data. */
 	protected MapObject data;
@@ -63,7 +63,8 @@ public class CombineFilter implements OdsFilter {
 	 * 
 	 * @return the map value
 	 */
-	public MapObject filter() {
+	@Override
+	protected MapObject filterHelper(Void param) {
 
 		if (!SchemaManager.validateGenericValusFitsSchema(data, schema)) {
 			Logging.info(this.getClass(),

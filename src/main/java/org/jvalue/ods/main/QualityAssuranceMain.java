@@ -120,7 +120,7 @@ public class QualityAssuranceMain {
 
 					mv = new CombineFilter((MapObject) gv,
 							sourceCoordinateStructure,
-							destinationCoordinateStructure).filter();
+							destinationCoordinateStructure).filter(null);
 
 					if (!SchemaManager.validateGenericValusFitsSchema(mv,
 							combinedSchema)) {
