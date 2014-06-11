@@ -2,8 +2,10 @@ package org.jvalue.ods.notifications;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -21,7 +23,9 @@ public class NotificationSender {
 	
 	private static final int MULTICAST_SIZE = 1000;
 	
-	private static final String DATA_KEY_SOURCE = "source";
+	static final String 
+		DATA_KEY_SOURCE = "source",
+		DATA_KEY_DEBUG = "debug";
 
 	
 	private static final NotificationSender instance = new NotificationSender();
@@ -35,42 +39,63 @@ public class NotificationSender {
 		sender = new Sender(ApiKey.getInstance().toString());
 	}
 	
+
+
+
 	
 	public int notifySourceChange(String source) throws IOException {
 		Set<String> clients = ClientDatastore.getInstance().getRegisteredClients().get(source);
 		if (clients == null) return 0;
-		
-		int total = clients.size();
-		Set<String> partialClients = new HashSet<String>(total);
+
+		Map<String,String> payload = new HashMap<String,String>();
+		payload.put(DATA_KEY_SOURCE, source);
+
+		sendNotification(clients, payload, source);
+
+		return clients.size();
+	}
+
+
+
+	void sendNotification(
+			final Set<String> clients, 
+			final Map<String,String> payload, 
+			final String collapseKey) {
+
+		Set<String> partialClients = new HashSet<String>(clients.size());
 		int counter = 0;
 		
 		for (String client : clients) {
 			counter++;
 			partialClients.add(client);
 
-			if (partialClients.size() == MULTICAST_SIZE || counter == total) {
-				asyncSend(partialClients, source);
+			if (partialClients.size() == MULTICAST_SIZE || counter == clients.size()) {
+				asyncSend(partialClients, payload, collapseKey);
 				partialClients.clear();
 			}
 		}
-
-		return total;
 	}
 
 
-	private void asyncSend(Set<String> partialClients, final String source) {
+	private void asyncSend(
+			final Set<String> partialClients, 
+			final Map<String, String> payload,
+			final String collapseKey) {
+
 		final List<String> devices = new ArrayList<String>(partialClients);
 		threadPool.execute(new Runnable() {
 			
 			public void run() {
 				// send
-				Message message = new Message.Builder()
-						.collapseKey(source)
-						.addData(DATA_KEY_SOURCE, source)
-						.build();
+				Message.Builder builder = new Message.Builder().collapseKey(collapseKey);
+				for (Map.Entry<String, String> e : payload.entrySet()) {
+					builder.addData(e.getKey(), e.getValue());
+				}
+
+
 				MulticastResult multicastResult;
 				try {
-					multicastResult = sender.send(message, devices, 5);
+					multicastResult = sender.send(builder.build(), devices, 5);
 				} catch (IOException e) {
 					Logging.error(NotificationSender.class, "Error posting messages");
 					return;
