@@ -17,14 +17,17 @@
  */
 package org.jvalue.ods.notifications;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
+import org.restlet.data.MediaType;
 import org.restlet.data.Method;
 import org.restlet.data.Parameter;
 import org.restlet.data.Status;
@@ -35,7 +38,8 @@ public final class NotificationRouter implements Router<Restlet> {
 
 	private static final String
 		ROUTE_REGISTER = "/notifications/register",
-		ROUTE_UNREGISTER = "/notifications/unregister";
+		ROUTE_UNREGISTER = "/notifications/unregister",
+		ROUTE_DEBUG = "/notifications/debug";
 
 	private static final String
 		PARAM_REGID = "regId",
@@ -79,6 +83,19 @@ public final class NotificationRouter implements Router<Restlet> {
 				Logging.info(
 					NotificationRouter.class, 
 					"Unregistered client " + regId + " for source " + source);
+			}
+		});
+
+
+		routes.put(ROUTE_DEBUG, new Restlet() {
+			@Override
+			public void handle(Request request, Response response) {
+				try {
+					String clients = new ObjectMapper().writeValueAsString(ClientDatastore.getInstance().getRegisteredClients());
+					response.setEntity(clients, MediaType.APPLICATION_JSON);
+				} catch (IOException io) {
+					throw new RuntimeException(io);
+				}
 			}
 		});
 
