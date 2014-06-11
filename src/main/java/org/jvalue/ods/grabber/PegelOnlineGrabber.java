@@ -54,7 +54,7 @@ public class PegelOnlineGrabber implements Grabber {
 
 		ListObject list = (ListObject) translator
 				.translate(new DataSource(
-						"http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true",
+						"http://pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true&includeCharacteristicValues=true",
 						genericObjectType));
 
 		return list;
@@ -67,68 +67,9 @@ public class PegelOnlineGrabber implements Grabber {
 	 */
 	@Override
 	public GenericValueType getDataSourceSchema() {
-		Map<String, GenericValueType> water = new HashMap<String, GenericValueType>();
-		water.put("shortname", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		water.put("longname", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		MapComplexValueType waterSchema = new MapComplexValueType(water);
-
-		Map<String, GenericValueType> currentMeasurement = new HashMap<String, GenericValueType>();
-		currentMeasurement.put("timestamp", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		currentMeasurement.put("value", AllowedValueTypes.getGenericValueType("java.lang.Number"));
-		currentMeasurement.put("trend", AllowedValueTypes.getGenericValueType("java.lang.Number"));
-		currentMeasurement.put("stateMnwMhw", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		currentMeasurement.put("stateNswHsw", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		MapComplexValueType currentMeasurementSchema = new MapComplexValueType(currentMeasurement);
-
-		Map<String, GenericValueType> gaugeZero = new HashMap<String, GenericValueType>();
-		gaugeZero.put("unit", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		gaugeZero.put("value", AllowedValueTypes.getGenericValueType("java.lang.Number"));
-		gaugeZero.put("validFrom", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		MapComplexValueType gaugeZeroSchema = new MapComplexValueType(gaugeZero);
-
-		Map<String, GenericValueType> comment = new HashMap<String, GenericValueType>();
-		comment.put("shortDescription", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		comment.put("longDescription", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		MapComplexValueType commentSchema = new MapComplexValueType(comment);
-
-		Map<String, GenericValueType> timeSeries = new HashMap<String, GenericValueType>();
-		timeSeries.put("shortname", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		timeSeries.put("longname", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		timeSeries.put("unit", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		timeSeries.put("equidistance", AllowedValueTypes.getGenericValueType("java.lang.Number"));
-		timeSeries.put("currentMeasurement", currentMeasurementSchema);
-		timeSeries.put("gaugeZero", gaugeZeroSchema);
-		timeSeries.put("comment", commentSchema);
-		MapComplexValueType timeSeriesSchema = new MapComplexValueType(timeSeries);
-
-		List<GenericValueType> timeSeriesList = new LinkedList<GenericValueType>();
-		timeSeriesList.add(timeSeriesSchema);
-		ListComplexValueType timeSeriesListSchema = new ListComplexValueType(timeSeriesList);
-
-		Map<String, GenericValueType> station = new HashMap<String, GenericValueType>();
-		station.put("uuid", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		station.put("number", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		station.put("shortname", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		station.put("longname", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		station.put("km", AllowedValueTypes.getGenericValueType("java.lang.Number"));
-		station.put("agency", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		station.put("longitude", AllowedValueTypes.getGenericValueType("java.lang.Number"));
-		station.put("latitude", AllowedValueTypes.getGenericValueType("java.lang.Number"));
-		station.put("water", waterSchema);
-		station.put("timeseries", timeSeriesListSchema);
-		// two class object strings, must not be "required"
-		Map<String, GenericValueType> type = new HashMap<String, GenericValueType>();
-		type.put("Station", AllowedValueTypes.getGenericValueType("Null"));
-		MapComplexValueType typeSchema = new MapComplexValueType(type);
-		station.put("objectType", typeSchema);
-		Map<String, GenericValueType> restName = new HashMap<String, GenericValueType>();
-		restName.put("stations", AllowedValueTypes.getGenericValueType("Null"));
-		MapComplexValueType restNameSchema = new MapComplexValueType(restName);
-		station.put("rest_name", restNameSchema);
-		MapComplexValueType stationSchema = new MapComplexValueType(station);
 
 		List<GenericValueType> stationList = new LinkedList<GenericValueType>();
-		stationList.add(stationSchema);
+		stationList.add(getDbSchema());
 		ListComplexValueType listObjectType = new ListComplexValueType(stationList);
 
 		return listObjectType;
@@ -173,6 +114,28 @@ public class PegelOnlineGrabber implements Grabber {
 		timeSeries.put("currentMeasurement", currentMeasurementSchema);
 		timeSeries.put("gaugeZero", gaugeZeroSchema);
 		timeSeries.put("comment", commentSchema);
+
+		Map<String, GenericValueType> characteristicValues = new HashMap<String, GenericValueType>();
+		characteristicValues.put("shortname", AllowedValueTypes.getGenericValueType("java.lang.String"));
+		characteristicValues.put("longname", AllowedValueTypes.getGenericValueType("java.lang.String"));
+		characteristicValues.put("unit", AllowedValueTypes.getGenericValueType("java.lang.String"));
+		characteristicValues.put("value", AllowedValueTypes.getGenericValueType("java.lang.Number"));
+		characteristicValues.put("validFrom", AllowedValueTypes.getGenericValueType("java.lang.String"));
+		characteristicValues.put("timespanStart", AllowedValueTypes.getGenericValueType("java.lang.String"));
+		characteristicValues.put("timespanEnd", AllowedValueTypes.getGenericValueType("java.lang.String"));
+		List<GenericValueType> occurrences = new LinkedList<GenericValueType>();
+		occurrences.add(AllowedValueTypes.getGenericValueType("java.lang.String"));
+		ListComplexValueType occurrencesSchema = new ListComplexValueType(occurrences);
+		characteristicValues.put("occurrences", occurrencesSchema);
+		MapComplexValueType characteristicValuesSchema = new MapComplexValueType(characteristicValues);
+
+		List<GenericValueType> characteristicValuesList = new LinkedList<GenericValueType>();
+		characteristicValuesList.add(characteristicValuesSchema);
+
+		ListComplexValueType characteristicValuesListSchema = new ListComplexValueType(characteristicValuesList);
+		timeSeries.put("characteristicValues", characteristicValuesListSchema);
+
+
 		MapComplexValueType timeSeriesSchema = new MapComplexValueType(timeSeries);
 
 		List<GenericValueType> timeSeriesList = new LinkedList<GenericValueType>();
