@@ -17,6 +17,10 @@
  */
 package org.jvalue.ods.grabber;
 
+import static org.jvalue.ods.data.schema.AllowedValueTypes.VALUETYPE_NULL;
+import static org.jvalue.ods.data.schema.AllowedValueTypes.VALUETYPE_NUMBER;
+import static org.jvalue.ods.data.schema.AllowedValueTypes.VALUETYPE_STRING;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,10 +32,9 @@ import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.metadata.JacksonMetaData;
 import org.jvalue.ods.data.metadata.OdsMetaData;
-import org.jvalue.ods.data.schema.AllowedValueTypes;
+import org.jvalue.ods.data.schema.GenericValueType;
 import org.jvalue.ods.data.schema.ListComplexValueType;
 import org.jvalue.ods.data.schema.MapComplexValueType;
-import org.jvalue.ods.data.schema.GenericValueType;
 import org.jvalue.ods.main.Grabber;
 import org.jvalue.ods.translator.OsmTranslator;
 
@@ -69,24 +72,24 @@ public class OsmGrabber implements Grabber {
 		MapComplexValueType nodeTagsSchema = new MapComplexValueType(nodeTagsMap);
 
 		Map<String, GenericValueType> nodeMap = new HashMap<String, GenericValueType>();
-		nodeMap.put("type", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		nodeMap.put("nodeId", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		nodeMap.put("timestamp", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		nodeMap.put("uid", AllowedValueTypes.getGenericValueType("java.lang.Number"));
-		nodeMap.put("user", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		nodeMap.put("changeset", AllowedValueTypes.getGenericValueType("java.lang.Number"));
-		nodeMap.put("latitude", AllowedValueTypes.getGenericValueType("java.lang.Number"));
-		nodeMap.put("longitude", AllowedValueTypes.getGenericValueType("java.lang.Number"));
+		nodeMap.put("type", VALUETYPE_STRING);
+		nodeMap.put("nodeId", VALUETYPE_STRING);
+		nodeMap.put("timestamp", VALUETYPE_STRING);
+		nodeMap.put("uid", VALUETYPE_NUMBER);
+		nodeMap.put("user", VALUETYPE_STRING);
+		nodeMap.put("changeset", VALUETYPE_NUMBER);
+		nodeMap.put("latitude", VALUETYPE_NUMBER);
+		nodeMap.put("longitude", VALUETYPE_NUMBER);
 		nodeMap.put("tags", nodeTagsSchema);
 		MapComplexValueType nodeMapSchema = new MapComplexValueType(nodeMap);
 
 		// two class object strings, must not be "required"
 		Map<String, GenericValueType> type = new HashMap<String, GenericValueType>();
-		type.put("Osm", AllowedValueTypes.getGenericValueType("Null"));
+		type.put("Osm", VALUETYPE_NULL);
 		MapComplexValueType typeSchema = new MapComplexValueType(type);
 		nodeMap.put("objectType", typeSchema);
 		Map<String, GenericValueType> restName = new HashMap<String, GenericValueType>();
-		restName.put("osm", AllowedValueTypes.getGenericValueType("Null"));
+		restName.put("osm", VALUETYPE_NULL);
 		MapComplexValueType restNameSchema = new MapComplexValueType(restName);
 		nodeMap.put("rest_name", restNameSchema);
 
@@ -105,25 +108,25 @@ public class OsmGrabber implements Grabber {
 	@Override
 	public MapComplexValueType getDbSchema() {
 		Map<String, GenericValueType> nodeMap = new HashMap<String, GenericValueType>();
-		nodeMap.put("type", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		nodeMap.put("nodeId", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		nodeMap.put("timestamp", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		nodeMap.put("uid", AllowedValueTypes.getGenericValueType("java.lang.Number"));
-		nodeMap.put("user", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		nodeMap.put("changeset", AllowedValueTypes.getGenericValueType("java.lang.Number"));
-		nodeMap.put("latitude", AllowedValueTypes.getGenericValueType("java.lang.Number"));
-		nodeMap.put("longitude", AllowedValueTypes.getGenericValueType("java.lang.Number"));
+		nodeMap.put("type", VALUETYPE_STRING);
+		nodeMap.put("nodeId", VALUETYPE_STRING);
+		nodeMap.put("timestamp", VALUETYPE_STRING);
+		nodeMap.put("uid", VALUETYPE_NUMBER);
+		nodeMap.put("user", VALUETYPE_STRING);
+		nodeMap.put("changeset", VALUETYPE_NUMBER);
+		nodeMap.put("latitude", VALUETYPE_NUMBER);
+		nodeMap.put("longitude", VALUETYPE_NUMBER);
 		Map<String, GenericValueType> nodeTagsMap = new HashMap<String, GenericValueType>();
 		MapComplexValueType nodeTagsSchema = new MapComplexValueType(nodeTagsMap);
 		nodeMap.put("tags", nodeTagsSchema);
 
 		// two class object strings, must not be "required"
 		Map<String, GenericValueType> type = new HashMap<String, GenericValueType>();
-		type.put("Osm", AllowedValueTypes.getGenericValueType("Null"));
+		type.put("Osm", VALUETYPE_NULL);
 		MapComplexValueType typeSchema = new MapComplexValueType(type);
 		nodeMap.put("objectType", typeSchema);
 		Map<String, GenericValueType> restName = new HashMap<String, GenericValueType>();
-		restName.put("osm", AllowedValueTypes.getGenericValueType("Null"));
+		restName.put("osm", VALUETYPE_NULL);
 		MapComplexValueType restNameSchema = new MapComplexValueType(restName);
 		nodeMap.put("rest_name", restNameSchema);
 		MapComplexValueType nodeMapSchema = new MapComplexValueType(nodeMap);

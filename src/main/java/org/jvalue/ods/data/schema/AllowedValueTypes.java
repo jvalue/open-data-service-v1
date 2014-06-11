@@ -25,7 +25,6 @@ import java.util.Map;
  */
 public class AllowedValueTypes {
 
-	/** The map. */
 	private static Map<String, GenericValueType> map = new HashMap<String, GenericValueType>();
 	static {
 		map.put("Coordinate", new SimpleValueType("Coordinate", ObjectTypeEnum.Reference));
@@ -34,6 +33,13 @@ public class AllowedValueTypes {
 		map.put("java.lang.Boolean", new SimpleValueType("java.lang.Boolean", ObjectTypeEnum.Domain));
 		map.put("Null", new SimpleValueType("Null", ObjectTypeEnum.Domain));
 	}
+
+
+	public static final GenericValueType 
+		VALUETYPE_STRING = getGenericValueType("java.lang.String"),
+		VALUETYPE_NUMBER = getGenericValueType("java.lang.Number"),
+		VALUETYPE_BOOLEAN = getGenericValueType("java.lang.Boolean"),
+		VALUETYPE_NULL = getGenericValueType("Null");
 
 
 

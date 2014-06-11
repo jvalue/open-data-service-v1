@@ -17,6 +17,10 @@
  */
 package org.jvalue.ods.grabber;
 
+import static org.jvalue.ods.data.schema.AllowedValueTypes.VALUETYPE_NULL;
+import static org.jvalue.ods.data.schema.AllowedValueTypes.VALUETYPE_NUMBER;
+import static org.jvalue.ods.data.schema.AllowedValueTypes.VALUETYPE_STRING;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -37,7 +41,6 @@ import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
 import org.jvalue.ods.data.metadata.JacksonMetaData;
 import org.jvalue.ods.data.metadata.OdsMetaData;
-import org.jvalue.ods.data.schema.AllowedValueTypes;
 import org.jvalue.ods.data.schema.GenericValueType;
 import org.jvalue.ods.data.schema.ListComplexValueType;
 import org.jvalue.ods.data.schema.MapComplexValueType;
@@ -101,22 +104,22 @@ public class PegelPortalMvGrabber implements Grabber {
 	@Override
 	public MapComplexValueType getDbSchema() {
 		Map<String, GenericValueType> object = new HashMap<String, GenericValueType>();
-		object.put(KEY_STATION, AllowedValueTypes.getGenericValueType("java.lang.String"));
-		object.put(KEY_WATER, AllowedValueTypes.getGenericValueType("java.lang.String"));
-		object.put(KEY_TIMESTAMP, AllowedValueTypes.getGenericValueType("java.lang.String"));
-		object.put(KEY_LEVEL, AllowedValueTypes.getGenericValueType("java.lang.Number"));
-		object.put(KEY_LEVEL_UNIT, AllowedValueTypes.getGenericValueType("java.lang.String"));
-		object.put(KEY_EFFLUENT, AllowedValueTypes.getGenericValueType("java.lang.Number"));
-		object.put(KEY_EFFLUENT_UNIT, AllowedValueTypes.getGenericValueType("java.lang.String"));
-		object.put(KEY_AGENCY, AllowedValueTypes.getGenericValueType("java.lang.String"));
+		object.put(KEY_STATION, VALUETYPE_STRING);
+		object.put(KEY_WATER, VALUETYPE_STRING);
+		object.put(KEY_TIMESTAMP, VALUETYPE_STRING);
+		object.put(KEY_LEVEL, VALUETYPE_NUMBER);
+		object.put(KEY_LEVEL_UNIT, VALUETYPE_STRING);
+		object.put(KEY_EFFLUENT, VALUETYPE_NUMBER);
+		object.put(KEY_EFFLUENT_UNIT, VALUETYPE_STRING);
+		object.put(KEY_AGENCY, VALUETYPE_STRING);
 
 
 		Map<String, GenericValueType> type = new HashMap<String, GenericValueType>();
-		type.put("MV-Station", AllowedValueTypes.getGenericValueType("Null"));
+		type.put("MV-Station", VALUETYPE_NULL);
 		object.put("objectType", new MapComplexValueType(type));
 
 		Map<String, GenericValueType> restName = new HashMap<String, GenericValueType>();
-		restName.put("mv-stations", AllowedValueTypes.getGenericValueType("Null"));
+		restName.put("mv-stations", VALUETYPE_NULL);
 		object.put("rest_name", new MapComplexValueType(restName));
 
 		return new MapComplexValueType(object);
