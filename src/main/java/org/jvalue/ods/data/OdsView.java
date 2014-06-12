@@ -41,8 +41,7 @@ public class OdsView {
 	 * @param function
 	 *            the function
 	 */
-	public OdsView(String idPath, String viewName, String function) {
-		super();
+	public OdsView(String idPath, String viewName, String function) {		
 		this.idPath = idPath;
 		this.viewName = viewName;
 		this.function = function;

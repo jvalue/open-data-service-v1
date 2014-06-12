@@ -45,8 +45,8 @@ public class OsmTranslatorTest {
 	 */
 	@Test
 	public void testTranslate() {
-		ListObject lv = (ListObject) translator.translate(new DataSource(testUrl,
-				null, null));
+		ListObject lv = (ListObject) translator.translate(new DataSource("testUrl", testUrl,
+				null, null, null, null) {});
 		assertNotNull(lv);
 	}
 
@@ -55,8 +55,8 @@ public class OsmTranslatorTest {
 	 */
 	@Test
 	public void testTranslateOffline() {
-		ListObject lv = (ListObject) translator.translate(new DataSource(
-				"/nbgcity.osm", null, null));
+		ListObject lv = (ListObject) translator.translate(new DataSource("osm",
+				"/nbgcity.osm", null, null, null, null) {});
 		assertNotNull(lv);
 		DbAccessor<JsonNode> db = DbFactory.createDbAccessor("testOsm");
 		db.connect();
@@ -76,8 +76,8 @@ public class OsmTranslatorTest {
 	 */
 	@Test
 	public void testTranslateInvalidSource() {
-		ListObject lv = (ListObject) translator.translate(new DataSource(
-				"invalidsource", null, null));
+		ListObject lv = (ListObject) translator.translate(new DataSource("invalidSource",
+				"invalidsource", null, null, null, null){});
 		assertNull(lv);
 	}
 

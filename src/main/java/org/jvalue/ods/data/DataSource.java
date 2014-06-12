@@ -81,32 +81,5 @@ public abstract class DataSource {
 	}
 
 
-	@Override
-	public boolean equals(Object other) {
-		if (other == null || !(other instanceof DataSource)) return false;
-		DataSource source = (DataSource) other;
-		return equals(id, source.id)
-			&& equals(url, source.url) 
-			&& equals(dataSourceSchema, source.dataSourceSchema)
-			&& equals(metaData, source.metaData);
-	}
-
-
-	private boolean equals(Object o1, Object o2) {
-		if (o1 == null && o2 == null) return true;
-		if (o1 == null || o2 == null) return false;
-		return o1.equals(o2);
-	}
-
-
-	@Override
-	public int hashCode() {
-		final int MULT = 13;
-		int hash = 11;
-		hash = hash * MULT + id.hashCode();
-		hash = hash * MULT + url.hashCode();
-		hash = hash * MULT + (dataSourceSchema == null ? 0 : dataSourceSchema.hashCode());
-		hash = hash * MULT + (metaData == null ? 0 : metaData.hashCode());
-		return hash;
-	}
+	
 }

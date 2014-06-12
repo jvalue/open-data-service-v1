@@ -81,34 +81,34 @@ public class SchemaManagerTest {
 	 */
 	private GenericValueType createSchema() {
 		Map<String, GenericValueType> water = new HashMap<String, GenericValueType>();
-		water.put("shortname", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		water.put("longname", AllowedValueTypes.getGenericValueType("java.lang.String"));
+		water.put("shortname", AllowedValueTypes.VALUETYPE_STRING);
+		water.put("longname", AllowedValueTypes.VALUETYPE_STRING);
 		MapComplexValueType waterSchema = new MapComplexValueType(water);
 
 		Map<String, GenericValueType> currentMeasurement = new HashMap<String, GenericValueType>();
-		currentMeasurement.put("timestamp", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		currentMeasurement.put("value", AllowedValueTypes.getGenericValueType("java.lang.Number"));
-		currentMeasurement.put("trend", AllowedValueTypes.getGenericValueType("java.lang.Number"));
-		currentMeasurement.put("stateMnwMhw", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		currentMeasurement.put("stateNswHsw", AllowedValueTypes.getGenericValueType("java.lang.String"));
+		currentMeasurement.put("timestamp", AllowedValueTypes.VALUETYPE_STRING);
+		currentMeasurement.put("value", AllowedValueTypes.VALUETYPE_NUMBER);
+		currentMeasurement.put("trend", AllowedValueTypes.VALUETYPE_NUMBER);
+		currentMeasurement.put("stateMnwMhw", AllowedValueTypes.VALUETYPE_STRING);
+		currentMeasurement.put("stateNswHsw", AllowedValueTypes.VALUETYPE_STRING);
 		MapComplexValueType currentMeasurementSchema = new MapComplexValueType(currentMeasurement);
 
 		Map<String, GenericValueType> gaugeZero = new HashMap<String, GenericValueType>();
-		gaugeZero.put("unit", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		gaugeZero.put("value", AllowedValueTypes.getGenericValueType("java.lang.Number"));
-		gaugeZero.put("validFrom", AllowedValueTypes.getGenericValueType("java.lang.String"));
+		gaugeZero.put("unit", AllowedValueTypes.VALUETYPE_STRING);
+		gaugeZero.put("value", AllowedValueTypes.VALUETYPE_NUMBER);
+		gaugeZero.put("validFrom", AllowedValueTypes.VALUETYPE_STRING);
 		MapComplexValueType gaugeZeroSchema = new MapComplexValueType(gaugeZero);
 
 		Map<String, GenericValueType> comment = new HashMap<String, GenericValueType>();
-		comment.put("shortDescription", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		comment.put("longDescription", AllowedValueTypes.getGenericValueType("java.lang.String"));
+		comment.put("shortDescription", AllowedValueTypes.VALUETYPE_STRING);
+		comment.put("longDescription", AllowedValueTypes.VALUETYPE_STRING);
 		MapComplexValueType commentSchema = new MapComplexValueType(comment);
 
 		Map<String, GenericValueType> timeSeries = new HashMap<String, GenericValueType>();
-		timeSeries.put("shortname", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		timeSeries.put("longname", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		timeSeries.put("unit", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		timeSeries.put("equidistance", AllowedValueTypes.getGenericValueType("java.lang.Number"));
+		timeSeries.put("shortname", AllowedValueTypes.VALUETYPE_STRING);
+		timeSeries.put("longname", AllowedValueTypes.VALUETYPE_STRING);
+		timeSeries.put("unit", AllowedValueTypes.VALUETYPE_STRING);
+		timeSeries.put("equidistance", AllowedValueTypes.VALUETYPE_NUMBER);
 		timeSeries.put("currentMeasurement", currentMeasurementSchema);
 		timeSeries.put("gaugeZero", gaugeZeroSchema);
 		timeSeries.put("comment", commentSchema);
@@ -119,14 +119,14 @@ public class SchemaManagerTest {
 		ListComplexValueType timeSeriesListSchema = new ListComplexValueType(timeSeriesList);
 
 		Map<String, GenericValueType> station = new HashMap<String, GenericValueType>();
-		station.put("uuid", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		station.put("number", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		station.put("shortname", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		station.put("longname", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		station.put("km", AllowedValueTypes.getGenericValueType("java.lang.Number"));
-		station.put("agency", AllowedValueTypes.getGenericValueType("java.lang.String"));
-		station.put("longitude", AllowedValueTypes.getGenericValueType("java.lang.Number"));
-		station.put("latitude", AllowedValueTypes.getGenericValueType("java.lang.Number"));
+		station.put("uuid", AllowedValueTypes.VALUETYPE_STRING);
+		station.put("number", AllowedValueTypes.VALUETYPE_STRING);
+		station.put("shortname", AllowedValueTypes.VALUETYPE_STRING);
+		station.put("longname", AllowedValueTypes.VALUETYPE_STRING);
+		station.put("km", AllowedValueTypes.VALUETYPE_NUMBER);
+		station.put("agency", AllowedValueTypes.VALUETYPE_STRING);
+		station.put("longitude", AllowedValueTypes.VALUETYPE_NUMBER);
+		station.put("latitude", AllowedValueTypes.VALUETYPE_NUMBER);
 		station.put("water", waterSchema);
 		station.put("timeseries", timeSeriesListSchema);
 		MapComplexValueType stationSchema = new MapComplexValueType(station);
