@@ -56,7 +56,7 @@ public class OsmGrabber implements Grabber {
 				"OpenStreetMap ist eine Karte der Welt, erstellt von Menschen wie dir und frei verwendbar unter einer offenen Lizenz.",
 				"http://www.openstreetmap.org",
 				"http://www.openstreetmap.org/copyright"),
-			getOdsViews());
+			getOdsViews()) { };
 
 	/*
 	 * (non-Javadoc)

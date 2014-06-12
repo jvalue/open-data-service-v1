@@ -80,7 +80,7 @@ public class PegelPortalMvGrabber implements Grabber {
 					+ "Küstenpegel des Bundeslandes Mecklenburg-Vorpommern zur Ansicht bereit",
 				"http://www.pegelportal-mv.de/",
 				"http://www.pegelportal-mv.de/impressum.html"),
-			getOdsViews());
+			getOdsViews()) { };
 
 
 

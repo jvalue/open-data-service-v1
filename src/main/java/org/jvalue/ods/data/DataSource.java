@@ -23,7 +23,7 @@ import org.jvalue.ods.data.metadata.OdsMetaData;
 import org.jvalue.ods.data.schema.GenericValueType;
 import org.jvalue.ods.data.schema.MapComplexValueType;
 
-public class DataSource {
+public abstract class DataSource {
 
 	private final String id;
 	private final String url;
@@ -32,7 +32,7 @@ public class DataSource {
 	private final OdsMetaData metaData;
 	private final List<OdsView> odsViews;
 
-	public DataSource(
+	protected DataSource(
 			String id,
 			String url, 
 			GenericValueType dataSourceSchema,
