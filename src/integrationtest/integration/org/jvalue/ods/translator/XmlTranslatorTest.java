@@ -52,7 +52,7 @@ public class XmlTranslatorTest {
 	@Test
 	public void testTranslate() {
 		GenericEntity gv = translator.translate(new DataSource("/nbgcity.osm",
-				null));
+				null, null));
 		assertNotNull(gv);
 	}
 
@@ -62,7 +62,7 @@ public class XmlTranslatorTest {
 	@Test
 	public void testTranslateNotExistingFile() {
 		GenericEntity gv = translator.translate(new DataSource(
-				"NotExistingFile", null));
+				"NotExistingFile", null, null));
 		assertNull(gv);
 	}
 

@@ -30,11 +30,9 @@ import org.junit.Test;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.schema.AllowedValueTypes;
-import org.jvalue.ods.data.schema.SimpleValueType;
 import org.jvalue.ods.data.schema.ListComplexValueType;
 import org.jvalue.ods.data.schema.MapComplexValueType;
 import org.jvalue.ods.data.schema.GenericValueType;
-import org.jvalue.ods.data.schema.ObjectTypeEnum;
 import org.jvalue.ods.grabber.Translator;
 import org.jvalue.ods.translator.JsonTranslator;
 
@@ -66,7 +64,7 @@ public class JsonTranslatorTest {
 	 */
 	@Test
 	public void testTranslate() {
-		GenericEntity gv = translator.translate(new DataSource(TestUrl, null));
+		GenericEntity gv = translator.translate(new DataSource(TestUrl, null, null));
 		assertNotNull(gv);
 	}
 
@@ -75,8 +73,7 @@ public class JsonTranslatorTest {
 	 */
 	@Test
 	public void testTranslateInvalidSource() {
-		GenericEntity gv = translator.translate(new DataSource("invalidsource",
-				null));
+		GenericEntity gv = translator.translate(new DataSource("invalidsource",	null, null));
 		assertNull(gv);
 	}
 
@@ -163,16 +160,10 @@ public class JsonTranslatorTest {
 	 * Test Translate null source.
 	 */
 	@Test()
-	public void testTranslateWithSchema() {
-		AllowedValueTypes.addBaseObjectType("java.lang.String", new SimpleValueType("java.lang.String", ObjectTypeEnum.Domain));
-		AllowedValueTypes.addBaseObjectType("java.lang.Number", new SimpleValueType("java.lang.Number", ObjectTypeEnum.Domain));
-		AllowedValueTypes.addBaseObjectType("java.lang.Boolean", new SimpleValueType("java.lang.Boolean", ObjectTypeEnum.Domain));
-		AllowedValueTypes.addBaseObjectType("Null", new SimpleValueType("Null", ObjectTypeEnum.Domain));
-		
-		
+	public void testTranslateWithSchema() {		
 		GenericValueType genericObjectType = createOpenWeatherSchema();
 		String url = "http://api.openweathermap.org/data/2.5/weather?q=Nuremberg,de";
-		GenericEntity gv = translator.translate(new DataSource(url, genericObjectType));
+		GenericEntity gv = translator.translate(new DataSource(url, genericObjectType, null));
 		assertNotNull(gv);
 	}
 
