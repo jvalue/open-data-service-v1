@@ -61,9 +61,10 @@ public class OverpassRouter implements Router<Restlet> {
 				GenericEntity ret = null;
 				try {
 					ret = new JsonTranslator().translate(new DataSource(
+							"ru-rambler-osm-overpass",
 							"http://overpass.osm.rambler.ru/cgi/interpreter?data=[out:json];node[name%3D"
 									+ (String) request.getAttributes().get(
-											"location") + "]%3Bout%3B", null, null));
+											"location") + "]%3Bout%3B", null, null, null, null));
 					ObjectMapper mapper = new ObjectMapper();
 					message += mapper.writeValueAsString(ret);
 

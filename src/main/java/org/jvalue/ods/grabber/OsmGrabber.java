@@ -44,8 +44,10 @@ import org.jvalue.ods.translator.OsmTranslator;
 public class OsmGrabber implements Grabber {
 
 	private final DataSource dataSource = new DataSource(
+			"org-openstreetmap",
 			"/nbgcity.osm", 
 			getDataSourceSchema(),
+			getDbSchema(),
 			new JacksonMetaData(
 				"org-openstreetmap",
 				"openstreetmap",
@@ -53,7 +55,8 @@ public class OsmGrabber implements Grabber {
 				"http://www.openstreetmap.org",
 				"OpenStreetMap ist eine Karte der Welt, erstellt von Menschen wie dir und frei verwendbar unter einer offenen Lizenz.",
 				"http://www.openstreetmap.org",
-				"http://www.openstreetmap.org/copyright"));
+				"http://www.openstreetmap.org/copyright"),
+			getOdsViews());
 
 	/*
 	 * (non-Javadoc)

@@ -59,10 +59,11 @@ public class NominatimRouter implements Router<Restlet> {
 
 					ret = new JsonTranslator()
 							.translate(new DataSource(
+									"org-nominatim-openstreetmap",
 									"http://nominatim.openstreetmap.org/search?q="
 											+ (String) request.getAttributes()
 													.get("location")
-											+ "&format=json", null, null));
+											+ "&format=json", null, null, null, null));
 
 					ObjectMapper mapper = new ObjectMapper();
 					message += mapper.writeValueAsString(ret);
@@ -90,9 +91,10 @@ public class NominatimRouter implements Router<Restlet> {
 					GenericEntity ret = null;
 
 					ret = new JsonTranslator().translate(new DataSource(
+							"org-nominatim-openstreetmap",
 							"http://nominatim.openstreetmap.org/reverse?format=json"
 									+ (String) request.getAttributes().get(
-											"coordinates"), null, null));
+											"coordinates"), null, null, null, null));
 
 					ObjectMapper mapper = new ObjectMapper();
 					message += mapper.writeValueAsString(ret);

@@ -17,23 +17,42 @@
  */
 package org.jvalue.ods.data;
 
+import java.util.List;
+
 import org.jvalue.ods.data.metadata.OdsMetaData;
 import org.jvalue.ods.data.schema.GenericValueType;
+import org.jvalue.ods.data.schema.MapComplexValueType;
 
 public class DataSource {
 
+	private final String id;
 	private final String url;
 	private final GenericValueType dataSourceSchema;
+	private final MapComplexValueType dbSchema;
 	private final OdsMetaData metaData;
+	private final List<OdsView> odsViews;
 
 	public DataSource(
+			String id,
 			String url, 
 			GenericValueType dataSourceSchema,
-			OdsMetaData metaData) {
+			MapComplexValueType dbSchema,
+			OdsMetaData metaData,
+			List<OdsView> odsViews) {
 
+		if (id == null || url == null) throw new NullPointerException("id or url cannot be null");
+
+		this.id = id;
 		this.url = url;
 		this.dataSourceSchema = dataSourceSchema;
+		this.dbSchema = dbSchema;
 		this.metaData = metaData;
+		this.odsViews = odsViews;
+	}
+
+
+	public String getId() {
+		return id;
 	}
 
 
@@ -47,8 +66,18 @@ public class DataSource {
 	}
 
 
+	public MapComplexValueType getDbSchema() {
+		return dbSchema;
+	}
+
+
 	public OdsMetaData getMetaData() {
 		return metaData;
+	}
+
+
+	public List<OdsView> getOdsViews() {
+		return odsViews;
 	}
 
 
@@ -56,7 +85,8 @@ public class DataSource {
 	public boolean equals(Object other) {
 		if (other == null || !(other instanceof DataSource)) return false;
 		DataSource source = (DataSource) other;
-		return equals(url, source.url) 
+		return equals(id, source.id)
+			&& equals(url, source.url) 
 			&& equals(dataSourceSchema, source.dataSourceSchema)
 			&& equals(metaData, source.metaData);
 	}
@@ -73,7 +103,8 @@ public class DataSource {
 	public int hashCode() {
 		final int MULT = 13;
 		int hash = 11;
-		hash = hash * MULT + (url == null ? 0 : url.hashCode());
+		hash = hash * MULT + id.hashCode();
+		hash = hash * MULT + url.hashCode();
 		hash = hash * MULT + (dataSourceSchema == null ? 0 : dataSourceSchema.hashCode());
 		hash = hash * MULT + (metaData == null ? 0 : metaData.hashCode());
 		return hash;

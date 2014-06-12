@@ -66,8 +66,10 @@ public class PegelPortalMvGrabber implements Grabber {
 
 
 	private final DataSource dataSource = new DataSource(
+			"de-pegelportal-mv",
 			"http://www.pegelportal-mv.de/pegel_list.html",
 			getDataSourceSchema(),
+			getDbSchema(),
 			new JacksonMetaData(
 				"de-pegelportal-mv",
 				"pegelportal-mv",
@@ -77,7 +79,8 @@ public class PegelPortalMvGrabber implements Grabber {
 					+ "gewässerkundlicher Parameter (z.B. Wasserstand) der Binnen- und "
 					+ "Küstenpegel des Bundeslandes Mecklenburg-Vorpommern zur Ansicht bereit",
 				"http://www.pegelportal-mv.de/",
-				"http://www.pegelportal-mv.de/impressum.html"));
+				"http://www.pegelportal-mv.de/impressum.html"),
+			getOdsViews());
 
 
 

@@ -44,16 +44,25 @@ import org.jvalue.ods.translator.JsonTranslator;
 public class PegelOnlineGrabber implements Grabber {
 
 	private final DataSource dataSource = new DataSource(
-			"http://pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true&includeCharacteristicValues=true", 
+			"de-pegelonline",
+			"http://pegelonline.wsv.de/webservices/rest-api/v2/stations.json"
+			+ "?includeTimeseries=true"
+			+ "&includeCurrentMeasurement=true"
+			+ "&includeCharacteristicValues=true", 
 			getDataSourceSchema(), 
+			getDbSchema(),
 			new JacksonMetaData(
 				"de-pegelonline",
 				"pegelonline",
 				"Wasser- und Schifffahrtsverwaltung des Bundes (WSV)",
 				"https://www.pegelonline.wsv.de/adminmail",
-				"PEGELONLINE stellt kostenfrei tagesaktuelle Rohwerte verschiedener gewässerkundlicher Parameter (z.B. Wasserstand) der Binnen- und Küstenpegel der Wasserstraßen des Bundes bis maximal 30 Tage rückwirkend zur Ansicht und zum Download bereit.",
+				"PEGELONLINE stellt kostenfrei tagesaktuelle Rohwerte verschiedener" 
+				+ " gewässerkundlicher Parameter (z.B. Wasserstand) der Binnen- und Küstenpegel"
+				+ " der Wasserstraßen des Bundes bis maximal 30 Tage rückwirkend zur Ansicht und"
+				+ " zum Download bereit.",
 				"https://www.pegelonline.wsv.de",
-				"http://www.pegelonline.wsv.de/gast/nutzungsbedingungen"));
+				"http://www.pegelonline.wsv.de/gast/nutzungsbedingungen"),
+			getOdsViews());
 
 	/*
 	 * (non-Javadoc)
