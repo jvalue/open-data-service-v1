@@ -36,9 +36,6 @@ import org.jvalue.ods.data.schema.MapComplexValueType;
 
 public final class PegelOnlineSource extends DataSource {
 
-	public static final PegelOnlineSource INSTANCE = new PegelOnlineSource();
-
-
 	private static final String sourceId = "de-pegelonline";
 	private static final String url = "http://pegelonline.wsv.de/webservices/rest-api/v2/" 
 		+ "stations.json?includeTimeseries=true"
@@ -182,6 +179,7 @@ public final class PegelOnlineSource extends DataSource {
 	}
 
 
+	public static final PegelOnlineSource INSTANCE = new PegelOnlineSource();
 
 	protected PegelOnlineSource() {
 		super(sourceId, url, sourceSchema, dbSchema, metaData, odsViews);
