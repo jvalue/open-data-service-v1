@@ -29,10 +29,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
-import org.jvalue.ods.data.schema.AllowedValueTypes;
-import org.jvalue.ods.data.schema.ListComplexValueType;
-import org.jvalue.ods.data.schema.MapComplexValueType;
-import org.jvalue.ods.data.schema.GenericValueType;
+import org.jvalue.ods.data.valuetypes.AllowedValueTypes;
+import org.jvalue.ods.data.valuetypes.GenericValueType;
+import org.jvalue.ods.data.valuetypes.ListComplexValueType;
+import org.jvalue.ods.data.valuetypes.MapComplexValueType;
 import org.jvalue.ods.grabber.Translator;
 import org.jvalue.ods.translator.JsonTranslator;
 
@@ -159,12 +159,12 @@ public class JsonTranslatorTest {
 	/**
 	 * Test Translate null source.
 	 */
-	@Test()
-	public void testTranslateWithSchema() {		
-		GenericValueType genericObjectType = createOpenWeatherSchema();
-		String url = "http://api.openweathermap.org/data/2.5/weather?q=Nuremberg,de";
-		GenericEntity gv = translator.translate(new DataSource("org-openweather-api", url, genericObjectType, null, null, null) {});
-		assertNotNull(gv);
-	}
-
+//	@Test()
+//	public void testTranslateWithSchema() {		
+//		GenericValueType genericObjectType = createOpenWeatherSchema();
+//		String url = "http://api.openweathermap.org/data/2.5/weather?q=Nuremberg,de";
+//		GenericEntity gv = translator.translate(new DataSource("org-openweather-api", url, genericObjectType, null, null, null) {});
+//		assertNotNull(gv);
+//	}
+//TODO
 }

@@ -17,9 +17,9 @@
  */
 package org.jvalue.ods.data.sources;
 
-import static org.jvalue.ods.data.schema.AllowedValueTypes.VALUETYPE_NULL;
-import static org.jvalue.ods.data.schema.AllowedValueTypes.VALUETYPE_NUMBER;
-import static org.jvalue.ods.data.schema.AllowedValueTypes.VALUETYPE_STRING;
+import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_NULL;
+import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_NUMBER;
+import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_STRING;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -30,18 +30,18 @@ import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.OdsView;
 import org.jvalue.ods.data.metadata.JacksonMetaData;
 import org.jvalue.ods.data.metadata.OdsMetaData;
-import org.jvalue.ods.data.schema.GenericValueType;
-import org.jvalue.ods.data.schema.ListComplexValueType;
-import org.jvalue.ods.data.schema.MapComplexValueType;
-
+import org.jvalue.ods.data.objecttypes.ListObjectType;
+import org.jvalue.ods.data.objecttypes.MapObjectType;
+import org.jvalue.ods.data.objecttypes.ObjectType;
+import org.jvalue.ods.data.valuetypes.GenericValueType;
 
 public class OsmSource extends DataSource {
 
 	private static final String sourceId = "org-openstreetmap";
 	private static final String url = "/nbgcity.osm";
 
-	private static final ListComplexValueType sourceSchema;
-	private static final MapComplexValueType dbSchema;
+	private static final ListObjectType sourceSchema;
+	private static final MapObjectType dbSchema;
 
 	private static final OdsMetaData metaData = new JacksonMetaData(
 			sourceId,
@@ -54,43 +54,56 @@ public class OsmSource extends DataSource {
 
 	private static final List<OdsView> odsViews = new LinkedList<OdsView>();
 
-
-
 	// db schema
 	static {
-		Map<String, GenericValueType> nodeMap = new HashMap<String, GenericValueType>();
-		nodeMap.put("type", VALUETYPE_STRING);
-		nodeMap.put("nodeId", VALUETYPE_STRING);
-		nodeMap.put("timestamp", VALUETYPE_STRING);
-		nodeMap.put("uid", VALUETYPE_NUMBER);
-		nodeMap.put("user", VALUETYPE_STRING);
-		nodeMap.put("changeset", VALUETYPE_NUMBER);
-		nodeMap.put("latitude", VALUETYPE_NUMBER);
-		nodeMap.put("longitude", VALUETYPE_NUMBER);
+
+		Map<String, GenericValueType> osmAttributes = new HashMap<String, GenericValueType>();
+		osmAttributes.put("type", VALUETYPE_STRING);
+		osmAttributes.put("nodeId", VALUETYPE_STRING);
+		osmAttributes.put("timestamp", VALUETYPE_STRING);
+		osmAttributes.put("uid", VALUETYPE_NUMBER);
+		osmAttributes.put("user", VALUETYPE_STRING);
+		osmAttributes.put("changeset", VALUETYPE_NUMBER);
+		osmAttributes.put("latitude", VALUETYPE_NUMBER);
+		osmAttributes.put("longitude", VALUETYPE_NUMBER);
+
+		Map<String, ObjectType> osmReferencedObjects = new HashMap<String, ObjectType>();
+
 		Map<String, GenericValueType> nodeTagsMap = new HashMap<String, GenericValueType>();
-		MapComplexValueType nodeTagsSchema = new MapComplexValueType(nodeTagsMap);
-		nodeMap.put("tags", nodeTagsSchema);
+
+		MapObjectType nodeTagsType = new MapObjectType("de-osm-data-tags",
+				nodeTagsMap, null);
+
+		osmReferencedObjects.put("tags", nodeTagsType);
 
 		// two class object strings, must not be "required"
 		Map<String, GenericValueType> type = new HashMap<String, GenericValueType>();
 		type.put("Osm", VALUETYPE_NULL);
-		MapComplexValueType typeSchema = new MapComplexValueType(type);
-		nodeMap.put("objectType", typeSchema);
+
+		ObjectType typeType = new MapObjectType("objectType", type, null);
+
+		osmReferencedObjects.put("objectType", typeType);
+
 		Map<String, GenericValueType> restName = new HashMap<String, GenericValueType>();
 		restName.put("osm", VALUETYPE_NULL);
-		MapComplexValueType restNameSchema = new MapComplexValueType(restName);
-		nodeMap.put("rest_name", restNameSchema);
-		dbSchema = new MapComplexValueType(nodeMap);
-	}
 
+		ObjectType restNameType = new MapObjectType("rest_name", restName, null);
+
+		osmReferencedObjects.put("rest_name", restNameType);
+
+		MapObjectType osmType = new MapObjectType("de-osm-data", osmAttributes,
+				osmReferencedObjects);
+
+		dbSchema = osmType;
+
+	}
 
 	// source schema
 	static {
-		List<GenericValueType> stationList = new LinkedList<GenericValueType>();
+		List<ObjectType> stationList = new LinkedList<ObjectType>();
 		stationList.add(dbSchema);
-		sourceSchema = new ListComplexValueType(stationList);
+		sourceSchema = new ListObjectType(null, stationList);
 	}
-
 
 	// ods views
 	static {
@@ -125,12 +138,11 @@ public class OsmSource extends DataSource {
 				"getCouchIdByOsmId",
 				"function(doc) { if (doc.dataType == 'Osm' && doc.nodeId) {emit(doc.nodeId, doc._id)} else if (doc.wayId) { emit(doc.wayId, doc._id)} else if (doc.relationId) { emit(doc.relationId, doc._id)}}"));
 		odsViews.add(new OdsView("_design/osm", "getClassObject",
-				"function(doc) { if(doc.rest_name.osm) emit (null, doc) }"));
+				"function(doc) { if(doc.name == 'de-osm-data') emit (null, doc) }"));
 
 		odsViews.add(new OdsView("_design/osm", "getClassObjectId",
-				"function(doc) { if(doc.rest_name.osm) emit (null, doc._id) }"));
+				"function(doc) { if(doc.name == 'de-osm-data') emit (null, doc._id) }"));
 	}
-
 
 	public static final OsmSource INSTANCE = new OsmSource();
 

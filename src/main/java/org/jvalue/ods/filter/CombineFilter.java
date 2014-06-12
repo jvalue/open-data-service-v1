@@ -23,12 +23,11 @@ import java.util.Map.Entry;
 
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
-import org.jvalue.ods.data.schema.SimpleValueType;
-import org.jvalue.ods.data.schema.ListComplexValueType;
-import org.jvalue.ods.data.schema.MapComplexValueType;
-import org.jvalue.ods.data.schema.GenericValueType;
+import org.jvalue.ods.data.valuetypes.GenericValueType;
+import org.jvalue.ods.data.valuetypes.ListComplexValueType;
+import org.jvalue.ods.data.valuetypes.MapComplexValueType;
+import org.jvalue.ods.data.valuetypes.SimpleValueType;
 import org.jvalue.ods.logger.Logging;
-import org.jvalue.ods.schema.SchemaManager;
 
 /**
  * The Class CombineFilter.
@@ -66,11 +65,12 @@ public class CombineFilter extends OdsFilter<Void, MapObject> {
 	@Override
 	protected MapObject filterHelper(Void param) {
 
-		if (!SchemaManager.validateGenericValusFitsSchema(data, schema)) {
-			Logging.info(this.getClass(),
-					"Could not validate schema in CombineFilter.");
-			return data;
-		}
+//		if (!SchemaManager.validateGenericValusFitsSchema(data, schema)) {
+//			Logging.info(this.getClass(),
+//					"Could not validate schema in CombineFilter.");
+//			return data;
+//		}
+		//TODO
 
 		MapObject mv = new MapObject();
 

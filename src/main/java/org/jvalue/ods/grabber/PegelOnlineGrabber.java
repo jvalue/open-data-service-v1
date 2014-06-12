@@ -23,8 +23,7 @@ import org.jvalue.ods.data.OdsView;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.metadata.OdsMetaData;
-import org.jvalue.ods.data.schema.GenericValueType;
-import org.jvalue.ods.data.schema.MapComplexValueType;
+import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.data.sources.PegelOnlineSource;
 import org.jvalue.ods.main.Grabber;
 import org.jvalue.ods.translator.JsonTranslator;
@@ -38,12 +37,12 @@ public class PegelOnlineGrabber implements Grabber {
 	}
 
 	@Override
-	public GenericValueType getDataSourceSchema() {
+	public ObjectType getDataSourceSchema() {
 		return PegelOnlineSource.INSTANCE.getDataSourceSchema();
 	}
 
 	@Override
-	public MapComplexValueType getDbSchema() {
+	public ObjectType getDbSchema() {
 		return PegelOnlineSource.INSTANCE.getDbSchema();
 	}
 

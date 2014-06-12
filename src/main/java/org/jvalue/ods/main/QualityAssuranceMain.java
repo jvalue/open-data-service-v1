@@ -29,10 +29,10 @@ import org.jvalue.numbers.Range;
 import org.jvalue.numbers.RangeBound;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.MapObject;
-import org.jvalue.ods.data.schema.AllowedValueTypes;
-import org.jvalue.ods.data.schema.GenericValueType;
-import org.jvalue.ods.data.schema.ListComplexValueType;
-import org.jvalue.ods.data.schema.MapComplexValueType;
+import org.jvalue.ods.data.valuetypes.AllowedValueTypes;
+import org.jvalue.ods.data.valuetypes.GenericValueType;
+import org.jvalue.ods.data.valuetypes.ListComplexValueType;
+import org.jvalue.ods.data.valuetypes.MapComplexValueType;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.exception.DbException;
@@ -111,11 +111,13 @@ public class QualityAssuranceMain {
 							sourceCoordinateStructure,
 							destinationCoordinateStructure).filter(null);
 
-					if (!SchemaManager.validateGenericValusFitsSchema(mv,
-							combinedSchema)) {
-						System.err
-								.println("Validation of quality-enhanced data failed.");
-					}
+//					if (!SchemaManager.validateGenericValusFitsSchema(mv,
+//							combinedSchema)) {
+//						System.err
+//								.println("Validation of quality-enhanced data failed.");
+//					}
+					
+					// TODO
 
 					try {
 

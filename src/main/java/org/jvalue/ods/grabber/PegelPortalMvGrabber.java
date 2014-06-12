@@ -35,11 +35,12 @@ import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
 import org.jvalue.ods.data.metadata.OdsMetaData;
-import org.jvalue.ods.data.schema.GenericValueType;
-import org.jvalue.ods.data.schema.ListComplexValueType;
-import org.jvalue.ods.data.schema.MapComplexValueType;
-import org.jvalue.ods.data.schema.SimpleValueType;
+import org.jvalue.ods.data.objecttypes.ListObjectType;
+import org.jvalue.ods.data.objecttypes.MapObjectType;
+import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.data.sources.PegelPortalMvSource;
+import org.jvalue.ods.data.valuetypes.GenericValueType;
+import org.jvalue.ods.data.valuetypes.SimpleValueType;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Grabber;
 import org.jvalue.ods.translator.HtmlTranslator;
@@ -55,31 +56,25 @@ public class PegelPortalMvGrabber implements Grabber {
 		return (ListObject) translator.translate(PegelPortalMvSource.INSTANCE);
 	}
 
-
 	@Override
-	public GenericValueType getDataSourceSchema() {
+	public ObjectType getDataSourceSchema() {
 		return PegelPortalMvSource.INSTANCE.getDataSourceSchema();
 	}
 
-
 	@Override
-	public MapComplexValueType getDbSchema() {
+	public ObjectType getDbSchema() {
 		return PegelPortalMvSource.INSTANCE.getDbSchema();
 	}
-
 
 	@Override
 	public OdsMetaData getMetaData() {
 		return PegelPortalMvSource.INSTANCE.getMetaData();
 	}
 
-
 	@Override
 	public List<OdsView> getOdsViews() {
 		return PegelPortalMvSource.INSTANCE.getOdsViews();
 	}
-
-
 
 	private static class PegelTranslator extends HtmlTranslator {
 
@@ -93,19 +88,21 @@ public class PegelPortalMvGrabber implements Grabber {
 			tableMapping.put(PegelPortalMvSource.KEY_AGENCY, 8);
 		}
 
-
 		@Override
-		protected GenericEntity translateHelper(Document doc, GenericValueType valueTypes) {
+		protected GenericEntity translateHelper(Document doc,
+				ObjectType valueTypes) {
 			Elements header = doc.select("#pegeltab thead tr");
 			Elements body = doc.select("#pegeltab tbody tr");
 
-			if (header.isEmpty() || body.isEmpty()) return null;
-			if (header.size() > 1) return unknownFormat();
+			if (header.isEmpty() || body.isEmpty())
+				return null;
+			if (header.size() > 1)
+				return unknownFormat();
 
 			try {
-				Map<String, GenericValueType> mapValueTypes 
-					= ((MapComplexValueType) ((ListComplexValueType) valueTypes).getList().get(0))
-					.getMap();
+
+				Map<String, GenericValueType> mapValueTypes = ((MapObjectType) ((ListObjectType) valueTypes)
+						.getReferencedObjects().get(0)).getAttributes();
 
 				List<Serializable> objectList = new LinkedList<Serializable>();
 				for (Element row : body) {
@@ -114,18 +111,22 @@ public class PegelPortalMvGrabber implements Grabber {
 
 						String key = e.getKey();
 						int colIdx = e.getValue();
-						SimpleValueType type = (SimpleValueType) mapValueTypes.get(key);
+						SimpleValueType type = (SimpleValueType) mapValueTypes
+								.get(key);
 						String value = extractText(row.child(colIdx));
-						if (value.equals("")) continue;
+						if (value.equals(""))
+							continue;
 
-						objectMap.getMap().put(key, new BaseObject(createValue(value, type.getName())));
+						objectMap.getMap().put(
+								key,
+								new BaseObject(createValue(value,
+										type.getName())));
 					}
 
-					objectMap.getMap().put(
-							PegelPortalMvSource.KEY_LEVEL_UNIT, 
+					objectMap.getMap().put(PegelPortalMvSource.KEY_LEVEL_UNIT,
 							new BaseObject("cm ü PNP"));
 					objectMap.getMap().put(
-							PegelPortalMvSource.KEY_EFFLUENT_UNIT, 
+							PegelPortalMvSource.KEY_EFFLUENT_UNIT,
 							new BaseObject("m³/s"));
 
 					objectList.add(objectMap);
@@ -137,11 +138,13 @@ public class PegelPortalMvGrabber implements Grabber {
 			}
 		}
 
-
 		private Serializable createValue(String value, String type) {
-			if (type.equals("java.lang.String")) return StringEscapeUtils.unescapeHtml4(value);
-			else if (type.equals("java.lang.Number")) return new Double(value);
-			else throw new IllegalArgumentException("Unknown type " + type);
+			if (type.equals("java.lang.String"))
+				return StringEscapeUtils.unescapeHtml4(value);
+			else if (type.equals("java.lang.Number"))
+				return new Double(value);
+			else
+				throw new IllegalArgumentException("Unknown type " + type);
 		}
 
 		private String extractText(Element element) {
@@ -156,7 +159,6 @@ public class PegelPortalMvGrabber implements Grabber {
 			return builder.toString();
 		}
 
-		
 		private GenericEntity unknownFormat() {
 			String error = "Unknown html format found while parsing source";
 			Logging.error(this.getClass(), error);

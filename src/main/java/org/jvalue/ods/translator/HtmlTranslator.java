@@ -23,7 +23,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
-import org.jvalue.ods.data.schema.GenericValueType;
+import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.grabber.Translator;
 import org.jvalue.ods.logger.Logging;
 
@@ -50,6 +50,6 @@ public abstract class HtmlTranslator implements Translator {
 	}
 
 
-	protected abstract GenericEntity translateHelper(Document doc, GenericValueType valueTypes);
+	protected abstract GenericEntity translateHelper(Document doc, ObjectType objectType);
 
 }

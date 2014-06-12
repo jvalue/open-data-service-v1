@@ -33,7 +33,8 @@ import org.ektorp.impl.StdCouchDbConnector;
 import org.ektorp.impl.StdCouchDbInstance;
 import org.jvalue.ods.data.generic.BaseObject;
 import org.jvalue.ods.data.generic.MapObject;
-import org.jvalue.ods.data.schema.MapComplexValueType;
+import org.jvalue.ods.data.objecttypes.MapObjectType;
+import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.schema.SchemaManager;
@@ -303,7 +304,7 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 	 * @see org.jvalue.ods.db.DbAccessor#executeBulk(java.util.Collection)
 	 */
 	@Override
-	public void executeBulk(Collection<MapObject> objects, MapComplexValueType schema) {
+	public void executeBulk(Collection<MapObject> objects, ObjectType schema) {
 
 		if (objects == null) {
 			throw new IllegalArgumentException("objects is null");
@@ -326,10 +327,14 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 
 			for (MapObject mv : objects) {
 
-				MapComplexValueType ms = null;
+				MapObjectType ms = null;
 				try {
-					ms = (MapComplexValueType) schema.getMap().get("objectType");
-					String s = (String) ms.getMap().keySet().toArray()[0];
+
+					MapObjectType mot = (MapObjectType) schema;
+
+					ms = (MapObjectType) mot.getReferencedObjects().get(
+							"objectType");
+					String s = (String) ms.getAttributes().keySet().toArray()[0];
 
 					mv.getMap().put("dataType", new BaseObject(s));
 				} catch (Exception ex) {

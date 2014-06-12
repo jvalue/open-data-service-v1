@@ -26,10 +26,11 @@ import org.jvalue.ods.data.generic.BaseObject;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
-import org.jvalue.ods.data.schema.SimpleValueType;
-import org.jvalue.ods.data.schema.ListComplexValueType;
-import org.jvalue.ods.data.schema.MapComplexValueType;
-import org.jvalue.ods.data.schema.GenericValueType;
+import org.jvalue.ods.data.objecttypes.ObjectType;
+import org.jvalue.ods.data.valuetypes.GenericValueType;
+import org.jvalue.ods.data.valuetypes.ListComplexValueType;
+import org.jvalue.ods.data.valuetypes.MapComplexValueType;
+import org.jvalue.ods.data.valuetypes.SimpleValueType;
 import org.jvalue.ods.grabber.Translator;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.schema.SchemaManager;
@@ -120,41 +121,42 @@ public class JsonTranslator implements Translator {
 	 * 
 	 * @param node
 	 *            the node
-	 * @param genericObjectType
+	 * @param objectType
 	 *            the schema
 	 * @return true, if successful
 	 */
-	private boolean validate(JsonNode node, GenericValueType genericObjectType) {
-		if (node.isBoolean()) {
-			if (!isClassOf(genericObjectType, SimpleValueType.class) || (((SimpleValueType)genericObjectType).getName() != "java.lang.Boolean")) {
-				// not boolean
-				return false;
-			}
-		} else if (node.isNull()) {
-			if (!isClassOf(genericObjectType, SimpleValueType.class) || (((SimpleValueType)genericObjectType).getName() != "java.lang.Number")) {
-				// not null
-				return false;
-			}
-		} else if (node.isTextual()) {
-			if (!isClassOf(genericObjectType, SimpleValueType.class) || (((SimpleValueType)genericObjectType).getName() != "java.lang.String")) {
-				// not string
-				return false;
-			}
-		} else if (node.isArray()) {
-			if (!isClassOf(genericObjectType, ListComplexValueType.class)) {
-				// not list
-				return false;
-			} else {
-				return validateList(node, (ListComplexValueType) genericObjectType);
-			}
-		} else if (node.isObject()) {
-			if (!isClassOf(genericObjectType, MapComplexValueType.class)) {
-				// not map
-				return false;
-			} else {
-				return validateMap(node, (MapComplexValueType) genericObjectType);
-			}
-		}
+	private boolean validate(JsonNode node, ObjectType objectType) {
+//		if (node.isBoolean()) {
+//			if (!isClassOf(objectType, SimpleValueType.class) || (((SimpleValueType)objectType).getName() != "java.lang.Boolean")) {
+//				// not boolean
+//				return false;
+//			}
+//		} else if (node.isNull()) {
+//			if (!isClassOf(objectType, SimpleValueType.class) || (((SimpleValueType)objectType).getName() != "java.lang.Number")) {
+//				// not null
+//				return false;
+//			}
+//		} else if (node.isTextual()) {
+//			if (!isClassOf(objectType, SimpleValueType.class) || (((SimpleValueType)objectType).getName() != "java.lang.String")) {
+//				// not string
+//				return false;
+//			}
+//		} else if (node.isArray()) {
+//			if (!isClassOf(objectType, ListComplexValueType.class)) {
+//				// not list
+//				return false;
+//			} else {
+//				return validateList(node, (ListComplexValueType) objectType);
+//			}
+//		} else if (node.isObject()) {
+//			if (!isClassOf(objectType, MapComplexValueType.class)) {
+//				// not map
+//				return false;
+//			} else {
+//				return validateMap(node, (MapComplexValueType) objectType);
+//			}
+//		}
+		//TODO
 		return true;
 	}
 
@@ -168,25 +170,26 @@ public class JsonTranslator implements Translator {
 	 * @return true, if successful
 	 */
 	private boolean validateMap(JsonNode node, MapComplexValueType schema) {
-		Map<String, GenericValueType> map = schema.getMap();
-
-		Iterator<Map.Entry<String, JsonNode>> fields = node.fields();
-		while (fields.hasNext()) {
-			Map.Entry<String, JsonNode> field = fields.next();
-			if (map.containsKey(field.getKey())) {
-				boolean result = validate(field.getValue(),
-						map.get(field.getKey()));
-				if (result == false)
-					return false;
-			} else {
-				String error = "Validation error: Key for map not found: "
-						+ field.getKey();
-				Logging.info(this.getClass(), error);
-				System.err.println(error);
-
-				return false;
-			}
-		}
+//		Map<String, GenericValueType> map = schema.getMap();
+//
+//		Iterator<Map.Entry<String, JsonNode>> fields = node.fields();
+//		while (fields.hasNext()) {
+//			Map.Entry<String, JsonNode> field = fields.next();
+//			if (map.containsKey(field.getKey())) {
+//				boolean result = validate(field.getValue(),
+//						map.get(field.getKey()));
+//				if (result == false)
+//					return false;
+//			} else {
+//				String error = "Validation error: Key for map not found: "
+//						+ field.getKey();
+//				Logging.info(this.getClass(), error);
+//				System.err.println(error);
+//
+//				return false;
+//			}
+//		}
+		//TODO
 		return true;
 	}
 
@@ -200,51 +203,52 @@ public class JsonTranslator implements Translator {
 	 * @return true, if successful
 	 */
 	private boolean validateList(JsonNode node, ListComplexValueType schema) {
-		for (JsonNode n : node) {
-			if (n.isBoolean()) {
-				if (!containsBaseObjectType(schema, "java.lang.Boolean")) {
-					// expected schema not found
-					return false;
-				}
-			} else if (n.isNull()) {
-				if (!containsBaseObjectType(schema, "Null")) {
-					// expected schema not found
-					return false;
-				}
-			} else if (n.isTextual()) {
-				if (!containsBaseObjectType(schema, "java.lang.String")) {
-					// expected schema not found
-					return false;
-				}
-			}
-			 else if (n.isNumber()) {
-					if (!containsBaseObjectType(schema, "java.lang.Number")) {
-						// expected schema not found
-						return false;
-					}
-				}
-			
-
-			else if (n.isArray()) {
-				if (!containsClass(schema, ListComplexValueType.class)) {
-					// expected schema not found
-					return false;
-				} else {
-					boolean result = findValidation(n, schema, ListComplexValueType.class);
-					if (result == false)
-						return false;
-				}
-			} else if (n.isObject()) {
-				if (!containsClass(schema, MapComplexValueType.class)) {
-					// expected schema not found
-					return false;
-				} else {
-					boolean result = findValidation(n, schema, MapComplexValueType.class);
-					if (result == false)
-						return false;
-				}
-			}
-		}
+//		for (JsonNode n : node) {
+//			if (n.isBoolean()) {
+//				if (!containsBaseObjectType(schema, "java.lang.Boolean")) {
+//					// expected schema not found
+//					return false;
+//				}
+//			} else if (n.isNull()) {
+//				if (!containsBaseObjectType(schema, "Null")) {
+//					// expected schema not found
+//					return false;
+//				}
+//			} else if (n.isTextual()) {
+//				if (!containsBaseObjectType(schema, "java.lang.String")) {
+//					// expected schema not found
+//					return false;
+//				}
+//			}
+//			 else if (n.isNumber()) {
+//					if (!containsBaseObjectType(schema, "java.lang.Number")) {
+//						// expected schema not found
+//						return false;
+//					}
+//				}
+//			
+//
+//			else if (n.isArray()) {
+//				if (!containsClass(schema, ListComplexValueType.class)) {
+//					// expected schema not found
+//					return false;
+//				} else {
+//					boolean result = findValidation(n, schema, ListComplexValueType.class);
+//					if (result == false)
+//						return false;
+//				}
+//			} else if (n.isObject()) {
+//				if (!containsClass(schema, MapComplexValueType.class)) {
+//					// expected schema not found
+//					return false;
+//				} else {
+//					boolean result = findValidation(n, schema, MapComplexValueType.class);
+//					if (result == false)
+//						return false;
+//				}
+//			}
+//		}
+		// TODO
 		return true;
 	}
 
@@ -260,13 +264,14 @@ public class JsonTranslator implements Translator {
 	 * @return true, if successful
 	 */
 	private boolean findValidation(JsonNode n, ListComplexValueType schema, Class<?> c) {
-		for (GenericValueType s : schema.getList()) {
-			if (s.getClass().equals(c)) {
-				boolean result = validate(n, s);
-				if (result == true)
-					return true;
-			}
-		}
+//		for (GenericValueType s : schema.getList()) {
+//			if (s.getClass().equals(c)) {
+//				boolean result = validate(n, s);
+//				if (result == true)
+//					return true;
+//			}
+//		}
+		//TODO
 		return false;
 	}
 

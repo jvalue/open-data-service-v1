@@ -20,66 +20,53 @@ package org.jvalue.ods.data;
 import java.util.List;
 
 import org.jvalue.ods.data.metadata.OdsMetaData;
-import org.jvalue.ods.data.schema.GenericValueType;
-import org.jvalue.ods.data.schema.MapComplexValueType;
+import org.jvalue.ods.data.objecttypes.ObjectType;
 
 public abstract class DataSource {
 
 	private final String id;
 	private final String url;
-	private final GenericValueType dataSourceSchema;
-	private final MapComplexValueType dbSchema;
+	private final ObjectType dataSourceSchema;
+	private final ObjectType dbSchema;
 	private final OdsMetaData metaData;
 	private final List<OdsView> odsViews;
 
-	protected DataSource(
-			String id,
-			String url, 
-			GenericValueType dataSourceSchema,
-			MapComplexValueType dbSchema,
-			OdsMetaData metaData,
-			List<OdsView> odsViews) {
+	protected DataSource(String id, String url, ObjectType sourceschema,
+			ObjectType dbschema, OdsMetaData metaData, List<OdsView> odsViews) {
 
-		if (id == null || url == null) throw new NullPointerException("id or url cannot be null");
+		if (id == null || url == null)
+			throw new NullPointerException("id or url cannot be null");
 
 		this.id = id;
 		this.url = url;
-		this.dataSourceSchema = dataSourceSchema;
-		this.dbSchema = dbSchema;
+		this.dataSourceSchema = sourceschema;
+		this.dbSchema = dbschema;
 		this.metaData = metaData;
 		this.odsViews = odsViews;
 	}
-
 
 	public String getId() {
 		return id;
 	}
 
-
 	public String getUrl() {
 		return url;
 	}
 
-
-	public GenericValueType getDataSourceSchema() {
+	public ObjectType getDataSourceSchema() {
 		return dataSourceSchema;
 	}
 
-
-	public MapComplexValueType getDbSchema() {
+	public ObjectType getDbSchema() {
 		return dbSchema;
 	}
-
 
 	public OdsMetaData getMetaData() {
 		return metaData;
 	}
 
-
 	public List<OdsView> getOdsViews() {
 		return odsViews;
 	}
 
-
-	
 }

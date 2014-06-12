@@ -17,9 +17,9 @@
  */
 package org.jvalue.ods.data.sources;
 
-import static org.jvalue.ods.data.schema.AllowedValueTypes.VALUETYPE_NULL;
-import static org.jvalue.ods.data.schema.AllowedValueTypes.VALUETYPE_NUMBER;
-import static org.jvalue.ods.data.schema.AllowedValueTypes.VALUETYPE_STRING;
+import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_NULL;
+import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_NUMBER;
+import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_STRING;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -30,18 +30,18 @@ import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.OdsView;
 import org.jvalue.ods.data.metadata.JacksonMetaData;
 import org.jvalue.ods.data.metadata.OdsMetaData;
-import org.jvalue.ods.data.schema.GenericValueType;
-import org.jvalue.ods.data.schema.ListComplexValueType;
-import org.jvalue.ods.data.schema.MapComplexValueType;
-
+import org.jvalue.ods.data.objecttypes.ListObjectType;
+import org.jvalue.ods.data.objecttypes.MapObjectType;
+import org.jvalue.ods.data.objecttypes.ObjectType;
+import org.jvalue.ods.data.valuetypes.GenericValueType;
 
 public class PegelPortalMvSource extends DataSource {
 
 	private static final String sourceId = "de-pegelportal-mv";
 	private static final String url = "http://www.pegelportal-mv.de/pegel_list.html";
 
-	private static final ListComplexValueType sourceSchema;
-	private static final MapComplexValueType dbSchema;
+	private static final ListObjectType sourceSchema;
+	private static final MapObjectType dbSchema;
 
 	private static final OdsMetaData metaData = new JacksonMetaData(
 			sourceId,
@@ -49,58 +49,59 @@ public class PegelPortalMvSource extends DataSource {
 			"Landesamt für Umwelt, Naturschutz und Geologie",
 			"http://www.pegelportal-mv.de/impressum.html",
 			"Pegelportal stellt kostenfrei tagesaktuelle Rohwerte verschiedener "
-				+ "gewässerkundlicher Parameter (z.B. Wasserstand) der Binnen- und "
-				+ "Küstenpegel des Bundeslandes Mecklenburg-Vorpommern zur Ansicht bereit",
+					+ "gewässerkundlicher Parameter (z.B. Wasserstand) der Binnen- und "
+					+ "Küstenpegel des Bundeslandes Mecklenburg-Vorpommern zur Ansicht bereit",
 			"http://www.pegelportal-mv.de/",
 			"http://www.pegelportal-mv.de/impressum.html");
 
 	private static final List<OdsView> odsViews = new LinkedList<OdsView>();
 
-
 	// keys used in the json schema
-	public static final String
-		KEY_STATION = "station",
-		KEY_WATER = "water",
-		KEY_TIMESTAMP = "timestamp",
-		KEY_LEVEL = "level",
-		KEY_LEVEL_UNIT = "levelUnit",
-		KEY_EFFLUENT = "effluent",
-		KEY_EFFLUENT_UNIT = "effluentUnit",
-		KEY_AGENCY = "agency";
-
+	public static final String KEY_STATION = "station", KEY_WATER = "water",
+			KEY_TIMESTAMP = "timestamp", KEY_LEVEL = "level",
+			KEY_LEVEL_UNIT = "levelUnit", KEY_EFFLUENT = "effluent",
+			KEY_EFFLUENT_UNIT = "effluentUnit", KEY_AGENCY = "agency";
 
 	// db schema
 	static {
-		Map<String, GenericValueType> object = new HashMap<String, GenericValueType>();
-		object.put(KEY_STATION, VALUETYPE_STRING);
-		object.put(KEY_WATER, VALUETYPE_STRING);
-		object.put(KEY_TIMESTAMP, VALUETYPE_STRING);
-		object.put(KEY_LEVEL, VALUETYPE_NUMBER);
-		object.put(KEY_LEVEL_UNIT, VALUETYPE_STRING);
-		object.put(KEY_EFFLUENT, VALUETYPE_NUMBER);
-		object.put(KEY_EFFLUENT_UNIT, VALUETYPE_STRING);
-		object.put(KEY_AGENCY, VALUETYPE_STRING);
+		Map<String, GenericValueType> ppAttributes = new HashMap<String, GenericValueType>();
+		ppAttributes.put(KEY_STATION, VALUETYPE_STRING);
+		ppAttributes.put(KEY_WATER, VALUETYPE_STRING);
+		ppAttributes.put(KEY_TIMESTAMP, VALUETYPE_STRING);
+		ppAttributes.put(KEY_LEVEL, VALUETYPE_NUMBER);
+		ppAttributes.put(KEY_LEVEL_UNIT, VALUETYPE_STRING);
+		ppAttributes.put(KEY_EFFLUENT, VALUETYPE_NUMBER);
+		ppAttributes.put(KEY_EFFLUENT_UNIT, VALUETYPE_STRING);
+		ppAttributes.put(KEY_AGENCY, VALUETYPE_STRING);
 
+		Map<String, ObjectType> ppReferencedObjects = new HashMap<String, ObjectType>();
 
 		Map<String, GenericValueType> type = new HashMap<String, GenericValueType>();
 		type.put("MV-Station", VALUETYPE_NULL);
-		object.put("objectType", new MapComplexValueType(type));
+
+		ObjectType typeType = new MapObjectType("objectType", type, null);
+
+		ppReferencedObjects.put("objectType", typeType);
 
 		Map<String, GenericValueType> restName = new HashMap<String, GenericValueType>();
 		restName.put("mv-stations", VALUETYPE_NULL);
-		object.put("rest_name", new MapComplexValueType(restName));
 
-		dbSchema = new MapComplexValueType(object);
+		ObjectType restNameType = new MapObjectType("rest_name", restName, null);
+
+		ppReferencedObjects.put("rest_name", restNameType);
+
+		MapObjectType pegelPortalType = new MapObjectType(
+				"de-pegelportal-mv-station", ppAttributes, ppReferencedObjects);
+
+		dbSchema = pegelPortalType;
 	}
-
 
 	// source schema
 	static {
-		List<GenericValueType> stationList = new LinkedList<GenericValueType>();
+		List<ObjectType> stationList = new LinkedList<ObjectType>();
 		stationList.add(dbSchema);
-		sourceSchema = new ListComplexValueType(stationList);
+		sourceSchema = new ListObjectType(null, stationList);
 	}
-
 
 	// ods views
 	static {
@@ -110,20 +111,26 @@ public class PegelPortalMvSource extends DataSource {
 		odsViews.add(new OdsView("_design/pegelportal-mv", "getMetadata",
 				"function(doc) { if(doc.title == 'pegelportal-mv') emit(null, doc)}"));
 
-		odsViews.add(new OdsView("_design/pegelportal-mv", "getAllStationsFlat",
+		odsViews.add(new OdsView("_design/pegelportal-mv",
+				"getAllStationsFlat",
 				"function(doc) { if(doc.dataType == 'MV-Station') emit (null, doc.station) }"));
 		odsViews.add(new OdsView("_design/pegelportal-mv", "getAllStations",
 				"function(doc) { if(doc.dataType == 'MV-Station') emit (null, doc) }"));
-		odsViews.add(new OdsView("_design/pegelportal-mv", "getStationId",
+		odsViews.add(new OdsView(
+				"_design/pegelportal-mv",
+				"getStationId",
 				"function(doc) { if(doc.dataType == 'MV-Station') emit (doc.station, doc._id) }"));
 
-		odsViews.add(new OdsView("_design/pegelportal-mv", "getClassObject",
-				"function(doc) { if(doc.rest_name[\"mv-stations\"]) emit (null, doc) }"));
+		odsViews.add(new OdsView(
+				"_design/pegelportal-mv",
+				"getClassObject",
+				"function(doc) { if(doc.name == 'de-pegelportal-mv-station') emit (null, doc) }"));
 
-		odsViews.add(new OdsView("_design/pegelportal-mv", "getClassObjectId",
-				"function(doc) { if(doc.rest_name[\"mv-stations\"]) emit (null, doc._id) }"));
+		odsViews.add(new OdsView(
+				"_design/pegelportal-mv",
+				"getClassObjectId",
+				"function(doc) { if(doc.name == 'de-pegelportal-mv-station') emit (null, doc._id) }"));
 	}
-
 
 	public static final PegelPortalMvSource INSTANCE = new PegelPortalMvSource();
 

@@ -32,7 +32,7 @@ import org.jvalue.ods.data.OdsView;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
-import org.jvalue.ods.data.schema.MapComplexValueType;
+import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.data.sources.OsmSource;
 import org.jvalue.ods.data.sources.PegelOnlineSource;
 import org.jvalue.ods.data.sources.PegelPortalMvSource;
@@ -61,7 +61,7 @@ public class DataGrabberMain {
 	 * @param args
 	 *            the arguments
 	 */
-	public static void main(String[] args) {		
+	public static void main(String[] args) {
 		Logging.adminLog("Update started");
 
 		accessor = DbFactory.createDbAccessor("ods");
@@ -95,12 +95,12 @@ public class DataGrabberMain {
 	/**
 	 * Insert db bulk.
 	 * 
-	 * @param schema
+	 * @param mapObjectType
 	 *            the schema
 	 * @param gv
 	 *            the gv
 	 */
-	private static void insertDbBulk(MapComplexValueType schema, GenericEntity gv) {
+	private static void insertDbBulk(ObjectType mapObjectType, GenericEntity gv) {
 		if (gv instanceof ListObject) {
 
 			ListObject lv = (ListObject) gv;
@@ -110,11 +110,11 @@ public class DataGrabberMain {
 				list.add((MapObject) i);
 			}
 
-			accessor.executeBulk(list, schema);
+			accessor.executeBulk(list, mapObjectType);
 		} else if (gv instanceof MapObject) {
 			LinkedList<MapObject> list = new LinkedList<>();
 			list.add((MapObject) gv);
-			accessor.executeBulk(list, schema);
+			accessor.executeBulk(list, mapObjectType);
 		} else {
 			String errmsg = "GenericValue must be ListValue or MapValue.";
 			System.err.println(errmsg);
@@ -122,7 +122,6 @@ public class DataGrabberMain {
 			throw new RuntimeException(errmsg);
 		}
 	}
-
 
 	private static void grab(Grabber grabber, DataSource source) {
 		GenericEntity data = grabber.grab();
@@ -135,10 +134,11 @@ public class DataGrabberMain {
 			createView(ov);
 		}
 
-		// TMP: notify clients about data change. Will be removed at some point ...
+		// TMP: notify clients about data change. Will be removed at some point
+		// ...
 		try {
 			NotificationSender.getInstance().notifySourceChanged(source);
-		} catch(IOException io) {
+		} catch (IOException io) {
 			Logging.error(DataGrabberMain.class, io.getMessage());
 		}
 	}

@@ -1,7 +1,7 @@
 /*
  * 
  */
-package org.jvalue.ods.data.schema;
+package org.jvalue.ods.data.valuetypes;
 
 /**
  * The Class SimpleObjectType.

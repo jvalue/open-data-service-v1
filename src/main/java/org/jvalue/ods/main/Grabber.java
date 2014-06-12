@@ -22,8 +22,7 @@ import java.util.List;
 import org.jvalue.ods.data.OdsView;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.metadata.OdsMetaData;
-import org.jvalue.ods.data.schema.MapComplexValueType;
-import org.jvalue.ods.data.schema.GenericValueType;
+import org.jvalue.ods.data.objecttypes.ObjectType;
 
 /**
  * The Interface Grabber.
@@ -35,14 +34,14 @@ public interface Grabber {
 	 * 
 	 * @return the data source schema
 	 */
-	public GenericValueType getDataSourceSchema();
+	public ObjectType getDataSourceSchema();
 
 	/**
 	 * Creates the pegel online db schema.
 	 * 
 	 * @return the schema
 	 */
-	public MapComplexValueType getDbSchema();
+	public ObjectType getDbSchema();
 
 	/**
 	 * Grab.

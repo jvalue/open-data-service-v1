@@ -14,18 +14,17 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
- */
-package org.jvalue.ods.data.schema;
+*/
+package org.jvalue.ods.data.objecttypes;
 
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * The Class Schema.
+ * The Class ObjectType.
  */
-public abstract class GenericValueType implements Serializable {
-
+public abstract class ObjectType implements Serializable {
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
@@ -76,5 +75,4 @@ public abstract class GenericValueType implements Serializable {
 	public void setRevision(String s) {
 		revision = s;
 	}
-
 }
