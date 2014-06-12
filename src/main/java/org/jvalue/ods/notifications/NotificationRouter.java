@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
 import org.restlet.Request;
@@ -41,7 +42,8 @@ public final class NotificationRouter implements Router<Restlet> {
 		ROUTE_REGISTER = "/notifications/register",
 		ROUTE_UNREGISTER = "/notifications/unregister",
 		ROUTE_DEBUG_CLIENTS = "/notifications/debug/clients",
-		ROUTE_DEBUG_TEST_MESSAGE = "/notifications/debug/testMessage";
+		ROUTE_DEBUG_TEST_MESSAGE = "/notifications/debug/testMessage",
+		ROUTE_DEBUG_SOURCES = "/notifications/debug/sources";
 
 	private static final String
 		PARAM_REGID = "regId",
@@ -136,6 +138,20 @@ public final class NotificationRouter implements Router<Restlet> {
 				if (clients == null) return;
 
 				NotificationSender.getInstance().sendNotification(clients, payload, collapsKey);
+			}
+		});
+
+
+		routes.put(ROUTE_DEBUG_SOURCES, new Restlet() {
+			@Override
+			public void handle(Request request, Response response) {
+				try {
+					String sources = new ObjectMapper().writeValueAsString(
+						DataSourceManager.getInstance().getAllIds());
+					response.setEntity(sources, MediaType.APPLICATION_JSON);
+				} catch (IOException io) {
+					throw new RuntimeException(io);
+				}
 			}
 		});
 
