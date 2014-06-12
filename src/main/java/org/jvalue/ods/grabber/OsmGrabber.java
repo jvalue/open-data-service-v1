@@ -43,6 +43,18 @@ import org.jvalue.ods.translator.OsmTranslator;
  */
 public class OsmGrabber implements Grabber {
 
+	private final DataSource dataSource = new DataSource(
+			"/nbgcity.osm", 
+			getDataSourceSchema(),
+			new JacksonMetaData(
+				"org-openstreetmap",
+				"openstreetmap",
+				"OpenStreetMap Community",
+				"http://www.openstreetmap.org",
+				"OpenStreetMap ist eine Karte der Welt, erstellt von Menschen wie dir und frei verwendbar unter einer offenen Lizenz.",
+				"http://www.openstreetmap.org",
+				"http://www.openstreetmap.org/copyright"));
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -52,11 +64,7 @@ public class OsmGrabber implements Grabber {
 	public GenericEntity grab() {
 
 		Translator translator = new OsmTranslator();
-
-		GenericValueType genericObjectType = getDataSourceSchema();
-
-		ListObject list = (ListObject) translator.translate(new DataSource(
-				"/nbgcity.osm", genericObjectType));
+		ListObject list = (ListObject) translator.translate(dataSource);
 
 		return list;
 	}
@@ -141,14 +149,7 @@ public class OsmGrabber implements Grabber {
 	 */
 	@Override
 	public OdsMetaData getMetaData() {
-		return new JacksonMetaData(
-				"org-openstreetmap",
-				"openstreetmap",
-				"OpenStreetMap Community",
-				"http://www.openstreetmap.org",
-				"OpenStreetMap ist eine Karte der Welt, erstellt von Menschen wie dir und frei verwendbar unter einer offenen Lizenz.",
-				"http://www.openstreetmap.org",
-				"http://www.openstreetmap.org/copyright");
+		return dataSource.getMetaData();
 	}
 
 	/*

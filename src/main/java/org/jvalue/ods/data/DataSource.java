@@ -17,47 +17,65 @@
  */
 package org.jvalue.ods.data;
 
+import org.jvalue.ods.data.metadata.OdsMetaData;
 import org.jvalue.ods.data.schema.GenericValueType;
 
-/**
- * The Class DataSource.
- */
 public class DataSource {
 
-	/** The url. */
 	private final String url;
-
-	/** The data source schema. */
 	private final GenericValueType dataSourceSchema;
+	private final OdsMetaData metaData;
 
-	/**
-	 * Instantiates a new data source.
-	 * 
-	 * @param url
-	 *            the url
-	 * @param dataSourceSchema
-	 *            the data source schema
-	 */
-	public DataSource(String url, GenericValueType dataSourceSchema) {
+	public DataSource(
+			String url, 
+			GenericValueType dataSourceSchema,
+			OdsMetaData metaData) {
+
 		this.url = url;
 		this.dataSourceSchema = dataSourceSchema;
+		this.metaData = metaData;
 	}
 
-	/**
-	 * Gets the url.
-	 * 
-	 * @return the url
-	 */
+
 	public String getUrl() {
 		return url;
 	}
 
-	/**
-	 * Gets the data source schema.
-	 * 
-	 * @return the data source schema
-	 */
+
 	public GenericValueType getDataSourceSchema() {
 		return dataSourceSchema;
+	}
+
+
+	public OdsMetaData getMetaData() {
+		return metaData;
+	}
+
+
+	@Override
+	public boolean equals(Object other) {
+		if (other == null || !(other instanceof DataSource)) return false;
+		DataSource source = (DataSource) other;
+		return equals(url, source.url) 
+			&& equals(dataSourceSchema, source.dataSourceSchema)
+			&& equals(metaData, source.metaData);
+	}
+
+
+	private boolean equals(Object o1, Object o2) {
+		if (o1 == null && o2 == null) return true;
+		if (o1 == null || o2 == null) return false;
+		return o1.equals(o2);
+	}
+
+
+	@Override
+	public int hashCode() {
+		final int MULT = 13;
+		int hash = 11;
+		hash = hash * MULT + (url == null ? 0 : url.hashCode());
+		hash = hash * MULT + (dataSourceSchema == null ? 0 : dataSourceSchema.hashCode());
+		hash = hash * MULT + (metaData == null ? 0 : metaData.hashCode());
+		return hash;
 	}
 }

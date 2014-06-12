@@ -35,19 +35,9 @@ import org.restlet.data.MediaType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-/**
- * The Class NominatimRouter.
- */
 public class NominatimRouter implements Router<Restlet> {
 
-	/** The routes. */
 	private HashMap<String, Restlet> routes;
-
-	/**
-	 * Instantiates a new nominatim router.
-	 */
-	public NominatimRouter() {
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -72,7 +62,7 @@ public class NominatimRouter implements Router<Restlet> {
 									"http://nominatim.openstreetmap.org/search?q="
 											+ (String) request.getAttributes()
 													.get("location")
-											+ "&format=json", null));
+											+ "&format=json", null, null));
 
 					ObjectMapper mapper = new ObjectMapper();
 					message += mapper.writeValueAsString(ret);
@@ -102,7 +92,7 @@ public class NominatimRouter implements Router<Restlet> {
 					ret = new JsonTranslator().translate(new DataSource(
 							"http://nominatim.openstreetmap.org/reverse?format=json"
 									+ (String) request.getAttributes().get(
-											"coordinates"), null));
+											"coordinates"), null, null));
 
 					ObjectMapper mapper = new ObjectMapper();
 					message += mapper.writeValueAsString(ret);

@@ -65,6 +65,22 @@ public class PegelPortalMvGrabber implements Grabber {
 		KEY_AGENCY = "agency";
 
 
+	private final DataSource dataSource = new DataSource(
+			"http://www.pegelportal-mv.de/pegel_list.html",
+			getDataSourceSchema(),
+			new JacksonMetaData(
+				"de-pegelportal-mv",
+				"pegelportal-mv",
+				"Landesamt für Umwelt, Naturschutz und Geologie",
+				"http://www.pegelportal-mv.de/impressum.html",
+				"Pegelportal stellt kostenfrei tagesaktuelle Rohwerte verschiedener "
+					+ "gewässerkundlicher Parameter (z.B. Wasserstand) der Binnen- und "
+					+ "Küstenpegel des Bundeslandes Mecklenburg-Vorpommern zur Ansicht bereit",
+				"http://www.pegelportal-mv.de/",
+				"http://www.pegelportal-mv.de/impressum.html"));
+
+
+
 
 	/*
 	 * (non-Javadoc)
@@ -73,13 +89,8 @@ public class PegelPortalMvGrabber implements Grabber {
 	 */
 	@Override
 	public GenericEntity grab() {
-
 		Translator translator = new PegelTranslator();
-		DataSource source = new DataSource(
-				"http://www.pegelportal-mv.de/pegel_list.html",
-				getDataSourceSchema());
-
-		return (ListObject) translator.translate(source);
+		return (ListObject) translator.translate(dataSource);
 	}
 
 	/*
@@ -132,16 +143,7 @@ public class PegelPortalMvGrabber implements Grabber {
 	 */
 	@Override
 	public OdsMetaData getMetaData() {
-		return new JacksonMetaData(
-				"de-pegelportal-mv",
-				"pegelportal-mv",
-				"Landesamt für Umwelt, Naturschutz und Geologie",
-				"http://www.pegelportal-mv.de/impressum.html",
-				"Pegelportal stellt kostenfrei tagesaktuelle Rohwerte verschiedener "
-					+ "gewässerkundlicher Parameter (z.B. Wasserstand) der Binnen- und "
-					+ "Küstenpegel des Bundeslandes Mecklenburg-Vorpommern zur Ansicht bereit",
-				"http://www.pegelportal-mv.de/",
-				"http://www.pegelportal-mv.de/impressum.html");
+		return dataSource.getMetaData();
 	}
 
 	/*

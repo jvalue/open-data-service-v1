@@ -43,6 +43,18 @@ import org.jvalue.ods.translator.JsonTranslator;
  */
 public class PegelOnlineGrabber implements Grabber {
 
+	private final DataSource dataSource = new DataSource(
+			"http://pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true&includeCharacteristicValues=true", 
+			getDataSourceSchema(), 
+			new JacksonMetaData(
+				"de-pegelonline",
+				"pegelonline",
+				"Wasser- und Schifffahrtsverwaltung des Bundes (WSV)",
+				"https://www.pegelonline.wsv.de/adminmail",
+				"PEGELONLINE stellt kostenfrei tagesaktuelle Rohwerte verschiedener gewässerkundlicher Parameter (z.B. Wasserstand) der Binnen- und Küstenpegel der Wasserstraßen des Bundes bis maximal 30 Tage rückwirkend zur Ansicht und zum Download bereit.",
+				"https://www.pegelonline.wsv.de",
+				"http://www.pegelonline.wsv.de/gast/nutzungsbedingungen"));
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -50,17 +62,8 @@ public class PegelOnlineGrabber implements Grabber {
 	 */
 	@Override
 	public GenericEntity grab() {
-
 		Translator translator = new JsonTranslator();
-
-		GenericValueType genericObjectType = getDataSourceSchema();
-
-		ListObject list = (ListObject) translator
-				.translate(new DataSource(
-						"http://pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true&includeCharacteristicValues=true",
-						genericObjectType));
-
-		return list;
+		return (ListObject) translator.translate(dataSource);
 	}
 
 	/*
@@ -177,14 +180,7 @@ public class PegelOnlineGrabber implements Grabber {
 	 */
 	@Override
 	public OdsMetaData getMetaData() {
-		return new JacksonMetaData(
-				"de-pegelonline",
-				"pegelonline",
-				"Wasser- und Schifffahrtsverwaltung des Bundes (WSV)",
-				"https://www.pegelonline.wsv.de/adminmail",
-				"PEGELONLINE stellt kostenfrei tagesaktuelle Rohwerte verschiedener gewässerkundlicher Parameter (z.B. Wasserstand) der Binnen- und Küstenpegel der Wasserstraßen des Bundes bis maximal 30 Tage rückwirkend zur Ansicht und zum Download bereit.",
-				"https://www.pegelonline.wsv.de",
-				"http://www.pegelonline.wsv.de/gast/nutzungsbedingungen");
+		return dataSource.getMetaData();
 	}
 
 	/*

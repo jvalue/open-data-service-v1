@@ -145,7 +145,7 @@ public class RoutesRouter implements Router<Restlet> {
 							+ endLongitude
 							+ "&v=motorcar&fast=1&layer=mapnik";
 
-					DataSource ds = new DataSource(source, null);
+					DataSource ds = new DataSource(source, null, null);
 
 					XmlTranslator grabber = new XmlTranslator();
 					GenericEntity gv = grabber.translate(ds);
