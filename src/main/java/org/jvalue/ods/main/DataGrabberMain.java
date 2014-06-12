@@ -17,6 +17,7 @@
  */
 package org.jvalue.ods.main;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,11 +27,15 @@ import org.ektorp.support.DesignDocument;
 import org.ektorp.support.DesignDocument.View;
 import org.ektorp.support.DesignDocumentFactory;
 import org.ektorp.support.StdDesignDocumentFactory;
+import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.OdsView;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
 import org.jvalue.ods.data.schema.MapComplexValueType;
+import org.jvalue.ods.data.sources.OsmSource;
+import org.jvalue.ods.data.sources.PegelOnlineSource;
+import org.jvalue.ods.data.sources.PegelPortalMvSource;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.exception.DbException;
@@ -38,6 +43,7 @@ import org.jvalue.ods.grabber.OsmGrabber;
 import org.jvalue.ods.grabber.PegelOnlineGrabber;
 import org.jvalue.ods.grabber.PegelPortalMvGrabber;
 import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.notifications.NotificationSender;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -63,13 +69,13 @@ public class DataGrabberMain {
 		accessor.deleteDatabase();
 
 		Logging.adminLog("grabbing PegelOnline...");
-		grab(new PegelOnlineGrabber());
+		grab(new PegelOnlineGrabber(), PegelOnlineSource.INSTANCE);
 
 		Logging.adminLog("grabbing Osm...");
-		grab(new OsmGrabber());
+		grab(new OsmGrabber(), OsmSource.INSTANCE);
 
 		Logging.adminLog("grapping PegelPortal MV...");
-		grab(new PegelPortalMvGrabber());
+		grab(new PegelPortalMvGrabber(), PegelPortalMvSource.INSTANCE);
 
 		createCommonViews();
 
@@ -117,13 +123,8 @@ public class DataGrabberMain {
 		}
 	}
 
-	/**
-	 * Grab.
-	 * 
-	 * @param grabber
-	 *            the grabber
-	 */
-	private static void grab(Grabber grabber) {
+
+	private static void grab(Grabber grabber, DataSource source) {
 		GenericEntity data = grabber.grab();
 
 		insertDbBulk(grabber.getDbSchema(), data);
@@ -132,6 +133,13 @@ public class DataGrabberMain {
 
 		for (OdsView ov : grabber.getOdsViews()) {
 			createView(ov);
+		}
+
+		// TMP: notify clients about data change. Will be removed at some point ...
+		try {
+			NotificationSender.getInstance().notifySourceChanged(source);
+		} catch(IOException io) {
+			Logging.error(DataGrabberMain.class, io.getMessage());
 		}
 	}
 

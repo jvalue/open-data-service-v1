@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.logger.Logging;
 
 import com.google.android.gcm.server.Constants;
@@ -43,14 +44,15 @@ public class NotificationSender {
 
 
 	
-	public int notifySourceChange(String source) throws IOException {
+	public int notifySourceChanged(DataSource source) throws IOException {
 		Set<String> clients = ClientDatastore.getInstance().getRegisteredClients().get(source);
 		if (clients == null) return 0;
 
 		Map<String,String> payload = new HashMap<String,String>();
-		payload.put(DATA_KEY_SOURCE, source);
+		payload.put(DATA_KEY_SOURCE, source.getId());
+		payload.put(DATA_KEY_DEBUG, Boolean.TRUE.toString());
 
-		sendNotification(clients, payload, source);
+		sendNotification(clients, payload, source.getId());
 
 		return clients.size();
 	}
