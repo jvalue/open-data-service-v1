@@ -135,9 +135,14 @@ public final class NotificationRouter implements Router<Restlet> {
 					.getInstance()
 					.getRegisteredClients()
 					.get(source);
-				if (clients == null) return;
+				if (clients !=  null)
+					NotificationSender
+						.getInstance()
+						.sendNotification(clients, payload, collapsKey);
 
-				NotificationSender.getInstance().sendNotification(clients, payload, collapsKey);
+				response.setEntity(
+						"Sending msg to " + clients.size() + " clients", 
+						MediaType.TEXT_PLAIN);
 			}
 		});
 
