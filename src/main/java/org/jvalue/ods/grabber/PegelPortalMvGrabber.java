@@ -53,27 +53,27 @@ public class PegelPortalMvGrabber implements Grabber {
 	@Override
 	public GenericEntity grab() {
 		Translator translator = new PegelTranslator();
-		return (ListObject) translator.translate(PegelPortalMvSource.INSTANCE);
+		return (ListObject) translator.translate(PegelPortalMvSource.createInstance());
 	}
 
 	@Override
 	public ObjectType getDataSourceSchema() {
-		return PegelPortalMvSource.INSTANCE.getDataSourceSchema();
+		return PegelPortalMvSource.createInstance().getDataSourceSchema();
 	}
 
 	@Override
 	public ObjectType getDbSchema() {
-		return PegelPortalMvSource.INSTANCE.getDbSchema();
+		return PegelPortalMvSource.createInstance().getDbSchema();
 	}
 
 	@Override
 	public OdsMetaData getMetaData() {
-		return PegelPortalMvSource.INSTANCE.getMetaData();
+		return PegelPortalMvSource.createInstance().getMetaData();
 	}
 
 	@Override
 	public List<OdsView> getOdsViews() {
-		return PegelPortalMvSource.INSTANCE.getOdsViews();
+		return PegelPortalMvSource.createInstance().getOdsViews();
 	}
 
 	private static class PegelTranslator extends HtmlTranslator {

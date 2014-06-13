@@ -69,13 +69,13 @@ public class DataGrabberMain {
 		accessor.deleteDatabase();
 
 		Logging.adminLog("grabbing PegelOnline...");
-		grab(new PegelOnlineGrabber(), PegelOnlineSource.INSTANCE);
+		grab(new PegelOnlineGrabber(), PegelOnlineSource.createInstance());
 
 		Logging.adminLog("grabbing Osm...");
-		grab(new OsmGrabber(), OsmSource.INSTANCE);
+		grab(new OsmGrabber(), OsmSource.createInstance());
 
 		Logging.adminLog("grapping PegelPortal MV...");
-		grab(new PegelPortalMvGrabber(), PegelPortalMvSource.INSTANCE);
+		grab(new PegelPortalMvGrabber(), PegelPortalMvSource.createInstance());
 
 		createCommonViews();
 

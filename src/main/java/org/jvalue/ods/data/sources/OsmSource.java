@@ -37,116 +37,126 @@ import org.jvalue.ods.data.valuetypes.GenericValueType;
 
 public class OsmSource extends DataSource {
 
-	private static final String sourceId = "org-openstreetmap";
-	private static final String url = "/nbgcity.osm";
+	
+	public static DataSource createInstance() {
+		String sourceId = "org-openstreetmap";
+		String url = "/nbgcity.osm";
 
-	private static final ListObjectType sourceSchema;
-	private static final MapObjectType dbSchema;
+		ListObjectType sourceSchema;
+		MapObjectType dbSchema;
 
-	private static final OdsMetaData metaData = new JacksonMetaData(
-			sourceId,
-			"openstreetmap",
-			"OpenStreetMap Community",
-			"http://www.openstreetmap.org",
-			"OpenStreetMap ist eine Karte der Welt, erstellt von Menschen wie dir und frei verwendbar unter einer offenen Lizenz.",
-			"http://www.openstreetmap.org",
-			"http://www.openstreetmap.org/copyright");
+		OdsMetaData metaData = new JacksonMetaData(
+				sourceId,
+				"openstreetmap",
+				"OpenStreetMap Community",
+				"http://www.openstreetmap.org",
+				"OpenStreetMap ist eine Karte der Welt, erstellt von Menschen wie dir und frei verwendbar unter einer offenen Lizenz.",
+				"http://www.openstreetmap.org",
+				"http://www.openstreetmap.org/copyright");
 
-	private static final List<OdsView> odsViews = new LinkedList<OdsView>();
+		List<OdsView> odsViews = new LinkedList<OdsView>();
 
-	// db schema
-	static {
+		// db schema
+		{
 
-		Map<String, GenericValueType> osmAttributes = new HashMap<String, GenericValueType>();
-		osmAttributes.put("type", VALUETYPE_STRING);
-		osmAttributes.put("nodeId", VALUETYPE_STRING);
-		osmAttributes.put("timestamp", VALUETYPE_STRING);
-		osmAttributes.put("uid", VALUETYPE_NUMBER);
-		osmAttributes.put("user", VALUETYPE_STRING);
-		osmAttributes.put("changeset", VALUETYPE_NUMBER);
-		osmAttributes.put("latitude", VALUETYPE_NUMBER);
-		osmAttributes.put("longitude", VALUETYPE_NUMBER);
+			Map<String, GenericValueType> osmAttributes = new HashMap<String, GenericValueType>();
+			osmAttributes.put("type", VALUETYPE_STRING);
+			osmAttributes.put("nodeId", VALUETYPE_STRING);
+			osmAttributes.put("timestamp", VALUETYPE_STRING);
+			osmAttributes.put("uid", VALUETYPE_NUMBER);
+			osmAttributes.put("user", VALUETYPE_STRING);
+			osmAttributes.put("changeset", VALUETYPE_NUMBER);
+			osmAttributes.put("latitude", VALUETYPE_NUMBER);
+			osmAttributes.put("longitude", VALUETYPE_NUMBER);
 
-		Map<String, ObjectType> osmReferencedObjects = new HashMap<String, ObjectType>();
+			Map<String, ObjectType> osmReferencedObjects = new HashMap<String, ObjectType>();
 
-		Map<String, GenericValueType> nodeTagsMap = new HashMap<String, GenericValueType>();
+			Map<String, GenericValueType> nodeTagsMap = new HashMap<String, GenericValueType>();
 
-		MapObjectType nodeTagsType = new MapObjectType("de-osm-data-tags",
-				nodeTagsMap, null);
+			MapObjectType nodeTagsType = new MapObjectType("de-osm-data-tags",
+					nodeTagsMap, null);
 
-		osmReferencedObjects.put("tags", nodeTagsType);
+			osmReferencedObjects.put("tags", nodeTagsType);
 
-		// two class object strings, must not be "required"
-		Map<String, GenericValueType> type = new HashMap<String, GenericValueType>();
-		type.put("Osm", VALUETYPE_NULL);
+			// two class object strings, must not be "required"
+			Map<String, GenericValueType> type = new HashMap<String, GenericValueType>();
+			type.put("Osm", VALUETYPE_NULL);
 
-		ObjectType typeType = new MapObjectType("objectType", type, null);
+			ObjectType typeType = new MapObjectType("objectType", type, null);
 
-		osmReferencedObjects.put("objectType", typeType);
+			osmReferencedObjects.put("objectType", typeType);
 
-		Map<String, GenericValueType> restName = new HashMap<String, GenericValueType>();
-		restName.put("osm", VALUETYPE_NULL);
+			Map<String, GenericValueType> restName = new HashMap<String, GenericValueType>();
+			restName.put("osm", VALUETYPE_NULL);
 
-		ObjectType restNameType = new MapObjectType("rest_name", restName, null);
+			ObjectType restNameType = new MapObjectType("rest_name", restName, null);
 
-		osmReferencedObjects.put("rest_name", restNameType);
+			osmReferencedObjects.put("rest_name", restNameType);
 
-		MapObjectType osmType = new MapObjectType("de-osm-data", osmAttributes,
-				osmReferencedObjects);
+			MapObjectType osmType = new MapObjectType("de-osm-data", osmAttributes,
+					osmReferencedObjects);
 
-		dbSchema = osmType;
+			dbSchema = osmType;
+		}
 
+		// source schema
+		{
+			List<ObjectType> stationList = new LinkedList<ObjectType>();
+			stationList.add(dbSchema);
+			sourceSchema = new ListObjectType(null, stationList);
+		}
+
+		// ods views
+		{
+			odsViews.add(new OdsView(
+					"_design/osm",
+					"getNodeById",
+					"function(doc) { if(doc.dataType == 'Osm' && doc.nodeId) emit( doc.nodeId, doc)}"));
+
+			odsViews.add(new OdsView("_design/osm", "getWayById",
+					"function(doc) { if(doc.dataType == 'Osm' && doc.wayId) emit( doc.wayId, doc)}"));
+
+			odsViews.add(new OdsView(
+					"_design/osm",
+					"getRelationById",
+					"function(doc) { if(doc.dataType == 'Osm' && doc.relationId) emit( doc.relationId, doc)}"));
+
+			odsViews.add(new OdsView(
+					"_design/osm",
+					"getOsmDataById",
+					"function(doc) { if (doc.dataType == 'Osm' && doc.nodeId) {emit(doc.nodeId, doc)} else if (doc.wayId) { emit(doc.wayId, doc)} else if (doc.relationId) { emit(doc.relationId, doc)}}"));
+
+			odsViews.add(new OdsView(
+					"_design/osm",
+					"getDocumentsByKeyword",
+					"function(doc) { if(doc.dataType == 'Osm' && doc.tags){ for (var i in doc.tags) { emit(doc.tags[i], doc) }} }"));
+
+			odsViews.add(new OdsView("_design/osm", "getMetadata",
+					"function(doc) { if(doc.title == 'openstreetmap') emit(null, doc)}"));
+
+			odsViews.add(new OdsView(
+					"_design/osm",
+					"getCouchIdByOsmId",
+					"function(doc) { if (doc.dataType == 'Osm' && doc.nodeId) {emit(doc.nodeId, doc._id)} else if (doc.wayId) { emit(doc.wayId, doc._id)} else if (doc.relationId) { emit(doc.relationId, doc._id)}}"));
+			odsViews.add(new OdsView("_design/osm", "getClassObject",
+					"function(doc) { if(doc.name == 'de-osm-data') emit (null, doc) }"));
+
+			odsViews.add(new OdsView("_design/osm", "getClassObjectId",
+					"function(doc) { if(doc.name == 'de-osm-data') emit (null, doc._id) }"));
+
+			return new OsmSource(sourceId, url, sourceSchema, dbSchema, metaData, odsViews);
+		}
 	}
 
-	// source schema
-	static {
-		List<ObjectType> stationList = new LinkedList<ObjectType>();
-		stationList.add(dbSchema);
-		sourceSchema = new ListObjectType(null, stationList);
-	}
 
-	// ods views
-	static {
-		odsViews.add(new OdsView(
-				"_design/osm",
-				"getNodeById",
-				"function(doc) { if(doc.dataType == 'Osm' && doc.nodeId) emit( doc.nodeId, doc)}"));
+	protected OsmSource(
+			String id, 
+			String url,
+			ObjectType sourceSchema,
+			ObjectType dbSchema,
+			OdsMetaData metaData,
+			List<OdsView> odsViews) {
 
-		odsViews.add(new OdsView("_design/osm", "getWayById",
-				"function(doc) { if(doc.dataType == 'Osm' && doc.wayId) emit( doc.wayId, doc)}"));
-
-		odsViews.add(new OdsView(
-				"_design/osm",
-				"getRelationById",
-				"function(doc) { if(doc.dataType == 'Osm' && doc.relationId) emit( doc.relationId, doc)}"));
-
-		odsViews.add(new OdsView(
-				"_design/osm",
-				"getOsmDataById",
-				"function(doc) { if (doc.dataType == 'Osm' && doc.nodeId) {emit(doc.nodeId, doc)} else if (doc.wayId) { emit(doc.wayId, doc)} else if (doc.relationId) { emit(doc.relationId, doc)}}"));
-
-		odsViews.add(new OdsView(
-				"_design/osm",
-				"getDocumentsByKeyword",
-				"function(doc) { if(doc.dataType == 'Osm' && doc.tags){ for (var i in doc.tags) { emit(doc.tags[i], doc) }} }"));
-
-		odsViews.add(new OdsView("_design/osm", "getMetadata",
-				"function(doc) { if(doc.title == 'openstreetmap') emit(null, doc)}"));
-
-		odsViews.add(new OdsView(
-				"_design/osm",
-				"getCouchIdByOsmId",
-				"function(doc) { if (doc.dataType == 'Osm' && doc.nodeId) {emit(doc.nodeId, doc._id)} else if (doc.wayId) { emit(doc.wayId, doc._id)} else if (doc.relationId) { emit(doc.relationId, doc._id)}}"));
-		odsViews.add(new OdsView("_design/osm", "getClassObject",
-				"function(doc) { if(doc.name == 'de-osm-data') emit (null, doc) }"));
-
-		odsViews.add(new OdsView("_design/osm", "getClassObjectId",
-				"function(doc) { if(doc.name == 'de-osm-data') emit (null, doc._id) }"));
-	}
-
-	public static final OsmSource INSTANCE = new OsmSource();
-
-	protected OsmSource() {
-		super(sourceId, url, sourceSchema, dbSchema, metaData, odsViews);
+		super(id, url, sourceSchema, dbSchema, metaData, odsViews);
 	}
 }

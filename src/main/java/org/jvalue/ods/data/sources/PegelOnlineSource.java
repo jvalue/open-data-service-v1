@@ -37,187 +37,199 @@ import org.jvalue.ods.data.valuetypes.GenericValueType;
 
 public final class PegelOnlineSource extends DataSource {
 
-	private static final String sourceId = "de-pegelonline";
-	private static final String url = "http://pegelonline.wsv.de/webservices/rest-api/v2/"
-			+ "stations.json?includeTimeseries=true"
-			+ "&includeCurrentMeasurement=true"
-			+ "&includeCharacteristicValues=true";
+	public static DataSource createInstance() {
 
-	private static final ListObjectType sourceSchema;
-	private static final MapObjectType dbSchema;
+		String sourceId = "de-pegelonline";
+		String url = "http://pegelonline.wsv.de/webservices/rest-api/v2/"
+				+ "stations.json?includeTimeseries=true"
+				+ "&includeCurrentMeasurement=true"
+				+ "&includeCharacteristicValues=true";
 
-	private static final OdsMetaData metaData = new JacksonMetaData(
-			sourceId,
-			"pegelonline",
-			"Wasser- und Schifffahrtsverwaltung des Bundes (WSV)",
-			"https://www.pegelonline.wsv.de/adminmail",
-			"PEGELONLINE stellt kostenfrei tagesaktuelle Rohwerte verschiedener"
-					+ " gewässerkundlicher Parameter (z.B. Wasserstand) der Binnen- und Küstenpegel"
-					+ " der Wasserstraßen des Bundes bis maximal 30 Tage rückwirkend zur Ansicht und"
-					+ " zum Download bereit.",
-			"https://www.pegelonline.wsv.de",
-			"http://www.pegelonline.wsv.de/gast/nutzungsbedingungen");
+		ListObjectType sourceSchema;
+		MapObjectType dbSchema;
 
-	private static final List<OdsView> odsViews = new LinkedList<OdsView>();
+		OdsMetaData metaData = new JacksonMetaData(
+				sourceId,
+				"pegelonline",
+				"Wasser- und Schifffahrtsverwaltung des Bundes (WSV)",
+				"https://www.pegelonline.wsv.de/adminmail",
+				"PEGELONLINE stellt kostenfrei tagesaktuelle Rohwerte verschiedener"
+						+ " gewässerkundlicher Parameter (z.B. Wasserstand) der Binnen- und Küstenpegel"
+						+ " der Wasserstraßen des Bundes bis maximal 30 Tage rückwirkend zur Ansicht und"
+						+ " zum Download bereit.",
+				"https://www.pegelonline.wsv.de",
+				"http://www.pegelonline.wsv.de/gast/nutzungsbedingungen");
 
-	// db schema
-	static {
-		Map<String, GenericValueType> water = new HashMap<String, GenericValueType>();
-		water.put("shortname", VALUETYPE_STRING);
-		water.put("longname", VALUETYPE_STRING);
+		List<OdsView> odsViews = new LinkedList<OdsView>();
 
-		MapObjectType waterGot = new MapObjectType("de-pegelonline-water",
-				water, null);
+		// db schema
+		{
+			Map<String, GenericValueType> water = new HashMap<String, GenericValueType>();
+			water.put("shortname", VALUETYPE_STRING);
+			water.put("longname", VALUETYPE_STRING);
 
-		Map<String, GenericValueType> currentMeasurement = new HashMap<String, GenericValueType>();
-		currentMeasurement.put("timestamp", VALUETYPE_STRING);
-		currentMeasurement.put("value", VALUETYPE_NUMBER);
-		currentMeasurement.put("trend", VALUETYPE_NUMBER);
-		currentMeasurement.put("stateMnwMhw", VALUETYPE_STRING);
-		currentMeasurement.put("stateNswHsw", VALUETYPE_STRING);
-		MapObjectType currentMeasurementGot = new MapObjectType(
-				"de-pegelonline-currentMeasurement", currentMeasurement, null);
+			MapObjectType waterGot = new MapObjectType("de-pegelonline-water",
+					water, null);
 
-		Map<String, GenericValueType> gaugeZero = new HashMap<String, GenericValueType>();
-		gaugeZero.put("unit", VALUETYPE_STRING);
-		gaugeZero.put("value", VALUETYPE_NUMBER);
-		gaugeZero.put("validFrom", VALUETYPE_STRING);
+			Map<String, GenericValueType> currentMeasurement = new HashMap<String, GenericValueType>();
+			currentMeasurement.put("timestamp", VALUETYPE_STRING);
+			currentMeasurement.put("value", VALUETYPE_NUMBER);
+			currentMeasurement.put("trend", VALUETYPE_NUMBER);
+			currentMeasurement.put("stateMnwMhw", VALUETYPE_STRING);
+			currentMeasurement.put("stateNswHsw", VALUETYPE_STRING);
+			MapObjectType currentMeasurementGot = new MapObjectType(
+					"de-pegelonline-currentMeasurement", currentMeasurement, null);
 
-		MapObjectType gaugeZeroGot = new MapObjectType(
-				"de-pegelonline-gaugeZero", gaugeZero, null);
+			Map<String, GenericValueType> gaugeZero = new HashMap<String, GenericValueType>();
+			gaugeZero.put("unit", VALUETYPE_STRING);
+			gaugeZero.put("value", VALUETYPE_NUMBER);
+			gaugeZero.put("validFrom", VALUETYPE_STRING);
 
-		Map<String, GenericValueType> comment = new HashMap<String, GenericValueType>();
-		comment.put("shortDescription", VALUETYPE_STRING);
-		comment.put("longDescription", VALUETYPE_STRING);
+			MapObjectType gaugeZeroGot = new MapObjectType(
+					"de-pegelonline-gaugeZero", gaugeZero, null);
 
-		MapObjectType commentGot = new MapObjectType("de-pegelonline-comment",
-				comment, null);
+			Map<String, GenericValueType> comment = new HashMap<String, GenericValueType>();
+			comment.put("shortDescription", VALUETYPE_STRING);
+			comment.put("longDescription", VALUETYPE_STRING);
 
-		Map<String, GenericValueType> timeSeriesAttributes = new HashMap<String, GenericValueType>();
-		timeSeriesAttributes.put("shortname", VALUETYPE_STRING);
-		timeSeriesAttributes.put("longname", VALUETYPE_STRING);
-		timeSeriesAttributes.put("unit", VALUETYPE_STRING);
-		timeSeriesAttributes.put("equidistance", VALUETYPE_NUMBER);
+			MapObjectType commentGot = new MapObjectType("de-pegelonline-comment",
+					comment, null);
 
-		Map<String, ObjectType> timeSeriesReferencedObjects = new HashMap<String, ObjectType>();
+			Map<String, GenericValueType> timeSeriesAttributes = new HashMap<String, GenericValueType>();
+			timeSeriesAttributes.put("shortname", VALUETYPE_STRING);
+			timeSeriesAttributes.put("longname", VALUETYPE_STRING);
+			timeSeriesAttributes.put("unit", VALUETYPE_STRING);
+			timeSeriesAttributes.put("equidistance", VALUETYPE_NUMBER);
 
-		timeSeriesReferencedObjects.put("currentMeasurement",
-				currentMeasurementGot);
-		timeSeriesReferencedObjects.put("gaugeZero", gaugeZeroGot);
-		timeSeriesReferencedObjects.put("comment", commentGot);
+			Map<String, ObjectType> timeSeriesReferencedObjects = new HashMap<String, ObjectType>();
 
-		Map<String, GenericValueType> characteristicValuesAttributes = new HashMap<String, GenericValueType>();
-		characteristicValuesAttributes.put("shortname", VALUETYPE_STRING);
-		characteristicValuesAttributes.put("longname", VALUETYPE_STRING);
-		characteristicValuesAttributes.put("unit", VALUETYPE_STRING);
-		characteristicValuesAttributes.put("value", VALUETYPE_NUMBER);
-		characteristicValuesAttributes.put("validFrom", VALUETYPE_STRING);
-		characteristicValuesAttributes.put("timespanStart", VALUETYPE_STRING);
-		characteristicValuesAttributes.put("timespanEnd", VALUETYPE_STRING);
+			timeSeriesReferencedObjects.put("currentMeasurement",
+					currentMeasurementGot);
+			timeSeriesReferencedObjects.put("gaugeZero", gaugeZeroGot);
+			timeSeriesReferencedObjects.put("comment", commentGot);
 
-		Map<String, ObjectType> characteristicValuesReferencedObjects = new HashMap<String, ObjectType>();
+			Map<String, GenericValueType> characteristicValuesAttributes = new HashMap<String, GenericValueType>();
+			characteristicValuesAttributes.put("shortname", VALUETYPE_STRING);
+			characteristicValuesAttributes.put("longname", VALUETYPE_STRING);
+			characteristicValuesAttributes.put("unit", VALUETYPE_STRING);
+			characteristicValuesAttributes.put("value", VALUETYPE_NUMBER);
+			characteristicValuesAttributes.put("validFrom", VALUETYPE_STRING);
+			characteristicValuesAttributes.put("timespanStart", VALUETYPE_STRING);
+			characteristicValuesAttributes.put("timespanEnd", VALUETYPE_STRING);
 
-		List<GenericValueType> occurrences = new LinkedList<GenericValueType>();
-		occurrences.add(VALUETYPE_STRING);
+			Map<String, ObjectType> characteristicValuesReferencedObjects = new HashMap<String, ObjectType>();
 
-		ListObjectType occurrencesType = new ListObjectType(occurrences, null);
+			List<GenericValueType> occurrences = new LinkedList<GenericValueType>();
+			occurrences.add(VALUETYPE_STRING);
 
-		characteristicValuesReferencedObjects.put("occurrences",
-				occurrencesType);
+			ListObjectType occurrencesType = new ListObjectType(occurrences, null);
 
-		MapObjectType characteristicValuesGot = new MapObjectType(
-				"de-pegelonline-characteristicValues",
-				characteristicValuesAttributes,
-				characteristicValuesReferencedObjects);
+			characteristicValuesReferencedObjects.put("occurrences",
+					occurrencesType);
 
-		timeSeriesReferencedObjects.put("characteristicValues",
-				characteristicValuesGot);
+			MapObjectType characteristicValuesGot = new MapObjectType(
+					"de-pegelonline-characteristicValues",
+					characteristicValuesAttributes,
+					characteristicValuesReferencedObjects);
 
-		MapObjectType timeSeriesType = new MapObjectType(
-				"de-pegelonline-timeSeries", timeSeriesAttributes,
-				timeSeriesReferencedObjects);
+			timeSeriesReferencedObjects.put("characteristicValues",
+					characteristicValuesGot);
 
-		List<ObjectType> timeseriesTypesList = new LinkedList<>();
-		timeseriesTypesList.add(timeSeriesType);
+			MapObjectType timeSeriesType = new MapObjectType(
+					"de-pegelonline-timeSeries", timeSeriesAttributes,
+					timeSeriesReferencedObjects);
 
-		ListObjectType timeSeriesGot = new ListObjectType(null,
-				timeseriesTypesList);
+			List<ObjectType> timeseriesTypesList = new LinkedList<>();
+			timeseriesTypesList.add(timeSeriesType);
 
-		Map<String, GenericValueType> stationAttributes = new HashMap<String, GenericValueType>();
-		stationAttributes.put("uuid", VALUETYPE_STRING);
-		stationAttributes.put("number", VALUETYPE_STRING);
-		stationAttributes.put("shortname", VALUETYPE_STRING);
-		stationAttributes.put("longname", VALUETYPE_STRING);
-		stationAttributes.put("km", VALUETYPE_NUMBER);
-		stationAttributes.put("agency", VALUETYPE_STRING);
-		stationAttributes.put("longitude", VALUETYPE_NUMBER);
-		stationAttributes.put("latitude", VALUETYPE_NUMBER);
+			ListObjectType timeSeriesGot = new ListObjectType(null,
+					timeseriesTypesList);
 
-		Map<String, ObjectType> stationReferencedObjects = new HashMap<String, ObjectType>();
+			Map<String, GenericValueType> stationAttributes = new HashMap<String, GenericValueType>();
+			stationAttributes.put("uuid", VALUETYPE_STRING);
+			stationAttributes.put("number", VALUETYPE_STRING);
+			stationAttributes.put("shortname", VALUETYPE_STRING);
+			stationAttributes.put("longname", VALUETYPE_STRING);
+			stationAttributes.put("km", VALUETYPE_NUMBER);
+			stationAttributes.put("agency", VALUETYPE_STRING);
+			stationAttributes.put("longitude", VALUETYPE_NUMBER);
+			stationAttributes.put("latitude", VALUETYPE_NUMBER);
 
-		stationReferencedObjects.put("water", waterGot);
-		stationReferencedObjects.put("timeseries", timeSeriesGot);
+			Map<String, ObjectType> stationReferencedObjects = new HashMap<String, ObjectType>();
 
-		// two class object strings, must not be "required"
-		Map<String, GenericValueType> type = new HashMap<String, GenericValueType>();
-		type.put("Station", VALUETYPE_NULL);
+			stationReferencedObjects.put("water", waterGot);
+			stationReferencedObjects.put("timeseries", timeSeriesGot);
 
-		ObjectType typeType = new MapObjectType("objectType", type, null);
+			// two class object strings, must not be "required"
+			Map<String, GenericValueType> type = new HashMap<String, GenericValueType>();
+			type.put("Station", VALUETYPE_NULL);
 
-		stationReferencedObjects.put("objectType", typeType);
+			ObjectType typeType = new MapObjectType("objectType", type, null);
 
-		Map<String, GenericValueType> restName = new HashMap<String, GenericValueType>();
-		restName.put("stations", VALUETYPE_NULL);
+			stationReferencedObjects.put("objectType", typeType);
 
-		ObjectType restNameType = new MapObjectType("rest_name", restName, null);
+			Map<String, GenericValueType> restName = new HashMap<String, GenericValueType>();
+			restName.put("stations", VALUETYPE_NULL);
 
-		stationReferencedObjects.put("rest_name", restNameType);
+			ObjectType restNameType = new MapObjectType("rest_name", restName, null);
 
-		
-		
-		
-		
-		MapObjectType stationType = new MapObjectType("de-pegelonline-station",
-				stationAttributes, stationReferencedObjects);
+			stationReferencedObjects.put("rest_name", restNameType);
 
-		dbSchema = stationType;
+			
+			
+			
+			
+			MapObjectType stationType = new MapObjectType("de-pegelonline-station",
+					stationAttributes, stationReferencedObjects);
+
+			dbSchema = stationType;
+		}
+
+		// source schema
+		{
+			List<ObjectType> stationList = new LinkedList<ObjectType>();
+			stationList.add(dbSchema);
+			sourceSchema = new ListObjectType(null, stationList);
+
+		}
+
+		// ods views
+		{
+			odsViews.add(new OdsView("_design/pegelonline", "getSingleStation",
+					"function(doc) { if(doc.dataType == 'Station') emit(doc.longname, doc)}"));
+
+			odsViews.add(new OdsView("_design/pegelonline", "getMetadata",
+					"function(doc) { if(doc.title == 'pegelonline') emit(null, doc)}"));
+
+			odsViews.add(new OdsView("_design/pegelonline", "getAllStationsFlat",
+					"function(doc) { if(doc.dataType == 'Station') emit (null, doc.longname) }"));
+			odsViews.add(new OdsView("_design/pegelonline", "getAllStations",
+					"function(doc) { if(doc.dataType == 'Station')emit (null, doc) }"));
+			odsViews.add(new OdsView("_design/pegelonline", "getStationId",
+					"function(doc) { if(doc.dataType == 'Station') emit (doc.longname, doc._id) }"));
+
+			odsViews.add(new OdsView("_design/pegelonline", "getClassObject",
+					"function(doc) { if(doc.name == 'de-pegelonline-station') emit (null, doc) }"));
+
+			odsViews.add(new OdsView(
+					"_design/pegelonline",
+					"getClassObjectId",
+					"function(doc) { if(doc.name == 'de-pegelonline-station') emit (null, doc._id) }"));
+
+		}
+		return new PegelOnlineSource(sourceId, url, sourceSchema, dbSchema, metaData, odsViews);
 	}
 
-	// source schema
-	static {
-		List<ObjectType> stationList = new LinkedList<ObjectType>();
-		stationList.add(dbSchema);
-		sourceSchema = new ListObjectType(null, stationList);
 
+	protected PegelOnlineSource(
+			String id, 
+			String url, 
+			ObjectType sourceSchema,
+			ObjectType dbSchema,
+			OdsMetaData metaData,
+			List<OdsView> odsViews) {
+		
+		super(id, url, sourceSchema, dbSchema, metaData, odsViews);
 	}
 
-	// ods views
-	static {
-		odsViews.add(new OdsView("_design/pegelonline", "getSingleStation",
-				"function(doc) { if(doc.dataType == 'Station') emit(doc.longname, doc)}"));
-
-		odsViews.add(new OdsView("_design/pegelonline", "getMetadata",
-				"function(doc) { if(doc.title == 'pegelonline') emit(null, doc)}"));
-
-		odsViews.add(new OdsView("_design/pegelonline", "getAllStationsFlat",
-				"function(doc) { if(doc.dataType == 'Station') emit (null, doc.longname) }"));
-		odsViews.add(new OdsView("_design/pegelonline", "getAllStations",
-				"function(doc) { if(doc.dataType == 'Station')emit (null, doc) }"));
-		odsViews.add(new OdsView("_design/pegelonline", "getStationId",
-				"function(doc) { if(doc.dataType == 'Station') emit (doc.longname, doc._id) }"));
-
-		odsViews.add(new OdsView("_design/pegelonline", "getClassObject",
-				"function(doc) { if(doc.name == 'de-pegelonline-station') emit (null, doc) }"));
-
-		odsViews.add(new OdsView(
-				"_design/pegelonline",
-				"getClassObjectId",
-				"function(doc) { if(doc.name == 'de-pegelonline-station') emit (null, doc._id) }"));
-	}
-
-	public static final PegelOnlineSource INSTANCE = new PegelOnlineSource();
-
-	protected PegelOnlineSource() {
-		super(sourceId, url, sourceSchema, dbSchema, metaData, odsViews);
-	}
 }

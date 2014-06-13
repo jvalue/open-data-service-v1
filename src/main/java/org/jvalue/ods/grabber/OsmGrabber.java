@@ -36,30 +36,30 @@ public class OsmGrabber implements Grabber {
 	@Override
 	public GenericEntity grab() {
 		Translator translator = new OsmTranslator();
-		return (ListObject) translator.translate(OsmSource.INSTANCE);
+		return (ListObject) translator.translate(OsmSource.createInstance());
 	}
 
 
 	@Override
 	public ObjectType getDataSourceSchema() {
-		return OsmSource.INSTANCE.getDataSourceSchema();
+		return OsmSource.createInstance().getDataSourceSchema();
 	}
 
 
 	@Override
 	public ObjectType getDbSchema() {
-		return OsmSource.INSTANCE.getDbSchema();
+		return OsmSource.createInstance().getDbSchema();
 	}
 
 
 	@Override
 	public OdsMetaData getMetaData() {
-		return OsmSource.INSTANCE.getMetaData();
+		return OsmSource.createInstance().getMetaData();
 	}
 
 
 	@Override
 	public List<OdsView> getOdsViews() {
-		return OsmSource.INSTANCE.getOdsViews();
+		return OsmSource.createInstance().getOdsViews();
 	}
 }

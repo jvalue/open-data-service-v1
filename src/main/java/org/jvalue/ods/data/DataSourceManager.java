@@ -38,9 +38,15 @@ public final class DataSourceManager {
 
 	private DataSourceManager() {
 		Map<String, DataSource> sources = new HashMap<String, DataSource>();
-		sources.put(PegelOnlineSource.INSTANCE.getId(), PegelOnlineSource.INSTANCE);
-		sources.put(PegelPortalMvSource.INSTANCE.getId(), PegelPortalMvSource.INSTANCE);
-		sources.put(OsmSource.INSTANCE.getId(), OsmSource.INSTANCE);
+
+		DataSource pegelOnlineSource = PegelOnlineSource.createInstance();
+		DataSource osmSource = OsmSource.createInstance();
+		DataSource pegelPortalSource = PegelPortalMvSource.createInstance();
+		
+		sources.put(pegelOnlineSource.getId(), pegelOnlineSource);
+		sources.put(pegelPortalSource.getId(), pegelPortalSource);
+		sources.put(osmSource.getId(), osmSource);
+
 		this.sources = Collections.unmodifiableMap(sources);
 	}
 

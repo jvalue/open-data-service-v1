@@ -22,7 +22,7 @@ import java.util.List;
 import org.jvalue.ods.data.metadata.OdsMetaData;
 import org.jvalue.ods.data.objecttypes.ObjectType;
 
-public abstract class DataSource {
+public abstract class DataSource implements Cloneable {
 
 	private final String id;
 	private final String url;
@@ -31,8 +31,13 @@ public abstract class DataSource {
 	private final OdsMetaData metaData;
 	private final List<OdsView> odsViews;
 
-	protected DataSource(String id, String url, ObjectType sourceschema,
-			ObjectType dbschema, OdsMetaData metaData, List<OdsView> odsViews) {
+	protected DataSource(
+			String id, 
+			String url, 
+			ObjectType sourceschema,
+			ObjectType dbschema, 
+			OdsMetaData metaData, 
+			List<OdsView> odsViews) {
 
 		if (id == null || url == null)
 			throw new NullPointerException("id or url cannot be null");

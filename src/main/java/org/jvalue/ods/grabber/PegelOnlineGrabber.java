@@ -33,26 +33,26 @@ public class PegelOnlineGrabber implements Grabber {
 	@Override
 	public GenericEntity grab() {
 		Translator translator = new JsonTranslator();
-		return (ListObject) translator.translate(PegelOnlineSource.INSTANCE);
+		return (ListObject) translator.translate(PegelOnlineSource.createInstance());
 	}
 
 	@Override
 	public ObjectType getDataSourceSchema() {
-		return PegelOnlineSource.INSTANCE.getDataSourceSchema();
+		return PegelOnlineSource.createInstance().getDataSourceSchema();
 	}
 
 	@Override
 	public ObjectType getDbSchema() {
-		return PegelOnlineSource.INSTANCE.getDbSchema();
+		return PegelOnlineSource.createInstance().getDbSchema();
 	}
 
 	@Override
 	public OdsMetaData getMetaData() {
-		return PegelOnlineSource.INSTANCE.getMetaData();
+		return PegelOnlineSource.createInstance().getMetaData();
 	}
 
 	@Override
 	public List<OdsView> getOdsViews() {
-		return PegelOnlineSource.INSTANCE.getOdsViews();
+		return PegelOnlineSource.createInstance().getOdsViews();
 	}
 }
