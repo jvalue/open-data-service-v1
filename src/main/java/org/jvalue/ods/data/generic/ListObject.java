@@ -18,6 +18,7 @@
 package org.jvalue.ods.data.generic;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,7 +31,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * The Class ListObject.
  */
 @JsonInclude(Include.NON_NULL)
-public class ListObject extends GenericEntity {
+public class ListObject extends GenericEntity implements Iterable<Serializable> {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 3269881048191211570L;
@@ -63,6 +64,12 @@ public class ListObject extends GenericEntity {
 	@JsonValue
 	public List<Serializable> getList() {
 		return list;
+	}
+
+
+	@Override
+	public Iterator<Serializable> iterator() {
+		return list.iterator();
 	}
 
 }
