@@ -24,6 +24,9 @@ import org.ektorp.support.StdDesignDocumentFactory;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.data.OdsView;
+import org.jvalue.ods.data.sources.OsmSource;
+import org.jvalue.ods.data.sources.PegelOnlineSource;
+import org.jvalue.ods.data.sources.PegelPortalMvSource;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.DbInsertionFilter;
@@ -48,17 +51,27 @@ public class DataGrabberMain {
 
 
 	public static void initialize() {
-		if (initialized) throw new IllegalStateException("Already initialized");
+		// TODO disabled for now as current insertion workflow requires db to be deleted
+		// before each update
+		// if (initialized) throw new IllegalStateException("Already initialized");
 
 		Logging.adminLog("Initializing Ods");
 
 		initialized = true;
 
-		// one time initialization
+		DataSourceManager manager = DataSourceManager.getInstance();
+		manager.clearSources();
+		manager.addSource(PegelOnlineSource.createInstance());
+		manager.addSource(OsmSource.createInstance());
+		manager.addSource(PegelPortalMvSource.createInstance());
+
 		accessor = DbFactory.createDbAccessor("ods");
 		accessor.connect();
+
+		// one time initialization
+		accessor.deleteDatabase();
 		createCommonViews();
-		for (DataSource source : DataSourceManager.getInstance().getAllSources()) {
+		for (DataSource source : manager.getAllSources()) {
 			accessor.insert(source.getDbSchema());
 			accessor.insert(source.getMetaData());
 			for (OdsView view : source.getOdsViews()) {

@@ -114,7 +114,7 @@ public class ContainerRestletApp extends Application implements Runnable {
 	public void run() {
 		while (true) {
 			try {
-				if (!DataGrabberMain.isInitialized()) DataGrabberMain.initialize();
+				DataGrabberMain.initialize();
 				DataGrabberMain.updateData();
 			} catch (Exception ex) {
 				Logging.error(DataGrabberMain.class, ex.getMessage());

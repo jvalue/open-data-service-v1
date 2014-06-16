@@ -16,14 +16,9 @@
 package org.jvalue.ods.data;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import org.jvalue.ods.data.sources.OsmSource;
-import org.jvalue.ods.data.sources.PegelOnlineSource;
-import org.jvalue.ods.data.sources.PegelPortalMvSource;
 
 public final class DataSourceManager {
 
@@ -34,21 +29,9 @@ public final class DataSourceManager {
 	}
 
 
-	private final Map<String, DataSource> sources;
+	private final Map<String, DataSource> sources = new HashMap<String, DataSource>();
 
-	private DataSourceManager() {
-		Map<String, DataSource> sources = new HashMap<String, DataSource>();
-
-		DataSource pegelOnlineSource = PegelOnlineSource.createInstance();
-		DataSource osmSource = OsmSource.createInstance();
-		DataSource pegelPortalSource = PegelPortalMvSource.createInstance();
-		
-		sources.put(pegelOnlineSource.getId(), pegelOnlineSource);
-		sources.put(pegelPortalSource.getId(), pegelPortalSource);
-		sources.put(osmSource.getId(), osmSource);
-
-		this.sources = Collections.unmodifiableMap(sources);
-	}
+	private DataSourceManager() { }
 
 
 	public Collection<DataSource> getAllSources() {
@@ -64,6 +47,17 @@ public final class DataSourceManager {
 	public DataSource getSourceForId(String id) {
 		if (id == null) throw new NullPointerException("id cannot be null");
 		return sources.get(id);
+	}
+
+
+	public void addSource(DataSource source) {
+		if (source == null) throw new NullPointerException("source cannot be null");
+		sources.put(source.getId(), source);
+	}
+
+
+	public void clearSources() {
+		sources.clear();
 	}
 
 }
