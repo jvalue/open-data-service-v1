@@ -30,6 +30,7 @@ import org.jvalue.ods.db.DbInsertionFilter;
 import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.grabber.GrabberFilter;
 import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.notifications.SimpleNotificationFilter;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -83,9 +84,11 @@ public class DataGrabberMain {
 		// define filters
 		GrabberFilter grabber = new GrabberFilter();
 		DbInsertionFilter dbInserter = new DbInsertionFilter(accessor);
+		SimpleNotificationFilter notifier = new SimpleNotificationFilter();
 
 		// link filters
 		grabber.addFilter(dbInserter);
+		dbInserter.addFilter(notifier);
 
 		// start filtering
 		for (DataSource source : DataSourceManager.getInstance().getAllSources()) {
