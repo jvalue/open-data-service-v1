@@ -1,5 +1,4 @@
 /*  Open Data Service
-    Copyright (C) 2013  Tsysin Konstantin, Reischl Patrick
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
@@ -40,21 +39,48 @@ import org.jvalue.ods.logger.Logging;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-/**
- * The Class DataGrabberMain.
- */
+
 public class DataGrabberMain {
 
-	/** The accessor. */
 	private static DbAccessor<JsonNode> accessor;
+	private static boolean initialized = false;
 
-	/**
-	 * The main method.
-	 * 
-	 * @param args
-	 *            the arguments
-	 */
 	public static void main(String[] args) {
+		initialize();
+		updateData();
+	}
+
+
+
+	public static void initialize() {
+		if (initialized) throw new IllegalStateException("Already initialized");
+
+		Logging.adminLog("Initializing Ods");
+
+		initialized = true;
+
+		// one time initialization
+		accessor = DbFactory.createDbAccessor("ods");
+		accessor.connect();
+		createCommonViews();
+		for (DataSource source : DataSourceManager.getInstance().getAllSources()) {
+			accessor.insert(source.getDbSchema());
+			accessor.insert(source.getMetaData());
+			for (OdsView view : source.getOdsViews()) {
+				createView(view);
+			}
+		}
+
+		Logging.adminLog("Initialization completet");
+	}
+
+
+	public static boolean isInitialized() {
+		return initialized;
+	}
+
+
+	public static void updateData() {
 		Logging.adminLog("Update started");
 
 		accessor = DbFactory.createDbAccessor("ods");
@@ -73,24 +99,12 @@ public class DataGrabberMain {
 		iterAdapter.addFilter(geAdapter);
 		geAdapter.addFilter(dbInserter);
 
-		// one time initialization
-		createCommonViews();
-		for (DataSource source : DataSourceManager.getInstance().getAllSources()) {
-			accessor.insert(source.getDbSchema());
-			accessor.insert(source.getMetaData());
-			for (OdsView view : source.getOdsViews()) {
-				createView(view);
-			}
-		}
-
 		// start filtering
 		for (DataSource source : DataSourceManager.getInstance().getAllSources()) {
 			Logging.adminLog("grabbing " + source.getId() + " ...");
 			grabber.filter(source, null);
 		}
 		Logging.adminLog("Update completed");
-
-
 	}
 
 
@@ -103,7 +117,6 @@ public class DataGrabberMain {
 
 
 	private static void createView(OdsView view) {
-
 		DesignDocument dd = null;
 		boolean update = true;
 
