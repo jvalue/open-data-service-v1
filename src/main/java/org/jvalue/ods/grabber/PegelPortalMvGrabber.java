@@ -17,33 +17,16 @@
  */
 package org.jvalue.ods.grabber;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
-import org.jsoup.nodes.TextNode;
-import org.jsoup.select.Elements;
 import org.jvalue.ods.data.OdsView;
-import org.jvalue.ods.data.generic.BaseObject;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
-import org.jvalue.ods.data.generic.MapObject;
 import org.jvalue.ods.data.metadata.OdsMetaData;
-import org.jvalue.ods.data.objecttypes.ListObjectType;
-import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.data.sources.PegelPortalMvSource;
-import org.jvalue.ods.data.valuetypes.GenericValueType;
-import org.jvalue.ods.data.valuetypes.SimpleValueType;
-import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Grabber;
-import org.jvalue.ods.translator.HtmlTranslator;
+import org.jvalue.ods.translator.PegelPortalMvTranslator;
 
 /**
  * The Class MecklenburgVorpommernPegel
@@ -52,8 +35,7 @@ public class PegelPortalMvGrabber implements Grabber {
 
 	@Override
 	public GenericEntity grab() {
-		Translator translator = new PegelTranslator();
-		return (ListObject) translator.translate(PegelPortalMvSource.createInstance());
+		return (ListObject) new PegelPortalMvTranslator().translate(PegelPortalMvSource.createInstance());
 	}
 
 	@Override
@@ -76,94 +58,4 @@ public class PegelPortalMvGrabber implements Grabber {
 		return PegelPortalMvSource.createInstance().getOdsViews();
 	}
 
-	private static class PegelTranslator extends HtmlTranslator {
-
-		static final Map<String, Integer> tableMapping = new HashMap<String, Integer>();
-		static {
-			tableMapping.put(PegelPortalMvSource.KEY_STATION, 0);
-			tableMapping.put(PegelPortalMvSource.KEY_WATER, 1);
-			tableMapping.put(PegelPortalMvSource.KEY_TIMESTAMP, 2);
-			tableMapping.put(PegelPortalMvSource.KEY_LEVEL, 3);
-			tableMapping.put(PegelPortalMvSource.KEY_EFFLUENT, 4);
-			tableMapping.put(PegelPortalMvSource.KEY_AGENCY, 8);
-		}
-
-		@Override
-		protected GenericEntity translateHelper(Document doc,
-				ObjectType valueTypes) {
-			Elements header = doc.select("#pegeltab thead tr");
-			Elements body = doc.select("#pegeltab tbody tr");
-
-			if (header.isEmpty() || body.isEmpty())
-				return null;
-			if (header.size() > 1)
-				return unknownFormat();
-
-			try {
-
-				Map<String, GenericValueType> mapValueTypes = ((MapObjectType) ((ListObjectType) valueTypes)
-						.getReferencedObjects().get(0)).getAttributes();
-
-				List<Serializable> objectList = new LinkedList<Serializable>();
-				for (Element row : body) {
-					MapObject objectMap = new MapObject();
-					for (Map.Entry<String, Integer> e : tableMapping.entrySet()) {
-
-						String key = e.getKey();
-						int colIdx = e.getValue();
-						SimpleValueType type = (SimpleValueType) mapValueTypes
-								.get(key);
-						String value = extractText(row.child(colIdx));
-						if (value.equals(""))
-							continue;
-
-						objectMap.getMap().put(
-								key,
-								new BaseObject(createValue(value,
-										type.getName())));
-					}
-
-					objectMap.getMap().put(PegelPortalMvSource.KEY_LEVEL_UNIT,
-							new BaseObject("cm ü PNP"));
-					objectMap.getMap().put(
-							PegelPortalMvSource.KEY_EFFLUENT_UNIT,
-							new BaseObject("m³/s"));
-
-					objectList.add(objectMap);
-				}
-
-				return new ListObject(objectList);
-			} catch (Exception e) {
-				return unknownFormat();
-			}
-		}
-
-		private Serializable createValue(String value, String type) {
-			if (type.equals("java.lang.String"))
-				return StringEscapeUtils.unescapeHtml4(value);
-			else if (type.equals("java.lang.Number"))
-				return new Double(value);
-			else
-				throw new IllegalArgumentException("Unknown type " + type);
-		}
-
-		private String extractText(Element element) {
-			StringBuilder builder = new StringBuilder();
-			for (Node node : element.childNodes()) {
-				if (node instanceof TextNode) {
-					builder.append(node.toString());
-				} else if (node instanceof Element) {
-					builder.append(extractText((Element) node));
-				}
-			}
-			return builder.toString();
-		}
-
-		private GenericEntity unknownFormat() {
-			String error = "Unknown html format found while parsing source";
-			Logging.error(this.getClass(), error);
-			System.err.println(error);
-			return null;
-		}
-	}
 }
