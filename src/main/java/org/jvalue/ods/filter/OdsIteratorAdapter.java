@@ -21,12 +21,12 @@ import org.jvalue.ods.data.DataSource;
 
 
 
-public final class OdsIteratorAdapter<P> extends OdsAdapter<Iterable<P>,P> {
+public final class OdsIteratorAdapter<P extends Iterable<R>,R> extends OdsAdapter<P,R> {
 
 	@Override
-	public void filter(DataSource source, Iterable<P> iter) {
-		for (OdsFilter<P,?> filter : filterChain) {
-			for (P item : iter) {
+	public void filter(DataSource source, P iter) {
+		for (OdsFilter<R,?> filter : filterChain) {
+			for (R item : iter) {
 				filter.filter(source, item);
 			}
 		}
