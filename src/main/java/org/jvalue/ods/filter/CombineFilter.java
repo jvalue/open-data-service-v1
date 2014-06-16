@@ -32,7 +32,7 @@ import org.jvalue.ods.logger.Logging;
 /**
  * The Class CombineFilter.
  */
-public class CombineFilter extends OdsFilter<Void, MapObject> {
+public class CombineFilter {
 
 	/** The data. */
 	protected MapObject data;
@@ -62,7 +62,6 @@ public class CombineFilter extends OdsFilter<Void, MapObject> {
 	 * 
 	 * @return the map value
 	 */
-	@Override
 	protected MapObject filterHelper(Void param) {
 
 //		if (!SchemaManager.validateGenericValusFitsSchema(data, schema)) {

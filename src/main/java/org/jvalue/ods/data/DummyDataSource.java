@@ -22,16 +22,10 @@ import java.util.List;
 import org.jvalue.ods.data.metadata.OdsMetaData;
 import org.jvalue.ods.data.objecttypes.ObjectType;
 
-public abstract class DataSource implements Cloneable {
 
-	private final String id;
-	private final String url;
-	private final ObjectType dataSourceSchema;
-	private final ObjectType dbSchema;
-	private final OdsMetaData metaData;
-	private final List<OdsView> odsViews;
+public final class DummyDataSource extends DataSource {
 
-	protected DataSource(
+	public DummyDataSource(
 			String id, 
 			String url, 
 			ObjectType sourceschema,
@@ -39,41 +33,13 @@ public abstract class DataSource implements Cloneable {
 			OdsMetaData metaData, 
 			List<OdsView> odsViews) {
 
-		if (id == null || url == null)
-			throw new NullPointerException("id or url cannot be null");
-
-		this.id = id;
-		this.url = url;
-		this.dataSourceSchema = sourceschema;
-		this.dbSchema = dbschema;
-		this.metaData = metaData;
-		this.odsViews = odsViews;
+		super(id, url, sourceschema, dbschema, metaData, odsViews);
 	}
 
-	public String getId() {
-		return id;
-	}
 
-	public String getUrl() {
-		return url;
+	@Override
+	public <P,R> R accept(DataSourceVisitor<P,R> visitor, P param) {
+		throw new UnsupportedOperationException("cant touch this");
 	}
-
-	public ObjectType getDataSourceSchema() {
-		return dataSourceSchema;
-	}
-
-	public ObjectType getDbSchema() {
-		return dbSchema;
-	}
-
-	public OdsMetaData getMetaData() {
-		return metaData;
-	}
-
-	public List<OdsView> getOdsViews() {
-		return odsViews;
-	}
-
-	public abstract <P,R> R accept(DataSourceVisitor<P,R> visitor, P param);
 
 }

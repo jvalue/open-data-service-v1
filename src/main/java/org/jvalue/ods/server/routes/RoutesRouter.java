@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.data.DummyDataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
@@ -145,7 +146,7 @@ public class RoutesRouter implements Router<Restlet> {
 							+ endLongitude
 							+ "&v=motorcar&fast=1&layer=mapnik";
 
-					DataSource ds = new DataSource("org-yournavigation", source, null, null, null, null) { };
+					DataSource ds = new DummyDataSource("org-yournavigation", source, null, null, null, null);
 
 					XmlTranslator grabber = new XmlTranslator();
 					GenericEntity gv = grabber.translate(ds);

@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.data.DummyDataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.metadata.JacksonMetaData;
 import org.jvalue.ods.logger.Logging;
@@ -60,11 +60,11 @@ public class OverpassRouter implements Router<Restlet> {
 
 				GenericEntity ret = null;
 				try {
-					ret = new JsonTranslator().translate(new DataSource(
+					ret = new JsonTranslator().translate(new DummyDataSource(
 							"ru-rambler-osm-overpass",
 							"http://overpass.osm.rambler.ru/cgi/interpreter?data=[out:json];node[name%3D"
 									+ (String) request.getAttributes().get(
-											"location") + "]%3Bout%3B", null, null, null, null) { });
+											"location") + "]%3Bout%3B", null, null, null, null));
 					ObjectMapper mapper = new ObjectMapper();
 					message += mapper.writeValueAsString(ret);
 

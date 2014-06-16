@@ -105,6 +105,7 @@ public class QualityAssuranceMain {
 			for (JsonNode station : nodes) {
 				if (station.isObject()) {
 
+					/*j
 					GenericEntity gv = new JsonTranslator().convertJson(station);
 
 					mv = new CombineFilter((MapObject) gv,
@@ -130,6 +131,7 @@ public class QualityAssuranceMain {
 						Logging.error(QualityAssuranceMain.class, errmsg);
 						throw new RuntimeException(errmsg);
 					}
+					*/
 
 				}
 			}
