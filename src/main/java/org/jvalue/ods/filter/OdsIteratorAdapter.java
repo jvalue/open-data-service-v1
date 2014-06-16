@@ -21,7 +21,7 @@ import org.jvalue.ods.data.DataSource;
 
 
 
-public abstract class OdsIteratorAdapter<P> extends OdsAdapter<Iterable<P>,P> {
+public final class OdsIteratorAdapter<P> extends OdsAdapter<Iterable<P>,P> {
 
 	@Override
 	public void filter(DataSource source, Iterable<P> iter) {
