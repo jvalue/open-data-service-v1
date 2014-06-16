@@ -16,8 +16,6 @@
  */
 package org.jvalue.ods.main;
 
-import java.io.Serializable;
-
 import org.ektorp.UpdateConflictException;
 import org.ektorp.support.DesignDocument;
 import org.ektorp.support.DesignDocument.View;
@@ -26,14 +24,10 @@ import org.ektorp.support.StdDesignDocumentFactory;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.data.OdsView;
-import org.jvalue.ods.data.generic.GenericEntity;
-import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.DbInsertionFilter;
 import org.jvalue.ods.db.exception.DbException;
-import org.jvalue.ods.filter.OdsFilter;
-import org.jvalue.ods.filter.OdsIteratorAdapter;
 import org.jvalue.ods.grabber.GrabberFilter;
 import org.jvalue.ods.logger.Logging;
 
@@ -89,15 +83,10 @@ public class DataGrabberMain {
 
 		// define filters
 		GrabberFilter grabber = new GrabberFilter();
-		OdsIteratorAdapter<ListObject, Serializable> iterAdapter 
-			= new OdsIteratorAdapter<ListObject, Serializable>();
-		SerializableToGenericEntityAdapter geAdapter = new SerializableToGenericEntityAdapter();
 		DbInsertionFilter dbInserter = new DbInsertionFilter(accessor);
 
 		// link filters
-		grabber.addFilter(iterAdapter);
-		iterAdapter.addFilter(geAdapter);
-		geAdapter.addFilter(dbInserter);
+		grabber.addFilter(dbInserter);
 
 		// start filtering
 		for (DataSource source : DataSourceManager.getInstance().getAllSources()) {
@@ -148,13 +137,4 @@ public class DataGrabberMain {
 
 	}
 
-
-	private static class SerializableToGenericEntityAdapter 
-			extends OdsFilter<Serializable, GenericEntity> {
-
-		@Override
-		protected final GenericEntity filterHelper(DataSource source, Serializable s) {
-			return (GenericEntity) s;
-		}
-	}
 }

@@ -47,7 +47,7 @@ public abstract class OdsFilter<P,R> {
 	}
 
 
-	public void filter(DataSource source, P param) {
+	public final void filter(DataSource source, P param) {
 		R ret = filterHelper(source, param);
 
 		for (OdsFilter<R,?> filter : filterChain) {
