@@ -27,7 +27,7 @@ import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.data.DummyDataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.valuetypes.AllowedValueTypes;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
@@ -55,7 +55,7 @@ public class JsonTranslatorTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		translator = new JsonTranslator();
+		translator = JsonTranslator.INSTANCE;
 		assertNotNull(translator);
 	}
 
@@ -64,7 +64,7 @@ public class JsonTranslatorTest {
 	 */
 	@Test
 	public void testTranslate() {
-		GenericEntity gv = translator.translate(new DataSource("testUrl", TestUrl, null, null, null, null) {});
+		GenericEntity gv = translator.translate(new DummyDataSource("testUrl", TestUrl, null, null, null, null));
 		assertNotNull(gv);
 	}
 
@@ -73,7 +73,7 @@ public class JsonTranslatorTest {
 	 */
 	@Test
 	public void testTranslateInvalidSource() {
-		GenericEntity gv = translator.translate(new DataSource("invalidSource", "invalidsource", null, null, null, null) {});
+		GenericEntity gv = translator.translate(new DummyDataSource("invalidSource", "invalidsource", null, null, null, null));
 		assertNull(gv);
 	}
 
