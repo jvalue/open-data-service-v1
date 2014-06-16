@@ -39,9 +39,7 @@ import org.jvalue.ods.data.sources.PegelPortalMvSource;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.exception.DbException;
-import org.jvalue.ods.grabber.OsmGrabber;
-import org.jvalue.ods.grabber.PegelOnlineGrabber;
-import org.jvalue.ods.grabber.PegelPortalMvGrabber;
+import org.jvalue.ods.grabber.GrabberFilter;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.notifications.NotificationSender;
 
@@ -68,7 +66,21 @@ public class DataGrabberMain {
 		accessor.connect();
 		accessor.deleteDatabase();
 
+		GrabberFilter grabber = new GrabberFilter();
+
+		List<DataSource> sources = new LinkedList<DataSource>();
+		sources.add(PegelOnlineSource.createInstance());
+		sources.add(OsmSource.createInstance());
+		sources.add(PegelPortalMvSource.createInstance());
+
 		Logging.adminLog("grabbing PegelOnline...");
+		for (DataSource source : sources) {
+			grabber.filter(source, null);
+		}
+		Logging.adminLog("Update completed");
+
+
+		/*
 		grab(new PegelOnlineGrabber(), PegelOnlineSource.createInstance());
 
 		Logging.adminLog("grabbing Osm...");
@@ -79,7 +91,7 @@ public class DataGrabberMain {
 
 		createCommonViews();
 
-		Logging.adminLog("Update completed");
+		*/
 	}
 
 	/**
