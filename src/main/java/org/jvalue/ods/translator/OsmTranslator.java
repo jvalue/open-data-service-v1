@@ -53,6 +53,10 @@ import org.openstreetmap.osmosis.xml.v0_6.XmlReader;
  */
 public class OsmTranslator implements Translator {
 
+	public static final OsmTranslator INSTANCE = new OsmTranslator();
+
+	private OsmTranslator() { }
+
 	/** The lv. */
 	private ListObject lv = new ListObject();
 

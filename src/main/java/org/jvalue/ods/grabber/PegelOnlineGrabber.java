@@ -32,7 +32,7 @@ public class PegelOnlineGrabber implements Grabber {
 
 	@Override
 	public GenericEntity grab() {
-		Translator translator = new JsonTranslator();
+		Translator translator = JsonTranslator.INSTANCE;
 		return (ListObject) translator.translate(PegelOnlineSource.createInstance());
 	}
 

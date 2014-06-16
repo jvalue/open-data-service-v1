@@ -45,6 +45,8 @@ import org.jvalue.ods.logger.Logging;
 
 public class PegelPortalMvTranslator extends HtmlTranslator {
 
+	public static final PegelPortalMvTranslator INSTANCE  = new PegelPortalMvTranslator();
+
 	private static final Map<String, Integer> tableMapping = new HashMap<String, Integer>();
 	static {
 		tableMapping.put(PegelPortalMvSource.KEY_STATION, 0);
@@ -54,6 +56,10 @@ public class PegelPortalMvTranslator extends HtmlTranslator {
 		tableMapping.put(PegelPortalMvSource.KEY_EFFLUENT, 4);
 		tableMapping.put(PegelPortalMvSource.KEY_AGENCY, 8);
 	}
+
+
+	private PegelPortalMvTranslator() { }
+
 
 	@Override
 	protected GenericEntity translateHelper(Document doc,

@@ -35,7 +35,7 @@ public class OsmGrabber implements Grabber {
 
 	@Override
 	public GenericEntity grab() {
-		Translator translator = new OsmTranslator();
+		Translator translator = OsmTranslator.INSTANCE;
 		return (ListObject) translator.translate(OsmSource.createInstance());
 	}
 

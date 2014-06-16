@@ -43,6 +43,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class JsonTranslator implements Translator {
 
+	public static final JsonTranslator INSTANCE = new JsonTranslator();
+
+	private JsonTranslator() { }
+
 	/**
 	 * Translate.
 	 * 

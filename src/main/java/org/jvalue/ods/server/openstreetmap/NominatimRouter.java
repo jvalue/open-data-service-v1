@@ -57,7 +57,7 @@ public class NominatimRouter implements Router<Restlet> {
 
 					GenericEntity ret = null;
 
-					ret = new JsonTranslator()
+					ret = JsonTranslator.INSTANCE
 							.translate(new DummyDataSource(
 									"org-nominatim-openstreetmap",
 									"http://nominatim.openstreetmap.org/search?q="
@@ -90,7 +90,7 @@ public class NominatimRouter implements Router<Restlet> {
 
 					GenericEntity ret = null;
 
-					ret = new JsonTranslator().translate(new DummyDataSource(
+					ret = JsonTranslator.INSTANCE.translate(new DummyDataSource(
 							"org-nominatim-openstreetmap",
 							"http://nominatim.openstreetmap.org/reverse?format=json"
 									+ (String) request.getAttributes().get(

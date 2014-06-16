@@ -148,8 +148,7 @@ public class RoutesRouter implements Router<Restlet> {
 
 					DataSource ds = new DummyDataSource("org-yournavigation", source, null, null, null, null);
 
-					XmlTranslator grabber = new XmlTranslator();
-					GenericEntity gv = grabber.translate(ds);
+					GenericEntity gv = XmlTranslator.INSTANCE.translate(ds);
 
 					String message = mapper.writeValueAsString(gv);
 

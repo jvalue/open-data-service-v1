@@ -28,6 +28,10 @@ import org.xml.sax.InputSource;
  */
 public class XmlTranslator implements Translator {
 
+	public static final XmlTranslator INSTANCE = new XmlTranslator();
+
+	private XmlTranslator() { }
+
 	/**
 	 * Translate.
 	 * 

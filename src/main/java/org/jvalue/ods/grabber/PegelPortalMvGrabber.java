@@ -35,7 +35,7 @@ public class PegelPortalMvGrabber implements Grabber {
 
 	@Override
 	public GenericEntity grab() {
-		return (ListObject) new PegelPortalMvTranslator().translate(PegelPortalMvSource.createInstance());
+		return PegelPortalMvTranslator.INSTANCE.translate(PegelPortalMvSource.createInstance());
 	}
 
 	@Override
