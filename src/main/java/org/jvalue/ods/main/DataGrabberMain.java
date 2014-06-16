@@ -79,7 +79,6 @@ public class DataGrabberMain {
 
 		accessor = DbFactory.createDbAccessor("ods");
 		accessor.connect();
-		accessor.deleteDatabase();
 
 		// define filters
 		GrabberFilter grabber = new GrabberFilter();
