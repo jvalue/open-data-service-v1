@@ -25,7 +25,7 @@ import java.util.List;
  */
 public abstract class OdsFilter<P,R> {
 
-	private final List<OdsFilter<R,?>> filterChain = new LinkedList<OdsFilter<R,?>>();
+	protected final List<OdsFilter<R,?>> filterChain = new LinkedList<OdsFilter<R,?>>();
 
 
 	public final void addFilter(OdsFilter<R,?> filter) {
@@ -45,14 +45,12 @@ public abstract class OdsFilter<P,R> {
 	}
 
 
-	public final R filter(P param) {
+	public void filter(P param) {
 		R ret = filterHelper(param);
 
 		for (OdsFilter<R,?> filter : filterChain) {
 			filter.filter(ret);
 		}
-
-		return ret;
 	}
 
 	
