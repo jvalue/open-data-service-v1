@@ -346,9 +346,6 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 				}
 
 			}
-
-			insert(schema);
-
 		}
 		try {
 
