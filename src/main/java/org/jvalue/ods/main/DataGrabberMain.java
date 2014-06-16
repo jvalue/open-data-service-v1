@@ -73,6 +73,16 @@ public class DataGrabberMain {
 		iterAdapter.addFilter(geAdapter);
 		geAdapter.addFilter(dbInserter);
 
+		// one time initialization
+		createCommonViews();
+		for (DataSource source : DataSourceManager.getInstance().getAllSources()) {
+			accessor.insert(source.getDbSchema());
+			accessor.insert(source.getMetaData());
+			for (OdsView view : source.getOdsViews()) {
+				createView(view);
+			}
+		}
+
 		// start filtering
 		for (DataSource source : DataSourceManager.getInstance().getAllSources()) {
 			Logging.adminLog("grabbing " + source.getId() + " ...");
@@ -80,7 +90,6 @@ public class DataGrabberMain {
 		}
 		Logging.adminLog("Update completed");
 
-		createCommonViews();
 
 	}
 

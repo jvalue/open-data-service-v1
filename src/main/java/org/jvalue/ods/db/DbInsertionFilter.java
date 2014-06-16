@@ -21,17 +21,10 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.ektorp.UpdateConflictException;
-import org.ektorp.support.DesignDocument;
-import org.ektorp.support.DesignDocument.View;
-import org.ektorp.support.DesignDocumentFactory;
-import org.ektorp.support.StdDesignDocumentFactory;
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.data.OdsView;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
-import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.filter.OdsFilter;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.DataGrabberMain;
@@ -51,14 +44,6 @@ public final class DbInsertionFilter extends OdsFilter<GenericEntity, Void> {
 
 	@Override
 	protected Void filterHelper(DataSource source, GenericEntity data) {
-		insertData(source, data);
-		insertViews(source);
-		accessor.insert(source.getMetaData());
-		return null;
-	}
-
-
-	private void insertData(DataSource source, GenericEntity data) {
 		if (data instanceof ListObject) {
 
 			ListObject lv = (ListObject) data;
@@ -79,39 +64,7 @@ public final class DbInsertionFilter extends OdsFilter<GenericEntity, Void> {
 			Logging.error(DataGrabberMain.class, errmsg);
 			throw new RuntimeException(errmsg);
 		}
+		return null;
 	}
 
-
-	private void insertViews(DataSource source) {
-		for (OdsView view : source.getOdsViews()) {
-			DesignDocument dd = null;
-			boolean update = true;
-
-			try {
-				dd = accessor.getDocument(DesignDocument.class, view.getIdPath());
-			} catch (DbException e) {
-				DesignDocumentFactory fac = new StdDesignDocumentFactory();
-				dd = fac.newDesignDocumentInstance();
-				dd.setId(view.getIdPath());
-				update = false;
-			}
-
-			View v = new DesignDocument.View();
-			v.setMap(view.getFunction());
-			dd.addView(view.getViewName(), v);
-
-			try {
-				if (update) {
-					accessor.update(dd);
-				} else {
-					accessor.insert(dd);
-				}
-			} catch (UpdateConflictException ex) {
-				System.err.println("Design Document already exists."
-						+ ex.getMessage());
-				Logging.error(DataGrabberMain.class,
-						"Design Document already exists." + ex.getMessage());
-			}
-		}
-	}
 }
