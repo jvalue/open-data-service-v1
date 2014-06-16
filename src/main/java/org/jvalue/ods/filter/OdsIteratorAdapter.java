@@ -17,15 +17,17 @@
  */
 package org.jvalue.ods.filter;
 
+import org.jvalue.ods.data.DataSource;
+
 
 
 public abstract class OdsIteratorAdapter<P> extends OdsAdapter<Iterable<P>,P> {
 
 	@Override
-	public void filter(Iterable<P> iter) {
+	public void filter(DataSource source, Iterable<P> iter) {
 		for (OdsFilter<P,?> filter : filterChain) {
 			for (P item : iter) {
-				filter.filter(item);
+				filter.filter(source, item);
 			}
 		}
 	}

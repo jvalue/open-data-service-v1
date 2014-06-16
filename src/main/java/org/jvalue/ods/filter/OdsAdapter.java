@@ -17,11 +17,13 @@
  */
 package org.jvalue.ods.filter;
 
+import org.jvalue.ods.data.DataSource;
+
 
 
 public abstract class OdsAdapter<P, R> extends OdsFilter<P, R> {
 
 	@Override
-	protected final R filterHelper(P param) { return null; }
+	protected final R filterHelper(DataSource source, P param) { return null; }
 	
 }

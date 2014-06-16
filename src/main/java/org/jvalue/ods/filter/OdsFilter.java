@@ -20,6 +20,8 @@ package org.jvalue.ods.filter;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.jvalue.ods.data.DataSource;
+
 /**
  * The Interface OdsFilter.
  */
@@ -45,14 +47,14 @@ public abstract class OdsFilter<P,R> {
 	}
 
 
-	public void filter(P param) {
-		R ret = filterHelper(param);
+	public void filter(DataSource source, P param) {
+		R ret = filterHelper(source, param);
 
 		for (OdsFilter<R,?> filter : filterChain) {
-			filter.filter(ret);
+			filter.filter(source, ret);
 		}
 	}
 
 	
-	protected abstract R filterHelper(P param);
+	protected abstract R filterHelper(DataSource source, P param);
 }
