@@ -17,8 +17,7 @@
  */
 package org.jvalue.ods.main;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.io.Serializable;
 
 import org.ektorp.UpdateConflictException;
 import org.ektorp.support.DesignDocument;
@@ -26,14 +25,16 @@ import org.ektorp.support.DesignDocument.View;
 import org.ektorp.support.DesignDocumentFactory;
 import org.ektorp.support.StdDesignDocumentFactory;
 import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.data.OdsView;
-import org.jvalue.ods.data.sources.OsmSource;
-import org.jvalue.ods.data.sources.PegelOnlineSource;
-import org.jvalue.ods.data.sources.PegelPortalMvSource;
+import org.jvalue.ods.data.generic.GenericEntity;
+import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.DbInsertionFilter;
 import org.jvalue.ods.db.exception.DbException;
+import org.jvalue.ods.filter.OdsFilter;
+import org.jvalue.ods.filter.OdsIteratorAdapter;
 import org.jvalue.ods.grabber.GrabberFilter;
 import org.jvalue.ods.logger.Logging;
 
@@ -60,16 +61,20 @@ public class DataGrabberMain {
 		accessor.connect();
 		accessor.deleteDatabase();
 
+		// define filters
 		GrabberFilter grabber = new GrabberFilter();
+		OdsIteratorAdapter<ListObject, Serializable> iterAdapter 
+			= new OdsIteratorAdapter<ListObject, Serializable>();
+		SerializableToGenericEntityAdapter geAdapter = new SerializableToGenericEntityAdapter();
 		DbInsertionFilter dbInserter = new DbInsertionFilter(accessor);
-		grabber.addFilter(dbInserter);
 
-		List<DataSource> sources = new LinkedList<DataSource>();
-		sources.add(PegelOnlineSource.createInstance());
-		sources.add(OsmSource.createInstance());
-		sources.add(PegelPortalMvSource.createInstance());
+		// link filters
+		grabber.addFilter(iterAdapter);
+		iterAdapter.addFilter(geAdapter);
+		geAdapter.addFilter(dbInserter);
 
-		for (DataSource source : sources) {
+		// start filtering
+		for (DataSource source : DataSourceManager.getInstance().getAllSources()) {
 			Logging.adminLog("grabbing " + source.getId() + " ...");
 			grabber.filter(source, null);
 		}
@@ -119,5 +124,15 @@ public class DataGrabberMain {
 					"Design Document already exists." + ex.getMessage());
 		}
 
+	}
+
+
+	private static class SerializableToGenericEntityAdapter 
+			extends OdsFilter<Serializable, GenericEntity> {
+
+		@Override
+		protected final GenericEntity filterHelper(DataSource source, Serializable s) {
+			return (GenericEntity) s;
+		}
 	}
 }
