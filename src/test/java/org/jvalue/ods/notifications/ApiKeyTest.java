@@ -8,7 +8,7 @@ import org.junit.Test;
 public final class ApiKeyTest {
 
 	@Test
-	public final void testSimpleFetch() {
+	public final void testSimpleFetch() throws NotificationException {
 		ApiKey key = ApiKey.getInstance();
 		assertTrue(key.toString() != null);
 	}
