@@ -103,8 +103,8 @@ public class DataGrabberMain {
 
 		// link filters
 		grabber.addFilter(dbInserter);
-		dbInserter.addFilter(notifier);
 		dbInserter.addFilter(combineFilter);
+		combineFilter.addFilter(notifier);
 
 		// start filtering
 		for (DataSource source : DataSourceManager.getInstance().getAllSources()) {

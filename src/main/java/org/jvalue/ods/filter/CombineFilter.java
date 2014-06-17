@@ -30,6 +30,7 @@ import org.jvalue.ValueType;
 import org.jvalue.numbers.Range;
 import org.jvalue.numbers.RangeBound;
 import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.data.generic.BaseObject;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
@@ -54,6 +55,12 @@ import com.fasterxml.jackson.databind.JsonNode;
  */
 public class CombineFilter extends OdsFilter<Void, Void> {
 
+	/** The value types. */
+	private static Map<String, ValueType<?>> valueTypes;
+
+	/** The accessor. */
+	private static DbAccessor<JsonNode> accessor;
+
 	/**
 	 * Filter.
 	 * 
@@ -62,6 +69,11 @@ public class CombineFilter extends OdsFilter<Void, Void> {
 	@Override
 	protected Void filterHelper(DataSource source, Void param) {
 
+		if (!source.getId().equals("de-pegelonline")) {
+			// it's only a pegelonline combine filter at the moment, has to
+			// change
+			return null;
+		}
 		// if (!SchemaManager.validateGenericValusFitsSchema(data, schema)) {
 		// Logging.info(this.getClass(),
 		// "Could not validate schema in CombineFilter.");
@@ -85,9 +97,6 @@ public class CombineFilter extends OdsFilter<Void, Void> {
 		try {
 			accessor = DbFactory.createDbAccessor("ods");
 			accessor.connect();
-			qaAccessor = DbFactory.createDbAccessor("ods_qa");
-			qaAccessor.connect();
-			qaAccessor.deleteDatabase();
 
 			List<JsonNode> nodes = accessor.executeDocumentQuery(
 					"_design/pegelonline", "getAllStations", null);
@@ -98,8 +107,7 @@ public class CombineFilter extends OdsFilter<Void, Void> {
 					GenericEntity gv = JsonTranslator.INSTANCE
 							.convertJson(station);
 
-					traverseSchema(sourceCoordinateStructure, gv,
-							mv.getMap());
+					traverseSchema(sourceCoordinateStructure, gv, mv.getMap());
 
 					insertCombinedValue(gv, mv, destinationCoordinateStructure);
 
@@ -113,7 +121,12 @@ public class CombineFilter extends OdsFilter<Void, Void> {
 
 					try {
 
-						qaAccessor.insert(gv);
+						MapObject finalMo = (MapObject) gv;
+
+						finalMo.getMap().put("dataStatus",
+								new BaseObject(new String("improved")));
+
+						accessor.insert(gv);
 
 					} catch (Exception ex) {
 						String errmsg = "Could not insert MapValue: "
@@ -125,7 +138,7 @@ public class CombineFilter extends OdsFilter<Void, Void> {
 
 				}
 			}
-			qaAccessor.insert(combinedSchema);
+			accessor.insert(combinedSchema);
 
 		} catch (DbException e) {
 
@@ -242,15 +255,6 @@ public class CombineFilter extends OdsFilter<Void, Void> {
 		}
 
 	}
-
-	/** The value types. */
-	private static Map<String, ValueType<?>> valueTypes;
-
-	/** The accessor. */
-	private static DbAccessor<JsonNode> accessor;
-
-	/** The qa accessor. */
-	private static DbAccessor<JsonNode> qaAccessor;
 
 	/**
 	 * Gets the value types.
