@@ -25,8 +25,8 @@ import java.util.List;
 import org.jvalue.ValueType;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
+import org.jvalue.ods.filter.CombineFilter;
 import org.jvalue.ods.logger.Logging;
-import org.jvalue.ods.main.QualityAssuranceMain;
 import org.jvalue.ods.qa.valueTypes.Coordinate;
 import org.jvalue.si.QuantityUnit;
 import org.jvalue.si.SiUnit;
@@ -122,7 +122,7 @@ public class PegelOnlineQualityAssurance {
 
 							JsonNode trend = currentMeasurement.get("trend");
 
-							ValueType waterLevelTrendType = QualityAssuranceMain
+							ValueType waterLevelTrendType = CombineFilter
 									.getValueTypes().get("waterLevelTrend");
 
 							boolean trendIsValid = waterLevelTrendType
@@ -141,7 +141,7 @@ public class PegelOnlineQualityAssurance {
 								JsonNode value = currentMeasurement
 										.get("value");
 
-								ValueType qut = QualityAssuranceMain
+								ValueType qut = CombineFilter
 										.getValueTypes().get("waterLevel");
 
 								boolean valueIsValid = qut
