@@ -29,22 +29,27 @@ public class NotificationSender {
 		DATA_KEY_DEBUG = "debug";
 
 	
-	private static final NotificationSender instance = new NotificationSender();
-	public static NotificationSender getInstance() {
+	private static NotificationSender instance;
+
+	public static NotificationSender getInstance(ApiKey key) {
+		if (key == null) throw new NullPointerException("param cannot be null");
+		if (instance == null) instance = new NotificationSender(key);
 		return instance;
 	}
+
 	
 	private final Executor threadPool = Executors.newFixedThreadPool(5);
 	private final Sender sender;
-	private NotificationSender() {
-		sender = new Sender(ApiKey.getInstance().toString());
+
+	private NotificationSender(ApiKey key) {
+		sender = new Sender(key.toString());
 	}
 	
 
 
 
 	
-	public int notifySourceChanged(DataSource source) throws IOException {
+	public int notifySourceChanged(DataSource source) {
 		Set<String> clients = ClientDatastore.getInstance().getRegisteredClients().get(source);
 		if (clients == null) return 0;
 

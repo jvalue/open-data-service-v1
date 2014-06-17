@@ -21,7 +21,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.jvalue.ods.logger.Logging;
@@ -30,7 +29,7 @@ import org.jvalue.ods.logger.Logging;
 public final class ApiKey {
 
 	private static ApiKey instance = null;
-	public static ApiKey getInstance() {
+	public static ApiKey getInstance() throws NotificationException {
 		if (instance == null) instance = new ApiKey();
 		return instance;
 	}
@@ -38,7 +37,8 @@ public final class ApiKey {
 
 	private static final String resourceName = "/googleApi.key";
 	private final String key;
-	private ApiKey() {
+
+	private ApiKey() throws NotificationException {
 		URL resourceUrl = getClass().getResource(resourceName);
 
 		String key = null;
@@ -49,10 +49,8 @@ public final class ApiKey {
 			if (reader.readLine() != null) 
 				throw new IllegalStateException(resourceName + " contains more than one line");
 
-		} catch(IOException io) {
-			Logging.error(getClass(), io.getMessage());
-		} catch (URISyntaxException use) {
-			Logging.error(getClass(), use.getMessage());
+		} catch(Exception e) {
+			throw new NotificationException(e);
 		} finally {
 			try {
 				if (reader != null) reader.close();

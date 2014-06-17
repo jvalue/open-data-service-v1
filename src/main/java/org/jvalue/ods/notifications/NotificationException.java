@@ -1,4 +1,5 @@
 /*  Open Data Service
+
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -15,25 +16,23 @@
  */
 package org.jvalue.ods.notifications;
 
-import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.filter.OdsFilter;
-import org.jvalue.ods.logger.Logging;
 
 
-public final class SimpleNotificationFilter extends OdsFilter<Void, Void> {
+public final class NotificationException extends Exception {
+
+	public static final long serialVersionUID = 42L;
 
 
-	@Override
-	protected final Void filterHelper(DataSource source, Void param) {
-		try {
-			NotificationSender sender = NotificationSender.getInstance(ApiKey.getInstance());
-			sender.notifySourceChanged(source);
-		} catch (NotificationException ne) {
-			Logging.error(getClass(), ne.getMessage());
-		}
+	public NotificationException(String msg) {
+		super(msg);
+	}
 
-		return null;
+	public NotificationException(Throwable cause) {
+		super(cause);
+	}
+
+	public NotificationException(String msg, Throwable cause) {
+		super(msg, cause);
 	}
 
 }
-
