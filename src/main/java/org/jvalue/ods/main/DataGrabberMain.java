@@ -31,6 +31,7 @@ import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.DbInsertionFilter;
 import org.jvalue.ods.db.exception.DbException;
+import org.jvalue.ods.filter.CombineFilter;
 import org.jvalue.ods.grabber.GrabberFilter;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.notifications.SimpleNotificationFilter;
@@ -98,10 +99,12 @@ public class DataGrabberMain {
 		GrabberFilter grabber = new GrabberFilter();
 		DbInsertionFilter dbInserter = new DbInsertionFilter(accessor);
 		SimpleNotificationFilter notifier = new SimpleNotificationFilter();
+		CombineFilter combineFilter = new CombineFilter();
 
 		// link filters
 		grabber.addFilter(dbInserter);
 		dbInserter.addFilter(notifier);
+		dbInserter.addFilter(combineFilter);
 
 		// start filtering
 		for (DataSource source : DataSourceManager.getInstance().getAllSources()) {

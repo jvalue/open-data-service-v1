@@ -80,7 +80,7 @@ public class CombineFilter extends OdsFilter<Void, Void> {
 		MapComplexValueType destinationCoordinateStructure = createDestinationCoordinateStructure();
 		MapComplexValueType combinedSchema = createCombinedSchema();
 
-		MapObject mv = null;
+		MapObject mv = new MapObject();
 
 		try {
 			accessor = DbFactory.createDbAccessor("ods");
@@ -99,7 +99,7 @@ public class CombineFilter extends OdsFilter<Void, Void> {
 							.convertJson(station);
 
 					traverseSchema(sourceCoordinateStructure, gv,
-							((MapObject) gv).getMap());
+							mv.getMap());
 
 					insertCombinedValue(gv, mv, destinationCoordinateStructure);
 
@@ -113,7 +113,7 @@ public class CombineFilter extends OdsFilter<Void, Void> {
 
 					try {
 
-						qaAccessor.insert(mv);
+						qaAccessor.insert(gv);
 
 					} catch (Exception ex) {
 						String errmsg = "Could not insert MapValue: "
