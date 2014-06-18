@@ -89,7 +89,7 @@ public class JsonTranslator implements Translator {
 		GenericEntity gv = convertJson(rootNode);
 
 		if (dataSource.getDataSourceSchema() != null) {
-			if (!SchemaManager.validateGenericValusFitsSchema(gv,
+			if (!SchemaManager.validateGenericValusFitsObjectType(gv,
 					dataSource.getDataSourceSchema()))
 				return null;
 		}

@@ -316,7 +316,7 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 
 			for (MapObject mv : objects) {
 
-				if (!SchemaManager.validateGenericValusFitsSchema(mv, schema)) {
+				if (!SchemaManager.validateGenericValusFitsObjectType(mv, schema)) {
 					Logging.error(this.getClass(),
 							"Data does not fit DB schema.");
 					System.err.println("Data does not fit DB schema.");

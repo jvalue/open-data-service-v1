@@ -171,7 +171,7 @@ public class OsmTranslator implements Translator {
 		}
 
 		if (source.getDataSourceSchema() != null) {
-			if (!SchemaManager.validateGenericValusFitsSchema(lv,
+			if (!SchemaManager.validateGenericValusFitsObjectType(lv,
 					source.getDataSourceSchema()))
 				return null;
 		}
