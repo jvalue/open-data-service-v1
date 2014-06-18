@@ -27,7 +27,8 @@ public final class SimpleNotificationFilter extends OdsFilter<Void, Void> {
 	protected final Void filterHelper(DataSource source, Void param) {
 		try {
 			NotificationSender sender = NotificationSender.getInstance(ApiKey.getInstance());
-			sender.notifySourceChanged(source);
+			int sentCount = sender.notifySourceChanged(source);
+			if (sentCount > 0) Logging.adminLog("Sent " + sentCount + " notification(s)");
 		} catch (NotificationException ne) {
 			Logging.error(getClass(), ne.getMessage());
 		}

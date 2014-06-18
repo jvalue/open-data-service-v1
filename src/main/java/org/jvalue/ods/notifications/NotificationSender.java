@@ -50,7 +50,11 @@ public class NotificationSender {
 
 	
 	public int notifySourceChanged(DataSource source) {
-		Set<String> clients = ClientDatastore.getInstance().getRegisteredClients().get(source);
+		Set<String> clients = ClientDatastore
+			.getInstance()
+			.getRegisteredClients()
+			.get(source.getId());
+
 		if (clients == null) return 0;
 
 		Map<String,String> payload = new HashMap<String,String>();
