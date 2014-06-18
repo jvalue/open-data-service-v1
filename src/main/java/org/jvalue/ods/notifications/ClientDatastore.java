@@ -19,65 +19,86 @@ package org.jvalue.ods.notifications;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.jvalue.ods.data.OdsView;
+import org.jvalue.ods.db.DbAccessor;
+import org.jvalue.ods.db.DbFactory;
+import org.jvalue.ods.db.DbUtils;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 
 
 public final class ClientDatastore {
 
-	private static final ClientDatastore instance = new ClientDatastore();
+	private static final String DATABASE_NAME = "notifications";
+	private static ClientDatastore instance;
+
+	private static final String
+		KEY_CLIENTID = "clientId",
+		KEY_SOURCE = "source";
+
+
+
 	public static ClientDatastore getInstance() {
+		if (instance == null) instance = new ClientDatastore();
 		return instance;
 	}
 
 
-	private final Map<String,Set<String>> registeredClients = new HashMap<String,Set<String>>();
+	private final OdsView getAllClientsView = new OdsView(
+					"_design/notifications",
+					"getAllClients",
+					"function(doc) { emit(doc._id, doc) }");
 
-	private ClientDatastore() { }
+
+	private final DbAccessor<JsonNode> dbAccessor;
+	private ClientDatastore() {
+		this.dbAccessor = DbFactory.createDbAccessor(DATABASE_NAME);
+		this.dbAccessor.connect();
+
+		DbUtils.createView(dbAccessor, getAllClientsView);
+	}
 
 
 	public void registerClient(String clientId, String source) {
 		if (clientId == null || source == null) 
 			throw new NullPointerException("params cannot be null");
 
-		Set<String> clients = registeredClients.get(source);
-		if (clients == null) {
-			clients = new HashSet<String>();
-			registeredClients.put(source, clients);
-		}
-		clients.add(clientId);
+		Map<String, String> client = new HashMap<String, String>();
+		client.put(KEY_CLIENTID, clientId);
+		client.put(KEY_SOURCE, source);
+
+		if (!isClientRegistered(clientId, source)) dbAccessor.insert(client);
 	}
 
 
-	public boolean unregisterClient(String clientId, String source) { 
+	public void unregisterClient(String clientId, String source) { 
 		if (clientId == null || source == null) 
 			throw new NullPointerException("params cannot be null");
 
-		Set<String> clients = registeredClients.get(source);
-		boolean ret = clients.remove(clientId);
-		if (clients.size() == 0) registeredClients.remove(source);
-		return ret;
+		List<JsonNode> clients = getAllClientsAsJson();
+		for (JsonNode client : clients) {
+			if (areEquals(client, clientId, source)) dbAccessor.delete(client);
+		}
+
 	}
 
 
-	public boolean unregisterClient(String clientId) {
+	public void unregisterClient(String clientId) {
 		if (clientId == null) throw new NullPointerException("param cannot be null");
 
-		boolean modified = false;
-
-		Iterator<Map.Entry<String, Set<String>>> iter = registeredClients.entrySet().iterator();
-		while (iter.hasNext()) {
-			Set<String> clients = iter.next().getValue();
-			if (clients.contains(clientId)) {
-				modified = true;
-				clients.remove(clientId);
-				if (clients.size() == 0) iter.remove();
-			}
+		List<JsonNode> clients = getAllClientsAsJson();
+		for (JsonNode client : clients) {
+			if (client.get(KEY_CLIENTID).asText().equals(clientId))
+				dbAccessor.delete(client);
 		}
 
-		return modified;
+
 	}
 
 
@@ -85,27 +106,55 @@ public final class ClientDatastore {
 		if (clientId == null || source == null) 
 			throw new NullPointerException("params cannot be null");
 
-		if (registeredClients.get(source) == null) return false;
-		else return registeredClients.get(source).contains(clientId);
+		for (JsonNode client : getAllClientsAsJson())
+			if (areEquals(client, clientId, source)) return true;
+
+		return false;
 	}
 
 	
 	public void updateClientId(String oldId, String newId) {
-		for (Set<String> clients : registeredClients.values()) {
-			if (clients.contains(oldId)) {
-				clients.remove(oldId);
-				clients.add(newId);
+		if (oldId == null || newId == null)
+			throw new NullPointerException("param cannot be null");
+
+		for (JsonNode client : getAllClientsAsJson()) {
+			if (client.get(KEY_CLIENTID).asText().equals(oldId)) {
+				ObjectNode c = (ObjectNode) client;
+				c.put(KEY_CLIENTID, newId);
+				dbAccessor.update(c);
 			}
 		}
 	}
 
 
 	public Map<String,Set<String>> getRegisteredClients() {
+		List<JsonNode> clients = getAllClientsAsJson();
+
 		Map<String, Set<String>> ret = new HashMap<String, Set<String>>();
-		for (Map.Entry<String, Set<String>> e : registeredClients.entrySet()) {
-			ret.put(e.getKey(), new HashSet<String>(e.getValue()));
+
+		for (JsonNode node : clients) {
+			String source = node.get(KEY_SOURCE).asText();
+			String clientId = node.get(KEY_CLIENTID).asText();
+			if (!ret.containsKey(source)) ret.put(source, new HashSet<String>());
+			ret.get(source).add(clientId);
 		}
+
 		return ret;
 	}
+
+
+	private List<JsonNode> getAllClientsAsJson() {
+		return dbAccessor.executeDocumentQuery(
+				getAllClientsView.getIdPath(),
+				getAllClientsView.getViewName(),
+				null);
+	}
+
+
+	private boolean areEquals(JsonNode client, String clientId, String source) {
+		return client.get(KEY_SOURCE).asText().equals(source) 
+				&& client.get(KEY_CLIENTID).asText().equals(clientId);
+	}
+
 
 }
