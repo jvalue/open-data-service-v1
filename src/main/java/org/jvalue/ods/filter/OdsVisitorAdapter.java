@@ -21,11 +21,11 @@ import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.DataSourceVisitor;
 
 
-public final class OdsVisitorFilter<P,R> extends OdsFilter<P,R> {
+public final class OdsVisitorAdapter<P,R> extends OdsFilter<P,R> {
 	
 	private final DataSourceVisitor<P,R> visitor;
 
-	public OdsVisitorFilter(DataSourceVisitor<P,R> visitor) {
+	public OdsVisitorAdapter(DataSourceVisitor<P,R> visitor) {
 		if (visitor == null) throw new NullPointerException("param cannot be null");
 		this.visitor = visitor;
 	}

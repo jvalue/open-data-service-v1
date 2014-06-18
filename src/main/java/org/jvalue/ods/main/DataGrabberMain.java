@@ -33,7 +33,7 @@ import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.DbInsertionFilter;
 import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.filter.CombineSourceVisitor;
-import org.jvalue.ods.filter.OdsVisitorFilter;
+import org.jvalue.ods.filter.OdsVisitorAdapter;
 import org.jvalue.ods.grabber.GrabberVisitor;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.notifications.SimpleNotificationFilter;
@@ -98,10 +98,10 @@ public class DataGrabberMain {
 		accessor.connect();
 
 		// define filters
-		OdsVisitorFilter<Void, GenericEntity> grabber = new OdsVisitorFilter<>(new GrabberVisitor());
+		OdsVisitorAdapter<Void, GenericEntity> grabber = new OdsVisitorAdapter<>(new GrabberVisitor());
 		DbInsertionFilter dbInserter = new DbInsertionFilter(accessor);
 		SimpleNotificationFilter notifier = new SimpleNotificationFilter();
-		OdsVisitorFilter<Void, Void> combiner = new OdsVisitorFilter<>(new CombineSourceVisitor());
+		OdsVisitorAdapter<Void, Void> combiner = new OdsVisitorAdapter<>(new CombineSourceVisitor());
 
 		// link filters
 		grabber.addFilter(dbInserter);
