@@ -9,6 +9,7 @@ public final class ApiKeyTest {
 
 	@Test
 	public final void testSimpleFetch() throws NotificationException {
+		ApiKey.setKeyResourceName("/googleApi.key.template");
 		ApiKey key = ApiKey.getInstance();
 		assertTrue(key.toString() != null);
 	}

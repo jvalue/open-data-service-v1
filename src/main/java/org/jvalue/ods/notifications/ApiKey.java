@@ -35,7 +35,7 @@ public final class ApiKey {
 	}
 
 
-	private static final String resourceName = "/googleApi.key";
+	private static String resourceName = "/googleApi.key";
 	private final String key;
 
 	private ApiKey() throws NotificationException {
@@ -46,8 +46,9 @@ public final class ApiKey {
 		try {
 			reader = new BufferedReader(new FileReader(new File(resourceUrl.toURI())));
 			key = reader.readLine();
-			if (reader.readLine() != null) 
-				throw new IllegalStateException(resourceName + " contains more than one line");
+			if (reader.readLine() != null) Logging.info(
+					getClass(), 
+					"ApiKey contains more than one line!");
 
 		} catch(Exception e) {
 			throw new NotificationException(e);
@@ -65,6 +66,15 @@ public final class ApiKey {
 	@Override
 	public String toString() {
 		return key;
+	}
+
+
+	/**
+	 * Used for testing, as the real key  might not be present on some builds.
+	 * Has to be called before first getInstance to function.
+	 */
+	static void setKeyResourceName(String resourceName) {
+		ApiKey.resourceName = resourceName;
 	}
 
 }
