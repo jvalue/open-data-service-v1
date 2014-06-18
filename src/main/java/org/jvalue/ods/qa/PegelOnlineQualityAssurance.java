@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.jvalue.EnumType;
 import org.jvalue.ValueType;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
@@ -122,7 +123,7 @@ public class PegelOnlineQualityAssurance {
 
 							JsonNode trend = currentMeasurement.get("trend");
 
-							ValueType waterLevelTrendType = valueTypes.get("waterLevelTrend");
+							EnumType waterLevelTrendType = (EnumType) valueTypes.get("waterLevelTrend");
 
 							boolean trendIsValid = waterLevelTrendType
 									.isValidInstance(trend.toString());
@@ -140,11 +141,11 @@ public class PegelOnlineQualityAssurance {
 								JsonNode value = currentMeasurement
 										.get("value");
 
-								ValueType qut = valueTypes.get("waterLevel");
+								EnumType qut = (EnumType) valueTypes.get("waterLevel");
 
 								boolean valueIsValid = qut
 										.isValidInstance(new QuantityUnit(value
-												.asDouble() / 100.0, SiUnit.m));
+												.asDouble() / 100.0, SiUnit.m).toString());
 
 								if (!valueIsValid) {
 									String errmsg = "Negative water level: "
