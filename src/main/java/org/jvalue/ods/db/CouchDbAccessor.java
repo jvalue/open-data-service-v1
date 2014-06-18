@@ -212,6 +212,19 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 
 	}
 
+
+	@Override
+	public void delete(Object data) {
+		if (data == null) throw new NullPointerException("data was null");
+		checkDbState();
+		try {
+			db.delete(data);
+		} catch (Exception ex) {
+			throw new DbException(ex);
+		}
+	}
+
+
 	/**
 	 * Delete database.
 	 */

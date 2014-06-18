@@ -23,90 +23,17 @@ import java.util.List;
 import org.jvalue.ods.data.generic.MapObject;
 import org.jvalue.ods.data.objecttypes.ObjectType;
 
-/**
- * The Interface DbAdapter. Q is the type of query result
- * 
- * @param <Q>
- *            the generic type
- */
 public interface DbAccessor<Q> {
 
-	/**
-	 * Gets the document.
-	 * 
-	 * @param <T>
-	 *            the generic type
-	 * @param c
-	 *            the c
-	 * @param id
-	 *            the id
-	 * @return the document
-	 */
 	public <T> T getDocument(Class<T> c, String id);
-
-	/**
-	 * Insert.
-	 * 
-	 * @param data
-	 *            the data
-	 */
 	public void insert(Object data);
-
-	/**
-	 * Update.
-	 * 
-	 * @param data
-	 *            the data
-	 * @return the string
-	 */
 	public void update(Object data);
-
-	/**
-	 * Delete database.
-	 */
+	public void delete(Object data);
 	public void deleteDatabase();
-
-	/**
-	 * Connect.
-	 */
 	public void connect();
-
-	/**
-	 * Checks if is connected.
-	 * 
-	 * @return true, if is connected
-	 */
 	boolean isConnected();
-
-	/**
-	 * Gets the all documents.
-	 * 
-	 * @return the all documents
-	 */
 	public List<Q> getAllDocuments();
-
-	/**
-	 * Execute document query.
-	 * 
-	 * @param designDocId
-	 *            the design doc id
-	 * @param viewName
-	 *            the view name
-	 * @param key
-	 *            the key
-	 * @return the object
-	 */
-	public List<Q> executeDocumentQuery(String designDocId, String viewName,
-			String key);
-
-	/**
-	 * Execute bulk.
-	 * 
-	 * @param objects
-	 *            the objects
-	 * @param mapObjectType
-	 *            the schema
-	 */
+	public List<Q> executeDocumentQuery(String designDocId, String viewName, String key);
 	public void executeBulk(Collection<MapObject> objects, ObjectType mapObjectType);
 
 }
