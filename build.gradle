@@ -93,3 +93,7 @@ task integrationTest(type: Test) {
 }
 
 //build.dependsOn integrationTest
+
+tasks.withType(Compile) {
+	options.compilerArgs << "-Xlint:unchecked"
+}
