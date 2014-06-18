@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.jvalue.ValueType;
 import org.jvalue.ods.db.DbAccessor;
@@ -54,7 +55,7 @@ public class PegelOnlineQualityAssurance {
 	/**
 	 * Check value types.
 	 */
-	public void checkValueTypes() {
+	public void checkValueTypes(Map<String, ValueType<?>> valueTypes) {
 
 		try {
 
@@ -122,8 +123,7 @@ public class PegelOnlineQualityAssurance {
 
 							JsonNode trend = currentMeasurement.get("trend");
 
-							ValueType waterLevelTrendType = CombineFilter
-									.getValueTypes().get("waterLevelTrend");
+							ValueType waterLevelTrendType = valueTypes.get("waterLevelTrend");
 
 							boolean trendIsValid = waterLevelTrendType
 									.isValidInstance(trend.toString());
@@ -141,8 +141,7 @@ public class PegelOnlineQualityAssurance {
 								JsonNode value = currentMeasurement
 										.get("value");
 
-								ValueType qut = CombineFilter
-										.getValueTypes().get("waterLevel");
+								ValueType qut = valueTypes.get("waterLevel");
 
 								boolean valueIsValid = qut
 										.isValidInstance(new QuantityUnit(value
