@@ -16,11 +16,6 @@
  */
 package org.jvalue.ods.main;
 
-import org.ektorp.UpdateConflictException;
-import org.ektorp.support.DesignDocument;
-import org.ektorp.support.DesignDocument.View;
-import org.ektorp.support.DesignDocumentFactory;
-import org.ektorp.support.StdDesignDocumentFactory;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.data.OdsView;
@@ -31,7 +26,7 @@ import org.jvalue.ods.data.sources.PegelPortalMvSource;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.DbInsertionFilter;
-import org.jvalue.ods.db.exception.DbException;
+import org.jvalue.ods.db.DbUtils;
 import org.jvalue.ods.filter.CombineSourceVisitor;
 import org.jvalue.ods.filter.OdsVisitorAdapter;
 import org.jvalue.ods.grabber.GrabberVisitor;
@@ -78,7 +73,7 @@ public class DataGrabberMain {
 			accessor.insert(source.getDbSchema());
 			accessor.insert(source.getMetaData());
 			for (OdsView view : source.getOdsViews()) {
-				createView(view);
+				DbUtils.createView(accessor, view);
 			}
 		}
 
@@ -118,43 +113,19 @@ public class DataGrabberMain {
 
 
 	private static void createCommonViews() {
-		createView(new OdsView("_design/ods", "getClassObjectByType",
-				"function(doc) { if(doc.objectType) emit (doc.objectType, doc) }"));
-		createView(new OdsView("_design/ods", "getAllClassObjects",
-				"function(doc) { if(doc.objectType) emit (null, doc) }"));
+		DbUtils.createView(
+				accessor, 
+				new OdsView(
+					"_design/ods", 
+					"getClassObjectByType",
+					"function(doc) { if(doc.objectType) emit (doc.objectType, doc) }"));
+		DbUtils.createView(
+				accessor, 
+				new OdsView(
+					"_design/ods", 
+					"getAllClassObjects",
+					"function(doc) { if(doc.objectType) emit (null, doc) }"));
 	}
 
-
-	private static void createView(OdsView view) {
-		DesignDocument dd = null;
-		boolean update = true;
-
-		try {
-			dd = accessor.getDocument(DesignDocument.class, view.getIdPath());
-		} catch (DbException e) {
-			DesignDocumentFactory fac = new StdDesignDocumentFactory();
-			dd = fac.newDesignDocumentInstance();
-			dd.setId(view.getIdPath());
-			update = false;
-		}
-
-		View v = new DesignDocument.View();
-		v.setMap(view.getFunction());
-		dd.addView(view.getViewName(), v);
-
-		try {
-			if (update) {
-				accessor.update(dd);
-			} else {
-				accessor.insert(dd);
-			}
-		} catch (UpdateConflictException ex) {
-			System.err.println("Design Document already exists."
-					+ ex.getMessage());
-			Logging.error(DataGrabberMain.class,
-					"Design Document already exists." + ex.getMessage());
-		}
-
-	}
 
 }
