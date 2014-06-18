@@ -18,14 +18,20 @@
 package org.jvalue.ods.filter;
 
 import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.data.DataSourceVisitor;
 
 
-public class CombineFilter extends OdsFilter<Void, Void> {
+public final class OdsVisitorFilter<P,R> extends OdsFilter<P,R> {
 	
-	private final CombineSourceVisitor visitor = new CombineSourceVisitor();
+	private final DataSourceVisitor<P,R> visitor;
 
-	@Override
-	protected Void filterHelper(DataSource source, Void param) {
+	public OdsVisitorFilter(DataSourceVisitor<P,R> visitor) {
+		if (visitor == null) throw new NullPointerException("param cannot be null");
+		this.visitor = visitor;
+	}
+
+	
+	protected R filterHelper(DataSource source, P param) {
 		return source.accept(visitor, param);
 	}
 

@@ -24,6 +24,7 @@ import org.ektorp.support.StdDesignDocumentFactory;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.data.OdsView;
+import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.sources.OsmSource;
 import org.jvalue.ods.data.sources.PegelOnlineSource;
 import org.jvalue.ods.data.sources.PegelPortalMvSource;
@@ -31,8 +32,9 @@ import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.DbInsertionFilter;
 import org.jvalue.ods.db.exception.DbException;
-import org.jvalue.ods.filter.CombineFilter;
-import org.jvalue.ods.grabber.GrabberFilter;
+import org.jvalue.ods.filter.CombineSourceVisitor;
+import org.jvalue.ods.filter.OdsVisitorFilter;
+import org.jvalue.ods.grabber.GrabberVisitor;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.notifications.SimpleNotificationFilter;
 
@@ -96,15 +98,15 @@ public class DataGrabberMain {
 		accessor.connect();
 
 		// define filters
-		GrabberFilter grabber = new GrabberFilter();
+		OdsVisitorFilter<Void, GenericEntity> grabber = new OdsVisitorFilter<>(new GrabberVisitor());
 		DbInsertionFilter dbInserter = new DbInsertionFilter(accessor);
 		SimpleNotificationFilter notifier = new SimpleNotificationFilter();
-		CombineFilter combineFilter = new CombineFilter();
+		OdsVisitorFilter<Void, Void> combiner = new OdsVisitorFilter<>(new CombineSourceVisitor());
 
 		// link filters
 		grabber.addFilter(dbInserter);
-		dbInserter.addFilter(combineFilter);
-		combineFilter.addFilter(notifier);
+		dbInserter.addFilter(combiner);
+		combiner.addFilter(notifier);
 
 		// start filtering
 		for (DataSource source : DataSourceManager.getInstance().getAllSources()) {

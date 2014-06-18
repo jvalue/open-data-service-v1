@@ -17,7 +17,9 @@
  */
 package org.jvalue.ods.grabber;
 
+import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.DataSourceVisitor;
+import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.sources.OsmSource;
 import org.jvalue.ods.data.sources.PegelOnlineSource;
 import org.jvalue.ods.data.sources.PegelPortalMvSource;
@@ -26,18 +28,28 @@ import org.jvalue.ods.translator.OsmTranslator;
 import org.jvalue.ods.translator.PegelPortalMvTranslator;
 
 
-final class GrabberVisitor implements DataSourceVisitor<Void, Translator> {
+public final class GrabberVisitor implements DataSourceVisitor<Void, GenericEntity> {
 
-	public Translator visit(PegelOnlineSource source, Void param) {
-		return JsonTranslator.INSTANCE;
+	@Override
+	public GenericEntity visit(PegelOnlineSource source, Void param) {
+		return handle(JsonTranslator.INSTANCE, source);
 	}
 
-	public Translator visit(PegelPortalMvSource source, Void param) {
-		return PegelPortalMvTranslator.INSTANCE;
+
+	@Override
+	public GenericEntity visit(PegelPortalMvSource source, Void param) {
+		return handle(PegelPortalMvTranslator.INSTANCE, source);
 	}
 
-	public Translator visit(OsmSource source, Void param) {
-		return OsmTranslator.INSTANCE;
+
+	@Override
+	public GenericEntity visit(OsmSource source, Void param) {
+		return handle(OsmTranslator.INSTANCE, source);
+	}
+
+
+	private GenericEntity handle(Translator translator, DataSource source) {
+		return translator.translate(source);
 	}
 
 }

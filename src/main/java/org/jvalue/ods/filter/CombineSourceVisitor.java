@@ -54,7 +54,7 @@ import org.jvalue.si.SiUnit;
 import com.fasterxml.jackson.databind.JsonNode;
 
 
-final class CombineSourceVisitor implements DataSourceVisitor<Void, Void> {
+public final class CombineSourceVisitor implements DataSourceVisitor<Void, Void> {
 
 	@Override
 	public Void visit(PegelOnlineSource source, Void param) {

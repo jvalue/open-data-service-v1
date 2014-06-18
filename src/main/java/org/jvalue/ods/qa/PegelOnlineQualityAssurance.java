@@ -26,7 +26,6 @@ import java.util.Map;
 import org.jvalue.ValueType;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.filter.CombineFilter;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.qa.valueTypes.Coordinate;
 import org.jvalue.si.QuantityUnit;
