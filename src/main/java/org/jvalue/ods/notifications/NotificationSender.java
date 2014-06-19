@@ -40,9 +40,11 @@ public class NotificationSender {
 	
 	private final Executor threadPool = Executors.newFixedThreadPool(5);
 	private final Sender sender;
+	private final ClientDatastore datastore;
 
 	private NotificationSender(ApiKey key) {
-		sender = new Sender(key.toString());
+		this.sender = new Sender(key.toString());
+		this.datastore = ClientDatastoreFactory.getCouchDbClientDatastore();
 	}
 	
 
@@ -50,8 +52,7 @@ public class NotificationSender {
 
 	
 	public int notifySourceChanged(DataSource source) {
-		Set<String> clients = ClientDatastore
-			.getInstance()
+		Set<String> clients = datastore
 			.getRegisteredClients()
 			.get(source.getId());
 
@@ -125,14 +126,14 @@ public class NotificationSender {
 						if (canonicalRegId != null) {
 							// same device has more than on registration id: update it
 							Logging.info(NotificationSender.class, "canonicalRegId " + canonicalRegId);
-							ClientDatastore.getInstance().updateClientId(regId, canonicalRegId);
+							datastore.updateClientId(regId, canonicalRegId);
 						}
 					} else {
 						String error = result.getErrorCodeName();
 						if (error.equals(Constants.ERROR_NOT_REGISTERED)) {
 							// application has been removed from device - unregister it
 							Logging.info(NotificationSender.class, "Unregistered device: " + regId);
-							ClientDatastore.getInstance().unregisterClient(regId);
+							datastore.unregisterClient(regId);
 						} else {
 							Logging.error(NotificationSender.class, "Error sending message to " + regId + ": " + error);
 						}

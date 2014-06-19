@@ -17,18 +17,17 @@
  */
 package org.jvalue.ods.notifications;
 
-import java.util.Map;
-import java.util.Set;
 
 
-interface ClientDatastore {
+final class ClientDatastoreFactory {
 
-	public void registerClient(String clientId, String source);
-	public void unregisterClient(String clientId, String source);
-	public void unregisterClient(String clientId);
-	public boolean isClientRegistered(String clientId, String source);
-	public void updateClientId(String oldId, String newId);
-	public Map<String,Set<String>> getRegisteredClients();
-	public void removeAllClients();
+	private static ClientDatastore couchDbClientStore;
+	static ClientDatastore getCouchDbClientDatastore() {
+		if (couchDbClientStore == null) couchDbClientStore = new CouchDbClientDatastore();
+		return couchDbClientStore;
+	}
+
+
+	private ClientDatastoreFactory() { }
 
 }

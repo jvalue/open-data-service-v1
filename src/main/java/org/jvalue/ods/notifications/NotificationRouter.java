@@ -69,7 +69,7 @@ public final class NotificationRouter implements Router<Restlet> {
 				String regId = getParameter(request, PARAM_REGID);
 				String source = getParameter(request, PARAM_SOURCE);
 
-				ClientDatastore.getInstance().registerClient(regId, source);
+				ClientDatastoreFactory.getCouchDbClientDatastore().registerClient(regId, source);
 				Logging.info(
 					NotificationRouter.class, 
 					"Registered client " + regId + " for source " + source);
@@ -89,7 +89,7 @@ public final class NotificationRouter implements Router<Restlet> {
 				String regId = getParameter(request, PARAM_REGID);
 				String source = getParameter(request, PARAM_SOURCE);
 
-				ClientDatastore.getInstance().unregisterClient(regId, source);
+				ClientDatastoreFactory.getCouchDbClientDatastore().unregisterClient(regId, source);
 				Logging.info(
 					NotificationRouter.class, 
 					"Unregistered client " + regId + " for source " + source);
@@ -102,7 +102,7 @@ public final class NotificationRouter implements Router<Restlet> {
 			public void handle(Request request, Response response) {
 				try {
 					String clients = new ObjectMapper().writeValueAsString(
-						ClientDatastore.getInstance().getRegisteredClients());
+						ClientDatastoreFactory.getCouchDbClientDatastore().getRegisteredClients());
 					response.setEntity(clients, MediaType.APPLICATION_JSON);
 				} catch (IOException io) {
 					throw new RuntimeException(io);
@@ -131,8 +131,8 @@ public final class NotificationRouter implements Router<Restlet> {
 					Boolean.TRUE.toString());
 				String collapsKey = NotificationSender.DATA_KEY_DEBUG;
 
-				Set<String> clients = ClientDatastore
-					.getInstance()
+				Set<String> clients = ClientDatastoreFactory
+					.getCouchDbClientDatastore()
 					.getRegisteredClients()
 					.get(source);
 

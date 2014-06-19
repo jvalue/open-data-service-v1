@@ -15,13 +15,13 @@ public final class ClientDatastoreTest {
 	@BeforeClass
 	@AfterClass
 	public static final void clearDatabase() {
-		ClientDatastore.getInstance().removeAllClients();
+		ClientDatastoreFactory.getCouchDbClientDatastore().removeAllClients();
 	}
 
 
 	@Test
 	public final void testRegisterUnregister() {
-		ClientDatastore store = ClientDatastore.getInstance();
+		ClientDatastore store = ClientDatastoreFactory.getCouchDbClientDatastore();
 
 		List<String> clients = new ArrayList<String>();
 		clients.add("foo");
@@ -62,7 +62,7 @@ public final class ClientDatastoreTest {
 		String client1 = "foo";
 		String client2 = "bar";
 
-		ClientDatastore store = ClientDatastore.getInstance();
+		ClientDatastore store = ClientDatastoreFactory.getCouchDbClientDatastore();
 
 		assertTrue(!store.isClientRegistered(client1, source));
 		assertTrue(!store.isClientRegistered(client2, source));
