@@ -143,6 +143,13 @@ public final class ClientDatastore {
 	}
 
 
+	public void removeAllClients() {
+		for (JsonNode client : getAllClientsAsJson()) {
+			dbAccessor.delete(client);
+		}
+	}
+
+
 	private List<JsonNode> getAllClientsAsJson() {
 		return dbAccessor.executeDocumentQuery(
 				getAllClientsView.getIdPath(),
