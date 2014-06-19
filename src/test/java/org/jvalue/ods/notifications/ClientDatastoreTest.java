@@ -5,10 +5,19 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 
 public final class ClientDatastoreTest {
+
+	@BeforeClass
+	@AfterClass
+	public static final void clearDatabase() {
+		ClientDatastore.getInstance().removeAllClients();
+	}
+
 
 	@Test
 	public final void testRegisterUnregister() {
