@@ -23,7 +23,8 @@ final class ClientDatastoreFactory {
 
 	private static ClientDatastore couchDbClientStore;
 	static ClientDatastore getCouchDbClientDatastore() {
-		if (couchDbClientStore == null) couchDbClientStore = new CouchDbClientDatastore();
+		if (couchDbClientStore == null) 
+			couchDbClientStore = new CachedClientDatastore(new CouchDbClientDatastore());
 		return couchDbClientStore;
 	}
 
