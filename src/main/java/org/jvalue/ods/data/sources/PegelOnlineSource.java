@@ -172,9 +172,9 @@ public final class PegelOnlineSource extends DataSource {
 			Map<String, GenericValueType> restName = new HashMap<String, GenericValueType>();
 			restName.put("stations", VALUETYPE_NULL);
 
-			ObjectType restNameType = new MapObjectType("rest_name", restName, null);
+			ObjectType restNameType = new MapObjectType("restName", restName, null);
 
-			stationReferencedObjects.put("rest_name", restNameType);
+			stationReferencedObjects.put("restName", restNameType);
 
 			
 			

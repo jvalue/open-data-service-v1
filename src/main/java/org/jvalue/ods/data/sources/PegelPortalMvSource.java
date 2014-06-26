@@ -90,9 +90,9 @@ public class PegelPortalMvSource extends DataSource {
 			Map<String, GenericValueType> restName = new HashMap<String, GenericValueType>();
 			restName.put("mv-stations", VALUETYPE_NULL);
 
-			ObjectType restNameType = new MapObjectType("rest_name", restName, null);
+			ObjectType restNameType = new MapObjectType("restName", restName, null);
 
-			ppReferencedObjects.put("rest_name", restNameType);
+			ppReferencedObjects.put("restName", restNameType);
 
 			MapObjectType pegelPortalType = new MapObjectType(
 					"de-pegelportal-mv-station", ppAttributes, ppReferencedObjects);

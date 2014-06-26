@@ -316,7 +316,7 @@ public final class CombineSourceVisitor implements DataSourceVisitor<Void, Void>
 		Map<String, GenericValueType> restName = new HashMap<String, GenericValueType>();
 		restName.put("stations", AllowedValueTypes.VALUETYPE_NULL);
 		MapComplexValueType restNameSchema = new MapComplexValueType(restName);
-		station.put("rest_name", restNameSchema);
+		station.put("restName", restNameSchema);
 		MapComplexValueType stationSchema = new MapComplexValueType(station);
 
 		return stationSchema;

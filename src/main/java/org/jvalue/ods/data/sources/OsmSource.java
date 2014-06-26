@@ -90,9 +90,9 @@ public class OsmSource extends DataSource {
 			Map<String, GenericValueType> restName = new HashMap<String, GenericValueType>();
 			restName.put("osm", VALUETYPE_NULL);
 
-			ObjectType restNameType = new MapObjectType("rest_name", restName, null);
+			ObjectType restNameType = new MapObjectType("restName", restName, null);
 
-			osmReferencedObjects.put("rest_name", restNameType);
+			osmReferencedObjects.put("restName", restNameType);
 
 			MapObjectType osmType = new MapObjectType("de-osm-data", osmAttributes,
 					osmReferencedObjects);
