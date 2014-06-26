@@ -35,7 +35,7 @@ public class MapObject extends GenericEntity {
 	private static final long serialVersionUID = -7476268653001753943L;
 	
 	/** The map. */
-	private Map<String, Serializable> map = new HashMap<String, Serializable>();
+	private Map<String, Serializable> attributes = new HashMap<String, Serializable>();
 
 	/**
 	 * Instantiates a new map value.
@@ -51,7 +51,7 @@ public class MapObject extends GenericEntity {
 	 */
 	@JsonValue
 	public Map<String, Serializable> getMap() {
-		return map;
+		return attributes;
 	}
 
 }

@@ -36,7 +36,7 @@ public class ListObject extends GenericEntity {
 	private static final long serialVersionUID = 3269881048191211570L;
 	
 	/** The list. */
-	private List<Serializable> list = new LinkedList<Serializable>();
+	private List<Serializable> attributes = new LinkedList<Serializable>();
 
 	/**
 	 * Instantiates a new list object.
@@ -52,7 +52,7 @@ public class ListObject extends GenericEntity {
 	 */
 	@JsonCreator
 	public ListObject(List<Serializable> list) {
-		this.list = list;
+		this.attributes = list;
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class ListObject extends GenericEntity {
 	 */
 	@JsonValue
 	public List<Serializable> getList() {
-		return list;
+		return attributes;
 	}
 
 }
