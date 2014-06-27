@@ -29,6 +29,7 @@ import org.jvalue.ods.db.DbInsertionFilter;
 import org.jvalue.ods.db.DbUtils;
 import org.jvalue.ods.filter.CombineSourceVisitor;
 import org.jvalue.ods.filter.OdsVisitorAdapter;
+import org.jvalue.ods.filter.RenameSourceVisitor;
 import org.jvalue.ods.grabber.GrabberVisitor;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.notifications.SimpleNotificationFilter;
@@ -97,11 +98,13 @@ public class DataGrabberMain {
 		DbInsertionFilter dbInserter = new DbInsertionFilter(accessor);
 		SimpleNotificationFilter notifier = new SimpleNotificationFilter();
 		OdsVisitorAdapter<Void, Void> combiner = new OdsVisitorAdapter<>(new CombineSourceVisitor());
-
+		OdsVisitorAdapter<Void, Void> renamer = new OdsVisitorAdapter<>(new RenameSourceVisitor());
+		
 		// link filters
 		grabber.addFilter(dbInserter);
 		dbInserter.addFilter(combiner);
-		combiner.addFilter(notifier);
+		combiner.addFilter(renamer);
+		renamer.addFilter(notifier);
 
 		// start filtering
 		for (DataSource source : DataSourceManager.getInstance().getAllSources()) {
