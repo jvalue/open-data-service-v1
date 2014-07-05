@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Set;
 
 
-interface ClientDatastore {
+public interface ClientDatastore {
 
 	public void registerClient(String clientId, String source);
 	public void unregisterClient(String clientId, String source);

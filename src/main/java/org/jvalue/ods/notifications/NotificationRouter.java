@@ -26,6 +26,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
+import org.jvalue.ods.notifications.db.ClientDatastoreFactory;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;

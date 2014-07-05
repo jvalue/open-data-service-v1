@@ -12,6 +12,7 @@ import java.util.concurrent.Executors;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.notifications.db.ClientDatastoreFactory;
 
 import com.google.android.gcm.server.Constants;
 import com.google.android.gcm.server.Message;

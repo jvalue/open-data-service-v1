@@ -15,14 +15,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.notifications;
+package org.jvalue.ods.notifications.db;
+
+import org.jvalue.ods.notifications.ClientDatastore;
 
 
 
-final class ClientDatastoreFactory {
+public final class ClientDatastoreFactory {
 
 	private static ClientDatastore couchDbClientStore;
-	static ClientDatastore getCouchDbClientDatastore() {
+
+	public static ClientDatastore getCouchDbClientDatastore() {
 		if (couchDbClientStore == null) 
 			couchDbClientStore = new CachedClientDatastore(new CouchDbClientDatastore());
 		return couchDbClientStore;
