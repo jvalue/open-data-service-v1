@@ -32,7 +32,7 @@ import org.jvalue.ods.filter.OdsVisitorAdapter;
 import org.jvalue.ods.filter.RenameSourceVisitor;
 import org.jvalue.ods.grabber.GrabberVisitor;
 import org.jvalue.ods.logger.Logging;
-import org.jvalue.ods.notifications.SimpleNotificationFilter;
+import org.jvalue.ods.notifications.NotificationFilter;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -96,7 +96,7 @@ public class DataGrabberMain {
 		// define filters
 		OdsVisitorAdapter<Void, GenericEntity> grabber = new OdsVisitorAdapter<>(new GrabberVisitor());
 		DbInsertionFilter dbInserter = new DbInsertionFilter(accessor);
-		SimpleNotificationFilter notifier = new SimpleNotificationFilter();
+		NotificationFilter notifier = new NotificationFilter();
 		OdsVisitorAdapter<Void, Void> combiner = new OdsVisitorAdapter<>(new CombineSourceVisitor());
 		OdsVisitorAdapter<Void, Void> renamer = new OdsVisitorAdapter<>(new RenameSourceVisitor());
 		

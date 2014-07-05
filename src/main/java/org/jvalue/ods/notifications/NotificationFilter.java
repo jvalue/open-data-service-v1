@@ -19,7 +19,7 @@ import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.filter.OdsFilter;
 
 
-public final class SimpleNotificationFilter extends OdsFilter<Void, Void> {
+public final class NotificationFilter extends OdsFilter<Void, Void> {
 
 
 	@Override
