@@ -72,7 +72,7 @@ public final class NotificationRouter implements Router<Restlet> {
 				String regId = getParameter(request, PARAM_REGID);
 				String source = getParameter(request, PARAM_SOURCE);
 
-				ClientDatastoreFactory.getCouchDbClientDatastore().registerClient(
+				ClientDatastoreFactory.getCouchDbClientDatastore().add(
 					new GcmClient(regId, source));
 				Logging.info(
 					NotificationRouter.class, 
@@ -93,7 +93,7 @@ public final class NotificationRouter implements Router<Restlet> {
 				String regId = getParameter(request, PARAM_REGID);
 				String source = getParameter(request, PARAM_SOURCE);
 
-				ClientDatastoreFactory.getCouchDbClientDatastore().unregisterClient(
+				ClientDatastoreFactory.getCouchDbClientDatastore().remove(
 					new GcmClient(regId, source));
 				Logging.info(
 					NotificationRouter.class, 
@@ -107,7 +107,7 @@ public final class NotificationRouter implements Router<Restlet> {
 			public void handle(Request request, Response response) {
 				try {
 					String clients = new ObjectMapper().writeValueAsString(
-						ClientDatastoreFactory.getCouchDbClientDatastore().getRegisteredClients());
+						ClientDatastoreFactory.getCouchDbClientDatastore().getAll());
 					response.setEntity(clients, MediaType.APPLICATION_JSON);
 				} catch (IOException io) {
 					throw new RuntimeException(io);
@@ -138,7 +138,7 @@ public final class NotificationRouter implements Router<Restlet> {
 
 				Set<Client> clients = ClientDatastoreFactory
 					.getCouchDbClientDatastore()
-					.getRegisteredClients();
+					.getAll();
 
 				Set<String> clientIds = new HashSet<String>();
 				for (Client client : clients) {

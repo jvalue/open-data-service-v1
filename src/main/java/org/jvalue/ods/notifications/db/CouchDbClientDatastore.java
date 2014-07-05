@@ -54,17 +54,17 @@ final class CouchDbClientDatastore implements ClientDatastore {
 
 
 	@Override
-	public void registerClient(Client client) {
+	public void add(Client client) {
 		Assert.assertNotNull(client);
 
-		if (!isClientRegistered(client)) {
+		if (!contains(client)) {
 			dbAccessor.insert(client.accept(clientToMapAdapter, null));
 		}
 	}
 
 
 	@Override
-	public void unregisterClient(Client client) {
+	public void remove(Client client) {
 		Assert.assertNotNull(client);
 
 		List<JsonNode> clients = getAllClientsAsJson();
@@ -77,15 +77,15 @@ final class CouchDbClientDatastore implements ClientDatastore {
 
 
 	@Override
-	public boolean isClientRegistered(Client client) {
+	public boolean contains(Client client) {
 		Assert.assertNotNull(client);
 
-		return getRegisteredClients().contains(client);
+		return getAll().contains(client);
 	}
 
 
 	@Override
-	public Set<Client> getRegisteredClients() {
+	public Set<Client> getAll() {
 		List<JsonNode> clients = getAllClientsAsJson();
 		Set<Client> ret = new HashSet<Client>();
 

@@ -18,8 +18,8 @@ public final class ClientDatastoreTest {
 	@AfterClass
 	public static final void clearDatabase() {
 		ClientDatastore store = ClientDatastoreFactory.getCouchDbClientDatastore();
-		for (Client client : store.getRegisteredClients()) {
-			store.unregisterClient(client);
+		for (Client client : store.getAll()) {
+			store.remove(client);
 		}
 	}
 
@@ -35,18 +35,18 @@ public final class ClientDatastoreTest {
 		clients.add(new GcmClient("foobar", "nopegel"));
 
 		for (Client client : clients) {
-			assertTrue(!store.isClientRegistered(client));
-			assertTrue(!store.getRegisteredClients().contains(client));
+			assertTrue(!store.contains(client));
+			assertTrue(!store.getAll().contains(client));
 
-			store.registerClient(client);
+			store.add(client);
 
-			assertTrue(store.isClientRegistered(client));
-			assertTrue(store.getRegisteredClients().contains(client));
+			assertTrue(store.contains(client));
+			assertTrue(store.getAll().contains(client));
 
-			store.unregisterClient(client);
+			store.remove(client);
 
-			assertTrue(!store.isClientRegistered(client));
-			assertTrue(!store.getRegisteredClients().contains(client));
+			assertTrue(!store.contains(client));
+			assertTrue(!store.getAll().contains(client));
 		}
 	}
 }

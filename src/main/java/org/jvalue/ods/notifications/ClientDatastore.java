@@ -22,9 +22,9 @@ import java.util.Set;
 
 public interface ClientDatastore {
 
-	public void registerClient(Client client);
-	public void unregisterClient(Client client);
-	public boolean isClientRegistered(Client client);
-	public Set<Client> getRegisteredClients();
+	public void add(Client client);
+	public void remove(Client client);
+	public boolean contains(Client client);
+	public Set<Client> getAll();
 
 }

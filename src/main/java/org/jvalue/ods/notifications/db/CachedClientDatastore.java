@@ -33,34 +33,34 @@ final class CachedClientDatastore implements ClientDatastore {
 		if (store == null) throw new NullPointerException("param cannot be null");
 		this.store = store;
 
-		clients.addAll(store.getRegisteredClients());
+		clients.addAll(store.getAll());
 	}
 
 
 	@Override
-	public void registerClient(Client client) {
-		store.registerClient(client);
+	public void add(Client client) {
+		store.add(client);
 
 		clients.add(client);
 	}
 
 
 	@Override
-	public void unregisterClient(Client client) {
-		store.unregisterClient(client);
+	public void remove(Client client) {
+		store.remove(client);
 
 		clients.remove(client);
 	}
 
 
 	@Override
-	public boolean isClientRegistered(Client client) {
+	public boolean contains(Client client) {
 		return clients.contains(client);
 	}
 
 
 	@Override
-	public Set<Client> getRegisteredClients() {
+	public Set<Client> getAll() {
 		return new HashSet<Client>(clients);
 	}
 

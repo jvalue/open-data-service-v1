@@ -55,7 +55,7 @@ public class NotificationSender {
 	
 	public int notifySourceChanged(DataSource source) {
 		Set<String> clients = new HashSet<String>();
-		for (Client client : datastore.getRegisteredClients()) {
+		for (Client client : datastore.getAll()) {
 			if (client.getSource().equals(source.getId()))
 				clients.add(client.getId());
 		}
@@ -130,10 +130,10 @@ public class NotificationSender {
 						if (canonicalRegId != null) {
 							// same device has more than on registration id: update it
 							Logging.info(NotificationSender.class, "canonicalRegId " + canonicalRegId);
-							for (Client client : datastore.getRegisteredClients()) {
+							for (Client client : datastore.getAll()) {
 								if (client.getId().equals(regId)) {
-									datastore.unregisterClient(client);
-									datastore.registerClient(new GcmClient(canonicalRegId, client.getSource()));
+									datastore.remove(client);
+									datastore.add(new GcmClient(canonicalRegId, client.getSource()));
 								}
 							}
 						}
@@ -142,9 +142,9 @@ public class NotificationSender {
 						if (error.equals(Constants.ERROR_NOT_REGISTERED)) {
 							// application has been removed from device - unregister it
 							Logging.info(NotificationSender.class, "Unregistered device: " + regId);
-							for (Client client : datastore.getRegisteredClients()) {
+							for (Client client : datastore.getAll()) {
 								if (client.getId().equals(regId))
-									datastore.unregisterClient(client);
+									datastore.remove(client);
 							}
 						} else {
 							Logging.error(NotificationSender.class, "Error sending message to " + regId + ": " + error);
