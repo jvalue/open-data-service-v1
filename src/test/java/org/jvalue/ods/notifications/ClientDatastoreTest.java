@@ -8,6 +8,8 @@ import java.util.List;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.jvalue.ods.notifications.clients.GcmClient;
+import org.jvalue.ods.notifications.db.ClientDatastoreFactory;
 
 
 public final class ClientDatastoreTest {
@@ -15,7 +17,10 @@ public final class ClientDatastoreTest {
 	@BeforeClass
 	@AfterClass
 	public static final void clearDatabase() {
-		ClientDatastoreFactory.getCouchDbClientDatastore().removeAllClients();
+		ClientDatastore store = ClientDatastoreFactory.getCouchDbClientDatastore();
+		for (Client client : store.getRegisteredClients()) {
+			store.unregisterClient(client);
+		}
 	}
 
 
@@ -23,64 +28,25 @@ public final class ClientDatastoreTest {
 	public final void testRegisterUnregister() {
 		ClientDatastore store = ClientDatastoreFactory.getCouchDbClientDatastore();
 
-		List<String> clients = new ArrayList<String>();
-		clients.add("foo");
-		clients.add("bar");
-		clients.add("bar");
-		clients.add("foobar");
-		List<String> sources = new ArrayList<String>();
-		sources.add("pegelonline");
-		sources.add("pegelonline");
-		sources.add("pegeloffline");
-		sources.add("nopegel");
+		List<Client> clients = new ArrayList<Client>();
+		clients.add(new GcmClient("foo", "pegelonline"));
+		clients.add(new GcmClient("bar", "pegelonline"));
+		clients.add(new GcmClient("bar", "pegeloffline"));
+		clients.add(new GcmClient("foobar", "nopegel"));
 
-		for (int i = 0; i < clients.size(); i++) {
-			String client = clients.get(i);
-			String source = sources.get(i);
+		for (Client client : clients) {
+			assertTrue(!store.isClientRegistered(client));
+			assertTrue(!store.getRegisteredClients().contains(client));
 
-			assertTrue(!store.isClientRegistered(client, source));
-			assertTrue(store.getRegisteredClients().get(source) == null 
-					|| !store.getRegisteredClients().get(source).contains(client));
+			store.registerClient(client);
 
-			store.registerClient(client, source);
+			assertTrue(store.isClientRegistered(client));
+			assertTrue(store.getRegisteredClients().contains(client));
 
-			assertTrue(store.isClientRegistered(client, source));
-			assertTrue(store.getRegisteredClients().get(source).contains(client));
+			store.unregisterClient(client);
 
-			store.unregisterClient(client, source);
-
-			assertTrue(!store.isClientRegistered(client, source));
-			assertTrue(store.getRegisteredClients().get(source) == null 
-					|| !store.getRegisteredClients().get(source).contains(client));
+			assertTrue(!store.isClientRegistered(client));
+			assertTrue(!store.getRegisteredClients().contains(client));
 		}
 	}
-
-
-	@Test
-	public final void testUpdateClientId() {
-		String source = "pegelonline";
-		String client1 = "foo";
-		String client2 = "bar";
-
-		ClientDatastore store = ClientDatastoreFactory.getCouchDbClientDatastore();
-
-		assertTrue(!store.isClientRegistered(client1, source));
-		assertTrue(!store.isClientRegistered(client2, source));
-
-		store.registerClient(client1, source);
-
-		assertTrue(store.isClientRegistered(client1, source));
-		assertTrue(!store.isClientRegistered(client2, source));
-
-		store.updateClientId(client1, client2);
-
-		assertTrue(!store.isClientRegistered(client1, source));
-		assertTrue(store.isClientRegistered(client2, source));
-
-		store.unregisterClient(client2, source);
-
-		assertTrue(!store.isClientRegistered(client1, source));
-		assertTrue(!store.isClientRegistered(client2, source));
-	}
-
 }

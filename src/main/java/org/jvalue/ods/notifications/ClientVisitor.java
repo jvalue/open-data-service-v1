@@ -17,14 +17,11 @@
  */
 package org.jvalue.ods.notifications;
 
-import java.util.Set;
+import org.jvalue.ods.notifications.clients.GcmClient;
 
 
-public interface ClientDatastore {
+public interface ClientVisitor<P,R> {
 
-	public void registerClient(Client client);
-	public void unregisterClient(Client client);
-	public boolean isClientRegistered(Client client);
-	public Set<Client> getRegisteredClients();
+	public R visit(GcmClient client, P param);
 
 }

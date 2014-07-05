@@ -15,16 +15,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.notifications;
-
-import java.util.Set;
+package org.jvalue.ods.notifications.db;
 
 
-public interface ClientDatastore {
+interface AdapterKeys {
 
-	public void registerClient(Client client);
-	public void unregisterClient(Client client);
-	public boolean isClientRegistered(Client client);
-	public Set<Client> getRegisteredClients();
+	static final String
+		KEY_SOURCE = "source",
+		KEY_ID = "id",
+		KEY_CLASS = "class";
 
 }

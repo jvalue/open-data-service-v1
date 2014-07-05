@@ -17,31 +17,28 @@
  */
 package org.jvalue.ods.notifications.db;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.jvalue.ods.data.OdsView;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.DbUtils;
+import org.jvalue.ods.notifications.Client;
 import org.jvalue.ods.notifications.ClientDatastore;
+import org.jvalue.ods.utils.Assert;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 
 
 final class CouchDbClientDatastore implements ClientDatastore {
 
 	private static final String DATABASE_NAME = "notifications";
-	private static final String
-		KEY_CLIENTID = "clientId",
-		KEY_SOURCE = "source";
 
 
+	private final ClientToMapAdapter clientToMapAdapter = new ClientToMapAdapter();
 	private final OdsView getAllClientsView = new OdsView(
 					"_design/notifications",
 					"getAllClients",
@@ -57,94 +54,46 @@ final class CouchDbClientDatastore implements ClientDatastore {
 
 
 	@Override
-	public void registerClient(String clientId, String source) {
-		if (clientId == null || source == null) 
-			throw new NullPointerException("params cannot be null");
+	public void registerClient(Client client) {
+		Assert.assertNotNull(client);
 
-		Map<String, String> client = new HashMap<String, String>();
-		client.put(KEY_CLIENTID, clientId);
-		client.put(KEY_SOURCE, source);
-
-		if (!isClientRegistered(clientId, source)) dbAccessor.insert(client);
+		if (!isClientRegistered(client)) {
+			dbAccessor.insert(client.accept(clientToMapAdapter, null));
+		}
 	}
 
 
 	@Override
-	public void unregisterClient(String clientId, String source) { 
-		if (clientId == null || source == null) 
-			throw new NullPointerException("params cannot be null");
+	public void unregisterClient(Client client) {
+		Assert.assertNotNull(client);
 
 		List<JsonNode> clients = getAllClientsAsJson();
-		for (JsonNode client : clients) {
-			if (areEquals(client, clientId, source)) dbAccessor.delete(client);
-		}
-
-	}
-
-
-	@Override
-	public void unregisterClient(String clientId) {
-		if (clientId == null) throw new NullPointerException("param cannot be null");
-
-		List<JsonNode> clients = getAllClientsAsJson();
-		for (JsonNode client : clients) {
-			if (client.get(KEY_CLIENTID).asText().equals(clientId))
-				dbAccessor.delete(client);
-		}
-
-
-	}
-
-
-	@Override
-	public boolean isClientRegistered(String clientId, String source) {
-		if (clientId == null || source == null) 
-			throw new NullPointerException("params cannot be null");
-
-		for (JsonNode client : getAllClientsAsJson())
-			if (areEquals(client, clientId, source)) return true;
-
-		return false;
-	}
-
-	
-	@Override
-	public void updateClientId(String oldId, String newId) {
-		if (oldId == null || newId == null)
-			throw new NullPointerException("param cannot be null");
-
-		for (JsonNode client : getAllClientsAsJson()) {
-			if (client.get(KEY_CLIENTID).asText().equals(oldId)) {
-				ObjectNode c = (ObjectNode) client;
-				c.put(KEY_CLIENTID, newId);
-				dbAccessor.update(c);
+		for (JsonNode node : clients) {
+			if (JsonNodeToClientAdapter.toClient(node).equals(client)) {
+				dbAccessor.delete(node);
 			}
 		}
 	}
 
 
 	@Override
-	public Map<String,Set<String>> getRegisteredClients() {
-		List<JsonNode> clients = getAllClientsAsJson();
+	public boolean isClientRegistered(Client client) {
+		Assert.assertNotNull(client);
 
-		Map<String, Set<String>> ret = new HashMap<String, Set<String>>();
-
-		for (JsonNode node : clients) {
-			String source = node.get(KEY_SOURCE).asText();
-			String clientId = node.get(KEY_CLIENTID).asText();
-			if (!ret.containsKey(source)) ret.put(source, new HashSet<String>());
-			ret.get(source).add(clientId);
-		}
-
-		return ret;
+		return getRegisteredClients().contains(client);
 	}
 
 
 	@Override
-	public void removeAllClients() {
-		for (JsonNode client : getAllClientsAsJson()) {
-			dbAccessor.delete(client);
+	public Set<Client> getRegisteredClients() {
+		List<JsonNode> clients = getAllClientsAsJson();
+		Set<Client> ret = new HashSet<Client>();
+
+		for (JsonNode node : clients) {
+			ret.add(JsonNodeToClientAdapter.toClient(node));
 		}
+
+		return ret;
 	}
 
 
@@ -154,12 +103,5 @@ final class CouchDbClientDatastore implements ClientDatastore {
 				getAllClientsView.getViewName(),
 				null);
 	}
-
-
-	private boolean areEquals(JsonNode client, String clientId, String source) {
-		return client.get(KEY_SOURCE).asText().equals(source) 
-				&& client.get(KEY_CLIENTID).asText().equals(clientId);
-	}
-
 
 }

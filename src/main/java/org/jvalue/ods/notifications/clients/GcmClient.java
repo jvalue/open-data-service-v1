@@ -15,16 +15,28 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.notifications;
+package org.jvalue.ods.notifications.clients;
 
-import java.util.Set;
+import org.jvalue.ods.notifications.Client;
+import org.jvalue.ods.notifications.ClientVisitor;
 
 
-public interface ClientDatastore {
+public final class GcmClient extends Client {
 
-	public void registerClient(Client client);
-	public void unregisterClient(Client client);
-	public boolean isClientRegistered(Client client);
-	public Set<Client> getRegisteredClients();
+	public GcmClient(String id, String source) {
+		super(id, source);
+	}
+
+
+	@Override
+	public boolean equals(Object other) {
+		if (!super.equals(other)) return false;
+		return other instanceof GcmClient;
+	}
+
+
+	public <P,R> R accept(ClientVisitor<P,R> visitor, P param) {
+		return visitor.visit(this, param);
+	}
 
 }

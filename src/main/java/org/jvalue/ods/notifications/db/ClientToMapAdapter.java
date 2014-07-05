@@ -15,16 +15,33 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.notifications;
+package org.jvalue.ods.notifications.db;
 
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.jvalue.ods.notifications.Client;
+import org.jvalue.ods.notifications.ClientVisitor;
+import org.jvalue.ods.notifications.clients.GcmClient;
+import org.jvalue.ods.utils.Assert;
 
 
-public interface ClientDatastore {
+final class ClientToMapAdapter implements ClientVisitor<Void, Map<String,?>>, AdapterKeys {
 
-	public void registerClient(Client client);
-	public void unregisterClient(Client client);
-	public boolean isClientRegistered(Client client);
-	public Set<Client> getRegisteredClients();
+
+	@Override
+	public Map<String, ?> visit(GcmClient client, Void param) {
+		return visitBasic(client);
+	}
+
+
+	private Map<String, ?> visitBasic(Client client) {
+		Assert.assertNotNull(client);
+		Map<String, Object> ret = new HashMap<String, Object>();
+		ret.put(KEY_SOURCE, client.getSource());
+		ret.put(KEY_ID, client.getId());
+		ret.put(KEY_CLASS, client.getClass().getName());
+		return ret;
+	}
 
 }

@@ -12,6 +12,7 @@ import java.util.concurrent.Executors;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.notifications.clients.GcmClient;
 import org.jvalue.ods.notifications.db.ClientDatastoreFactory;
 
 import com.google.android.gcm.server.Constants;
@@ -53,11 +54,13 @@ public class NotificationSender {
 
 	
 	public int notifySourceChanged(DataSource source) {
-		Set<String> clients = datastore
-			.getRegisteredClients()
-			.get(source.getId());
+		Set<String> clients = new HashSet<String>();
+		for (Client client : datastore.getRegisteredClients()) {
+			if (client.getSource().equals(source.getId()))
+				clients.add(client.getId());
+		}
 
-		if (clients == null) return 0;
+		if (clients.size() == 0) return 0;
 
 		Map<String,String> payload = new HashMap<String,String>();
 		payload.put(DATA_KEY_SOURCE, source.getId());
@@ -127,14 +130,22 @@ public class NotificationSender {
 						if (canonicalRegId != null) {
 							// same device has more than on registration id: update it
 							Logging.info(NotificationSender.class, "canonicalRegId " + canonicalRegId);
-							datastore.updateClientId(regId, canonicalRegId);
+							for (Client client : datastore.getRegisteredClients()) {
+								if (client.getId().equals(regId)) {
+									datastore.unregisterClient(client);
+									datastore.registerClient(new GcmClient(canonicalRegId, client.getSource()));
+								}
+							}
 						}
 					} else {
 						String error = result.getErrorCodeName();
 						if (error.equals(Constants.ERROR_NOT_REGISTERED)) {
 							// application has been removed from device - unregister it
 							Logging.info(NotificationSender.class, "Unregistered device: " + regId);
-							datastore.unregisterClient(regId);
+							for (Client client : datastore.getRegisteredClients()) {
+								if (client.getId().equals(regId))
+									datastore.unregisterClient(client);
+							}
 						} else {
 							Logging.error(NotificationSender.class, "Error sending message to " + regId + ": " + error);
 						}

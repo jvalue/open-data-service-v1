@@ -19,6 +19,7 @@ package org.jvalue.ods.notifications;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,6 +27,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
+import org.jvalue.ods.notifications.clients.GcmClient;
 import org.jvalue.ods.notifications.db.ClientDatastoreFactory;
 import org.restlet.Request;
 import org.restlet.Response;
@@ -70,7 +72,8 @@ public final class NotificationRouter implements Router<Restlet> {
 				String regId = getParameter(request, PARAM_REGID);
 				String source = getParameter(request, PARAM_SOURCE);
 
-				ClientDatastoreFactory.getCouchDbClientDatastore().registerClient(regId, source);
+				ClientDatastoreFactory.getCouchDbClientDatastore().registerClient(
+					new GcmClient(regId, source));
 				Logging.info(
 					NotificationRouter.class, 
 					"Registered client " + regId + " for source " + source);
@@ -90,7 +93,8 @@ public final class NotificationRouter implements Router<Restlet> {
 				String regId = getParameter(request, PARAM_REGID);
 				String source = getParameter(request, PARAM_SOURCE);
 
-				ClientDatastoreFactory.getCouchDbClientDatastore().unregisterClient(regId, source);
+				ClientDatastoreFactory.getCouchDbClientDatastore().unregisterClient(
+					new GcmClient(regId, source));
 				Logging.info(
 					NotificationRouter.class, 
 					"Unregistered client " + regId + " for source " + source);
@@ -132,22 +136,26 @@ public final class NotificationRouter implements Router<Restlet> {
 					Boolean.TRUE.toString());
 				String collapsKey = NotificationSender.DATA_KEY_DEBUG;
 
-				Set<String> clients = ClientDatastoreFactory
+				Set<Client> clients = ClientDatastoreFactory
 					.getCouchDbClientDatastore()
-					.getRegisteredClients()
-					.get(source);
+					.getRegisteredClients();
+
+				Set<String> clientIds = new HashSet<String>();
+				for (Client client : clients) {
+					if (!client.getSource().equals(source)) continue;
+					clientIds.add(client.getId());
+				}
 
 				try {
-					if (clients !=  null)
-						NotificationSender
-							.getInstance(ApiKey.getInstance())
-							.sendNotification(clients, payload, collapsKey);
+					NotificationSender
+						.getInstance(ApiKey.getInstance())
+						.sendNotification(clientIds, payload, collapsKey);
 				} catch (NotificationException ne) {
 					throw new RuntimeException(ne);
 				}
 
 				response.setEntity(
-						"Sending msg to " + clients.size() + " clients", 
+						"Sending msg to " + clientIds.size() + " clients", 
 						MediaType.TEXT_PLAIN);
 			}
 		});
