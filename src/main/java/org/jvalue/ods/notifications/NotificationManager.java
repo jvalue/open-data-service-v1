@@ -17,12 +17,15 @@
  */
 package org.jvalue.ods.notifications;
 
+import java.util.Set;
+
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.notifications.db.ClientDatastoreFactory;
 import org.jvalue.ods.notifications.sender.SenderVisitor;
+import org.jvalue.ods.utils.Assert;
 
 
-final class NotificationManager {
+public final class NotificationManager {
 
 	private static NotificationManager instance;
 
@@ -52,6 +55,23 @@ final class NotificationManager {
 		for (Client client : clientStore.getAll()) {
 			client.accept(sender, source);
 		}
+	}
+
+
+	public void registerClient(Client client) {
+		Assert.assertNotNull(client);
+		clientStore.add(client);
+	}
+
+
+	public void unregisterClient(Client client) {
+		Assert.assertNotNull(client);
+		clientStore.remove(client);
+	}
+
+
+	public Set<Client> getAllClients() {
+		return clientStore.getAll();
 	}
 
 }

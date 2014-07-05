@@ -12,10 +12,9 @@ import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.notifications.ApiKey;
 import org.jvalue.ods.notifications.Client;
-import org.jvalue.ods.notifications.ClientDatastore;
+import org.jvalue.ods.notifications.NotificationManager;
 import org.jvalue.ods.notifications.NotificationSender;
 import org.jvalue.ods.notifications.clients.GcmClient;
-import org.jvalue.ods.notifications.db.ClientDatastoreFactory;
 import org.jvalue.ods.utils.Assert;
 
 import com.google.android.gcm.server.Constants;
@@ -34,12 +33,12 @@ final class GcmSender implements NotificationSender<GcmClient> {
 	
 	private final Executor threadPool = Executors.newFixedThreadPool(5);
 	private final Sender sender;
-	private final ClientDatastore datastore;
+	private final NotificationManager notificationManager;
 
 	GcmSender(ApiKey key) {
 		Assert.assertNotNull(key);
 		this.sender = new Sender(key.toString());
-		this.datastore = ClientDatastoreFactory.getCouchDbClientDatastore();
+		this.notificationManager = NotificationManager.getInstance();
 	}
 	
 	
@@ -92,10 +91,10 @@ final class GcmSender implements NotificationSender<GcmClient> {
 						if (canonicalRegId != null) {
 							// same device has more than on registration id: update it
 							Logging.info(NotificationSender.class, "canonicalRegId " + canonicalRegId);
-							for (Client client : datastore.getAll()) {
+							for (Client client : notificationManager.getAllClients()) {
 								if (client.getId().equals(regId)) {
-									datastore.remove(client);
-									datastore.add(new GcmClient(canonicalRegId, client.getSource()));
+									notificationManager.unregisterClient(client);
+									notificationManager.registerClient(new GcmClient(canonicalRegId, client.getSource()));
 								}
 							}
 						}
@@ -104,9 +103,9 @@ final class GcmSender implements NotificationSender<GcmClient> {
 						if (error.equals(Constants.ERROR_NOT_REGISTERED)) {
 							// application has been removed from device - unregister it
 							Logging.info(NotificationSender.class, "Unregistered device: " + regId);
-							for (Client client : datastore.getAll()) {
+							for (Client client : notificationManager.getAllClients()) {
 								if (client.getId().equals(regId))
-									datastore.remove(client);
+									notificationManager.unregisterClient(client);
 							}
 						} else {
 							Logging.error(NotificationSender.class, "Error sending message to " + regId + ": " + error);

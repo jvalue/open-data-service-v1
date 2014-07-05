@@ -26,7 +26,6 @@ import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
 import org.jvalue.ods.notifications.clients.GcmClient;
-import org.jvalue.ods.notifications.db.ClientDatastoreFactory;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
@@ -70,7 +69,7 @@ public final class NotificationRouter implements Router<Restlet> {
 				String regId = getParameter(request, PARAM_REGID);
 				String source = getParameter(request, PARAM_SOURCE);
 
-				ClientDatastoreFactory.getCouchDbClientDatastore().add(
+				NotificationManager.getInstance().registerClient(
 					new GcmClient(regId, source));
 				Logging.info(
 					NotificationRouter.class, 
@@ -91,7 +90,7 @@ public final class NotificationRouter implements Router<Restlet> {
 				String regId = getParameter(request, PARAM_REGID);
 				String source = getParameter(request, PARAM_SOURCE);
 
-				ClientDatastoreFactory.getCouchDbClientDatastore().remove(
+				NotificationManager.getInstance().unregisterClient(
 					new GcmClient(regId, source));
 				Logging.info(
 					NotificationRouter.class, 
@@ -105,7 +104,7 @@ public final class NotificationRouter implements Router<Restlet> {
 			public void handle(Request request, Response response) {
 				try {
 					String clients = new ObjectMapper().writeValueAsString(
-						ClientDatastoreFactory.getCouchDbClientDatastore().getAll());
+						NotificationManager.getInstance().getAllClients());
 					response.setEntity(clients, MediaType.APPLICATION_JSON);
 				} catch (IOException io) {
 					throw new RuntimeException(io);
