@@ -18,6 +18,9 @@ package org.jvalue.ods.notifications;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.filter.OdsFilter;
 import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.notifications.clients.GcmClient;
+import org.jvalue.ods.notifications.db.ClientDatastoreFactory;
+import org.jvalue.ods.notifications.sender.SenderFactory;
 
 
 public final class SimpleNotificationFilter extends OdsFilter<Void, Void> {
@@ -26,9 +29,15 @@ public final class SimpleNotificationFilter extends OdsFilter<Void, Void> {
 	@Override
 	protected final Void filterHelper(DataSource source, Void param) {
 		try {
-			NotificationSender sender = NotificationSender.getInstance(ApiKey.getInstance());
-			int sentCount = sender.notifySourceChanged(source);
-			if (sentCount > 0) Logging.adminLog("Sent " + sentCount + " notification(s)");
+			NotificationSender<GcmClient> sender = SenderFactory.getGcmSender(ApiKey.getInstance());
+
+			int msgCount = 0;
+			for (Client client : ClientDatastoreFactory.getCouchDbClientDatastore().getAll()) {
+				if (!(client instanceof GcmClient)) continue;
+				sender.notifySourceChanged(source, (GcmClient) client);
+				msgCount++;
+			}
+			if (msgCount > 0) Logging.adminLog("Sent " + msgCount + " notification(s)");
 		} catch (NotificationException ne) {
 			Logging.error(getClass(), ne.getMessage());
 		}

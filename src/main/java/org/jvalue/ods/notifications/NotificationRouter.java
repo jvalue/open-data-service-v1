@@ -19,9 +19,7 @@ package org.jvalue.ods.notifications;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.jvalue.ods.data.DataSourceManager;
@@ -45,7 +43,7 @@ public final class NotificationRouter implements Router<Restlet> {
 		ROUTE_REGISTER = "/notifications/register",
 		ROUTE_UNREGISTER = "/notifications/unregister",
 		ROUTE_DEBUG_CLIENTS = "/notifications/debug/clients",
-		ROUTE_DEBUG_TEST_MESSAGE = "/notifications/debug/testMessage",
+//		ROUTE_DEBUG_TEST_MESSAGE = "/notifications/debug/testMessage",
 		ROUTE_DEBUG_SOURCES = "/notifications/debug/sources";
 
 	private static final String
@@ -116,6 +114,7 @@ public final class NotificationRouter implements Router<Restlet> {
 		});
 
 
+		/*
 		routes.put(ROUTE_DEBUG_TEST_MESSAGE, new Restlet() {
 			@Override
 			public void handle(Request request, Response response) {
@@ -159,6 +158,7 @@ public final class NotificationRouter implements Router<Restlet> {
 						MediaType.TEXT_PLAIN);
 			}
 		});
+		*/
 
 
 		routes.put(ROUTE_DEBUG_SOURCES, new Restlet() {
