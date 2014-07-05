@@ -1,4 +1,6 @@
 /*  Open Data Service
+    Copyright (C) 2013  Tsysin Konstantin, Reischl Patrick
+
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -13,20 +15,28 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.notifications;
+package org.jvalue.ods.notifications.sender;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.filter.OdsFilter;
+import org.jvalue.ods.notifications.ApiKey;
+import org.jvalue.ods.notifications.ClientVisitor;
+import org.jvalue.ods.notifications.NotificationException;
+import org.jvalue.ods.notifications.clients.GcmClient;
+import org.jvalue.ods.utils.Assert;
 
 
-public final class SimpleNotificationFilter extends OdsFilter<Void, Void> {
+public final class SenderVisitor implements ClientVisitor<DataSource, Void> {
 
+	private final ApiKey key;
 
-	@Override
-	protected final Void filterHelper(DataSource source, Void param) {
-		NotificationManager.getInstance().notifySourceChanged(source);
+	public SenderVisitor(ApiKey key) throws NotificationException {
+		Assert.assertNotNull(key);
+		this.key = key;
+	}
+
+	public Void visit(GcmClient client, DataSource source) {
+		SenderFactory.getGcmSender(key).notifySourceChanged(source, client);
 		return null;
 	}
 
 }
-
