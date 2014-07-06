@@ -61,6 +61,10 @@ public final class NotificationManager {
 		for (Client client : clientStore.getAll()) {
 			if (!client.getSource().equals(source.getId())) continue;
 			NotificationSender sender = definitions.get(client.getClass()).getNotificationSender();
+			if (sender == null) {
+				Logging.error(NotificationManager.class, "Failed to get NotificationSender for client " + client.getId());
+				continue;
+			}
 			try {
 				sender.notifySourceChanged(source, client);
 			} catch (NotificationException ne) {
