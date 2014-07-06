@@ -23,19 +23,29 @@ import java.util.Map;
 import org.jvalue.ods.notifications.Client;
 import org.jvalue.ods.notifications.ClientVisitor;
 import org.jvalue.ods.notifications.clients.GcmClient;
+import org.jvalue.ods.notifications.clients.RestClient;
 import org.jvalue.ods.utils.Assert;
 
 
-final class ClientToMapAdapter implements ClientVisitor<Void, Map<String,?>>, AdapterKeys {
+final class ClientToMapAdapter implements ClientVisitor<Void, Map<String,Object>>, AdapterKeys {
 
 
 	@Override
-	public Map<String, ?> visit(GcmClient client, Void param) {
+	public Map<String, Object> visit(GcmClient client, Void param) {
 		return visitBasic(client);
 	}
 
 
-	private Map<String, ?> visitBasic(Client client) {
+	@Override
+	public Map<String, Object> visit(RestClient client, Void param) {
+		Map<String, Object> values = visitBasic(client);
+		values.put(KEY_REST_URL, client.getRestUrl());
+		values.put(KEY_REST_PARAM, client.getSourceParam());
+		return values;
+	}
+
+
+	private Map<String, Object> visitBasic(Client client) {
 		Assert.assertNotNull(client);
 		Map<String, Object> ret = new HashMap<String, Object>();
 		ret.put(KEY_SOURCE, client.getSource());

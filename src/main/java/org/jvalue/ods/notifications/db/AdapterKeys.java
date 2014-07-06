@@ -23,6 +23,9 @@ interface AdapterKeys {
 	static final String
 		KEY_SOURCE = "source",
 		KEY_ID = "id",
-		KEY_CLASS = "class";
+		KEY_CLASS = "class",
+
+		KEY_REST_URL = "restUrl",
+		KEY_REST_PARAM = "restParam";
 
 }

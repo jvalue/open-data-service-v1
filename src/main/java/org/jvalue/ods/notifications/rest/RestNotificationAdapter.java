@@ -15,15 +15,33 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.notifications;
+package org.jvalue.ods.notifications.rest;
 
-import org.jvalue.ods.notifications.clients.GcmClient;
+import java.util.Set;
+
+import org.jvalue.ods.notifications.RestAdapter;
 import org.jvalue.ods.notifications.clients.RestClient;
+import org.restlet.Request;
 
 
-public interface ClientVisitor<P,R> {
+final class RestNotificationAdapter extends RestAdapter<RestClient> {
 
-	public R visit(GcmClient client, P param);
-	public R visit(RestClient client, P param);
+	private static final String
+		PARAM_URL = "restUrl",
+		PARAM_PARAM = "restParam";
+
+	@Override
+	protected RestClient toClient(Request request, String regId, String source) {
+		String url = getParameter(request, PARAM_URL);
+		String param = getParameter(request, PARAM_PARAM);
+		return new RestClient(regId, source, url, param);
+	}
+
+
+	@Override
+	protected void getParameters(Set<String> params) {
+		params.add(PARAM_URL);
+		params.add(PARAM_PARAM);
+	}
 
 }

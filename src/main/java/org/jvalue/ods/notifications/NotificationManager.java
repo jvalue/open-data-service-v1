@@ -25,6 +25,7 @@ import java.util.Set;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.notifications.clients.GcmClient;
+import org.jvalue.ods.notifications.clients.RestClient;
 import org.jvalue.ods.notifications.db.ClientDatastoreFactory;
 import org.jvalue.ods.notifications.definitions.DefinitionFactory;
 import org.jvalue.ods.utils.Assert;
@@ -48,6 +49,7 @@ public final class NotificationManager {
 
 		Map<Class<?>, NotificationDefinition<?>> definitions = new HashMap<Class<?>, NotificationDefinition<?>>();
 		definitions.put(GcmClient.class, DefinitionFactory.getGcmDefinition());
+		definitions.put(RestClient.class, DefinitionFactory.getRestDefinition());
 		this.definitions = Collections.unmodifiableMap(definitions);
 	}
 	
