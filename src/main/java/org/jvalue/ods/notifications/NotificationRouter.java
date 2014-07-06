@@ -20,12 +20,11 @@ package org.jvalue.ods.notifications;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.jvalue.ods.data.DataSourceManager;
-import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
-import org.jvalue.ods.notifications.clients.GcmClient;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
@@ -35,71 +34,31 @@ import org.restlet.data.Parameter;
 import org.restlet.data.Status;
 
 
-
 public final class NotificationRouter implements Router<Restlet> {
 
 	private static final String
-		ROUTE_REGISTER = "/notifications/register",
-		ROUTE_UNREGISTER = "/notifications/unregister",
-		ROUTE_DEBUG_CLIENTS = "/notifications/debug/clients",
+		ROUTE_BASE = "/notifications",
+		ROUTE_REGISTER = "/register",
+		ROUTE_UNREGISTER = "/unregister",
+		ROUTE_DEBUG_CLIENTS = "/debug/clients",
+		ROUTE_DEBUG_SOURCES = "/debug/sources";
 //		ROUTE_DEBUG_TEST_MESSAGE = "/notifications/debug/testMessage",
-		ROUTE_DEBUG_SOURCES = "/notifications/debug/sources";
-
-	private static final String
-		PARAM_REGID = "regId",
-		PARAM_SOURCE = "source";
 
 	private static final String MSG_BAD_REQUEST = "Usage: POST /<url>?";
+
 
 
 	@Override
 	public Map<String, Restlet> getRoutes() {
 		Map<String, Restlet> routes = new HashMap<String, Restlet>();
 
+		for (NotificationDefinition<?> definition : 
+				NotificationManager.getInstance().getNotificationDefinitions()) {
 
-		routes.put(ROUTE_REGISTER, new Restlet() {
-			@Override
-			public void handle(Request request, Response response) {
-				if (!validateRequest(
-						request, 
-						response, 
-						new String[] { PARAM_REGID, PARAM_SOURCE })) 
-					return;
+			addRoutes(routes, definition.getRestName(), definition.getRestAdapter());
+		}
 
-				String regId = getParameter(request, PARAM_REGID);
-				String source = getParameter(request, PARAM_SOURCE);
-
-				NotificationManager.getInstance().registerClient(
-					new GcmClient(regId, source));
-				Logging.info(
-					NotificationRouter.class, 
-					"Registered client " + regId + " for source " + source);
-			}
-		});
-
-
-		routes.put(ROUTE_UNREGISTER, new Restlet() {
-			@Override
-			public void handle(Request request, Response response) {
-				if (!validateRequest(
-						request, 
-						response, 
-						new String[] { PARAM_REGID, PARAM_SOURCE })) 
-					return;
-
-				String regId = getParameter(request, PARAM_REGID);
-				String source = getParameter(request, PARAM_SOURCE);
-
-				NotificationManager.getInstance().unregisterClient(
-					new GcmClient(regId, source));
-				Logging.info(
-					NotificationRouter.class, 
-					"Unregistered client " + regId + " for source " + source);
-			}
-		});
-
-
-		routes.put(ROUTE_DEBUG_CLIENTS, new Restlet() {
+		routes.put(ROUTE_BASE + ROUTE_DEBUG_CLIENTS, new Restlet() {
 			@Override
 			public void handle(Request request, Response response) {
 				try {
@@ -111,7 +70,6 @@ public final class NotificationRouter implements Router<Restlet> {
 				}
 			}
 		});
-
 
 		/*
 		routes.put(ROUTE_DEBUG_TEST_MESSAGE, new Restlet() {
@@ -159,8 +117,7 @@ public final class NotificationRouter implements Router<Restlet> {
 		});
 		*/
 
-
-		routes.put(ROUTE_DEBUG_SOURCES, new Restlet() {
+		routes.put(ROUTE_BASE + ROUTE_DEBUG_SOURCES, new Restlet() {
 			@Override
 			public void handle(Request request, Response response) {
 				try {
@@ -173,8 +130,38 @@ public final class NotificationRouter implements Router<Restlet> {
 			}
 		});
 
-
 		return routes;
+	}
+
+
+	private static void addRoutes(
+			final Map<String, Restlet> routes, 
+			final String name, 
+			final RestAdapter<?> adapter) {
+
+		String routeRegister = ROUTE_BASE + name + ROUTE_REGISTER;
+		String routeUnregister = ROUTE_BASE + name + ROUTE_UNREGISTER;
+
+		routes.put(routeRegister, new Restlet() {
+			@Override
+			public void handle(Request request, Response response) {
+				if (!validateRequest(request, response, adapter.getParameters()))
+					return;
+
+				NotificationManager.getInstance().registerClient(adapter.toClient(request));
+			}
+		});
+
+
+		routes.put(routeUnregister, new Restlet() {
+			@Override
+			public void handle(Request request, Response response) {
+				if (!validateRequest(request, response, adapter.getParameters()))
+					return;
+
+				NotificationManager.getInstance().unregisterClient(adapter.toClient(request));
+			}
+		});
 	}
 
 
@@ -188,7 +175,7 @@ public final class NotificationRouter implements Router<Restlet> {
 	private static boolean validateRequest(
 			Request request, 
 			Response response,
-			String[] requiredParams) {
+			Set<String> requiredParams) {
 
 		boolean valid = true;
 

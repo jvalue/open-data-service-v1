@@ -14,7 +14,7 @@ final class GcmDefinition implements NotificationDefinition<GcmClient> {
 	
 	@Override
 	public String getRestName() {
-		return "gcm";
+		return "/gcm";
 	}
 
 

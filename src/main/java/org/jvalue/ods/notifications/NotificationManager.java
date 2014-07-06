@@ -17,6 +17,8 @@
  */
 package org.jvalue.ods.notifications;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -43,9 +45,10 @@ public final class NotificationManager {
 
 	private NotificationManager() {
 		this.clientStore = ClientDatastoreFactory.getCouchDbClientDatastore();
-		this.definitions = new HashMap<Class<?>, NotificationDefinition<?>>();
 
+		Map<Class<?>, NotificationDefinition<?>> definitions = new HashMap<Class<?>, NotificationDefinition<?>>();
 		definitions.put(GcmClient.class, DefinitionFactory.getGcmDefinition());
+		this.definitions = Collections.unmodifiableMap(definitions);
 	}
 	
 
@@ -56,6 +59,11 @@ public final class NotificationManager {
 			NotificationSender sender = definitions.get(client.getClass()).getNotificationSender();
 			sender.notifySourceChanged(source, client);
 		}
+	}
+
+
+	public Collection<NotificationDefinition<?>> getNotificationDefinitions() {
+		return definitions.values();
 	}
 
 
