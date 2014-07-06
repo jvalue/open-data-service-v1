@@ -22,27 +22,24 @@ import java.util.List;
 
 import org.jvalue.ods.data.DataSource;
 
-/**
- * The Interface OdsFilter.
- */
-public abstract class OdsFilter<P,R> {
+public abstract class Filter<P,R> {
 
-	protected final List<OdsFilter<R,?>> filterChain = new LinkedList<OdsFilter<R,?>>();
+	protected final List<Filter<R,?>> filterChain = new LinkedList<Filter<R,?>>();
 
 
-	public final void addFilter(OdsFilter<R,?> filter) {
+	public final void addFilter(Filter<R,?> filter) {
 		if (filter == null) throw new NullPointerException("filter cannot be null");
 		filterChain.add(filter);
 	}
 
 
-	public final boolean removeFilter(OdsFilter<R,?> filter) {
+	public final boolean removeFilter(Filter<R,?> filter) {
 		if (filter == null) throw new NullPointerException("filter cannot be null");
 		return filterChain.remove(filter);
 	}
 
 
-	public final boolean containsFilter(OdsFilter<R,?> filter) {
+	public final boolean containsFilter(Filter<R,?> filter) {
 		return filterChain.contains(filter);
 	}
 
@@ -50,7 +47,7 @@ public abstract class OdsFilter<P,R> {
 	public final void filter(DataSource source, P param) {
 		R ret = filterHelper(source, param);
 
-		for (OdsFilter<R,?> filter : filterChain) {
+		for (Filter<R,?> filter : filterChain) {
 			filter.filter(source, ret);
 		}
 	}

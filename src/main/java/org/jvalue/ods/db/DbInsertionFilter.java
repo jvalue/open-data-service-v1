@@ -25,14 +25,14 @@ import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
-import org.jvalue.ods.filter.OdsFilter;
+import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.DataGrabberMain;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
 
-public final class DbInsertionFilter extends OdsFilter<GenericEntity, Void> {
+public final class DbInsertionFilter extends Filter<GenericEntity, Void> {
 
 	private final DbAccessor<JsonNode> accessor;
 

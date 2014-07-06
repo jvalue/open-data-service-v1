@@ -16,10 +16,10 @@
 package org.jvalue.ods.notifications;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.filter.OdsFilter;
+import org.jvalue.ods.filter.Filter;
 
 
-public final class NotificationFilter extends OdsFilter<Void, Void> {
+public final class NotificationFilter extends Filter<Void, Void> {
 
 
 	@Override
