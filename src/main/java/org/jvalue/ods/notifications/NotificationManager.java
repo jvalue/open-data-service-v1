@@ -17,10 +17,14 @@
  */
 package org.jvalue.ods.notifications;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.notifications.clients.GcmClient;
 import org.jvalue.ods.notifications.db.ClientDatastoreFactory;
+import org.jvalue.ods.notifications.definitions.DefinitionFactory;
 import org.jvalue.ods.utils.Assert;
 
 
@@ -35,18 +39,21 @@ public final class NotificationManager {
 
 
 	private final ClientDatastore clientStore;
-	private final DefinitionVisitor definitionVisitor;
+	private final Map<Class<?>, NotificationDefinition<?>> definitions;
 
 	private NotificationManager() {
 		this.clientStore = ClientDatastoreFactory.getCouchDbClientDatastore();
-		this.definitionVisitor = new DefinitionVisitor();
+		this.definitions = new HashMap<Class<?>, NotificationDefinition<?>>();
+
+		definitions.put(GcmClient.class, DefinitionFactory.getGcmDefinition());
 	}
 	
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	public void notifySourceChanged(DataSource source) {
+		Assert.assertNotNull(source);
 		for (Client client : clientStore.getAll()) {
-			NotificationSender sender = client.accept(definitionVisitor, null).getNotificationSender();
+			NotificationSender sender = definitions.get(client.getClass()).getNotificationSender();
 			sender.notifySourceChanged(source, client);
 		}
 	}
