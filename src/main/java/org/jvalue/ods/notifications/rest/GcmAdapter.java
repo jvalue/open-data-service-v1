@@ -19,16 +19,15 @@ package org.jvalue.ods.notifications.rest;
 
 import java.util.Set;
 
-import org.jvalue.ods.notifications.Client;
 import org.jvalue.ods.notifications.RestAdapter;
 import org.jvalue.ods.notifications.clients.GcmClient;
 import org.restlet.Request;
 
 
-final class GcmAdapter extends RestAdapter {
+final class GcmAdapter extends RestAdapter<GcmClient> {
 
 	@Override
-	protected Client toClient(Request request, String regId, String source) {
+	protected GcmClient toClient(Request request, String regId, String source) {
 		return new GcmClient(regId, source);
 	}
 

@@ -25,7 +25,7 @@ import org.restlet.Request;
 import org.restlet.data.Parameter;
 
 
-public abstract class RestAdapter {
+public abstract class RestAdapter<C extends Client> {
 
 	private static final String
 		PARAM_REGID = "regId",
@@ -34,7 +34,7 @@ public abstract class RestAdapter {
 	private Set<String> parameters;
 
 
-	public final Client toClient(Request request) {
+	public final C toClient(Request request) {
 		String regId = getParameter(request, PARAM_REGID);
 		String source = getParameter(request, PARAM_SOURCE);
 		return toClient(request, regId, source);
@@ -61,7 +61,7 @@ public abstract class RestAdapter {
 	}
 
 
-	protected abstract Client toClient(Request request, String regId, String source);
+	protected abstract C toClient(Request request, String regId, String source);
 	protected abstract void getParameters(Set<String> params);
 
 }
