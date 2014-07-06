@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.notifications.clients.GcmClient;
 import org.jvalue.ods.notifications.clients.RestClient;
 import org.jvalue.ods.notifications.db.ClientDatastoreFactory;
@@ -59,7 +60,12 @@ public final class NotificationManager {
 		Assert.assertNotNull(source);
 		for (Client client : clientStore.getAll()) {
 			NotificationSender sender = definitions.get(client.getClass()).getNotificationSender();
-			sender.notifySourceChanged(source, client);
+			try {
+				sender.notifySourceChanged(source, client);
+			} catch (NotificationException ne) {
+				Logging.error(NotificationManager.class, "Error sending notification to client " + client.getId()
+						+ " (" + ne.getMessage() + ")");
+			}
 		}
 	}
 
