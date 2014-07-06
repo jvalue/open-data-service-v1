@@ -2,7 +2,7 @@ package org.jvalue.ods.notifications.definitions;
 
 import org.jvalue.ods.notifications.NotificationDefinition;
 import org.jvalue.ods.notifications.clients.GcmClient;
-import org.jvalue.ods.notifications.clients.RestClient;
+import org.jvalue.ods.notifications.clients.HttpClient;
 
 
 public final class DefinitionFactory {
@@ -11,7 +11,7 @@ public final class DefinitionFactory {
 
 
 	private static GcmDefinition gcmDefinition;
-	private static RestDefinition restDefinition;
+	private static HttpDefinition restDefinition;
 
 
 	public static NotificationDefinition<GcmClient> getGcmDefinition() { 
@@ -20,8 +20,8 @@ public final class DefinitionFactory {
 	}
 
 
-	public static NotificationDefinition<RestClient> getRestDefinition() { 
-		if (restDefinition == null) restDefinition = new RestDefinition();
+	public static NotificationDefinition<HttpClient> getRestDefinition() { 
+		if (restDefinition == null) restDefinition = new HttpDefinition();
 		return restDefinition;
 	}
 

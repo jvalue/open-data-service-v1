@@ -3,16 +3,16 @@ package org.jvalue.ods.notifications.sender;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.notifications.NotificationException;
 import org.jvalue.ods.notifications.NotificationSender;
-import org.jvalue.ods.notifications.clients.RestClient;
+import org.jvalue.ods.notifications.clients.HttpClient;
 import org.jvalue.ods.utils.RestCall;
 import org.jvalue.ods.utils.RestException;
 
 
-final class RestSender implements NotificationSender<RestClient> {
+final class HttpSender implements NotificationSender<HttpClient> {
 	
 
 	@Override
-	public void notifySourceChanged(DataSource source, RestClient client) throws NotificationException {
+	public void notifySourceChanged(DataSource source, HttpClient client) throws NotificationException {
 		try {
 			new RestCall.Builder(RestCall.RequestType.POST, client.getRestUrl())
 				.parameter(client.getSourceParam(), source.getId())

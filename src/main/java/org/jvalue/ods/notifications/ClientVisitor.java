@@ -18,12 +18,12 @@
 package org.jvalue.ods.notifications;
 
 import org.jvalue.ods.notifications.clients.GcmClient;
-import org.jvalue.ods.notifications.clients.RestClient;
+import org.jvalue.ods.notifications.clients.HttpClient;
 
 
 public interface ClientVisitor<P,R> {
 
 	public R visit(GcmClient client, P param);
-	public R visit(RestClient client, P param);
+	public R visit(HttpClient client, P param);
 
 }

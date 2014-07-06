@@ -19,7 +19,7 @@ package org.jvalue.ods.notifications.db;
 
 import org.jvalue.ods.notifications.Client;
 import org.jvalue.ods.notifications.clients.GcmClient;
-import org.jvalue.ods.notifications.clients.RestClient;
+import org.jvalue.ods.notifications.clients.HttpClient;
 import org.jvalue.ods.utils.Assert;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -37,7 +37,7 @@ final class JsonNodeToClientAdapter implements AdapterKeys {
 		Assert.assertNotNull(className, source, id);
 
 		if (className.equals(GcmClient.class.getName())) return toGcmClient(id, source);
-		if (className.equals(RestClient.class.getName())) return toRestClient(json, id, source);
+		if (className.equals(HttpClient.class.getName())) return toRestClient(json, id, source);
 		throw new IllegalArgumentException("Unkown class " + className);
 	}
 
@@ -50,7 +50,7 @@ final class JsonNodeToClientAdapter implements AdapterKeys {
 	private static Client toRestClient(JsonNode json, String id, String source) {
 		String restUrl = json.get(KEY_REST_URL).asText();
 		String sourceParam = json.get(KEY_REST_PARAM).asText();
-		return new RestClient(id, source, restUrl, sourceParam);
+		return new HttpClient(id, source, restUrl, sourceParam);
 	}
 
 

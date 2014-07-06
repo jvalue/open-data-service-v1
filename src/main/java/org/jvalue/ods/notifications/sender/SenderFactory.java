@@ -3,7 +3,7 @@ package org.jvalue.ods.notifications.sender;
 import org.jvalue.ods.notifications.ApiKey;
 import org.jvalue.ods.notifications.NotificationSender;
 import org.jvalue.ods.notifications.clients.GcmClient;
-import org.jvalue.ods.notifications.clients.RestClient;
+import org.jvalue.ods.notifications.clients.HttpClient;
 import org.jvalue.ods.utils.Assert;
 
 
@@ -13,7 +13,7 @@ public final class SenderFactory {
 
 
 	private static GcmSender gcmSender;
-	private static RestSender restSender;
+	private static HttpSender restSender;
 
 
 	public static NotificationSender<GcmClient> getGcmSender(ApiKey apiKey) {
@@ -23,8 +23,8 @@ public final class SenderFactory {
 	}
 
 
-	public static NotificationSender<RestClient> getRestSender() {
-		if (restSender == null) restSender = new RestSender();
+	public static NotificationSender<HttpClient> getRestSender() {
+		if (restSender == null) restSender = new HttpSender();
 		return restSender;
 	}
 

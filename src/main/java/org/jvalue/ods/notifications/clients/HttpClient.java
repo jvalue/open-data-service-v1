@@ -22,11 +22,11 @@ import org.jvalue.ods.notifications.ClientVisitor;
 import org.jvalue.ods.utils.Assert;
 
 
-public final class RestClient extends Client {
+public final class HttpClient extends Client {
 
 	private final String restUrl, sourceParam;
 
-	public RestClient(String id, String source, String restUrl, String sourceParam) {
+	public HttpClient(String id, String source, String restUrl, String sourceParam) {
 		super(id, source);
 		Assert.assertNotNull(restUrl, sourceParam);
 		this.restUrl = restUrl;
@@ -47,9 +47,9 @@ public final class RestClient extends Client {
 	@Override
 	public boolean equals(Object other) {
 		if (!super.equals(other)) return false;
-		if (!(other instanceof RestClient)) return false;
+		if (!(other instanceof HttpClient)) return false;
 
-		RestClient client = (RestClient) other;
+		HttpClient client = (HttpClient) other;
 		return client.restUrl.equals(restUrl) && client.sourceParam.equals(sourceParam);
 	}
 

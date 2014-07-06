@@ -20,21 +20,21 @@ package org.jvalue.ods.notifications.rest;
 import java.util.Set;
 
 import org.jvalue.ods.notifications.RestAdapter;
-import org.jvalue.ods.notifications.clients.RestClient;
+import org.jvalue.ods.notifications.clients.HttpClient;
 import org.restlet.Request;
 
 
-final class RestNotificationAdapter extends RestAdapter<RestClient> {
+final class HttpAdapter extends RestAdapter<HttpClient> {
 
 	private static final String
 		PARAM_URL = "restUrl",
 		PARAM_PARAM = "restParam";
 
 	@Override
-	protected RestClient toClient(Request request, String regId, String source) {
+	protected HttpClient toClient(Request request, String regId, String source) {
 		String url = getParameter(request, PARAM_URL);
 		String param = getParameter(request, PARAM_PARAM);
-		return new RestClient(regId, source, url, param);
+		return new HttpClient(regId, source, url, param);
 	}
 
 

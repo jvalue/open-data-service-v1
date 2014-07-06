@@ -23,7 +23,7 @@ import java.util.Map;
 import org.jvalue.ods.notifications.Client;
 import org.jvalue.ods.notifications.ClientVisitor;
 import org.jvalue.ods.notifications.clients.GcmClient;
-import org.jvalue.ods.notifications.clients.RestClient;
+import org.jvalue.ods.notifications.clients.HttpClient;
 import org.jvalue.ods.utils.Assert;
 
 
@@ -37,7 +37,7 @@ final class ClientToMapAdapter implements ClientVisitor<Void, Map<String,Object>
 
 
 	@Override
-	public Map<String, Object> visit(RestClient client, Void param) {
+	public Map<String, Object> visit(HttpClient client, Void param) {
 		Map<String, Object> values = visitBasic(client);
 		values.put(KEY_REST_URL, client.getRestUrl());
 		values.put(KEY_REST_PARAM, client.getSourceParam());

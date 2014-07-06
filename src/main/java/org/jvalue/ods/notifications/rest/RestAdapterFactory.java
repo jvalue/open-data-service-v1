@@ -2,7 +2,7 @@ package org.jvalue.ods.notifications.rest;
 
 import org.jvalue.ods.notifications.RestAdapter;
 import org.jvalue.ods.notifications.clients.GcmClient;
-import org.jvalue.ods.notifications.clients.RestClient;
+import org.jvalue.ods.notifications.clients.HttpClient;
 
 
 public final class RestAdapterFactory {
@@ -11,7 +11,7 @@ public final class RestAdapterFactory {
 
 
 	private static GcmAdapter gcmAdapter;
-	private static RestNotificationAdapter restAdapter;
+	private static HttpAdapter restAdapter;
 
 
 	public static RestAdapter<GcmClient> getGcmAdapter() {
@@ -20,8 +20,8 @@ public final class RestAdapterFactory {
 	}
 
 
-	public static RestAdapter<RestClient> getRestAdapter() {
-		if (restAdapter == null) restAdapter = new RestNotificationAdapter();
+	public static RestAdapter<HttpClient> getRestAdapter() {
+		if (restAdapter == null) restAdapter = new HttpAdapter();
 		return restAdapter;
 	}
 
