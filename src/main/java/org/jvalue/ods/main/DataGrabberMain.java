@@ -27,12 +27,12 @@ import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.DbInsertionFilter;
 import org.jvalue.ods.db.DbUtils;
-import org.jvalue.ods.filter.CombineSourceVisitor;
 import org.jvalue.ods.filter.OdsVisitorAdapter;
-import org.jvalue.ods.filter.RenameSourceVisitor;
 import org.jvalue.ods.grabber.GrabberVisitor;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.notifications.NotificationFilter;
+import org.jvalue.ods.qa.improvement.CombineSourceVisitor;
+import org.jvalue.ods.qa.improvement.RenameSourceVisitor;
 
 import com.fasterxml.jackson.databind.JsonNode;
 

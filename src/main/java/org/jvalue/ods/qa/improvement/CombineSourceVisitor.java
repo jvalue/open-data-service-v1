@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.filter;
+package org.jvalue.ods.qa.improvement;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -24,6 +24,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.jvalue.EnumType;
+import org.jvalue.ExactValueRestriction;
+import org.jvalue.ValueType;
+import org.jvalue.numbers.Range;
+import org.jvalue.numbers.RangeBound;
 import org.jvalue.ods.data.DataSourceVisitor;
 import org.jvalue.ods.data.generic.BaseObject;
 import org.jvalue.ods.data.generic.GenericEntity;
@@ -41,11 +46,15 @@ import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.qa.PegelOnlineQualityAssurance;
 import org.jvalue.ods.translator.JsonTranslator;
+import org.jvalue.si.QuantityUnitType;
+import org.jvalue.si.SiUnit;
+
 import com.fasterxml.jackson.databind.JsonNode;
 
 
-public final class RenameSourceVisitor implements DataSourceVisitor<Void, Void> {
+public final class CombineSourceVisitor implements DataSourceVisitor<Void, Void> {
 
 	@Override
 	public Void visit(PegelOnlineSource source, Void param) {
@@ -56,10 +65,16 @@ public final class RenameSourceVisitor implements DataSourceVisitor<Void, Void> 
 		// }
 		// TODO
 
-		MapComplexValueType sourceStructure = createSourceWaterStructure();
-		MapComplexValueType destinationStructure = createDestinationWaterStructure();
-		String newName = "BodyOfWater";
-		MapComplexValueType combinedSchema = createRenamedSchema();
+		Map<String, ValueType<?>> valueTypes = new HashMap<>();
+		valueTypes.put("waterLevelTrend", createWaterLevelTrendType());
+		valueTypes.put("waterLevel", createWaterLevelType());
+		valueTypes.put("temperature", createTemperatureType());
+		valueTypes.put("electricalConductivity",
+				createElectricalConductivityType());
+
+		MapComplexValueType sourceCoordinateStructure = createSourceCoordinateStructure();
+		MapComplexValueType destinationCoordinateStructure = createDestinationCoordinateStructure();
+		MapComplexValueType combinedSchema = createCombinedSchema();
 
 		MapObject mv = new MapObject();
 
@@ -76,10 +91,9 @@ public final class RenameSourceVisitor implements DataSourceVisitor<Void, Void> 
 					GenericEntity gv = JsonTranslator.INSTANCE
 							.convertJson(station);
 
-					traverseSchema(sourceStructure, newName, gv, mv.getMap());
-					insertRenamedValue(gv, mv, destinationStructure);
-					
-					
+					traverseSchema(sourceCoordinateStructure, gv, mv.getMap());
+
+					insertCombinedValue(gv, mv, destinationCoordinateStructure);
 
 					// if (!SchemaManager.validateGenericValusFitsSchema(mv,
 					// combinedSchema)) {
@@ -97,7 +111,6 @@ public final class RenameSourceVisitor implements DataSourceVisitor<Void, Void> 
 							finalMo.getMap().put("dataStatus",
 								new BaseObject("improved"));
 						}
-
 						accessor.insert(gv);
 
 					} catch (Exception ex) {
@@ -120,7 +133,7 @@ public final class RenameSourceVisitor implements DataSourceVisitor<Void, Void> 
 			throw new RuntimeException(errmsg);
 
 		}
-
+		new PegelOnlineQualityAssurance().checkValueTypes(valueTypes);
 		return null;
 	}
 
@@ -137,44 +150,39 @@ public final class RenameSourceVisitor implements DataSourceVisitor<Void, Void> 
 
 
 
-	private void traverseSchema(GenericValueType sourceStructure, String newName, Serializable serializable, Map<String, Serializable> map) {
+	private void traverseSchema(GenericValueType sourceStructure,
+			Serializable serializable, Map<String, Serializable> map) {
 
 		if (sourceStructure instanceof MapComplexValueType) {
 
 			for (Entry<String, GenericValueType> e : ((MapComplexValueType) sourceStructure)
 					.getMap().entrySet()) {
 
-				if (e.getValue() instanceof SimpleValueType) {
-					map.put(newName, ((MapObject) serializable).getMap()
+				if ((e.getValue() instanceof SimpleValueType)
+						&& (((SimpleValueType) e.getValue()).getName() != "Null")) {
+
+					map.put(e.getKey(), ((MapObject) serializable).getMap()
 							.remove(e.getKey()));
 
 				} else {
-					if (e.getValue() instanceof MapComplexValueType)
-					{
-						MapComplexValueType mcvt = (MapComplexValueType) e.getValue();
-						if (mcvt.getMap() != null)
-						{
-							traverseSchema(e.getValue(), newName, ((MapObject) serializable)
-									.getMap().get(e.getKey()), map);
-						}
-						else
-						{
-							map.put(newName, ((MapObject) serializable).getMap()
-									.remove(e.getKey()));
-						}
-					}					
+					traverseSchema(e.getValue(), ((MapObject) serializable)
+							.getMap().get(e.getKey()), map);
 				}
 			}
 		} else if (sourceStructure instanceof ListComplexValueType) {
+
 			for (Serializable gv : ((ListObject) serializable).getList()) {
+
 				traverseSchema(((ListComplexValueType) sourceStructure)
-						.getList().get(0), newName, gv, map);
+						.getList().get(0), gv, map);
+
 			}
+
 		}
 	}
 
 	/**
-	 * Insert renamed value.
+	 * Insert combined value.
 	 * 
 	 * @param serializable
 	 *            the serializable
@@ -183,7 +191,7 @@ public final class RenameSourceVisitor implements DataSourceVisitor<Void, Void> 
 	 * @param destinationStructure
 	 *            the destination structure
 	 */
-	private void insertRenamedValue(Serializable serializable, MapObject mv,
+	private void insertCombinedValue(Serializable serializable, MapObject mv,
 			GenericValueType destinationStructure) {
 
 		if (destinationStructure instanceof MapComplexValueType) {
@@ -193,13 +201,12 @@ public final class RenameSourceVisitor implements DataSourceVisitor<Void, Void> 
 
 				if (e.getValue() == null) {
 
-					if (serializable instanceof MapObject) {			
-						Serializable ser = mv.getMap().get(e.getKey());
-						
+					if (serializable instanceof MapObject) {
+
 						// check for correct value here
-						((MapObject) serializable).getMap().put(e.getKey(), ser);
+						((MapObject) serializable).getMap().put(e.getKey(), mv);
 					} else {
-						String errmsg = "Invalid renamedSchema.";
+						String errmsg = "Invalid combinedSchema.";
 						Logging.error(this.getClass(), errmsg);
 						System.err.println(errmsg);
 						throw new RuntimeException(errmsg);
@@ -212,14 +219,14 @@ public final class RenameSourceVisitor implements DataSourceVisitor<Void, Void> 
 								new MapObject());
 					}
 
-					insertRenamedValue(((MapObject) serializable).getMap()
+					insertCombinedValue(((MapObject) serializable).getMap()
 							.get(e.getKey()), mv, e.getValue());
 				}
 			}
 		} else if (destinationStructure instanceof ListComplexValueType) {
 
 			if (!(serializable instanceof ListObject)) {
-				String errmsg = "Invalid renameSchema.";
+				String errmsg = "Invalid combinedSchema.";
 				Logging.error(this.getClass(), errmsg);
 				System.err.println(errmsg);
 				throw new RuntimeException(errmsg);
@@ -227,7 +234,7 @@ public final class RenameSourceVisitor implements DataSourceVisitor<Void, Void> 
 
 			for (Serializable gv : ((ListObject) serializable).getList()) {
 
-				insertRenamedValue(gv, mv,
+				insertCombinedValue(gv, mv,
 						((ListComplexValueType) destinationStructure).getList()
 								.get(0));
 			}
@@ -238,11 +245,11 @@ public final class RenameSourceVisitor implements DataSourceVisitor<Void, Void> 
 
 
 	/**
-	 * Creates the renamed schema.
+	 * Creates the combined schema.
 	 * 
 	 * @return the map schema
 	 */
-	private static MapComplexValueType createRenamedSchema() {
+	private static MapComplexValueType createCombinedSchema() {
 		Map<String, GenericValueType> water = new HashMap<String, GenericValueType>();
 		water.put("shortname", AllowedValueTypes.VALUETYPE_STRING);
 		water.put("longname", AllowedValueTypes.VALUETYPE_STRING);
@@ -300,7 +307,7 @@ public final class RenameSourceVisitor implements DataSourceVisitor<Void, Void> 
 		station.put("longname", AllowedValueTypes.VALUETYPE_STRING);
 		station.put("km", AllowedValueTypes.VALUETYPE_NUMBER);
 		station.put("agency", AllowedValueTypes.VALUETYPE_STRING);
-		station.put("BodyOfWater", waterSchema);
+		station.put("water", waterSchema);
 		station.put("timeseries", timeSeriesListSchema);
 		// two class object strings, must not be "required"
 		Map<String, GenericValueType> type = new HashMap<String, GenericValueType>();
@@ -321,11 +328,12 @@ public final class RenameSourceVisitor implements DataSourceVisitor<Void, Void> 
 	 * 
 	 * @return the map schema
 	 */
-	private static MapComplexValueType createSourceWaterStructure() {
+	private static MapComplexValueType createSourceCoordinateStructure() {
 
 		Map<String, GenericValueType> station = new HashMap<String, GenericValueType>();
 
-		station.put("water", new MapComplexValueType(null));
+		station.put("longitude", AllowedValueTypes.VALUETYPE_NUMBER);
+		station.put("latitude", AllowedValueTypes.VALUETYPE_NUMBER);
 		MapComplexValueType stationSchema = new MapComplexValueType(station);
 
 		return stationSchema;
@@ -336,14 +344,71 @@ public final class RenameSourceVisitor implements DataSourceVisitor<Void, Void> 
 	 * 
 	 * @return the map schema
 	 */
-	private static MapComplexValueType createDestinationWaterStructure() {
+	private static MapComplexValueType createDestinationCoordinateStructure() {
 
-		Map<String, GenericValueType> station = new HashMap<String, GenericValueType>();
-		station.put("BodyOfWater", null);
-		MapComplexValueType stationSchema = new MapComplexValueType(
-				station);
+		Map<String, GenericValueType> coordinate = new HashMap<String, GenericValueType>();
 
-		return stationSchema;
+		coordinate.put("coordinate", null);
+		MapComplexValueType coordinateSchema = new MapComplexValueType(
+				coordinate);
+
+		return coordinateSchema;
+	}
+
+	/**
+	 * Creates the water level trend type.
+	 * 
+	 * @return the enum type
+	 */
+	private static EnumType createWaterLevelTrendType() {
+		ExactValueRestriction<String> a = new ExactValueRestriction<String>(
+				"-1");
+		ExactValueRestriction<String> b = new ExactValueRestriction<String>("0");
+		ExactValueRestriction<String> c = new ExactValueRestriction<String>("1");
+		ExactValueRestriction<String> d = new ExactValueRestriction<String>(
+				"-999");
+
+		EnumType trendType = new EnumType(a.or(b).or(c).or(d));
+		return trendType;
+	}
+
+	/**
+	 * Creates the water level type.
+	 * 
+	 * @return the quantity unit type
+	 */
+	private static QuantityUnitType createWaterLevelType() {
+
+		RangeBound<Double> low = new RangeBound<Double>(0.0);
+		RangeBound<Double> high = new RangeBound<Double>(Double.MAX_VALUE);
+		Range<Double> range = new Range<Double>(low, high);
+		return new QuantityUnitType(range, SiUnit.m);
+	}
+
+	/**
+	 * Creates the temperature type.
+	 * 
+	 * @return the quantity unit type
+	 */
+	private static QuantityUnitType createTemperatureType() {
+
+		RangeBound<Double> low = new RangeBound<Double>(0.0);
+		RangeBound<Double> high = new RangeBound<Double>(Double.MAX_VALUE);
+		Range<Double> range = new Range<Double>(low, high);
+		return new QuantityUnitType(range, SiUnit.K);
+	}
+
+	/**
+	 * Creates the electrical conductivity type.
+	 * 
+	 * @return the quantity unit type
+	 */
+	private static QuantityUnitType createElectricalConductivityType() {
+
+		RangeBound<Double> low = new RangeBound<Double>(0.0);
+		RangeBound<Double> high = new RangeBound<Double>(Double.MAX_VALUE);
+		Range<Double> range = new Range<Double>(low, high);
+		return new QuantityUnitType(range, SiUnit.s.divide(SiUnit.m));
 	}
 
 }
