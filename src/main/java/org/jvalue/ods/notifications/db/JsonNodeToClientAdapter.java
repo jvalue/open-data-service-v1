@@ -35,8 +35,6 @@ final class JsonNodeToClientAdapter implements AdapterKeys {
 		String className = json.get(KEY_CLASS).asText();
 		Assert.assertNotNull(className, source, id);
 
-		System.out.println(GcmClient.class.getName());
-		System.out.println(className);
 		if (className.equals(GcmClient.class.getName())) return toGcmClient(id, source);
 		throw new IllegalArgumentException("Unkown class " + className);
 	}
