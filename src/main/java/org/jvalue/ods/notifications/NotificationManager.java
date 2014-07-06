@@ -59,6 +59,7 @@ public final class NotificationManager {
 	public void notifySourceChanged(DataSource source) {
 		Assert.assertNotNull(source);
 		for (Client client : clientStore.getAll()) {
+			if (!client.getSource().equals(source.getId())) continue;
 			NotificationSender sender = definitions.get(client.getClass()).getNotificationSender();
 			try {
 				sender.notifySourceChanged(source, client);
