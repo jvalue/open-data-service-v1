@@ -21,7 +21,6 @@ import java.util.Set;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.notifications.db.ClientDatastoreFactory;
-import org.jvalue.ods.notifications.sender.SenderVisitor;
 import org.jvalue.ods.utils.Assert;
 
 
@@ -35,25 +34,20 @@ public final class NotificationManager {
 	}
 
 
-	private final SenderVisitor sender;
 	private final ClientDatastore clientStore;
+	private final DefinitionVisitor definitionVisitor;
 
 	private NotificationManager() {
 		this.clientStore = ClientDatastoreFactory.getCouchDbClientDatastore();
-
-		SenderVisitor sender = null;
-		try {
-			sender = new SenderVisitor(ApiKey.getInstance());
-		} catch (NotificationException ne) {
-			ne.printStackTrace(System.err);
-		}
-		this.sender = sender;
+		this.definitionVisitor = new DefinitionVisitor();
 	}
 	
 
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	public void notifySourceChanged(DataSource source) {
 		for (Client client : clientStore.getAll()) {
-			client.accept(sender, source);
+			NotificationSender sender = client.accept(definitionVisitor, null).getNotificationSender();
+			sender.notifySourceChanged(source, client);
 		}
 	}
 

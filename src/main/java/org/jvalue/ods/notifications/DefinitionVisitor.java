@@ -15,28 +15,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.notifications.sender;
+package org.jvalue.ods.notifications;
 
-import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.notifications.ApiKey;
-import org.jvalue.ods.notifications.ClientVisitor;
-import org.jvalue.ods.notifications.NotificationException;
 import org.jvalue.ods.notifications.clients.GcmClient;
-import org.jvalue.ods.utils.Assert;
+import org.jvalue.ods.notifications.definitions.DefinitionFactory;
 
 
-public final class SenderVisitor implements ClientVisitor<DataSource, Void> {
+public final class DefinitionVisitor implements ClientVisitor<Void, NotificationDefinition<?>> {
 
-	private final ApiKey key;
-
-	public SenderVisitor(ApiKey key) throws NotificationException {
-		Assert.assertNotNull(key);
-		this.key = key;
-	}
-
-	public Void visit(GcmClient client, DataSource source) {
-		SenderFactory.getGcmSender(key).notifySourceChanged(source, client);
-		return null;
+	@Override
+	public NotificationDefinition<GcmClient> visit(GcmClient client, Void param) {
+		return DefinitionFactory.getGcmDefinition();
 	}
 
 }
