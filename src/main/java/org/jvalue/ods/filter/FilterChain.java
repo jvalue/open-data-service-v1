@@ -18,9 +18,39 @@
 package org.jvalue.ods.filter;
 
 import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.utils.Assert;
 
-public interface Filter<P,R> {
 
-	public R filter(DataSource source, P param);
+public final class FilterChain<P,R> {
+
+	public static <P,R> FilterChain<P,R> instance(Filter<P,R> filter) {
+		return new FilterChain<P,R>(filter);
+	}
+
+
+	private final Filter<P,R> filter;
+	private FilterChain<R,?> nextChain;
+
+
+	private FilterChain(Filter<P,R> filter) {
+		Assert.assertNotNull(filter);
+		this.filter = filter;
+	}
+
+
+	public <T> FilterChain<R,T> setNextFilter(Filter<R,T> filter) {
+		Assert.assertNotNull(filter);
+		FilterChain<R,T> nextChain = new FilterChain<R,T>(filter);
+		this.nextChain = nextChain;
+		return nextChain;
+	}
+
+
+	public void filter(DataSource source, P param) {
+		Assert.assertNotNull(source);
+		R ret = filter.filter(source, param);
+		if (nextChain != null) nextChain.filter(source, ret);
+	}
+
 
 }

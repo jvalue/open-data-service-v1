@@ -32,7 +32,7 @@ import org.jvalue.ods.main.DataGrabberMain;
 import com.fasterxml.jackson.databind.JsonNode;
 
 
-public final class DbInsertionFilter extends Filter<GenericEntity, Void> {
+public final class DbInsertionFilter implements Filter<GenericEntity, Void> {
 
 	private final DbAccessor<JsonNode> accessor;
 
@@ -43,7 +43,7 @@ public final class DbInsertionFilter extends Filter<GenericEntity, Void> {
 
 
 	@Override
-	protected Void filterHelper(DataSource source, GenericEntity data) {
+	public Void filter(DataSource source, GenericEntity data) {
 		if (data instanceof ListObject) {
 
 			ListObject lv = (ListObject) data;

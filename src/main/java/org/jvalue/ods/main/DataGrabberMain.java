@@ -27,6 +27,7 @@ import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.DbInsertionFilter;
 import org.jvalue.ods.db.DbUtils;
+import org.jvalue.ods.filter.FilterChain;
 import org.jvalue.ods.filter.FilterVisitorAdapter;
 import org.jvalue.ods.grabber.GrabberVisitor;
 import org.jvalue.ods.logger.Logging;
@@ -94,22 +95,16 @@ public class DataGrabberMain {
 		accessor.connect();
 
 		// define filters
-		FilterVisitorAdapter<Void, GenericEntity> grabber = new FilterVisitorAdapter<>(new GrabberVisitor());
-		DbInsertionFilter dbInserter = new DbInsertionFilter(accessor);
-		NotificationFilter notifier = new NotificationFilter();
-		FilterVisitorAdapter<Void, Void> combiner = new FilterVisitorAdapter<>(new CombineSourceVisitor());
-		FilterVisitorAdapter<Void, Void> renamer = new FilterVisitorAdapter<>(new RenameSourceVisitor());
-		
-		// link filters
-		grabber.addFilter(dbInserter);
-		dbInserter.addFilter(combiner);
-		combiner.addFilter(renamer);
-		renamer.addFilter(notifier);
+		FilterChain<Void, GenericEntity> chain = FilterChain.instance(new FilterVisitorAdapter<>(new GrabberVisitor()));
+		chain.setNextFilter(new DbInsertionFilter(accessor))
+			.setNextFilter(new FilterVisitorAdapter<>(new CombineSourceVisitor()))
+			.setNextFilter(new FilterVisitorAdapter<>(new RenameSourceVisitor()))
+			.setNextFilter(new NotificationFilter());
 
 		// start filtering
 		for (DataSource source : DataSourceManager.getInstance().getAllSources()) {
 			Logging.adminLog("grabbing " + source.getId() + " ...");
-			grabber.filter(source, null);
+			chain.filter(source, null);
 		}
 		Logging.adminLog("Update completed");
 	}

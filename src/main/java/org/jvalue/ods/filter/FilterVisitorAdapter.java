@@ -21,7 +21,7 @@ import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.DataSourceVisitor;
 
 
-public final class FilterVisitorAdapter<P,R> extends Filter<P,R> {
+public final class FilterVisitorAdapter<P,R> implements Filter<P,R> {
 	
 	private final DataSourceVisitor<P,R> visitor;
 
@@ -31,7 +31,8 @@ public final class FilterVisitorAdapter<P,R> extends Filter<P,R> {
 	}
 
 	
-	protected R filterHelper(DataSource source, P param) {
+	@Override
+	public R filter(DataSource source, P param) {
 		return source.accept(visitor, param);
 	}
 

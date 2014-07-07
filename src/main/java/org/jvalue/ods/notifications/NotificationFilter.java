@@ -19,11 +19,10 @@ import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.filter.Filter;
 
 
-public final class NotificationFilter extends Filter<Void, Void> {
-
+public final class NotificationFilter implements Filter<Void, Void> {
 
 	@Override
-	protected final Void filterHelper(DataSource source, Void param) {
+	public Void filter(DataSource source, Void param) {
 		NotificationManager.getInstance().notifySourceChanged(source);
 		return null;
 	}
