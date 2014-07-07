@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.data.sources;
+package org.jvalue.ods.utils;
 
 import java.util.LinkedList;
 
@@ -25,13 +25,13 @@ import org.jvalue.ods.data.metadata.JacksonMetaData;
 import org.jvalue.ods.data.objecttypes.MapObjectType;
 
 
-public final class DummyDataSource extends DataSource {
+public final class DummyDataSource {
 
-	public DummyDataSource(
-			String id, 
-			String url) {
+	private DummyDataSource() { }
 
-		super(
+
+	public static DataSource newInstance(String id, String url) {
+		return new DataSource(
 				id, 
 				url,
 				new MapObjectType("dummy", null, null), 

@@ -29,6 +29,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
+import org.jvalue.ods.configuration.PegelPortalMvConfiguration;
 import org.jvalue.ods.data.generic.BaseObject;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
@@ -36,7 +37,6 @@ import org.jvalue.ods.data.generic.MapObject;
 import org.jvalue.ods.data.objecttypes.ListObjectType;
 import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.objecttypes.ObjectType;
-import org.jvalue.ods.data.sources.PegelPortalMvSource;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.data.valuetypes.SimpleValueType;
 import org.jvalue.ods.logger.Logging;
@@ -47,12 +47,12 @@ final class PegelPortalMvTranslator extends HtmlTranslator {
 
 	private static final Map<String, Integer> tableMapping = new HashMap<String, Integer>();
 	static {
-		tableMapping.put(PegelPortalMvSource.KEY_STATION, 0);
-		tableMapping.put(PegelPortalMvSource.KEY_WATER, 1);
-		tableMapping.put(PegelPortalMvSource.KEY_TIMESTAMP, 2);
-		tableMapping.put(PegelPortalMvSource.KEY_LEVEL, 3);
-		tableMapping.put(PegelPortalMvSource.KEY_EFFLUENT, 4);
-		tableMapping.put(PegelPortalMvSource.KEY_AGENCY, 8);
+		tableMapping.put(PegelPortalMvConfiguration.KEY_STATION, 0);
+		tableMapping.put(PegelPortalMvConfiguration.KEY_WATER, 1);
+		tableMapping.put(PegelPortalMvConfiguration.KEY_TIMESTAMP, 2);
+		tableMapping.put(PegelPortalMvConfiguration.KEY_LEVEL, 3);
+		tableMapping.put(PegelPortalMvConfiguration.KEY_EFFLUENT, 4);
+		tableMapping.put(PegelPortalMvConfiguration.KEY_AGENCY, 8);
 	}
 
 
@@ -91,10 +91,10 @@ final class PegelPortalMvTranslator extends HtmlTranslator {
 									type.getName())));
 				}
 
-				objectMap.getMap().put(PegelPortalMvSource.KEY_LEVEL_UNIT,
+				objectMap.getMap().put(PegelPortalMvConfiguration.KEY_LEVEL_UNIT,
 						new BaseObject("cm ü PNP"));
 				objectMap.getMap().put(
-						PegelPortalMvSource.KEY_EFFLUENT_UNIT,
+						PegelPortalMvConfiguration.KEY_EFFLUENT_UNIT,
 						new BaseObject("m³/s"));
 
 				objectList.add(objectMap);

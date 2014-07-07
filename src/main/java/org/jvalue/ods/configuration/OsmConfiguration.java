@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.data.sources;
+package org.jvalue.ods.configuration;
 
 import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_NULL;
 import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_NUMBER;
@@ -28,17 +28,27 @@ import java.util.Map;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.OdsView;
+import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.metadata.JacksonMetaData;
 import org.jvalue.ods.data.metadata.OdsMetaData;
 import org.jvalue.ods.data.objecttypes.ListObjectType;
 import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
+import org.jvalue.ods.db.DbAccessor;
+import org.jvalue.ods.db.DbInsertionFilter;
+import org.jvalue.ods.filter.FilterChain;
+import org.jvalue.ods.notifications.NotificationFilter;
+import org.jvalue.ods.translator.TranslatorFactory;
 
-public class OsmSource extends DataSource {
+import com.fasterxml.jackson.databind.JsonNode;
+
+
+final class OsmConfiguration implements Configuration {
 
 	
-	public static DataSource createInstance() {
+	@Override
+	public DataSource getDataSource() {
 		String sourceId = "org-openstreetmap";
 		String url = "/nbgcity.osm";
 
@@ -144,20 +154,19 @@ public class OsmSource extends DataSource {
 			odsViews.add(new OdsView("_design/osm", "getClassObjectId",
 					"function(doc) { if(doc.name == 'de-osm-data') emit (null, doc._id) }"));
 
-			return new OsmSource(sourceId, url, sourceSchema, dbSchema, metaData, odsViews);
+			return new DataSource(sourceId, url, sourceSchema, dbSchema, metaData, odsViews);
 		}
 	}
 
 
-	protected OsmSource(
-			String id, 
-			String url,
-			ObjectType sourceSchema,
-			ObjectType dbSchema,
-			OdsMetaData metaData,
-			List<OdsView> odsViews) {
-
-		super(id, url, sourceSchema, dbSchema, metaData, odsViews);
+	@Override
+	public FilterChain<Void,?> getFilterChain(DbAccessor<JsonNode> accessor) {
+		FilterChain<Void, GenericEntity> chain = FilterChain
+			.instance(TranslatorFactory.getOsmTranslator());
+		chain
+			.setNextFilter(new DbInsertionFilter(accessor))
+			.setNextFilter(new NotificationFilter());
+		return chain;
 	}
 
 }

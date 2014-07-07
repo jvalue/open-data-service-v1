@@ -23,7 +23,7 @@ import org.jvalue.ods.data.metadata.OdsMetaData;
 import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.utils.Assert;
 
-public abstract class DataSource implements Cloneable {
+public class DataSource {
 
 	private final String id;
 	private final String url;
@@ -32,7 +32,7 @@ public abstract class DataSource implements Cloneable {
 	private final OdsMetaData metaData;
 	private final List<OdsView> odsViews;
 
-	protected DataSource(
+	public DataSource(
 			String id, 
 			String url, 
 			ObjectType sourceschema,

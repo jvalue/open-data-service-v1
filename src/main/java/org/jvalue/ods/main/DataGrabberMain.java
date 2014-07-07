@@ -16,23 +16,13 @@
  */
 package org.jvalue.ods.main;
 
-import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.configuration.ConfigurationManager;
 import org.jvalue.ods.data.OdsView;
-import org.jvalue.ods.data.generic.GenericEntity;
-import org.jvalue.ods.data.sources.OsmSource;
-import org.jvalue.ods.data.sources.PegelOnlineSource;
-import org.jvalue.ods.data.sources.PegelPortalMvSource;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.db.DbInsertionFilter;
 import org.jvalue.ods.db.DbUtils;
-import org.jvalue.ods.filter.FilterChain;
 import org.jvalue.ods.filter.FilterChainManager;
 import org.jvalue.ods.logger.Logging;
-import org.jvalue.ods.notifications.NotificationFilter;
-import org.jvalue.ods.qa.improvement.CombineSourceFilter;
-import org.jvalue.ods.qa.improvement.RenameSourceFilter;
-import org.jvalue.ods.translator.TranslatorFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -54,48 +44,7 @@ public class DataGrabberMain {
 		// before each update
 		// if (initialized) throw new IllegalStateException("Already initialized");
 
-		Logging.adminLog("Initializing Ods");
-
-		initialized = true;
-		accessor = DbFactory.createDbAccessor("ods");
-		accessor.connect();
-
-		// create filter chains
-		FilterChainManager filterManager = FilterChainManager.getInstance();
-
-		FilterChain<Void, GenericEntity> pegelOnlineChain = FilterChain
-			.instance(TranslatorFactory.getPegelOnlineTranslator());
-		pegelOnlineChain.setNextFilter(new DbInsertionFilter(accessor))
-			.setNextFilter(new CombineSourceFilter())
-			.setNextFilter(new RenameSourceFilter())
-			.setNextFilter(new NotificationFilter());
-		filterManager.register(PegelOnlineSource.createInstance(), pegelOnlineChain);
-
-		FilterChain<Void, GenericEntity> pegelPortalChain = FilterChain
-			.instance(TranslatorFactory.getPegelPortalMvTranslator());
-		pegelOnlineChain.setNextFilter(new DbInsertionFilter(accessor))
-			.setNextFilter(new NotificationFilter());
-		filterManager.register(PegelPortalMvSource.createInstance(), pegelPortalChain);
-
-		FilterChain<Void, GenericEntity> osmChain = FilterChain
-			.instance(TranslatorFactory.getOsmTranslator());
-		pegelOnlineChain.setNextFilter(new DbInsertionFilter(accessor))
-			.setNextFilter(new NotificationFilter());
-		filterManager.register(OsmSource.createInstance(), osmChain);
-
-
-		// db initialization
-		accessor.deleteDatabase();
-		createCommonViews();
-		for (DataSource source : filterManager.getRegistered().keySet()) {
-			accessor.insert(source.getDbSchema());
-			accessor.insert(source.getMetaData());
-			for (OdsView view : source.getOdsViews()) {
-				DbUtils.createView(accessor, view);
-			}
-		}
-
-		Logging.adminLog("Initialization completet");
+		ConfigurationManager.getInstance().configureAll();
 	}
 
 

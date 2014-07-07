@@ -23,10 +23,10 @@ import java.util.Map;
 
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.metadata.JacksonMetaData;
-import org.jvalue.ods.data.sources.DummyDataSource;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
 import org.jvalue.ods.translator.TranslatorFactory;
+import org.jvalue.ods.utils.DummyDataSource;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
@@ -58,7 +58,7 @@ public class NominatimRouter implements Router<Restlet> {
 					GenericEntity ret = null;
 
 					ret = TranslatorFactory.getJsonTranslator()
-							.translate(new DummyDataSource(
+							.translate(DummyDataSource.newInstance(
 									"org-nominatim-openstreetmap",
 									"http://nominatim.openstreetmap.org/search?q="
 											+ (String) request.getAttributes()
@@ -91,7 +91,7 @@ public class NominatimRouter implements Router<Restlet> {
 					GenericEntity ret = null;
 
 					ret = TranslatorFactory.getJsonTranslator()
-						.translate(new DummyDataSource(
+						.translate(DummyDataSource.newInstance(
 							"org-nominatim-openstreetmap",
 							"http://nominatim.openstreetmap.org/reverse?format=json"
 									+ (String) request.getAttributes().get(
