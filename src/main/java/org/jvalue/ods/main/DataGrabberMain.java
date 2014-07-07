@@ -71,19 +71,25 @@ public class DataGrabberMain {
 		// create filter chains
 		FilterChainManager filterManager = FilterChainManager.getInstance();
 
-		FilterChain<Void, GenericEntity> pegelOnlineChain = FilterChain.instance(TranslatorFactory.getPegelOnlineTranslator());
+		FilterChain<Void, GenericEntity> pegelOnlineChain = FilterChain
+			.instance(TranslatorFactory.getPegelOnlineTranslator());
 		pegelOnlineChain.setNextFilter(new DbInsertionFilter(accessor))
 			.setNextFilter(new CombineSourceFilter())
 			.setNextFilter(new RenameSourceFilter())
 			.setNextFilter(new NotificationFilter());
 		filterManager.register(PegelOnlineSource.createInstance(), pegelOnlineChain);
 
-		FilterChain<Void, GenericEntity> simpleChain = FilterChain.instance(TranslatorFactory.getPegelPortalMvTranslator());
+		FilterChain<Void, GenericEntity> pegelPortalChain = FilterChain
+			.instance(TranslatorFactory.getPegelPortalMvTranslator());
 		pegelOnlineChain.setNextFilter(new DbInsertionFilter(accessor))
 			.setNextFilter(new NotificationFilter());
+		filterManager.register(PegelPortalMvSource.createInstance(), pegelPortalChain);
 
-		filterManager.register(PegelPortalMvSource.createInstance(), simpleChain);
-		filterManager.register(OsmSource.createInstance(), simpleChain);
+		FilterChain<Void, GenericEntity> osmChain = FilterChain
+			.instance(TranslatorFactory.getOsmTranslator());
+		pegelOnlineChain.setNextFilter(new DbInsertionFilter(accessor))
+			.setNextFilter(new NotificationFilter());
+		filterManager.register(OsmSource.createInstance(), osmChain);
 
 
 		// db initialization
