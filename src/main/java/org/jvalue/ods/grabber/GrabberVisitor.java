@@ -23,29 +23,27 @@ import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.sources.OsmSource;
 import org.jvalue.ods.data.sources.PegelOnlineSource;
 import org.jvalue.ods.data.sources.PegelPortalMvSource;
-import org.jvalue.ods.translator.JsonTranslator;
-import org.jvalue.ods.translator.OsmTranslator;
-import org.jvalue.ods.translator.PegelPortalMvTranslator;
 import org.jvalue.ods.translator.Translator;
+import org.jvalue.ods.translator.TranslatorFactory;
 
 
 public final class GrabberVisitor implements DataSourceVisitor<Void, GenericEntity> {
 
 	@Override
 	public GenericEntity visit(PegelOnlineSource source, Void param) {
-		return handle(JsonTranslator.INSTANCE, source);
+		return handle(TranslatorFactory.getPegelOnlineTranslator(), source);
 	}
 
 
 	@Override
 	public GenericEntity visit(PegelPortalMvSource source, Void param) {
-		return handle(PegelPortalMvTranslator.INSTANCE, source);
+		return handle(TranslatorFactory.getPegelPortalMvTranslator(), source);
 	}
 
 
 	@Override
 	public GenericEntity visit(OsmSource source, Void param) {
-		return handle(OsmTranslator.INSTANCE, source);
+		return handle(TranslatorFactory.getOsmTranslator(), source);
 	}
 
 

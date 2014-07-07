@@ -23,12 +23,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 
-public final class XmlTranslator extends Translator {
-
-	public static final XmlTranslator INSTANCE = new XmlTranslator();
-
-	private XmlTranslator() { }
-
+final class XmlTranslator extends Translator {
 
 	@Override
 	public GenericEntity translate(DataSource source) {

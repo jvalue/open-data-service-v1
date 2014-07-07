@@ -26,7 +26,7 @@ import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.metadata.JacksonMetaData;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
-import org.jvalue.ods.translator.JsonTranslator;
+import org.jvalue.ods.translator.TranslatorFactory;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
@@ -60,7 +60,7 @@ public class OverpassRouter implements Router<Restlet> {
 
 				GenericEntity ret = null;
 				try {
-					ret = JsonTranslator.INSTANCE.translate(new DummyDataSource(
+					ret = TranslatorFactory.getJsonTranslator().translate(new DummyDataSource(
 							"ru-rambler-osm-overpass",
 							"http://overpass.osm.rambler.ru/cgi/interpreter?data=[out:json];node[name%3D"
 									+ (String) request.getAttributes().get(

@@ -34,6 +34,7 @@ import org.jvalue.ods.data.generic.BaseObject;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
+import org.jvalue.ods.data.generic.Utils;
 import org.jvalue.ods.data.sources.OsmSource;
 import org.jvalue.ods.data.sources.PegelOnlineSource;
 import org.jvalue.ods.data.sources.PegelPortalMvSource;
@@ -47,7 +48,6 @@ import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.qa.PegelOnlineQualityAssurance;
-import org.jvalue.ods.translator.JsonTranslator;
 import org.jvalue.si.QuantityUnitType;
 import org.jvalue.si.SiUnit;
 
@@ -88,8 +88,7 @@ public final class CombineSourceVisitor implements DataSourceVisitor<Void, Void>
 			for (JsonNode station : nodes) {
 				if (station.isObject()) {
 
-					GenericEntity gv = JsonTranslator.INSTANCE
-							.convertJson(station);
+					GenericEntity gv = Utils.convertFromJson(station);
 
 					traverseSchema(sourceCoordinateStructure, gv, mv.getMap());
 

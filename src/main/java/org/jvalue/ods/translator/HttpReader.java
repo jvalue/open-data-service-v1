@@ -30,7 +30,7 @@ import org.jvalue.ods.logger.Logging;
 /**
  * The Class HttpReader.
  */
-public class HttpReader {
+class HttpReader {
 
 	/** The url. */
 	private String url;

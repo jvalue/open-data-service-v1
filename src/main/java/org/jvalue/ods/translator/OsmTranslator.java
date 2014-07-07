@@ -47,11 +47,7 @@ import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 import org.openstreetmap.osmosis.xml.common.CompressionMethod;
 import org.openstreetmap.osmosis.xml.v0_6.XmlReader;
 
-public final class OsmTranslator extends Translator {
-
-	public static final OsmTranslator INSTANCE = new OsmTranslator();
-
-	private OsmTranslator() { }
+final class OsmTranslator extends Translator {
 
 	private ListObject lv = new ListObject();
 

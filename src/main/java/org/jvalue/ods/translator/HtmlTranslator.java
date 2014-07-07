@@ -27,7 +27,7 @@ import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.logger.Logging;
 
 
-public abstract class HtmlTranslator extends Translator {
+abstract class HtmlTranslator extends Translator {
 
 	@Override
 	public GenericEntity translate(DataSource dataSource) {

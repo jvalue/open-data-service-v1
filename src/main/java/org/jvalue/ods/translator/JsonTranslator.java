@@ -18,14 +18,10 @@
 package org.jvalue.ods.translator;
 
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.Map;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.data.generic.BaseObject;
 import org.jvalue.ods.data.generic.GenericEntity;
-import org.jvalue.ods.data.generic.ListObject;
-import org.jvalue.ods.data.generic.MapObject;
+import org.jvalue.ods.data.generic.Utils;
 import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.data.valuetypes.ListComplexValueType;
@@ -38,11 +34,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
-public final class JsonTranslator extends Translator {
-
-	public static final JsonTranslator INSTANCE = new JsonTranslator();
-
-	private JsonTranslator() { }
+final class JsonTranslator extends Translator {
 
 	@Override
 	public GenericEntity translate(DataSource dataSource) {
@@ -76,7 +68,7 @@ public final class JsonTranslator extends Translator {
 			return null;
 		}
 
-		GenericEntity gv = convertJson(rootNode);
+		GenericEntity gv = Utils.convertFromJson(rootNode);
 
 		if (dataSource.getDataSourceSchema() != null) {
 			if (!SchemaManager.validateGenericValusFitsObjectType(gv,
@@ -303,69 +295,5 @@ public final class JsonTranslator extends Translator {
 		}
 		return false;
 	}
-	
-	
-	
-	/**
-	 * Convert json.
-	 * 
-	 * @param rootNode
-	 *            the root node
-	 * @return the generic value
-	 */
-	public GenericEntity convertJson(JsonNode rootNode) {
 
-		GenericEntity gv = null;
-
-		if (rootNode.isBoolean()) {
-			gv = new BaseObject(rootNode.asBoolean());
-		} else if (rootNode.isArray()) {
-			gv = new ListObject();
-			fillListRec(rootNode, (ListObject) gv);
-		} else if (rootNode.isObject()) {
-			gv = new MapObject();
-			fillMapRec(rootNode, (MapObject) gv);
-		} else if (rootNode.isNull()) {
-			gv = new BaseObject(null);
-		} else if (rootNode.isNumber()) {
-			gv = new BaseObject(rootNode.numberValue());
-		} else if (rootNode.isTextual()) {
-			gv = new BaseObject(rootNode.asText());
-		}
-
-		return gv;
-	}
-
-	/**
-	 * Fill list rec.
-	 * 
-	 * @param node
-	 *            the node
-	 * @param lv
-	 *            the lv
-	 */
-	private void fillListRec(JsonNode node, ListObject lv) {
-		for (JsonNode n : node) {
-			GenericEntity gv = convertJson(n);
-			lv.getList().add(gv);
-		}
-	}
-
-	/**
-	 * Fill map rec.
-	 * 
-	 * @param node
-	 *            the node
-	 * @param mv
-	 *            the mv
-	 */
-	private void fillMapRec(JsonNode node, MapObject mv) {
-
-		Iterator<Map.Entry<String, JsonNode>> fields = node.fields();
-		while (fields.hasNext()) {
-			Map.Entry<String, JsonNode> field = fields.next();
-			GenericEntity gv = convertJson(field.getValue());
-			mv.getMap().put(field.getKey(), gv);
-		}
-	}
 }

@@ -29,7 +29,7 @@ import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
-import org.jvalue.ods.translator.XmlTranslator;
+import org.jvalue.ods.translator.TranslatorFactory;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
@@ -148,7 +148,7 @@ public class RoutesRouter implements Router<Restlet> {
 
 					DataSource ds = new DummyDataSource("org-yournavigation", source, null, null, null, null);
 
-					GenericEntity gv = XmlTranslator.INSTANCE.translate(ds);
+					GenericEntity gv = TranslatorFactory.getXmlTranslator().translate(ds);
 
 					String message = mapper.writeValueAsString(gv);
 
