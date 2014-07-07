@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.utils.Assert;
 
 
@@ -36,32 +37,39 @@ public final class FilterChainManager {
 
 
 
-	private final Map<Class<?>, FilterChain<Void, ?>> filterChains = new HashMap<>();
+	private final Map<DataSource, FilterChain<Void, ?>> filterChains = new HashMap<>();
 
 	private FilterChainManager() { }
 
 
 	public void register(DataSource source, FilterChain<Void, ?> chain) {
 		Assert.assertNotNull(source, chain);
-		filterChains.put(source.getClass(), chain);
+		filterChains.put(source, chain);
 	}
 
 
 	public void unregister(DataSource source) {
 		Assert.assertNotNull(source);
-		filterChains.remove(source.getClass());
+		filterChains.remove(source);
 	}
 
 
 	public boolean isRegistered(DataSource source) {
 		Assert.assertNotNull(source);
-		return filterChains.containsKey(source.getClass());
+		return filterChains.containsKey(source);
 	}
 
 
-	public void process(DataSource source) {
-		Assert.assertTrue(isRegistered(source), "No filter chain found");
-		filterChains.get(source.getClass()).filter(source, null);
+	public void startFilterChains() {
+		for (Map.Entry<DataSource, FilterChain<Void,?>> entry : filterChains.entrySet()) {
+			Logging.adminLog("grabbing " + entry.getKey().getId()  + " ...");
+			entry.getValue().filter(entry.getKey(), null);
+		}
+	}
+
+
+	public Map<DataSource, FilterChain<Void,?>> getRegistered() {
+		return new HashMap<DataSource, FilterChain<Void,?>>(filterChains);
 	}
 
 }

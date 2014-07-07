@@ -17,7 +17,6 @@
 package org.jvalue.ods.main;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.data.OdsView;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.sources.OsmSource;
@@ -61,13 +60,6 @@ public class DataGrabberMain {
 		accessor = DbFactory.createDbAccessor("ods");
 		accessor.connect();
 
-		// create sources
-		DataSourceManager sourceManager = DataSourceManager.getInstance();
-		sourceManager.clearSources();
-		sourceManager.addSource(PegelOnlineSource.createInstance());
-		sourceManager.addSource(OsmSource.createInstance());
-		sourceManager.addSource(PegelPortalMvSource.createInstance());
-
 		// create filter chains
 		FilterChainManager filterManager = FilterChainManager.getInstance();
 
@@ -95,7 +87,7 @@ public class DataGrabberMain {
 		// db initialization
 		accessor.deleteDatabase();
 		createCommonViews();
-		for (DataSource source : sourceManager.getAllSources()) {
+		for (DataSource source : filterManager.getRegistered().keySet()) {
 			accessor.insert(source.getDbSchema());
 			accessor.insert(source.getMetaData());
 			for (OdsView view : source.getOdsViews()) {
@@ -118,11 +110,8 @@ public class DataGrabberMain {
 		accessor = DbFactory.createDbAccessor("ods");
 		accessor.connect();
 
-		// start filtering
-		for (DataSource source : DataSourceManager.getInstance().getAllSources()) {
-			Logging.adminLog("grabbing " + source.getId() + " ...");
-			FilterChainManager.getInstance().process(source);
-		}
+		FilterChainManager.getInstance().startFilterChains();
+
 		Logging.adminLog("Update completed");
 	}
 

@@ -19,11 +19,13 @@ package org.jvalue.ods.notifications;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import org.codehaus.jackson.map.ObjectMapper;
-import org.jvalue.ods.data.DataSourceManager;
+import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.filter.FilterChainManager;
 import org.jvalue.ods.main.Router;
 import org.restlet.Request;
 import org.restlet.Response;
@@ -121,8 +123,15 @@ public final class NotificationRouter implements Router<Restlet> {
 			@Override
 			public void handle(Request request, Response response) {
 				try {
-					String sources = new ObjectMapper().writeValueAsString(
-						DataSourceManager.getInstance().getAllIds());
+					Set<String> ids = new HashSet<String>();
+					for (DataSource source : FilterChainManager
+							.getInstance()
+							.getRegistered()
+							.keySet()) {
+
+						ids.add(source.getId());
+					}
+					String sources = new ObjectMapper().writeValueAsString(ids);
 					response.setEntity(sources, MediaType.APPLICATION_JSON);
 				} catch (IOException io) {
 					throw new RuntimeException(io);
