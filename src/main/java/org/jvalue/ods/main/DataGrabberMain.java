@@ -28,6 +28,7 @@ import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.DbInsertionFilter;
 import org.jvalue.ods.db.DbUtils;
 import org.jvalue.ods.filter.FilterChain;
+import org.jvalue.ods.filter.FilterChainManager;
 import org.jvalue.ods.filter.FilterVisitorAdapter;
 import org.jvalue.ods.grabber.GrabberVisitor;
 import org.jvalue.ods.logger.Logging;
@@ -58,20 +59,33 @@ public class DataGrabberMain {
 		Logging.adminLog("Initializing Ods");
 
 		initialized = true;
-
-		DataSourceManager manager = DataSourceManager.getInstance();
-		manager.clearSources();
-		manager.addSource(PegelOnlineSource.createInstance());
-		manager.addSource(OsmSource.createInstance());
-		manager.addSource(PegelPortalMvSource.createInstance());
-
 		accessor = DbFactory.createDbAccessor("ods");
 		accessor.connect();
 
-		// one time initialization
+		// create sources
+		DataSourceManager sourceManager = DataSourceManager.getInstance();
+		sourceManager.clearSources();
+		sourceManager.addSource(PegelOnlineSource.createInstance());
+		sourceManager.addSource(OsmSource.createInstance());
+		sourceManager.addSource(PegelPortalMvSource.createInstance());
+
+		// create filter chains
+		FilterChainManager filterManager = FilterChainManager.getInstance();
+		FilterChain<Void, GenericEntity> chain = FilterChain.instance(new FilterVisitorAdapter<>(new GrabberVisitor()));
+		chain.setNextFilter(new DbInsertionFilter(accessor))
+			.setNextFilter(new FilterVisitorAdapter<>(new CombineSourceVisitor()))
+			.setNextFilter(new FilterVisitorAdapter<>(new RenameSourceVisitor()))
+			.setNextFilter(new NotificationFilter());
+
+		for (DataSource source : sourceManager.getAllSources()) {
+			filterManager.register(source, chain);
+		}
+
+
+		// db initialization
 		accessor.deleteDatabase();
 		createCommonViews();
-		for (DataSource source : manager.getAllSources()) {
+		for (DataSource source : sourceManager.getAllSources()) {
 			accessor.insert(source.getDbSchema());
 			accessor.insert(source.getMetaData());
 			for (OdsView view : source.getOdsViews()) {
@@ -94,17 +108,10 @@ public class DataGrabberMain {
 		accessor = DbFactory.createDbAccessor("ods");
 		accessor.connect();
 
-		// define filters
-		FilterChain<Void, GenericEntity> chain = FilterChain.instance(new FilterVisitorAdapter<>(new GrabberVisitor()));
-		chain.setNextFilter(new DbInsertionFilter(accessor))
-			.setNextFilter(new FilterVisitorAdapter<>(new CombineSourceVisitor()))
-			.setNextFilter(new FilterVisitorAdapter<>(new RenameSourceVisitor()))
-			.setNextFilter(new NotificationFilter());
-
 		// start filtering
 		for (DataSource source : DataSourceManager.getInstance().getAllSources()) {
 			Logging.adminLog("grabbing " + source.getId() + " ...");
-			chain.filter(source, null);
+			FilterChainManager.getInstance().process(source);
 		}
 		Logging.adminLog("Update completed");
 	}
