@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.data.DataSourceVisitor;
 import org.jvalue.ods.data.OdsView;
 import org.jvalue.ods.data.metadata.JacksonMetaData;
 import org.jvalue.ods.data.metadata.OdsMetaData;
@@ -159,12 +158,6 @@ public class OsmSource extends DataSource {
 			List<OdsView> odsViews) {
 
 		super(id, url, sourceSchema, dbSchema, metaData, odsViews);
-	}
-
-
-	@Override
-	public <P,R> R accept(DataSourceVisitor<P,R> visitor, P param) {
-		return visitor.visit(this, param);
 	}
 
 }

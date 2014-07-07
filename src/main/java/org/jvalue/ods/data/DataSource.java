@@ -74,6 +74,4 @@ public abstract class DataSource implements Cloneable {
 		return odsViews;
 	}
 
-	public abstract <P,R> R accept(DataSourceVisitor<P,R> visitor, P param);
-
 }

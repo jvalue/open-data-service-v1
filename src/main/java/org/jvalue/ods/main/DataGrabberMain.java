@@ -29,12 +29,11 @@ import org.jvalue.ods.db.DbInsertionFilter;
 import org.jvalue.ods.db.DbUtils;
 import org.jvalue.ods.filter.FilterChain;
 import org.jvalue.ods.filter.FilterChainManager;
-import org.jvalue.ods.filter.FilterVisitorAdapter;
-import org.jvalue.ods.grabber.GrabberVisitor;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.notifications.NotificationFilter;
-import org.jvalue.ods.qa.improvement.CombineSourceVisitor;
-import org.jvalue.ods.qa.improvement.RenameSourceVisitor;
+import org.jvalue.ods.qa.improvement.CombineSourceFilter;
+import org.jvalue.ods.qa.improvement.RenameSourceFilter;
+import org.jvalue.ods.translator.TranslatorFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -71,15 +70,20 @@ public class DataGrabberMain {
 
 		// create filter chains
 		FilterChainManager filterManager = FilterChainManager.getInstance();
-		FilterChain<Void, GenericEntity> chain = FilterChain.instance(new FilterVisitorAdapter<>(new GrabberVisitor()));
-		chain.setNextFilter(new DbInsertionFilter(accessor))
-			.setNextFilter(new FilterVisitorAdapter<>(new CombineSourceVisitor()))
-			.setNextFilter(new FilterVisitorAdapter<>(new RenameSourceVisitor()))
+
+		FilterChain<Void, GenericEntity> pegelOnlineChain = FilterChain.instance(TranslatorFactory.getPegelOnlineTranslator());
+		pegelOnlineChain.setNextFilter(new DbInsertionFilter(accessor))
+			.setNextFilter(new CombineSourceFilter())
+			.setNextFilter(new RenameSourceFilter())
+			.setNextFilter(new NotificationFilter());
+		filterManager.register(PegelOnlineSource.createInstance(), pegelOnlineChain);
+
+		FilterChain<Void, GenericEntity> simpleChain = FilterChain.instance(TranslatorFactory.getPegelPortalMvTranslator());
+		pegelOnlineChain.setNextFilter(new DbInsertionFilter(accessor))
 			.setNextFilter(new NotificationFilter());
 
-		for (DataSource source : sourceManager.getAllSources()) {
-			filterManager.register(source, chain);
-		}
+		filterManager.register(PegelPortalMvSource.createInstance(), simpleChain);
+		filterManager.register(OsmSource.createInstance(), simpleChain);
 
 
 		// db initialization

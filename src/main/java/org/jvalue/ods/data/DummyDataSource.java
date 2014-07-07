@@ -36,10 +36,4 @@ public final class DummyDataSource extends DataSource {
 		super(id, url, sourceschema, dbschema, metaData, odsViews);
 	}
 
-
-	@Override
-	public <P,R> R accept(DataSourceVisitor<P,R> visitor, P param) {
-		throw new UnsupportedOperationException("cant touch this");
-	}
-
 }
