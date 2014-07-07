@@ -50,28 +50,61 @@ public abstract class DataSource implements Cloneable {
 		this.odsViews = odsViews;
 	}
 
+
 	public String getId() {
 		return id;
 	}
+
 
 	public String getUrl() {
 		return url;
 	}
 
+
 	public ObjectType getDataSourceSchema() {
 		return dataSourceSchema;
 	}
+
 
 	public ObjectType getDbSchema() {
 		return dbSchema;
 	}
 
+
 	public OdsMetaData getMetaData() {
 		return metaData;
 	}
 
+
 	public List<OdsView> getOdsViews() {
 		return odsViews;
+	}
+
+
+	@Override
+	public boolean equals(Object other) {
+		if (other == null || !(other instanceof DataSource)) return false;
+		DataSource source = (DataSource) other;
+		return source.id.equals(id) 
+			&& source.url.equals(url) 
+			&& source.dataSourceSchema.equals(dataSourceSchema)
+			&& source.dbSchema.equals(dbSchema)
+			&& source.metaData.equals(metaData)
+			&& source.odsViews.equals(odsViews);
+	}
+
+
+	@Override
+	public int hashCode() {
+		final int MULT = 17;
+		int hash = 13;
+		hash = hash + MULT * id.hashCode();
+		hash = hash + MULT * url.hashCode();
+		hash = hash + MULT * dataSourceSchema.hashCode();
+		hash = hash + MULT * dbSchema.hashCode();
+		hash = hash + MULT * metaData.hashCode();
+		hash = hash + MULT * odsViews.hashCode();
+		return hash;
 	}
 
 }
