@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.jvalue.ods.data.metadata.OdsMetaData;
 import org.jvalue.ods.data.objecttypes.ObjectType;
+import org.jvalue.ods.utils.Assert;
 
 public abstract class DataSource implements Cloneable {
 
@@ -39,8 +40,7 @@ public abstract class DataSource implements Cloneable {
 			OdsMetaData metaData, 
 			List<OdsView> odsViews) {
 
-		if (id == null || url == null)
-			throw new NullPointerException("id or url cannot be null");
+		Assert.assertNotNull(id, url, sourceschema, dbschema, metaData, odsViews);
 
 		this.id = id;
 		this.url = url;

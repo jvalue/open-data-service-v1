@@ -17,25 +17,27 @@
  */
 package org.jvalue.ods.data.sources;
 
-import java.util.List;
+import java.util.LinkedList;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.OdsView;
-import org.jvalue.ods.data.metadata.OdsMetaData;
-import org.jvalue.ods.data.objecttypes.ObjectType;
+import org.jvalue.ods.data.metadata.JacksonMetaData;
+import org.jvalue.ods.data.objecttypes.MapObjectType;
 
 
 public final class DummyDataSource extends DataSource {
 
 	public DummyDataSource(
 			String id, 
-			String url, 
-			ObjectType sourceschema,
-			ObjectType dbschema, 
-			OdsMetaData metaData, 
-			List<OdsView> odsViews) {
+			String url) {
 
-		super(id, url, sourceschema, dbschema, metaData, odsViews);
+		super(
+				id, 
+				url,
+				new MapObjectType("dummy", null, null), 
+				new MapObjectType("dummy", null, null), 
+				new JacksonMetaData("dummy", "dummy", "dummy", "dummy", "dummy", "dummy", "dummy"),
+				new LinkedList<OdsView>());
 	}
 
 }
