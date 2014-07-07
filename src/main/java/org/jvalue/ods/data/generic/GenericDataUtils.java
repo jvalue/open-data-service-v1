@@ -23,9 +23,9 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.JsonNode;
 
 
-public final class Utils {
+public final class GenericDataUtils {
 
-	private Utils() { }
+	private GenericDataUtils() { }
 
 	public static GenericEntity convertFromJson(JsonNode rootNode) {
 		GenericEntity gv = null;

@@ -29,7 +29,7 @@ import org.jvalue.ods.data.generic.BaseObject;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
-import org.jvalue.ods.data.generic.Utils;
+import org.jvalue.ods.data.generic.GenericDataUtils;
 import org.jvalue.ods.data.valuetypes.AllowedValueTypes;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.data.valuetypes.ListComplexValueType;
@@ -72,7 +72,7 @@ public final class RenameSourceFilter implements Filter<Void, Void> {
 			for (JsonNode station : nodes) {
 				if (station.isObject()) {
 
-					GenericEntity gv = Utils.convertFromJson(station);
+					GenericEntity gv = GenericDataUtils.convertFromJson(station);
 
 					traverseSchema(sourceStructure, newName, gv, mv.getMap());
 					insertRenamedValue(gv, mv, destinationStructure);

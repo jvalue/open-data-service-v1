@@ -21,7 +21,7 @@ import java.io.IOException;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
-import org.jvalue.ods.data.generic.Utils;
+import org.jvalue.ods.data.generic.GenericDataUtils;
 import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.data.valuetypes.ListComplexValueType;
@@ -68,7 +68,7 @@ final class JsonTranslator extends Translator {
 			return null;
 		}
 
-		GenericEntity gv = Utils.convertFromJson(rootNode);
+		GenericEntity gv = GenericDataUtils.convertFromJson(rootNode);
 
 		if (dataSource.getDataSourceSchema() != null) {
 			if (!SchemaManager.validateGenericValusFitsObjectType(gv,
