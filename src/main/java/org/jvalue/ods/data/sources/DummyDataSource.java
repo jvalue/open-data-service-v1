@@ -15,10 +15,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.data;
+package org.jvalue.ods.data.sources;
 
 import java.util.List;
 
+import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.data.OdsView;
 import org.jvalue.ods.data.metadata.OdsMetaData;
 import org.jvalue.ods.data.objecttypes.ObjectType;
 

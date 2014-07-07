@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.data.DummyDataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
+import org.jvalue.ods.data.sources.DummyDataSource;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.logger.Logging;
