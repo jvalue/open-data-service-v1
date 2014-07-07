@@ -15,22 +15,20 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.grabber;
+package org.jvalue.ods.translator;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
+import org.jvalue.ods.filter.Filter;
 
-/**
- * The Interface Translator.
- */
-public interface Translator {
+public abstract class Translator implements Filter<Void, GenericEntity> {
 
-	/**
-	 * Grab.
-	 * 
-	 * @param dataSource
-	 *            the data source
-	 * @return the generic value
-	 */
-	public GenericEntity translate(DataSource dataSource);
+	@Override
+	public final GenericEntity filter(DataSource dataSource, Void param) {
+		return translate(dataSource);
+	}
+
+
+	public abstract GenericEntity translate(DataSource dataSource);
+
 }

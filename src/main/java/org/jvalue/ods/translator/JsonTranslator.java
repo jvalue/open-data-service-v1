@@ -31,29 +31,19 @@ import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.data.valuetypes.ListComplexValueType;
 import org.jvalue.ods.data.valuetypes.MapComplexValueType;
 import org.jvalue.ods.data.valuetypes.SimpleValueType;
-import org.jvalue.ods.grabber.Translator;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.schema.SchemaManager;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-/**
- * The Class JsonTranslator.
- */
-public class JsonTranslator implements Translator {
+
+public final class JsonTranslator extends Translator {
 
 	public static final JsonTranslator INSTANCE = new JsonTranslator();
 
 	private JsonTranslator() { }
 
-	/**
-	 * Translate.
-	 * 
-	 * @param dataSource
-	 *            the data source
-	 * @return the generic value
-	 */
 	@Override
 	public GenericEntity translate(DataSource dataSource) {
 		if ((dataSource == null) || (dataSource.getUrl() == null))

@@ -15,7 +15,6 @@ import org.jvalue.ods.data.generic.BaseObject;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
-import org.jvalue.ods.grabber.Translator;
 import org.jvalue.ods.logger.Logging;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -23,22 +22,14 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-/**
- * The Class XmlTranslator.
- */
-public class XmlTranslator implements Translator {
+
+public final class XmlTranslator extends Translator {
 
 	public static final XmlTranslator INSTANCE = new XmlTranslator();
 
 	private XmlTranslator() { }
 
-	/**
-	 * Translate.
-	 * 
-	 * @param source
-	 *            the source
-	 * @return the generic value
-	 */
+
 	@Override
 	public GenericEntity translate(DataSource source) {
 		if (source == null)

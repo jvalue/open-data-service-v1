@@ -43,7 +43,7 @@ import org.jvalue.ods.logger.Logging;
 
 
 
-public class PegelPortalMvTranslator extends HtmlTranslator {
+public final class PegelPortalMvTranslator extends HtmlTranslator {
 
 	public static final PegelPortalMvTranslator INSTANCE  = new PegelPortalMvTranslator();
 

@@ -26,6 +26,7 @@ import org.jvalue.ods.data.sources.PegelPortalMvSource;
 import org.jvalue.ods.translator.JsonTranslator;
 import org.jvalue.ods.translator.OsmTranslator;
 import org.jvalue.ods.translator.PegelPortalMvTranslator;
+import org.jvalue.ods.translator.Translator;
 
 
 public final class GrabberVisitor implements DataSourceVisitor<Void, GenericEntity> {

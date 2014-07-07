@@ -32,7 +32,6 @@ import org.jvalue.ods.data.generic.BaseObject;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
-import org.jvalue.ods.grabber.Translator;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.schema.SchemaManager;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
@@ -48,25 +47,14 @@ import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 import org.openstreetmap.osmosis.xml.common.CompressionMethod;
 import org.openstreetmap.osmosis.xml.v0_6.XmlReader;
 
-/**
- * The Class OsmTranslator.
- */
-public class OsmTranslator implements Translator {
+public final class OsmTranslator extends Translator {
 
 	public static final OsmTranslator INSTANCE = new OsmTranslator();
 
 	private OsmTranslator() { }
 
-	/** The lv. */
 	private ListObject lv = new ListObject();
 
-	/**
-	 * Translate.
-	 * 
-	 * @param source
-	 *            the source
-	 * @return the osm data
-	 */
 	@Override
 	public GenericEntity translate(DataSource source) {
 		if (source == null) {

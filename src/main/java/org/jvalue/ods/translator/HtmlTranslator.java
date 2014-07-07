@@ -24,11 +24,10 @@ import org.jsoup.nodes.Document;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.objecttypes.ObjectType;
-import org.jvalue.ods.grabber.Translator;
 import org.jvalue.ods.logger.Logging;
 
 
-public abstract class HtmlTranslator implements Translator {
+public abstract class HtmlTranslator extends Translator {
 
 	@Override
 	public GenericEntity translate(DataSource dataSource) {
