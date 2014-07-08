@@ -237,9 +237,9 @@ final class PegelOnlineConfiguration implements Configuration {
 	public FilterChain<Void,?> getFilterChain(DbAccessor<JsonNode> accessor) {
 		FilterChain<Void, GenericEntity> chain = FilterChain
 			.instance(TranslatorFactory.getPegelOnlineTranslator());
-		chain.setNextFilter(new DbInsertionFilter(accessor))
-			.setNextFilter(new CombineSourceFilter())
+		chain.setNextFilter(new CombineSourceFilter())
 			.setNextFilter(new RenameSourceFilter())
+			.setNextFilter(new DbInsertionFilter(accessor))
 			.setNextFilter(new NotificationFilter());
 		return chain;
 	}

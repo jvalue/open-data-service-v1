@@ -16,15 +16,16 @@
 package org.jvalue.ods.notifications;
 
 import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.filter.Filter;
 
 
-public final class NotificationFilter implements Filter<Void, Void> {
+public final class NotificationFilter implements Filter<GenericEntity, GenericEntity> {
 
 	@Override
-	public Void filter(DataSource source, Void param) {
+	public GenericEntity filter(DataSource source, GenericEntity data) {
 		NotificationManager.getInstance().notifySourceChanged(source);
-		return null;
+		return data;
 	}
 
 }

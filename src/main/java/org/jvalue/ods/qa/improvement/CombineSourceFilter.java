@@ -34,7 +34,6 @@ import org.jvalue.ods.data.generic.BaseObject;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
-import org.jvalue.ods.data.generic.GenericDataUtils;
 import org.jvalue.ods.data.valuetypes.AllowedValueTypes;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.data.valuetypes.ListComplexValueType;
@@ -52,10 +51,10 @@ import org.jvalue.si.SiUnit;
 import com.fasterxml.jackson.databind.JsonNode;
 
 
-public final class CombineSourceFilter implements Filter<Void, Void> {
+public final class CombineSourceFilter implements Filter<GenericEntity, GenericEntity> {
 
 	@Override
-	public Void filter(DataSource source, Void param) {
+	public GenericEntity filter(DataSource source, GenericEntity data) {
 		// if (!SchemaManager.validateGenericValusFitsSchema(data, schema)) {
 		// Logging.info(this.getClass(),
 		// "Could not validate schema in CombineFilter.");
@@ -76,62 +75,39 @@ public final class CombineSourceFilter implements Filter<Void, Void> {
 
 		MapObject mv = new MapObject();
 
+		List<Serializable> improvedObjects = new LinkedList<Serializable>();
+		ListObject oldObjects = (ListObject) data;
+
+		for (Serializable s : oldObjects.getList()) {
+			GenericEntity gv = (GenericEntity) s;
+
+			traverseSchema(sourceCoordinateStructure, gv, mv.getMap());
+
+			insertCombinedValue(gv, mv, destinationCoordinateStructure);
+
+			MapObject finalMo = (MapObject) gv;
+			if (!finalMo.getMap().containsKey("dataStatus")) {
+				finalMo.getMap().put("dataStatus",
+					new BaseObject("improved"));
+			}
+
+			improvedObjects.add(gv);
+		}
+
 		try {
 			DbAccessor<JsonNode> accessor = DbFactory.createDbAccessor("ods");
 			accessor.connect();
-
-			List<JsonNode> nodes = accessor.executeDocumentQuery(
-					"_design/pegelonline", "getAllStations", null);
-
-			for (JsonNode station : nodes) {
-				if (station.isObject()) {
-
-					GenericEntity gv = GenericDataUtils.convertFromJson(station);
-
-					traverseSchema(sourceCoordinateStructure, gv, mv.getMap());
-
-					insertCombinedValue(gv, mv, destinationCoordinateStructure);
-
-					// if (!SchemaManager.validateGenericValusFitsSchema(mv,
-					// combinedSchema)) {
-					// System.err
-					// .println("Validation of quality-enhanced data failed.");
-					// }
-
-					// TODO
-
-					try {
-
-						MapObject finalMo = (MapObject) gv;
-						if (!finalMo.getMap().containsKey("dataStatus"))
-						{
-							finalMo.getMap().put("dataStatus",
-								new BaseObject("improved"));
-						}
-						accessor.insert(gv);
-
-					} catch (Exception ex) {
-						String errmsg = "Could not insert MapValue: "
-								+ ex.getMessage();
-						System.err.println(errmsg);
-						Logging.error(this.getClass(), errmsg);
-						throw new RuntimeException(errmsg);
-					}
-
-				}
-			}
 			accessor.insert(combinedSchema);
-
 		} catch (DbException e) {
-
 			String errmsg = "Error during Quality Assurance. " + e.getMessage();
 			System.err.println(errmsg);
 			Logging.error(this.getClass(), errmsg);
 			throw new RuntimeException(errmsg);
-
 		}
+
 		new PegelOnlineQualityAssurance().checkValueTypes(valueTypes);
-		return null;
+
+		return new ListObject(improvedObjects);
 	}
 
 
