@@ -22,17 +22,17 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.jvalue.ods.data.DummyDataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
-import org.jvalue.ods.translator.XmlTranslator;
+import org.jvalue.ods.translator.Translator;
+import org.jvalue.ods.translator.TranslatorFactory;
+import org.jvalue.ods.utils.DummyDataSource;
 
 /**
  * The Class XmlTranslatorTest.
  */
 public class XmlTranslatorTest {
 
-	/** The grabber. */
-	private XmlTranslator translator;
+	private Translator translator;
 
 	/**
 	 * Sets the up.
@@ -42,7 +42,7 @@ public class XmlTranslatorTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		translator = XmlTranslator.INSTANCE;
+		translator = TranslatorFactory.getXmlTranslator();
 		assertNotNull(translator);
 	}
 
@@ -51,8 +51,7 @@ public class XmlTranslatorTest {
 	 */
 	@Test
 	public void testTranslate() {
-		GenericEntity gv = translator.translate(new DummyDataSource("osm", "/nbgcity.osm",
-				null, null, null, null));
+		GenericEntity gv = translator.translate(DummyDataSource.newInstance("osm", "/nbgcity.osm"));
 		assertNotNull(gv);
 	}
 
@@ -61,8 +60,7 @@ public class XmlTranslatorTest {
 	 */
 	@Test
 	public void testTranslateNotExistingFile() {
-		GenericEntity gv = translator.translate(new DummyDataSource("notExistingFile",
-				"NotExistingFile", null, null, null, null));
+		GenericEntity gv = translator.translate(DummyDataSource.newInstance("notExistingFile", "NotExistingFile"));
 		assertNull(gv);
 	}
 

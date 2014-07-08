@@ -27,14 +27,14 @@ import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.jvalue.ods.data.DummyDataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.valuetypes.AllowedValueTypes;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.data.valuetypes.ListComplexValueType;
 import org.jvalue.ods.data.valuetypes.MapComplexValueType;
-import org.jvalue.ods.grabber.Translator;
-import org.jvalue.ods.translator.JsonTranslator;
+import org.jvalue.ods.translator.Translator;
+import org.jvalue.ods.translator.TranslatorFactory;
+import org.jvalue.ods.utils.DummyDataSource;
 
 /**
  * The Class JsonTranslatorTest.
@@ -55,7 +55,7 @@ public class JsonTranslatorTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		translator = JsonTranslator.INSTANCE;
+		translator = TranslatorFactory.getJsonTranslator();
 		assertNotNull(translator);
 	}
 
@@ -64,7 +64,7 @@ public class JsonTranslatorTest {
 	 */
 	@Test
 	public void testTranslate() {
-		GenericEntity gv = translator.translate(new DummyDataSource("testUrl", TestUrl, null, null, null, null));
+		GenericEntity gv = translator.translate(DummyDataSource.newInstance("testUrl", TestUrl));
 		assertNotNull(gv);
 	}
 
@@ -73,7 +73,7 @@ public class JsonTranslatorTest {
 	 */
 	@Test
 	public void testTranslateInvalidSource() {
-		GenericEntity gv = translator.translate(new DummyDataSource("invalidSource", "invalidsource", null, null, null, null));
+		GenericEntity gv = translator.translate(DummyDataSource.newInstance("invalidSource", "invalidsource"));
 		assertNull(gv);
 	}
 

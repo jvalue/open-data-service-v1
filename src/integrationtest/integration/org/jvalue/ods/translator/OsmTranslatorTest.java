@@ -12,12 +12,13 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.jvalue.ods.data.DummyDataSource;
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.translator.OsmTranslator;
+import org.jvalue.ods.translator.Translator;
+import org.jvalue.ods.translator.TranslatorFactory;
+import org.jvalue.ods.utils.DummyDataSource;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -27,7 +28,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 public class OsmTranslatorTest {
 
 	/** The translator. */
-	private OsmTranslator translator;
+	private Translator translator;
 
 	/** The test url. */
 	private final String testUrl = "http://api.openstreetmap.org/api/0.6/map?bbox=9.382840810129357,52.78909755467678,9.392840810129357,52.79909755467678";
@@ -37,7 +38,7 @@ public class OsmTranslatorTest {
 	 */
 	@Before
 	public void setUp() {
-		translator = OsmTranslator.INSTANCE;
+		translator = TranslatorFactory.getOsmTranslator();
 		assertNotNull(translator);
 	}
 
@@ -46,8 +47,7 @@ public class OsmTranslatorTest {
 	 */
 	@Test
 	public void testTranslate() {
-		ListObject lv = (ListObject) translator.translate(new DummyDataSource("testUrl", testUrl,
-				null, null, null, null));
+		ListObject lv = (ListObject) translator.translate(DummyDataSource.newInstance("testUrl", testUrl));
 		assertNotNull(lv);
 	}
 
@@ -56,8 +56,7 @@ public class OsmTranslatorTest {
 	 */
 	@Test
 	public void testTranslateOffline() {
-		ListObject lv = (ListObject) translator.translate(new DummyDataSource("osm",
-				"/nbgcity.osm", null, null, null, null));
+		ListObject lv = (ListObject) translator.translate(DummyDataSource.newInstance("osm", "/nbgcity.osm"));
 		assertNotNull(lv);
 		DbAccessor<JsonNode> db = DbFactory.createDbAccessor("testOsm");
 		db.connect();
@@ -77,8 +76,7 @@ public class OsmTranslatorTest {
 	 */
 	@Test
 	public void testTranslateInvalidSource() {
-		ListObject lv = (ListObject) translator.translate(new DummyDataSource("invalidSource",
-				"invalidsource", null, null, null, null));
+		ListObject lv = (ListObject) translator.translate(DummyDataSource.newInstance("invalidSource", "invalidsource"));
 		assertNull(lv);
 	}
 
