@@ -50,7 +50,8 @@ final class JsonNodeToClientAdapter implements AdapterKeys {
 	private static Client toRestClient(JsonNode json, String id, String source) {
 		String restUrl = json.get(KEY_REST_URL).asText();
 		String sourceParam = json.get(KEY_REST_PARAM).asText();
-		return new HttpClient(id, source, restUrl, sourceParam);
+		boolean sendData = json.get(KEY_REST_SEND_DATA).asBoolean();
+		return new HttpClient(id, source, restUrl, sourceParam, sendData);
 	}
 
 

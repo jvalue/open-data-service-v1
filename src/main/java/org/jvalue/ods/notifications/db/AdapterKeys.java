@@ -26,6 +26,7 @@ interface AdapterKeys {
 		KEY_CLASS = "class",
 
 		KEY_REST_URL = "restUrl",
-		KEY_REST_PARAM = "restParam";
+		KEY_REST_PARAM = "restParam",
+		KEY_REST_SEND_DATA = "sendData";
 
 }

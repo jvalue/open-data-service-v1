@@ -25,12 +25,20 @@ import org.jvalue.ods.utils.Assert;
 public final class HttpClient extends Client {
 
 	private final String restUrl, sourceParam;
+	private final boolean sendData;
 
-	public HttpClient(String id, String source, String restUrl, String sourceParam) {
+	public HttpClient(
+			String id, 
+			String source, 
+			String restUrl, 
+			String sourceParam,
+			boolean sendData) {
+
 		super(id, source);
 		Assert.assertNotNull(restUrl, sourceParam);
 		this.restUrl = restUrl;
 		this.sourceParam = sourceParam;
+		this.sendData = sendData;
 	}
 
 
@@ -44,13 +52,20 @@ public final class HttpClient extends Client {
 	}
 
 
+	public boolean getSendData() {
+		return sendData;
+	}
+
+
 	@Override
 	public boolean equals(Object other) {
 		if (!super.equals(other)) return false;
 		if (!(other instanceof HttpClient)) return false;
 
 		HttpClient client = (HttpClient) other;
-		return client.restUrl.equals(restUrl) && client.sourceParam.equals(sourceParam);
+		return client.restUrl.equals(restUrl) 
+			&& client.sourceParam.equals(sourceParam) 
+			&& client.sendData == sendData;
 	}
 
 
@@ -59,6 +74,7 @@ public final class HttpClient extends Client {
 		int hash = super.hashCode();
 		hash = hash + HASH_MULT * restUrl.hashCode();
 		hash = hash + HASH_MULT * sourceParam.hashCode();
+		hash = hash + Boolean.valueOf(sendData).hashCode();
 		return hash;
 	}
 

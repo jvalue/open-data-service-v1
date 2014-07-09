@@ -28,13 +28,15 @@ final class HttpAdapter extends RestAdapter<HttpClient> {
 
 	private static final String
 		PARAM_URL = "restUrl",
-		PARAM_PARAM = "restParam";
+		PARAM_PARAM = "restParam",
+		PARAM_SEND_DATA = "sendData";
 
 	@Override
 	protected HttpClient toClient(Request request, String regId, String source) {
 		String url = getParameter(request, PARAM_URL);
 		String param = getParameter(request, PARAM_PARAM);
-		return new HttpClient(regId, source, url, param);
+		boolean sendData = Boolean.valueOf(getParameter(request, PARAM_SEND_DATA));
+		return new HttpClient(regId, source, url, param, sendData);
 	}
 
 
@@ -42,6 +44,7 @@ final class HttpAdapter extends RestAdapter<HttpClient> {
 	protected void getParameters(Set<String> params) {
 		params.add(PARAM_URL);
 		params.add(PARAM_PARAM);
+		params.add(PARAM_SEND_DATA);
 	}
 
 }

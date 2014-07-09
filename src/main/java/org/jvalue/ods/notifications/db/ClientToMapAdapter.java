@@ -41,6 +41,7 @@ final class ClientToMapAdapter implements ClientVisitor<Void, Map<String,Object>
 		Map<String, Object> values = visitBasic(client);
 		values.put(KEY_REST_URL, client.getRestUrl());
 		values.put(KEY_REST_PARAM, client.getSourceParam());
+		values.put(KEY_REST_SEND_DATA, client.getSendData());
 		return values;
 	}
 
