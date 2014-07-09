@@ -49,6 +49,8 @@ public final class RestCall {
 	private final List<String> paths;
 	private final Map<String, String> parameters;
 	private final Map<String, String> headers;
+	private final String contentType;
+	private final byte[] content;
 
 
 	private RestCall(
@@ -56,13 +58,17 @@ public final class RestCall {
 				String baseUrl,
 				List<String> paths,
 				Map<String, String> parameters,
-				Map<String, String> headers) {
+				Map<String, String> headers,
+				String contentType,
+				byte[] content) {
 		
 		this.requestType = requestType;
 		this.baseUrl = baseUrl;
 		this.paths = paths;
 		this.parameters = parameters;
 		this.headers = headers;
+		this.contentType = contentType;
+		this.content = content;
 	}
 
 
@@ -100,6 +106,18 @@ public final class RestCall {
 			conn.setUseCaches(false);
 			conn.setRequestMethod(requestType.toString());
 
+			if (contentType != null) {
+				conn.setDoOutput(true);
+
+				conn.setRequestProperty("Content-Type", contentType);
+				conn.setRequestProperty("Content-Length", Integer.toString(content.length));
+
+				outputStream = conn.getOutputStream();
+				outputStream.write(content);
+				outputStream.flush();
+			}
+
+
 			int responseCode = conn.getResponseCode();
 			if (responseCode != HttpURLConnection.HTTP_CREATED
 					&& responseCode != HttpURLConnection.HTTP_OK
@@ -135,6 +153,9 @@ public final class RestCall {
 		private final List<String> paths = new LinkedList<String>();
 		private final Map<String, String> parameters = new HashMap<String, String>();
 		private final Map<String, String> headers = new HashMap<String, String>();
+		private byte[] content = null;
+		private String contentType = null;
+
 		private boolean built = false;
 
 		public Builder(final RequestType requestType, final String baseUrl) {
@@ -164,10 +185,19 @@ public final class RestCall {
 			return this;
 		}
 
+		public Builder content(String contentType, byte[] content) {
+			Assert.assertNotNull(contentType, content);
+			Assert.assertFalse(built, "already built");
+			this.contentType = contentType;
+			this.content = content;
+			return this;
+		}
+
+
 		public RestCall build() {
 			Assert.assertFalse(built, "already built");
 			built = true;
-			return new RestCall(requestType, baseUrl, paths, parameters, headers);
+			return new RestCall(requestType, baseUrl, paths, parameters, headers, contentType, content);
 		}
 	}
 }
