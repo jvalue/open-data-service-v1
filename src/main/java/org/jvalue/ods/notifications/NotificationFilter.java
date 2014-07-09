@@ -24,7 +24,7 @@ public final class NotificationFilter implements Filter<GenericEntity, GenericEn
 
 	@Override
 	public GenericEntity filter(DataSource source, GenericEntity data) {
-		NotificationManager.getInstance().notifySourceChanged(source);
+		NotificationManager.getInstance().notifySourceChanged(source, data);
 		return data;
 	}
 

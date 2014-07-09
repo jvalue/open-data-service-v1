@@ -1,6 +1,7 @@
 package org.jvalue.ods.notifications.sender;
 
 import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.notifications.NotificationException;
 import org.jvalue.ods.notifications.NotificationSender;
 import org.jvalue.ods.notifications.clients.HttpClient;
@@ -12,7 +13,11 @@ final class HttpSender implements NotificationSender<HttpClient> {
 	
 
 	@Override
-	public void notifySourceChanged(DataSource source, HttpClient client) throws NotificationException {
+	public void notifySourceChanged(
+			HttpClient client, 
+			DataSource source, 
+			GenericEntity data) throws NotificationException {
+
 		try {
 			new RestCall.Builder(RestCall.RequestType.POST, client.getRestUrl())
 				.parameter(client.getSourceParam(), source.getId())
@@ -22,5 +27,6 @@ final class HttpSender implements NotificationSender<HttpClient> {
 			throw new NotificationException(re);
 		}
 	}
+
 
 }

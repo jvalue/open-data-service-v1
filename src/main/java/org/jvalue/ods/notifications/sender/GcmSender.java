@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.notifications.ApiKey;
 import org.jvalue.ods.notifications.Client;
@@ -41,7 +42,11 @@ final class GcmSender implements NotificationSender<GcmClient> {
 	
 	
 	@Override
-	public void notifySourceChanged(DataSource source, GcmClient client) throws NotificationException {
+	public void notifySourceChanged(
+			GcmClient client, 
+			DataSource source, 
+			GenericEntity data) throws NotificationException {
+
 		// gather data
 		Map<String,String> payload = new HashMap<String,String>();
 		payload.put(DATA_KEY_SOURCE, source.getId());
