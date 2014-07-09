@@ -20,3 +20,7 @@ Build and run with Eclipse:
 
 current REST-API:
 * GET http://127.0.0.1:8182/api -> prints the API
+
+
+Google Cloud Messaging (GCM):
+* To setup GCM for the ODS copy src/main/resources/googleApi.key.template to src/main/resources/googleApi.key and replace its content with a server API key obtained from https://console.developers.google.com/
