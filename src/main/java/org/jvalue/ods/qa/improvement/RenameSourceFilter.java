@@ -29,18 +29,12 @@ import org.jvalue.ods.data.generic.BaseObject;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
-import org.jvalue.ods.data.valuetypes.AllowedValueTypes;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.data.valuetypes.ListComplexValueType;
 import org.jvalue.ods.data.valuetypes.MapComplexValueType;
 import org.jvalue.ods.data.valuetypes.SimpleValueType;
-import org.jvalue.ods.db.DbAccessor;
-import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.logger.Logging;
-
-import com.fasterxml.jackson.databind.JsonNode;
 
 
 public final class RenameSourceFilter implements Filter<GenericEntity, GenericEntity> {
@@ -57,7 +51,6 @@ public final class RenameSourceFilter implements Filter<GenericEntity, GenericEn
 		MapComplexValueType sourceStructure = createSourceWaterStructure();
 		MapComplexValueType destinationStructure = createDestinationWaterStructure();
 		String newName = "BodyOfWater";
-		MapComplexValueType combinedSchema = createRenamedSchema();
 
 		MapObject mv = new MapObject();
 
@@ -79,19 +72,6 @@ public final class RenameSourceFilter implements Filter<GenericEntity, GenericEn
 
 			improvedObjects.add(gv);
 		}
-
-		try {
-			DbAccessor<JsonNode> accessor = DbFactory.createDbAccessor("ods");
-			accessor.connect();
-			accessor.insert(combinedSchema);
-
-		} catch (DbException e) {
-			String errmsg = "Error during Quality Assurance. " + e.getMessage();
-			System.err.println(errmsg);
-			Logging.error(this.getClass(), errmsg);
-			throw new RuntimeException(errmsg);
-		}
-
 
 		return data;
 	}
@@ -197,90 +177,6 @@ public final class RenameSourceFilter implements Filter<GenericEntity, GenericEn
 	}
 
 
-	/**
-	 * Creates the renamed schema.
-	 * 
-	 * @return the map schema
-	 */
-	private static MapComplexValueType createRenamedSchema() {
-		Map<String, GenericValueType> water = new HashMap<String, GenericValueType>();
-		water.put("shortname", AllowedValueTypes.VALUETYPE_STRING);
-		water.put("longname", AllowedValueTypes.VALUETYPE_STRING);
-		MapComplexValueType waterSchema = new MapComplexValueType(water);
-
-		Map<String, GenericValueType> currentMeasurement = new HashMap<String, GenericValueType>();
-		currentMeasurement.put("timestamp", AllowedValueTypes.VALUETYPE_STRING);
-		currentMeasurement.put("value", AllowedValueTypes.VALUETYPE_NUMBER);
-		currentMeasurement.put("trend", AllowedValueTypes.VALUETYPE_NUMBER);
-		currentMeasurement.put("stateMnwMhw",
-				AllowedValueTypes.VALUETYPE_STRING);
-		currentMeasurement.put("stateNswHsw",
-				AllowedValueTypes.VALUETYPE_STRING);
-		MapComplexValueType currentMeasurementSchema = new MapComplexValueType(
-				currentMeasurement);
-
-		Map<String, GenericValueType> gaugeZero = new HashMap<String, GenericValueType>();
-		gaugeZero.put("unit", AllowedValueTypes.VALUETYPE_STRING);
-		gaugeZero.put("value", AllowedValueTypes.VALUETYPE_NUMBER);
-		gaugeZero.put("validFrom", AllowedValueTypes.VALUETYPE_STRING);
-		MapComplexValueType gaugeZeroSchema = new MapComplexValueType(gaugeZero);
-
-		Map<String, GenericValueType> comment = new HashMap<String, GenericValueType>();
-		comment.put("shortDescription", AllowedValueTypes.VALUETYPE_STRING);
-		comment.put("longDescription", AllowedValueTypes.VALUETYPE_STRING);
-		MapComplexValueType commentSchema = new MapComplexValueType(comment);
-
-		Map<String, GenericValueType> timeSeries = new HashMap<String, GenericValueType>();
-		timeSeries.put("shortname", AllowedValueTypes.VALUETYPE_STRING);
-		timeSeries.put("longname", AllowedValueTypes.VALUETYPE_STRING);
-		timeSeries.put("unit", AllowedValueTypes.VALUETYPE_STRING);
-		timeSeries.put("equidistance", AllowedValueTypes.VALUETYPE_NUMBER);
-		timeSeries.put("currentMeasurement", currentMeasurementSchema);
-		timeSeries.put("gaugeZero", gaugeZeroSchema);
-		timeSeries.put("comment", commentSchema);
-		MapComplexValueType timeSeriesSchema = new MapComplexValueType(
-				timeSeries);
-
-		List<GenericValueType> timeSeriesList = new LinkedList<GenericValueType>();
-		timeSeriesList.add(timeSeriesSchema);
-		ListComplexValueType timeSeriesListSchema = new ListComplexValueType(
-				timeSeriesList);
-
-		Map<String, GenericValueType> coordinate = new HashMap<>();
-		coordinate.put("longitude", AllowedValueTypes.VALUETYPE_NUMBER);
-		coordinate.put("latitude", AllowedValueTypes.VALUETYPE_NUMBER);
-		MapComplexValueType coordinateSchema = new MapComplexValueType(
-				coordinate);
-
-		Map<String, GenericValueType> station = new HashMap<String, GenericValueType>();
-		station.put("coordinate", coordinateSchema);
-		station.put("uuid", AllowedValueTypes.VALUETYPE_STRING);
-		station.put("number", AllowedValueTypes.VALUETYPE_STRING);
-		station.put("shortname", AllowedValueTypes.VALUETYPE_STRING);
-		station.put("longname", AllowedValueTypes.VALUETYPE_STRING);
-		station.put("km", AllowedValueTypes.VALUETYPE_NUMBER);
-		station.put("agency", AllowedValueTypes.VALUETYPE_STRING);
-		station.put("BodyOfWater", waterSchema);
-		station.put("timeseries", timeSeriesListSchema);
-		// two class object strings, must not be "required"
-		Map<String, GenericValueType> type = new HashMap<String, GenericValueType>();
-		type.put("Station", AllowedValueTypes.VALUETYPE_NULL);
-		MapComplexValueType typeSchema = new MapComplexValueType(type);
-		station.put("objectType", typeSchema);
-		Map<String, GenericValueType> restName = new HashMap<String, GenericValueType>();
-		restName.put("stations", AllowedValueTypes.VALUETYPE_NULL);
-		MapComplexValueType restNameSchema = new MapComplexValueType(restName);
-		station.put("restName", restNameSchema);
-		MapComplexValueType stationSchema = new MapComplexValueType(station);
-
-		return stationSchema;
-	}
-
-	/**
-	 * Creates the coordinate schema.
-	 * 
-	 * @return the map schema
-	 */
 	private static MapComplexValueType createSourceWaterStructure() {
 
 		Map<String, GenericValueType> station = new HashMap<String, GenericValueType>();
@@ -291,11 +187,7 @@ public final class RenameSourceFilter implements Filter<GenericEntity, GenericEn
 		return stationSchema;
 	}
 
-	/**
-	 * Creates the destination coordinate structure.
-	 * 
-	 * @return the map schema
-	 */
+
 	private static MapComplexValueType createDestinationWaterStructure() {
 
 		Map<String, GenericValueType> station = new HashMap<String, GenericValueType>();

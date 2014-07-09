@@ -164,6 +164,130 @@ final class PegelOnlineConfiguration implements Configuration {
 			stationAttributes.put("longname", VALUETYPE_STRING);
 			stationAttributes.put("km", VALUETYPE_NUMBER);
 			stationAttributes.put("agency", VALUETYPE_STRING);
+
+			Map<String, GenericValueType> coordinateValues = new HashMap<String, GenericValueType>();
+			coordinateValues.put("longitude", VALUETYPE_NUMBER);
+			coordinateValues.put("latitude", VALUETYPE_NUMBER);
+
+			MapObjectType coordinateGot = new MapObjectType("de-pegelonline-coordinate", coordinateValues, null);
+
+			Map<String, ObjectType> stationReferencedObjects = new HashMap<String, ObjectType>();
+
+			stationReferencedObjects.put("BodyOfWater", waterGot);
+			stationReferencedObjects.put("timeseries", timeSeriesGot);
+			stationReferencedObjects.put("coordinate", coordinateGot);
+
+			// two class object strings, must not be "required"
+			Map<String, GenericValueType> type = new HashMap<String, GenericValueType>();
+			type.put("Station", VALUETYPE_NULL);
+
+			ObjectType typeType = new MapObjectType("objectType", type, null);
+
+			stationReferencedObjects.put("objectType", typeType);
+
+			Map<String, GenericValueType> restName = new HashMap<String, GenericValueType>();
+			restName.put("stations", VALUETYPE_NULL);
+
+			ObjectType restNameType = new MapObjectType("restName", restName, null);
+
+			stationReferencedObjects.put("restName", restNameType);
+
+			MapObjectType stationType = new MapObjectType("de-pegelonline-station",
+					stationAttributes, stationReferencedObjects);
+
+			dbSchema = stationType;
+		}
+
+		// source schema
+		{
+			Map<String, GenericValueType> water = new HashMap<String, GenericValueType>();
+			water.put("shortname", VALUETYPE_STRING);
+			water.put("longname", VALUETYPE_STRING);
+
+			MapObjectType waterGot = new MapObjectType("de-pegelonline-water",
+					water, null);
+
+			Map<String, GenericValueType> currentMeasurement = new HashMap<String, GenericValueType>();
+			currentMeasurement.put("timestamp", VALUETYPE_STRING);
+			currentMeasurement.put("value", VALUETYPE_NUMBER);
+			currentMeasurement.put("trend", VALUETYPE_NUMBER);
+			currentMeasurement.put("stateMnwMhw", VALUETYPE_STRING);
+			currentMeasurement.put("stateNswHsw", VALUETYPE_STRING);
+			MapObjectType currentMeasurementGot = new MapObjectType(
+					"de-pegelonline-currentMeasurement", currentMeasurement, null);
+
+			Map<String, GenericValueType> gaugeZero = new HashMap<String, GenericValueType>();
+			gaugeZero.put("unit", VALUETYPE_STRING);
+			gaugeZero.put("value", VALUETYPE_NUMBER);
+			gaugeZero.put("validFrom", VALUETYPE_STRING);
+
+			MapObjectType gaugeZeroGot = new MapObjectType(
+					"de-pegelonline-gaugeZero", gaugeZero, null);
+
+			Map<String, GenericValueType> comment = new HashMap<String, GenericValueType>();
+			comment.put("shortDescription", VALUETYPE_STRING);
+			comment.put("longDescription", VALUETYPE_STRING);
+
+			MapObjectType commentGot = new MapObjectType("de-pegelonline-comment",
+					comment, null);
+
+			Map<String, GenericValueType> timeSeriesAttributes = new HashMap<String, GenericValueType>();
+			timeSeriesAttributes.put("shortname", VALUETYPE_STRING);
+			timeSeriesAttributes.put("longname", VALUETYPE_STRING);
+			timeSeriesAttributes.put("unit", VALUETYPE_STRING);
+			timeSeriesAttributes.put("equidistance", VALUETYPE_NUMBER);
+
+			Map<String, ObjectType> timeSeriesReferencedObjects = new HashMap<String, ObjectType>();
+
+			timeSeriesReferencedObjects.put("currentMeasurement",
+					currentMeasurementGot);
+			timeSeriesReferencedObjects.put("gaugeZero", gaugeZeroGot);
+			timeSeriesReferencedObjects.put("comment", commentGot);
+
+			Map<String, GenericValueType> characteristicValuesAttributes = new HashMap<String, GenericValueType>();
+			characteristicValuesAttributes.put("shortname", VALUETYPE_STRING);
+			characteristicValuesAttributes.put("longname", VALUETYPE_STRING);
+			characteristicValuesAttributes.put("unit", VALUETYPE_STRING);
+			characteristicValuesAttributes.put("value", VALUETYPE_NUMBER);
+			characteristicValuesAttributes.put("validFrom", VALUETYPE_STRING);
+			characteristicValuesAttributes.put("timespanStart", VALUETYPE_STRING);
+			characteristicValuesAttributes.put("timespanEnd", VALUETYPE_STRING);
+
+			Map<String, ObjectType> characteristicValuesReferencedObjects = new HashMap<String, ObjectType>();
+
+			List<GenericValueType> occurrences = new LinkedList<GenericValueType>();
+			occurrences.add(VALUETYPE_STRING);
+
+			ListObjectType occurrencesType = new ListObjectType(occurrences, null);
+
+			characteristicValuesReferencedObjects.put("occurrences",
+					occurrencesType);
+
+			MapObjectType characteristicValuesGot = new MapObjectType(
+					"de-pegelonline-characteristicValues",
+					characteristicValuesAttributes,
+					characteristicValuesReferencedObjects);
+
+			timeSeriesReferencedObjects.put("characteristicValues",
+					characteristicValuesGot);
+
+			MapObjectType timeSeriesType = new MapObjectType(
+					"de-pegelonline-timeSeries", timeSeriesAttributes,
+					timeSeriesReferencedObjects);
+
+			List<ObjectType> timeseriesTypesList = new LinkedList<>();
+			timeseriesTypesList.add(timeSeriesType);
+
+			ListObjectType timeSeriesGot = new ListObjectType(null,
+					timeseriesTypesList);
+
+			Map<String, GenericValueType> stationAttributes = new HashMap<String, GenericValueType>();
+			stationAttributes.put("uuid", VALUETYPE_STRING);
+			stationAttributes.put("number", VALUETYPE_STRING);
+			stationAttributes.put("shortname", VALUETYPE_STRING);
+			stationAttributes.put("longname", VALUETYPE_STRING);
+			stationAttributes.put("km", VALUETYPE_NUMBER);
+			stationAttributes.put("agency", VALUETYPE_STRING);
 			stationAttributes.put("longitude", VALUETYPE_NUMBER);
 			stationAttributes.put("latitude", VALUETYPE_NUMBER);
 
@@ -187,20 +311,11 @@ final class PegelOnlineConfiguration implements Configuration {
 
 			stationReferencedObjects.put("restName", restNameType);
 
-			
-			
-			
-			
 			MapObjectType stationType = new MapObjectType("de-pegelonline-station",
 					stationAttributes, stationReferencedObjects);
 
-			dbSchema = stationType;
-		}
-
-		// source schema
-		{
 			List<ObjectType> stationList = new LinkedList<ObjectType>();
-			stationList.add(dbSchema);
+			stationList.add(stationType);
 			sourceSchema = new ListObjectType(null, stationList);
 
 		}
