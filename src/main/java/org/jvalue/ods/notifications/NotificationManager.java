@@ -26,10 +26,15 @@ import java.util.Set;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.notifications.clients.Client;
 import org.jvalue.ods.notifications.clients.GcmClient;
 import org.jvalue.ods.notifications.clients.HttpClient;
+import org.jvalue.ods.notifications.db.ClientDatastore;
 import org.jvalue.ods.notifications.db.ClientDatastoreFactory;
 import org.jvalue.ods.notifications.definitions.DefinitionFactory;
+import org.jvalue.ods.notifications.definitions.NotificationDefinition;
+import org.jvalue.ods.notifications.sender.NotificationException;
+import org.jvalue.ods.notifications.sender.NotificationSender;
 import org.jvalue.ods.utils.Assert;
 
 

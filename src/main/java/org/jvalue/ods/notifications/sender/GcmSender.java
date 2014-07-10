@@ -9,13 +9,9 @@ import java.util.Map;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.logger.Logging;
-import org.jvalue.ods.notifications.ApiKey;
-import org.jvalue.ods.notifications.Client;
-import org.jvalue.ods.notifications.NotificationException;
 import org.jvalue.ods.notifications.NotificationManager;
-import org.jvalue.ods.notifications.NotificationSender;
+import org.jvalue.ods.notifications.clients.Client;
 import org.jvalue.ods.notifications.clients.GcmClient;
-import org.jvalue.ods.utils.Assert;
 
 import com.google.android.gcm.server.Constants;
 import com.google.android.gcm.server.Message;
@@ -34,9 +30,8 @@ final class GcmSender implements NotificationSender<GcmClient> {
 	private final Sender sender;
 	private final NotificationManager notificationManager;
 
-	GcmSender(ApiKey key) {
-		Assert.assertNotNull(key);
-		this.sender = new Sender(key.toString());
+	GcmSender() throws NotificationException {
+		this.sender = new Sender(GcmApiKey.getInstance().toString());
 		this.notificationManager = NotificationManager.getInstance();
 	}
 	

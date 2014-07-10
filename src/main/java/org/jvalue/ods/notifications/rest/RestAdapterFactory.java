@@ -1,6 +1,5 @@
 package org.jvalue.ods.notifications.rest;
 
-import org.jvalue.ods.notifications.RestAdapter;
 import org.jvalue.ods.notifications.clients.GcmClient;
 import org.jvalue.ods.notifications.clients.HttpClient;
 

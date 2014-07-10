@@ -17,7 +17,6 @@
  */
 package org.jvalue.ods.notifications.db;
 
-import org.jvalue.ods.notifications.ClientDatastore;
 
 
 

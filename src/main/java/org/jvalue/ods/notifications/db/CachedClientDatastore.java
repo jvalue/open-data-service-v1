@@ -20,8 +20,7 @@ package org.jvalue.ods.notifications.db;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.jvalue.ods.notifications.Client;
-import org.jvalue.ods.notifications.ClientDatastore;
+import org.jvalue.ods.notifications.clients.Client;
 
 
 final class CachedClientDatastore implements ClientDatastore {

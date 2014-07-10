@@ -5,8 +5,6 @@ import java.net.URLEncoder;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
-import org.jvalue.ods.notifications.NotificationException;
-import org.jvalue.ods.notifications.NotificationSender;
 import org.jvalue.ods.notifications.clients.HttpClient;
 import org.jvalue.ods.utils.RestCall;
 import org.jvalue.ods.utils.RestException;

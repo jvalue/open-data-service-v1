@@ -20,8 +20,8 @@ package org.jvalue.ods.notifications.db;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jvalue.ods.notifications.Client;
-import org.jvalue.ods.notifications.ClientVisitor;
+import org.jvalue.ods.notifications.clients.Client;
+import org.jvalue.ods.notifications.clients.ClientVisitor;
 import org.jvalue.ods.notifications.clients.GcmClient;
 import org.jvalue.ods.notifications.clients.HttpClient;
 import org.jvalue.ods.utils.Assert;

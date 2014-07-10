@@ -1,4 +1,5 @@
 /*  Open Data Service
+    Copyright (C) 2013  Tsysin Konstantin, Reischl Patrick
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
@@ -14,25 +15,18 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.notifications;
+package org.jvalue.ods.notifications.db;
+
+import java.util.Set;
+
+import org.jvalue.ods.notifications.clients.Client;
 
 
+public interface ClientDatastore {
 
-public final class NotificationException extends Exception {
-
-	public static final long serialVersionUID = 42L;
-
-
-	public NotificationException(String msg) {
-		super(msg);
-	}
-
-	public NotificationException(Throwable cause) {
-		super(cause);
-	}
-
-	public NotificationException(String msg, Throwable cause) {
-		super(msg, cause);
-	}
+	public void add(Client client);
+	public void remove(Client client);
+	public boolean contains(Client client);
+	public Set<Client> getAll();
 
 }

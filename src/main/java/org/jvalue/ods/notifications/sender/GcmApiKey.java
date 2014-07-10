@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.notifications;
+package org.jvalue.ods.notifications.sender;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -26,11 +26,11 @@ import java.net.URL;
 import org.jvalue.ods.logger.Logging;
 
 
-public final class ApiKey {
+final class GcmApiKey {
 
-	private static ApiKey instance = null;
-	public static ApiKey getInstance() throws NotificationException {
-		if (instance == null) instance = new ApiKey();
+	private static GcmApiKey instance = null;
+	public static GcmApiKey getInstance() throws NotificationException {
+		if (instance == null) instance = new GcmApiKey();
 		return instance;
 	}
 
@@ -38,7 +38,7 @@ public final class ApiKey {
 	private static String resourceName = "/googleApi.key";
 	private final String key;
 
-	private ApiKey() throws NotificationException {
+	private GcmApiKey() throws NotificationException {
 		URL resourceUrl = getClass().getResource(resourceName);
 
 		String key = null;
@@ -74,7 +74,7 @@ public final class ApiKey {
 	 * Has to be called before first getInstance to function.
 	 */
 	static void setKeyResourceName(String resourceName) {
-		ApiKey.resourceName = resourceName;
+		GcmApiKey.resourceName = resourceName;
 	}
 
 }

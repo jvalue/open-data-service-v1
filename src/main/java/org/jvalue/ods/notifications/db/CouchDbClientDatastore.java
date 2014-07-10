@@ -25,8 +25,7 @@ import org.jvalue.ods.data.OdsView;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.DbUtils;
-import org.jvalue.ods.notifications.Client;
-import org.jvalue.ods.notifications.ClientDatastore;
+import org.jvalue.ods.notifications.clients.Client;
 import org.jvalue.ods.utils.Assert;
 
 import com.fasterxml.jackson.databind.JsonNode;

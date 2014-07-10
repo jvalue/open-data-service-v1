@@ -19,7 +19,6 @@ package org.jvalue.ods.notifications.rest;
 
 import java.util.Set;
 
-import org.jvalue.ods.notifications.RestAdapter;
 import org.jvalue.ods.notifications.clients.HttpClient;
 import org.restlet.Request;
 
