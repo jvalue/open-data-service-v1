@@ -1,4 +1,4 @@
-package org.jvalue.ods.notifications;
+package org.jvalue.ods.notifications.db;
 
 import static org.junit.Assert.assertTrue;
 
@@ -8,8 +8,8 @@ import java.util.List;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.jvalue.ods.notifications.clients.Client;
 import org.jvalue.ods.notifications.clients.GcmClient;
-import org.jvalue.ods.notifications.db.ClientDatastoreFactory;
 
 
 public final class ClientDatastoreTest {
