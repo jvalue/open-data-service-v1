@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.server;
+package org.jvalue.ods.server.router;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +24,6 @@ import java.util.Map;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.logger.Logging;
-import org.jvalue.ods.main.Router;
 import org.jvalue.ods.server.restlet.AccessObjectByIdRestlet;
 import org.restlet.Request;
 import org.restlet.Response;
@@ -36,29 +35,19 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-/**
- * The Class OdsRouter.
- */
+
 public class OdsRouter implements Router<Restlet> {
-	/** The routes. */
+
 	private HashMap<String, Restlet> routes;
 
-	/** The db accessor. */
 	private DbAccessor<JsonNode> dbAccessor;
 
-	/**
-	 * Instantiates a new pegel online router.
-	 * 
-	 */
+
 	public OdsRouter() {
 		this.dbAccessor = DbFactory.createDbAccessor("ods");
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.jvalue.ods.main.Router#getRoutes()
-	 */
+
 	@Override
 	public Map<String, Restlet> getRoutes() {
 
@@ -73,7 +62,7 @@ public class OdsRouter implements Router<Restlet> {
 				// there is an attribute in url
 				if (request.getResourceRef().getQueryAsForm().size() == 1) {
 
-					message = new RouterUtils().getDocumentByAttribute(request,
+					message = RouterUtils.getDocumentByAttribute(request,
 							dbAccessor);
 
 				}
@@ -120,7 +109,7 @@ public class OdsRouter implements Router<Restlet> {
 
 					}
 
-					message = new RouterUtils().getDocumentByAttribute(request,
+					message = RouterUtils.getDocumentByAttribute(request,
 							dbAccessor);
 
 				} else {

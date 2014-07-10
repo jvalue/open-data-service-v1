@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.server.pegelonline;
+package org.jvalue.ods.server.router;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -29,38 +29,26 @@ import org.junit.Before;
 import org.junit.Test;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.main.RouterFactory;
 import org.restlet.Restlet;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-/**
- * The Class PegelOnlineRouterTest.
- */
-public class PegelOnlineRouterTest {
 
-	/** The router. */
-	PegelOnlineRouter router;
+public final class PegelOnlineRouterTest {
 
-	/** The mock accessor. */
-	DbAccessor<JsonNode> mockAccessor;
+	private PegelOnlineRouter router;
 
-	/**
-	 * Sets the up.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
+	private DbAccessor<JsonNode> mockAccessor;
+
+
 	@Before
 	public void setUp() throws Exception {
-		router = RouterFactory.createPegelOnlineRouter();
+		router = new PegelOnlineRouter();
 		mockAccessor = DbFactory.createMockDbAccessor("DbAccessorTest");
 		router.setDbAccessor(mockAccessor);
 	}
 
-	/**
-	 * Clean up.
-	 */
+
 	@After
 	public void cleanUp() {
 		mockAccessor.connect();
@@ -70,9 +58,7 @@ public class PegelOnlineRouterTest {
 		}
 	}
 
-	/**
-	 * Test get routes.
-	 */
+
 	@Test
 	public void testGetRoutes() {
 		Map<String, Restlet> routes = router.getRoutes();

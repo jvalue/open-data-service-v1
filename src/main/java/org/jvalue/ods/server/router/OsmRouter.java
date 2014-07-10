@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.server.openstreetmap;
+package org.jvalue.ods.server.router;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,8 +25,6 @@ import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.logger.Logging;
-import org.jvalue.ods.main.Router;
-import org.jvalue.ods.server.RouterUtils;
 import org.jvalue.ods.server.restlet.ExecuteQueryRestlet;
 import org.restlet.Request;
 import org.restlet.Response;
@@ -37,29 +35,19 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-/**
- * The Class OsmRouter.
- */
-public class OsmRouter implements Router<Restlet> {
 
-	/** The routes. */
+class OsmRouter implements Router<Restlet> {
+
 	private HashMap<String, Restlet> routes;
 
-	/** The db accessor. */
 	private DbAccessor<JsonNode> dbAccessor;
 
-	/**
-	 * Instantiates a new osm router.
-	 */
+
 	public OsmRouter() {
 		this.dbAccessor = DbFactory.createDbAccessor("ods");
 	}
 
-	/**
-	 * Gets the routes.
-	 * 
-	 * @return the routes
-	 */
+
 	@Override
 	public Map<String, Restlet> getRoutes() {
 		routes = new HashMap<String, Restlet>();
@@ -269,7 +257,7 @@ public class OsmRouter implements Router<Restlet> {
 				// there is an attribute in url
 				if (request.getResourceRef().getQueryAsForm().size() == 1) {
 
-					message = new RouterUtils().getDocumentByAttribute(request,
+					message = RouterUtils.getDocumentByAttribute(request,
 							dbAccessor);
 
 				}
@@ -303,21 +291,12 @@ public class OsmRouter implements Router<Restlet> {
 		return routes;
 	}
 
-	/**
-	 * Gets the db accessor.
-	 * 
-	 * @return the db accessor
-	 */
+
 	public DbAccessor<JsonNode> getDbAccessor() {
 		return dbAccessor;
 	}
 
-	/**
-	 * Sets the db accessor.
-	 * 
-	 * @param dbAccessor
-	 *            the new db accessor
-	 */
+
 	public void setDbAccessor(DbAccessor<JsonNode> dbAccessor) {
 		this.dbAccessor = dbAccessor;
 	}

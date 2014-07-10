@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.server.routes;
+package org.jvalue.ods.server.router;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -28,7 +28,6 @@ import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.logger.Logging;
-import org.jvalue.ods.main.Router;
 import org.jvalue.ods.translator.TranslatorFactory;
 import org.restlet.Request;
 import org.restlet.Response;
@@ -40,29 +39,18 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-/**
- * The Class RoutesRouter.
- */
-public class RoutesRouter implements Router<Restlet> {
 
-	/** The routes. */
+class RoutesRouter implements Router<Restlet> {
+
 	private HashMap<String, Restlet> routes;
 
-	/** The db accessor. */
 	private DbAccessor<JsonNode> dbAccessor;
 
-	/**
-	 * Instantiates a new routes router.
-	 */
 	public RoutesRouter() {
 		this.dbAccessor = DbFactory.createDbAccessor("ods");
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.jvalue.ods.adapter.RouterInterface#getRoutes()
-	 */
+
 	@Override
 	public Map<String, Restlet> getRoutes() {
 		routes = new HashMap<String, Restlet>();
@@ -208,21 +196,12 @@ public class RoutesRouter implements Router<Restlet> {
 		return routes;
 	}
 
-	/**
-	 * Gets the db accessor.
-	 * 
-	 * @return the db accessor
-	 */
+
 	public DbAccessor<JsonNode> getDbAccessor() {
 		return dbAccessor;
 	}
 
-	/**
-	 * Sets the db accessor.
-	 * 
-	 * @param dbAccessor
-	 *            the new db accessor
-	 */
+
 	public void setDbAccessor(DbAccessor<JsonNode> dbAccessor) {
 		this.dbAccessor = dbAccessor;
 	}

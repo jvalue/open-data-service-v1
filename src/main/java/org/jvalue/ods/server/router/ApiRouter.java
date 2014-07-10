@@ -15,33 +15,24 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.server;
+package org.jvalue.ods.server.router;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeSet;
 
 import org.jvalue.ods.logger.Logging;
-import org.jvalue.ods.main.Router;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
 import org.restlet.data.MediaType;
 
-/**
- * The Class ApiRouter.
- */
-public class ApiRouter implements Router<Restlet> {
 
-	/** The routes. */
+class ApiRouter implements Router<Restlet> {
+
 	private HashMap<String, Restlet> routes;
 
-	/**
-	 * Instantiates a new api router.
-	 * 
-	 * @param routes
-	 *            the routes
-	 */
+
 	public ApiRouter(HashMap<String, Restlet> routes) {
 		if (routes == null) {
 			String errorMessage = "routes is null";
@@ -52,11 +43,7 @@ public class ApiRouter implements Router<Restlet> {
 		this.routes = routes;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.jvalue.ods.adapter.RouterInterface#getRoutes()
-	 */
+
 	@Override
 	public Map<String, Restlet> getRoutes() {
 

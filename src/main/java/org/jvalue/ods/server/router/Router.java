@@ -15,23 +15,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.main;
+package org.jvalue.ods.server.router;
 
 import java.util.Map;
 
-/**
- * The Interface RouterInterface.
- * 
- * @param <T>
- *            the generic type
- */
+
 public interface Router<T> {
 
-	/**
-	 * Gets the routes.
-	 * 
-	 * @return the routes
-	 */
 	public Map<String, T> getRoutes();
 
 }

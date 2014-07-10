@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.server.openstreetmap;
+package org.jvalue.ods.server.router;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -25,7 +25,6 @@ import org.jvalue.ods.data.DummyDataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.metadata.JacksonMetaData;
 import org.jvalue.ods.logger.Logging;
-import org.jvalue.ods.main.Router;
 import org.jvalue.ods.translator.TranslatorFactory;
 import org.restlet.Request;
 import org.restlet.Response;
@@ -35,36 +34,32 @@ import org.restlet.data.MediaType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-/**
- * The Class OverpassRouter.
- */
-public class OverpassRouter implements Router<Restlet> {
+class NominatimRouter implements Router<Restlet> {
 
-	/** The routes. */
 	private HashMap<String, Restlet> routes;
 
-	/**
-	 * Gets the routes.
-	 * 
-	 * @return the routes
-	 */
+
 	@Override
 	public Map<String, Restlet> getRoutes() {
 		routes = new HashMap<String, Restlet>();
 
-		Restlet overpassLocationRestlet = new Restlet() {
+		Restlet nominatimRestlet = new Restlet() {
 			@Override
 			public void handle(Request request, Response response) {
 				// Print the requested URI path
 				String message = "";
-
-				GenericEntity ret = null;
 				try {
-					ret = TranslatorFactory.getJsonTranslator(DummyDataSource.newInstance( 
-								"ru-rambler-osm-overpass",
-								"http://overpass.osm.rambler.ru/cgi/interpreter?data=[out:json];node[name%3D"
-								+ (String) request.getAttributes().get("location") + "]%3Bout%3B"))
+
+					GenericEntity ret = null;
+
+					ret = TranslatorFactory.getJsonTranslator(
+							DummyDataSource.newInstance(
+								"org-nominatim-openstreetmap",
+								"http://nominatim.openstreetmap.org/search?q="
+								+ (String) request.getAttributes().get("location") 
+								+ "&format=json"))
 						.translate();
+
 					ObjectMapper mapper = new ObjectMapper();
 					message += mapper.writeValueAsString(ret);
 
@@ -72,8 +67,41 @@ public class OverpassRouter implements Router<Restlet> {
 					String errorMessage = "Error during client request: " + e;
 					Logging.error(this.getClass(), errorMessage);
 					System.err.println(errorMessage);
-					message += "Station not found: "
+					message += "Unable to geocode: "
 							+ (String) request.getAttributes().get("location");
+				}
+
+				response.setEntity(message, MediaType.APPLICATION_JSON);
+			}
+
+		};
+
+		Restlet reverseNominatimRestlet = new Restlet() {
+			@Override
+			public void handle(Request request, Response response) {
+				// Print the requested URI path
+				String message = "";
+				try {
+
+					GenericEntity ret = null;
+
+					ret = TranslatorFactory.getJsonTranslator(
+							DummyDataSource.newInstance(
+								"org-nominatim-openstreetmap",
+								"http://nominatim.openstreetmap.org/reverse?format=json"
+								+ (String) request.getAttributes().get("coordinates")))
+						.translate();
+
+					ObjectMapper mapper = new ObjectMapper();
+					message += mapper.writeValueAsString(ret);
+
+				} catch (IOException e) {
+					String errorMessage = "Error during client request: " + e;
+					Logging.error(this.getClass(), errorMessage);
+					System.err.println(errorMessage);
+					message += "Unable to reverse-geocode: "
+							+ (String) request.getAttributes().get(
+									"coordinates");
 				}
 
 				response.setEntity(message, MediaType.APPLICATION_JSON);
@@ -91,12 +119,12 @@ public class OverpassRouter implements Router<Restlet> {
 
 					String message = mapper
 							.writeValueAsString(new JacksonMetaData(
-									"org-openstreetmap-overpass",
-									"overpass",
+									"org-openstreetmap-nominatim",
+									"nominatim",
 									"OpenStreetMap Community",
 									"http://www.openstreetmap.org",
-									"The Overpass API is a read-only API that serves up custom selected parts of the OSM map data. It acts as a database over the web: the client sends a query to the API and gets back the data set that corresponds to the query.",
-									"http://overpass.osm.rambler.ru",
+									"Nominatim is a tool to search OSM data by name and address and to generate synthetic addresses of OSM points (reverse geocoding). Usage policy: http://wiki.openstreetmap.org/wiki/Nominatim_usage_policy",
+									"http://nominatim.openstreetmap.org",
 									"http://www.openstreetmap.org/copyright"));
 
 					response.setEntity(message, MediaType.APPLICATION_JSON);
@@ -109,9 +137,13 @@ public class OverpassRouter implements Router<Restlet> {
 			}
 		};
 
-		routes.put("/services/de/overpass/{location}", overpassLocationRestlet);
-		routes.put("/services/de/overpass/metadata", metadataRestlet);
+		routes.put("/services/de/nominatim/coordinates/{location}",
+				nominatimRestlet);
+		routes.put("/services/de/nominatim/reverse{coordinates}",
+				reverseNominatimRestlet);
+		routes.put("/services/de/nominatim/metadata", metadataRestlet);
 
 		return routes;
 	}
+
 }

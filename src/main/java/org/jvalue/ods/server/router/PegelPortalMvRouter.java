@@ -15,83 +15,71 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.server.pegelonline;
+package org.jvalue.ods.server.router;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.main.Router;
 import org.jvalue.ods.server.restlet.ExecuteQueryRestlet;
 import org.restlet.Restlet;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-/**
- * The Class PegelOnlineRouter. defines routes that start with /pegelonline/
- * 
- */
-public class PegelOnlineRouter implements Router<Restlet> {
 
-	private static final String CLIENT_ERROR_MSG = "Could not retrieve data. Try to update database via /pegelonline/update.";
+class PegelPortalMvRouter implements Router<Restlet> {
+	
+	private final static String CLIENT_ERROR_MSG = "Could not retrieve data. Try to update database via /pegelportal-mv/update.";
 
-	/** The db accessor. */
 	private DbAccessor<JsonNode> dbAccessor;
 
-	/**
-	 * Instantiates a new pegel online router.
-	 * 
-	 */
-	public PegelOnlineRouter() {
+	public PegelPortalMvRouter() {
 		this.dbAccessor = DbFactory.createDbAccessor("ods");
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.jvalue.ods.adapter.RouterInterface#getRoutes()
-	 */
+	
 	@Override
 	public Map<String, Restlet> getRoutes() {
 		Map<String, Restlet> routes = new LinkedHashMap<String, Restlet>();
 
 		// all stations
 		routes.put(
-				"/ods/de/pegelonline/stations", 
+				"/ods/de/pegelportal-mv/stations", 
 				new ExecuteQueryRestlet.Builder(
-						dbAccessor,
-						"_design/pegelonline",
+						dbAccessor, 
+						"_design/pegelportal-mv", 
 						"getAllStations")
 					.errorMsg(CLIENT_ERROR_MSG)
 					.build());
 
 		// all stations flat
 		routes.put(
-				"/ods/de/pegelonline/stationsFlat", 
+				"/ods/de/pegelportal-mv/stationsFlat", 
 				new ExecuteQueryRestlet.Builder(
-						dbAccessor,
-						"_design/pegelonline",
+						dbAccessor, 
+						"_design/pegelportal-mv", 
 						"getAllStationsFlat")
 					.errorMsg(CLIENT_ERROR_MSG)
 					.build());
 
-		// value types
+		// value types 
 		routes.put(
-				"/ods/de/pegelonline/stations/$class",
+				"/ods/de/pegelportal-mv/stations/$class", 
 				new ExecuteQueryRestlet.Builder(
 						dbAccessor, 
-						"_design/pegelonline",
+						"_design/pegelportal-mv", 
 						"getClassObject")
 					.errorMsg(CLIENT_ERROR_MSG)
 					.fetchAllDbEntries(false)
 					.build());
 
 		// value types id
-		routes.put("/ods/de/pegelonline/stations/$class_id",
+		routes.put(
+				"/ods/de/pegelportal-mv/stations/$class_id",
 				new ExecuteQueryRestlet.Builder(
 						dbAccessor, 
-						"_design/pegelonline",
+						"_design/pegelportal-mv", 
 						"getClassObjectId")
 					.errorMsg(CLIENT_ERROR_MSG)
 					.fetchAllDbEntries(false)
@@ -99,45 +87,35 @@ public class PegelOnlineRouter implements Router<Restlet> {
 
 		// get single station
 		routes.put(
-				"/ods/de/pegelonline/stations/{station}",
+				"/ods/de/pegelportal-mv/stations/{station}", 
 				new ExecuteQueryRestlet.Builder(
-						dbAccessor,
-						"_design/pegelonline",
+						dbAccessor, 
+						"_design/pegelportal-mv", 
 						"getSingleStation")
+					.errorMsg(CLIENT_ERROR_MSG)
 					.fetchAllDbEntries(false)
 					.attributeName("station")
-					.errorMsg(CLIENT_ERROR_MSG)
 					.build());
 
-		// metadata
+		// meta data
 		routes.put(
-				"/ods/de/pegelonline/metadata", 
+				"/ods/de/pegelportal-mv/metadata", 
 				new ExecuteQueryRestlet.Builder(
-						dbAccessor,
-						"_design/pegelonline",
+						dbAccessor, 
+						"_design/pegelportal-mv", 
 						"getMetadata")
-					.fetchAllDbEntries(false)
 					.errorMsg(CLIENT_ERROR_MSG)
+					.fetchAllDbEntries(false)
 					.build());
-
 		return routes;
 	}
 
-	/**
-	 * Gets the db accessor.
-	 * 
-	 * @return the db accessor
-	 */
+
 	public DbAccessor<JsonNode> getDbAccessor() {
 		return dbAccessor;
 	}
 
-	/**
-	 * Sets the db accessor.
-	 * 
-	 * @param dbAccessor
-	 *            the new db accessor
-	 */
+
 	public void setDbAccessor(DbAccessor<JsonNode> dbAccessor) {
 		this.dbAccessor = dbAccessor;
 	}

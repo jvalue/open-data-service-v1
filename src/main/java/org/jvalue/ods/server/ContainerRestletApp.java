@@ -25,8 +25,8 @@ import java.util.Set;
 
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.DataGrabberMain;
-import org.jvalue.ods.main.RouterFactory;
 import org.jvalue.ods.server.restlet.DefaultRestlet;
+import org.jvalue.ods.server.router.RouterFactory;
 import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.routing.Router;
@@ -45,23 +45,23 @@ public class ContainerRestletApp extends Application implements Runnable {
 	public Restlet createInboundRoot() {
 		(new Thread(this)).start();
 
-		org.jvalue.ods.main.Router<Restlet> odsRouter = RouterFactory
+		org.jvalue.ods.server.router.Router<Restlet> odsRouter = RouterFactory
 				.createOdsRouter();
-		org.jvalue.ods.main.Router<Restlet> poRouter = RouterFactory
+		org.jvalue.ods.server.router.Router<Restlet> poRouter = RouterFactory
 				.createPegelOnlineRouter();
-		org.jvalue.ods.main.Router<Restlet> ppRouter = RouterFactory
+		org.jvalue.ods.server.router.Router<Restlet> ppRouter = RouterFactory
 				.createPegelPortalMvRouter();
-		org.jvalue.ods.main.Router<Restlet> noRouter = RouterFactory
+		org.jvalue.ods.server.router.Router<Restlet> noRouter = RouterFactory
 				.createNominatimRouter();
-		org.jvalue.ods.main.Router<Restlet> ovRouter = RouterFactory
+		org.jvalue.ods.server.router.Router<Restlet> ovRouter = RouterFactory
 				.createOverpassRouter();
-		org.jvalue.ods.main.Router<Restlet> osmRouter = RouterFactory
+		org.jvalue.ods.server.router.Router<Restlet> osmRouter = RouterFactory
 				.createOsmRouter();
-		org.jvalue.ods.main.Router<Restlet> notificationRouter = RouterFactory
+		org.jvalue.ods.server.router.Router<Restlet> notificationRouter = RouterFactory
 				.createNotificationRouter();
-		org.jvalue.ods.main.Router<Restlet> routesRouter = RouterFactory
+		org.jvalue.ods.server.router.Router<Restlet> routesRouter = RouterFactory
 				.createRoutesRouter();
-		org.jvalue.ods.main.Router<Restlet> administrationRouter = RouterFactory
+		org.jvalue.ods.server.router.Router<Restlet> administrationRouter = RouterFactory
 				.createAdministrationRouter();
 
 		HashMap<String, Restlet> combinedRouter = new LinkedHashMap<String, Restlet>();
@@ -76,7 +76,7 @@ public class ContainerRestletApp extends Application implements Runnable {
 		combinedRouter.putAll(administrationRouter.getRoutes());
 
 		// must be last router, generates api output
-		org.jvalue.ods.main.Router<Restlet> apiRouter = RouterFactory
+		org.jvalue.ods.server.router.Router<Restlet> apiRouter = RouterFactory
 				.createApiRouter(combinedRouter);
 		combinedRouter.putAll(apiRouter.getRoutes());
 

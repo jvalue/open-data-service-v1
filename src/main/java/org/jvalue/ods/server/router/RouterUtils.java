@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.server;
+package org.jvalue.ods.server.router;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -31,21 +31,13 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-/**
- * The Class RouterUtils.
- */
-public class RouterUtils {
 
-	/**
-	 * Gets the document by attribute.
-	 * 
-	 * @param request
-	 *            the request
-	 * @param dbAccessor
-	 *            the db accessor
-	 * @return the document by attribute
-	 */
-	public String getDocumentByAttribute(Request request,
+class RouterUtils {
+
+	private RouterUtils() { }
+
+
+	public static String getDocumentByAttribute(Request request,
 			DbAccessor<JsonNode> dbAccessor) {
 
 		String message = "Could not find matching document.";
@@ -65,7 +57,7 @@ public class RouterUtils {
 				nodes = dbAccessor.getAllDocuments();
 			} catch (RuntimeException e) {
 				String errorMessage = "Could not retrieve data from db: " + e;
-				Logging.error(this.getClass(), errorMessage);
+				Logging.error(RouterUtils.class, errorMessage);
 				System.err.println(errorMessage);
 				message += mapper
 						.writeValueAsString("Could not retrieve data.");
@@ -73,7 +65,7 @@ public class RouterUtils {
 
 		} catch (IOException e) {
 			String errorMessage = "Error during client request: " + e;
-			Logging.error(this.getClass(), errorMessage);
+			Logging.error(RouterUtils.class, errorMessage);
 			System.err.println(errorMessage);
 		}
 
@@ -122,7 +114,7 @@ public class RouterUtils {
 			}
 		} catch (IOException e) {
 			String errorMessage = "Error during client request: " + e;
-			Logging.error(this.getClass(), errorMessage);
+			Logging.error(RouterUtils.class, errorMessage);
 			System.err.println(errorMessage);
 		}
 
