@@ -23,8 +23,8 @@ import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.jvalue.ods.grabber.DataGrabberMain;
 import org.jvalue.ods.logger.Logging;
-import org.jvalue.ods.main.DataGrabberMain;
 import org.jvalue.ods.server.restlet.DefaultRestlet;
 import org.jvalue.ods.server.router.RouterFactory;
 import org.restlet.Application;

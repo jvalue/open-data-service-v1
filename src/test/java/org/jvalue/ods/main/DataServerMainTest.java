@@ -20,6 +20,7 @@ package org.jvalue.ods.main;
 
 import org.junit.Test;
 import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.server.DataServerMain;
 
 /**
  * The Class DataServerMainTest.

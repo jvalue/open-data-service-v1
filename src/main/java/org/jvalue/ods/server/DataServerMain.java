@@ -16,9 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jvalue.ods.main;
+package org.jvalue.ods.server;
 
-import org.jvalue.ods.server.RestletServer;
 
 /**
  * The Class DataServerMain.

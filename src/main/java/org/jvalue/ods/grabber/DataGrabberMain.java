@@ -14,7 +14,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.main;
+package org.jvalue.ods.grabber;
 
 import org.jvalue.ods.administration.AdministrationLogging;
 import org.jvalue.ods.configuration.ConfigurationManager;
