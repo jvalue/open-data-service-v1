@@ -27,7 +27,6 @@ import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
 import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.logger.Logging;
-import org.jvalue.ods.main.DataGrabberMain;
 import org.jvalue.ods.utils.Assert;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -64,7 +63,7 @@ public final class DbInsertionFilter implements Filter<GenericEntity, GenericEnt
 		} else {
 			String errmsg = "GenericValue must be ListValue or MapValue.";
 			System.err.println(errmsg);
-			Logging.error(DataGrabberMain.class, errmsg);
+			Logging.error(this.getClass(), errmsg);
 			throw new RuntimeException(errmsg);
 		}
 		return data;
