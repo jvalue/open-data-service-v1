@@ -17,8 +17,6 @@
  */
 package org.jvalue.ods.notifications.clients;
 
-import org.jvalue.ods.notifications.clients.GcmClient;
-import org.jvalue.ods.notifications.clients.HttpClient;
 
 
 public interface ClientVisitor<P,R> {

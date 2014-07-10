@@ -44,6 +44,7 @@ public abstract class Client {
 	@Override
 	public boolean equals(Object other) {
 		if (other == null || !(other instanceof Client)) return false;
+		if (other == this) return true;
 		Client client = (Client) other;
 		return client.id.equals(id) && client.source.equals(source);
 	}
