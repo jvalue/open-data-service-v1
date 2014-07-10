@@ -27,6 +27,7 @@ import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.jvalue.ods.data.DummyDataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.valuetypes.AllowedValueTypes;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
@@ -34,7 +35,6 @@ import org.jvalue.ods.data.valuetypes.ListComplexValueType;
 import org.jvalue.ods.data.valuetypes.MapComplexValueType;
 import org.jvalue.ods.translator.Translator;
 import org.jvalue.ods.translator.TranslatorFactory;
-import org.jvalue.ods.utils.DummyDataSource;
 
 
 public class JsonTranslatorTest {

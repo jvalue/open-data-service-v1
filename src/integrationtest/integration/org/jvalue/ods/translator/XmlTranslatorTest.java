@@ -21,10 +21,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
+import org.jvalue.ods.data.DummyDataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.translator.Translator;
 import org.jvalue.ods.translator.TranslatorFactory;
-import org.jvalue.ods.utils.DummyDataSource;
 
 
 public class XmlTranslatorTest {

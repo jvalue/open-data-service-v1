@@ -23,13 +23,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.data.DummyDataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.main.Router;
 import org.jvalue.ods.translator.TranslatorFactory;
-import org.jvalue.ods.utils.DummyDataSource;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
