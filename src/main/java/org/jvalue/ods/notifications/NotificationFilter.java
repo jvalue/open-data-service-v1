@@ -18,12 +18,20 @@ package org.jvalue.ods.notifications;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.filter.Filter;
+import org.jvalue.ods.utils.Assert;
 
 
 public final class NotificationFilter implements Filter<GenericEntity, GenericEntity> {
 
+	private final DataSource source;
+
+	public NotificationFilter(DataSource source) {
+		Assert.assertNotNull(source);
+		this.source = source;
+	}
+
 	@Override
-	public GenericEntity filter(DataSource source, GenericEntity data) {
+	public GenericEntity filter(GenericEntity data) {
 		NotificationManager.getInstance().notifySourceChanged(source, data);
 		return data;
 	}

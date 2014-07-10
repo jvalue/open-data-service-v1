@@ -17,10 +17,8 @@
  */
 package org.jvalue.ods.filter;
 
-import org.jvalue.ods.data.DataSource;
-
 public interface Filter<P,R> {
 
-	public R filter(DataSource source, P param);
+	public R filter(P param);
 
 }

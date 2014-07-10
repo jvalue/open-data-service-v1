@@ -29,8 +29,13 @@ import org.jvalue.ods.logger.Logging;
 
 abstract class HtmlTranslator extends Translator {
 
+	protected HtmlTranslator(DataSource source) {
+		super(source);
+	}
+
+
 	@Override
-	public GenericEntity translate(DataSource dataSource) {
+	public GenericEntity translate() {
 		if (dataSource == null || dataSource.getUrl() == null)
 			throw new IllegalArgumentException("source is null");
 

@@ -51,13 +51,16 @@ final class OsmTranslator extends Translator {
 
 	private ListObject lv = new ListObject();
 
-	@Override
-	public GenericEntity translate(DataSource source) {
-		if (source == null) {
-			throw new IllegalArgumentException("source is null");
-		}
 
-		String url = source.getUrl();
+	public OsmTranslator(DataSource source) {
+		super(source);
+	}
+
+
+	@Override
+	public GenericEntity translate() {
+
+		String url = dataSource.getUrl();
 
 		if (url == null || url.length() == 0) {
 			throw new IllegalArgumentException("source is empty");
@@ -154,9 +157,9 @@ final class OsmTranslator extends Translator {
 			file.delete();
 		}
 
-		if (source.getDataSourceSchema() != null) {
+		if (dataSource.getDataSourceSchema() != null) {
 			if (!SchemaManager.validateGenericValusFitsObjectType(lv,
-					source.getDataSourceSchema()))
+					dataSource.getDataSourceSchema()))
 				return null;
 		}
 

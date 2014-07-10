@@ -29,7 +29,6 @@ import org.jvalue.ExactValueRestriction;
 import org.jvalue.ValueType;
 import org.jvalue.numbers.Range;
 import org.jvalue.numbers.RangeBound;
-import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.BaseObject;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
@@ -49,7 +48,7 @@ import org.jvalue.si.SiUnit;
 public final class CombineSourceFilter implements Filter<GenericEntity, GenericEntity> {
 
 	@Override
-	public GenericEntity filter(DataSource source, GenericEntity data) {
+	public GenericEntity filter(GenericEntity data) {
 		// if (!SchemaManager.validateGenericValusFitsSchema(data, schema)) {
 		// Logging.info(this.getClass(),
 		// "Could not validate schema in CombineFilter.");

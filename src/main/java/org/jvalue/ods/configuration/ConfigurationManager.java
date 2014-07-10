@@ -66,7 +66,7 @@ public final class ConfigurationManager {
 			DataSource source = configuration.getDataSource();
 			FilterChain<Void,?> chain = configuration.getFilterChain(accessor);
 
-			filterManager.register(source, chain);
+			filterManager.register(chain);
 
 			accessor.insert(source.getDbSchema());
 			accessor.insert(source.getMetaData());

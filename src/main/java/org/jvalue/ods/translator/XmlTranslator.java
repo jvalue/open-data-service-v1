@@ -25,10 +25,14 @@ import org.xml.sax.InputSource;
 
 final class XmlTranslator extends Translator {
 
+
+	public XmlTranslator(DataSource source) {
+		super(source);
+	}
+
+
 	@Override
-	public GenericEntity translate(DataSource source) {
-		if (source == null)
-			throw new IllegalArgumentException("source is null");
+	public GenericEntity translate() {
 
 		try {
 
@@ -37,7 +41,7 @@ final class XmlTranslator extends Translator {
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 
 			Document doc = null;
-			String sourceUrlString = source.getUrl();
+			String sourceUrlString = dataSource.getUrl();
 			if (!sourceUrlString.startsWith("http")) {
 				URL sourceUrl = getClass().getResource(sourceUrlString);
 				File xmlFile = new File(sourceUrl.toURI());

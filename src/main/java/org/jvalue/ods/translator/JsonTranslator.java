@@ -36,10 +36,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 final class JsonTranslator extends Translator {
 
+	public JsonTranslator(DataSource source) {
+		super(source);
+	}
+
+
 	@Override
-	public GenericEntity translate(DataSource dataSource) {
-		if ((dataSource == null) || (dataSource.getUrl() == null))
-			throw new IllegalArgumentException("source is null");
+	public GenericEntity translate() {
 
 		HttpReader httpAdapter = new HttpReader(dataSource.getUrl());
 		JsonNode rootNode = null;

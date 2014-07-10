@@ -20,15 +20,24 @@ package org.jvalue.ods.translator;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.filter.Filter;
+import org.jvalue.ods.utils.Assert;
 
 public abstract class Translator implements Filter<Void, GenericEntity> {
 
-	@Override
-	public final GenericEntity filter(DataSource dataSource, Void param) {
-		return translate(dataSource);
+	protected final DataSource dataSource;
+
+	protected Translator(DataSource dataSource) {
+		Assert.assertNotNull(dataSource);
+		this.dataSource = dataSource;
 	}
 
 
-	public abstract GenericEntity translate(DataSource dataSource);
+	@Override
+	public final GenericEntity filter(Void param) {
+		return translate();
+	}
+
+
+	public abstract GenericEntity translate();
 
 }

@@ -19,13 +19,10 @@ package org.jvalue.ods.notifications;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import org.codehaus.jackson.map.ObjectMapper;
-import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.filter.FilterChainManager;
 import org.jvalue.ods.main.Router;
 import org.restlet.Request;
 import org.restlet.Response;
@@ -122,6 +119,7 @@ public final class NotificationRouter implements Router<Restlet> {
 		routes.put(ROUTE_BASE + ROUTE_DEBUG_SOURCES, new Restlet() {
 			@Override
 			public void handle(Request request, Response response) {
+				/*
 				try {
 					Set<String> ids = new HashSet<String>();
 					for (DataSource source : FilterChainManager
@@ -136,6 +134,7 @@ public final class NotificationRouter implements Router<Restlet> {
 				} catch (IOException io) {
 					throw new RuntimeException(io);
 				}
+				*/
 			}
 		});
 

@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.BaseObject;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
@@ -40,7 +39,7 @@ import org.jvalue.ods.logger.Logging;
 public final class RenameSourceFilter implements Filter<GenericEntity, GenericEntity> {
 
 	@Override
-	public GenericEntity filter(DataSource source, GenericEntity data) {
+	public GenericEntity filter(GenericEntity data) {
 		// if (!SchemaManager.validateGenericValusFitsSchema(data, schema)) {
 		// Logging.info(this.getClass(),
 		// "Could not validate schema in CombineFilter.");

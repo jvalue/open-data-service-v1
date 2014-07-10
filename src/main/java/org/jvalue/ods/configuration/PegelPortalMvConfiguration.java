@@ -152,12 +152,14 @@ public final class PegelPortalMvConfiguration implements Configuration {
 
 	@Override
 	public FilterChain<Void,?> getFilterChain(DbAccessor<JsonNode> accessor) {
+		DataSource source = getDataSource();
+
 		FilterChain<Void, GenericEntity> chain = FilterChain
-			.instance(TranslatorFactory.getPegelPortalMvTranslator());
+			.instance(TranslatorFactory.getPegelPortalMvTranslator(source));
 
 		chain
-			.setNextFilter(new DbInsertionFilter(accessor))
-			.setNextFilter(new NotificationFilter());
+			.setNextFilter(new DbInsertionFilter(accessor, source))
+			.setNextFilter(new NotificationFilter(source));
 
 		return chain;
 

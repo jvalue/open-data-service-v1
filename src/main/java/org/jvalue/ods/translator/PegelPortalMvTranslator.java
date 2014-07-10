@@ -30,6 +30,7 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 import org.jvalue.ods.configuration.PegelPortalMvConfiguration;
+import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.BaseObject;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
@@ -53,6 +54,11 @@ final class PegelPortalMvTranslator extends HtmlTranslator {
 		tableMapping.put(PegelPortalMvConfiguration.KEY_LEVEL, 3);
 		tableMapping.put(PegelPortalMvConfiguration.KEY_EFFLUENT, 4);
 		tableMapping.put(PegelPortalMvConfiguration.KEY_AGENCY, 8);
+	}
+
+
+	public PegelPortalMvTranslator(DataSource source) {
+		super(source);
 	}
 
 
