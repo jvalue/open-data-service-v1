@@ -93,7 +93,7 @@ final class JsonTranslator extends Translator {
 	 */
 	private boolean isClassOf(GenericValueType genericObjectType, Class<?> c) {
 		boolean result = genericObjectType.getClass().equals(c);
-		if (result == false) {
+		if (!result) {
 			String error = "Validation error: Expected: "
 					+ genericObjectType.getClass().getName() + " Actual: "
 					+ c.getClass().getName();
