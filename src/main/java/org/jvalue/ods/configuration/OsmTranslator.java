@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.translator;
+package org.jvalue.ods.configuration;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +34,8 @@ import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.schema.SchemaManager;
+import org.jvalue.ods.translator.Translator;
+import org.jvalue.ods.utils.HttpUtils;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
@@ -85,8 +87,7 @@ final class OsmTranslator extends Translator {
 
 			try {
 				Logging.info(this.getClass(), "Opening: " + url);
-				HttpReader reader = new HttpReader(url);
-				String data = reader.read("UTF-8");
+				String data = HttpUtils.readUrl(url, "UTF-8");
 
 				// ToDo: Nicht thread-sicher, Problem bei 2 parallelen Anfragen
 				// Schreiben in Dateien nicht ohne weiteres moeglich in tomcat

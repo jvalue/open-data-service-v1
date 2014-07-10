@@ -353,7 +353,7 @@ final class PegelOnlineConfiguration implements Configuration {
 		DataSource source = getDataSource();
 
 		FilterChain<Void, GenericEntity> chain = FilterChain
-			.instance(TranslatorFactory.getPegelOnlineTranslator(source));
+			.instance(TranslatorFactory.getJsonTranslator(source));
 		chain.setNextFilter(new CombineSourceFilter())
 			.setNextFilter(new RenameSourceFilter())
 			.setNextFilter(new DbInsertionFilter(accessor, source))

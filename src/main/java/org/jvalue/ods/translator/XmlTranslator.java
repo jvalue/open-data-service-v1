@@ -16,6 +16,7 @@ import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
 import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.utils.HttpUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -47,8 +48,7 @@ final class XmlTranslator extends Translator {
 				File xmlFile = new File(sourceUrl.toURI());
 				doc = dBuilder.parse(xmlFile);
 			} else {
-				HttpReader reader = new HttpReader(sourceUrlString);
-				String data = reader.read("UTF-8");
+				String data = HttpUtils.readUrl(sourceUrlString, "UTF-8");
 				doc = dBuilder.parse(new InputSource(new StringReader(data)));
 			}
 

@@ -20,8 +20,8 @@ package org.jvalue.ods.translator;
 import java.io.IOException;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.GenericDataUtils;
+import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.data.valuetypes.ListComplexValueType;
@@ -29,6 +29,7 @@ import org.jvalue.ods.data.valuetypes.MapComplexValueType;
 import org.jvalue.ods.data.valuetypes.SimpleValueType;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.schema.SchemaManager;
+import org.jvalue.ods.utils.HttpUtils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,10 +45,9 @@ final class JsonTranslator extends Translator {
 	@Override
 	public GenericEntity translate() {
 
-		HttpReader httpAdapter = new HttpReader(dataSource.getUrl());
 		JsonNode rootNode = null;
 		try {
-			String json = httpAdapter.read("UTF-8");
+			String json = HttpUtils.readUrl(dataSource.getUrl(), "UTF-8");
 
 			ObjectMapper mapper = new ObjectMapper();
 			rootNode = mapper.readTree(json);

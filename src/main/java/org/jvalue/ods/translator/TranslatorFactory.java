@@ -26,24 +26,6 @@ public final class TranslatorFactory {
 	private TranslatorFactory() { }
 
 
-	public static Translator getPegelOnlineTranslator(DataSource source) {
-		Assert.assertNotNull(source);
-		return getJsonTranslator(source);
-	}
-
-
-	public static Translator getOsmTranslator(DataSource source) {
-		Assert.assertNotNull(source);
-		return new OsmTranslator(source);
-	}
-
-
-	public static Translator getPegelPortalMvTranslator(DataSource source) {
-		Assert.assertNotNull(source);
-		return new PegelPortalMvTranslator(source);
-	}
-
-
 	public static Translator getXmlTranslator(DataSource source) {
 		Assert.assertNotNull(source);
 		return new XmlTranslator(source);

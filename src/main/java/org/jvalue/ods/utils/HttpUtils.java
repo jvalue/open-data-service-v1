@@ -15,7 +15,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jvalue.ods.translator;
+package org.jvalue.ods.utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,47 +27,21 @@ import java.nio.charset.Charset;
 
 import org.jvalue.ods.logger.Logging;
 
-/**
- * The Class HttpReader.
- */
-class HttpReader {
 
-	/** The url. */
-	private String url;
+public class HttpUtils {
 
-	/**
-	 * Instantiates a new http json adapter.
-	 * 
-	 * @param url
-	 *            the url
-	 */
-	public HttpReader(String url) {
-		if (url == null || url.isEmpty()) {
-			String errorMessage = "url is null or empty";
-			Logging.error(this.getClass(), errorMessage);
-			throw new IllegalArgumentException(errorMessage);
-		}
+	private HttpUtils () { } 
 
-		this.url = url;
-	}
+	public static String readUrl(String stringUrl, String charsetName) throws IOException {
+		Assert.assertNotNull(stringUrl, charsetName);
 
-	/**
-	 * Gets the json.
-	 * 
-	 * @param charsetName
-	 *            the charset name
-	 * @return the json
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
-	public String read(String charsetName) throws IOException {
 		// using string builder for best performance of string concatenation
 		StringBuilder sb = new StringBuilder();
 		HttpURLConnection conn = null;
 		BufferedReader rd = null;
 		try {
 
-			URL url = new URL(this.url);
+			URL url = new URL(stringUrl);
 			conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("GET");
 			conn.setReadTimeout(10000);
@@ -82,11 +56,11 @@ class HttpReader {
 			rd.close();
 		} catch (SocketTimeoutException ste) {
 			String errorMessage = "socket timeout";
-			Logging.error(this.getClass(), errorMessage);
+			Logging.error(HttpUtils.class, errorMessage);
 			throw new IOException(errorMessage);
 		} catch (IOException ioe) {
 			String errorMessage = "An I/O Exception occured while trying to read from HTTP server.";
-			Logging.error(this.getClass(), errorMessage);
+			Logging.error(HttpUtils.class, errorMessage);
 			throw new IOException(errorMessage);
 		} finally {
 			// close stream and connection
@@ -96,7 +70,7 @@ class HttpReader {
 				}
 			} catch (IOException e) {
 				String errorMessage = "An I/O Exception occured while trying to read from HTTP server.";
-				Logging.error(this.getClass(), errorMessage);
+				Logging.error(HttpUtils.class, errorMessage);
 			} finally {
 				if (conn != null) {
 					conn.disconnect();

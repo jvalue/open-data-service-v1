@@ -15,8 +15,9 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.translator;
+package org.jvalue.ods.configuration;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -24,12 +25,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
-import org.jvalue.ods.configuration.PegelPortalMvConfiguration;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.BaseObject;
 import org.jvalue.ods.data.generic.GenericEntity;
@@ -37,14 +38,15 @@ import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
 import org.jvalue.ods.data.objecttypes.ListObjectType;
 import org.jvalue.ods.data.objecttypes.MapObjectType;
-import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.data.valuetypes.SimpleValueType;
 import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.translator.Translator;
+import org.jvalue.ods.utils.HttpUtils;
 
 
 
-final class PegelPortalMvTranslator extends HtmlTranslator {
+final class PegelPortalMvTranslator extends Translator {
 
 	private static final Map<String, Integer> tableMapping = new HashMap<String, Integer>();
 	static {
@@ -63,8 +65,16 @@ final class PegelPortalMvTranslator extends HtmlTranslator {
 
 
 	@Override
-	protected GenericEntity translateHelper(Document doc,
-			ObjectType valueTypes) {
+	public GenericEntity translate() {
+		Document doc = null;
+		try {
+			doc = Jsoup.parse(HttpUtils.readUrl(dataSource.getUrl(), "UTF-8"));
+		} catch (IOException io) {
+			Logging.error(this.getClass(), io.getMessage());
+			return null;
+		}
+
+
 		Elements header = doc.select("#pegeltab thead tr");
 		Elements body = doc.select("#pegeltab tbody tr");
 
@@ -75,7 +85,8 @@ final class PegelPortalMvTranslator extends HtmlTranslator {
 
 		try {
 
-			Map<String, GenericValueType> mapValueTypes = ((MapObjectType) ((ListObjectType) valueTypes)
+			Map<String, GenericValueType> mapValueTypes = ((MapObjectType) ((ListObjectType) 
+						dataSource.getDataSourceSchema())
 					.getReferencedObjects().get(0)).getAttributes();
 
 			List<Serializable> objectList = new LinkedList<Serializable>();
