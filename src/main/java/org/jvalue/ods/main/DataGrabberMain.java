@@ -17,10 +17,8 @@
 package org.jvalue.ods.main;
 
 import org.jvalue.ods.configuration.ConfigurationManager;
-import org.jvalue.ods.data.OdsView;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.db.DbUtils;
 import org.jvalue.ods.filter.FilterChainManager;
 import org.jvalue.ods.logger.Logging;
 
@@ -39,12 +37,16 @@ public class DataGrabberMain {
 
 
 
-	public static void initialize() {
-		// TODO disabled for now as current insertion workflow requires db to be deleted
-		// before each update
-		// if (initialized) throw new IllegalStateException("Already initialized");
-
-		ConfigurationManager.getInstance().configureAll();
+	public static void initialize() {		
+		if (!initialized)
+		{		
+			Logging.adminLog("Initialize started");
+			
+			ConfigurationManager.getInstance().configureAll();
+			initialized = true;
+			
+			Logging.adminLog("Initialize completed");
+		}
 	}
 
 
@@ -62,22 +64,6 @@ public class DataGrabberMain {
 		FilterChainManager.getInstance().startFilterChains();
 
 		Logging.adminLog("Update completed");
-	}
-
-
-	private static void createCommonViews() {
-		DbUtils.createView(
-				accessor, 
-				new OdsView(
-					"_design/ods", 
-					"getClassObjectByType",
-					"function(doc) { if(doc.objectType) emit (doc.objectType, doc) }"));
-		DbUtils.createView(
-				accessor, 
-				new OdsView(
-					"_design/ods", 
-					"getAllClassObjects",
-					"function(doc) { if(doc.objectType) emit (null, doc) }"));
 	}
 
 

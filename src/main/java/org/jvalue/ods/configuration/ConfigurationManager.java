@@ -75,7 +75,7 @@ public final class ConfigurationManager {
 			}
 		}
 
-		Logging.adminLog("Initialization completet");
+		Logging.adminLog("Initialization completed");
 	}
 
 
