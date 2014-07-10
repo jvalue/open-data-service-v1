@@ -19,6 +19,7 @@ package org.jvalue.ods.configuration;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.jvalue.ods.administration.AdministrationLogging;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.OdsView;
 import org.jvalue.ods.db.DbAccessor;
@@ -26,7 +27,6 @@ import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.DbUtils;
 import org.jvalue.ods.filter.FilterChain;
 import org.jvalue.ods.filter.FilterChainManager;
-import org.jvalue.ods.logger.Logging;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -53,7 +53,7 @@ public final class ConfigurationManager {
 
 	public void configureAll() {
 
-		Logging.adminLog("Initializing Ods");
+		AdministrationLogging.log("Initializing Ods");
 
 		DbAccessor<JsonNode> accessor = DbFactory.createDbAccessor("ods");
 		FilterChainManager filterManager = FilterChainManager.getInstance();
@@ -75,7 +75,7 @@ public final class ConfigurationManager {
 			}
 		}
 
-		Logging.adminLog("Initialization completed");
+		AdministrationLogging.log("Initialization completed");
 	}
 
 

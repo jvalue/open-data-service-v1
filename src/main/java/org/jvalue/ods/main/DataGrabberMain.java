@@ -16,11 +16,11 @@
  */
 package org.jvalue.ods.main;
 
+import org.jvalue.ods.administration.AdministrationLogging;
 import org.jvalue.ods.configuration.ConfigurationManager;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.filter.FilterChainManager;
-import org.jvalue.ods.logger.Logging;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -40,12 +40,12 @@ public class DataGrabberMain {
 	public static void initialize() {		
 		if (!initialized)
 		{		
-			Logging.adminLog("Initialize started");
+			AdministrationLogging.log("Initialize started");
 			
 			ConfigurationManager.getInstance().configureAll();
 			initialized = true;
 			
-			Logging.adminLog("Initialize completed");
+			AdministrationLogging.log("Initialize completed");
 		}
 	}
 
@@ -56,14 +56,14 @@ public class DataGrabberMain {
 
 
 	public static void updateData() {
-		Logging.adminLog("Update started");
+		AdministrationLogging.log("Update started");
 
 		accessor = DbFactory.createDbAccessor("ods");
 		accessor.connect();
 
 		FilterChainManager.getInstance().startFilterChains();
 
-		Logging.adminLog("Update completed");
+		AdministrationLogging.log("Update completed");
 	}
 
 
