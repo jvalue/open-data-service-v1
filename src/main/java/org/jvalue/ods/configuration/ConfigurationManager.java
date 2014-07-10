@@ -85,13 +85,13 @@ public final class ConfigurationManager {
 				new OdsView(
 					"_design/ods", 
 					"getClassObjectByType",
-					"function(doc) { if(doc.objectType) emit (doc.objectType, doc) }"));
+					"function(doc) { if(doc.name) emit (doc.name, doc) }"));
 		DbUtils.createView(
 				accessor, 
 				new OdsView(
 					"_design/ods", 
 					"getAllClassObjects",
-					"function(doc) { if(doc.objectType) emit (null, doc) }"));
+					"function(doc) { if(doc.name) emit (null, doc) }"));
 	}
 
 
