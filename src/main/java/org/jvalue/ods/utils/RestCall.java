@@ -81,10 +81,10 @@ public final class RestCall {
 
 		// format params
 		if (parameters.size() != 0) {
-			urlBuilder.append("?");
+			urlBuilder.append('?');
 			boolean firstKey = true;
 			for (String key : parameters.keySet()) {
-				if (!firstKey) urlBuilder.append("&");
+				if (!firstKey) urlBuilder.append('&');
 				firstKey = false;
 
 				urlBuilder.append(key + "=" + parameters.get(key));
@@ -139,7 +139,7 @@ public final class RestCall {
 			try {
 				if (outputStream != null) outputStream.close();
 				if (dataReader != null) dataReader.close();
-			} catch (IOException e) { }
+			} catch (IOException e) { throw new RestException(e); }
 
 			if (conn != null) conn.disconnect();
 		}
