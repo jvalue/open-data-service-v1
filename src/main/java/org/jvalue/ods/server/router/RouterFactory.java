@@ -20,7 +20,6 @@ package org.jvalue.ods.server.router;
 import java.util.HashMap;
 
 import org.jvalue.ods.administration.AdministrationRouter;
-import org.jvalue.ods.notifications.NotificationRouter;
 import org.restlet.Restlet;
 
 

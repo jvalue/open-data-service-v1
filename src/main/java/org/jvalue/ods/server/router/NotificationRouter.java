@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.notifications;
+package org.jvalue.ods.server.router;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -23,9 +23,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.jvalue.ods.notifications.NotificationManager;
 import org.jvalue.ods.notifications.definitions.NotificationDefinition;
 import org.jvalue.ods.notifications.rest.RestAdapter;
-import org.jvalue.ods.server.router.Router;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
@@ -35,7 +35,7 @@ import org.restlet.data.Parameter;
 import org.restlet.data.Status;
 
 
-public final class NotificationRouter implements Router<Restlet> {
+final class NotificationRouter implements Router<Restlet> {
 
 	private static final String
 		ROUTE_BASE = "/notifications",
