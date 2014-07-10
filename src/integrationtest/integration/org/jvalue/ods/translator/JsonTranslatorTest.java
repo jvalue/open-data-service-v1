@@ -36,60 +36,29 @@ import org.jvalue.ods.translator.Translator;
 import org.jvalue.ods.translator.TranslatorFactory;
 import org.jvalue.ods.utils.DummyDataSource;
 
-/**
- * The Class JsonTranslatorTest.
- */
+
 public class JsonTranslatorTest {
 
-	/** The Test url. */
-	private final String TestUrl = "http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true";
+	private final String testUrl = "http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true";
 
-	/** The translator. */
-	private Translator translator;
 
-	/**
-	 * Sets the up.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-		translator = TranslatorFactory.getJsonTranslator();
-		assertNotNull(translator);
-	}
-
-	/**
-	 * Test Translate.
-	 */
 	@Test
 	public void testTranslate() {
-		GenericEntity gv = translator.translate(DummyDataSource.newInstance("testUrl", TestUrl));
+		Translator translator = TranslatorFactory.getJsonTranslator(
+				DummyDataSource.newInstance("testUrl", testUrl));
+		GenericEntity gv = translator.translate();
 		assertNotNull(gv);
 	}
 
-	/**
-	 * Test Translate invalid source.
-	 */
 	@Test
 	public void testTranslateInvalidSource() {
-		GenericEntity gv = translator.translate(DummyDataSource.newInstance("invalidSource", "invalidsource"));
+		Translator translator = TranslatorFactory.getJsonTranslator(
+				DummyDataSource.newInstance("invalidSource", "invalidSource"));
+		GenericEntity gv = translator.translate();
 		assertNull(gv);
 	}
 
-	/**
-	 * Test Translate null source.
-	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testTranslateNullSource() {
-		translator.translate(null);
-	}
-
-	/**
-	 * Creates the open weather schema.
-	 * 
-	 * @return the schema
-	 */
+	
 	private static GenericValueType createOpenWeatherSchema() {
 		Map<String, GenericValueType> coord = new HashMap<String, GenericValueType>();
 		coord.put("lon", AllowedValueTypes.VALUETYPE_NUMBER);
