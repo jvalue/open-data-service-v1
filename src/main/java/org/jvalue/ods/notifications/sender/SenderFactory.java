@@ -13,7 +13,7 @@ public final class SenderFactory {
 	private static HttpSender restSender;
 
 
-	public static NotificationSender<GcmClient> getGcmSender() throws NotificationException {
+	public static NotificationSender<GcmClient> getGcmSender() {
 		if (gcmSender == null) gcmSender = new GcmSender();
 		return gcmSender;
 	}

@@ -33,8 +33,8 @@ import org.jvalue.ods.notifications.db.ClientDatastore;
 import org.jvalue.ods.notifications.db.ClientDatastoreFactory;
 import org.jvalue.ods.notifications.definitions.DefinitionFactory;
 import org.jvalue.ods.notifications.definitions.NotificationDefinition;
-import org.jvalue.ods.notifications.sender.NotificationException;
 import org.jvalue.ods.notifications.sender.NotificationSender;
+import org.jvalue.ods.notifications.sender.SenderResult;
 import org.jvalue.ods.utils.Assert;
 
 
@@ -71,11 +71,32 @@ public final class NotificationManager {
 				Logging.error(NotificationManager.class, "Failed to get NotificationSender for client " + client.getId());
 				continue;
 			}
-			try {
-				sender.notifySourceChanged(client, source, data);
-			} catch (NotificationException ne) {
-				Logging.error(NotificationManager.class, "Error sending notification to client " + client.getId()
-						+ " (" + ne.getMessage() + ")");
+
+			SenderResult result = sender.notifySourceChanged(client, source, data);
+			switch(result.getStatus()) {
+				case SUCCESS:
+					continue;
+
+				case ERROR:
+					String errorMsg = "Failed to send notification to client " + client.getId();
+					if (result.getErrorCause() != null) 
+						errorMsg = errorMsg + " (" + result.getErrorCause().getMessage();
+					if (result.getErrorMsg() != null)
+						errorMsg = errorMsg + " (" + result.getErrorMsg();
+					Logging.error(NotificationManager.class, errorMsg);
+					break;
+
+				case REMOVE_CLIENT:
+					Logging.info(NotificationSender.class, "Unregistering client " + result.getOldClient().getId());
+					unregisterClient(result.getOldClient());
+					break;
+					
+				case UPDATE_CLIENT:
+					Logging.info(NotificationSender.class, "Updating client id to " + result.getNewClient().getId());
+					unregisterClient(result.getOldClient());
+					registerClient(result.getNewClient());
+					break;
+
 			}
 		}
 	}

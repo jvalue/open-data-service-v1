@@ -12,16 +12,16 @@ import org.jvalue.ods.utils.RestException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
-final class HttpSender implements NotificationSender<HttpClient> {
+final class HttpSender extends NotificationSender<HttpClient> {
 
 	private static final ObjectMapper mapper = new ObjectMapper();
 	
 
 	@Override
-	public void notifySourceChanged(
+	public SenderResult notifySourceChanged(
 			HttpClient client, 
 			DataSource source, 
-			GenericEntity data) throws NotificationException {
+			GenericEntity data) {
 
 		try {
 			RestCall.Builder builder = new RestCall.Builder(
@@ -39,10 +39,12 @@ final class HttpSender implements NotificationSender<HttpClient> {
 			builder.build().execute();
 
 		} catch (RestException re) {
-			throw new NotificationException(re);
+			return getErrorResult(re);
 		} catch (UnsupportedEncodingException uee) {
-			throw new NotificationException(uee);
+			throw new RuntimeException(uee);
 		}
+
+		return getSuccessResult();
 	}
 
 

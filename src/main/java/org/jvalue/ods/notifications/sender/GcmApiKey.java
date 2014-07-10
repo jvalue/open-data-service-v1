@@ -29,7 +29,7 @@ import org.jvalue.ods.logger.Logging;
 final class GcmApiKey {
 
 	private static GcmApiKey instance = null;
-	public static GcmApiKey getInstance() throws NotificationException {
+	public static GcmApiKey getInstance() {
 		if (instance == null) instance = new GcmApiKey();
 		return instance;
 	}
@@ -38,7 +38,7 @@ final class GcmApiKey {
 	private static String resourceName = "/googleApi.key";
 	private final String key;
 
-	private GcmApiKey() throws NotificationException {
+	private GcmApiKey() {
 		URL resourceUrl = getClass().getResource(resourceName);
 
 		String key = null;
@@ -51,7 +51,7 @@ final class GcmApiKey {
 					"ApiKey contains more than one line!");
 
 		} catch(Exception e) {
-			throw new NotificationException(e);
+			key = null;
 		} finally {
 			try {
 				if (reader != null) reader.close();

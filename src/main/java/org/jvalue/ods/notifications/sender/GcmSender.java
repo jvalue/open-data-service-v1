@@ -9,8 +9,6 @@ import java.util.Map;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.logger.Logging;
-import org.jvalue.ods.notifications.NotificationManager;
-import org.jvalue.ods.notifications.clients.Client;
 import org.jvalue.ods.notifications.clients.GcmClient;
 
 import com.google.android.gcm.server.Constants;
@@ -20,7 +18,7 @@ import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
 
 
-final class GcmSender implements NotificationSender<GcmClient> {
+final class GcmSender extends NotificationSender<GcmClient> {
 	
 	static final String 
 		DATA_KEY_SOURCE = "source",
@@ -28,19 +26,21 @@ final class GcmSender implements NotificationSender<GcmClient> {
 
 	
 	private final Sender sender;
-	private final NotificationManager notificationManager;
 
-	GcmSender() throws NotificationException {
-		this.sender = new Sender(GcmApiKey.getInstance().toString());
-		this.notificationManager = NotificationManager.getInstance();
+	GcmSender() {
+		String apiKey = GcmApiKey.getInstance().toString();
+		if (apiKey == null) sender = null;
+		else sender = new Sender(apiKey);
 	}
 	
 	
 	@Override
-	public void notifySourceChanged(
+	public SenderResult notifySourceChanged(
 			GcmClient client, 
 			DataSource source, 
-			GenericEntity data) throws NotificationException {
+			GenericEntity data) {
+
+		if (sender == null) return getErrorResult("api key not set");
 
 		// gather data
 		Map<String,String> payload = new HashMap<String,String>();
@@ -61,9 +61,8 @@ final class GcmSender implements NotificationSender<GcmClient> {
 		MulticastResult multicastResult;
 		try {
 			multicastResult = sender.send(builder.build(), devices, 5);
-		} catch (IOException e) {
-			Logging.error(NotificationSender.class, "Error posting messages");
-			return;
+		} catch (IOException io) {
+			return getErrorResult(io);
 		}
 
 		// analyze the results
@@ -78,38 +77,26 @@ final class GcmSender implements NotificationSender<GcmClient> {
 				String canonicalRegId = result.getCanonicalRegistrationId();
 				if (canonicalRegId != null) {
 					// same device has more than on registration id: update it
-					updateClientId(regId, canonicalRegId);
+					return new SenderResult.Builder(SenderResult.Status.UPDATE_CLIENT)
+						.oldClient(client)
+						.newClient(new GcmClient(canonicalRegId, client.getSource()))
+						.build();
+
 				}
 			} else {
 				String error = result.getErrorCodeName();
 				if (error.equals(Constants.ERROR_NOT_REGISTERED)) {
+					return new SenderResult.Builder(SenderResult.Status.REMOVE_CLIENT)
+						.oldClient(client)
+						.build();
 					// application has been removed from device - unregister it
-					unregisterClientId(regId);
 				} else {
-					throw new NotificationException("Error sending message to " + regId + ": " + error);
+					return getErrorResult(error);
 				}
 			}
 		}
-	}
 
-
-	private void unregisterClientId(String id) {
-		Logging.info(NotificationSender.class, "Unregistered device: " + id);
-		for (Client client : notificationManager.getAllClients()) {
-			if (client.getId().equals(id))
-				notificationManager.unregisterClient(client);
-		}
-	}
-
-
-	private void updateClientId(String oldId, String newId) {
-		Logging.info(NotificationSender.class, "Updating client id to " + newId);
-		for (Client client : notificationManager.getAllClients()) {
-			if (client.getId().equals(oldId)) {
-				notificationManager.unregisterClient(client);
-				notificationManager.registerClient(new GcmClient(newId, client.getSource()));
-			}
-		}
+		return getSuccessResult();
 	}
 
 }
