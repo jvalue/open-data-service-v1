@@ -77,19 +77,15 @@ final class GcmSender extends NotificationSender<GcmClient> {
 				String canonicalRegId = result.getCanonicalRegistrationId();
 				if (canonicalRegId != null) {
 					// same device has more than on registration id: update it
-					return new SenderResult.Builder(SenderResult.Status.UPDATE_CLIENT)
-						.oldClient(client)
-						.newClient(new GcmClient(canonicalRegId, client.getSource()))
-						.build();
-
+					return getUpdateClientResult(
+							client, 
+							new GcmClient(canonicalRegId, client.getSource()));
 				}
 			} else {
 				String error = result.getErrorCodeName();
 				if (error.equals(Constants.ERROR_NOT_REGISTERED)) {
-					return new SenderResult.Builder(SenderResult.Status.REMOVE_CLIENT)
-						.oldClient(client)
-						.build();
 					// application has been removed from device - unregister it
+					return getRemoveClientResult(client);
 				} else {
 					return getErrorResult(error);
 				}

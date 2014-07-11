@@ -27,5 +27,19 @@ public abstract class NotificationSender<T extends Client> {
 		return new SenderResult.Builder(SenderResult.Status.ERROR).errorCause(cause).build();
 	}
 
+	
+	protected SenderResult getUpdateClientResult(Client oldClient, Client newClient) {
+		return new SenderResult.Builder(SenderResult.Status.UPDATE_CLIENT)
+			.oldClient(oldClient)
+			.newClient(newClient)
+			.build();
+	}
+
+
+	protected SenderResult getRemoveClientResult(Client oldClient) {
+		return new SenderResult.Builder(SenderResult.Status.REMOVE_CLIENT)
+			.oldClient(oldClient)
+			.build();
+	}
 
 }

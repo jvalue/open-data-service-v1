@@ -45,10 +45,10 @@ public final class NotificationManager {
 		if (instance == null) {
 			ClientDatastore store = ClientDatastoreFactory.getClientDatastore();
 			instance = new NotificationManager(store);
-			instance.addNotificationDefinition(
+			instance.addDefinition(
 					GcmClient.class, 
 					DefinitionFactory.getGcmDefinition());
-			instance.addNotificationDefinition(
+			instance.addDefinition(
 					HttpClient.class, 
 					DefinitionFactory.getRestDefinition());
 		}
@@ -65,7 +65,7 @@ public final class NotificationManager {
 	}
 
 
-	<T extends Client> void addNotificationDefinition(
+	<T extends Client> void addDefinition(
 			Class<T> clientType, 
 			NotificationDefinition<T> definition) {
 
