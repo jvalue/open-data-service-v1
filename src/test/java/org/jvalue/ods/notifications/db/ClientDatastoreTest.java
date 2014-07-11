@@ -5,15 +5,32 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.notifications.clients.Client;
 import org.jvalue.ods.notifications.clients.DummyClient;
 
 
-public final class CachedClientDatastoreTest {
+public final class ClientDatastoreTest {
 
 	@Test
-	public void testCrud() {
+	public void testCachedStore() {
+
 		ClientDatastore store = new CachedClientDatastore(new DummyClientDatastore());
+		testCrud(store);
+
+	}
+
+
+	@Test
+	public void testJsonDbStore() {
+
+		ClientDatastore store = new JsonDbClientDatastore(DbFactory.createMockDbAccessor("dummy"));
+		testCrud(store);
+
+	}
+
+
+	private void testCrud(ClientDatastore store) {
 
 		Client[] clients = {
 			new DummyClient("id1", "source"),

@@ -1,11 +1,18 @@
 package org.jvalue.ods.notifications.clients; 
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 
 
 public final class DummyClient extends Client {
 
 
-	public DummyClient(String id, String source) {
+	@JsonCreator
+	public DummyClient(
+			@JsonProperty("id") String id, 
+			@JsonProperty("source") String source) {
+
 		super(id, source);
 	}
 
