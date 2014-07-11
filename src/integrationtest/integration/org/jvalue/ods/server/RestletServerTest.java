@@ -15,15 +15,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.server;
+package integration.org.jvalue.ods.server;
 
 import java.net.BindException;
 import java.util.Arrays;
 import java.util.Collection;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import org.jvalue.ods.server.RestletServer;
 
 /**
  * The Class RestletServerTest.

@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jvalue.ods.main;
+package integration.org.jvalue.ods.server;
 
 import org.junit.Test;
 import org.jvalue.ods.logger.Logging;
