@@ -27,8 +27,8 @@ final class GcmSender extends NotificationSender<GcmClient> {
 	
 	private final Sender sender;
 
-	GcmSender() {
-		String apiKey = GcmApiKey.getInstance().toString();
+	GcmSender(String apiKeyResource) {
+		String apiKey = new GcmApiKey(apiKeyResource).toString();
 		if (apiKey == null) sender = null;
 		else sender = new Sender(apiKey);
 	}

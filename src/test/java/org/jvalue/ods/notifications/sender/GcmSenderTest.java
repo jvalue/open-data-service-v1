@@ -5,7 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.DummyDataSource;
@@ -14,16 +13,10 @@ import org.jvalue.ods.notifications.clients.GcmClient;
 
 public final class GcmSenderTest {
 
-	@Before
-	public final void setup() {
-		GcmApiKeyHelper.setupKeyResource();
-	}
-
-
 	@Test
 	public final void testFail() {
 		
-		GcmSender sender = new GcmSender();
+		GcmSender sender = new GcmSender(GcmApiKeyHelper.getResourceName());
 		GcmClient client = new GcmClient("dummy", "dummy");
 		DataSource source = DummyDataSource.newInstance("dummy", "dummy");
 

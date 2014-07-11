@@ -28,17 +28,9 @@ import org.jvalue.ods.logger.Logging;
 
 final class GcmApiKey {
 
-	private static GcmApiKey instance = null;
-	public static GcmApiKey getInstance() {
-		if (instance == null) instance = new GcmApiKey();
-		return instance;
-	}
-
-
-	private static String resourceName = "/googleApi.key";
 	private final String key;
 
-	private GcmApiKey() {
+	public GcmApiKey(String resourceName) {
 		URL resourceUrl = getClass().getResource(resourceName);
 
 		String key = null;
@@ -51,7 +43,8 @@ final class GcmApiKey {
 					"ApiKey contains more than one line!");
 
 		} catch(Exception e) {
-			key = null;
+			throw new IllegalArgumentException(e.getMessage());
+
 		} finally {
 			try {
 				if (reader != null) reader.close();
@@ -66,15 +59,6 @@ final class GcmApiKey {
 	@Override
 	public String toString() {
 		return key;
-	}
-
-
-	/**
-	 * Used for testing, as the real key  might not be present on some builds.
-	 * Has to be called before first getInstance to function.
-	 */
-	static void setKeyResourceName(String resourceName) {
-		GcmApiKey.resourceName = resourceName;
 	}
 
 }
