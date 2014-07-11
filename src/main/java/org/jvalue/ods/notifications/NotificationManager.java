@@ -52,7 +52,7 @@ public final class NotificationManager {
 	private final Map<Class<?>, NotificationDefinition<?>> definitions;
 
 	private NotificationManager() {
-		this.clientStore = ClientDatastoreFactory.getCouchDbClientDatastore();
+		this.clientStore = ClientDatastoreFactory.getClientDatastore();
 
 		Map<Class<?>, NotificationDefinition<?>> definitions = new HashMap<Class<?>, NotificationDefinition<?>>();
 		definitions.put(GcmClient.class, DefinitionFactory.getGcmDefinition());

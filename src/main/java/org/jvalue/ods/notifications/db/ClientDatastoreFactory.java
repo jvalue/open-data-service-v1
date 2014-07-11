@@ -17,16 +17,25 @@
  */
 package org.jvalue.ods.notifications.db;
 
+import org.jvalue.ods.db.DbAccessor;
+import org.jvalue.ods.db.DbFactory;
+
+import com.fasterxml.jackson.databind.JsonNode;
+
 
 
 
 public final class ClientDatastoreFactory {
 
+	private static final String DB_NAME = "notifications";
+
 	private static ClientDatastore couchDbClientStore;
 
-	public static ClientDatastore getCouchDbClientDatastore() {
-		if (couchDbClientStore == null) 
-			couchDbClientStore = new CachedClientDatastore(new CouchDbClientDatastore());
+	public static ClientDatastore getClientDatastore() {
+		if (couchDbClientStore == null) {
+			DbAccessor<JsonNode> accessor = DbFactory.createDbAccessor(DB_NAME);
+			couchDbClientStore = new CachedClientDatastore(new JsonDbClientDatastore(accessor));
+		}
 		return couchDbClientStore;
 	}
 

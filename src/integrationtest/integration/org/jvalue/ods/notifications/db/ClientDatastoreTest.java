@@ -19,7 +19,7 @@ public final class ClientDatastoreTest {
 	@BeforeClass
 	@AfterClass
 	public static final void clearDatabase() {
-		ClientDatastore store = ClientDatastoreFactory.getCouchDbClientDatastore();
+		ClientDatastore store = ClientDatastoreFactory.getClientDatastore();
 		for (Client client : store.getAll()) {
 			store.remove(client);
 		}
@@ -28,7 +28,7 @@ public final class ClientDatastoreTest {
 
 	@Test
 	public final void testRegisterUnregister() {
-		ClientDatastore store = ClientDatastoreFactory.getCouchDbClientDatastore();
+		ClientDatastore store = ClientDatastoreFactory.getClientDatastore();
 
 		List<Client> clients = new ArrayList<Client>();
 		clients.add(new GcmClient("foo", "pegelonline"));

@@ -23,7 +23,6 @@ import java.util.Set;
 
 import org.jvalue.ods.data.OdsView;
 import org.jvalue.ods.db.DbAccessor;
-import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.DbUtils;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.notifications.clients.Client;
@@ -35,10 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 
-final class CouchDbClientDatastore implements ClientDatastore {
-
-	private static final String DATABASE_NAME = "notifications";
-
+final class JsonDbClientDatastore implements ClientDatastore {
 
 	private final ObjectMapper mapper = new ObjectMapper();
 	private final OdsView getAllClientsView = new OdsView(
@@ -47,8 +43,9 @@ final class CouchDbClientDatastore implements ClientDatastore {
 					"function(doc) { emit(doc._id, doc) }");
 	private final DbAccessor<JsonNode> dbAccessor;
 
-	CouchDbClientDatastore() {
-		this.dbAccessor = DbFactory.createDbAccessor(DATABASE_NAME);
+	JsonDbClientDatastore(DbAccessor<JsonNode> dbAccessor) {
+		Assert.assertNotNull(dbAccessor);
+		this.dbAccessor = dbAccessor;
 		this.dbAccessor.connect();
 
 		DbUtils.createView(dbAccessor, getAllClientsView);
@@ -75,7 +72,7 @@ final class CouchDbClientDatastore implements ClientDatastore {
 					dbAccessor.delete(node);
 				}
 			} catch (JsonProcessingException jpe) {
-				Logging.error(CouchDbClientDatastore.class, jpe.getMessage());
+				Logging.error(JsonDbClientDatastore.class, jpe.getMessage());
 			}
 		}
 	}
@@ -98,7 +95,7 @@ final class CouchDbClientDatastore implements ClientDatastore {
 			try {
 				ret.add(mapper.treeToValue(node, Client.class));
 			} catch (JsonProcessingException jpe) {
-				Logging.error(CouchDbClientDatastore.class, jpe.getMessage());
+				Logging.error(JsonDbClientDatastore.class, jpe.getMessage());
 			}
 		}
 
