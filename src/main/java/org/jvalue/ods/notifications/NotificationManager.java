@@ -18,7 +18,6 @@
 package org.jvalue.ods.notifications;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -43,21 +42,35 @@ public final class NotificationManager {
 	private static NotificationManager instance;
 
 	public static NotificationManager getInstance() {
-		if (instance == null) instance = new NotificationManager();
+		if (instance == null) {
+			ClientDatastore store = ClientDatastoreFactory.getClientDatastore();
+			instance = new NotificationManager(store);
+			instance.addNotificationDefinition(
+					GcmClient.class, 
+					DefinitionFactory.getGcmDefinition());
+			instance.addNotificationDefinition(
+					HttpClient.class, 
+					DefinitionFactory.getRestDefinition());
+		}
 		return instance;
 	}
 
 
 	private final ClientDatastore clientStore;
-	private final Map<Class<?>, NotificationDefinition<?>> definitions;
+	private final Map<Class<?>, NotificationDefinition<?>> definitions = new HashMap<>();
 
-	private NotificationManager() {
-		this.clientStore = ClientDatastoreFactory.getClientDatastore();
+	NotificationManager(ClientDatastore clientStore) {
+		Assert.assertNotNull(clientStore);
+		this.clientStore = clientStore;
+	}
 
-		Map<Class<?>, NotificationDefinition<?>> definitions = new HashMap<Class<?>, NotificationDefinition<?>>();
-		definitions.put(GcmClient.class, DefinitionFactory.getGcmDefinition());
-		definitions.put(HttpClient.class, DefinitionFactory.getRestDefinition());
-		this.definitions = Collections.unmodifiableMap(definitions);
+
+	<T extends Client> void addNotificationDefinition(
+			Class<T> clientType, 
+			NotificationDefinition<T> definition) {
+
+		definitions.put(clientType, definition);
+
 	}
 	
 
