@@ -2,7 +2,7 @@ package org.jvalue.ods.notifications.clients;
 
 
 
-final class DummyClient extends Client {
+public final class DummyClient extends Client {
 
 
 	public DummyClient(String id, String source) {
