@@ -25,10 +25,13 @@ import org.jvalue.ods.data.OdsView;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.DbUtils;
+import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.notifications.clients.Client;
 import org.jvalue.ods.utils.Assert;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 
@@ -37,7 +40,7 @@ final class CouchDbClientDatastore implements ClientDatastore {
 	private static final String DATABASE_NAME = "notifications";
 
 
-	private final ClientToMapAdapter clientToMapAdapter = new ClientToMapAdapter();
+	private final ObjectMapper mapper = new ObjectMapper();
 	private final OdsView getAllClientsView = new OdsView(
 					"_design/notifications",
 					"getAllClients",
@@ -57,7 +60,7 @@ final class CouchDbClientDatastore implements ClientDatastore {
 		Assert.assertNotNull(client);
 
 		if (!contains(client)) {
-			dbAccessor.insert(client.accept(clientToMapAdapter, null));
+			dbAccessor.insert(mapper.valueToTree(client));
 		}
 	}
 
@@ -66,10 +69,13 @@ final class CouchDbClientDatastore implements ClientDatastore {
 	public void remove(Client client) {
 		Assert.assertNotNull(client);
 
-		List<JsonNode> clients = getAllClientsAsJson();
-		for (JsonNode node : clients) {
-			if (JsonNodeToClientAdapter.toClient(node).equals(client)) {
-				dbAccessor.delete(node);
+		for (JsonNode node : getAllClientsAsJson()) {
+			try {
+				if (mapper.treeToValue(node, Client.class).equals(client)) {
+					dbAccessor.delete(node);
+				}
+			} catch (JsonProcessingException jpe) {
+				Logging.error(CouchDbClientDatastore.class, jpe.getMessage());
 			}
 		}
 	}
@@ -89,7 +95,11 @@ final class CouchDbClientDatastore implements ClientDatastore {
 		Set<Client> ret = new HashSet<Client>();
 
 		for (JsonNode node : clients) {
-			ret.add(JsonNodeToClientAdapter.toClient(node));
+			try {
+				ret.add(mapper.treeToValue(node, Client.class));
+			} catch (JsonProcessingException jpe) {
+				Logging.error(CouchDbClientDatastore.class, jpe.getMessage());
+			}
 		}
 
 		return ret;
