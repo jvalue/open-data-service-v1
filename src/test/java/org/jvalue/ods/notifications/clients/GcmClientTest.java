@@ -2,11 +2,18 @@ package org.jvalue.ods.notifications.clients;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 public final class GcmClientTest {
+
+	private static final ObjectMapper mapper = new ObjectMapper();
 
 	@Test
 	public final void testEquals() {
@@ -40,6 +47,16 @@ public final class GcmClientTest {
 
 	}
 
+	
 
+	@Test
+	public final void testJson() throws JsonProcessingException {
+
+		GcmClient client = new GcmClient("id", "source");
+		JsonNode json = mapper.valueToTree(client);
+		assertNotNull(json);
+		assertEquals(client, mapper.treeToValue(json, GcmClient.class));
+
+	}
 
 }

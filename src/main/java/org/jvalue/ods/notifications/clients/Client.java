@@ -19,7 +19,14 @@ package org.jvalue.ods.notifications.clients;
 
 import org.jvalue.ods.utils.Assert;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
+
+@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonTypeInfo(use=Id.CLASS, include=As.PROPERTY, property="class")
 public abstract class Client {
 
 	private final String id, source;

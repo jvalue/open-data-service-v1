@@ -17,11 +17,18 @@
  */
 package org.jvalue.ods.notifications.clients;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 
 
 public final class GcmClient extends Client {
 
-	public GcmClient(String id, String source) {
+	@JsonCreator
+	public GcmClient(
+			@JsonProperty("id") String id, 
+			@JsonProperty("source") String source) {
+
 		super(id, source);
 	}
 
