@@ -21,9 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.jvalue.ods.data.OdsView;
 import org.jvalue.ods.db.DbAccessor;
-import org.jvalue.ods.db.DbUtils;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.notifications.clients.Client;
 import org.jvalue.ods.utils.Assert;
@@ -37,18 +35,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 final class JsonDbClientDatastore implements ClientDatastore {
 
 	private final ObjectMapper mapper = new ObjectMapper();
-	private final OdsView getAllClientsView = new OdsView(
-					"_design/notifications",
-					"getAllClients",
-					"function(doc) { emit(doc._id, doc) }");
 	private final DbAccessor<JsonNode> dbAccessor;
 
 	JsonDbClientDatastore(DbAccessor<JsonNode> dbAccessor) {
 		Assert.assertNotNull(dbAccessor);
 		this.dbAccessor = dbAccessor;
 		this.dbAccessor.connect();
-
-		DbUtils.createView(dbAccessor, getAllClientsView);
 	}
 
 
@@ -66,7 +58,7 @@ final class JsonDbClientDatastore implements ClientDatastore {
 	public void remove(Client client) {
 		Assert.assertNotNull(client);
 
-		for (JsonNode node : getAllClientsAsJson()) {
+		for (JsonNode node : dbAccessor.getAllDocuments()) {
 			try {
 				if (mapper.treeToValue(node, Client.class).equals(client)) {
 					dbAccessor.delete(node);
@@ -88,7 +80,7 @@ final class JsonDbClientDatastore implements ClientDatastore {
 
 	@Override
 	public Set<Client> getAll() {
-		List<JsonNode> clients = getAllClientsAsJson();
+		List<JsonNode> clients = dbAccessor.getAllDocuments();
 		Set<Client> ret = new HashSet<Client>();
 
 		for (JsonNode node : clients) {
@@ -100,14 +92,6 @@ final class JsonDbClientDatastore implements ClientDatastore {
 		}
 
 		return ret;
-	}
-
-
-	private List<JsonNode> getAllClientsAsJson() {
-		return dbAccessor.executeDocumentQuery(
-				getAllClientsView.getIdPath(),
-				getAllClientsView.getViewName(),
-				null);
 	}
 
 }
