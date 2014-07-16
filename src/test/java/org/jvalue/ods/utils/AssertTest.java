@@ -49,11 +49,8 @@ public final class AssertTest {
 		testAssertEquals("one", null);
 		testAssertEquals(null, "two");
 
-		try {
-			Assert.assertEquals(null, null, "error");
-		} catch (IllegalArgumentException iae) {
-			org.junit.Assert.fail();
-		}
+		Assert.assertEquals(null, null, "error");
+		Assert.assertEquals("dummy", "dummy", "error");
 	}
 
 
@@ -66,6 +63,7 @@ public final class AssertTest {
 	}
 
 
+	@Test
 	public void testAssertValidIdx() {
 		try {
 			Assert.assertValidIdx(new LinkedList<String>(), -1);
