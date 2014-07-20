@@ -23,7 +23,7 @@ public final class HttpAdapterTest extends BaseAdapterTest {
 
 		HttpAdapter adapter = new HttpAdapter();
 		Set<String> params = adapter.getParameters();
-		assertEquals(params.size(), 5);
+		assertEquals(params.size(), 4);
 		assertTrue(params.contains(PARAM_URL));
 		assertTrue(params.contains(PARAM_PARAM));
 		assertTrue(params.contains(PARAM_SEND_DATA));
@@ -36,7 +36,6 @@ public final class HttpAdapterTest extends BaseAdapterTest {
 
 		HttpAdapter adapter = new HttpAdapter();
 		Request request = createMockRequest();
-		addParameter(request, PARAM_ID, "id");
 		addParameter(request, PARAM_SOURCE, "source");
 		addParameter(request, PARAM_URL, "url");
 		addParameter(request, PARAM_PARAM, "param");
@@ -45,7 +44,12 @@ public final class HttpAdapterTest extends BaseAdapterTest {
 		HttpClient client = adapter.toClient(request);
 
 		assertNotNull(client);
-		assertEquals(client, new HttpClient("id", "source", "url", "param", true));
+
+		assertNotNull(client.getClientId());
+		assertEquals("source", client.getSource());
+		assertEquals("url", client.getRestUrl());
+		assertEquals("param", client.getSourceParam());
+		assertEquals(true, client.getSendData());
 
 	}
 

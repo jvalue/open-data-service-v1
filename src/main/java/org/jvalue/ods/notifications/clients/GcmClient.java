@@ -33,7 +33,7 @@ public final class GcmClient extends Client {
 			@JsonProperty("source") String source,
 			@JsonProperty("gcmClientId") String gcmClientId) {
 
-		super(gcmClientId, source);
+		super(clientId, source);
 		Assert.assertNotNull(gcmClientId);
 		this.gcmClientId = gcmClientId;
 	}

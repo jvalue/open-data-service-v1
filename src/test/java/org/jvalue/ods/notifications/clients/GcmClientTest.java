@@ -18,10 +18,10 @@ public final class GcmClientTest {
 	@Test
 	public final void testEquals() {
 
-		GcmClient client1 = new GcmClient("0", "source1");
-		GcmClient client2 = new GcmClient("0", "source1");
-		GcmClient client3 = new GcmClient("1", "source1");
-		GcmClient client4 = new GcmClient("0", "source2");
+		GcmClient client1 = new GcmClient("0", "source1", "0");
+		GcmClient client2 = new GcmClient("0", "source1", "0");
+		GcmClient client3 = new GcmClient("1", "source1", "0");
+		GcmClient client4 = new GcmClient("0", "source2", "1");
 
 		assertEquals(client1, client1);
 		assertEquals(client1, client2);
@@ -41,9 +41,10 @@ public final class GcmClientTest {
 	@Test
 	public final void testGet() {
 
-		GcmClient client = new GcmClient("0", "source");
-		assertEquals(client.getId(), "0");
+		GcmClient client = new GcmClient("0", "source", "1");
+		assertEquals(client.getClientId(), "0");
 		assertEquals(client.getSource(), "source");
+		assertEquals(client.getGcmClientId(), "1");
 
 	}
 
@@ -52,7 +53,7 @@ public final class GcmClientTest {
 	@Test
 	public final void testJson() throws JsonProcessingException {
 
-		GcmClient client = new GcmClient("id", "source");
+		GcmClient client = new GcmClient("id", "source", "gcm");
 		JsonNode json = mapper.valueToTree(client);
 		assertNotNull(json);
 		assertEquals(client, mapper.treeToValue(json, GcmClient.class));

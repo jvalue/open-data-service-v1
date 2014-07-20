@@ -10,10 +10,10 @@ public final class DummyClient extends Client {
 
 	@JsonCreator
 	public DummyClient(
-			@JsonProperty("id") String id, 
+			@JsonProperty("clientId") String clientId, 
 			@JsonProperty("source") String source) {
 
-		super(id, source);
+		super(clientId, source);
 	}
 
 

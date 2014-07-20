@@ -12,6 +12,9 @@ import org.restlet.Request;
 
 public final class GcmAdapterTest extends BaseAdapterTest {
 
+	private final String
+		PARAM_GCM_CLIENT_ID = "gcmClientId";
+
 	@Test
 	public void testGetParameters() {
 
@@ -27,13 +30,16 @@ public final class GcmAdapterTest extends BaseAdapterTest {
 
 		GcmAdapter adapter = new GcmAdapter();
 		Request request = createMockRequest();
-		addParameter(request, PARAM_ID, "id");
 		addParameter(request, PARAM_SOURCE, "source");
+		addParameter(request, PARAM_GCM_CLIENT_ID, "someId");
 
 		GcmClient client = adapter.toClient(request);
 
 		assertNotNull(client);
-		assertEquals(client, new GcmClient("id", "source"));
+
+		assertNotNull(client.getClientId());
+		assertEquals("source", client.getSource());
+		assertEquals("someId", client.getGcmClientId());
 
 	}
 

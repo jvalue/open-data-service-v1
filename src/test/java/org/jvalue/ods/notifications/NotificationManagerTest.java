@@ -207,7 +207,7 @@ public final class NotificationManagerTest {
 			return new RestAdapter<DummyClient>() {
 
 				@Override
-				protected DummyClient toClient(Request request, String id, String source) {
+				protected DummyClient toClient(Request request, String source) {
 					return null;
 				}
 

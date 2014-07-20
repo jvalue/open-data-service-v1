@@ -75,7 +75,7 @@ final class JsonDbClientDatastore implements ClientDatastore {
 		Assert.assertNotNull(clientId);
 
 		for (Client client : getAll()) {
-			if (client.getClientId().equals(client)) return true;
+			if (client.getClientId().equals(clientId)) return true;
 		}
 		return false;
 	}

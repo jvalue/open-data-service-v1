@@ -35,7 +35,7 @@ public final class ClientTest {
 	public final void testGet() {
 
 		DummyClient client = new DummyClient("0", "source");
-		assertEquals(client.getId(), "0");
+		assertEquals(client.getClientId(), "0");
 		assertEquals(client.getSource(), "source");
 
 	}

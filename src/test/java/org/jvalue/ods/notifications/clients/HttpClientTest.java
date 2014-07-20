@@ -45,7 +45,7 @@ public final class HttpClientTest {
 	public final void testGet() {
 
 		HttpClient client = new HttpClient("0", "source", "url", "param", true);
-		assertEquals(client.getId(), "0");
+		assertEquals(client.getClientId(), "0");
 		assertEquals(client.getSource(), "source");
 		assertEquals(client.getRestUrl(), "url");
 		assertEquals(client.getSourceParam(), "param");

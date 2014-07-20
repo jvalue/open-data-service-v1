@@ -1,6 +1,8 @@
 package org.jvalue.ods.notifications.db;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.jvalue.ods.notifications.clients.Client;
@@ -8,29 +10,29 @@ import org.jvalue.ods.notifications.clients.Client;
 
 public final class DummyClientDatastore implements ClientDatastore {
 
-	private final Set<Client> clients = new HashSet<Client>();
+	private final Map<String, Client> clients = new HashMap<String, Client>();
 
 	@Override
 	public void add(Client client) {
-		clients.add(client);
+		clients.put(client.getClientId(), client);
 	}
 
 
 	@Override
-	public void remove(Client client) {
-		clients.remove(client);
+	public void remove(String clientId) {
+		clients.remove(clientId);
 	}
 
 
 	@Override
-	public boolean contains(Client client) {
-		return clients.contains(client);
+	public boolean contains(String clientId) {
+		return clients.containsKey(clientId);
 	}
 
 
 	@Override
 	public Set<Client> getAll() {
-		return new HashSet<Client>(clients);
+		return new HashSet<Client>(clients.values());
 	}
 
 }

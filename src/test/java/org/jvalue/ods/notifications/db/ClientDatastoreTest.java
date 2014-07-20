@@ -39,11 +39,12 @@ public final class ClientDatastoreTest {
 		};
 
 		for (Client client : clients) {
+			assertFalse(store.contains(client.getClientId()));
 			store.add(client);
-			assertTrue(store.contains(client));
+			assertTrue(store.contains(client.getClientId()));
 			assertTrue(store.getAll().contains(client));
-			store.remove(client);
-			assertFalse(store.contains(client));
+			store.remove(client.getClientId());
+			assertFalse(store.contains(client.getClientId()));
 		}
 
 		for (Client client : clients) store.add(client);

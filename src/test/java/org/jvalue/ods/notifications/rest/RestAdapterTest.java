@@ -21,7 +21,6 @@ public final class RestAdapterTest extends BaseAdapterTest {
 		Set<String> params = adapter.getParameters();
 
 		assertNotNull(params);
-		assertTrue(params.contains(PARAM_ID));
 		assertTrue(params.contains(PARAM_SOURCE));
 
 	}
@@ -33,13 +32,11 @@ public final class RestAdapterTest extends BaseAdapterTest {
 		RestAdapter<DummyClient> adapter = new DummyRestAdapter();
 
 		Request request = createMockRequest();
-		addParameter(request, PARAM_ID, "id");
 		addParameter(request, PARAM_SOURCE, "source");
 
 		Client client = adapter.toClient(request);
 
 		assertNotNull(client);
-		assertEquals(client.getId(), "id");
 		assertEquals(client.getSource(), "source");
 
 	}

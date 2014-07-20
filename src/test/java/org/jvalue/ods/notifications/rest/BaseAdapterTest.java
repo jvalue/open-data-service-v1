@@ -7,9 +7,7 @@ import org.restlet.data.Reference;
 
 abstract class BaseAdapterTest {
 
-	protected final String 
-		PARAM_ID = "regId",
-		PARAM_SOURCE = "source";
+	protected final String PARAM_SOURCE = "source";
 
 
 	protected Request createMockRequest() {

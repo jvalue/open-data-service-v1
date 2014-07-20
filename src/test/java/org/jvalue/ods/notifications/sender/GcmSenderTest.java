@@ -8,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.DummyDataSource;
+import org.jvalue.ods.notifications.clients.ClientFactory;
 import org.jvalue.ods.notifications.clients.GcmClient;
 
 
@@ -17,7 +18,7 @@ public final class GcmSenderTest {
 	public final void testFail() {
 		
 		GcmSender sender = new GcmSender(GcmApiKeyHelper.getResourceName());
-		GcmClient client = new GcmClient("dummy", "dummy");
+		GcmClient client = ClientFactory.newGcmClient("dummy", "dummy");
 		DataSource source = DummyDataSource.newInstance("dummy", "dummy");
 
 		try {
