@@ -25,8 +25,8 @@ import org.jvalue.ods.notifications.clients.Client;
 public interface ClientDatastore {
 
 	public void add(Client client);
-	public void remove(Client client);
-	public boolean contains(Client client);
+	public void remove(String clientId);
+	public boolean contains(String clientId);
 	public Set<Client> getAll();
 
 }

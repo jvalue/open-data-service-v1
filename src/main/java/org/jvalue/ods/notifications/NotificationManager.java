@@ -128,7 +128,7 @@ public final class NotificationManager {
 
 	public void unregisterClient(Client client) {
 		Assert.assertNotNull(client);
-		clientStore.remove(client);
+		clientStore.remove(client.getClientId());
 	}
 
 

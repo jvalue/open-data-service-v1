@@ -48,19 +48,19 @@ final class JsonDbClientDatastore implements ClientDatastore {
 	public void add(Client client) {
 		Assert.assertNotNull(client);
 
-		if (!contains(client)) {
+		if (!contains(client.getClientId())) {
 			dbAccessor.insert(mapper.valueToTree(client));
 		}
 	}
 
 
 	@Override
-	public void remove(Client client) {
-		Assert.assertNotNull(client);
+	public void remove(String clientId) {
+		Assert.assertNotNull(clientId);
 
 		for (JsonNode node : dbAccessor.getAllDocuments()) {
 			try {
-				if (mapper.treeToValue(node, Client.class).equals(client)) {
+				if (mapper.treeToValue(node, Client.class).getClientId().equals(clientId)) {
 					dbAccessor.delete(node);
 				}
 			} catch (JsonProcessingException jpe) {
@@ -71,10 +71,13 @@ final class JsonDbClientDatastore implements ClientDatastore {
 
 
 	@Override
-	public boolean contains(Client client) {
-		Assert.assertNotNull(client);
+	public boolean contains(String clientId) {
+		Assert.assertNotNull(clientId);
 
-		return getAll().contains(client);
+		for (Client client : getAll()) {
+			if (client.getClientId().equals(client)) return true;
+		}
+		return false;
 	}
 
 
