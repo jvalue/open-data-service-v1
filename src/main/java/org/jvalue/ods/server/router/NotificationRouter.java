@@ -18,12 +18,15 @@
 package org.jvalue.ods.server.router;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.jvalue.ods.notifications.NotificationManager;
+import org.jvalue.ods.notifications.clients.Client;
 import org.jvalue.ods.notifications.definitions.NotificationDefinition;
 import org.jvalue.ods.notifications.rest.RestAdapter;
 import org.restlet.Request;
@@ -43,6 +46,9 @@ final class NotificationRouter implements Router<Restlet> {
 		ROUTE_UNREGISTER = "/unregister",
 		ROUTE_DEBUG_CLIENTS = "/debug/clients",
 		ROUTE_DEBUG_SOURCES = "/debug/sources";
+
+	private static final String
+		PARAM_CLIENT_ID = "clientId";
 //		ROUTE_DEBUG_TEST_MESSAGE = "/notifications/debug/testMessage",
 
 	private static final String MSG_BAD_REQUEST = "Usage: POST /<url>?";
@@ -53,12 +59,29 @@ final class NotificationRouter implements Router<Restlet> {
 	public Map<String, Restlet> getRoutes() {
 		Map<String, Restlet> routes = new HashMap<String, Restlet>();
 
+		// add registration routes
 		for (NotificationDefinition<?> definition : 
 				NotificationManager.getInstance().getNotificationDefinitions()) {
 
-			addRoutes(routes, definition.getRestName(), definition.getRestAdapter());
+			addRegisterRoute(routes, definition.getRestName(), definition.getRestAdapter());
 		}
 
+		// add unregisration route
+		routes.put(ROUTE_BASE + ROUTE_UNREGISTER, new Restlet() {
+			@Override
+			public void handle(Request request, Response response) {
+				if (!validateRequest(
+						request, 
+						response, 
+						new HashSet<String>(Arrays.asList(PARAM_CLIENT_ID))))
+					return;
+
+				String clientId = getParameter(request, PARAM_CLIENT_ID);
+				NotificationManager.getInstance().unregisterClient(clientId);
+			}
+		});
+
+		// add debug routes
 		routes.put(ROUTE_BASE + ROUTE_DEBUG_CLIENTS, new Restlet() {
 			@Override
 			public void handle(Request request, Response response) {
@@ -144,13 +167,12 @@ final class NotificationRouter implements Router<Restlet> {
 	}
 
 
-	private static void addRoutes(
+	private static void addRegisterRoute(
 			final Map<String, Restlet> routes, 
 			final String name, 
 			final RestAdapter<?> adapter) {
 
 		String routeRegister = ROUTE_BASE + name + ROUTE_REGISTER;
-		String routeUnregister = ROUTE_BASE + name + ROUTE_UNREGISTER;
 
 		routes.put(routeRegister, new Restlet() {
 			@Override
@@ -158,18 +180,9 @@ final class NotificationRouter implements Router<Restlet> {
 				if (!validateRequest(request, response, adapter.getParameters()))
 					return;
 
-				NotificationManager.getInstance().registerClient(adapter.toClient(request));
-			}
-		});
-
-
-		routes.put(routeUnregister, new Restlet() {
-			@Override
-			public void handle(Request request, Response response) {
-				if (!validateRequest(request, response, adapter.getParameters()))
-					return;
-
-				NotificationManager.getInstance().unregisterClient(adapter.toClient(request));
+				Client client = adapter.toClient(request);
+				NotificationManager.getInstance().registerClient(client);
+				response.setEntity(client.getClientId(), MediaType.TEXT_PLAIN);
 			}
 		});
 	}

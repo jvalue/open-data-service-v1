@@ -101,12 +101,12 @@ public final class NotificationManager {
 
 				case REMOVE_CLIENT:
 					Logging.info(NotificationSender.class, "Unregistering client " + result.getOldClient().getClientId());
-					unregisterClient(result.getOldClient());
+					unregisterClient(result.getOldClient().getClientId());
 					break;
 					
 				case UPDATE_CLIENT:
 					Logging.info(NotificationSender.class, "Updating client id to " + result.getNewClient().getClientId());
-					unregisterClient(result.getOldClient());
+					unregisterClient(result.getOldClient().getClientId());
 					registerClient(result.getNewClient());
 					break;
 
@@ -126,9 +126,9 @@ public final class NotificationManager {
 	}
 
 
-	public void unregisterClient(Client client) {
-		Assert.assertNotNull(client);
-		clientStore.remove(client.getClientId());
+	public void unregisterClient(String clientId) {
+		Assert.assertNotNull(clientId);
+		clientStore.remove(clientId);
 	}
 
 
