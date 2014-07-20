@@ -9,6 +9,7 @@ import java.util.Map;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.notifications.clients.ClientFactory;
 import org.jvalue.ods.notifications.clients.GcmClient;
 
 import com.google.android.gcm.server.Constants;
@@ -50,7 +51,7 @@ final class GcmSender extends NotificationSender<GcmClient> {
 		String collapseKey = source.getId();
 
 		final List<String> devices = new ArrayList<String>();
-		devices.add(client.getId());
+		devices.add(client.getGcmClientId());
 
 		// send
 		Message.Builder builder = new Message.Builder().collapseKey(collapseKey);
@@ -79,7 +80,7 @@ final class GcmSender extends NotificationSender<GcmClient> {
 					// same device has more than on registration id: update it
 					return getUpdateClientResult(
 							client, 
-							new GcmClient(canonicalRegId, client.getSource()));
+							ClientFactory.newGcmClient(client.getSource(), canonicalRegId));
 				}
 			} else {
 				String error = result.getErrorCodeName();

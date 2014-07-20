@@ -15,30 +15,41 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.notifications.rest;
+package org.jvalue.ods.notifications.clients;
 
-import java.util.Set;
+import java.util.UUID;
 
-import org.jvalue.ods.notifications.clients.ClientFactory;
-import org.jvalue.ods.notifications.clients.GcmClient;
-import org.restlet.Request;
+import org.jvalue.ods.utils.Assert;
 
 
-final class GcmAdapter extends RestAdapter<GcmClient> {
 
-	private static final String
-		PARAM_GCM_CLIENT_ID = "gcmClientId";
+public final class ClientFactory {
 
-	@Override
-	protected GcmClient toClient(Request request, String source) {
-		String gcmClientId = getParameter(request, PARAM_GCM_CLIENT_ID);
-		return ClientFactory.newGcmClient(source, gcmClientId);
+	private ClientFactory() { }
+
+
+	public static GcmClient newGcmClient(
+			String source, 
+			String gcmClientId) {
+
+		Assert.assertNotNull(source, gcmClientId);
+		return new GcmClient(getClientId(), source, gcmClientId);
 	}
 
 
-	@Override
-	protected void getParameters(Set<String> params) {
-		params.add(PARAM_GCM_CLIENT_ID);
+	public static HttpClient newHttpClient(
+			String source, 
+			String restUrl,
+			String sourceParam,
+			boolean sendData) {
+
+		Assert.assertNotNull(source, restUrl, sourceParam, sendData);
+		return new HttpClient(getClientId(), source, restUrl, sourceParam, sendData);
+	}
+
+
+	private static String getClientId() {
+		return UUID.randomUUID().toString();
 	}
 
 }

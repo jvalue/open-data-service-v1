@@ -28,30 +28,27 @@ import org.restlet.data.Parameter;
 
 public abstract class RestAdapter<C extends Client> {
 
-	private static final String
-		PARAM_REGID = "regId",
-		PARAM_SOURCE = "source";
+	private static final String PARAM_SOURCE = "source";
 
-	private Set<String> parameters;
+	private final Set<String> parameters;
+
+
+	protected RestAdapter() {
+		Set<String> parameters = new HashSet<String>();
+		parameters.add(PARAM_SOURCE);
+		getParameters(parameters);
+		this.parameters = Collections.unmodifiableSet(parameters);
+	}
 
 
 	public final C toClient(Request request) {
-		String regId = getParameter(request, PARAM_REGID);
 		String source = getParameter(request, PARAM_SOURCE);
-		return toClient(request, regId, source);
+		return toClient(request, source);
 	}
 
 
 	public Set<String> getParameters() {
-		if (parameters != null) return parameters;
-
-		Set<String> parameters = new HashSet<String>();
-		parameters.add(PARAM_REGID);
-		parameters.add(PARAM_SOURCE);
-		getParameters(parameters);
-		this.parameters = Collections.unmodifiableSet(parameters);
-
-		return this.parameters;
+		return parameters;
 	}
 
 
@@ -62,7 +59,7 @@ public abstract class RestAdapter<C extends Client> {
 	}
 
 
-	protected abstract C toClient(Request request, String regId, String source);
+	protected abstract C toClient(Request request, String source);
 	protected abstract void getParameters(Set<String> params);
 
 }

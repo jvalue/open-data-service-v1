@@ -29,17 +29,17 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 @JsonTypeInfo(use=Id.CLASS, include=As.PROPERTY, property="class")
 public abstract class Client {
 
-	private final String id, source;
+	private final String clientId, source;
 
-	protected Client(String id, String source) {
-		Assert.assertNotNull(id, source);
-		this.id = id;
+	protected Client(String clientId, String source) {
+		Assert.assertNotNull(clientId, source);
+		this.clientId = clientId;
 		this.source = source;
 	}
 
 
-	public final String getId() {
-		return id;
+	public final String getClientId() {
+		return clientId;
 	}
 
 
@@ -53,7 +53,7 @@ public abstract class Client {
 		if (other == null || !(other instanceof Client)) return false;
 		if (other == this) return true;
 		Client client = (Client) other;
-		return client.id.equals(id) && client.source.equals(source);
+		return client.clientId.equals(clientId) && client.source.equals(source);
 	}
 
 
@@ -61,7 +61,7 @@ public abstract class Client {
 	@Override
 	public int hashCode() {
 		int hash = 13;
-		hash = hash + HASH_MULT * id.hashCode();
+		hash = hash + HASH_MULT * clientId.hashCode();
 		hash = hash + HASH_MULT * source.hashCode();
 		return hash;
 	}

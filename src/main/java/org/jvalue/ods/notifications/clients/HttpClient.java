@@ -29,14 +29,14 @@ public final class HttpClient extends Client {
 	private final boolean sendData;
 
 	@JsonCreator
-	public HttpClient(
-			@JsonProperty("id") String id, 
+	HttpClient(
+			@JsonProperty("clientId") String clientId, 
 			@JsonProperty("source") String source, 
 			@JsonProperty("restUrl") String restUrl, 
 			@JsonProperty("sourceParam") String sourceParam,
 			@JsonProperty("sendData") boolean sendData) {
 
-		super(id, source);
+		super(clientId, source);
 		Assert.assertNotNull(restUrl, sourceParam);
 		this.restUrl = restUrl;
 		this.sourceParam = sourceParam;

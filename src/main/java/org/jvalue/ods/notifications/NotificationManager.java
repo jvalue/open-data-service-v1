@@ -81,7 +81,7 @@ public final class NotificationManager {
 			if (!client.getSource().equals(source.getId())) continue;
 			NotificationSender sender = definitions.get(client.getClass()).getNotificationSender();
 			if (sender == null) {
-				Logging.error(NotificationManager.class, "Failed to get NotificationSender for client " + client.getId());
+				Logging.error(NotificationManager.class, "Failed to get NotificationSender for client " + client.getClientId());
 				continue;
 			}
 
@@ -91,7 +91,7 @@ public final class NotificationManager {
 					continue;
 
 				case ERROR:
-					String errorMsg = "Failed to send notification to client " + client.getId();
+					String errorMsg = "Failed to send notification to client " + client.getClientId();
 					if (result.getErrorCause() != null) 
 						errorMsg = errorMsg + " (" + result.getErrorCause().getMessage();
 					if (result.getErrorMsg() != null)
@@ -100,12 +100,12 @@ public final class NotificationManager {
 					break;
 
 				case REMOVE_CLIENT:
-					Logging.info(NotificationSender.class, "Unregistering client " + result.getOldClient().getId());
+					Logging.info(NotificationSender.class, "Unregistering client " + result.getOldClient().getClientId());
 					unregisterClient(result.getOldClient());
 					break;
 					
 				case UPDATE_CLIENT:
-					Logging.info(NotificationSender.class, "Updating client id to " + result.getNewClient().getId());
+					Logging.info(NotificationSender.class, "Updating client id to " + result.getNewClient().getClientId());
 					unregisterClient(result.getOldClient());
 					registerClient(result.getNewClient());
 					break;
