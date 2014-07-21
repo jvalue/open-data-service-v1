@@ -77,7 +77,7 @@ public class ContainerRestletApp extends Application implements Runnable {
 
 		// must be last router, generates api output
 		org.jvalue.ods.server.router.Router<Restlet> apiRouter = RouterFactory
-				.createApiRouter(combinedRouter);
+				.createApiRouter(combinedRouter.keySet());
 		combinedRouter.putAll(apiRouter.getRoutes());
 
 		if (combinedRouter.isEmpty()) {

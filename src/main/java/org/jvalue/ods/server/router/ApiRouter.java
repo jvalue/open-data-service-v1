@@ -19,48 +19,41 @@ package org.jvalue.ods.server.router;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeSet;
+import java.util.Set;
 
-import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.server.restlet.BaseRestlet;
+import org.jvalue.ods.server.utils.RestletResult;
+import org.jvalue.ods.utils.Assert;
 import org.restlet.Request;
-import org.restlet.Response;
 import org.restlet.Restlet;
-import org.restlet.data.MediaType;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 class ApiRouter implements Router<Restlet> {
 
-	private HashMap<String, Restlet> routes;
+	private static final ObjectMapper mapper = new ObjectMapper();
 
 
-	public ApiRouter(HashMap<String, Restlet> routes) {
-		if (routes == null) {
-			String errorMessage = "routes is null";
-			Logging.error(this.getClass(), errorMessage);
-			throw new IllegalArgumentException(errorMessage);
-		}
+	private final JsonNode apiJsonData;
 
-		this.routes = routes;
+	public ApiRouter(Set<String> routes) {
+		Assert.assertNotNull(routes);
+		this.apiJsonData = mapper.valueToTree(routes);
 	}
 
 
 	@Override
 	public Map<String, Restlet> getRoutes() {
 
+		Map<String, Restlet> routes = new HashMap<String, Restlet>();
+
 		// creates a visualization of the API
-		Restlet apiRestlet = new Restlet() {
+		Restlet apiRestlet = new BaseRestlet() {
 			@Override
-			public void handle(Request request, Response response) {
-				// Print the requested URI path
-				String message = "";
-
-				for (String s : new TreeSet<String>(routes.keySet())) {
-
-					message += s + "\n";
-				}
-
-				response.setEntity(message, MediaType.TEXT_PLAIN);
-
+			protected RestletResult doGet(Request request) {
+				return RestletResult.newSuccessResult(apiJsonData);
 			}
 		};
 

@@ -17,7 +17,7 @@
  */
 package org.jvalue.ods.server.router;
 
-import java.util.HashMap;
+import java.util.Set;
 
 import org.jvalue.ods.administration.AdministrationRouter;
 import org.restlet.Restlet;
@@ -28,7 +28,7 @@ public class RouterFactory {
 	private RouterFactory() { }
 
 
-	public static Router<Restlet> createApiRouter(HashMap<String, Restlet> routes) {
+	public static Router<Restlet> createApiRouter(Set<String> routes) {
 		return new ApiRouter(routes);
 	}
 
