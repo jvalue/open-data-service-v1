@@ -17,49 +17,29 @@
  */
 package org.jvalue.ods.server.restlet;
 
-import java.util.List;
-
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.server.utils.RestletResult;
 import org.restlet.Request;
-import org.restlet.Response;
-import org.restlet.Restlet;
-import org.restlet.data.MediaType;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-/**
- * The Class DefaultRestlet.
- */
-public class DefaultRestlet extends Restlet {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.restlet.Restlet#handle(org.restlet.Request,
-	 * org.restlet.Response)
-	 */
+public class DefaultRestlet extends BaseRestlet {
+
 	@Override
-	public void handle(Request request, Response response) {
-
-		String message = "Invalid query, see /api for available queries.";
-
+	protected RestletResult doGet(Request request) {
 		String url = request.getResourceRef().toString();
 
 		String[] tree = url.split("/");
-		ObjectMapper mapper = new ObjectMapper();
 
 		if (url.contains("/ods/$")) {
 
 			DbAccessor<JsonNode> dbAccessor = DbFactory.createDbAccessor("ods");
 			dbAccessor.connect();
 
-			int pos = 0;
-
 			// determine position where intern path begins
+			int pos = 0;
 			for (int i = 0; i < tree.length; i++) {
 				if (tree[i].startsWith("$")) {
 					pos = i;
@@ -67,80 +47,21 @@ public class DefaultRestlet extends Restlet {
 				}
 			}
 
+			JsonNode node = null;
+			String objectId = tree[pos].substring(1);
 			try {
-				JsonNode node = null;
-				try {
-					node = dbAccessor.getDocument(JsonNode.class,
-							tree[pos].substring(1));
-				} catch (RuntimeException e) {
-					String errorMessage = "Could not retrieve data from db: "
-							+ e;
-					Logging.error(this.getClass(), errorMessage);
-					System.err.println(errorMessage);
-					message += mapper
-							.writeValueAsString("Could not retrieve data.");
+				node = dbAccessor.getDocument(JsonNode.class, objectId);
+				for (int k = pos + 1; k < tree.length; k++) {
+					node = node.get(tree[k]);
 				}
-				if (node != null) {
-					for (int k = pos + 1; k < tree.length; k++) {
-						node = node.get(tree[k]);
-					}
+				return RestletResult.newSuccessResult(node);
 
-					message = mapper.writeValueAsString(node);
-				} else {
-					message = "Could not find data matching the input.";
-				}
-			} catch (JsonProcessingException e) {
-				String errorMessage = "Error during client request: " + e;
-				Logging.error(this.getClass(), errorMessage);
-				System.err.println(errorMessage);
+			} catch (RuntimeException e) {
+				return onBadRequest("no data for given id '" + objectId + "'");
 			}
-
-		} else if (url.contains("/ods/de/pegelonline/stations/")) {
-
-			DbAccessor<JsonNode> dbAccessor = DbFactory.createDbAccessor("ods");
-			dbAccessor.connect();
-
-			int pos = 0;
-
-			// determine position where intern path begins
-			for (int i = 0; i < tree.length; i++) {
-				if (tree[i].equals("stations")) {
-					pos = i + 1;
-					break;
-				}
-			}
-			try {
-				List<JsonNode> nodes = null;
-				try {
-					nodes = dbAccessor.executeDocumentQuery(
-							"_design/pegelonline", "getSingleStation",
-							tree[pos].toUpperCase());
-				} catch (RuntimeException e) {
-					String errorMessage = "Could not retrieve data from db: "
-							+ e;
-					Logging.error(this.getClass(), errorMessage);
-					System.err.println(errorMessage);
-					message += mapper
-							.writeValueAsString("Could not retrieve data.");
-				}
-				if (nodes != null && !nodes.isEmpty()) {
-					JsonNode result = nodes.get(0);
-					for (int k = pos + 1; k < tree.length; k++) {
-						result = result.get(tree[k]);
-					}
-
-					message = mapper.writeValueAsString(result);
-				} else {
-					message = "Could not find data matching the input.";
-				}
-			} catch (JsonProcessingException e) {
-				String errorMessage = "Error during client request: " + e;
-				Logging.error(this.getClass(), errorMessage);
-				System.err.println(errorMessage);
-			}
-
 		}
 
-		response.setEntity(message, MediaType.APPLICATION_JSON);
+		return onBadRequest("Invalid query, see /api for available queries");
 	}
+
 }
