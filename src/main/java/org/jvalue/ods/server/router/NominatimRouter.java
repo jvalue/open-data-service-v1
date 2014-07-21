@@ -17,24 +17,23 @@
  */
 package org.jvalue.ods.server.router;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.jvalue.ods.data.DummyDataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.metadata.JacksonMetaData;
-import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.server.restlet.BaseRestlet;
+import org.jvalue.ods.server.utils.RestletResult;
 import org.jvalue.ods.translator.TranslatorFactory;
 import org.restlet.Request;
-import org.restlet.Response;
 import org.restlet.Restlet;
-import org.restlet.data.MediaType;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 class NominatimRouter implements Router<Restlet> {
+
+	private static final ObjectMapper mapper = new ObjectMapper();
 
 	private HashMap<String, Restlet> routes;
 
@@ -43,97 +42,49 @@ class NominatimRouter implements Router<Restlet> {
 	public Map<String, Restlet> getRoutes() {
 		routes = new HashMap<String, Restlet>();
 
-		Restlet nominatimRestlet = new Restlet() {
+		Restlet nominatimRestlet = new BaseRestlet() {
 			@Override
-			public void handle(Request request, Response response) {
-				// Print the requested URI path
-				String message = "";
-				try {
+			protected RestletResult doGet(Request request) {
+				GenericEntity ret = TranslatorFactory.getJsonTranslator(
+						DummyDataSource.newInstance(
+							"org-nominatim-openstreetmap",
+							"http://nominatim.openstreetmap.org/search?q="
+							+ (String) request.getAttributes().get("location") 
+							+ "&format=json"))
+					.translate();
 
-					GenericEntity ret = null;
-
-					ret = TranslatorFactory.getJsonTranslator(
-							DummyDataSource.newInstance(
-								"org-nominatim-openstreetmap",
-								"http://nominatim.openstreetmap.org/search?q="
-								+ (String) request.getAttributes().get("location") 
-								+ "&format=json"))
-						.translate();
-
-					ObjectMapper mapper = new ObjectMapper();
-					message += mapper.writeValueAsString(ret);
-
-				} catch (IOException e) {
-					String errorMessage = "Error during client request: " + e;
-					Logging.error(this.getClass(), errorMessage);
-					System.err.println(errorMessage);
-					message += "Unable to geocode: "
-							+ (String) request.getAttributes().get("location");
-				}
-
-				response.setEntity(message, MediaType.APPLICATION_JSON);
+				return RestletResult.newSuccessResult(mapper.valueToTree(ret));
 			}
 
 		};
 
-		Restlet reverseNominatimRestlet = new Restlet() {
+		Restlet reverseNominatimRestlet = new BaseRestlet() {
 			@Override
-			public void handle(Request request, Response response) {
-				// Print the requested URI path
-				String message = "";
-				try {
+			protected RestletResult doGet(Request request) {
+				GenericEntity ret = TranslatorFactory.getJsonTranslator(
+						DummyDataSource.newInstance(
+							"org-nominatim-openstreetmap",
+							"http://nominatim.openstreetmap.org/reverse?format=json"
+							+ (String) request.getAttributes().get("coordinates")))
+					.translate();
 
-					GenericEntity ret = null;
-
-					ret = TranslatorFactory.getJsonTranslator(
-							DummyDataSource.newInstance(
-								"org-nominatim-openstreetmap",
-								"http://nominatim.openstreetmap.org/reverse?format=json"
-								+ (String) request.getAttributes().get("coordinates")))
-						.translate();
-
-					ObjectMapper mapper = new ObjectMapper();
-					message += mapper.writeValueAsString(ret);
-
-				} catch (IOException e) {
-					String errorMessage = "Error during client request: " + e;
-					Logging.error(this.getClass(), errorMessage);
-					System.err.println(errorMessage);
-					message += "Unable to reverse-geocode: "
-							+ (String) request.getAttributes().get(
-									"coordinates");
-				}
-
-				response.setEntity(message, MediaType.APPLICATION_JSON);
-
+				return RestletResult.newSuccessResult(mapper.valueToTree(ret));
 			}
 
 		};
 
-		Restlet metadataRestlet = new Restlet() {
+		Restlet metadataRestlet = new BaseRestlet() {
 			@Override
-			public void handle(Request request, Response response) {
-
-				try {
-					ObjectMapper mapper = new ObjectMapper();
-
-					String message = mapper
-							.writeValueAsString(new JacksonMetaData(
-									"org-openstreetmap-nominatim",
-									"nominatim",
-									"OpenStreetMap Community",
-									"http://www.openstreetmap.org",
-									"Nominatim is a tool to search OSM data by name and address and to generate synthetic addresses of OSM points (reverse geocoding). Usage policy: http://wiki.openstreetmap.org/wiki/Nominatim_usage_policy",
-									"http://nominatim.openstreetmap.org",
-									"http://www.openstreetmap.org/copyright"));
-
-					response.setEntity(message, MediaType.APPLICATION_JSON);
-				} catch (JsonProcessingException ex) {
-					response.setEntity("OSM Metadata not found.",
-							MediaType.TEXT_PLAIN);
-					Logging.error(this.getClass(), "OSM Metadata not found.");
-					System.err.println("OSM Metadata not found.");
-				}
+			protected RestletResult doGet(Request request) {
+				return RestletResult.newSuccessResult(mapper.valueToTree(
+							new JacksonMetaData(
+								"org-openstreetmap-nominatim",
+								"nominatim",
+								"OpenStreetMap Community",
+								"http://www.openstreetmap.org",
+								"Nominatim is a tool to search OSM data by name and address and to generate synthetic addresses of OSM points (reverse geocoding). Usage policy: http://wiki.openstreetmap.org/wiki/Nominatim_usage_policy",
+								"http://nominatim.openstreetmap.org",
+								"http://www.openstreetmap.org/copyright")));
 			}
 		};
 
