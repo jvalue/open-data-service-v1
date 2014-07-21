@@ -17,25 +17,25 @@
  */
 package org.jvalue.ods.server.router;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.jvalue.ods.data.DummyDataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.metadata.JacksonMetaData;
-import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.server.restlet.BaseRestlet;
+import org.jvalue.ods.server.utils.RestletResult;
 import org.jvalue.ods.translator.TranslatorFactory;
 import org.restlet.Request;
-import org.restlet.Response;
 import org.restlet.Restlet;
-import org.restlet.data.MediaType;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 class OverpassRouter implements Router<Restlet> {
+
+	private static final ObjectMapper mapper = new ObjectMapper();
 
 	private HashMap<String, Restlet> routes;
 
@@ -44,60 +44,34 @@ class OverpassRouter implements Router<Restlet> {
 	public Map<String, Restlet> getRoutes() {
 		routes = new HashMap<String, Restlet>();
 
-		Restlet overpassLocationRestlet = new Restlet() {
+		Restlet overpassLocationRestlet = new BaseRestlet() {
 			@Override
-			public void handle(Request request, Response response) {
-				// Print the requested URI path
-				String message = "";
-
-				GenericEntity ret = null;
-				try {
-					ret = TranslatorFactory.getJsonTranslator(DummyDataSource.newInstance( 
-								"ru-rambler-osm-overpass",
-								"http://overpass.osm.rambler.ru/cgi/interpreter?data=[out:json];node[name%3D"
-								+ (String) request.getAttributes().get("location") + "]%3Bout%3B"))
-						.translate();
-					ObjectMapper mapper = new ObjectMapper();
-					message += mapper.writeValueAsString(ret);
-
-				} catch (IOException e) {
-					String errorMessage = "Error during client request: " + e;
-					Logging.error(this.getClass(), errorMessage);
-					System.err.println(errorMessage);
-					message += "Station not found: "
-							+ (String) request.getAttributes().get("location");
-				}
-
-				response.setEntity(message, MediaType.APPLICATION_JSON);
-
+			protected RestletResult doGet(Request request) {
+				String location = request.getAttributes().get("location").toString();
+				GenericEntity ret = TranslatorFactory.getJsonTranslator(
+						DummyDataSource.newInstance( 
+							"ru-rambler-osm-overpass",
+							"http://overpass.osm.rambler.ru/cgi/interpreter?data=[out:json];node[name%3D"
+							+ location + "]%3Bout%3B"))
+					.translate();
+				return RestletResult.newSuccessResult(mapper.valueToTree(ret));
 			}
 
 		};
 
-		Restlet metadataRestlet = new Restlet() {
+		Restlet metadataRestlet = new BaseRestlet() {
 			@Override
-			public void handle(Request request, Response response) {
+			protected RestletResult doGet(Request request) {
+				JsonNode data = mapper.valueToTree(new JacksonMetaData(
+							"org-openstreetmap-overpass",
+							"overpass",
+							"OpenStreetMap Community",
+							"http://www.openstreetmap.org",
+							"The Overpass API is a read-only API that serves up custom selected parts of the OSM map data. It acts as a database over the web: the client sends a query to the API and gets back the data set that corresponds to the query.",
+							"http://overpass.osm.rambler.ru",
+							"http://www.openstreetmap.org/copyright"));
 
-				try {
-					ObjectMapper mapper = new ObjectMapper();
-
-					String message = mapper
-							.writeValueAsString(new JacksonMetaData(
-									"org-openstreetmap-overpass",
-									"overpass",
-									"OpenStreetMap Community",
-									"http://www.openstreetmap.org",
-									"The Overpass API is a read-only API that serves up custom selected parts of the OSM map data. It acts as a database over the web: the client sends a query to the API and gets back the data set that corresponds to the query.",
-									"http://overpass.osm.rambler.ru",
-									"http://www.openstreetmap.org/copyright"));
-
-					response.setEntity(message, MediaType.APPLICATION_JSON);
-				} catch (JsonProcessingException ex) {
-					response.setEntity("OSM Metadata not found.",
-							MediaType.TEXT_PLAIN);
-					Logging.error(this.getClass(), "OSM Metadata not found.");
-					System.err.println("OSM Metadata not found.");
-				}
+				return RestletResult.newSuccessResult(data);
 			}
 		};
 
