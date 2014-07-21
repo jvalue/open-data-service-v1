@@ -17,25 +17,23 @@
  */
 package org.jvalue.ods.server.router;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.jvalue.ods.notifications.NotificationManager;
 import org.jvalue.ods.notifications.clients.Client;
 import org.jvalue.ods.notifications.definitions.NotificationDefinition;
 import org.jvalue.ods.notifications.rest.RestAdapter;
+import org.jvalue.ods.server.restlet.BaseRestlet;
+import org.jvalue.ods.server.utils.RestletResult;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
-import org.restlet.data.MediaType;
-import org.restlet.data.Method;
-import org.restlet.data.Parameter;
-import org.restlet.data.Status;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 final class NotificationRouter implements Router<Restlet> {
@@ -51,7 +49,7 @@ final class NotificationRouter implements Router<Restlet> {
 		PARAM_CLIENT_ID = "clientId";
 //		ROUTE_DEBUG_TEST_MESSAGE = "/notifications/debug/testMessage",
 
-	private static final String MSG_BAD_REQUEST = "Usage: POST /<url>?";
+	private static final ObjectMapper mapper = new ObjectMapper();
 
 
 
@@ -67,31 +65,24 @@ final class NotificationRouter implements Router<Restlet> {
 		}
 
 		// add unregisration route
-		routes.put(ROUTE_BASE + ROUTE_UNREGISTER, new Restlet() {
-			@Override
-			public void handle(Request request, Response response) {
-				if (!validateRequest(
-						request, 
-						response, 
-						new HashSet<String>(Arrays.asList(PARAM_CLIENT_ID))))
-					return;
+		routes.put(ROUTE_BASE + ROUTE_UNREGISTER, new BaseRestlet(
+					new HashSet<String>(),
+					new HashSet<String>(Arrays.asList(PARAM_CLIENT_ID))) {
 
+			@Override
+			protected RestletResult doPost(Request request) {
 				String clientId = getParameter(request, PARAM_CLIENT_ID);
 				NotificationManager.getInstance().unregisterClient(clientId);
+				return RestletResult.newSuccessResult();
 			}
 		});
 
 		// add debug routes
-		routes.put(ROUTE_BASE + ROUTE_DEBUG_CLIENTS, new Restlet() {
+		routes.put(ROUTE_BASE + ROUTE_DEBUG_CLIENTS, new BaseRestlet() {
 			@Override
-			public void handle(Request request, Response response) {
-				try {
-					String clients = new ObjectMapper().writeValueAsString(
-						NotificationManager.getInstance().getAllClients());
-					response.setEntity(clients, MediaType.APPLICATION_JSON);
-				} catch (IOException io) {
-					throw new RuntimeException(io);
-				}
+			protected RestletResult doGet(Request request) {
+				JsonNode json = mapper.valueToTree(NotificationManager.getInstance().getAllClients());
+				return RestletResult.newSuccessResult(json);
 			}
 		});
 
@@ -174,49 +165,21 @@ final class NotificationRouter implements Router<Restlet> {
 
 		String routeRegister = ROUTE_BASE + name + ROUTE_REGISTER;
 
-		routes.put(routeRegister, new Restlet() {
-			@Override
-			public void handle(Request request, Response response) {
-				if (!validateRequest(request, response, adapter.getParameters()))
-					return;
+		routes.put(routeRegister, new BaseRestlet(
+					adapter.getParameters(),
+					new HashSet<String>()) {
 
+			@Override
+			protected RestletResult doPost(Request request) {
 				Client client = adapter.toClient(request);
 				NotificationManager.getInstance().registerClient(client);
-				response.setEntity(client.getClientId(), MediaType.TEXT_PLAIN);
+
+				Map<String, Object> data = new HashMap<String, Object>();
+				data.put(PARAM_CLIENT_ID, client.getClientId());
+
+				return RestletResult.newSuccessResult(mapper.valueToTree(data));
 			}
 		});
-	}
-
-
-	private static String getParameter(Request request, String key) {
-		Parameter param = request.getResourceRef().getQueryAsForm().getFirst(key);
-		if (param == null) return null;
-		else return param.getValue();
-	}
-
-
-	private static boolean validateRequest(
-			Request request, 
-			Response response,
-			Set<String> requiredParams) {
-
-		boolean valid = true;
-
-		for (String param : requiredParams) {
-			if (getParameter(request, param) == null) valid = false;
-		}
-
-		if (!request.getMethod().equals(Method.POST)) valid = false;
-
-		boolean first = true;
-		String msg = MSG_BAD_REQUEST;
-		for (String param : requiredParams) {
-			if (first) first = false;
-			else msg = msg + "&";
-			msg = msg + param + "=<value>";
-		}
-		if (!valid) response.setStatus(Status.CLIENT_ERROR_BAD_REQUEST, msg);
-		return valid;
 	}
 
 }
