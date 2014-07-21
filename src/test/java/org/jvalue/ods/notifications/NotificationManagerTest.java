@@ -80,7 +80,7 @@ public final class NotificationManagerTest {
 		manager.registerClient(client);
 		assertEquals(manager.getAllClients().size(), 1);
 		assertTrue(manager.getAllClients().contains(client));
-		manager.unregisterClient(client);
+		manager.unregisterClient(client.getClientId());
 		assertEquals(manager.getAllClients().size(), 0);
 
 		manager.registerClient(client);
