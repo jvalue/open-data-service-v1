@@ -20,11 +20,12 @@ public final class RestletResult {
 
 
 	public static RestletResult newSuccessResult() {
-		return newSuccessResult(Status.SUCCESS_OK, null);
+		return newSuccessResult(Status.SUCCESS_NO_CONTENT, null);
 	}
 
 
 	public static RestletResult newSuccessResult(JsonNode data) {
+		Assert.assertNotNull(data);
 		return newSuccessResult(Status.SUCCESS_OK, data);
 	}
 
