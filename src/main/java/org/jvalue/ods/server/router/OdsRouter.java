@@ -18,25 +18,27 @@
 package org.jvalue.ods.server.router;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.server.restlet.AccessObjectByIdRestlet;
+import org.jvalue.ods.server.restlet.BaseRestlet;
+import org.jvalue.ods.server.utils.RestletResult;
 import org.restlet.Request;
-import org.restlet.Response;
 import org.restlet.Restlet;
 import org.restlet.data.Form;
-import org.restlet.data.MediaType;
+import org.restlet.data.Status;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 public class OdsRouter implements Router<Restlet> {
+
+	private static final ObjectMapper mapper = new ObjectMapper();
 
 	private HashMap<String, Restlet> routes;
 
@@ -53,31 +55,34 @@ public class OdsRouter implements Router<Restlet> {
 
 		routes = new HashMap<String, Restlet>();
 
-		Restlet odsRestlet = new Restlet() {
+		Restlet odsRestlet = new BaseRestlet(
+				new HashSet<String>(),
+				true) {
+
 			@Override
-			public void handle(Request request, Response response) {
-
-				String message = "Please specify an argument.";
-
+			protected RestletResult doGet(Request request) {
 				// there is an attribute in url
-				if (request.getResourceRef().getQueryAsForm().size() == 1) {
+				if (request.getResourceRef().getQueryAsForm().size() != 1)
+					return onBadRequest("no argument given");
 
-					message = RouterUtils.getDocumentByAttribute(request,
-							dbAccessor);
+				String jsonString = RouterUtils.getDocumentByAttribute(request,
+						dbAccessor);
 
+				try {
+					JsonNode json = mapper.readTree(jsonString);
+					return RestletResult.newSuccessResult(json);
+				} catch (Exception e) {
+					throw new RuntimeException(e);
 				}
-
-				response.setEntity(message, MediaType.APPLICATION_JSON);
-
 			}
 		};
 
-		Restlet odsSchemaRestlet = new Restlet() {
+		Restlet odsSchemaRestlet = new BaseRestlet(
+				new HashSet<String>(),
+				true) {
+
 			@Override
-			public void handle(Request request, Response response) {
-
-				String message = "Please specify an argument.";
-
+			protected RestletResult doGet(Request request) {
 				// there is an attribute in url
 				if (request.getResourceRef().getQueryAsForm().size() == 1) {
 
@@ -96,44 +101,35 @@ public class OdsRouter implements Router<Restlet> {
 								"_design/ods", "getClassObjectByType", dbKey);
 
 						if (nodes != null && !nodes.isEmpty()) {
-							try {
-								message = new ObjectMapper()
-										.writeValueAsString(nodes.get(0));
-							} catch (JsonProcessingException e) {
-								String errorMessage = "Error during client request: "
-										+ e;
-								Logging.error(this.getClass(), errorMessage);
-								System.err.println(errorMessage);
-							}
+							return RestletResult.newSuccessResult(nodes.get(0));
+						} else {
+							return RestletResult.newErrorResult(
+									Status.CLIENT_ERROR_NOT_FOUND,
+									"No schema found for name '" + value + "'");
+						}
+
+					} else {
+
+						String jsonString = RouterUtils.getDocumentByAttribute(request, dbAccessor);
+						try {
+							JsonNode json = mapper.readTree(jsonString);
+							return RestletResult.newSuccessResult(json);
+						} catch (Exception e) {
+							throw new RuntimeException(e);
 						}
 
 					}
 
-					message = RouterUtils.getDocumentByAttribute(request,
-							dbAccessor);
 
 				} else {
 
 					dbAccessor.connect();
-
 					List<JsonNode> nodes = dbAccessor.executeDocumentQuery(
 							"_design/ods", "getAllClassObjects", null);
 
-					if (nodes != null && !nodes.isEmpty()) {
-						try {
-							message = new ObjectMapper()
-									.writeValueAsString(nodes);
-						} catch (JsonProcessingException e) {
-							String errorMessage = "Error during client request: "
-									+ e;
-							Logging.error(this.getClass(), errorMessage);
-							System.err.println(errorMessage);
-						}
-					}
-
+					JsonNode resultData = mapper.valueToTree(nodes);
+					return RestletResult.newSuccessResult(resultData);
 				}
-
-				response.setEntity(message, MediaType.APPLICATION_JSON);
 
 			}
 		};
