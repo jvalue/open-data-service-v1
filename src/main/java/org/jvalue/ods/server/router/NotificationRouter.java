@@ -71,9 +71,16 @@ final class NotificationRouter implements Router<Restlet> {
 
 			@Override
 			protected RestletResult doPost(Request request) {
+				NotificationManager manager = NotificationManager.getInstance();
+
 				String clientId = getParameter(request, PARAM_CLIENT_ID);
-				NotificationManager.getInstance().unregisterClient(clientId);
-				return RestletResult.newSuccessResult();
+				for (Client client : manager.getAllClients()) {
+					if (client.getClientId().equals(clientId)) {
+						NotificationManager.getInstance().unregisterClient(clientId);
+						return RestletResult.newSuccessResult();
+					}
+				}
+				return onBadRequest("clientId '" + clientId + "' is not registered");
 			}
 		});
 
