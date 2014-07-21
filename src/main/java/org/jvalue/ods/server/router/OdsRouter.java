@@ -64,15 +64,8 @@ public class OdsRouter implements Router<Restlet> {
 				if (request.getResourceRef().getQueryAsForm().size() != 1)
 					return onBadRequest("no argument given");
 
-				String jsonString = RouterUtils.getDocumentByAttribute(request,
-						dbAccessor);
-
-				try {
-					JsonNode json = mapper.readTree(jsonString);
-					return RestletResult.newSuccessResult(json);
-				} catch (Exception e) {
-					throw new RuntimeException(e);
-				}
+				JsonNode data = RouterUtils.getDocumentByAttribute(dbAccessor, request);
+				return RestletResult.newSuccessResult(data);
 			}
 		};
 
@@ -109,13 +102,8 @@ public class OdsRouter implements Router<Restlet> {
 
 					} else {
 
-						String jsonString = RouterUtils.getDocumentByAttribute(request, dbAccessor);
-						try {
-							JsonNode json = mapper.readTree(jsonString);
-							return RestletResult.newSuccessResult(json);
-						} catch (Exception e) {
-							throw new RuntimeException(e);
-						}
+						JsonNode data = RouterUtils.getDocumentByAttribute(dbAccessor, request);
+						return RestletResult.newSuccessResult(data);
 
 					}
 

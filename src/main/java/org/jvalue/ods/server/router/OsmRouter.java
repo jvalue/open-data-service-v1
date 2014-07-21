@@ -17,7 +17,6 @@
  */
 package org.jvalue.ods.server.router;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -79,13 +78,8 @@ class OsmRouter implements Router<Restlet> {
 			protected RestletResult doGet(Request request) {
 				// there is an attribute in url
 				if (request.getResourceRef().getQueryAsForm().size() == 1) {
-					try {
-						String jsonString = RouterUtils.getDocumentByAttribute(request, dbAccessor);
-						JsonNode data = mapper.readTree(jsonString);
-						return RestletResult.newSuccessResult(data);
-					} catch (IOException ioe) {
-						throw new RuntimeException(ioe);
-					}
+					JsonNode data = RouterUtils.getDocumentByAttribute(dbAccessor, request);
+					return RestletResult.newSuccessResult(data);
 				} else {
 					return onBadRequest("Please specify an argument");
 				}

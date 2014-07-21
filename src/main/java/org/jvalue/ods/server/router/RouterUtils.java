@@ -17,108 +17,53 @@
  */
 package org.jvalue.ods.server.router;
 
-import java.io.IOException;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.jvalue.ods.db.DbAccessor;
-import org.jvalue.ods.logger.Logging;
 import org.restlet.Request;
 import org.restlet.data.Form;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 
-class RouterUtils {
+final class RouterUtils {
 
 	private RouterUtils() { }
 
 
-	public static String getDocumentByAttribute(Request request,
-			DbAccessor<JsonNode> dbAccessor) {
+	private static final ObjectMapper mapper = new ObjectMapper();
 
-		String message = "Could not find matching document.";
-
+	public static JsonNode getDocumentByAttribute(DbAccessor<JsonNode> dbAccessor, Request request) {
 		Form f = request.getResourceRef().getQueryAsForm();
 		String key = f.get(0).getName();
 		String value = f.get(0).getValue();
 
-		List<JsonNode> nodes = null;
-		ObjectMapper mapper = new ObjectMapper();
+		dbAccessor.connect();
+		List<JsonNode> nodes = dbAccessor.getAllDocuments();
+		List<JsonNode> resultNodes = new LinkedList<JsonNode>();
 
-		try {
-			try {
+		for (JsonNode node : nodes) {
+			if (!node.isObject()) continue;
 
-				dbAccessor.connect();
+			ObjectNode object = (ObjectNode) node;
 
-				nodes = dbAccessor.getAllDocuments();
-			} catch (RuntimeException e) {
-				String errorMessage = "Could not retrieve data from db: " + e;
-				Logging.error(RouterUtils.class, errorMessage);
-				System.err.println(errorMessage);
-				message += mapper
-						.writeValueAsString("Could not retrieve data.");
-			}
-
-		} catch (IOException e) {
-			String errorMessage = "Error during client request: " + e;
-			Logging.error(RouterUtils.class, errorMessage);
-			System.err.println(errorMessage);
-		}
-
-		List<HashMap<String, Object>> result = new LinkedList<>();
-
-		try {
-
-			for (JsonNode n : nodes) {
-
-				if (n.isObject()) {
-
-					HashMap<String, Object> doc;
-
-					doc = mapper.readValue(n.toString(),
-							new TypeReference<HashMap<String, Object>>() {
-							});
-
-					for (String k : doc.keySet()) {
-						if (k.equals(key)) {
-							String dbValue = null;
-							boolean isString = false;
-							try {
-								dbValue = "" + doc.get(key);
-								isString = true;
-							} catch (Exception e) {
-								isString = false;
-							}
-							if (dbValue != null
-									&& (value.equals(dbValue))
-									|| (isString && dbValue.toLowerCase()
-											.equals(value))) {
-
-								result.add(doc);
-
-								break;
-
-							}
-						}
+			Iterator<String> iter = object.fieldNames();
+			while (iter.hasNext()) {
+				String fieldName = iter.next();
+				if (fieldName.equals(key)) {
+					JsonNode valueNode = object.get(fieldName);
+					if (valueNode.isTextual() && valueNode.asText().equals(value)) {
+						resultNodes.add(node);
 					}
 				}
-
 			}
-
-			if (!result.isEmpty()) {
-				message = mapper.writeValueAsString(result);
-			}
-		} catch (IOException e) {
-			String errorMessage = "Error during client request: " + e;
-			Logging.error(RouterUtils.class, errorMessage);
-			System.err.println(errorMessage);
 		}
 
-		return message;
+		return mapper.valueToTree(resultNodes);
 	}
 
 }
