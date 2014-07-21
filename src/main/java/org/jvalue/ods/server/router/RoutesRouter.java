@@ -17,8 +17,9 @@
  */
 package org.jvalue.ods.server.router;
 
-import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -26,22 +27,26 @@ import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.DummyDataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.db.DbAccessor;
-import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.server.restlet.BaseRestlet;
+import org.jvalue.ods.server.utils.RestletResult;
 import org.jvalue.ods.translator.TranslatorFactory;
 import org.jvalue.ods.utils.Assert;
 import org.restlet.Request;
-import org.restlet.Response;
 import org.restlet.Restlet;
-import org.restlet.data.Form;
-import org.restlet.data.MediaType;
+import org.restlet.data.Status;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 class RoutesRouter implements Router<Restlet> {
+		
+	
+	private static final ObjectMapper mapper = new ObjectMapper();
+
+	private static final String
+		PARAM_START = "start",
+		PARAM_END = "end";
 
 
 	private final DbAccessor<JsonNode> dbAccessor;
@@ -56,109 +61,74 @@ class RoutesRouter implements Router<Restlet> {
 	public Map<String, Restlet> getRoutes() {
 		Map<String, Restlet> routes = new HashMap<String, Restlet>();
 
-		final Restlet routeRestlet = new Restlet() {
-			@Override
-			public void handle(Request request, Response response) {
+		final Restlet routeRestlet = new BaseRestlet(
+				new HashSet<String>(Arrays.asList(PARAM_START, PARAM_END)),
+				false) {
 
+			@Override
+			protected RestletResult doGet(Request request) {
 				dbAccessor.connect();
 
-				ObjectMapper mapper = new ObjectMapper();
+				String startStation = getParameter(request, PARAM_START).toUpperCase();
+				String endStation = getParameter(request, PARAM_START).toUpperCase();
 
-				Form f = request.getResourceRef().getQueryAsForm();
-				String startStation = f.getFirstValue("start");
-				String endStation = f.getFirstValue("end");
+				List<JsonNode> startNodes = dbAccessor.executeDocumentQuery(
+						"_design/pegelonline",
+						"getSingleStation", 
+						startStation);
 
-				if (startStation == null || endStation == null) {
-					response.setEntity(
-							"You have to specify start + end parameters, for example: .../route?start=rethem&end=eitze",
-							MediaType.TEXT_PLAIN);
-					return;
-				}
-
-				startStation = startStation.toUpperCase();
-				endStation = endStation.toUpperCase();
-
-				DbAccessor<JsonNode> pegelOnlineDbAccessor = DbFactory
-						.createDbAccessor("ods");
-				pegelOnlineDbAccessor.connect();
-				List<JsonNode> startNodes = pegelOnlineDbAccessor
-						.executeDocumentQuery("_design/pegelonline",
-								"getSingleStation", startStation);
-
-				List<JsonNode> endNodes = pegelOnlineDbAccessor
-						.executeDocumentQuery("_design/pegelonline",
-								"getSingleStation", endStation);
+				List<JsonNode> endNodes = dbAccessor.executeDocumentQuery(
+						"_design/pegelonline",
+						"getSingleStation", 
+						endStation);
 
 				if (startNodes.isEmpty() || endNodes.isEmpty()) {
-					response.setEntity("Could not find a route between "
-							+ startStation + " and " + endStation,
-							MediaType.APPLICATION_JSON);
-					return;
+					return RestletResult.newErrorResult(
+							Status.CLIENT_ERROR_NOT_FOUND, 
+							"no route found between '" + startStation + "' and '" + endStation + "'");
 				}
 
-				try {
+				double startLongitude = 0;
+				double startLatitude = 0;
+				double endLongitude = 0;
+				double endLatitude = 0;
 
-					double startLongitude = 0;
-					double startLatitude = 0;
-					double endLongitude = 0;
-					double endLatitude = 0;
-
-					if (startNodes.get(0).isObject()) {
-						HashMap<String, Object> startStationMap;
-						startStationMap = mapper.readValue(startNodes.get(0)
-								.toString(),
-								new TypeReference<HashMap<String, Object>>() {
-								});
-						startLongitude = (double) startStationMap
-								.get("longitude");
-						startLatitude = (double) startStationMap
-								.get("latitude");
-					}
-
-					if (endNodes.get(0).isObject()) {
-						HashMap<String, Object> endStationMap;
-						endStationMap = mapper.readValue(endNodes.get(0)
-								.toString(),
-								new TypeReference<HashMap<String, Object>>() {
-								});
-						endLongitude = (double) endStationMap.get("longitude");
-						endLatitude = (double) endStationMap.get("latitude");
-					}
-
-					String source = "http://www.yournavigation.org/api/1.0/gosmore.php?format=kml&flat="
-							+ startLatitude
-							+ "&flon="
-							+ startLongitude
-							+ "&tlat="
-							+ endLatitude
-							+ "&tlon="
-							+ endLongitude
-							+ "&v=motorcar&fast=1&layer=mapnik";
-
-					DataSource ds = DummyDataSource.newInstance("org-yournavigation", source);
-
-					GenericEntity gv = TranslatorFactory.getXmlTranslator(ds).translate();
-
-					String message = mapper.writeValueAsString(gv);
-
-					response.setEntity(message, MediaType.APPLICATION_JSON);
-
-				} catch (IOException e) {
-					String errorMessage = "Error during client request: " + e;
-					Logging.error(this.getClass(), errorMessage);
-					System.err.println(errorMessage);
-					response.setEntity("Internal error.", MediaType.TEXT_PLAIN);
+				if (startNodes.get(0).isObject()) {
+					JsonNode node = startNodes.get(0);
+					startLatitude = node.get("coordinate").get("latitude").asDouble();
+					startLongitude = node.get("coordinate").get("longitude").asDouble();
 				}
+
+				if (endNodes.get(0).isObject()) {
+					JsonNode node = endNodes.get(0);
+					endLatitude = node.get("coordinate").get("latitude").asDouble();
+					endLongitude = node.get("coordinate").get("longitude").asDouble();
+				}
+
+				String source = "http://www.yournavigation.org/api/1.0/gosmore.php?format=kml&flat="
+						+ startLatitude
+						+ "&flon="
+						+ startLongitude
+						+ "&tlat="
+						+ endLatitude
+						+ "&tlon="
+						+ endLongitude
+						+ "&v=motorcar&fast=1&layer=mapnik";
+
+				DataSource ds = DummyDataSource.newInstance("org-yournavigation", source);
+
+				GenericEntity gv = TranslatorFactory.getXmlTranslator(ds).translate();
+				return RestletResult.newSuccessResult(mapper.valueToTree(gv));
 			}
 		};
 
-		Restlet routeDistanceRestlet = new Restlet() {
-			@SuppressWarnings("unchecked")
+		/*
+		Restlet routeDistanceRestlet = new BaseRestlet() {
+			// @SuppressWarnings("unchecked")
 			@Override
-			public void handle(Request request, Response response) {
+			protected RestletResult doGet(Request request) {
 
-				ObjectMapper mapper = new ObjectMapper();
-
+				// TODO come on, seriously?
 				Response r = routeRestlet.handle(request);
 
 				try {
@@ -189,10 +159,11 @@ class RoutesRouter implements Router<Restlet> {
 
 			}
 		};
+		*/
 
 		routes.put("/services/org/jvalue/routes/route", routeRestlet);
-		routes.put("/services/org/jvalue/routes/routeDistance",
-				routeDistanceRestlet);
+		// routes.put("/services/org/jvalue/routes/routeDistance",
+				// routeDistanceRestlet);
 
 		return routes;
 	}
