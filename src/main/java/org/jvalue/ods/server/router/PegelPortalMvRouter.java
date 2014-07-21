@@ -30,8 +30,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 class PegelPortalMvRouter implements Router<Restlet> {
 	
-	private final static String CLIENT_ERROR_MSG = "Could not retrieve data. Try to update database via /pegelportal-mv/update.";
-
 	private DbAccessor<JsonNode> dbAccessor;
 
 	public PegelPortalMvRouter() {
@@ -50,7 +48,6 @@ class PegelPortalMvRouter implements Router<Restlet> {
 						dbAccessor, 
 						"_design/pegelportal-mv", 
 						"getAllStations")
-					.errorMsg(CLIENT_ERROR_MSG)
 					.build());
 
 		// all stations flat
@@ -60,7 +57,6 @@ class PegelPortalMvRouter implements Router<Restlet> {
 						dbAccessor, 
 						"_design/pegelportal-mv", 
 						"getAllStationsFlat")
-					.errorMsg(CLIENT_ERROR_MSG)
 					.build());
 
 		// value types 
@@ -70,7 +66,6 @@ class PegelPortalMvRouter implements Router<Restlet> {
 						dbAccessor, 
 						"_design/pegelportal-mv", 
 						"getClassObject")
-					.errorMsg(CLIENT_ERROR_MSG)
 					.fetchAllDbEntries(false)
 					.build());
 
@@ -81,7 +76,6 @@ class PegelPortalMvRouter implements Router<Restlet> {
 						dbAccessor, 
 						"_design/pegelportal-mv", 
 						"getClassObjectId")
-					.errorMsg(CLIENT_ERROR_MSG)
 					.fetchAllDbEntries(false)
 					.build());
 
@@ -92,7 +86,6 @@ class PegelPortalMvRouter implements Router<Restlet> {
 						dbAccessor, 
 						"_design/pegelportal-mv", 
 						"getSingleStation")
-					.errorMsg(CLIENT_ERROR_MSG)
 					.fetchAllDbEntries(false)
 					.attributeName("station")
 					.build());
@@ -104,7 +97,6 @@ class PegelPortalMvRouter implements Router<Restlet> {
 						dbAccessor, 
 						"_design/pegelportal-mv", 
 						"getMetadata")
-					.errorMsg(CLIENT_ERROR_MSG)
 					.fetchAllDbEntries(false)
 					.build());
 		return routes;

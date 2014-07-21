@@ -30,7 +30,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 class PegelOnlineRouter implements Router<Restlet> {
 
-	private static final String CLIENT_ERROR_MSG = "Could not retrieve data. Try to update database via /pegelonline/update.";
 
 	private DbAccessor<JsonNode> dbAccessor;
 
@@ -50,7 +49,6 @@ class PegelOnlineRouter implements Router<Restlet> {
 						dbAccessor,
 						"_design/pegelonline",
 						"getAllStations")
-					.errorMsg(CLIENT_ERROR_MSG)
 					.build());
 
 		// all stations flat
@@ -60,7 +58,6 @@ class PegelOnlineRouter implements Router<Restlet> {
 						dbAccessor,
 						"_design/pegelonline",
 						"getAllStationsFlat")
-					.errorMsg(CLIENT_ERROR_MSG)
 					.build());
 
 		// value types
@@ -70,7 +67,6 @@ class PegelOnlineRouter implements Router<Restlet> {
 						dbAccessor, 
 						"_design/pegelonline",
 						"getClassObject")
-					.errorMsg(CLIENT_ERROR_MSG)
 					.fetchAllDbEntries(false)
 					.build());
 
@@ -80,7 +76,6 @@ class PegelOnlineRouter implements Router<Restlet> {
 						dbAccessor, 
 						"_design/pegelonline",
 						"getClassObjectId")
-					.errorMsg(CLIENT_ERROR_MSG)
 					.fetchAllDbEntries(false)
 					.build());
 
@@ -93,7 +88,6 @@ class PegelOnlineRouter implements Router<Restlet> {
 						"getSingleStation")
 					.fetchAllDbEntries(false)
 					.attributeName("station")
-					.errorMsg(CLIENT_ERROR_MSG)
 					.build());
 
 		// metadata
@@ -104,7 +98,6 @@ class PegelOnlineRouter implements Router<Restlet> {
 						"_design/pegelonline",
 						"getMetadata")
 					.fetchAllDbEntries(false)
-					.errorMsg(CLIENT_ERROR_MSG)
 					.build());
 
 		return routes;
