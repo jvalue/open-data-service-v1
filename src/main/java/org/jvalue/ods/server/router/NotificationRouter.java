@@ -66,8 +66,8 @@ final class NotificationRouter implements Router<Restlet> {
 
 		// add unregisration route
 		routes.put(ROUTE_BASE + ROUTE_UNREGISTER, new BaseRestlet(
-					new HashSet<String>(),
-					new HashSet<String>(Arrays.asList(PARAM_CLIENT_ID))) {
+					new HashSet<String>(Arrays.asList(PARAM_CLIENT_ID)),
+					false) {
 
 			@Override
 			protected RestletResult doPost(Request request) {
@@ -174,7 +174,7 @@ final class NotificationRouter implements Router<Restlet> {
 
 		routes.put(routeRegister, new BaseRestlet(
 					adapter.getParameters(),
-					new HashSet<String>()) {
+					false) {
 
 			@Override
 			protected RestletResult doPost(Request request) {

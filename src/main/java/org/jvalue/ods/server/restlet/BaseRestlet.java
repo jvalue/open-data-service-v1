@@ -1,6 +1,5 @@
 package org.jvalue.ods.server.restlet;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,24 +16,19 @@ import org.restlet.data.Status;
 
 public abstract class BaseRestlet extends Restlet {
 
-	private final Set<String> mandatoryQueryParams, optionalQueryParams;
+	private final Set<String> mandatoryQueryParams;
+	private final boolean allowAdditionalParams;
 
-	protected BaseRestlet(
-			Set<String> mandatoryQueryParams,
-			Set<String> optionalQueryParams) {
-
-		Assert.assertNotNull(mandatoryQueryParams, optionalQueryParams);
-		Assert.assertTrue(
-				Collections.disjoint(mandatoryQueryParams, optionalQueryParams),
-				"param sets must be disjoint");
+	protected BaseRestlet(Set<String> mandatoryQueryParams, boolean allowAdditionalParams) {
+		Assert.assertNotNull(mandatoryQueryParams);
 
 		this.mandatoryQueryParams = mandatoryQueryParams;
-		this.optionalQueryParams = optionalQueryParams;
+		this.allowAdditionalParams = allowAdditionalParams;
 	}
 
 
 	protected BaseRestlet() {
-		this(new HashSet<String>(), new HashSet<String>());
+		this(new HashSet<String>(), false);
 	}
 
 
@@ -56,8 +50,7 @@ public abstract class BaseRestlet extends Restlet {
 				return onBadRequest("missing query param " + param); 
 			}
 		}
-		paramNames.removeAll(optionalQueryParams);
-		if (paramNames.size() > 0) {
+		if (!allowAdditionalParams && paramNames.size() > 0) {
 			return onBadRequest("found unknown query params");
 		}
 
