@@ -21,8 +21,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.jvalue.ods.db.DbAccessor;
-import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.server.restlet.ExecuteQueryRestlet;
+import org.jvalue.ods.utils.Assert;
 import org.restlet.Restlet;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -31,10 +31,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 class PegelOnlineRouter implements Router<Restlet> {
 
 
-	private DbAccessor<JsonNode> dbAccessor;
+	private final DbAccessor<JsonNode> dbAccessor;
 
-	public PegelOnlineRouter() {
-		this.dbAccessor = DbFactory.createDbAccessor("ods");
+	public PegelOnlineRouter(DbAccessor<JsonNode> dbAccessor) {
+		Assert.assertNotNull(dbAccessor);
+		this.dbAccessor = dbAccessor;
 	}
 
 
@@ -101,25 +102,6 @@ class PegelOnlineRouter implements Router<Restlet> {
 					.build());
 
 		return routes;
-	}
-
-	/**
-	 * Gets the db accessor.
-	 * 
-	 * @return the db accessor
-	 */
-	public DbAccessor<JsonNode> getDbAccessor() {
-		return dbAccessor;
-	}
-
-	/**
-	 * Sets the db accessor.
-	 * 
-	 * @param dbAccessor
-	 *            the new db accessor
-	 */
-	public void setDbAccessor(DbAccessor<JsonNode> dbAccessor) {
-		this.dbAccessor = dbAccessor;
 	}
 
 }

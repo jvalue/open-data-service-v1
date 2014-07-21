@@ -20,10 +20,14 @@ package org.jvalue.ods.server.router;
 import java.util.Set;
 
 import org.jvalue.ods.administration.AdministrationRouter;
+import org.jvalue.ods.db.DbAccessor;
+import org.jvalue.ods.db.DbFactory;
 import org.restlet.Restlet;
 
+import com.fasterxml.jackson.databind.JsonNode;
 
-public class RouterFactory {
+
+public final class RouterFactory {
 
 	private RouterFactory() { }
 
@@ -39,7 +43,7 @@ public class RouterFactory {
 
 
 	public static Router<Restlet> createOsmRouter() {
-		return new OsmRouter();
+		return new OsmRouter(getOdsDbAccessor());
 	}
 
 
@@ -49,17 +53,17 @@ public class RouterFactory {
 
 
 	public static Router<Restlet> createPegelOnlineRouter() {
-		return new PegelOnlineRouter();
+		return new PegelOnlineRouter(getOdsDbAccessor());
 	}
 
 
 	public static Router<Restlet> createPegelPortalMvRouter() {
-		return new PegelPortalMvRouter();
+		return new PegelPortalMvRouter(getOdsDbAccessor());
 	}
 
 
 	public static Router<Restlet> createRoutesRouter() {
-		return new RoutesRouter();
+		return new RoutesRouter(getOdsDbAccessor());
 	}
 
 
@@ -69,11 +73,17 @@ public class RouterFactory {
 
 
 	public static Router<Restlet> createOdsRouter() {
-		return new OdsRouter();
+		return new OdsRouter(getOdsDbAccessor());
 	}
 
 
 	public static Router<Restlet> createNotificationRouter() {
 		return new NotificationRouter();
 	}
+
+
+	private static DbAccessor<JsonNode> getOdsDbAccessor() {
+		return DbFactory.createDbAccessor("ods");
+	}
+
 }

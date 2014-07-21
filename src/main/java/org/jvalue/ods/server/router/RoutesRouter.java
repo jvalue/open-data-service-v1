@@ -29,6 +29,7 @@ import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.translator.TranslatorFactory;
+import org.jvalue.ods.utils.Assert;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
@@ -42,18 +43,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 class RoutesRouter implements Router<Restlet> {
 
-	private HashMap<String, Restlet> routes;
 
-	private DbAccessor<JsonNode> dbAccessor;
+	private final DbAccessor<JsonNode> dbAccessor;
 
-	public RoutesRouter() {
-		this.dbAccessor = DbFactory.createDbAccessor("ods");
+	public RoutesRouter(DbAccessor<JsonNode> dbAccessor) {
+		Assert.assertNotNull(dbAccessor);
+		this.dbAccessor = dbAccessor;
 	}
 
 
 	@Override
 	public Map<String, Restlet> getRoutes() {
-		routes = new HashMap<String, Restlet>();
+		Map<String, Restlet> routes = new HashMap<String, Restlet>();
 
 		final Restlet routeRestlet = new Restlet() {
 			@Override
@@ -194,16 +195,6 @@ class RoutesRouter implements Router<Restlet> {
 				routeDistanceRestlet);
 
 		return routes;
-	}
-
-
-	public DbAccessor<JsonNode> getDbAccessor() {
-		return dbAccessor;
-	}
-
-
-	public void setDbAccessor(DbAccessor<JsonNode> dbAccessor) {
-		this.dbAccessor = dbAccessor;
 	}
 
 }

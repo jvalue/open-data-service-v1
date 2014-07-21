@@ -37,12 +37,10 @@ class OverpassRouter implements Router<Restlet> {
 
 	private static final ObjectMapper mapper = new ObjectMapper();
 
-	private HashMap<String, Restlet> routes;
-
 
 	@Override
 	public Map<String, Restlet> getRoutes() {
-		routes = new HashMap<String, Restlet>();
+		Map<String, Restlet> routes = new HashMap<String, Restlet>();
 
 		Restlet overpassLocationRestlet = new BaseRestlet() {
 			@Override

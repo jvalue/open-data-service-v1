@@ -23,10 +23,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.jvalue.ods.db.DbAccessor;
-import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.server.restlet.AccessObjectByIdRestlet;
 import org.jvalue.ods.server.restlet.BaseRestlet;
 import org.jvalue.ods.server.utils.RestletResult;
+import org.jvalue.ods.utils.Assert;
 import org.restlet.Request;
 import org.restlet.Restlet;
 import org.restlet.data.Form;
@@ -40,20 +40,19 @@ public class OdsRouter implements Router<Restlet> {
 
 	private static final ObjectMapper mapper = new ObjectMapper();
 
-	private HashMap<String, Restlet> routes;
 
-	private DbAccessor<JsonNode> dbAccessor;
+	private final DbAccessor<JsonNode> dbAccessor;
 
-
-	public OdsRouter() {
-		this.dbAccessor = DbFactory.createDbAccessor("ods");
+	public OdsRouter(DbAccessor<JsonNode> dbAccessor) {
+		Assert.assertNotNull(dbAccessor);
+		this.dbAccessor = dbAccessor;
 	}
 
 
 	@Override
 	public Map<String, Restlet> getRoutes() {
 
-		routes = new HashMap<String, Restlet>();
+		HashMap<String, Restlet> routes = new HashMap<String, Restlet>();
 
 		Restlet odsRestlet = new BaseRestlet(
 				new HashSet<String>(),
