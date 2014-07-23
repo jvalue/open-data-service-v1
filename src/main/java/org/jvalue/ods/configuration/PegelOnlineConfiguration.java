@@ -54,7 +54,6 @@ final class PegelOnlineConfiguration implements Configuration {
 		String sourceId = "de-pegelonline";
 		String url = "http://pegelonline.wsv.de/webservices/rest-api/v2/"
 				+ "stations.json?includeTimeseries=true"
-				+ "&waters=ALLER"
 				+ "&includeCurrentMeasurement=true"
 				+ "&includeCharacteristicValues=true";
 
