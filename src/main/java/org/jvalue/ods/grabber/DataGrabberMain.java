@@ -44,7 +44,7 @@ public class DataGrabberMain {
 			AdministrationLogging.log("Initialize started");
 			
 			accessor = DbFactory.createDbAccessor("ods");
-			filterManager = FilterChainManager.getInstance();
+			filterManager = new FilterChainManager();
 
 			ConfigurationManager.configureAll(accessor, filterManager);
 			initialized = true;

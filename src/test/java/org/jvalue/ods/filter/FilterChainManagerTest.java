@@ -23,7 +23,7 @@ public final class FilterChainManagerTest {
 		chains.add(FilterChain.instance(new DummyFilter()));
 		chains.add(FilterChain.instance(new DummyFilter()));
 
-		FilterChainManager manager = FilterChainManager.getInstance();
+		FilterChainManager manager = new FilterChainManager();
 
 		for (FilterChain<Void,?> chain : chains) {
 			assertFalse(manager.isRegistered(chain));

@@ -26,18 +26,7 @@ import org.jvalue.ods.utils.Assert;
 
 public final class FilterChainManager {
 
-	private static FilterChainManager instance;
-
-	public static FilterChainManager getInstance() {
-		if (instance == null) instance = new FilterChainManager();
-		return instance;
-	}
-
-
-
 	private final Set<FilterChain<Void, ?>> filterChains = new HashSet<FilterChain<Void, ?>>();
-
-	private FilterChainManager() { }
 
 
 	public void register(FilterChain<Void, ?> chain) {
