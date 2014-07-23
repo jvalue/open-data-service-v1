@@ -28,6 +28,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 public class DataGrabberMain {
 
 	private static DbAccessor<JsonNode> accessor;
+	private static FilterChainManager filterManager;
+
 	private static boolean initialized = false;
 
 	public static void main(String[] args) {
@@ -36,13 +38,15 @@ public class DataGrabberMain {
 	}
 
 
-
 	public static void initialize() {		
-		if (!initialized)
-		{		
+		if (!initialized) {		
+
 			AdministrationLogging.log("Initialize started");
 			
-			ConfigurationManager.getInstance().configureAll();
+			accessor = DbFactory.createDbAccessor("ods");
+			filterManager = FilterChainManager.getInstance();
+
+			ConfigurationManager.configureAll(accessor, filterManager);
 			initialized = true;
 			
 			AdministrationLogging.log("Initialize completed");
@@ -61,7 +65,7 @@ public class DataGrabberMain {
 		accessor = DbFactory.createDbAccessor("ods");
 		accessor.connect();
 
-		FilterChainManager.getInstance().startFilterChains();
+		filterManager.startFilterChains();
 
 		AdministrationLogging.log("Update completed");
 	}
