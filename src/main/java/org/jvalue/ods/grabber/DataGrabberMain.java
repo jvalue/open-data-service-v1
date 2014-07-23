@@ -39,18 +39,15 @@ public class DataGrabberMain {
 
 
 	public static void initialize() {		
-		if (!initialized) {		
+		AdministrationLogging.log("Initialize started");
+		
+		accessor = DbFactory.createDbAccessor("ods");
+		filterManager = new FilterChainManager();
 
-			AdministrationLogging.log("Initialize started");
-			
-			accessor = DbFactory.createDbAccessor("ods");
-			filterManager = new FilterChainManager();
-
-			ConfigurationManager.configureAll(accessor, filterManager);
-			initialized = true;
-			
-			AdministrationLogging.log("Initialize completed");
-		}
+		ConfigurationManager.configureAll(accessor, filterManager);
+		initialized = true;
+		
+		AdministrationLogging.log("Initialize completed");
 	}
 
 
