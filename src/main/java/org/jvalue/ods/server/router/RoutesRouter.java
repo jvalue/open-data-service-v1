@@ -70,7 +70,7 @@ class RoutesRouter implements Router<Restlet> {
 				dbAccessor.connect();
 
 				String startStation = getParameter(request, PARAM_START).toUpperCase();
-				String endStation = getParameter(request, PARAM_START).toUpperCase();
+				String endStation = getParameter(request, PARAM_END).toUpperCase();
 
 				List<JsonNode> startNodes = dbAccessor.executeDocumentQuery(
 						"_design/pegelonline",
