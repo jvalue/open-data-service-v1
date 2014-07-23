@@ -38,16 +38,11 @@ import org.restlet.data.Status;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
 class RoutesRouter implements Router<Restlet> {
-		
-	
+
 	private static final ObjectMapper mapper = new ObjectMapper();
 
-	private static final String
-		PARAM_START = "start",
-		PARAM_END = "end";
-
+	private static final String PARAM_START = "start", PARAM_END = "end";
 
 	private final DbAccessor<JsonNode> dbAccessor;
 
@@ -56,36 +51,34 @@ class RoutesRouter implements Router<Restlet> {
 		this.dbAccessor = dbAccessor;
 	}
 
-
 	@Override
 	public Map<String, Restlet> getRoutes() {
 		Map<String, Restlet> routes = new HashMap<String, Restlet>();
 
-		final Restlet routeRestlet = new BaseRestlet(
-				new HashSet<String>(Arrays.asList(PARAM_START, PARAM_END)),
-				false) {
+		final Restlet routeRestlet = new BaseRestlet(new HashSet<String>(
+				Arrays.asList(PARAM_START, PARAM_END)), false) {
 
 			@Override
 			protected RestletResult doGet(Request request) {
 				dbAccessor.connect();
 
-				String startStation = getParameter(request, PARAM_START).toUpperCase();
-				String endStation = getParameter(request, PARAM_END).toUpperCase();
+				String startStation = getParameter(request, PARAM_START)
+						.toUpperCase();
+				String endStation = getParameter(request, PARAM_END)
+						.toUpperCase();
 
-				List<JsonNode> startNodes = dbAccessor.executeDocumentQuery(
-						"_design/pegelonline",
-						"getSingleStation", 
-						startStation);
+				List<JsonNode> startNodes = dbAccessor
+						.executeDocumentQuery("_design/pegelonline",
+								"getSingleStation", startStation);
 
 				List<JsonNode> endNodes = dbAccessor.executeDocumentQuery(
-						"_design/pegelonline",
-						"getSingleStation", 
-						endStation);
+						"_design/pegelonline", "getSingleStation", endStation);
 
 				if (startNodes.isEmpty() || endNodes.isEmpty()) {
 					return RestletResult.newErrorResult(
-							Status.CLIENT_ERROR_NOT_FOUND, 
-							"no route found between '" + startStation + "' and '" + endStation + "'");
+							Status.CLIENT_ERROR_NOT_FOUND,
+							"no route found between '" + startStation
+									+ "' and '" + endStation + "'");
 				}
 
 				double startLongitude = 0;
@@ -95,14 +88,18 @@ class RoutesRouter implements Router<Restlet> {
 
 				if (startNodes.get(0).isObject()) {
 					JsonNode node = startNodes.get(0);
-					startLatitude = node.get("coordinate").get("latitude").asDouble();
-					startLongitude = node.get("coordinate").get("longitude").asDouble();
+					startLatitude = node.get("coordinate").get("latitude")
+							.asDouble();
+					startLongitude = node.get("coordinate").get("longitude")
+							.asDouble();
 				}
 
 				if (endNodes.get(0).isObject()) {
 					JsonNode node = endNodes.get(0);
-					endLatitude = node.get("coordinate").get("latitude").asDouble();
-					endLongitude = node.get("coordinate").get("longitude").asDouble();
+					endLatitude = node.get("coordinate").get("latitude")
+							.asDouble();
+					endLongitude = node.get("coordinate").get("longitude")
+							.asDouble();
 				}
 
 				String source = "http://www.yournavigation.org/api/1.0/gosmore.php?format=kml&flat="
@@ -115,55 +112,16 @@ class RoutesRouter implements Router<Restlet> {
 						+ endLongitude
 						+ "&v=motorcar&fast=1&layer=mapnik";
 
-				DataSource ds = DummyDataSource.newInstance("org-yournavigation", source);
+				DataSource ds = DummyDataSource.newInstance(
+						"org-yournavigation", source);
 
-				GenericEntity gv = TranslatorFactory.getXmlTranslator(ds).translate();
+				GenericEntity gv = TranslatorFactory.getXmlTranslator(ds)
+						.translate();
 				return RestletResult.newSuccessResult(mapper.valueToTree(gv));
 			}
 		};
 
-		/*
-		Restlet routeDistanceRestlet = new BaseRestlet() {
-			// @SuppressWarnings("unchecked")
-			@Override
-			protected RestletResult doGet(Request request) {
-
-				// TODO come on, seriously?
-				Response r = routeRestlet.handle(request);
-
-				try {
-
-					if (r.getEntity().getMediaType() == MediaType.TEXT_PLAIN) {
-						throw new IOException(r.getEntityAsText());
-					}
-
-					HashMap<String, Object> route = mapper.readValue(
-							r.getEntityAsText(),
-							new TypeReference<HashMap<String, Object>>() {
-							});
-
-					HashMap<String, Object> kml = (HashMap<String, Object>) route
-							.get("kml");
-					HashMap<String, Object> document = (HashMap<String, Object>) kml
-							.get("Document");
-					String distance = (String) document.get("distance");
-
-					response.setEntity(distance, MediaType.TEXT_PLAIN);
-
-				} catch (IOException e) {
-					String errorMessage = "Error during client request: " + e;
-					Logging.error(this.getClass(), errorMessage);
-					System.err.println(errorMessage);
-					response.setEntity(r.getEntity());
-				}
-
-			}
-		};
-		*/
-
 		routes.put("/services/org/jvalue/routes/route", routeRestlet);
-		// routes.put("/services/org/jvalue/routes/routeDistance",
-				// routeDistanceRestlet);
 
 		return routes;
 	}
