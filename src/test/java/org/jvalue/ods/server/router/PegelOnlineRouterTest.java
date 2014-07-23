@@ -24,43 +24,18 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.restlet.Restlet;
-
-import com.fasterxml.jackson.databind.JsonNode;
 
 
 public final class PegelOnlineRouterTest {
 
-	private PegelOnlineRouter router;
-
-	private DbAccessor<JsonNode> mockAccessor;
-
-
-	@Before
-	public void setUp() throws Exception {
-		router = new PegelOnlineRouter();
-		mockAccessor = DbFactory.createMockDbAccessor("DbAccessorTest");
-		router.setDbAccessor(mockAccessor);
-	}
-
-
-	@After
-	public void cleanUp() {
-		mockAccessor.connect();
-		if (mockAccessor.isConnected()) {
-
-			mockAccessor.deleteDatabase();
-		}
-	}
-
-
 	@Test
 	public void testGetRoutes() {
+		PegelOnlineRouter router = new PegelOnlineRouter(
+				DbFactory.createMockDbAccessor("DbAccessorTest"));
+
 		Map<String, Restlet> routes = router.getRoutes();
 		assertNotNull(routes);
 
