@@ -51,7 +51,6 @@ public final class RenameSourceFilter implements Filter<GenericEntity, GenericEn
 		MapComplexValueType destinationStructure = createDestinationWaterStructure();
 		String newName = "BodyOfWater";
 
-		MapObject mv = new MapObject();
 
 		List<Serializable> improvedObjects = new LinkedList<Serializable>();
 		ListObject oldObjects = (ListObject) data;
@@ -59,6 +58,7 @@ public final class RenameSourceFilter implements Filter<GenericEntity, GenericEn
 		for (Serializable s : oldObjects.getList()) {
 			GenericEntity gv = (GenericEntity) s;
 
+			MapObject mv = new MapObject();
 			traverseSchema(sourceStructure, newName, gv, mv.getMap());
 			insertRenamedValue(gv, mv, destinationStructure);
 			
@@ -112,16 +112,6 @@ public final class RenameSourceFilter implements Filter<GenericEntity, GenericEn
 		}
 	}
 
-	/**
-	 * Insert renamed value.
-	 * 
-	 * @param serializable
-	 *            the serializable
-	 * @param mv
-	 *            the mv
-	 * @param destinationStructure
-	 *            the destination structure
-	 */
 	private void insertRenamedValue(Serializable serializable, MapObject mv,
 			GenericValueType destinationStructure) {
 
