@@ -1,26 +1,8 @@
 /*
  * 
  */
-package integration.org.jvalue.ods.translator;
+package integration.org.jvalue.ods.configuration;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
-import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.jvalue.ods.data.DummyDataSource;
-import org.jvalue.ods.data.generic.ListObject;
-import org.jvalue.ods.data.generic.MapObject;
-import org.jvalue.ods.db.DbAccessor;
-import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.translator.Translator;
-import org.jvalue.ods.translator.TranslatorFactory;
-
-import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * The Class OsmTranslatorTest.
