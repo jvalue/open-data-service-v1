@@ -54,6 +54,7 @@ final class PegelOnlineConfiguration implements Configuration {
 		String sourceId = "de-pegelonline";
 		String url = "http://pegelonline.wsv.de/webservices/rest-api/v2/"
 				+ "stations.json?includeTimeseries=true"
+				+ "&waters=ALLER"
 				+ "&includeCurrentMeasurement=true"
 				+ "&includeCharacteristicValues=true";
 
@@ -139,22 +140,31 @@ final class PegelOnlineConfiguration implements Configuration {
 			characteristicValuesReferencedObjects.put("occurrences",
 					occurrencesType);
 
-			MapObjectType characteristicValuesGot = new MapObjectType(
+			MapObjectType characteristicValuesType = new MapObjectType(
 					"de-pegelonline-characteristicValues",
 					characteristicValuesAttributes,
 					characteristicValuesReferencedObjects);
+
+			List<ObjectType> characteristicValuesTypesList = new LinkedList<>();
+			characteristicValuesTypesList.add(characteristicValuesType);
+
+			ListObjectType characteristicValuesGot = new ListObjectType(
+					null,
+					characteristicValuesTypesList);
 
 			timeSeriesReferencedObjects.put("characteristicValues",
 					characteristicValuesGot);
 
 			MapObjectType timeSeriesType = new MapObjectType(
-					"de-pegelonline-timeSeries", timeSeriesAttributes,
+					"de-pegelonline-timeSeries", 
+					timeSeriesAttributes,
 					timeSeriesReferencedObjects);
 
 			List<ObjectType> timeseriesTypesList = new LinkedList<>();
 			timeseriesTypesList.add(timeSeriesType);
 
-			ListObjectType timeSeriesGot = new ListObjectType(null,
+			ListObjectType timeSeriesGot = new ListObjectType(
+					null,
 					timeseriesTypesList);
 
 			Map<String, GenericValueType> stationAttributes = new HashMap<String, GenericValueType>();
