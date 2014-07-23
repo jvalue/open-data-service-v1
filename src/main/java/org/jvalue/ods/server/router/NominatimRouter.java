@@ -17,7 +17,9 @@
  */
 package org.jvalue.ods.server.router;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import org.jvalue.ods.data.DummyDataSource;
@@ -35,6 +37,8 @@ class NominatimRouter implements Router<Restlet> {
 
 	private static final ObjectMapper mapper = new ObjectMapper();
 
+	private static final String PARAM_LATITUDE = "latitude",
+			PARAM_LONGITUDE = "longitude";
 
 	@Override
 	public Map<String, Restlet> getRoutes() {
@@ -45,26 +49,31 @@ class NominatimRouter implements Router<Restlet> {
 			protected RestletResult doGet(Request request) {
 				GenericEntity ret = TranslatorFactory.getJsonTranslator(
 						DummyDataSource.newInstance(
-							"org-nominatim-openstreetmap",
-							"http://nominatim.openstreetmap.org/search?q="
-							+ (String) request.getAttributes().get("location") 
-							+ "&format=json"))
-					.translate();
+								"org-nominatim-openstreetmap",
+								"http://nominatim.openstreetmap.org/search?q="
+										+ (String) request.getAttributes().get(
+												"location") + "&format=json"))
+						.translate();
 
 				return RestletResult.newSuccessResult(mapper.valueToTree(ret));
 			}
 
 		};
 
-		Restlet reverseNominatimRestlet = new BaseRestlet() {
+		Restlet reverseNominatimRestlet = new BaseRestlet(new HashSet<String>(
+				Arrays.asList(PARAM_LATITUDE, PARAM_LONGITUDE)), false) {
 			@Override
 			protected RestletResult doGet(Request request) {
+
+				String latitude = getParameter(request, PARAM_LATITUDE);
+				String longitude = getParameter(request, PARAM_LONGITUDE);
+
 				GenericEntity ret = TranslatorFactory.getJsonTranslator(
 						DummyDataSource.newInstance(
-							"org-nominatim-openstreetmap",
-							"http://nominatim.openstreetmap.org/reverse?format=json"
-							+ (String) request.getAttributes().get("coordinates")))
-					.translate();
+								"org-nominatim-openstreetmap",
+								"http://nominatim.openstreetmap.org/reverse?format=json&lat="
+										+ latitude + "&lon=" + longitude))
+						.translate();
 
 				return RestletResult.newSuccessResult(mapper.valueToTree(ret));
 			}
@@ -74,22 +83,22 @@ class NominatimRouter implements Router<Restlet> {
 		Restlet metadataRestlet = new BaseRestlet() {
 			@Override
 			protected RestletResult doGet(Request request) {
-				return RestletResult.newSuccessResult(mapper.valueToTree(
-							new JacksonMetaData(
-								"org-openstreetmap-nominatim",
-								"nominatim",
-								"OpenStreetMap Community",
-								"http://www.openstreetmap.org",
-								"Nominatim is a tool to search OSM data by name and address and to generate synthetic addresses of OSM points (reverse geocoding). Usage policy: http://wiki.openstreetmap.org/wiki/Nominatim_usage_policy",
-								"http://nominatim.openstreetmap.org",
-								"http://www.openstreetmap.org/copyright")));
+				return RestletResult
+						.newSuccessResult(mapper
+								.valueToTree(new JacksonMetaData(
+										"org-openstreetmap-nominatim",
+										"nominatim",
+										"OpenStreetMap Community",
+										"http://www.openstreetmap.org",
+										"Nominatim is a tool to search OSM data by name and address and to generate synthetic addresses of OSM points (reverse geocoding). Usage policy: http://wiki.openstreetmap.org/wiki/Nominatim_usage_policy",
+										"http://nominatim.openstreetmap.org",
+										"http://www.openstreetmap.org/copyright")));
 			}
 		};
 
 		routes.put("/services/de/nominatim/coordinates/{location}",
 				nominatimRestlet);
-		routes.put("/services/de/nominatim/reverse{coordinates}",
-				reverseNominatimRestlet);
+		routes.put("/services/de/nominatim/reverse", reverseNominatimRestlet);
 		routes.put("/services/de/nominatim/metadata", metadataRestlet);
 
 		return routes;
