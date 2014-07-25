@@ -50,10 +50,15 @@ public abstract class Client {
 
 	@Override
 	public boolean equals(Object other) {
+		return equalsIgnoreId(other) && ((Client) other).clientId.equals(clientId);
+	}
+
+
+	public boolean equalsIgnoreId(Object other) {
 		if (other == null || !(other instanceof Client)) return false;
 		if (other == this) return true;
 		Client client = (Client) other;
-		return client.clientId.equals(clientId) && client.source.equals(source);
+		return client.source.equals(source);
 	}
 
 
