@@ -15,27 +15,29 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.translator;
+package org.jvalue.ods.grabber;
 
-import org.jvalue.ods.data.generic.GenericEntity;
+import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.filter.Filter;
-import org.w3c.dom.Document;
-
-import com.fasterxml.jackson.databind.JsonNode;
+import org.jvalue.ods.utils.Assert;
 
 
-public final class TranslatorFactory {
+public abstract class Grabber<T> implements Filter<Void, T> {
 
-	private TranslatorFactory() { }
+	protected final DataSource dataSource;
 
-
-	public static Filter<Document, GenericEntity> getXmlTranslator() {
-		return new XmlTranslator();
+	protected Grabber(DataSource dataSource) {
+		Assert.assertNotNull(dataSource);
+		this.dataSource = dataSource;
 	}
 
 
-	public static Filter<JsonNode, GenericEntity> getJsonTranslator() {
-		return new JsonTranslator();
+	@Override
+	public final T filter(Void param) {
+		return grabSource();
 	}
+
+
+	protected abstract T grabSource();
 
 }

@@ -1,4 +1,5 @@
-/*  Open Data Service
+/*
+    Open Data Service
     Copyright (C) 2013  Tsysin Konstantin, Reischl Patrick
 
     This program is free software: you can redistribute it and/or modify
@@ -13,31 +14,40 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-    
  */
-package org.jvalue.ods.translator;
+package org.jvalue.ods.grabber;
+
+import java.io.IOException;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.data.generic.GenericEntity;
-import org.jvalue.ods.filter.Filter;
-import org.jvalue.ods.utils.Assert;
+import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.utils.HttpUtils;
 
-public abstract class Translator implements Filter<Void, GenericEntity> {
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-	protected final DataSource dataSource;
 
-	protected Translator(DataSource dataSource) {
-		Assert.assertNotNull(dataSource);
-		this.dataSource = dataSource;
+final class JsonGrabber extends Grabber<JsonNode> {
+	
+	private static final ObjectMapper mapper = new ObjectMapper();
+
+	public JsonGrabber(DataSource source) {
+		super(source);
 	}
 
 
 	@Override
-	public final GenericEntity filter(Void param) {
-		return translate();
+	protected JsonNode grabSource() {
+		JsonNode rootNode = null;
+		try {
+			String json = HttpUtils.readUrl(dataSource.getUrl(), "UTF-8");
+			rootNode = mapper.readTree(json);
+
+		} catch (IOException e) {
+			Logging.error(this.getClass(), e.getMessage());
+		}
+		
+		return rootNode;
 	}
-
-
-	public abstract GenericEntity translate();
 
 }

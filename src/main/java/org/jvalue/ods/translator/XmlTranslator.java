@@ -1,81 +1,30 @@
-/*
- * 
- */
 package org.jvalue.ods.translator;
 
-import java.io.File;
-import java.io.StringReader;
-import java.net.URL;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.BaseObject;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
-import org.jvalue.ods.logger.Logging;
-import org.jvalue.ods.utils.HttpUtils;
+import org.jvalue.ods.filter.Filter;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 
 
-final class XmlTranslator extends Translator {
-
-
-	public XmlTranslator(DataSource source) {
-		super(source);
-	}
-
+final class XmlTranslator implements Filter<Document, GenericEntity> {
 
 	@Override
-	public GenericEntity translate() {
+	public GenericEntity filter(Document xmlDocument) {
+		Node rootNode = xmlDocument.getFirstChild();
 
-		try {
+		GenericEntity gv = new MapObject();
+		((MapObject) gv).getMap().put(rootNode.getNodeName(),
+				convertXml(rootNode, false));
 
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory
-					.newInstance();
-			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-
-			Document doc = null;
-			String sourceUrlString = dataSource.getUrl();
-			if (!sourceUrlString.startsWith("http")) {
-				URL sourceUrl = getClass().getResource(sourceUrlString);
-				File xmlFile = new File(sourceUrl.toURI());
-				doc = dBuilder.parse(xmlFile);
-			} else {
-				String data = HttpUtils.readUrl(sourceUrlString, "UTF-8");
-				doc = dBuilder.parse(new InputSource(new StringReader(data)));
-			}
-
-			doc.getDocumentElement().normalize();
-			Node rootNode = doc.getFirstChild();
-
-			GenericEntity gv = new MapObject();
-			((MapObject) gv).getMap().put(rootNode.getNodeName(),
-					convertXml(rootNode, false));
-
-			return gv;
-		} catch (Exception ex) {
-			Logging.info(this.getClass(), ex.getMessage());
-			return null;
-		}
-
+		return gv;
 	}
 
-	/**
-	 * Convert xml.
-	 * 
-	 * @param node
-	 *            the node
-	 * @param isMultiple
-	 *            the is multiple
-	 * @return the generic value
-	 */
+
 	private GenericEntity convertXml(Node node, boolean isMultiple) {
 		GenericEntity gv = null;
 
@@ -95,13 +44,7 @@ final class XmlTranslator extends Translator {
 		return gv;
 	}
 
-	/**
-	 * Fill multiple nodes.
-	 * 
-	 * @param node
-	 *            the node
-	 * @return the generic value
-	 */
+
 	private GenericEntity fillMultipleNodes(Node node) {
 		Node tmpNode = node;
 
@@ -129,13 +72,7 @@ final class XmlTranslator extends Translator {
 		return lv;
 	}
 
-	/**
-	 * Fill node rec.
-	 * 
-	 * @param node
-	 *            the node
-	 * @return the generic value
-	 */
+
 	private GenericEntity fillNodeRec(Node node) {
 
 		GenericEntity mv = new MapObject();
@@ -171,13 +108,7 @@ final class XmlTranslator extends Translator {
 		return mv;
 	}
 
-	/**
-	 * Checks if is multiple node.
-	 * 
-	 * @param node
-	 *            the node
-	 * @return true, if is multiple node
-	 */
+
 	private boolean isMultipleNode(Node node) {
 		String currentNodeName = node.getNodeName();
 
@@ -201,4 +132,5 @@ final class XmlTranslator extends Translator {
 		}
 		return false;
 	}
+
 }
