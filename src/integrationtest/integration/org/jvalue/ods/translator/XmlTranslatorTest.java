@@ -23,29 +23,25 @@ import static org.junit.Assert.assertNull;
 import org.junit.Test;
 import org.jvalue.ods.data.DummyDataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
-import org.jvalue.ods.translator.Translator;
+import org.jvalue.ods.grabber.GrabberFactory;
 import org.jvalue.ods.translator.TranslatorFactory;
+import org.w3c.dom.Document;
 
 
 public class XmlTranslatorTest {
 
 	@Test
 	public void testTranslate() {
-		Translator translator = TranslatorFactory.getXmlTranslator(
-				DummyDataSource.newInstance("osm", "/nbgcity.osm"));
-
-		GenericEntity gv = translator.translate();
+		Document xmlDocument = GrabberFactory.getXmlGrabber(DummyDataSource.newInstance("osm", "/nbgcity.osm")).filter(null);
+		GenericEntity gv = TranslatorFactory.getXmlTranslator().filter(xmlDocument);		
 		assertNotNull(gv);
 	}
 
 
 	@Test
 	public void testTranslateNotExistingFile() {
-		Translator translator = TranslatorFactory.getXmlTranslator(
-				DummyDataSource.newInstance("osm", "NotExistingFile"));
-
-		GenericEntity gv = translator.translate();
-		assertNull(gv);
+		Document xmlDocument = GrabberFactory.getXmlGrabber(DummyDataSource.newInstance("osm", "NotExistingFile")).filter(null);		
+		assertNull(xmlDocument);
 	}
 
 }

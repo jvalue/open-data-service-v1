@@ -25,7 +25,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.jvalue.ods.data.DummyDataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
@@ -33,8 +32,10 @@ import org.jvalue.ods.data.valuetypes.AllowedValueTypes;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.data.valuetypes.ListComplexValueType;
 import org.jvalue.ods.data.valuetypes.MapComplexValueType;
-import org.jvalue.ods.translator.Translator;
+import org.jvalue.ods.grabber.GrabberFactory;
 import org.jvalue.ods.translator.TranslatorFactory;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 
 public class JsonTranslatorTest {
@@ -44,18 +45,15 @@ public class JsonTranslatorTest {
 
 	@Test
 	public void testTranslate() {
-		Translator translator = TranslatorFactory.getJsonTranslator(
-				DummyDataSource.newInstance("testUrl", testUrl));
-		GenericEntity gv = translator.translate();
+		JsonNode jsonNode = GrabberFactory.getJsonGrabber(DummyDataSource.newInstance("testUrl", testUrl)).filter(null);
+		GenericEntity gv = TranslatorFactory.getJsonTranslator().filter(jsonNode);
 		assertNotNull(gv);
 	}
 
 	@Test
 	public void testTranslateInvalidSource() {
-		Translator translator = TranslatorFactory.getJsonTranslator(
-				DummyDataSource.newInstance("invalidSource", "invalidSource"));
-		GenericEntity gv = translator.translate();
-		assertNull(gv);
+		JsonNode jsonNode = GrabberFactory.getJsonGrabber(DummyDataSource.newInstance("invalidSource", "invalidSource")).filter(null);
+		assertNull(jsonNode);
 	}
 
 	
