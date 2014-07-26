@@ -27,6 +27,7 @@ import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.DummyDataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.db.DbAccessor;
+import org.jvalue.ods.grabber.GrabberFactory;
 import org.jvalue.ods.server.restlet.BaseRestlet;
 import org.jvalue.ods.server.utils.RestletResult;
 import org.jvalue.ods.translator.TranslatorFactory;
@@ -34,6 +35,7 @@ import org.jvalue.ods.utils.Assert;
 import org.restlet.Request;
 import org.restlet.Restlet;
 import org.restlet.data.Status;
+import org.w3c.dom.Document;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -115,8 +117,8 @@ class RoutesRouter implements Router<Restlet> {
 				DataSource ds = DummyDataSource.newInstance(
 						"org-yournavigation", source);
 
-				GenericEntity gv = TranslatorFactory.getXmlTranslator(ds)
-						.translate();
+				Document xmlDocument = GrabberFactory.getXmlGrabber(ds).filter(null);
+				GenericEntity gv = TranslatorFactory.getXmlTranslator().filter(xmlDocument);
 				return RestletResult.newSuccessResult(mapper.valueToTree(gv));
 			}
 		};

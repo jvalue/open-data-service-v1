@@ -23,6 +23,7 @@ import java.util.Map;
 import org.jvalue.ods.data.DummyDataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.metadata.JacksonMetaData;
+import org.jvalue.ods.grabber.GrabberFactory;
 import org.jvalue.ods.server.restlet.BaseRestlet;
 import org.jvalue.ods.server.utils.RestletResult;
 import org.jvalue.ods.translator.TranslatorFactory;
@@ -46,12 +47,12 @@ class OverpassRouter implements Router<Restlet> {
 			@Override
 			protected RestletResult doGet(Request request) {
 				String location = request.getAttributes().get("location").toString();
-				GenericEntity ret = TranslatorFactory.getJsonTranslator(
+				JsonNode jsonNode = GrabberFactory.getJsonGrabber(
 						DummyDataSource.newInstance( 
 							"ru-rambler-osm-overpass",
 							"http://overpass.osm.rambler.ru/cgi/interpreter?data=[out:json];node[name%3D"
-							+ location + "]%3Bout%3B"))
-					.translate();
+							+ location + "]%3Bout%3B")).filter(null);
+				GenericEntity ret = TranslatorFactory.getJsonTranslator().filter(jsonNode);
 				return RestletResult.newSuccessResult(mapper.valueToTree(ret));
 			}
 
