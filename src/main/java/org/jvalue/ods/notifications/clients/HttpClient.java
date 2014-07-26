@@ -61,7 +61,13 @@ public final class HttpClient extends Client {
 
 	@Override
 	public boolean equals(Object other) {
-		if (!super.equals(other)) return false;
+		return super.equals(other) && equalsIgnoreId(other);
+	}
+
+	
+	@Override
+	public boolean equalsIgnoreId(Object other) {
+		if (!super.equalsIgnoreId(other)) return false;
 		if (!(other instanceof HttpClient)) return false;
 
 		HttpClient client = (HttpClient) other;
