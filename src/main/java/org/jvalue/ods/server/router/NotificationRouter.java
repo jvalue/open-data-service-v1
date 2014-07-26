@@ -178,11 +178,21 @@ final class NotificationRouter implements Router<Restlet> {
 
 			@Override
 			protected RestletResult doPost(Request request) {
-				Client client = adapter.toClient(request);
-				NotificationManager.getInstance().registerClient(client);
+				NotificationManager manager = NotificationManager.getInstance();
+
+				Client newClient = adapter.toClient(request);
+
+				for (Client client : manager.getAllClients()) {
+					if (client.equalsIgnoreId(newClient)) {
+						newClient = client;
+						break;
+					}
+				}
+
+				manager.registerClient(newClient);
 
 				Map<String, Object> data = new HashMap<String, Object>();
-				data.put(PARAM_CLIENT_ID, client.getClientId());
+				data.put(PARAM_CLIENT_ID, newClient.getClientId());
 
 				return RestletResult.newSuccessResult(mapper.valueToTree(data));
 			}

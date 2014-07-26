@@ -3,6 +3,8 @@ package org.jvalue.ods.notifications.clients;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
 
@@ -34,6 +36,10 @@ public final class GcmClientTest {
 		assertEquals(client1.hashCode(), client2.hashCode());
 		assertNotEquals(client1.hashCode(), client3.hashCode());
 		assertNotEquals(client1.hashCode(), client4.hashCode());
+
+		assertTrue(client1.equalsIgnoreId(client2));
+		assertTrue(client1.equalsIgnoreId(client3));
+		assertFalse(client1.equalsIgnoreId(client4));
 		
 	}
 
