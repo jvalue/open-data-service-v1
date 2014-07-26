@@ -17,17 +17,12 @@
  */
 package org.jvalue.ods.qa.improvement;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.jvalue.ods.data.generic.BaseObject;
-import org.jvalue.ods.data.generic.GenericEntity;
-import org.jvalue.ods.data.generic.ListObject;
-import org.jvalue.ods.data.generic.MapObject;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.data.valuetypes.ListComplexValueType;
 import org.jvalue.ods.data.valuetypes.MapComplexValueType;
@@ -36,47 +31,44 @@ import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.logger.Logging;
 
 
-public final class RenameSourceFilter implements Filter<GenericEntity, GenericEntity> {
+public final class RenameSourceFilter implements Filter<Object, Object> {
 
 	@Override
-	public GenericEntity filter(GenericEntity data) {
-		// if (!SchemaManager.validateGenericValusFitsSchema(data, schema)) {
-		// Logging.info(this.getClass(),
-		// "Could not validate schema in CombineFilter.");
-		// return data;
-		// }
-		// TODO
+	@SuppressWarnings("unchecked")
+	public Object filter(Object data) {
 
 		MapComplexValueType sourceStructure = createSourceWaterStructure();
 		MapComplexValueType destinationStructure = createDestinationWaterStructure();
 		String newName = "BodyOfWater";
 
 
-		List<Serializable> improvedObjects = new LinkedList<Serializable>();
-		ListObject oldObjects = (ListObject) data;
+		List<Object> improvedObjects = new LinkedList<Object>();
+		List<Object> oldObjects = (List<Object>) data;
 
-		for (Serializable s : oldObjects.getList()) {
-			GenericEntity gv = (GenericEntity) s;
-
-			MapObject mv = new MapObject();
-			traverseSchema(sourceStructure, newName, gv, mv.getMap());
-			insertRenamedValue(gv, mv, destinationStructure);
+		for (Object o : oldObjects) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			traverseSchema(sourceStructure, newName, o, map);
+			insertRenamedValue(o, map, destinationStructure);
 			
-			MapObject finalMo = (MapObject) gv;
-			if (!finalMo.getMap().containsKey("dataStatus"))
+			Map<String, Object> finalMo = (Map<String, Object>) o;
+			if (!finalMo.containsKey("dataStatus"))
 			{
-				finalMo.getMap().put("dataStatus",
-					new BaseObject("improved"));
+				finalMo.put("dataStatus", "improved");
 			}
 
-			improvedObjects.add(gv);
+			improvedObjects.add(o);
 		}
 
 		return data;
 	}
 
 
-	private void traverseSchema(GenericValueType sourceStructure, String newName, Serializable serializable, Map<String, Serializable> map) {
+	@SuppressWarnings("unchecked")
+	private void traverseSchema(
+			GenericValueType sourceStructure, 
+			String newName, 
+			Object object,
+			Map<String, Object> map) {
 
 		if (sourceStructure instanceof MapComplexValueType) {
 
@@ -84,8 +76,7 @@ public final class RenameSourceFilter implements Filter<GenericEntity, GenericEn
 					.getMap().entrySet()) {
 
 				if (e.getValue() instanceof SimpleValueType) {
-					map.put(newName, ((MapObject) serializable).getMap()
-							.remove(e.getKey()));
+					map.put(newName, ((Map<String, Object>) object).remove(e.getKey()));
 
 				} else {
 					if (e.getValue() instanceof MapComplexValueType)
@@ -93,26 +84,30 @@ public final class RenameSourceFilter implements Filter<GenericEntity, GenericEn
 						MapComplexValueType mcvt = (MapComplexValueType) e.getValue();
 						if (mcvt.getMap() != null)
 						{
-							traverseSchema(e.getValue(), newName, ((MapObject) serializable)
-									.getMap().get(e.getKey()), map);
+							traverseSchema(e.getValue(), newName, ((Map<String, Object>) object)
+									.get(e.getKey()), map);
 						}
 						else
 						{
-							map.put(newName, ((MapObject) serializable).getMap()
+							map.put(newName, ((Map<String, Object>) object)
 									.remove(e.getKey()));
 						}
 					}					
 				}
 			}
 		} else if (sourceStructure instanceof ListComplexValueType) {
-			for (Serializable gv : ((ListObject) serializable).getList()) {
+			for (Object o: ((List<Object>) object)) {
 				traverseSchema(((ListComplexValueType) sourceStructure)
-						.getList().get(0), newName, gv, map);
+						.getList().get(0), newName, o, map);
 			}
 		}
 	}
 
-	private void insertRenamedValue(Serializable serializable, MapObject mv,
+
+	@SuppressWarnings("unchecked")
+	private void insertRenamedValue(
+			Object object, 
+			Map<String, Object> map,
 			GenericValueType destinationStructure) {
 
 		if (destinationStructure instanceof MapComplexValueType) {
@@ -122,11 +117,11 @@ public final class RenameSourceFilter implements Filter<GenericEntity, GenericEn
 
 				if (e.getValue() == null) {
 
-					if (serializable instanceof MapObject) {			
-						Serializable ser = mv.getMap().get(e.getKey());
+					if (object instanceof Map) {			
+						Object ser = map.get(e.getKey());
 						
 						// check for correct value here
-						((MapObject) serializable).getMap().put(e.getKey(), ser);
+						((Map<String, Object>) object).put(e.getKey(), ser);
 					} else {
 						String errmsg = "Invalid renamedSchema.";
 						Logging.error(this.getClass(), errmsg);
@@ -136,27 +131,27 @@ public final class RenameSourceFilter implements Filter<GenericEntity, GenericEn
 
 				} else {
 
-					if (((MapObject) serializable).getMap().get(e.getKey()) == null) {
-						((MapObject) serializable).getMap().put(e.getKey(),
-								new MapObject());
+					if (((Map<String, Object>) object).get(e.getKey()) == null) {
+						((Map<String, Object>) object).put(e.getKey(),
+								new HashMap<String, Object>());
 					}
 
-					insertRenamedValue(((MapObject) serializable).getMap()
-							.get(e.getKey()), mv, e.getValue());
+					insertRenamedValue(((Map<String, Object>) object)
+							.get(e.getKey()), map, e.getValue());
 				}
 			}
 		} else if (destinationStructure instanceof ListComplexValueType) {
 
-			if (!(serializable instanceof ListObject)) {
+			if (!(object instanceof List)) {
 				String errmsg = "Invalid renameSchema.";
 				Logging.error(this.getClass(), errmsg);
 				System.err.println(errmsg);
 				throw new RuntimeException(errmsg);
 			}
 
-			for (Serializable gv : ((ListObject) serializable).getList()) {
+			for (Object gv : ((List<Object>) object)) {
 
-				insertRenamedValue(gv, mv,
+				insertRenamedValue(gv, map,
 						((ListComplexValueType) destinationStructure).getList()
 								.get(0));
 			}

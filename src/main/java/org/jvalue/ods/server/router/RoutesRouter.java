@@ -25,7 +25,6 @@ import java.util.Map;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.DummyDataSource;
-import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.grabber.GrabberFactory;
 import org.jvalue.ods.server.restlet.BaseRestlet;
@@ -118,8 +117,8 @@ class RoutesRouter implements Router<Restlet> {
 						"org-yournavigation", source);
 
 				Document xmlDocument = GrabberFactory.getXmlGrabber(ds).grabSource();
-				GenericEntity gv = TranslatorFactory.getXmlTranslator().translate(xmlDocument);
-				return RestletResult.newSuccessResult(mapper.valueToTree(gv));
+				Object data = TranslatorFactory.getXmlTranslator().translate(xmlDocument);
+				return RestletResult.newSuccessResult(mapper.valueToTree(data));
 			}
 		};
 

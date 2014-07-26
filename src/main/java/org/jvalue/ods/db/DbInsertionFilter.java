@@ -17,14 +17,11 @@
  */
 package org.jvalue.ods.db;
 
-import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.data.generic.GenericEntity;
-import org.jvalue.ods.data.generic.ListObject;
-import org.jvalue.ods.data.generic.MapObject;
 import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.utils.Assert;
@@ -32,7 +29,7 @@ import org.jvalue.ods.utils.Assert;
 import com.fasterxml.jackson.databind.JsonNode;
 
 
-public final class DbInsertionFilter implements Filter<GenericEntity, GenericEntity> {
+public final class DbInsertionFilter implements Filter<Object, Object> {
 
 	private final DbAccessor<JsonNode> accessor;
 	private final DataSource source;
@@ -45,24 +42,19 @@ public final class DbInsertionFilter implements Filter<GenericEntity, GenericEnt
 
 
 	@Override
-	public GenericEntity filter(GenericEntity data) {
-		if (data instanceof ListObject) {
-
-			ListObject lv = (ListObject) data;
-			List<MapObject> list = new LinkedList<>();
-
-			for (Serializable i : lv.getList()) {
-				list.add((MapObject) i);
-			}
-
+	@SuppressWarnings("unchecked")
+	public Object filter(Object data) {
+		if (data instanceof List) {
+			List<Map<String, Object>> list = (List<Map<String, Object>>) data;
 			accessor.executeBulk(list, source.getDbSchema());
-		} else if (data instanceof MapObject) {
-			LinkedList<MapObject> list = new LinkedList<>();
-			list.add((MapObject) data);
+
+		} else if (data instanceof Map) {
+			List<Map<String, Object>> list = new LinkedList<>();
+			list.add((Map<String, Object>) data);
 			accessor.executeBulk(list, source.getDbSchema());
+
 		} else {
-			String errmsg = "GenericValue must be ListValue or MapValue.";
-			System.err.println(errmsg);
+			String errmsg = "data must be a list or map.";
 			Logging.error(this.getClass(), errmsg);
 			throw new RuntimeException(errmsg);
 		}

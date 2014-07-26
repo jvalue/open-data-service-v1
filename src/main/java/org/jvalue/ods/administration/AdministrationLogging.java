@@ -21,13 +21,13 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.jvalue.ods.data.generic.BaseObject;
-import org.jvalue.ods.data.generic.MapObject;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.logger.Logging;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 
 public final class AdministrationLogging {
@@ -46,9 +46,9 @@ public final class AdministrationLogging {
 			if (!content.endsWith("\n"))
 				content += "\n";
 
-			MapObject mv = new MapObject();
-			mv.getMap().put("log", new BaseObject(datetime + " " + content));
-			accessor.insert(mv);
+			ObjectNode node = new ObjectNode(JsonNodeFactory.instance);
+			node.put("log", datetime + " " + content);
+			accessor.insert(node);
 
 		} catch (Exception ex) {
 			Logging.error(Logging.class, ex.getMessage());

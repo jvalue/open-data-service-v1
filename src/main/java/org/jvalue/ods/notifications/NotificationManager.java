@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.notifications.clients.Client;
 import org.jvalue.ods.notifications.clients.GcmClient;
@@ -75,7 +74,7 @@ public final class NotificationManager {
 	
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
-	public void notifySourceChanged(DataSource source, GenericEntity data) {
+	public void notifySourceChanged(DataSource source, Object data) {
 		Assert.assertNotNull(source);
 		for (Client client : clientStore.getAll()) {
 			if (!client.getSource().equals(source.getId())) continue;

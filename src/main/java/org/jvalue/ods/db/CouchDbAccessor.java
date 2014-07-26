@@ -20,6 +20,7 @@ package org.jvalue.ods.db;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.ektorp.CouchDbConnector;
 import org.ektorp.CouchDbInstance;
@@ -31,39 +32,21 @@ import org.ektorp.http.HttpClient;
 import org.ektorp.http.StdHttpClient;
 import org.ektorp.impl.StdCouchDbConnector;
 import org.ektorp.impl.StdCouchDbInstance;
-import org.jvalue.ods.data.generic.BaseObject;
-import org.jvalue.ods.data.generic.MapObject;
 import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.logger.Logging;
-import org.jvalue.ods.schema.SchemaManager;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-/**
- * The Class CouchDbAdapter.
- */
 public class CouchDbAccessor implements DbAccessor<JsonNode> {
 
-	/** The db. */
 	private CouchDbConnector db;
-
-	/** The db instance. */
 	private CouchDbInstance dbInstance;
-
-	/** The database name. */
 	private String databaseName;
-
-	/** The is connected. */
 	private boolean isConnected = false;
 
-	/**
-	 * Instantiates a new couch db adapter.
-	 * 
-	 * @param databaseName
-	 *            the database name
-	 */
+
 	protected CouchDbAccessor(String databaseName) {
 		if ((databaseName == null) || (databaseName.isEmpty())) {
 			String errorMessage = "databaseName is null or empty";
@@ -74,19 +57,13 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 		this.databaseName = databaseName;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.jvalue.ods.db.DbAdapter#isConnected()
-	 */
+
 	@Override
 	public boolean isConnected() {
 		return isConnected;
 	}
 
-	/**
-	 * Creates the db if not exist.
-	 */
+
 	private void createDbIfNotExist() {
 		try {
 			if (!dbInstance.checkIfDbExists(databaseName)) {
@@ -100,9 +77,7 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 		}
 	}
 
-	/**
-	 * Check db state.
-	 */
+
 	private void checkDbState() {
 		if (!isConnected) {
 			String errorMessage = "The database is not connected";
@@ -114,9 +89,7 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 
 	}
 
-	/**
-	 * Connect.
-	 */
+
 	@Override
 	public void connect() {
 		HttpClient httpClient = new StdHttpClient.Builder().build();
@@ -127,17 +100,7 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 		isConnected = true;
 	}
 
-	/**
-	 * Gets the document.
-	 * 
-	 * @param <T>
-	 *            the generic type
-	 * @param c
-	 *            the c
-	 * @param id
-	 *            the id
-	 * @return the document
-	 */
+
 	@Override
 	public <T> T getDocument(Class<T> c, String id) {
 		if (c == null) {
@@ -163,13 +126,7 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 		return ret;
 	}
 
-	/**
-	 * Insert.
-	 * 
-	 * @param data
-	 *            the data
-	 * @return the string
-	 */
+
 	@Override
 	public void insert(Object data) {
 		if (data == null) {
@@ -187,13 +144,7 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 		}
 	}
 
-	/**
-	 * Update.
-	 * 
-	 * @param data
-	 *            the data
-	 * @return the string
-	 */
+
 	@Override
 	public void update(Object data) {
 		if (data == null) {
@@ -225,9 +176,6 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 	}
 
 
-	/**
-	 * Delete database.
-	 */
 	@Override
 	public void deleteDatabase() {
 		checkDbState();
@@ -317,7 +265,7 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 	 * @see org.jvalue.ods.db.DbAccessor#executeBulk(java.util.Collection)
 	 */
 	@Override
-	public void executeBulk(Collection<MapObject> objects, ObjectType schema) {
+	public void executeBulk(Collection<Map<String, Object>> objects, ObjectType schema) {
 
 		if (objects == null) {
 			throw new IllegalArgumentException("objects is null");
@@ -327,18 +275,7 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 
 		if (schema != null) {
 
-			for (MapObject mv : objects) {
-
-				if (!SchemaManager.validateGenericValusFitsObjectType(mv, schema)) {
-					Logging.error(this.getClass(),
-							"Data does not fit DB schema.");
-					System.err.println("Data does not fit DB schema.");
-					return;
-				}
-
-			}
-
-			for (MapObject mv : objects) {
+			for (Map<String, Object> mv : objects) {
 
 				MapObjectType ms = null;
 				try {
@@ -349,7 +286,7 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 							"objectType");
 					String s = (String) ms.getAttributes().keySet().toArray()[0];
 
-					mv.getMap().put("dataType", new BaseObject(s));
+					mv.put("dataType", s);
 				} catch (Exception ex) {
 					Logging.error(this.getClass(), ex.getMessage()
 							+ "Schema does not contain objectType.");

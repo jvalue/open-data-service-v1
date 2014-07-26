@@ -18,15 +18,12 @@
 package org.jvalue.ods.configuration;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.jvalue.ods.data.generic.BaseObject;
-import org.jvalue.ods.data.generic.GenericEntity;
-import org.jvalue.ods.data.generic.ListObject;
-import org.jvalue.ods.data.generic.MapObject;
 import org.jvalue.ods.translator.Translator;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
@@ -44,20 +41,19 @@ import org.openstreetmap.osmosis.xml.v0_6.XmlReader;
 final class OsmTranslator extends Translator<File> {
 
 	@Override
-	public GenericEntity translate(File file) {
-		final ListObject lv = new ListObject();
+	public Object translate(File file) {
+		final List<Object> resultList = new LinkedList<Object>();
 
 		Sink sinkImplementation = new Sink() {
 			public void process(EntityContainer entityContainer) {
 				Entity entity = entityContainer.getEntity();
-				List<Serializable> list = lv.getList();
 
 				if (entity instanceof Node) {
-					list.add(convertNodeToGenericValue((Node) entity));
+					resultList.add(convertNodeToGenericValue((Node) entity));
 				} else if (entity instanceof Way) {
-					list.add(convertWayToGenericValue((Way) entity));
+					resultList.add(convertWayToGenericValue((Way) entity));
 				} else if (entity instanceof Relation) {
-					list.add(convertRelationToGenericValue((Relation) entity));
+					resultList.add(convertRelationToGenericValue((Relation) entity));
 				}
 				// else if (entity instanceof Bound) {
 				//
@@ -88,99 +84,89 @@ final class OsmTranslator extends Translator<File> {
 			}
 		}
 
-		return lv;
+		return resultList;
 	}
 
 
-	private MapObject convertRelationToGenericValue(Relation relation) {
-		MapObject mv = new MapObject();
-		Map<String, Serializable> map = mv.getMap();
-		map.put("type", new BaseObject("Relation"));
+	private Map<String, Object> convertRelationToGenericValue(Relation relation) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("type", "Relation");
 
-		map.put("relationId", new BaseObject("" + relation.getId()));
-		map.put("timestamp",
-				new BaseObject(relation.getTimestamp().toString()));
-		map.put("uid", new BaseObject(relation.getUser().getId()));
-		map.put("user", new BaseObject(relation.getUser().getName()));
-		map.put("version", new BaseObject(relation.getVersion()));
-		map.put("changeset", new BaseObject(relation.getChangesetId()));
+		map.put("relationId", "" + relation.getId());
+		map.put("timestamp", relation.getTimestamp().toString());
+		map.put("uid", relation.getUser().getId());
+		map.put("user", relation.getUser().getName());
+		map.put("version", relation.getVersion());
+		map.put("changeset", relation.getChangesetId());
 
-		MapObject tagsMapValue = new MapObject();
-		Map<String, Serializable> tagsMap = tagsMapValue.getMap();
+		Map<String, Object> tagsMap = new HashMap<String, Object>();
 		Collection<Tag> coll = relation.getTags();
 		for (Tag tag : coll) {
-			tagsMap.put(tag.getKey(), new BaseObject(tag.getValue()));
+			tagsMap.put(tag.getKey(), tag.getValue());
 		}
-		map.put("tags", tagsMapValue);
 
-		ListObject memberList = new ListObject();
+		List<Object> memberList = new LinkedList<Object>();
 		for (RelationMember rm : relation.getMembers()) {
-			MapObject membersMapValue = new MapObject();
-			Map<String, Serializable> membersMap = membersMapValue.getMap();
+			Map<String, Object> membersMap = new HashMap<String, Object>();
 
-			membersMap.put("type", new BaseObject(rm.getMemberType()
-					.toString()));
-			membersMap.put("ref", new BaseObject(rm.getMemberId()));
-			membersMap.put("role", new BaseObject(rm.getMemberRole()));
-			memberList.getList().add(membersMapValue);
+			membersMap.put("type", rm.getMemberType().toString());
+			membersMap.put("ref", rm.getMemberId());
+			membersMap.put("role", rm.getMemberRole());
+			memberList.add(membersMap);
 		}
 
 		map.put("members", memberList);
 
-		return mv;
+		return map;
 	}
 
 
-	private MapObject convertWayToGenericValue(Way w) {
-		MapObject mv = new MapObject();
-		Map<String, Serializable> map = mv.getMap();
-		map.put("type", new BaseObject("Way"));
+	private Map<String, Object> convertWayToGenericValue(Way w) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("type", "Way");
 
-		map.put("wayId", new BaseObject("" + w.getId()));
-		map.put("timestamp", new BaseObject(w.getTimestamp().toString()));
-		map.put("uid", new BaseObject(w.getUser().getId()));
-		map.put("user", new BaseObject(w.getUser().getName()));
-		map.put("changeset", new BaseObject(w.getChangesetId()));
-		map.put("version", new BaseObject(w.getVersion()));
-		MapObject tagsMapValue = new MapObject();
-		Map<String, Serializable> tagsMap = tagsMapValue.getMap();
+		map.put("wayId", "" + w.getId());
+		map.put("timestamp", w.getTimestamp().toString());
+		map.put("uid", w.getUser().getId());
+		map.put("user", w.getUser().getName());
+		map.put("changeset", w.getChangesetId());
+		map.put("version", w.getVersion());
+		Map<String, Object> tagsMap = new HashMap<String, Object>();
 		Collection<Tag> coll = w.getTags();
 		for (Tag tag : coll) {
-			tagsMap.put(tag.getKey(), new BaseObject(tag.getValue()));
+			tagsMap.put(tag.getKey(), tag.getValue());
 		}
-		map.put("tags", tagsMapValue);
+		map.put("tags", tagsMap);
 
-		ListObject lv = new ListObject();
+		List<Object> list = new LinkedList<Object>();
 		for (WayNode wn : w.getWayNodes()) {
-			lv.getList().add(new BaseObject(wn.getNodeId()));
+			list.add(wn.getNodeId());
 		}
-		map.put("nd", lv);
+		map.put("nd", list);
 
-		return mv;
+		return map;
 	}
 
 
-	private MapObject convertNodeToGenericValue(Node n) {
-		MapObject mv = new MapObject();
-		Map<String, Serializable> map = mv.getMap();
-		map.put("type", new BaseObject("Node"));
+	private Map<String, Object> convertNodeToGenericValue(Node n) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("type", "Node");
 
-		map.put("nodeId", new BaseObject("" + n.getId()));
-		map.put("timestamp", new BaseObject(n.getTimestamp().toString()));
-		map.put("uid", new BaseObject(n.getUser().getId()));
-		map.put("user", new BaseObject(n.getUser().getName()));
-		map.put("changeset", new BaseObject(n.getChangesetId()));
-		map.put("latitude", new BaseObject(n.getLatitude()));
-		map.put("longitude", new BaseObject(n.getLongitude()));
+		map.put("nodeId", "" + n.getId());
+		map.put("timestamp", n.getTimestamp().toString());
+		map.put("uid", n.getUser().getId());
+		map.put("user", n.getUser().getName());
+		map.put("changeset", n.getChangesetId());
+		map.put("latitude", n.getLatitude());
+		map.put("longitude", n.getLongitude());
 
-		MapObject tagsMapValue = new MapObject();
-		Map<String, Serializable> tagsMap = tagsMapValue.getMap();
+		Map<String, Object> tagsMap = new HashMap<String, Object>();
 		Collection<Tag> coll = n.getTags();
 		for (Tag tag : coll) {
-			tagsMap.put(tag.getKey(), new BaseObject(tag.getValue()));
+			tagsMap.put(tag.getKey(), tag.getValue());
 		}
-		map.put("tags", tagsMapValue);
+		map.put("tags", tagsMap);
 
-		return mv;
+		return map;
 	}
 }

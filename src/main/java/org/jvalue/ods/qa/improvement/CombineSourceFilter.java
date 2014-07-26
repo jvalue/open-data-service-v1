@@ -17,7 +17,6 @@
  */
 package org.jvalue.ods.qa.improvement;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,10 +28,6 @@ import org.jvalue.ExactValueRestriction;
 import org.jvalue.ValueType;
 import org.jvalue.numbers.Range;
 import org.jvalue.numbers.RangeBound;
-import org.jvalue.ods.data.generic.BaseObject;
-import org.jvalue.ods.data.generic.GenericEntity;
-import org.jvalue.ods.data.generic.ListObject;
-import org.jvalue.ods.data.generic.MapObject;
 import org.jvalue.ods.data.valuetypes.AllowedValueTypes;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.data.valuetypes.ListComplexValueType;
@@ -44,17 +39,11 @@ import org.jvalue.ods.qa.PegelOnlineQualityAssurance;
 import org.jvalue.si.QuantityUnitType;
 import org.jvalue.si.SiUnit;
 
-public final class CombineSourceFilter implements
-		Filter<GenericEntity, GenericEntity> {
+public final class CombineSourceFilter implements Filter<Object, Object> {
 
 	@Override
-	public GenericEntity filter(GenericEntity data) {
-		// if (!SchemaManager.validateGenericValusFitsSchema(data, schema)) {
-		// Logging.info(this.getClass(),
-		// "Could not validate schema in CombineFilter.");
-		// return data;
-		// }
-		// TODO
+	@SuppressWarnings("unchecked")
+	public Object filter(Object data) {
 
 		if (data == null) {
 			throw new IllegalArgumentException();
@@ -70,20 +59,19 @@ public final class CombineSourceFilter implements
 		MapComplexValueType sourceCoordinateStructure = createSourceCoordinateStructure();
 		MapComplexValueType destinationCoordinateStructure = createDestinationCoordinateStructure();
 
-		List<Serializable> improvedObjects = new LinkedList<Serializable>();
-		ListObject oldObjects = (ListObject) data;
+		List<Object> improvedObjects = new LinkedList<Object>();
+		List<Object> oldObjects = (List<Object>) data;
 
-		for (Serializable s : oldObjects.getList()) {
-			GenericEntity gv = (GenericEntity) s;
+		for (Object gv : oldObjects) {
 
-			MapObject mv = new MapObject();
-			traverseSchema(sourceCoordinateStructure, gv, mv.getMap());
+			Map<String, Object> map = new HashMap<String, Object>();
+			traverseSchema(sourceCoordinateStructure, gv, map);
 
-			insertCombinedValue(gv, mv, destinationCoordinateStructure);
+			insertCombinedValue(gv, map, destinationCoordinateStructure);
 
-			MapObject finalMo = (MapObject) gv;
-			if (!finalMo.getMap().containsKey("dataStatus")) {
-				finalMo.getMap().put("dataStatus", new BaseObject("improved"));
+			Map<String, Object> finalMo = (Map<String, Object>) gv;
+			if (!finalMo.containsKey("dataStatus")) {
+				finalMo.put("dataStatus", "improved");
 			}
 
 			improvedObjects.add(gv);
@@ -91,11 +79,15 @@ public final class CombineSourceFilter implements
 
 		new PegelOnlineQualityAssurance().checkValueTypes(valueTypes);
 
-		return new ListObject(improvedObjects);
+		return improvedObjects;
 	}
 
-	private void traverseSchema(GenericValueType sourceStructure,
-			Serializable serializable, Map<String, Serializable> map) {
+
+	@SuppressWarnings("unchecked")
+	private void traverseSchema(
+			GenericValueType sourceStructure,
+			Object object,
+			Map<String, Object> map) {
 
 		if (sourceStructure instanceof MapComplexValueType) {
 
@@ -105,17 +97,15 @@ public final class CombineSourceFilter implements
 				if ((e.getValue() instanceof SimpleValueType)
 						&& (((SimpleValueType) e.getValue()).getName() != "Null")) {
 
-					map.put(e.getKey(), ((MapObject) serializable).getMap()
-							.remove(e.getKey()));
+					map.put(e.getKey(), ((Map<String, Object>) object).remove(e.getKey()));
 
 				} else {
-					traverseSchema(e.getValue(), ((MapObject) serializable)
-							.getMap().get(e.getKey()), map);
+					traverseSchema(e.getValue(), ((Map<String, Object>) object).get(e.getKey()), map);
 				}
 			}
 		} else if (sourceStructure instanceof ListComplexValueType) {
 
-			for (Serializable gv : ((ListObject) serializable).getList()) {
+			for (Object gv : ((List<Object>) object)) {
 
 				traverseSchema(((ListComplexValueType) sourceStructure)
 						.getList().get(0), gv, map);
@@ -125,7 +115,11 @@ public final class CombineSourceFilter implements
 		}
 	}
 
-	private void insertCombinedValue(Serializable serializable, MapObject mv,
+
+	@SuppressWarnings("unchecked")
+	private void insertCombinedValue(
+			Object object, 
+			Map<String, Object> mv,
 			GenericValueType destinationStructure) {
 
 		if (destinationStructure instanceof MapComplexValueType) {
@@ -135,10 +129,10 @@ public final class CombineSourceFilter implements
 
 				if (e.getValue() == null) {
 
-					if (serializable instanceof MapObject) {
+					if (object instanceof Map) {
 
 						// check for correct value here
-						((MapObject) serializable).getMap().put(e.getKey(), mv);
+						((Map<String, Object>) object).put(e.getKey(), mv);
 					} else {
 						String errmsg = "Invalid combinedSchema.";
 						Logging.error(this.getClass(), errmsg);
@@ -148,25 +142,25 @@ public final class CombineSourceFilter implements
 
 				} else {
 
-					if (((MapObject) serializable).getMap().get(e.getKey()) == null) {
-						((MapObject) serializable).getMap().put(e.getKey(),
-								new MapObject());
+					if (((Map<String, Object>) object).get(e.getKey()) == null) {
+						((Map<String, Object>) object).put(e.getKey(),
+								new HashMap<String, Object>());
 					}
 
-					insertCombinedValue(((MapObject) serializable).getMap()
+					insertCombinedValue(((Map<String, Object>) object)
 							.get(e.getKey()), mv, e.getValue());
 				}
 			}
 		} else if (destinationStructure instanceof ListComplexValueType) {
 
-			if (!(serializable instanceof ListObject)) {
+			if (!(object instanceof List)) {
 				String errmsg = "Invalid combinedSchema.";
 				Logging.error(this.getClass(), errmsg);
 				System.err.println(errmsg);
 				throw new RuntimeException(errmsg);
 			}
 
-			for (Serializable gv : ((ListObject) serializable).getList()) {
+			for (Object gv : ((List<Object>) object)) {
 
 				insertCombinedValue(gv, mv,
 						((ListComplexValueType) destinationStructure).getList()
@@ -176,6 +170,7 @@ public final class CombineSourceFilter implements
 		}
 
 	}
+
 
 	private static MapComplexValueType createSourceCoordinateStructure() {
 

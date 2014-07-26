@@ -23,7 +23,6 @@ import java.util.HashSet;
 import java.util.Map;
 
 import org.jvalue.ods.data.DummyDataSource;
-import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.metadata.JacksonMetaData;
 import org.jvalue.ods.grabber.GrabberFactory;
 import org.jvalue.ods.server.restlet.BaseRestlet;
@@ -56,9 +55,8 @@ class NominatimRouter implements Router<Restlet> {
 									+ (String) request.getAttributes().get(
 											"location") + "&format=json"))
 					.grabSource();
-				GenericEntity ret = TranslatorFactory.getJsonTranslator().translate(jsonNode);
-
-				return RestletResult.newSuccessResult(mapper.valueToTree(ret));
+				Object data = TranslatorFactory.getJsonTranslator().translate(jsonNode);
+				return RestletResult.newSuccessResult(mapper.valueToTree(data));
 			}
 
 		};
@@ -77,9 +75,8 @@ class NominatimRouter implements Router<Restlet> {
 								"http://nominatim.openstreetmap.org/reverse?format=json&lat="
 										+ latitude + "&lon=" + longitude))
 					.grabSource();
-				GenericEntity ret = TranslatorFactory.getJsonTranslator().translate(jsonNode);
-
-				return RestletResult.newSuccessResult(mapper.valueToTree(ret));
+				Object data = TranslatorFactory.getJsonTranslator().translate(jsonNode);
+				return RestletResult.newSuccessResult(mapper.valueToTree(data));
 			}
 
 		};

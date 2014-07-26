@@ -20,13 +20,13 @@ package org.jvalue.ods.db;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.LinkedList;
+import java.util.Map;
 
 import org.ektorp.support.CouchDbDocument;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.jvalue.ods.data.generic.MapObject;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -290,7 +290,7 @@ public class DbAccessorTest {
 	public void testExecuteBulkWithoutConnect() {
 		DbAccessor<JsonNode> couchDbFooAccessor = DbFactory
 				.createMockDbAccessor("foo");
-		couchDbFooAccessor.executeBulk(new LinkedList<MapObject>(), null);
+		couchDbFooAccessor.executeBulk(new LinkedList<Map<String, Object>>(), null);
 	}
 
 	/**
@@ -302,7 +302,7 @@ public class DbAccessorTest {
 				.createMockDbAccessor("foo");
 		assertNotNull(couchDbFooAccessor);
 		couchDbFooAccessor.connect();
-		couchDbFooAccessor.executeBulk(new LinkedList<MapObject>(), null);
+		couchDbFooAccessor.executeBulk(new LinkedList<Map<String, Object>>(), null);
 		couchDbFooAccessor.deleteDatabase();
 	}
 

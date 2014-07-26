@@ -17,18 +17,17 @@
  */
 package org.jvalue.ods.translator;
 
-import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.filter.Filter;
 
 
-public abstract class Translator<T> implements Filter<T, GenericEntity> {
+public abstract class Translator<T> implements Filter<T, Object> {
 
 	@Override
-	public final GenericEntity filter(T value) {
+	public final Object filter(T value) {
 		return translate(value);
 	}
 
 
-	public abstract GenericEntity translate(T value);
+	public abstract Object translate(T value);
 
 }

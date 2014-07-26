@@ -19,8 +19,8 @@ package org.jvalue.ods.db;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
-import org.jvalue.ods.data.generic.MapObject;
 import org.jvalue.ods.data.objecttypes.ObjectType;
 
 public interface DbAccessor<Q> {
@@ -34,6 +34,6 @@ public interface DbAccessor<Q> {
 	boolean isConnected();
 	public List<Q> getAllDocuments();
 	public List<Q> executeDocumentQuery(String designDocId, String viewName, String key);
-	public void executeBulk(Collection<MapObject> objects, ObjectType mapObjectType);
+	public void executeBulk(Collection<Map<String, Object>> objects, ObjectType mapObjectType);
 
 }

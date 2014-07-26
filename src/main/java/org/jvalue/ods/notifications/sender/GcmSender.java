@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.notifications.clients.ClientFactory;
 import org.jvalue.ods.notifications.clients.GcmClient;
@@ -39,7 +38,7 @@ final class GcmSender extends NotificationSender<GcmClient> {
 	public SenderResult notifySourceChanged(
 			GcmClient client, 
 			DataSource source, 
-			GenericEntity data) {
+			Object data) {
 
 		if (sender == null) return getErrorResult("api key not set");
 

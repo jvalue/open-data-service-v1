@@ -4,7 +4,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.notifications.clients.HttpClient;
 import org.jvalue.ods.utils.RestCall;
 import org.jvalue.ods.utils.RestException;
@@ -21,7 +20,7 @@ final class HttpSender extends NotificationSender<HttpClient> {
 	public SenderResult notifySourceChanged(
 			HttpClient client, 
 			DataSource source, 
-			GenericEntity data) {
+			Object data) {
 
 		try {
 			RestCall.Builder builder = new RestCall.Builder(

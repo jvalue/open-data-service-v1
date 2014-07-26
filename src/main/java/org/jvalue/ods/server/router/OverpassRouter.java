@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jvalue.ods.data.DummyDataSource;
-import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.metadata.JacksonMetaData;
 import org.jvalue.ods.grabber.GrabberFactory;
 import org.jvalue.ods.server.restlet.BaseRestlet;
@@ -52,8 +51,8 @@ class OverpassRouter implements Router<Restlet> {
 							"ru-rambler-osm-overpass",
 							"http://overpass.osm.rambler.ru/cgi/interpreter?data=[out:json];node[name%3D"
 							+ location + "]%3Bout%3B")).grabSource();
-				GenericEntity ret = TranslatorFactory.getJsonTranslator().translate(jsonNode);
-				return RestletResult.newSuccessResult(mapper.valueToTree(ret));
+				Object data = TranslatorFactory.getJsonTranslator().translate(jsonNode);
+				return RestletResult.newSuccessResult(mapper.valueToTree(data));
 			}
 
 		};

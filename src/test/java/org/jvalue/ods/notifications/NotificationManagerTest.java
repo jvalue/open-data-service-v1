@@ -11,8 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.DummyDataSource;
-import org.jvalue.ods.data.generic.BaseObject;
-import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.notifications.clients.Client;
 import org.jvalue.ods.notifications.clients.DummyClient;
 import org.jvalue.ods.notifications.db.DummyClientDatastore;
@@ -28,7 +26,7 @@ public final class NotificationManagerTest {
 	private NotificationManager manager;
 	private Client client;
 	private DataSource source;
-	private GenericEntity data;
+	private Object data;
 
 	private int notifyCalledCount;
 
@@ -39,7 +37,7 @@ public final class NotificationManagerTest {
 		manager = new NotificationManager(new DummyClientDatastore());
 		client = new DummyClient("dummy", "dummy");
 		source = DummyDataSource.newInstance("dummy", "dummy");
-		data = new BaseObject("dummy");
+		data = "dummy";
 
 	}
 
@@ -57,7 +55,7 @@ public final class NotificationManagerTest {
 						public SenderResult notifySourceChanged(
 								DummyClient client,
 								DataSource source,
-								GenericEntity data) {
+								Object data) {
 
 							assertNotNull(client);
 							assertNotNull(source);
@@ -102,7 +100,7 @@ public final class NotificationManagerTest {
 					public SenderResult notifySourceChanged(
 							DummyClient client,
 							DataSource source,
-							GenericEntity data) {
+							Object data) {
 
 						return getSuccessResult();
 					}
@@ -123,7 +121,7 @@ public final class NotificationManagerTest {
 					public SenderResult notifySourceChanged(
 							DummyClient client,
 							DataSource source,
-							GenericEntity data) {
+							Object data) {
 
 						return getErrorResult("error");
 					}
@@ -145,7 +143,7 @@ public final class NotificationManagerTest {
 					public SenderResult notifySourceChanged(
 							DummyClient client,
 							DataSource source,
-							GenericEntity data) {
+							Object data) {
 
 						return getRemoveClientResult(client);
 					}
@@ -168,7 +166,7 @@ public final class NotificationManagerTest {
 					public SenderResult notifySourceChanged(
 							DummyClient client,
 							DataSource source,
-							GenericEntity data) {
+							Object data) {
 
 						return getUpdateClientResult(client, newClient);
 					}

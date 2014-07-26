@@ -17,18 +17,25 @@
  */
 package org.jvalue.ods.translator;
 
-import org.jvalue.ods.data.generic.GenericDataUtils;
-import org.jvalue.ods.data.generic.GenericEntity;
+import org.jvalue.ods.logger.Logging;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 final class JsonTranslator extends Translator<JsonNode> {
 
+	private static final ObjectMapper mapper = new ObjectMapper();
+
 	@Override
-	public GenericEntity translate(JsonNode jsonNode) {
-		GenericEntity gv = GenericDataUtils.convertFromJson(jsonNode);
-		return gv;
+	public Object translate(JsonNode jsonNode) {
+		try {
+			return mapper.treeToValue(jsonNode, Object.class);
+		} catch (JsonProcessingException jpe) {
+			Logging.error(JsonTranslator.class, jpe.getMessage());
+			return null;
+		}
 	}
 
 }

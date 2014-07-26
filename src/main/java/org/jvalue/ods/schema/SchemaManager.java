@@ -3,20 +3,8 @@
  */
 package org.jvalue.ods.schema;
 
-import java.io.Serializable;
-import java.util.List;
-import java.util.Map.Entry;
-
-import org.jvalue.ods.data.generic.GenericEntity;
-import org.jvalue.ods.data.generic.ListObject;
-import org.jvalue.ods.data.generic.MapObject;
-import org.jvalue.ods.data.objecttypes.ListObjectType;
-import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
-import org.jvalue.ods.data.valuetypes.ListComplexValueType;
-import org.jvalue.ods.data.valuetypes.MapComplexValueType;
-import org.jvalue.ods.data.valuetypes.SimpleValueType;
 
 /**
  * The Class SchemaManager.
@@ -198,7 +186,8 @@ public class SchemaManager {
 	 *            the db schema
 	 * @return true, if successful
 	 */
-	public static boolean validateGenericValusFitsObjectType(GenericEntity ge,
+	public static boolean validateGenericValusFitsObjectType(
+			Object object,
 			ObjectType objectType) {
 
 //		if (objectType instanceof MapObjectType) {
@@ -287,7 +276,8 @@ public class SchemaManager {
 		return true;
 	}
 
-	private static boolean validateGenericValusFitsValueType(GenericEntity s,
+	private static boolean validateGenericValusFitsValueType(
+			Object data,
 			GenericValueType value) {
 		return true;
 

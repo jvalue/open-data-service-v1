@@ -1,9 +1,10 @@
 package org.jvalue.ods.translator;
 
-import org.jvalue.ods.data.generic.BaseObject;
-import org.jvalue.ods.data.generic.GenericEntity;
-import org.jvalue.ods.data.generic.ListObject;
-import org.jvalue.ods.data.generic.MapObject;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -13,48 +14,42 @@ import org.w3c.dom.NodeList;
 final class XmlTranslator extends Translator<Document> {
 
 	@Override
-	public GenericEntity translate(Document xmlDocument) {
+	public Object translate(Document xmlDocument) {
 		Node rootNode = xmlDocument.getFirstChild();
 
-		GenericEntity gv = new MapObject();
-		((MapObject) gv).getMap().put(rootNode.getNodeName(),
-				convertXml(rootNode, false));
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put(rootNode.getNodeName(), convertXml(rootNode, false));
 
-		return gv;
+		return map;
 	}
 
 
-	private GenericEntity convertXml(Node node, boolean isMultiple) {
-		GenericEntity gv = null;
-
+	private Object convertXml(Node node, boolean isMultiple) {
 		if (node.getNodeType() == Node.ELEMENT_NODE) {
 			if (isMultiple || !isMultipleNode(node)) {
-				gv = fillNodeRec(node);
+				return fillNodeRec(node);
 			} else {
-				gv = new ListObject();
-				gv = fillMultipleNodes(node);
+				return fillMultipleNodes(node);
 			}
 		} else if ((node.getNodeType() == Node.ATTRIBUTE_NODE)
 				|| (node.getNodeType() == Node.TEXT_NODE)) {
-			String s = node.getNodeValue();
-			gv = new BaseObject(s);
+			return node.getNodeValue();
 		}
-
-		return gv;
+		return null;
 	}
 
 
-	private GenericEntity fillMultipleNodes(Node node) {
+	private Object fillMultipleNodes(Node node) {
 		Node tmpNode = node;
 
-		ListObject lv = new ListObject();
+		List<Object> resultList = new LinkedList<Object>();
 
 		String currentNodeName = node.getNodeName();
 
 		while (tmpNode != null) {
 			String tempNodeName = tmpNode.getNodeName();
 			if (tempNodeName.equals(currentNodeName)) {
-				lv.getList().add(convertXml(tmpNode, true));
+				resultList.add(convertXml(tmpNode, true));
 			}
 			tmpNode = tmpNode.getNextSibling();
 		}
@@ -63,25 +58,25 @@ final class XmlTranslator extends Translator<Document> {
 		while (tmpNode != null) {
 			String tempNodeName = tmpNode.getNodeName();
 			if (tempNodeName.equals(currentNodeName)) {
-				lv.getList().add(convertXml(tmpNode, true));
+				resultList.add(convertXml(tmpNode, true));
 			}
 			tmpNode = tmpNode.getPreviousSibling();
 		}
 
-		return lv;
+		return resultList;
 	}
 
 
-	private GenericEntity fillNodeRec(Node node) {
+	private Object fillNodeRec(Node node) {
 
-		GenericEntity mv = new MapObject();
+		Map<String, Object> resultMap = new HashMap<String, Object>();
 
 		if (node.hasAttributes()) {
 			NamedNodeMap map = node.getAttributes();
 			for (int i = 0; i < map.getLength(); i++) {
 				Node n = map.item(i);
-				GenericEntity gv = convertXml(n, false);
-				((MapObject) mv).getMap().put(n.getNodeName(), gv);
+				Object value = convertXml(n, false);
+				resultMap.put(n.getNodeName(), value);
 			}
 		}
 
@@ -90,21 +85,20 @@ final class XmlTranslator extends Translator<Document> {
 
 			if ((list.getLength() == 1)
 					&& (list.item(0).getNodeType() == Node.TEXT_NODE)) {
-				mv = new BaseObject(list.item(0).getNodeValue());
-				return mv;
+				return list.item(0).getNodeValue();
 			}
 
 			for (int i = 0; i < list.getLength(); i++) {
 				Node n = list.item(i);
 				if (n.getNodeType() == Node.ELEMENT_NODE) {
-					GenericEntity gv = convertXml(n, false);
-					((MapObject) mv).getMap().put(n.getNodeName(), gv);
+					Object value = convertXml(n, false);
+					resultMap.put(n.getNodeName(), value);
 				}
 
 			}
 		}
 
-		return mv;
+		return resultMap;
 	}
 
 

@@ -17,7 +17,6 @@
  */
 package org.jvalue.ods.configuration;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,10 +30,6 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.data.generic.BaseObject;
-import org.jvalue.ods.data.generic.GenericEntity;
-import org.jvalue.ods.data.generic.ListObject;
-import org.jvalue.ods.data.generic.MapObject;
 import org.jvalue.ods.data.objecttypes.ListObjectType;
 import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
@@ -67,7 +62,7 @@ final class PegelPortalMvTranslator extends Translator<String> {
 
 
 	@Override
-	public GenericEntity translate(String httpContent) {
+	public Object translate(String httpContent) {
 		Document doc = Jsoup.parse(httpContent);
 
 
@@ -85,9 +80,9 @@ final class PegelPortalMvTranslator extends Translator<String> {
 						source.getDataSourceSchema())
 					.getReferencedObjects().get(0)).getAttributes();
 
-			List<Serializable> objectList = new LinkedList<Serializable>();
+			List<Object> objectList = new LinkedList<Object>();
 			for (Element row : body) {
-				MapObject objectMap = new MapObject();
+				Map<String, Object> objectMap = new HashMap<String, Object>();
 				for (Map.Entry<String, Integer> e : tableMapping.entrySet()) {
 
 					String key = e.getKey();
@@ -98,28 +93,24 @@ final class PegelPortalMvTranslator extends Translator<String> {
 					if (value.equals(""))
 						continue;
 
-					objectMap.getMap().put(
+					objectMap.put(
 							key,
-							new BaseObject(createValue(value,
-									type.getName())));
+							createValue(value, type.getName()));
 				}
 
-				objectMap.getMap().put(PegelPortalMvConfiguration.KEY_LEVEL_UNIT,
-						new BaseObject("cm ü PNP"));
-				objectMap.getMap().put(
-						PegelPortalMvConfiguration.KEY_EFFLUENT_UNIT,
-						new BaseObject("m³/s"));
+				objectMap.put(PegelPortalMvConfiguration.KEY_LEVEL_UNIT, "cm ü PNP");
+				objectMap.put(PegelPortalMvConfiguration.KEY_EFFLUENT_UNIT, "m³/s");
 
 				objectList.add(objectMap);
 			}
 
-			return new ListObject(objectList);
+			return objectList;
 		} catch (Exception e) {
 			return unknownFormat();
 		}
 	}
 
-	private Serializable createValue(String value, String type) {
+	private Object createValue(String value, String type) {
 		if (type.equals("java.lang.String"))
 			return StringEscapeUtils.unescapeHtml4(value);
 		else if (type.equals("java.lang.Number"))
@@ -140,7 +131,7 @@ final class PegelPortalMvTranslator extends Translator<String> {
 		return builder.toString();
 	}
 
-	private GenericEntity unknownFormat() {
+	private Object unknownFormat() {
 		String error = "Unknown html format found while parsing source";
 		Logging.error(this.getClass(), error);
 		System.err.println(error);

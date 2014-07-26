@@ -27,7 +27,6 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.jvalue.ods.data.DummyDataSource;
-import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.valuetypes.AllowedValueTypes;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.data.valuetypes.ListComplexValueType;
@@ -46,8 +45,8 @@ public class JsonTranslatorTest {
 	@Test
 	public void testTranslate() {
 		JsonNode jsonNode = GrabberFactory.getJsonGrabber(DummyDataSource.newInstance("testUrl", testUrl)).filter(null);
-		GenericEntity gv = TranslatorFactory.getJsonTranslator().filter(jsonNode);
-		assertNotNull(gv);
+		Object data = TranslatorFactory.getJsonTranslator().filter(jsonNode);
+		assertNotNull(data);
 	}
 
 	@Test

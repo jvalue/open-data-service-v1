@@ -16,12 +16,11 @@
 package org.jvalue.ods.notifications;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.utils.Assert;
 
 
-public final class NotificationFilter implements Filter<GenericEntity, GenericEntity> {
+public final class NotificationFilter implements Filter<Object, Object> {
 
 	private final DataSource source;
 
@@ -31,7 +30,7 @@ public final class NotificationFilter implements Filter<GenericEntity, GenericEn
 	}
 
 	@Override
-	public GenericEntity filter(GenericEntity data) {
+	public Object filter(Object data) {
 		NotificationManager.getInstance().notifySourceChanged(source, data);
 		return data;
 	}
