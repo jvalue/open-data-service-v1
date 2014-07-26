@@ -17,7 +17,6 @@
  */
 package org.jvalue.ods.configuration;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -40,13 +39,13 @@ import org.jvalue.ods.data.objecttypes.ListObjectType;
 import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.data.valuetypes.SimpleValueType;
+import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.logger.Logging;
-import org.jvalue.ods.translator.Translator;
-import org.jvalue.ods.utils.HttpUtils;
+import org.jvalue.ods.utils.Assert;
 
 
 
-final class PegelPortalMvTranslator extends Translator {
+final class PegelPortalMvTranslator implements Filter<String, GenericEntity> {
 
 	private static final Map<String, Integer> tableMapping = new HashMap<String, Integer>();
 	static {
@@ -58,21 +57,18 @@ final class PegelPortalMvTranslator extends Translator {
 		tableMapping.put(PegelPortalMvConfiguration.KEY_AGENCY, 8);
 	}
 
+	
+	private final DataSource source;
 
 	public PegelPortalMvTranslator(DataSource source) {
-		super(source);
+		Assert.assertNotNull(source);
+		this.source = source;
 	}
 
 
 	@Override
-	public GenericEntity translate() {
-		Document doc = null;
-		try {
-			doc = Jsoup.parse(HttpUtils.readUrl(dataSource.getUrl(), "UTF-8"));
-		} catch (IOException io) {
-			Logging.error(this.getClass(), io.getMessage());
-			return null;
-		}
+	public GenericEntity filter(String httpContent) {
+		Document doc = Jsoup.parse(httpContent);
 
 
 		Elements header = doc.select("#pegeltab thead tr");
@@ -86,7 +82,7 @@ final class PegelPortalMvTranslator extends Translator {
 		try {
 
 			Map<String, GenericValueType> mapValueTypes = ((MapObjectType) ((ListObjectType) 
-						dataSource.getDataSourceSchema())
+						source.getDataSourceSchema())
 					.getReferencedObjects().get(0)).getAttributes();
 
 			List<Serializable> objectList = new LinkedList<Serializable>();

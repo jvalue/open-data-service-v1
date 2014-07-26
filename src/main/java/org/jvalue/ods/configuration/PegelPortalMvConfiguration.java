@@ -28,7 +28,6 @@ import java.util.Map;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.OdsView;
-import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.metadata.JacksonMetaData;
 import org.jvalue.ods.data.metadata.OdsMetaData;
 import org.jvalue.ods.data.objecttypes.ListObjectType;
@@ -38,6 +37,7 @@ import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbInsertionFilter;
 import org.jvalue.ods.filter.FilterChain;
+import org.jvalue.ods.grabber.GrabberFactory;
 import org.jvalue.ods.notifications.NotificationFilter;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -153,10 +153,11 @@ public final class PegelPortalMvConfiguration implements Configuration {
 	public FilterChain<Void,?> getFilterChain(DbAccessor<JsonNode> accessor) {
 		DataSource source = getDataSource();
 
-		FilterChain<Void, GenericEntity> chain = FilterChain
-			.instance(new PegelPortalMvTranslator(source));
+		FilterChain<Void, String> chain = FilterChain
+			.instance(GrabberFactory.getHttpGrabber(source, "UTF-8"));
 
 		chain
+			.setNextFilter(new PegelPortalMvTranslator(source))
 			.setNextFilter(new DbInsertionFilter(accessor, source))
 			.setNextFilter(new NotificationFilter(source));
 

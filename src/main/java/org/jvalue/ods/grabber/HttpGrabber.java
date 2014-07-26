@@ -17,37 +17,33 @@
  */
 package org.jvalue.ods.grabber;
 
-import java.io.File;
+import java.io.IOException;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.filter.Filter;
-import org.w3c.dom.Document;
-
-import com.fasterxml.jackson.databind.JsonNode;
-
-
-public final class GrabberFactory {
-
-	private GrabberFactory() { }
+import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.utils.Assert;
+import org.jvalue.ods.utils.HttpUtils;
 
 
-	public static Filter<Void, Document> getXmlGrabber(DataSource source) {
-		return new XmlGrabber(source);
+final class HttpGrabber extends Grabber<String> {
+
+	private final String encoding;
+
+	public HttpGrabber(DataSource source, String encoding) {
+		super(source);
+		Assert.assertNotNull(encoding);
+		this.encoding = encoding;
 	}
 
 
-	public static Filter<Void, JsonNode> getJsonGrabber(DataSource source) {
-		return new JsonGrabber(source);
-	}
-
-
-	public static Filter<Void, File> getResourceGrabber(DataSource source) {
-		return new ResourceGrabber(source);
-	}
-
-
-	public static Filter<Void, String> getHttpGrabber(DataSource source, String encoding) {
-		return new HttpGrabber(source, encoding);
+	@Override
+	protected String grabSource() {
+		try {
+			return HttpUtils.readUrl(dataSource.getUrl(), encoding);
+		} catch (IOException io) {
+			Logging.error(this.getClass(), io.getMessage());
+			return null;
+		}
 	}
 
 }
