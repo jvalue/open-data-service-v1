@@ -125,18 +125,21 @@ public class MockDbAccessor implements DbAccessor<JsonNode> {
 		checkDbState();
 	}
 
-
 	@Override
 	public void delete(Object data) {
-		if (data == null) throw new NullPointerException("data is null");
-		checkDbState();
+		if (data == null) {
+			throw new IllegalArgumentException("data is null");
 
+		}
+		checkDbState();
 		String key = null;
 		for (Entry<String, Object> e : map.entrySet()) {
-			if (e.getValue().equals(data)) key = e.getKey();
+			if (e.getValue().equals(data))
+				key = e.getKey();
 		}
 
-		if (key != null) map.remove(key);
+		if (key != null)
+			map.remove(key);
 	}
 
 	/*

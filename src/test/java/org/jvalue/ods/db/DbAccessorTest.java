@@ -21,7 +21,9 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.LinkedList;
 
+import org.ektorp.support.CouchDbDocument;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.jvalue.ods.data.generic.MapObject;
@@ -140,6 +142,15 @@ public class DbAccessorTest {
 		couchDbFooAccessor.update(data);
 	}
 
+	@Test
+	public void testUpdate() {
+		DbAccessor<JsonNode> couchDbFooAccessor = DbFactory
+				.createMockDbAccessor("foo");
+		couchDbFooAccessor.connect();
+		couchDbFooAccessor.update(new CouchDbDocument());
+		couchDbFooAccessor.deleteDatabase();
+	}
+
 	/**
 	 * Test get document null classname.
 	 */
@@ -172,6 +183,15 @@ public class DbAccessorTest {
 		DbAccessor<JsonNode> couchDbFooAccessor = DbFactory
 				.createMockDbAccessor("foo");
 		couchDbFooAccessor.getDocument(Object.class, "1");
+	}
+
+	@Test
+	public void testGetDocument() {
+		DbAccessor<JsonNode> couchDbFooAccessor = DbFactory
+				.createMockDbAccessor("foo");
+		couchDbFooAccessor.connect();
+		Object ret = couchDbFooAccessor.getDocument(Object.class, "1");
+		Assert.assertNull(ret);
 	}
 
 	/**
@@ -284,6 +304,26 @@ public class DbAccessorTest {
 		couchDbFooAccessor.connect();
 		couchDbFooAccessor.executeBulk(new LinkedList<MapObject>(), null);
 		couchDbFooAccessor.deleteDatabase();
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testExecuteBulkObjectsNull() {
+		DbAccessor<JsonNode> couchDbFooAccessor = DbFactory
+				.createMockDbAccessor("foo");
+		assertNotNull(couchDbFooAccessor);
+		couchDbFooAccessor.connect();
+		couchDbFooAccessor.executeBulk(null, null);
+		couchDbFooAccessor.deleteDatabase();
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testDeleteNull() {
+		DbAccessor<JsonNode> couchDbFooAccessor = DbFactory
+				.createMockDbAccessor("foo");
+		assertNotNull(couchDbFooAccessor);
+		couchDbFooAccessor.connect();
+		couchDbFooAccessor.delete(null);
+
 	}
 
 }
