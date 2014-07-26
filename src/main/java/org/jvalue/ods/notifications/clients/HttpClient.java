@@ -17,9 +17,10 @@
  */
 package org.jvalue.ods.notifications.clients;
 
-import org.jvalue.ods.notifications.Client;
-import org.jvalue.ods.notifications.ClientVisitor;
 import org.jvalue.ods.utils.Assert;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 public final class HttpClient extends Client {
@@ -27,14 +28,15 @@ public final class HttpClient extends Client {
 	private final String restUrl, sourceParam;
 	private final boolean sendData;
 
-	public HttpClient(
-			String id, 
-			String source, 
-			String restUrl, 
-			String sourceParam,
-			boolean sendData) {
+	@JsonCreator
+	HttpClient(
+			@JsonProperty("clientId") String clientId, 
+			@JsonProperty("source") String source, 
+			@JsonProperty("restUrl") String restUrl, 
+			@JsonProperty("sourceParam") String sourceParam,
+			@JsonProperty("sendData") boolean sendData) {
 
-		super(id, source);
+		super(clientId, source);
 		Assert.assertNotNull(restUrl, sourceParam);
 		this.restUrl = restUrl;
 		this.sourceParam = sourceParam;

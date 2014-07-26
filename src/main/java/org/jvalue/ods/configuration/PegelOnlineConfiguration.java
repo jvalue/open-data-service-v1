@@ -139,22 +139,31 @@ final class PegelOnlineConfiguration implements Configuration {
 			characteristicValuesReferencedObjects.put("occurrences",
 					occurrencesType);
 
-			MapObjectType characteristicValuesGot = new MapObjectType(
+			MapObjectType characteristicValuesType = new MapObjectType(
 					"de-pegelonline-characteristicValues",
 					characteristicValuesAttributes,
 					characteristicValuesReferencedObjects);
+
+			List<ObjectType> characteristicValuesTypesList = new LinkedList<>();
+			characteristicValuesTypesList.add(characteristicValuesType);
+
+			ListObjectType characteristicValuesGot = new ListObjectType(
+					null,
+					characteristicValuesTypesList);
 
 			timeSeriesReferencedObjects.put("characteristicValues",
 					characteristicValuesGot);
 
 			MapObjectType timeSeriesType = new MapObjectType(
-					"de-pegelonline-timeSeries", timeSeriesAttributes,
+					"de-pegelonline-timeSeries", 
+					timeSeriesAttributes,
 					timeSeriesReferencedObjects);
 
 			List<ObjectType> timeseriesTypesList = new LinkedList<>();
 			timeseriesTypesList.add(timeSeriesType);
 
-			ListObjectType timeSeriesGot = new ListObjectType(null,
+			ListObjectType timeSeriesGot = new ListObjectType(
+					null,
 					timeseriesTypesList);
 
 			Map<String, GenericValueType> stationAttributes = new HashMap<String, GenericValueType>();
@@ -350,12 +359,14 @@ final class PegelOnlineConfiguration implements Configuration {
 
 	@Override
 	public FilterChain<Void,?> getFilterChain(DbAccessor<JsonNode> accessor) {
+		DataSource source = getDataSource();
+
 		FilterChain<Void, GenericEntity> chain = FilterChain
-			.instance(TranslatorFactory.getPegelOnlineTranslator());
+			.instance(TranslatorFactory.getJsonTranslator(source));
 		chain.setNextFilter(new CombineSourceFilter())
 			.setNextFilter(new RenameSourceFilter())
-			.setNextFilter(new DbInsertionFilter(accessor))
-			.setNextFilter(new NotificationFilter());
+			.setNextFilter(new DbInsertionFilter(accessor, source))
+			.setNextFilter(new NotificationFilter(source));
 		return chain;
 	}
 

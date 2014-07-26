@@ -17,7 +17,6 @@
  */
 package org.jvalue.ods.filter;
 
-import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.utils.Assert;
 
 
@@ -46,10 +45,9 @@ public final class FilterChain<P,R> {
 	}
 
 
-	public void filter(DataSource source, P param) {
-		Assert.assertNotNull(source);
-		R ret = filter.filter(source, param);
-		if (nextChain != null) nextChain.filter(source, ret);
+	public void filter(P param) {
+		R ret = filter.filter(param);
+		if (nextChain != null) nextChain.filter(ret);
 	}
 
 

@@ -17,45 +17,24 @@
  */
 package org.jvalue.ods.translator;
 
+import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.utils.Assert;
+
 
 public final class TranslatorFactory {
 
 	private TranslatorFactory() { }
 
 
-	private static Translator 
-		jsonTranslator,
-		xmlTranslator,
-		osmTranslator,
-		pegelPortalMvTranslator;
-
-
-	public static Translator getPegelOnlineTranslator() {
-		return getJsonTranslator();
+	public static Translator getXmlTranslator(DataSource source) {
+		Assert.assertNotNull(source);
+		return new XmlTranslator(source);
 	}
 
 
-	public static Translator getOsmTranslator() {
-		if (osmTranslator == null) osmTranslator = new OsmTranslator();
-		return osmTranslator;
-	}
-
-
-	public static Translator getPegelPortalMvTranslator() {
-		if (pegelPortalMvTranslator == null) pegelPortalMvTranslator = new PegelPortalMvTranslator();
-		return pegelPortalMvTranslator;
-	}
-
-
-	public static Translator getXmlTranslator() {
-		if (xmlTranslator == null) xmlTranslator = new XmlTranslator();
-		return xmlTranslator;
-	}
-
-
-	public static Translator getJsonTranslator() {
-		if (jsonTranslator == null) jsonTranslator = new JsonTranslator();
-		return jsonTranslator;
+	public static Translator getJsonTranslator(DataSource source) {
+		Assert.assertNotNull(source);
+		return new JsonTranslator(source);
 	}
 
 }

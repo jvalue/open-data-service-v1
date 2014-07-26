@@ -29,7 +29,6 @@ import org.jvalue.ExactValueRestriction;
 import org.jvalue.ValueType;
 import org.jvalue.numbers.Range;
 import org.jvalue.numbers.RangeBound;
-import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.BaseObject;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
@@ -49,7 +48,7 @@ import org.jvalue.si.SiUnit;
 public final class CombineSourceFilter implements Filter<GenericEntity, GenericEntity> {
 
 	@Override
-	public GenericEntity filter(DataSource source, GenericEntity data) {
+	public GenericEntity filter(GenericEntity data) {
 		// if (!SchemaManager.validateGenericValusFitsSchema(data, schema)) {
 		// Logging.info(this.getClass(),
 		// "Could not validate schema in CombineFilter.");
@@ -67,7 +66,6 @@ public final class CombineSourceFilter implements Filter<GenericEntity, GenericE
 		MapComplexValueType sourceCoordinateStructure = createSourceCoordinateStructure();
 		MapComplexValueType destinationCoordinateStructure = createDestinationCoordinateStructure();
 
-		MapObject mv = new MapObject();
 
 		List<Serializable> improvedObjects = new LinkedList<Serializable>();
 		ListObject oldObjects = (ListObject) data;
@@ -75,6 +73,7 @@ public final class CombineSourceFilter implements Filter<GenericEntity, GenericE
 		for (Serializable s : oldObjects.getList()) {
 			GenericEntity gv = (GenericEntity) s;
 
+			MapObject mv = new MapObject();
 			traverseSchema(sourceCoordinateStructure, gv, mv.getMap());
 
 			insertCombinedValue(gv, mv, destinationCoordinateStructure);
@@ -125,16 +124,7 @@ public final class CombineSourceFilter implements Filter<GenericEntity, GenericE
 		}
 	}
 
-	/**
-	 * Insert combined value.
-	 * 
-	 * @param serializable
-	 *            the serializable
-	 * @param mv
-	 *            the mv
-	 * @param destinationStructure
-	 *            the destination structure
-	 */
+
 	private void insertCombinedValue(Serializable serializable, MapObject mv,
 			GenericValueType destinationStructure) {
 
@@ -188,11 +178,6 @@ public final class CombineSourceFilter implements Filter<GenericEntity, GenericE
 	}
 
 
-	/**
-	 * Creates the coordinate schema.
-	 * 
-	 * @return the map schema
-	 */
 	private static MapComplexValueType createSourceCoordinateStructure() {
 
 		Map<String, GenericValueType> station = new HashMap<String, GenericValueType>();
@@ -204,11 +189,7 @@ public final class CombineSourceFilter implements Filter<GenericEntity, GenericE
 		return stationSchema;
 	}
 
-	/**
-	 * Creates the destination coordinate structure.
-	 * 
-	 * @return the map schema
-	 */
+
 	private static MapComplexValueType createDestinationCoordinateStructure() {
 
 		Map<String, GenericValueType> coordinate = new HashMap<String, GenericValueType>();
@@ -220,11 +201,7 @@ public final class CombineSourceFilter implements Filter<GenericEntity, GenericE
 		return coordinateSchema;
 	}
 
-	/**
-	 * Creates the water level trend type.
-	 * 
-	 * @return the enum type
-	 */
+
 	private static EnumType createWaterLevelTrendType() {
 		ExactValueRestriction<String> a = new ExactValueRestriction<String>(
 				"-1");
@@ -237,11 +214,7 @@ public final class CombineSourceFilter implements Filter<GenericEntity, GenericE
 		return trendType;
 	}
 
-	/**
-	 * Creates the water level type.
-	 * 
-	 * @return the quantity unit type
-	 */
+
 	private static QuantityUnitType createWaterLevelType() {
 
 		RangeBound<Double> low = new RangeBound<Double>(0.0);
@@ -250,11 +223,7 @@ public final class CombineSourceFilter implements Filter<GenericEntity, GenericE
 		return new QuantityUnitType(range, SiUnit.m);
 	}
 
-	/**
-	 * Creates the temperature type.
-	 * 
-	 * @return the quantity unit type
-	 */
+
 	private static QuantityUnitType createTemperatureType() {
 
 		RangeBound<Double> low = new RangeBound<Double>(0.0);
@@ -263,11 +232,7 @@ public final class CombineSourceFilter implements Filter<GenericEntity, GenericE
 		return new QuantityUnitType(range, SiUnit.K);
 	}
 
-	/**
-	 * Creates the electrical conductivity type.
-	 * 
-	 * @return the quantity unit type
-	 */
+
 	private static QuantityUnitType createElectricalConductivityType() {
 
 		RangeBound<Double> low = new RangeBound<Double>(0.0);

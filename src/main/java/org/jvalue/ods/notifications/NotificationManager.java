@@ -18,7 +18,6 @@
 package org.jvalue.ods.notifications;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -26,10 +25,15 @@ import java.util.Set;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.notifications.clients.Client;
 import org.jvalue.ods.notifications.clients.GcmClient;
 import org.jvalue.ods.notifications.clients.HttpClient;
+import org.jvalue.ods.notifications.db.ClientDatastore;
 import org.jvalue.ods.notifications.db.ClientDatastoreFactory;
 import org.jvalue.ods.notifications.definitions.DefinitionFactory;
+import org.jvalue.ods.notifications.definitions.NotificationDefinition;
+import org.jvalue.ods.notifications.sender.NotificationSender;
+import org.jvalue.ods.notifications.sender.SenderResult;
 import org.jvalue.ods.utils.Assert;
 
 
@@ -38,21 +42,35 @@ public final class NotificationManager {
 	private static NotificationManager instance;
 
 	public static NotificationManager getInstance() {
-		if (instance == null) instance = new NotificationManager();
+		if (instance == null) {
+			ClientDatastore store = ClientDatastoreFactory.getClientDatastore();
+			instance = new NotificationManager(store);
+			instance.addDefinition(
+					GcmClient.class, 
+					DefinitionFactory.getGcmDefinition());
+			instance.addDefinition(
+					HttpClient.class, 
+					DefinitionFactory.getRestDefinition());
+		}
 		return instance;
 	}
 
 
 	private final ClientDatastore clientStore;
-	private final Map<Class<?>, NotificationDefinition<?>> definitions;
+	private final Map<Class<?>, NotificationDefinition<?>> definitions = new HashMap<>();
 
-	private NotificationManager() {
-		this.clientStore = ClientDatastoreFactory.getCouchDbClientDatastore();
+	NotificationManager(ClientDatastore clientStore) {
+		Assert.assertNotNull(clientStore);
+		this.clientStore = clientStore;
+	}
 
-		Map<Class<?>, NotificationDefinition<?>> definitions = new HashMap<Class<?>, NotificationDefinition<?>>();
-		definitions.put(GcmClient.class, DefinitionFactory.getGcmDefinition());
-		definitions.put(HttpClient.class, DefinitionFactory.getRestDefinition());
-		this.definitions = Collections.unmodifiableMap(definitions);
+
+	<T extends Client> void addDefinition(
+			Class<T> clientType, 
+			NotificationDefinition<T> definition) {
+
+		definitions.put(clientType, definition);
+
 	}
 	
 
@@ -63,14 +81,35 @@ public final class NotificationManager {
 			if (!client.getSource().equals(source.getId())) continue;
 			NotificationSender sender = definitions.get(client.getClass()).getNotificationSender();
 			if (sender == null) {
-				Logging.error(NotificationManager.class, "Failed to get NotificationSender for client " + client.getId());
+				Logging.error(NotificationManager.class, "Failed to get NotificationSender for client " + client.getClientId());
 				continue;
 			}
-			try {
-				sender.notifySourceChanged(client, source, data);
-			} catch (NotificationException ne) {
-				Logging.error(NotificationManager.class, "Error sending notification to client " + client.getId()
-						+ " (" + ne.getMessage() + ")");
+
+			SenderResult result = sender.notifySourceChanged(client, source, data);
+			switch(result.getStatus()) {
+				case SUCCESS:
+					continue;
+
+				case ERROR:
+					String errorMsg = "Failed to send notification to client " + client.getClientId();
+					if (result.getErrorCause() != null) 
+						errorMsg = errorMsg + " (" + result.getErrorCause().getMessage();
+					if (result.getErrorMsg() != null)
+						errorMsg = errorMsg + " (" + result.getErrorMsg();
+					Logging.error(NotificationManager.class, errorMsg);
+					break;
+
+				case REMOVE_CLIENT:
+					Logging.info(NotificationSender.class, "Unregistering client " + result.getOldClient().getClientId());
+					unregisterClient(result.getOldClient().getClientId());
+					break;
+					
+				case UPDATE_CLIENT:
+					Logging.info(NotificationSender.class, "Updating client id to " + result.getNewClient().getClientId());
+					unregisterClient(result.getOldClient().getClientId());
+					registerClient(result.getNewClient());
+					break;
+
 			}
 		}
 	}
@@ -87,9 +126,9 @@ public final class NotificationManager {
 	}
 
 
-	public void unregisterClient(Client client) {
-		Assert.assertNotNull(client);
-		clientStore.remove(client);
+	public void unregisterClient(String clientId) {
+		Assert.assertNotNull(clientId);
+		clientStore.remove(clientId);
 	}
 
 

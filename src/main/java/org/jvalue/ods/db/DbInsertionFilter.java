@@ -27,7 +27,7 @@ import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
 import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.logger.Logging;
-import org.jvalue.ods.main.DataGrabberMain;
+import org.jvalue.ods.utils.Assert;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -35,15 +35,17 @@ import com.fasterxml.jackson.databind.JsonNode;
 public final class DbInsertionFilter implements Filter<GenericEntity, GenericEntity> {
 
 	private final DbAccessor<JsonNode> accessor;
+	private final DataSource source;
 
-	public DbInsertionFilter(DbAccessor<JsonNode> accessor) {
-		if (accessor == null) throw new NullPointerException("param cannot be null");
+	public DbInsertionFilter(DbAccessor<JsonNode> accessor, DataSource source) {
+		Assert.assertNotNull(accessor, source);
 		this.accessor = accessor;
+		this.source = source;
 	}
 
 
 	@Override
-	public GenericEntity filter(DataSource source, GenericEntity data) {
+	public GenericEntity filter(GenericEntity data) {
 		if (data instanceof ListObject) {
 
 			ListObject lv = (ListObject) data;
@@ -61,7 +63,7 @@ public final class DbInsertionFilter implements Filter<GenericEntity, GenericEnt
 		} else {
 			String errmsg = "GenericValue must be ListValue or MapValue.";
 			System.err.println(errmsg);
-			Logging.error(DataGrabberMain.class, errmsg);
+			Logging.error(this.getClass(), errmsg);
 			throw new RuntimeException(errmsg);
 		}
 		return data;

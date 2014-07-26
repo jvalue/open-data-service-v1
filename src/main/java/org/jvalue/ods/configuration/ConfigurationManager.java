@@ -19,14 +19,14 @@ package org.jvalue.ods.configuration;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.jvalue.ods.administration.AdministrationLogging;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.OdsView;
 import org.jvalue.ods.db.DbAccessor;
-import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.DbUtils;
 import org.jvalue.ods.filter.FilterChain;
 import org.jvalue.ods.filter.FilterChainManager;
-import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.utils.Assert;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -34,29 +34,24 @@ import com.fasterxml.jackson.databind.JsonNode;
 public final class ConfigurationManager {
 
 
-	private static ConfigurationManager instance;
-
-	public static ConfigurationManager getInstance() {
-		if (instance == null) instance = new ConfigurationManager();
-		return instance;
-	}
+	private ConfigurationManager() { }
 
 
-	private final List<Configuration> configurations = new LinkedList<Configuration>();
-
-	private ConfigurationManager() {
+	private static final List<Configuration> configurations = new LinkedList<Configuration>();
+	static {
 		configurations.add(new PegelOnlineConfiguration());
 		configurations.add(new OsmConfiguration());
 		configurations.add(new PegelPortalMvConfiguration());
 	}
 
 
-	public void configureAll() {
+	public static void configureAll(
+			DbAccessor<JsonNode> accessor, 
+			FilterChainManager filterManager) {
 
-		Logging.adminLog("Initializing Ods");
+		Assert.assertNotNull(accessor, filterManager);
 
-		DbAccessor<JsonNode> accessor = DbFactory.createDbAccessor("ods");
-		FilterChainManager filterManager = FilterChainManager.getInstance();
+		AdministrationLogging.log("Initializing Ods");
 
 		accessor.connect();
 		accessor.deleteDatabase();
@@ -66,7 +61,7 @@ public final class ConfigurationManager {
 			DataSource source = configuration.getDataSource();
 			FilterChain<Void,?> chain = configuration.getFilterChain(accessor);
 
-			filterManager.register(source, chain);
+			filterManager.register(chain);
 
 			accessor.insert(source.getDbSchema());
 			accessor.insert(source.getMetaData());
@@ -75,7 +70,7 @@ public final class ConfigurationManager {
 			}
 		}
 
-		Logging.adminLog("Initialization completed");
+		AdministrationLogging.log("Initialization completed");
 	}
 
 

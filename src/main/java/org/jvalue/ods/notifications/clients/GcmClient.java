@@ -17,21 +17,47 @@
  */
 package org.jvalue.ods.notifications.clients;
 
-import org.jvalue.ods.notifications.Client;
-import org.jvalue.ods.notifications.ClientVisitor;
+import org.jvalue.ods.utils.Assert;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 public final class GcmClient extends Client {
 
-	public GcmClient(String id, String source) {
-		super(id, source);
+	private final String gcmClientId;
+
+	@JsonCreator
+	GcmClient(
+			@JsonProperty("clientId") String clientId, 
+			@JsonProperty("source") String source,
+			@JsonProperty("gcmClientId") String gcmClientId) {
+
+		super(clientId, source);
+		Assert.assertNotNull(gcmClientId);
+		this.gcmClientId = gcmClientId;
+	}
+
+	
+	public String getGcmClientId() {
+		return gcmClientId;
 	}
 
 
 	@Override
 	public boolean equals(Object other) {
 		if (!super.equals(other)) return false;
-		return other instanceof GcmClient;
+		if (!(other instanceof GcmClient)) return false;
+		GcmClient client = (GcmClient) other;
+		return gcmClientId.equals(client.gcmClientId);
+	}
+
+
+	@Override
+	public int hashCode() {
+		int hash = super.hashCode();
+		hash = hash + HASH_MULT * gcmClientId.hashCode();
+		return hash;
 	}
 
 

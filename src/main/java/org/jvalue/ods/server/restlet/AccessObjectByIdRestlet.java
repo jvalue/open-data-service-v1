@@ -17,77 +17,38 @@
  */
 package org.jvalue.ods.server.restlet;
 
-import java.io.IOException;
-
 import org.jvalue.ods.db.DbAccessor;
-import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.server.utils.RestletResult;
 import org.restlet.Request;
-import org.restlet.Response;
-import org.restlet.Restlet;
-import org.restlet.data.MediaType;
+import org.restlet.data.Status;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-/**
- * The Class IdAccessRestlet.
- */
-public class AccessObjectByIdRestlet extends Restlet {
 
-	/** The db accessor. */
+public class AccessObjectByIdRestlet extends BaseRestlet {
+
 	private DbAccessor<JsonNode> dbAccessor;
 
-	/**
-	 * Instantiates a new id access restlet.
-	 * 
-	 * @param dbAccessor
-	 *            the db accessor
-	 */
+
 	public AccessObjectByIdRestlet(DbAccessor<JsonNode> dbAccessor) {
 		this.dbAccessor = dbAccessor;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.restlet.Restlet#handle(org.restlet.Request,
-	 * org.restlet.Response)
-	 */
-	@Override
-	public void handle(Request request, Response response) {
 
-		String message = "";
+	@Override
+	protected RestletResult doGet(Request request) {
+		dbAccessor.connect();
+		String id = (String) request.getAttributes().get("id");
 		try {
 
-			ObjectMapper mapper = new ObjectMapper();
+			JsonNode n = dbAccessor.getDocument(JsonNode.class, id);
+			return RestletResult.newSuccessResult(n);
 
-			try {
-				dbAccessor.connect();
-				String id = (String) request.getAttributes().get("id");
-
-				JsonNode n = dbAccessor.getDocument(JsonNode.class, id);
-
-				if (n == null) {
-					throw new RuntimeException();
-				} else {
-					message += mapper.writeValueAsString(n);
-				}
-
-			} catch (RuntimeException e) {
-				String errorMessage = "Could not retrieve data from db: " + e;
-				Logging.error(this.getClass(), errorMessage);
-				System.err.println(errorMessage);
-				message += mapper
-						.writeValueAsString("Could not retrieve data.");
-			}
-
-		} catch (IOException e) {
-			String errorMessage = "Error during client request: " + e;
-			Logging.error(this.getClass(), errorMessage);
-			System.err.println(errorMessage);
+		} catch (RuntimeException e) {
+			return RestletResult.newErrorResult(
+					Status.CLIENT_ERROR_NOT_FOUND, 
+					"No data found for id '" + id + "'");
 		}
-
-		response.setEntity(message, MediaType.APPLICATION_JSON);
 
 	}
 }

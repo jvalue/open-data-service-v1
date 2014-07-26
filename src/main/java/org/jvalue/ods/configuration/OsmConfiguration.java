@@ -39,7 +39,6 @@ import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbInsertionFilter;
 import org.jvalue.ods.filter.FilterChain;
 import org.jvalue.ods.notifications.NotificationFilter;
-import org.jvalue.ods.translator.TranslatorFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -161,11 +160,13 @@ final class OsmConfiguration implements Configuration {
 
 	@Override
 	public FilterChain<Void,?> getFilterChain(DbAccessor<JsonNode> accessor) {
+		DataSource source = getDataSource();
+
 		FilterChain<Void, GenericEntity> chain = FilterChain
-			.instance(TranslatorFactory.getOsmTranslator());
+			.instance(new OsmTranslator(source));
 		chain
-			.setNextFilter(new DbInsertionFilter(accessor))
-			.setNextFilter(new NotificationFilter());
+			.setNextFilter(new DbInsertionFilter(accessor, source))
+			.setNextFilter(new NotificationFilter(source));
 		return chain;
 	}
 

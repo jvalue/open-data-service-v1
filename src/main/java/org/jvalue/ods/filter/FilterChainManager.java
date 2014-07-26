@@ -17,59 +17,45 @@
  */
 package org.jvalue.ods.filter;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
-import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.utils.Assert;
 
 
 
 public final class FilterChainManager {
 
-	private static FilterChainManager instance;
+	private final Set<FilterChain<Void, ?>> filterChains = new HashSet<FilterChain<Void, ?>>();
 
-	public static FilterChainManager getInstance() {
-		if (instance == null) instance = new FilterChainManager();
-		return instance;
+
+	public void register(FilterChain<Void, ?> chain) {
+		Assert.assertNotNull(chain);
+		filterChains.add(chain);
 	}
 
 
-
-	private final Map<DataSource, FilterChain<Void, ?>> filterChains = new HashMap<>();
-
-	private FilterChainManager() { }
-
-
-	public void register(DataSource source, FilterChain<Void, ?> chain) {
-		Assert.assertNotNull(source, chain);
-		filterChains.put(source, chain);
+	public void unregister(FilterChain<Void, ?> chain) {
+		Assert.assertNotNull(chain);
+		filterChains.remove(chain);
 	}
 
 
-	public void unregister(DataSource source) {
-		Assert.assertNotNull(source);
-		filterChains.remove(source);
-	}
-
-
-	public boolean isRegistered(DataSource source) {
-		Assert.assertNotNull(source);
-		return filterChains.containsKey(source);
+	public boolean isRegistered(FilterChain<Void, ?> chain) {
+		Assert.assertNotNull(chain);
+		return filterChains.contains(chain);
 	}
 
 
 	public void startFilterChains() {
-		for (Map.Entry<DataSource, FilterChain<Void,?>> entry : filterChains.entrySet()) {
-			Logging.adminLog("grabbing " + entry.getKey().getId()  + " ...");
-			entry.getValue().filter(entry.getKey(), null);
+		for (FilterChain<Void, ?> chain : filterChains) {
+			chain.filter(null);
 		}
 	}
 
 
-	public Map<DataSource, FilterChain<Void,?>> getRegistered() {
-		return new HashMap<DataSource, FilterChain<Void,?>>(filterChains);
+	public Set<FilterChain<Void, ?>> getRegistered() {
+		return new HashSet<FilterChain <Void,?>>(filterChains);
 	}
 
 }

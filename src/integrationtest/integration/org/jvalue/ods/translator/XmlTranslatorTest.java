@@ -20,55 +20,32 @@ package integration.org.jvalue.ods.translator;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import org.junit.Before;
 import org.junit.Test;
+import org.jvalue.ods.data.DummyDataSource;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.translator.Translator;
 import org.jvalue.ods.translator.TranslatorFactory;
-import org.jvalue.ods.utils.DummyDataSource;
 
-/**
- * The Class XmlTranslatorTest.
- */
+
 public class XmlTranslatorTest {
 
-	private Translator translator;
-
-	/**
-	 * Sets the up.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-		translator = TranslatorFactory.getXmlTranslator();
-		assertNotNull(translator);
-	}
-
-	/**
-	 * Test Translate.
-	 */
 	@Test
 	public void testTranslate() {
-		GenericEntity gv = translator.translate(DummyDataSource.newInstance("osm", "/nbgcity.osm"));
+		Translator translator = TranslatorFactory.getXmlTranslator(
+				DummyDataSource.newInstance("osm", "/nbgcity.osm"));
+
+		GenericEntity gv = translator.translate();
 		assertNotNull(gv);
 	}
 
-	/**
-	 * Test Translate not existing file.
-	 */
+
 	@Test
 	public void testTranslateNotExistingFile() {
-		GenericEntity gv = translator.translate(DummyDataSource.newInstance("notExistingFile", "NotExistingFile"));
+		Translator translator = TranslatorFactory.getXmlTranslator(
+				DummyDataSource.newInstance("osm", "NotExistingFile"));
+
+		GenericEntity gv = translator.translate();
 		assertNull(gv);
 	}
 
-	/**
-	 * Test Translate null source.
-	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testTranslateNullSource() {
-		translator.translate(null);
-	}
 }

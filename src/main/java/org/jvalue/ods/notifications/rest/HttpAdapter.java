@@ -19,7 +19,7 @@ package org.jvalue.ods.notifications.rest;
 
 import java.util.Set;
 
-import org.jvalue.ods.notifications.RestAdapter;
+import org.jvalue.ods.notifications.clients.ClientFactory;
 import org.jvalue.ods.notifications.clients.HttpClient;
 import org.restlet.Request;
 
@@ -32,11 +32,11 @@ final class HttpAdapter extends RestAdapter<HttpClient> {
 		PARAM_SEND_DATA = "sendData";
 
 	@Override
-	protected HttpClient toClient(Request request, String regId, String source) {
+	protected HttpClient toClient(Request request, String source) {
 		String url = getParameter(request, PARAM_URL);
 		String param = getParameter(request, PARAM_PARAM);
 		boolean sendData = Boolean.valueOf(getParameter(request, PARAM_SEND_DATA));
-		return new HttpClient(regId, source, url, param, sendData);
+		return ClientFactory.newHttpClient(source, url, param, sendData);
 	}
 
 

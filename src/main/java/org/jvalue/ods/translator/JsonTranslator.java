@@ -20,8 +20,8 @@ package org.jvalue.ods.translator;
 import java.io.IOException;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.GenericDataUtils;
+import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.data.valuetypes.ListComplexValueType;
@@ -29,6 +29,7 @@ import org.jvalue.ods.data.valuetypes.MapComplexValueType;
 import org.jvalue.ods.data.valuetypes.SimpleValueType;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.schema.SchemaManager;
+import org.jvalue.ods.utils.HttpUtils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,15 +37,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 final class JsonTranslator extends Translator {
 
-	@Override
-	public GenericEntity translate(DataSource dataSource) {
-		if ((dataSource == null) || (dataSource.getUrl() == null))
-			throw new IllegalArgumentException("source is null");
+	public JsonTranslator(DataSource source) {
+		super(source);
+	}
 
-		HttpReader httpAdapter = new HttpReader(dataSource.getUrl());
+
+	@Override
+	public GenericEntity translate() {
+
 		JsonNode rootNode = null;
 		try {
-			String json = httpAdapter.read("UTF-8");
+			String json = HttpUtils.readUrl(dataSource.getUrl(), "UTF-8");
 
 			ObjectMapper mapper = new ObjectMapper();
 			rootNode = mapper.readTree(json);
@@ -90,7 +93,7 @@ final class JsonTranslator extends Translator {
 	 */
 	private boolean isClassOf(GenericValueType genericObjectType, Class<?> c) {
 		boolean result = genericObjectType.getClass().equals(c);
-		if (result == false) {
+		if (!result) {
 			String error = "Validation error: Expected: "
 					+ genericObjectType.getClass().getName() + " Actual: "
 					+ c.getClass().getName();

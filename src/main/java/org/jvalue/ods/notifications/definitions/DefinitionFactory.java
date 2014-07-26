@@ -1,6 +1,5 @@
 package org.jvalue.ods.notifications.definitions;
 
-import org.jvalue.ods.notifications.NotificationDefinition;
 import org.jvalue.ods.notifications.clients.GcmClient;
 import org.jvalue.ods.notifications.clients.HttpClient;
 

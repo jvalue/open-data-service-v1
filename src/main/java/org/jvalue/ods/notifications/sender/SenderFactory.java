@@ -1,10 +1,7 @@
 package org.jvalue.ods.notifications.sender;
 
-import org.jvalue.ods.notifications.ApiKey;
-import org.jvalue.ods.notifications.NotificationSender;
 import org.jvalue.ods.notifications.clients.GcmClient;
 import org.jvalue.ods.notifications.clients.HttpClient;
-import org.jvalue.ods.utils.Assert;
 
 
 public final class SenderFactory {
@@ -16,9 +13,8 @@ public final class SenderFactory {
 	private static HttpSender restSender;
 
 
-	public static NotificationSender<GcmClient> getGcmSender(ApiKey apiKey) {
-		Assert.assertNotNull(apiKey);
-		if (gcmSender == null) gcmSender = new GcmSender(apiKey);
+	public static NotificationSender<GcmClient> getGcmSender() {
+		if (gcmSender == null) gcmSender = new GcmSender("/googleApi.key");
 		return gcmSender;
 	}
 
