@@ -44,8 +44,8 @@ import org.jvalue.ods.qa.PegelOnlineQualityAssurance;
 import org.jvalue.si.QuantityUnitType;
 import org.jvalue.si.SiUnit;
 
-
-public final class CombineSourceFilter implements Filter<GenericEntity, GenericEntity> {
+public final class CombineSourceFilter implements
+		Filter<GenericEntity, GenericEntity> {
 
 	@Override
 	public GenericEntity filter(GenericEntity data) {
@@ -56,6 +56,10 @@ public final class CombineSourceFilter implements Filter<GenericEntity, GenericE
 		// }
 		// TODO
 
+		if (data == null) {
+			throw new IllegalArgumentException();
+		}
+
 		Map<String, ValueType<?>> valueTypes = new HashMap<>();
 		valueTypes.put("waterLevelTrend", createWaterLevelTrendType());
 		valueTypes.put("waterLevel", createWaterLevelType());
@@ -65,7 +69,6 @@ public final class CombineSourceFilter implements Filter<GenericEntity, GenericE
 
 		MapComplexValueType sourceCoordinateStructure = createSourceCoordinateStructure();
 		MapComplexValueType destinationCoordinateStructure = createDestinationCoordinateStructure();
-
 
 		List<Serializable> improvedObjects = new LinkedList<Serializable>();
 		ListObject oldObjects = (ListObject) data;
@@ -80,8 +83,7 @@ public final class CombineSourceFilter implements Filter<GenericEntity, GenericE
 
 			MapObject finalMo = (MapObject) gv;
 			if (!finalMo.getMap().containsKey("dataStatus")) {
-				finalMo.getMap().put("dataStatus",
-					new BaseObject("improved"));
+				finalMo.getMap().put("dataStatus", new BaseObject("improved"));
 			}
 
 			improvedObjects.add(gv);
@@ -91,7 +93,6 @@ public final class CombineSourceFilter implements Filter<GenericEntity, GenericE
 
 		return new ListObject(improvedObjects);
 	}
-
 
 	private void traverseSchema(GenericValueType sourceStructure,
 			Serializable serializable, Map<String, Serializable> map) {
@@ -123,7 +124,6 @@ public final class CombineSourceFilter implements Filter<GenericEntity, GenericE
 
 		}
 	}
-
 
 	private void insertCombinedValue(Serializable serializable, MapObject mv,
 			GenericValueType destinationStructure) {
@@ -177,7 +177,6 @@ public final class CombineSourceFilter implements Filter<GenericEntity, GenericE
 
 	}
 
-
 	private static MapComplexValueType createSourceCoordinateStructure() {
 
 		Map<String, GenericValueType> station = new HashMap<String, GenericValueType>();
@@ -189,7 +188,6 @@ public final class CombineSourceFilter implements Filter<GenericEntity, GenericE
 		return stationSchema;
 	}
 
-
 	private static MapComplexValueType createDestinationCoordinateStructure() {
 
 		Map<String, GenericValueType> coordinate = new HashMap<String, GenericValueType>();
@@ -200,7 +198,6 @@ public final class CombineSourceFilter implements Filter<GenericEntity, GenericE
 
 		return coordinateSchema;
 	}
-
 
 	private static EnumType createWaterLevelTrendType() {
 		ExactValueRestriction<String> a = new ExactValueRestriction<String>(
@@ -214,7 +211,6 @@ public final class CombineSourceFilter implements Filter<GenericEntity, GenericE
 		return trendType;
 	}
 
-
 	private static QuantityUnitType createWaterLevelType() {
 
 		RangeBound<Double> low = new RangeBound<Double>(0.0);
@@ -223,7 +219,6 @@ public final class CombineSourceFilter implements Filter<GenericEntity, GenericE
 		return new QuantityUnitType(range, SiUnit.m);
 	}
 
-
 	private static QuantityUnitType createTemperatureType() {
 
 		RangeBound<Double> low = new RangeBound<Double>(0.0);
@@ -231,7 +226,6 @@ public final class CombineSourceFilter implements Filter<GenericEntity, GenericE
 		Range<Double> range = new Range<Double>(low, high);
 		return new QuantityUnitType(range, SiUnit.K);
 	}
-
 
 	private static QuantityUnitType createElectricalConductivityType() {
 
