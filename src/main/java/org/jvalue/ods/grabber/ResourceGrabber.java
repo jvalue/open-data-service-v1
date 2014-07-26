@@ -18,31 +18,29 @@
 package org.jvalue.ods.grabber;
 
 import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.filter.Filter;
-import org.w3c.dom.Document;
+import org.jvalue.ods.logger.Logging;
 
-import com.fasterxml.jackson.databind.JsonNode;
+final class ResourceGrabber extends Grabber<File> {
 
-
-public final class GrabberFactory {
-
-	private GrabberFactory() { }
-
-
-	public static Filter<Void, Document> getXmlGrabber(DataSource source) {
-		return new XmlGrabber(source);
+	public ResourceGrabber(DataSource source) {
+		super(source);
 	}
 
 
-	public static Filter<Void, JsonNode> getJsonGrabber(DataSource source) {
-		return new JsonGrabber(source);
-	}
-
-
-	public static Filter<Void, File> getResourceGrabber(DataSource source) {
-		return new ResourceGrabber(source);
+	@Override
+	protected File grabSource() {
+		File file = null;
+		URL sourceUrl = getClass().getResource(dataSource.getUrl());
+		try {
+			file = new File(sourceUrl.toURI());
+		} catch (URISyntaxException e) {
+			Logging.error(this.getClass(), e.getMessage());
+		}
+		return file;
 	}
 
 }

@@ -18,24 +18,16 @@
 package org.jvalue.ods.configuration;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.Serializable;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.generic.BaseObject;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
-import org.jvalue.ods.logger.Logging;
-import org.jvalue.ods.schema.SchemaManager;
-import org.jvalue.ods.translator.Translator;
-import org.jvalue.ods.utils.HttpUtils;
+import org.jvalue.ods.filter.Filter;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
@@ -49,65 +41,11 @@ import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 import org.openstreetmap.osmosis.xml.common.CompressionMethod;
 import org.openstreetmap.osmosis.xml.v0_6.XmlReader;
 
-final class OsmTranslator extends Translator {
-
-	private ListObject lv = new ListObject();
-
-
-	public OsmTranslator(DataSource source) {
-		super(source);
-	}
-
+final class OsmTranslator implements Filter<File, GenericEntity> {
 
 	@Override
-	public GenericEntity translate() {
-
-		String url = dataSource.getUrl();
-
-		if (url == null || url.length() == 0) {
-			throw new IllegalArgumentException("source is empty");
-		}
-
-		File file = null;
-
-		if (!url.startsWith("http")) {
-			URL sourceUrl = getClass().getResource(url);
-			if (sourceUrl == null)
-				return null;
-			try {
-				file = new File(sourceUrl.toURI());
-			} catch (URISyntaxException e) {
-				Logging.error(this.getClass(), e.getMessage());
-				e.printStackTrace();
-				return null;
-			}
-		} else {
-
-			PrintWriter out = null;
-
-			try {
-				Logging.info(this.getClass(), "Opening: " + url);
-				String data = HttpUtils.readUrl(url, "UTF-8");
-
-				// ToDo: Nicht thread-sicher, Problem bei 2 parallelen Anfragen
-				// Schreiben in Dateien nicht ohne weiteres moeglich in tomcat
-				File tmpFile = new File("tmp.txt");
-				if (tmpFile.exists()) {
-					tmpFile.delete();
-				}
-				out = new PrintWriter("tmp.txt");
-				out.println(data);
-				file = new File("tmp.txt");
-			} catch (IOException e) {
-				Logging.error(this.getClass(), e.getMessage());
-				// maybe throw another exception here instead of returning null
-				return null;
-			} finally {
-				if (out != null) {
-					out.close();
-				}
-			}
-		}
+	public GenericEntity filter(File file) {
+		final ListObject lv = new ListObject();
 
 		Sink sinkImplementation = new Sink() {
 			public void process(EntityContainer entityContainer) {
@@ -126,15 +64,11 @@ final class OsmTranslator extends Translator {
 				// }
 			}
 
-			public void release() {
-			}
+			public void release() { }
 
-			public void complete() {
-			}
+			public void complete() { }
 
-			public void initialize(Map<String, Object> metaData) {
-
-			}
+			public void initialize(Map<String, Object> metaData) { }
 		};
 
 		RunnableSource reader = new XmlReader(file, false,
@@ -154,26 +88,10 @@ final class OsmTranslator extends Translator {
 			}
 		}
 
-		if (file.exists() && url.startsWith("http")) {
-			file.delete();
-		}
-
-		if (dataSource.getDataSourceSchema() != null) {
-			if (!SchemaManager.validateGenericValusFitsObjectType(lv,
-					dataSource.getDataSourceSchema()))
-				return null;
-		}
-
 		return lv;
 	}
 
-	/**
-	 * Convert relation to generic value.
-	 * 
-	 * @param relation
-	 *            the relation
-	 * @return the map value
-	 */
+
 	private MapObject convertRelationToGenericValue(Relation relation) {
 		MapObject mv = new MapObject();
 		Map<String, Serializable> map = mv.getMap();
@@ -212,13 +130,7 @@ final class OsmTranslator extends Translator {
 		return mv;
 	}
 
-	/**
-	 * Convert way to generic value.
-	 * 
-	 * @param w
-	 *            the w
-	 * @return the map value
-	 */
+
 	private MapObject convertWayToGenericValue(Way w) {
 		MapObject mv = new MapObject();
 		Map<String, Serializable> map = mv.getMap();
@@ -247,13 +159,7 @@ final class OsmTranslator extends Translator {
 		return mv;
 	}
 
-	/**
-	 * Convert node to generic value.
-	 * 
-	 * @param n
-	 *            the n
-	 * @return the map value
-	 */
+
 	private MapObject convertNodeToGenericValue(Node n) {
 		MapObject mv = new MapObject();
 		Map<String, Serializable> map = mv.getMap();
