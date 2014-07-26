@@ -20,7 +20,6 @@ package org.jvalue.ods.grabber;
 import java.io.File;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.filter.Filter;
 import org.w3c.dom.Document;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -31,22 +30,22 @@ public final class GrabberFactory {
 	private GrabberFactory() { }
 
 
-	public static Filter<Void, Document> getXmlGrabber(DataSource source) {
+	public static Grabber<Document> getXmlGrabber(DataSource source) {
 		return new XmlGrabber(source);
 	}
 
 
-	public static Filter<Void, JsonNode> getJsonGrabber(DataSource source) {
+	public static Grabber<JsonNode> getJsonGrabber(DataSource source) {
 		return new JsonGrabber(source);
 	}
 
 
-	public static Filter<Void, File> getResourceGrabber(DataSource source) {
+	public static Grabber<File> getResourceGrabber(DataSource source) {
 		return new ResourceGrabber(source);
 	}
 
 
-	public static Filter<Void, String> getHttpGrabber(DataSource source, String encoding) {
+	public static Grabber<String> getHttpGrabber(DataSource source, String encoding) {
 		return new HttpGrabber(source, encoding);
 	}
 
