@@ -4,6 +4,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+import org.jvalue.ods.notifications.sender.GcmApiKeyHelper;
 
 
 public final class NotificationDefinitionTest {
@@ -11,7 +12,15 @@ public final class NotificationDefinitionTest {
 	@Test
 	public final void testGcmDefinition() {
 
-		testDefinition(new GcmDefinition());
+		NotificationDefinition<?> definition = new GcmDefinition();
+		assertNotNull(definition.getRestName());
+		assertTrue(definition.getRestName().startsWith("/"));
+		assertNotNull(definition.getRestAdapter());
+		try {
+			assertNotNull(definition.getNotificationSender());
+		} catch (Exception e) {
+			assertTrue(GcmApiKeyHelper.isApiKeyPresent());
+		}
 
 	}
 
@@ -19,13 +28,7 @@ public final class NotificationDefinitionTest {
 	@Test
 	public final void testHttpDefinition() {
 
-		testDefinition(new HttpDefinition());
-
-	}
-
-
-	private void testDefinition(NotificationDefinition<?> definition) {
-
+		NotificationDefinition<?> definition = new HttpDefinition();
 		assertNotNull(definition.getRestName());
 		assertTrue(definition.getRestName().startsWith("/"));
 		assertNotNull(definition.getRestAdapter());

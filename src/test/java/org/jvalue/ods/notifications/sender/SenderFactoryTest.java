@@ -11,9 +11,13 @@ public final class SenderFactoryTest {
 	@Test
 	public void testGet() {
 
-		NotificationSender<?> sender1 = SenderFactory.getGcmSender();
-		assertNotNull(sender1);
-		assertTrue(sender1 == SenderFactory.getGcmSender());
+		try {
+			NotificationSender<?> sender1 = SenderFactory.getGcmSender();
+			assertNotNull(sender1);
+			assertTrue(sender1 == SenderFactory.getGcmSender());
+		} catch (Exception e) {
+			assertTrue(GcmApiKeyHelper.isApiKeyPresent());
+		}
 
 		NotificationSender<?> sender2 = SenderFactory.getRestSender();
 		assertNotNull(sender2);

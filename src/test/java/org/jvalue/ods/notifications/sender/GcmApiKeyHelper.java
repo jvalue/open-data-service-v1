@@ -2,7 +2,7 @@ package org.jvalue.ods.notifications.sender;
 
 
 
-final class GcmApiKeyHelper {
+public final class GcmApiKeyHelper {
 
 	private  GcmApiKeyHelper() { }
 
