@@ -37,7 +37,7 @@ final class JsonGrabber extends Grabber<JsonNode> {
 
 
 	@Override
-	protected JsonNode grabSource() {
+	public JsonNode grabSource() {
 		JsonNode rootNode = null;
 		try {
 			String json = HttpUtils.readUrl(dataSource.getUrl(), "UTF-8");

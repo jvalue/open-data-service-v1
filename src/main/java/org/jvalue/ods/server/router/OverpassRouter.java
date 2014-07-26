@@ -51,7 +51,7 @@ class OverpassRouter implements Router<Restlet> {
 						DummyDataSource.newInstance( 
 							"ru-rambler-osm-overpass",
 							"http://overpass.osm.rambler.ru/cgi/interpreter?data=[out:json];node[name%3D"
-							+ location + "]%3Bout%3B")).filter(null);
+							+ location + "]%3Bout%3B")).grabSource();
 				GenericEntity ret = TranslatorFactory.getJsonTranslator().translate(jsonNode);
 				return RestletResult.newSuccessResult(mapper.valueToTree(ret));
 			}

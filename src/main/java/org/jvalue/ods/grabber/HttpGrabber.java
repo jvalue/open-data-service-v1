@@ -37,7 +37,7 @@ final class HttpGrabber extends Grabber<String> {
 
 
 	@Override
-	protected String grabSource() {
+	public String grabSource() {
 		try {
 			return HttpUtils.readUrl(dataSource.getUrl(), encoding);
 		} catch (IOException io) {

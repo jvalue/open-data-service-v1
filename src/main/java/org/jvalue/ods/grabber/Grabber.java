@@ -38,6 +38,6 @@ public abstract class Grabber<T> implements Filter<Void, T> {
 	}
 
 
-	protected abstract T grabSource();
+	public abstract T grabSource();
 
 }

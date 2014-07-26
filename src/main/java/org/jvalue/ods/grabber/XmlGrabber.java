@@ -23,7 +23,7 @@ final class XmlGrabber extends Grabber<Document> {
 
 
 	@Override
-	protected Document grabSource() {
+	public Document grabSource() {
 
 		try {
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory

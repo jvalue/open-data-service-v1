@@ -117,7 +117,7 @@ class RoutesRouter implements Router<Restlet> {
 				DataSource ds = DummyDataSource.newInstance(
 						"org-yournavigation", source);
 
-				Document xmlDocument = GrabberFactory.getXmlGrabber(ds).filter(null);
+				Document xmlDocument = GrabberFactory.getXmlGrabber(ds).grabSource();
 				GenericEntity gv = TranslatorFactory.getXmlTranslator().translate(xmlDocument);
 				return RestletResult.newSuccessResult(mapper.valueToTree(gv));
 			}

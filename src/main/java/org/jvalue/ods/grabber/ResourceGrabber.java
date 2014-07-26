@@ -32,7 +32,7 @@ final class ResourceGrabber extends Grabber<File> {
 
 
 	@Override
-	protected File grabSource() {
+	public File grabSource() {
 		File file = null;
 		URL sourceUrl = getClass().getResource(dataSource.getUrl());
 		try {
