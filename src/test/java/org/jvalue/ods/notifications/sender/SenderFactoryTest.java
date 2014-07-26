@@ -1,5 +1,6 @@
 package org.jvalue.ods.notifications.sender;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -16,7 +17,7 @@ public final class SenderFactoryTest {
 			assertNotNull(sender1);
 			assertTrue(sender1 == SenderFactory.getGcmSender());
 		} catch (Exception e) {
-			assertTrue(GcmApiKeyHelper.isApiKeyPresent());
+			assertFalse(GcmApiKeyHelper.isApiKeyPresent());
 		}
 
 		NotificationSender<?> sender2 = SenderFactory.getRestSender();

@@ -1,5 +1,6 @@
 package org.jvalue.ods.notifications.definitions;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -19,7 +20,7 @@ public final class NotificationDefinitionTest {
 		try {
 			assertNotNull(definition.getNotificationSender());
 		} catch (Exception e) {
-			assertTrue(GcmApiKeyHelper.isApiKeyPresent());
+			assertFalse(GcmApiKeyHelper.isApiKeyPresent());
 		}
 
 	}
