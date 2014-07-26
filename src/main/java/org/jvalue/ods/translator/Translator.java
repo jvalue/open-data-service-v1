@@ -17,18 +17,18 @@
  */
 package org.jvalue.ods.translator;
 
-import org.jvalue.ods.data.generic.GenericDataUtils;
 import org.jvalue.ods.data.generic.GenericEntity;
+import org.jvalue.ods.filter.Filter;
 
-import com.fasterxml.jackson.databind.JsonNode;
 
-
-final class JsonTranslator extends Translator<JsonNode> {
+public abstract class Translator<T> implements Filter<T, GenericEntity> {
 
 	@Override
-	public GenericEntity translate(JsonNode jsonNode) {
-		GenericEntity gv = GenericDataUtils.convertFromJson(jsonNode);
-		return gv;
+	public final GenericEntity filter(T value) {
+		return translate(value);
 	}
+
+
+	public abstract GenericEntity translate(T value);
 
 }

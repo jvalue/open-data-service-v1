@@ -39,13 +39,13 @@ import org.jvalue.ods.data.objecttypes.ListObjectType;
 import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.data.valuetypes.SimpleValueType;
-import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.translator.Translator;
 import org.jvalue.ods.utils.Assert;
 
 
 
-final class PegelPortalMvTranslator implements Filter<String, GenericEntity> {
+final class PegelPortalMvTranslator extends Translator<String> {
 
 	private static final Map<String, Integer> tableMapping = new HashMap<String, Integer>();
 	static {
@@ -67,7 +67,7 @@ final class PegelPortalMvTranslator implements Filter<String, GenericEntity> {
 
 
 	@Override
-	public GenericEntity filter(String httpContent) {
+	public GenericEntity translate(String httpContent) {
 		Document doc = Jsoup.parse(httpContent);
 
 

@@ -17,8 +17,6 @@
  */
 package org.jvalue.ods.translator;
 
-import org.jvalue.ods.data.generic.GenericEntity;
-import org.jvalue.ods.filter.Filter;
 import org.w3c.dom.Document;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -29,12 +27,12 @@ public final class TranslatorFactory {
 	private TranslatorFactory() { }
 
 
-	public static Filter<Document, GenericEntity> getXmlTranslator() {
+	public static Translator<Document> getXmlTranslator() {
 		return new XmlTranslator();
 	}
 
 
-	public static Filter<JsonNode, GenericEntity> getJsonTranslator() {
+	public static Translator<JsonNode> getJsonTranslator() {
 		return new JsonTranslator();
 	}
 

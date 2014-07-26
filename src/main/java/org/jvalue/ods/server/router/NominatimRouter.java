@@ -56,7 +56,7 @@ class NominatimRouter implements Router<Restlet> {
 									+ (String) request.getAttributes().get(
 											"location") + "&format=json"))
 					.filter(null);
-				GenericEntity ret = TranslatorFactory.getJsonTranslator().filter(jsonNode);
+				GenericEntity ret = TranslatorFactory.getJsonTranslator().translate(jsonNode);
 
 				return RestletResult.newSuccessResult(mapper.valueToTree(ret));
 			}
@@ -77,7 +77,7 @@ class NominatimRouter implements Router<Restlet> {
 								"http://nominatim.openstreetmap.org/reverse?format=json&lat="
 										+ latitude + "&lon=" + longitude))
 					.filter(null);
-				GenericEntity ret = TranslatorFactory.getJsonTranslator().filter(jsonNode);
+				GenericEntity ret = TranslatorFactory.getJsonTranslator().translate(jsonNode);
 
 				return RestletResult.newSuccessResult(mapper.valueToTree(ret));
 			}

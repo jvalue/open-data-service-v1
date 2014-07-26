@@ -27,7 +27,7 @@ import org.jvalue.ods.data.generic.BaseObject;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
-import org.jvalue.ods.filter.Filter;
+import org.jvalue.ods.translator.Translator;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
@@ -41,10 +41,10 @@ import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 import org.openstreetmap.osmosis.xml.common.CompressionMethod;
 import org.openstreetmap.osmosis.xml.v0_6.XmlReader;
 
-final class OsmTranslator implements Filter<File, GenericEntity> {
+final class OsmTranslator extends Translator<File> {
 
 	@Override
-	public GenericEntity filter(File file) {
+	public GenericEntity translate(File file) {
 		final ListObject lv = new ListObject();
 
 		Sink sinkImplementation = new Sink() {

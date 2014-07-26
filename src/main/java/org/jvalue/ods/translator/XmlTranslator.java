@@ -4,17 +4,16 @@ import org.jvalue.ods.data.generic.BaseObject;
 import org.jvalue.ods.data.generic.GenericEntity;
 import org.jvalue.ods.data.generic.ListObject;
 import org.jvalue.ods.data.generic.MapObject;
-import org.jvalue.ods.filter.Filter;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 
-final class XmlTranslator implements Filter<Document, GenericEntity> {
+final class XmlTranslator extends Translator<Document> {
 
 	@Override
-	public GenericEntity filter(Document xmlDocument) {
+	public GenericEntity translate(Document xmlDocument) {
 		Node rootNode = xmlDocument.getFirstChild();
 
 		GenericEntity gv = new MapObject();
