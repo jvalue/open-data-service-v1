@@ -28,6 +28,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.restlet.data.Status;
+
 public final class RestCall {
 
 	public enum RequestType {
@@ -118,11 +120,8 @@ public final class RestCall {
 			}
 
 
-			int responseCode = conn.getResponseCode();
-			if (responseCode != HttpURLConnection.HTTP_CREATED
-					&& responseCode != HttpURLConnection.HTTP_OK
-					&& responseCode != HttpURLConnection.HTTP_ACCEPTED)
-				throw new RestException(responseCode);
+			Status status = Status.valueOf(conn.getResponseCode());
+			if (status.isError()) throw new RestException(status);
 
 			dataReader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			StringBuilder dataBuilder = new StringBuilder();
