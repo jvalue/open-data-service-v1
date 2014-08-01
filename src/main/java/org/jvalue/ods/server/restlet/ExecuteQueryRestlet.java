@@ -17,6 +17,8 @@
  */
 package org.jvalue.ods.server.restlet;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 
 import org.jvalue.ods.db.DbAccessor;
@@ -57,8 +59,13 @@ public class ExecuteQueryRestlet extends BaseRestlet {
 		dbAccessor.connect();
 
 		String attributeValue = null;
-		if (attributeName != null) 
-			attributeValue = request.getAttributes().get(attributeName).toString();
+		if (attributeName != null) {
+			try {
+				attributeValue = URLDecoder.decode(request.getAttributes().get(attributeName).toString(), "UTF-8");
+			} catch (UnsupportedEncodingException uee) {
+				throw new RuntimeException(uee);
+			}
+		}
 
 		List<JsonNode> nodes = dbAccessor.executeDocumentQuery(
 				designDocId, 
