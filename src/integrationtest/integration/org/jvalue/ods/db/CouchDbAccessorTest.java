@@ -20,15 +20,16 @@ package integration.org.jvalue.ods.db;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.ektorp.DocumentNotFoundException;
 import org.ektorp.support.CouchDbDocument;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.jvalue.ods.data.generic.MapObject;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.exception.DbException;
@@ -310,7 +311,7 @@ public class CouchDbAccessorTest {
 	public void testExecuteBulkWithoutConnect() {
 		couchDbAdapter = DbFactory.createDbAccessor(testDbName);
 		assertNotNull(couchDbAdapter);
-		couchDbAdapter.executeBulk(new LinkedList<MapObject>(), null);
+		couchDbAdapter.executeBulk(new LinkedList<Map<String, Object>>(), null);
 	}
 
 	/**
@@ -322,10 +323,10 @@ public class CouchDbAccessorTest {
 		assertNotNull(couchDbAdapter);
 		couchDbAdapter.connect();
 
-		List<MapObject> list = new LinkedList<>();
-		list.add(new MapObject());
-		list.add(new MapObject());
-		list.add(new MapObject());
+		List<Map<String, Object>> list = new LinkedList<>();
+		list.add(new HashMap<String, Object>());
+		list.add(new HashMap<String, Object>());
+		list.add(new HashMap<String, Object>());
 
 		couchDbAdapter.executeBulk(list, null);
 		couchDbAdapter.deleteDatabase();
@@ -337,10 +338,10 @@ public class CouchDbAccessorTest {
 	@Test
 	public void testExecuteBulk() {
 
-		List<MapObject> list = new LinkedList<>();
-		list.add(new MapObject());
-		list.add(new MapObject());
-		list.add(new MapObject());
+		List<Map<String, Object>> list = new LinkedList<>();
+		list.add(new HashMap<String, Object>());
+		list.add(new HashMap<String, Object>());
+		list.add(new HashMap<String, Object>());
 
 		couchDbAdapter.executeBulk(list, null);
 	}
