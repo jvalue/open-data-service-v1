@@ -24,10 +24,10 @@ import java.util.List;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.server.utils.RestletResult;
 import org.restlet.Request;
+import org.restlet.data.Status;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 
 public class ExecuteQueryRestlet extends BaseRestlet {
 
@@ -38,12 +38,8 @@ public class ExecuteQueryRestlet extends BaseRestlet {
 	private final String attributeName;
 	private final ObjectMapper mapper = new ObjectMapper();
 
-
-	private ExecuteQueryRestlet(
-			DbAccessor<JsonNode> dbAccessor,
-			String designDocId, 
-			String viewName,
-			boolean fetchAllDbEntries,
+	private ExecuteQueryRestlet(DbAccessor<JsonNode> dbAccessor,
+			String designDocId, String viewName, boolean fetchAllDbEntries,
 			String attributeName) {
 
 		this.dbAccessor = dbAccessor;
@@ -53,7 +49,6 @@ public class ExecuteQueryRestlet extends BaseRestlet {
 		this.attributeName = attributeName;
 	}
 
-
 	@Override
 	protected RestletResult doGet(Request request) {
 		dbAccessor.connect();
@@ -61,34 +56,40 @@ public class ExecuteQueryRestlet extends BaseRestlet {
 		String attributeValue = null;
 		if (attributeName != null) {
 			try {
-				attributeValue = URLDecoder.decode(request.getAttributes().get(attributeName).toString(), "UTF-8");
+				attributeValue = URLDecoder.decode(
+						request.getAttributes().get(attributeName).toString(),
+						"UTF-8");
 			} catch (UnsupportedEncodingException uee) {
 				throw new RuntimeException(uee);
 			}
 		}
 
-		List<JsonNode> nodes = dbAccessor.executeDocumentQuery(
-				designDocId, 
-				viewName, 
-				attributeValue);
+		List<JsonNode> nodes = dbAccessor.executeDocumentQuery(designDocId,
+				viewName, attributeValue);
 
 		JsonNode resultData;
 
-		if (fetchAllDbEntries) resultData = mapper.valueToTree(nodes);
-		else resultData = nodes.get(0);
+		if (fetchAllDbEntries) {
+			resultData = mapper.valueToTree(nodes);
+		} else if (!nodes.isEmpty()) {
+			resultData = nodes.get(0);
+		} else {
+			return RestletResult.newErrorResult(Status.CLIENT_ERROR_NOT_FOUND,
+					"No data found.");
+		}
 
 		return RestletResult.newSuccessResult(resultData);
 	}
 
-
 	public static final class Builder {
-		
+
 		private final DbAccessor<JsonNode> dbAccessor;
 		private final String designDocId, viewName;
 		private boolean fetchAllDbEntries = true;
 		private String attributeName = null;
 
-		public Builder(DbAccessor<JsonNode> dbAccessor, String designDocId, String viewName) {
+		public Builder(DbAccessor<JsonNode> dbAccessor, String designDocId,
+				String viewName) {
 			if (dbAccessor == null || designDocId == null || viewName == null)
 				throw new NullPointerException("params cannot be null");
 			this.dbAccessor = dbAccessor;
@@ -96,28 +97,27 @@ public class ExecuteQueryRestlet extends BaseRestlet {
 			this.viewName = viewName;
 		}
 
-
-		/** Whether all entries should be fetched from the db. If false only
-		* the first entry will be fetched. */
+		/**
+		 * Whether all entries should be fetched from the db. If false only the
+		 * first entry will be fetched.
+		 */
 		public Builder fetchAllDbEntries(boolean fetchAllDbEntries) {
 			this.fetchAllDbEntries = fetchAllDbEntries;
 			return this;
 		}
 
-
-		/** Set this value if you wish to specify a attribute value to be used during querying. */
+		/**
+		 * Set this value if you wish to specify a attribute value to be used
+		 * during querying.
+		 */
 		public Builder attributeName(String attributeName) {
 			this.attributeName = attributeName;
 			return this;
 		}
 
 		public ExecuteQueryRestlet build() {
-			return new ExecuteQueryRestlet(
-					dbAccessor,
-					designDocId,
-					viewName,
-					fetchAllDbEntries,
-					attributeName);
+			return new ExecuteQueryRestlet(dbAccessor, designDocId, viewName,
+					fetchAllDbEntries, attributeName);
 		}
 	}
 }
