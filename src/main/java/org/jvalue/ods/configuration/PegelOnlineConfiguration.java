@@ -45,9 +45,7 @@ import org.jvalue.ods.translator.TranslatorFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-
 final class PegelOnlineConfiguration implements Configuration {
-
 
 	@Override
 	public DataSource getDataSource() {
@@ -90,7 +88,8 @@ final class PegelOnlineConfiguration implements Configuration {
 			currentMeasurement.put("stateMnwMhw", VALUETYPE_STRING);
 			currentMeasurement.put("stateNswHsw", VALUETYPE_STRING);
 			MapObjectType currentMeasurementGot = new MapObjectType(
-					"de-pegelonline-currentMeasurement", currentMeasurement, null);
+					"de-pegelonline-currentMeasurement", currentMeasurement,
+					null);
 
 			Map<String, GenericValueType> gaugeZero = new HashMap<String, GenericValueType>();
 			gaugeZero.put("unit", VALUETYPE_STRING);
@@ -104,8 +103,8 @@ final class PegelOnlineConfiguration implements Configuration {
 			comment.put("shortDescription", VALUETYPE_STRING);
 			comment.put("longDescription", VALUETYPE_STRING);
 
-			MapObjectType commentGot = new MapObjectType("de-pegelonline-comment",
-					comment, null);
+			MapObjectType commentGot = new MapObjectType(
+					"de-pegelonline-comment", comment, null);
 
 			Map<String, GenericValueType> timeSeriesAttributes = new HashMap<String, GenericValueType>();
 			timeSeriesAttributes.put("shortname", VALUETYPE_STRING);
@@ -126,7 +125,8 @@ final class PegelOnlineConfiguration implements Configuration {
 			characteristicValuesAttributes.put("unit", VALUETYPE_STRING);
 			characteristicValuesAttributes.put("value", VALUETYPE_NUMBER);
 			characteristicValuesAttributes.put("validFrom", VALUETYPE_STRING);
-			characteristicValuesAttributes.put("timespanStart", VALUETYPE_STRING);
+			characteristicValuesAttributes.put("timespanStart",
+					VALUETYPE_STRING);
 			characteristicValuesAttributes.put("timespanEnd", VALUETYPE_STRING);
 
 			Map<String, ObjectType> characteristicValuesReferencedObjects = new HashMap<String, ObjectType>();
@@ -134,7 +134,8 @@ final class PegelOnlineConfiguration implements Configuration {
 			List<GenericValueType> occurrences = new LinkedList<GenericValueType>();
 			occurrences.add(VALUETYPE_STRING);
 
-			ListObjectType occurrencesType = new ListObjectType(occurrences, null);
+			ListObjectType occurrencesType = new ListObjectType(occurrences,
+					null);
 
 			characteristicValuesReferencedObjects.put("occurrences",
 					occurrencesType);
@@ -147,23 +148,20 @@ final class PegelOnlineConfiguration implements Configuration {
 			List<ObjectType> characteristicValuesTypesList = new LinkedList<>();
 			characteristicValuesTypesList.add(characteristicValuesType);
 
-			ListObjectType characteristicValuesGot = new ListObjectType(
-					null,
+			ListObjectType characteristicValuesGot = new ListObjectType(null,
 					characteristicValuesTypesList);
 
 			timeSeriesReferencedObjects.put("characteristicValues",
 					characteristicValuesGot);
 
 			MapObjectType timeSeriesType = new MapObjectType(
-					"de-pegelonline-timeSeries", 
-					timeSeriesAttributes,
+					"de-pegelonline-timeSeries", timeSeriesAttributes,
 					timeSeriesReferencedObjects);
 
 			List<ObjectType> timeseriesTypesList = new LinkedList<>();
 			timeseriesTypesList.add(timeSeriesType);
 
-			ListObjectType timeSeriesGot = new ListObjectType(
-					null,
+			ListObjectType timeSeriesGot = new ListObjectType(null,
 					timeseriesTypesList);
 
 			Map<String, GenericValueType> stationAttributes = new HashMap<String, GenericValueType>();
@@ -178,7 +176,8 @@ final class PegelOnlineConfiguration implements Configuration {
 			coordinateValues.put("longitude", VALUETYPE_NUMBER);
 			coordinateValues.put("latitude", VALUETYPE_NUMBER);
 
-			MapObjectType coordinateGot = new MapObjectType("de-pegelonline-coordinate", coordinateValues, null);
+			MapObjectType coordinateGot = new MapObjectType(
+					"de-pegelonline-coordinate", coordinateValues, null);
 
 			Map<String, ObjectType> stationReferencedObjects = new HashMap<String, ObjectType>();
 
@@ -197,12 +196,14 @@ final class PegelOnlineConfiguration implements Configuration {
 			Map<String, GenericValueType> restName = new HashMap<String, GenericValueType>();
 			restName.put("stations", VALUETYPE_NULL);
 
-			ObjectType restNameType = new MapObjectType("restName", restName, null);
+			ObjectType restNameType = new MapObjectType("restName", restName,
+					null);
 
 			stationReferencedObjects.put("restName", restNameType);
 
-			MapObjectType stationType = new MapObjectType("de-pegelonline-station",
-					stationAttributes, stationReferencedObjects);
+			MapObjectType stationType = new MapObjectType(
+					"de-pegelonline-station", stationAttributes,
+					stationReferencedObjects);
 
 			dbSchema = stationType;
 		}
@@ -223,7 +224,8 @@ final class PegelOnlineConfiguration implements Configuration {
 			currentMeasurement.put("stateMnwMhw", VALUETYPE_STRING);
 			currentMeasurement.put("stateNswHsw", VALUETYPE_STRING);
 			MapObjectType currentMeasurementGot = new MapObjectType(
-					"de-pegelonline-currentMeasurement", currentMeasurement, null);
+					"de-pegelonline-currentMeasurement", currentMeasurement,
+					null);
 
 			Map<String, GenericValueType> gaugeZero = new HashMap<String, GenericValueType>();
 			gaugeZero.put("unit", VALUETYPE_STRING);
@@ -237,8 +239,8 @@ final class PegelOnlineConfiguration implements Configuration {
 			comment.put("shortDescription", VALUETYPE_STRING);
 			comment.put("longDescription", VALUETYPE_STRING);
 
-			MapObjectType commentGot = new MapObjectType("de-pegelonline-comment",
-					comment, null);
+			MapObjectType commentGot = new MapObjectType(
+					"de-pegelonline-comment", comment, null);
 
 			Map<String, GenericValueType> timeSeriesAttributes = new HashMap<String, GenericValueType>();
 			timeSeriesAttributes.put("shortname", VALUETYPE_STRING);
@@ -259,7 +261,8 @@ final class PegelOnlineConfiguration implements Configuration {
 			characteristicValuesAttributes.put("unit", VALUETYPE_STRING);
 			characteristicValuesAttributes.put("value", VALUETYPE_NUMBER);
 			characteristicValuesAttributes.put("validFrom", VALUETYPE_STRING);
-			characteristicValuesAttributes.put("timespanStart", VALUETYPE_STRING);
+			characteristicValuesAttributes.put("timespanStart",
+					VALUETYPE_STRING);
 			characteristicValuesAttributes.put("timespanEnd", VALUETYPE_STRING);
 
 			Map<String, ObjectType> characteristicValuesReferencedObjects = new HashMap<String, ObjectType>();
@@ -267,7 +270,8 @@ final class PegelOnlineConfiguration implements Configuration {
 			List<GenericValueType> occurrences = new LinkedList<GenericValueType>();
 			occurrences.add(VALUETYPE_STRING);
 
-			ListObjectType occurrencesType = new ListObjectType(occurrences, null);
+			ListObjectType occurrencesType = new ListObjectType(occurrences,
+					null);
 
 			characteristicValuesReferencedObjects.put("occurrences",
 					occurrencesType);
@@ -316,12 +320,14 @@ final class PegelOnlineConfiguration implements Configuration {
 			Map<String, GenericValueType> restName = new HashMap<String, GenericValueType>();
 			restName.put("stations", VALUETYPE_NULL);
 
-			ObjectType restNameType = new MapObjectType("restName", restName, null);
+			ObjectType restNameType = new MapObjectType("restName", restName,
+					null);
 
 			stationReferencedObjects.put("restName", restNameType);
 
-			MapObjectType stationType = new MapObjectType("de-pegelonline-station",
-					stationAttributes, stationReferencedObjects);
+			MapObjectType stationType = new MapObjectType(
+					"de-pegelonline-station", stationAttributes,
+					stationReferencedObjects);
 
 			List<ObjectType> stationList = new LinkedList<ObjectType>();
 			stationList.add(stationType);
@@ -331,18 +337,26 @@ final class PegelOnlineConfiguration implements Configuration {
 
 		// ods views
 		{
-			odsViews.add(new OdsView("_design/pegelonline", "getSingleStation",
-					"function(doc) { if(doc.dataType == 'Station') emit(doc.longname, doc)}"));
+			odsViews.add(new OdsView(
+					"_design/pegelonline",
+					"getSingleStation",
+					"function(doc) { if(doc.dataType == 'Station' && doc.dataQualityStatus == 'improved') emit(doc.longname, doc)}"));
 
 			odsViews.add(new OdsView("_design/pegelonline", "getMetadata",
 					"function(doc) { if(doc.title == 'pegelonline') emit(null, doc)}"));
 
-			odsViews.add(new OdsView("_design/pegelonline", "getAllStationsFlat",
-					"function(doc) { if(doc.dataType == 'Station') emit (null, doc.longname) }"));
-			odsViews.add(new OdsView("_design/pegelonline", "getAllStations",
-					"function(doc) { if(doc.dataType == 'Station')emit (null, doc) }"));
-			odsViews.add(new OdsView("_design/pegelonline", "getStationId",
-					"function(doc) { if(doc.dataType == 'Station') emit (doc.longname, doc._id) }"));
+			odsViews.add(new OdsView(
+					"_design/pegelonline",
+					"getAllStationsFlat",
+					"function(doc) { if(doc.dataType == 'Station' && doc.dataQualityStatus == 'improved') emit (null, doc.longname) }"));
+			odsViews.add(new OdsView(
+					"_design/pegelonline",
+					"getAllStations",
+					"function(doc) { if(doc.dataType == 'Station' && doc.dataQualityStatus == 'improved')emit (null, doc) }"));
+			odsViews.add(new OdsView(
+					"_design/pegelonline",
+					"getStationId",
+					"function(doc) { if(doc.dataType == 'Station' && doc.dataQualityStatus == 'improved') emit (doc.longname, doc._id) }"));
 
 			odsViews.add(new OdsView("_design/pegelonline", "getClassObject",
 					"function(doc) { if(doc.name == 'de-pegelonline-station') emit (null, doc) }"));
@@ -353,21 +367,22 @@ final class PegelOnlineConfiguration implements Configuration {
 					"function(doc) { if(doc.name == 'de-pegelonline-station') emit (null, doc._id) }"));
 
 		}
-		return new DataSource(sourceId, url, sourceSchema, dbSchema, metaData, odsViews);
+		return new DataSource(sourceId, url, sourceSchema, dbSchema, metaData,
+				odsViews);
 	}
 
-
 	@Override
-	public FilterChain<Void,?> getFilterChain(DbAccessor<JsonNode> accessor) {
+	public FilterChain<Void, ?> getFilterChain(DbAccessor<JsonNode> accessor) {
 		DataSource source = getDataSource();
 
-		FilterChain<Void, JsonNode> chain = FilterChain
-			.instance(GrabberFactory.getJsonGrabber(source));
+		FilterChain<Void, JsonNode> chain = FilterChain.instance(GrabberFactory
+				.getJsonGrabber(source));
 		chain.setNextFilter(TranslatorFactory.getJsonTranslator())
-			.setNextFilter(new CombineSourceFilter())
-			.setNextFilter(new RenameSourceFilter())
-			.setNextFilter(new DbInsertionFilter(accessor, source))
-			.setNextFilter(new NotificationFilter(source));
+				.setNextFilter(new DbInsertionFilter(accessor, source))
+				.setNextFilter(new CombineSourceFilter())
+				.setNextFilter(new RenameSourceFilter())
+				.setNextFilter(new DbInsertionFilter(accessor, source))
+				.setNextFilter(new NotificationFilter(source));
 		return chain;
 	}
 

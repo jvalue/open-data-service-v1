@@ -287,6 +287,11 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 					String s = (String) ms.getAttributes().keySet().toArray()[0];
 
 					mv.put("dataType", s);
+					
+					if (!mv.containsKey("dataQualityStatus")) {
+						mv.put("dataQualityStatus", "raw");
+					}
+					
 				} catch (Exception ex) {
 					Logging.error(this.getClass(), ex.getMessage()
 							+ "Schema does not contain objectType.");

@@ -70,10 +70,14 @@ public final class CombineSourceFilter implements Filter<Object, Object> {
 			insertCombinedValue(gv, map, destinationCoordinateStructure);
 
 			Map<String, Object> finalMo = (Map<String, Object>) gv;
-			if (!finalMo.containsKey("dataStatus")) {
-				finalMo.put("dataStatus", "improved");
-			}
+			finalMo.put("dataQualityStatus", "improved");
 
+			try {
+				((Map<String, Object>) gv).remove("_id");
+				((Map<String, Object>) gv).remove("_rev");
+			} catch (Exception e) {
+				Logging.error(this.getClass(), e.getMessage());
+			}
 			improvedObjects.add(gv);
 		}
 
@@ -82,12 +86,9 @@ public final class CombineSourceFilter implements Filter<Object, Object> {
 		return improvedObjects;
 	}
 
-
 	@SuppressWarnings("unchecked")
-	private void traverseSchema(
-			GenericValueType sourceStructure,
-			Object object,
-			Map<String, Object> map) {
+	private void traverseSchema(GenericValueType sourceStructure,
+			Object object, Map<String, Object> map) {
 
 		if (sourceStructure instanceof MapComplexValueType) {
 
@@ -97,10 +98,12 @@ public final class CombineSourceFilter implements Filter<Object, Object> {
 				if ((e.getValue() instanceof SimpleValueType)
 						&& (((SimpleValueType) e.getValue()).getName() != "Null")) {
 
-					map.put(e.getKey(), ((Map<String, Object>) object).remove(e.getKey()));
+					map.put(e.getKey(),
+							((Map<String, Object>) object).remove(e.getKey()));
 
 				} else {
-					traverseSchema(e.getValue(), ((Map<String, Object>) object).get(e.getKey()), map);
+					traverseSchema(e.getValue(),
+							((Map<String, Object>) object).get(e.getKey()), map);
 				}
 			}
 		} else if (sourceStructure instanceof ListComplexValueType) {
@@ -115,11 +118,8 @@ public final class CombineSourceFilter implements Filter<Object, Object> {
 		}
 	}
 
-
 	@SuppressWarnings("unchecked")
-	private void insertCombinedValue(
-			Object object, 
-			Map<String, Object> mv,
+	private void insertCombinedValue(Object object, Map<String, Object> mv,
 			GenericValueType destinationStructure) {
 
 		if (destinationStructure instanceof MapComplexValueType) {
@@ -147,8 +147,9 @@ public final class CombineSourceFilter implements Filter<Object, Object> {
 								new HashMap<String, Object>());
 					}
 
-					insertCombinedValue(((Map<String, Object>) object)
-							.get(e.getKey()), mv, e.getValue());
+					insertCombinedValue(
+							((Map<String, Object>) object).get(e.getKey()), mv,
+							e.getValue());
 				}
 			}
 		} else if (destinationStructure instanceof ListComplexValueType) {
@@ -170,7 +171,6 @@ public final class CombineSourceFilter implements Filter<Object, Object> {
 		}
 
 	}
-
 
 	private static MapComplexValueType createSourceCoordinateStructure() {
 

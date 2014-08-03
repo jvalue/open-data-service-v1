@@ -30,7 +30,6 @@ import org.jvalue.ods.data.valuetypes.SimpleValueType;
 import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.logger.Logging;
 
-
 public final class RenameSourceFilter implements Filter<Object, Object> {
 
 	@Override
@@ -41,7 +40,6 @@ public final class RenameSourceFilter implements Filter<Object, Object> {
 		MapComplexValueType destinationStructure = createDestinationWaterStructure();
 		String newName = "BodyOfWater";
 
-
 		List<Object> improvedObjects = new LinkedList<Object>();
 		List<Object> oldObjects = (List<Object>) data;
 
@@ -49,11 +47,16 @@ public final class RenameSourceFilter implements Filter<Object, Object> {
 			Map<String, Object> map = new HashMap<String, Object>();
 			traverseSchema(sourceStructure, newName, o, map);
 			insertRenamedValue(o, map, destinationStructure);
-			
+
 			Map<String, Object> finalMo = (Map<String, Object>) o;
-			if (!finalMo.containsKey("dataStatus"))
-			{
-				finalMo.put("dataStatus", "improved");
+
+			finalMo.put("dataQualityStatus", "improved");
+
+			try {
+				finalMo.remove("_id");
+				finalMo.remove("_rev");
+			} catch (Exception e) {
+				Logging.error(this.getClass(), e.getMessage());
 			}
 
 			improvedObjects.add(o);
@@ -62,13 +65,9 @@ public final class RenameSourceFilter implements Filter<Object, Object> {
 		return data;
 	}
 
-
 	@SuppressWarnings("unchecked")
-	private void traverseSchema(
-			GenericValueType sourceStructure, 
-			String newName, 
-			Object object,
-			Map<String, Object> map) {
+	private void traverseSchema(GenericValueType sourceStructure,
+			String newName, Object object, Map<String, Object> map) {
 
 		if (sourceStructure instanceof MapComplexValueType) {
 
@@ -76,38 +75,34 @@ public final class RenameSourceFilter implements Filter<Object, Object> {
 					.getMap().entrySet()) {
 
 				if (e.getValue() instanceof SimpleValueType) {
-					map.put(newName, ((Map<String, Object>) object).remove(e.getKey()));
+					map.put(newName,
+							((Map<String, Object>) object).remove(e.getKey()));
 
 				} else {
-					if (e.getValue() instanceof MapComplexValueType)
-					{
-						MapComplexValueType mcvt = (MapComplexValueType) e.getValue();
-						if (mcvt.getMap() != null)
-						{
-							traverseSchema(e.getValue(), newName, ((Map<String, Object>) object)
-									.get(e.getKey()), map);
-						}
-						else
-						{
+					if (e.getValue() instanceof MapComplexValueType) {
+						MapComplexValueType mcvt = (MapComplexValueType) e
+								.getValue();
+						if (mcvt.getMap() != null) {
+							traverseSchema(e.getValue(), newName,
+									((Map<String, Object>) object).get(e
+											.getKey()), map);
+						} else {
 							map.put(newName, ((Map<String, Object>) object)
 									.remove(e.getKey()));
 						}
-					}					
+					}
 				}
 			}
 		} else if (sourceStructure instanceof ListComplexValueType) {
-			for (Object o: ((List<Object>) object)) {
+			for (Object o : ((List<Object>) object)) {
 				traverseSchema(((ListComplexValueType) sourceStructure)
 						.getList().get(0), newName, o, map);
 			}
 		}
 	}
 
-
 	@SuppressWarnings("unchecked")
-	private void insertRenamedValue(
-			Object object, 
-			Map<String, Object> map,
+	private void insertRenamedValue(Object object, Map<String, Object> map,
 			GenericValueType destinationStructure) {
 
 		if (destinationStructure instanceof MapComplexValueType) {
@@ -117,9 +112,9 @@ public final class RenameSourceFilter implements Filter<Object, Object> {
 
 				if (e.getValue() == null) {
 
-					if (object instanceof Map) {			
+					if (object instanceof Map) {
 						Object ser = map.get(e.getKey());
-						
+
 						// check for correct value here
 						((Map<String, Object>) object).put(e.getKey(), ser);
 					} else {
@@ -136,8 +131,9 @@ public final class RenameSourceFilter implements Filter<Object, Object> {
 								new HashMap<String, Object>());
 					}
 
-					insertRenamedValue(((Map<String, Object>) object)
-							.get(e.getKey()), map, e.getValue());
+					insertRenamedValue(
+							((Map<String, Object>) object).get(e.getKey()),
+							map, e.getValue());
 				}
 			}
 		} else if (destinationStructure instanceof ListComplexValueType) {
@@ -160,7 +156,6 @@ public final class RenameSourceFilter implements Filter<Object, Object> {
 
 	}
 
-
 	private static MapComplexValueType createSourceWaterStructure() {
 
 		Map<String, GenericValueType> station = new HashMap<String, GenericValueType>();
@@ -171,13 +166,11 @@ public final class RenameSourceFilter implements Filter<Object, Object> {
 		return stationSchema;
 	}
 
-
 	private static MapComplexValueType createDestinationWaterStructure() {
 
 		Map<String, GenericValueType> station = new HashMap<String, GenericValueType>();
 		station.put("BodyOfWater", null);
-		MapComplexValueType stationSchema = new MapComplexValueType(
-				station);
+		MapComplexValueType stationSchema = new MapComplexValueType(station);
 
 		return stationSchema;
 	}
