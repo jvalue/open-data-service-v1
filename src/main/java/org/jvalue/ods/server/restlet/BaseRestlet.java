@@ -17,7 +17,7 @@ import org.restlet.data.Status;
 public abstract class BaseRestlet extends Restlet {
 
 	private final Set<String> mandatoryQueryParams;
-	private final boolean allowAdditionalParams;
+	protected final boolean allowAdditionalParams;
 
 	protected BaseRestlet(Set<String> mandatoryQueryParams, boolean allowAdditionalParams) {
 		Assert.assertNotNull(mandatoryQueryParams);

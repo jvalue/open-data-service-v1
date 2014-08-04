@@ -27,9 +27,8 @@ import org.restlet.Restlet;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-
 class PegelPortalMvRouter implements Router<Restlet> {
-	
+
 	private final DbAccessor<JsonNode> dbAccessor;
 
 	public PegelPortalMvRouter(DbAccessor<JsonNode> dbAccessor) {
@@ -37,69 +36,46 @@ class PegelPortalMvRouter implements Router<Restlet> {
 		this.dbAccessor = dbAccessor;
 	}
 
-	
 	@Override
 	public Map<String, Restlet> getRoutes() {
 		Map<String, Restlet> routes = new LinkedHashMap<String, Restlet>();
 
 		// all stations
-		routes.put(
-				"/ods/de/pegelportal-mv/stations", 
-				new ExecuteQueryRestlet.Builder(
-						dbAccessor, 
-						"_design/pegelportal-mv", 
-						"getAllStations")
-					.build());
+		routes.put("/ods/de/pegelportal-mv/stations",
+				new ExecuteQueryRestlet.Builder(dbAccessor,
+						"_design/pegelportal-mv", "getAllStations", null)
+						.build());
 
 		// all stations flat
-		routes.put(
-				"/ods/de/pegelportal-mv/stationsFlat", 
-				new ExecuteQueryRestlet.Builder(
-						dbAccessor, 
-						"_design/pegelportal-mv", 
-						"getAllStationsFlat")
-					.build());
+		routes.put("/ods/de/pegelportal-mv/stationsFlat",
+				new ExecuteQueryRestlet.Builder(dbAccessor,
+						"_design/pegelportal-mv", "getAllStationsFlat", null)
+						.build());
 
-		// value types 
-		routes.put(
-				"/ods/de/pegelportal-mv/stations/$class", 
-				new ExecuteQueryRestlet.Builder(
-						dbAccessor, 
-						"_design/pegelportal-mv", 
-						"getClassObject")
-					.fetchAllDbEntries(false)
-					.build());
+		// value types
+		routes.put("/ods/de/pegelportal-mv/stations/$class",
+				new ExecuteQueryRestlet.Builder(dbAccessor,
+						"_design/pegelportal-mv", "getClassObject", null)
+						.fetchAllDbEntries(false).build());
 
 		// value types id
-		routes.put(
-				"/ods/de/pegelportal-mv/stations/$class_id",
-				new ExecuteQueryRestlet.Builder(
-						dbAccessor, 
-						"_design/pegelportal-mv", 
-						"getClassObjectId")
-					.fetchAllDbEntries(false)
-					.build());
+		routes.put("/ods/de/pegelportal-mv/stations/$class_id",
+				new ExecuteQueryRestlet.Builder(dbAccessor,
+						"_design/pegelportal-mv", "getClassObjectId", null)
+						.fetchAllDbEntries(false).build());
 
 		// get single station
-		routes.put(
-				"/ods/de/pegelportal-mv/stations/{station}", 
-				new ExecuteQueryRestlet.Builder(
-						dbAccessor, 
-						"_design/pegelportal-mv", 
-						"getSingleStation")
-					.fetchAllDbEntries(false)
-					.attributeName("station")
-					.build());
+		routes.put("/ods/de/pegelportal-mv/stations/{station}",
+				new ExecuteQueryRestlet.Builder(dbAccessor,
+						"_design/pegelportal-mv", "getSingleStation", null)
+						.fetchAllDbEntries(false).attributeName("station")
+						.build());
 
 		// meta data
-		routes.put(
-				"/ods/de/pegelportal-mv/metadata", 
-				new ExecuteQueryRestlet.Builder(
-						dbAccessor, 
-						"_design/pegelportal-mv", 
-						"getMetadata")
-					.fetchAllDbEntries(false)
-					.build());
+		routes.put("/ods/de/pegelportal-mv/metadata",
+				new ExecuteQueryRestlet.Builder(dbAccessor,
+						"_design/pegelportal-mv", "getMetadata", null)
+						.fetchAllDbEntries(false).build());
 		return routes;
 	}
 

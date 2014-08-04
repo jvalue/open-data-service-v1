@@ -27,9 +27,7 @@ import org.restlet.Restlet;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-
 class PegelOnlineRouter implements Router<Restlet> {
-
 
 	private final DbAccessor<JsonNode> dbAccessor;
 
@@ -38,68 +36,46 @@ class PegelOnlineRouter implements Router<Restlet> {
 		this.dbAccessor = dbAccessor;
 	}
 
-
 	@Override
 	public Map<String, Restlet> getRoutes() {
 		Map<String, Restlet> routes = new LinkedHashMap<String, Restlet>();
 
 		// all stations
-		routes.put(
-				"/ods/de/pegelonline/stations", 
-				new ExecuteQueryRestlet.Builder(
-						dbAccessor,
-						"_design/pegelonline",
-						"getAllStations")
-					.build());
+		routes.put("/ods/de/pegelonline/stations",
+				new ExecuteQueryRestlet.Builder(dbAccessor,
+						"_design/pegelonline", "getAllStations",
+						"getAllStationsRaw").build());
 
 		// all stations flat
-		routes.put(
-				"/ods/de/pegelonline/stationsFlat", 
-				new ExecuteQueryRestlet.Builder(
-						dbAccessor,
-						"_design/pegelonline",
-						"getAllStationsFlat")
-					.build());
+		routes.put("/ods/de/pegelonline/stationsFlat",
+				new ExecuteQueryRestlet.Builder(dbAccessor,
+						"_design/pegelonline", "getAllStationsFlat",
+						"getAllStationsFlatRaw").build());
 
 		// value types
-		routes.put(
-				"/ods/de/pegelonline/stations/$class",
-				new ExecuteQueryRestlet.Builder(
-						dbAccessor, 
-						"_design/pegelonline",
-						"getClassObject")
-					.fetchAllDbEntries(false)
-					.build());
+		routes.put("/ods/de/pegelonline/stations/$class",
+				new ExecuteQueryRestlet.Builder(dbAccessor,
+						"_design/pegelonline", "getClassObject", null)
+						.fetchAllDbEntries(false).build());
 
 		// value types id
 		routes.put("/ods/de/pegelonline/stations/$class_id",
-				new ExecuteQueryRestlet.Builder(
-						dbAccessor, 
-						"_design/pegelonline",
-						"getClassObjectId")
-					.fetchAllDbEntries(false)
-					.build());
+				new ExecuteQueryRestlet.Builder(dbAccessor,
+						"_design/pegelonline", "getClassObjectId", null)
+						.fetchAllDbEntries(false).build());
 
 		// get single station
-		routes.put(
-				"/ods/de/pegelonline/stations/{station}",
-				new ExecuteQueryRestlet.Builder(
-						dbAccessor,
-						"_design/pegelonline",
-						"getSingleStation")
-					.fetchAllDbEntries(false)
-					.attributeName("station")
-					.build());
+		routes.put("/ods/de/pegelonline/stations/{station}",
+				new ExecuteQueryRestlet.Builder(dbAccessor,
+						"_design/pegelonline", "getSingleStation",
+						"getSingleStationRaw").fetchAllDbEntries(false)
+						.attributeName("station").build());
 
 		// metadata
-		routes.put(
-				"/ods/de/pegelonline/metadata", 
-				new ExecuteQueryRestlet.Builder(
-						dbAccessor,
-						"_design/pegelonline",
-						"getMetadata")
-					.fetchAllDbEntries(false)
-					.build());
+		routes.put("/ods/de/pegelonline/metadata",
+				new ExecuteQueryRestlet.Builder(dbAccessor,
+						"_design/pegelonline", "getMetadata", null)
+						.fetchAllDbEntries(false).build());
 
 		return routes;
 	}

@@ -337,13 +337,12 @@ final class PegelOnlineConfiguration implements Configuration {
 
 		// ods views
 		{
+			// improved data quality
+			
 			odsViews.add(new OdsView(
 					"_design/pegelonline",
 					"getSingleStation",
 					"function(doc) { if(doc.dataType == 'Station' && doc.dataQualityStatus == 'improved') emit(doc.longname, doc)}"));
-
-			odsViews.add(new OdsView("_design/pegelonline", "getMetadata",
-					"function(doc) { if(doc.title == 'pegelonline') emit(null, doc)}"));
 
 			odsViews.add(new OdsView(
 					"_design/pegelonline",
@@ -358,6 +357,30 @@ final class PegelOnlineConfiguration implements Configuration {
 					"getStationId",
 					"function(doc) { if(doc.dataType == 'Station' && doc.dataQualityStatus == 'improved') emit (doc.longname, doc._id) }"));
 
+			// raw
+			
+			odsViews.add(new OdsView(
+					"_design/pegelonline",
+					"getSingleStationRaw",
+					"function(doc) { if(doc.dataType == 'Station' && doc.dataQualityStatus == 'raw') emit(doc.longname, doc)}"));
+
+			odsViews.add(new OdsView(
+					"_design/pegelonline",
+					"getAllStationsFlatRaw",
+					"function(doc) { if(doc.dataType == 'Station' && doc.dataQualityStatus == 'raw') emit (null, doc.longname) }"));
+			odsViews.add(new OdsView(
+					"_design/pegelonline",
+					"getAllStationsRaw",
+					"function(doc) { if(doc.dataType == 'Station' && doc.dataQualityStatus == 'raw')emit (null, doc) }"));
+			odsViews.add(new OdsView(
+					"_design/pegelonline",
+					"getStationIdRaw",
+					"function(doc) { if(doc.dataType == 'Station' && doc.dataQualityStatus == 'raw') emit (doc.longname, doc._id) }"));
+			
+			
+			odsViews.add(new OdsView("_design/pegelonline", "getMetadata",
+					"function(doc) { if(doc.title == 'pegelonline') emit(null, doc)}"));
+			
 			odsViews.add(new OdsView("_design/pegelonline", "getClassObject",
 					"function(doc) { if(doc.name == 'de-pegelonline-station') emit (null, doc) }"));
 

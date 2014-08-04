@@ -19,6 +19,7 @@ package org.jvalue.ods.server.restlet;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.HashSet;
 import java.util.List;
 
 import org.jvalue.ods.db.DbAccessor;
@@ -34,6 +35,7 @@ public class ExecuteQueryRestlet extends BaseRestlet {
 	private final DbAccessor<JsonNode> dbAccessor;
 	private final String designDocId;
 	private final String viewName;
+	private final String viewNameRaw;
 	private final boolean fetchAllDbEntries;
 	private final String attributeName;
 	private final ObjectMapper mapper = new ObjectMapper();
@@ -45,8 +47,25 @@ public class ExecuteQueryRestlet extends BaseRestlet {
 		this.dbAccessor = dbAccessor;
 		this.designDocId = designDocId;
 		this.viewName = viewName;
+		this.viewNameRaw = null;
 		this.fetchAllDbEntries = fetchAllDbEntries;
 		this.attributeName = attributeName;
+
+	}
+
+	private ExecuteQueryRestlet(DbAccessor<JsonNode> dbAccessor,
+			String designDocId, String viewName, String viewNameRaw,
+			boolean fetchAllDbEntries, String attributeName) {
+
+		super(new HashSet<String>(), true);
+
+		this.dbAccessor = dbAccessor;
+		this.designDocId = designDocId;
+		this.viewName = viewName;
+		this.viewNameRaw = viewNameRaw;
+		this.fetchAllDbEntries = fetchAllDbEntries;
+		this.attributeName = attributeName;
+
 	}
 
 	@Override
@@ -64,8 +83,22 @@ public class ExecuteQueryRestlet extends BaseRestlet {
 			}
 		}
 
+		// check if user wants raw data, else he gets improved data quality by
+		// default
+		boolean rawDataWanted = false;
+		String dataQualityStatus = getParameter(request, "dataQualityStatus");
+		if (dataQualityStatus != null && dataQualityStatus.equals("raw")) {
+			rawDataWanted = true;
+		}
+
 		List<JsonNode> nodes = dbAccessor.executeDocumentQuery(designDocId,
 				viewName, attributeValue);
+
+		// if there is no improved data or client wants raw data, query raw data
+		if (viewNameRaw != null && (nodes.isEmpty() || rawDataWanted)) {
+			nodes = dbAccessor.executeDocumentQuery(designDocId, viewNameRaw,
+					attributeValue);
+		}
 
 		JsonNode resultData;
 
@@ -84,17 +117,18 @@ public class ExecuteQueryRestlet extends BaseRestlet {
 	public static final class Builder {
 
 		private final DbAccessor<JsonNode> dbAccessor;
-		private final String designDocId, viewName;
+		private final String designDocId, viewName, viewNameRaw;
 		private boolean fetchAllDbEntries = true;
 		private String attributeName = null;
 
 		public Builder(DbAccessor<JsonNode> dbAccessor, String designDocId,
-				String viewName) {
+				String viewName, String viewNameRaw) {
 			if (dbAccessor == null || designDocId == null || viewName == null)
 				throw new NullPointerException("params cannot be null");
 			this.dbAccessor = dbAccessor;
 			this.designDocId = designDocId;
 			this.viewName = viewName;
+			this.viewNameRaw = viewNameRaw;
 		}
 
 		/**
@@ -116,8 +150,14 @@ public class ExecuteQueryRestlet extends BaseRestlet {
 		}
 
 		public ExecuteQueryRestlet build() {
-			return new ExecuteQueryRestlet(dbAccessor, designDocId, viewName,
-					fetchAllDbEntries, attributeName);
+
+			if (viewNameRaw != null) {
+				return new ExecuteQueryRestlet(dbAccessor, designDocId,
+						viewName, viewNameRaw, fetchAllDbEntries, attributeName);
+			} else {
+				return new ExecuteQueryRestlet(dbAccessor, designDocId,
+						viewName, fetchAllDbEntries, attributeName);
+			}
 		}
 	}
 }

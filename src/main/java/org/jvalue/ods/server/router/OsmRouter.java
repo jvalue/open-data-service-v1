@@ -35,11 +35,9 @@ import org.restlet.data.Status;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
 class OsmRouter implements Router<Restlet> {
 
 	private static final ObjectMapper mapper = new ObjectMapper();
-
 
 	private final DbAccessor<JsonNode> dbAccessor;
 
@@ -47,7 +45,6 @@ class OsmRouter implements Router<Restlet> {
 		Assert.assertNotNull(dbAccessor);
 		this.dbAccessor = dbAccessor;
 	}
-
 
 	@Override
 	public Map<String, Restlet> getRoutes() {
@@ -60,15 +57,13 @@ class OsmRouter implements Router<Restlet> {
 
 				try {
 					List<JsonNode> nodes = dbAccessor.executeDocumentQuery(
-							"_design/osm",
-							"getMetadata", 
-							null);
+							"_design/osm", "getMetadata", null);
 
 					return RestletResult.newSuccessResult(nodes.get(0));
 				} catch (DbException ex) {
-					return RestletResult.newErrorResult(
-							Status.CLIENT_ERROR_NOT_FOUND, 
-							"Metadata not found");
+					return RestletResult
+							.newErrorResult(Status.CLIENT_ERROR_NOT_FOUND,
+									"Metadata not found");
 				}
 			}
 		};
@@ -78,7 +73,8 @@ class OsmRouter implements Router<Restlet> {
 			protected RestletResult doGet(Request request) {
 				// there is an attribute in url
 				if (request.getResourceRef().getQueryAsForm().size() == 1) {
-					JsonNode data = RouterUtils.getDocumentByAttribute(dbAccessor, request);
+					JsonNode data = RouterUtils.getDocumentByAttribute(
+							dbAccessor, request);
 					return RestletResult.newSuccessResult(data);
 				} else {
 					return onBadRequest("Please specify an argument");
@@ -86,29 +82,27 @@ class OsmRouter implements Router<Restlet> {
 			}
 		};
 
-		routes.put("/ods/de/osm/nodes/{osm_id}", new FetchOsmObjectRestlet("getNodeById"));
-		routes.put("/ods/de/osm/ways/{osm_id}", new FetchOsmObjectRestlet("getWayById"));
-		routes.put("/ods/de/osm/relations/{osm_id}", new FetchOsmObjectRestlet("getRelationById"));
-		routes.put("/ods/de/osm/data/{osm_id}", new FetchOsmObjectRestlet("getOsmDataById"));
-		routes.put("/ods/de/osm/keyword/{osm_keyword}", new FetchOsmObjectRestlet("getDocumentsByKeyword"));
+		routes.put("/ods/de/osm/nodes/{osm_id}", new FetchOsmObjectRestlet(
+				"getNodeById"));
+		routes.put("/ods/de/osm/ways/{osm_id}", new FetchOsmObjectRestlet(
+				"getWayById"));
+		routes.put("/ods/de/osm/relations/{osm_id}", new FetchOsmObjectRestlet(
+				"getRelationById"));
+		routes.put("/ods/de/osm/data/{osm_id}", new FetchOsmObjectRestlet(
+				"getOsmDataById"));
+		routes.put("/ods/de/osm/keyword/{osm_keyword}",
+				new FetchOsmObjectRestlet("getDocumentsByKeyword"));
 		routes.put("/ods/de/osm/metadata", metadataRestlet);
 		routes.put("/ods/de/osm", osmRestlet);
 		routes.put("/ods/de/osm/$class", new ExecuteQueryRestlet.Builder(
-					dbAccessor, 
-					"_design/osm", 
-					"getClassObject")
-				.fetchAllDbEntries(false)
-				.build());
+				dbAccessor, "_design/osm", "getClassObject", null)
+				.fetchAllDbEntries(false).build());
 		routes.put("/ods/de/osm/$class_id", new ExecuteQueryRestlet.Builder(
-					dbAccessor, 
-					"_design/osm", 
-					"getClassObjectId")
-				.fetchAllDbEntries(false)
-				.build());
+				dbAccessor, "_design/osm", "getClassObjectId", null)
+				.fetchAllDbEntries(false).build());
 
 		return routes;
 	}
-
 
 	private class FetchOsmObjectRestlet extends BaseRestlet {
 
@@ -125,16 +119,15 @@ class OsmRouter implements Router<Restlet> {
 			try {
 				dbAccessor.connect();
 				List<JsonNode> nodes = dbAccessor.executeDocumentQuery(
-						"_design/osm", 
-						viewName,
-						osmId);
+						"_design/osm", viewName, osmId);
 
-				return RestletResult.newSuccessResult(mapper.valueToTree(nodes));
+				return RestletResult
+						.newSuccessResult(mapper.valueToTree(nodes));
 
 			} catch (DbException e) {
 				return RestletResult.newErrorResult(
-						Status.CLIENT_ERROR_NOT_FOUND,
-						"no item with id '" + osmId + "' found");
+						Status.CLIENT_ERROR_NOT_FOUND, "no item with id '"
+								+ osmId + "' found");
 			}
 		}
 
