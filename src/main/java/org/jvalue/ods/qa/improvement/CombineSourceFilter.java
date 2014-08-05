@@ -60,8 +60,15 @@ public final class CombineSourceFilter implements Filter<Object, Object> {
 		MapComplexValueType destinationCoordinateStructure = createDestinationCoordinateStructure();
 
 		List<Object> improvedObjects = new LinkedList<Object>();
-		List<Object> oldObjects = (List<Object>) data;
 
+		List<Object> oldObjects = null;
+		try {
+			oldObjects = (List<Object>) data;
+		} catch (Exception e) {
+			Logging.error(this.getClass(),
+					"Cannot cast data to list, aborting CombineSourceFilter");
+			return data;
+		}
 		for (Object gv : oldObjects) {
 
 			Map<String, Object> map = new HashMap<String, Object>();

@@ -41,7 +41,15 @@ public final class RenameSourceFilter implements Filter<Object, Object> {
 		String newName = "BodyOfWater";
 
 		List<Object> improvedObjects = new LinkedList<Object>();
-		List<Object> oldObjects = (List<Object>) data;
+
+		List<Object> oldObjects = null;
+		try {
+			oldObjects = (List<Object>) data;
+		} catch (Exception e) {
+			Logging.error(this.getClass(),
+					"Cannot cast data to list, aborting RenameSourceFilter");
+			return data;
+		}
 
 		for (Object o : oldObjects) {
 			Map<String, Object> map = new HashMap<String, Object>();
