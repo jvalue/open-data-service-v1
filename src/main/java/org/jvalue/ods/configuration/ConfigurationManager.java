@@ -30,12 +30,10 @@ import org.jvalue.ods.utils.Assert;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-
 public final class ConfigurationManager {
 
-
-	private ConfigurationManager() { }
-
+	private ConfigurationManager() {
+	}
 
 	private static final List<Configuration> configurations = new LinkedList<Configuration>();
 	static {
@@ -44,9 +42,7 @@ public final class ConfigurationManager {
 		configurations.add(new PegelPortalMvConfiguration());
 	}
 
-
-	public static void configureAll(
-			DbAccessor<JsonNode> accessor, 
+	public static void configureAll(DbAccessor<JsonNode> accessor,
 			FilterChainManager filterManager) {
 
 		Assert.assertNotNull(accessor, filterManager);
@@ -59,11 +55,19 @@ public final class ConfigurationManager {
 
 		for (Configuration configuration : configurations) {
 			DataSource source = configuration.getDataSource();
-			FilterChain<Void,?> chain = configuration.getFilterChain(accessor);
+			FilterChain<Void, ?> chain = configuration.getFilterChain(accessor);
 
 			filterManager.register(chain);
 
-			accessor.insert(source.getDbSchema());
+			accessor.insert(source.getImprovedDbSchema());
+
+			if (source.getImprovedDbSchema() != null
+					&& !source.getImprovedDbSchema().equals(
+							source.getRawDbSchema())) {
+				accessor.insert(source.getRawDbSchema());
+
+			}
+
 			accessor.insert(source.getMetaData());
 			for (OdsView view : source.getOdsViews()) {
 				DbUtils.createView(accessor, view);
@@ -73,21 +77,13 @@ public final class ConfigurationManager {
 		AdministrationLogging.log("Initialization completed");
 	}
 
-
 	private static void createCommonViews(DbAccessor<JsonNode> accessor) {
-		DbUtils.createView(
-				accessor, 
-				new OdsView(
-					"_design/ods", 
-					"getClassObjectByType",
-					"function(doc) { if(doc.name) emit (doc.name, doc) }"));
-		DbUtils.createView(
-				accessor, 
-				new OdsView(
-					"_design/ods", 
-					"getAllClassObjects",
-					"function(doc) { if(doc.name) emit (null, doc) }"));
+		DbUtils.createView(accessor, new OdsView("_design/ods",
+				"getClassObjectByType",
+				"function(doc) { if(doc.name) emit (doc.name, doc) }"));
+		DbUtils.createView(accessor, new OdsView("_design/ods",
+				"getAllClassObjects",
+				"function(doc) { if(doc.name) emit (null, doc) }"));
 	}
-
 
 }

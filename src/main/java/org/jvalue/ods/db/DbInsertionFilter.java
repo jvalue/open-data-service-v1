@@ -46,12 +46,12 @@ public final class DbInsertionFilter implements Filter<Object, Object> {
 	public Object filter(Object data) {
 		if (data instanceof List) {
 			List<Map<String, Object>> list = (List<Map<String, Object>>) data;
-			accessor.executeBulk(list, source.getDbSchema());
+			accessor.executeBulk(list, source.getImprovedDbSchema());
 
 		} else if (data instanceof Map) {
 			List<Map<String, Object>> list = new LinkedList<>();
 			list.add((Map<String, Object>) data);
-			accessor.executeBulk(list, source.getDbSchema());
+			accessor.executeBulk(list, source.getImprovedDbSchema());
 
 		} else {
 			String errmsg = "data must be a list or map.";

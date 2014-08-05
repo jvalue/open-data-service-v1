@@ -14,7 +14,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
-*/
+ */
 package org.jvalue.ods.data.objecttypes;
 
 import java.util.HashMap;
@@ -37,18 +37,23 @@ public class MapObjectType extends ObjectType {
 	/** The name. */
 	private String name;
 
+	private String dataQualityStatus;
+
 	/** The attributes. */
 	private Map<String, GenericValueType> attributes;
-	
+
 	/** The referenced objects. */
 	private Map<String, ObjectType> referencedObjects;
 
 	/**
 	 * Instantiates a new map object type.
-	 *
-	 * @param name the name
-	 * @param attributes the attributes
-	 * @param referencedObjects the referenced objects
+	 * 
+	 * @param name
+	 *            the name
+	 * @param attributes
+	 *            the attributes
+	 * @param referencedObjects
+	 *            the referenced objects
 	 */
 	public MapObjectType(String name, Map<String, GenericValueType> attributes,
 			Map<String, ObjectType> referencedObjects) {
@@ -62,11 +67,12 @@ public class MapObjectType extends ObjectType {
 		if (this.referencedObjects == null) {
 			this.referencedObjects = new HashMap<String, ObjectType>();
 		}
+		this.dataQualityStatus = "raw";
 	}
 
 	/**
 	 * Gets the name.
-	 *
+	 * 
 	 * @return the name
 	 */
 	public String getName() {
@@ -75,8 +81,9 @@ public class MapObjectType extends ObjectType {
 
 	/**
 	 * Sets the name.
-	 *
-	 * @param name the new name
+	 * 
+	 * @param name
+	 *            the new name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -84,7 +91,7 @@ public class MapObjectType extends ObjectType {
 
 	/**
 	 * Gets the attributes.
-	 *
+	 * 
 	 * @return the attributes
 	 */
 	public Map<String, GenericValueType> getAttributes() {
@@ -93,8 +100,9 @@ public class MapObjectType extends ObjectType {
 
 	/**
 	 * Sets the attributes.
-	 *
-	 * @param attributes the attributes
+	 * 
+	 * @param attributes
+	 *            the attributes
 	 */
 	public void setAttributes(Map<String, GenericValueType> attributes) {
 		this.attributes = attributes;
@@ -102,7 +110,7 @@ public class MapObjectType extends ObjectType {
 
 	/**
 	 * Gets the referenced objects.
-	 *
+	 * 
 	 * @return the referenced objects
 	 */
 	public Map<String, ObjectType> getReferencedObjects() {
@@ -111,11 +119,20 @@ public class MapObjectType extends ObjectType {
 
 	/**
 	 * Sets the referenced objects.
-	 *
-	 * @param referencedObjects the referenced objects
+	 * 
+	 * @param referencedObjects
+	 *            the referenced objects
 	 */
 	public void setReferencedObjects(Map<String, ObjectType> referencedObjects) {
 		this.referencedObjects = referencedObjects;
+	}
+
+	public String getDataQualityStatus() {
+		return dataQualityStatus;
+	}
+
+	public void setDataQualityStatus(String dataQualityStatus) {
+		this.dataQualityStatus = dataQualityStatus;
 	}
 
 }

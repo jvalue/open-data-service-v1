@@ -20,6 +20,7 @@ package org.jvalue.ods.data;
 import java.util.List;
 
 import org.jvalue.ods.data.metadata.OdsMetaData;
+import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.utils.Assert;
 
@@ -28,71 +29,67 @@ public class DataSource {
 	private final String id;
 	private final String url;
 	private final ObjectType dataSourceSchema;
-	private final ObjectType dbSchema;
+	private final ObjectType rawDbSchema;
+	private final ObjectType improvedDbSchema;
 	private final OdsMetaData metaData;
 	private final List<OdsView> odsViews;
 
-	public DataSource(
-			String id, 
-			String url, 
-			ObjectType sourceschema,
-			ObjectType dbschema, 
-			OdsMetaData metaData, 
-			List<OdsView> odsViews) {
+	public DataSource(String id, String url, ObjectType sourceschema,
+			MapObjectType rawDbSchema, MapObjectType improvedDbSchema,
+			OdsMetaData metaData, List<OdsView> odsViews) {
 
-		Assert.assertNotNull(id, url, sourceschema, dbschema, metaData, odsViews);
+		Assert.assertNotNull(id, url, sourceschema, rawDbSchema,
+				improvedDbSchema, metaData, odsViews);
 
 		this.id = id;
 		this.url = url;
 		this.dataSourceSchema = sourceschema;
-		this.dbSchema = dbschema;
+		this.rawDbSchema = rawDbSchema;
+		this.improvedDbSchema = improvedDbSchema;
 		this.metaData = metaData;
 		this.odsViews = odsViews;
 	}
-
 
 	public String getId() {
 		return id;
 	}
 
-
 	public String getUrl() {
 		return url;
 	}
-
 
 	public ObjectType getDataSourceSchema() {
 		return dataSourceSchema;
 	}
 
-
-	public ObjectType getDbSchema() {
-		return dbSchema;
+	public ObjectType getImprovedDbSchema() {
+		return improvedDbSchema;
 	}
 
+	public ObjectType getRawDbSchema() {
+		return rawDbSchema;
+	}
 
 	public OdsMetaData getMetaData() {
 		return metaData;
 	}
 
-
 	public List<OdsView> getOdsViews() {
 		return odsViews;
 	}
 
-
 	@Override
 	public boolean equals(Object other) {
-		if (other == null || !(other instanceof DataSource)) return false;
+		if (other == null || !(other instanceof DataSource))
+			return false;
 		DataSource source = (DataSource) other;
-		return source.id.equals(id) 
-			&& source.url.equals(url) 
-			&& source.dataSourceSchema.equals(dataSourceSchema)
-			&& source.dbSchema.equals(dbSchema)
-			&& source.metaData.equals(metaData)
-			&& source.odsViews.equals(odsViews);
+		return source.id.equals(id) && source.url.equals(url)
+				&& source.dataSourceSchema.equals(dataSourceSchema)
+				&& source.rawDbSchema.equals(rawDbSchema)
+				&& source.improvedDbSchema.equals(improvedDbSchema)
+				&& source.metaData.equals(metaData)
+				&& source.odsViews.equals(odsViews);
 	}
-
 
 	@Override
 	public int hashCode() {
@@ -101,7 +98,8 @@ public class DataSource {
 		hash = hash + MULT * id.hashCode();
 		hash = hash + MULT * url.hashCode();
 		hash = hash + MULT * dataSourceSchema.hashCode();
-		hash = hash + MULT * dbSchema.hashCode();
+		hash = hash + MULT * rawDbSchema.hashCode();
+		hash = hash + MULT * improvedDbSchema.hashCode();
 		hash = hash + MULT * metaData.hashCode();
 		hash = hash + MULT * odsViews.hashCode();
 		return hash;

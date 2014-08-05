@@ -55,14 +55,14 @@ class PegelOnlineRouter implements Router<Restlet> {
 		// value types
 		routes.put("/ods/de/pegelonline/stations/$class",
 				new ExecuteQueryRestlet.Builder(dbAccessor,
-						"_design/pegelonline", "getClassObject", null)
-						.fetchAllDbEntries(false).build());
+						"_design/pegelonline", "getClassObject",
+						"getClassObjectRaw").fetchAllDbEntries(false).build());
 
 		// value types id
 		routes.put("/ods/de/pegelonline/stations/$class_id",
 				new ExecuteQueryRestlet.Builder(dbAccessor,
-						"_design/pegelonline", "getClassObjectId", null)
-						.fetchAllDbEntries(false).build());
+						"_design/pegelonline", "getClassObjectId",
+						"getClassObjectIdRaw").fetchAllDbEntries(false).build());
 
 		// get single station
 		routes.put("/ods/de/pegelonline/stations/{station}",

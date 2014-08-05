@@ -42,7 +42,6 @@ import org.jvalue.ods.notifications.NotificationFilter;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-
 public final class PegelPortalMvConfiguration implements Configuration {
 
 	// keys used in the json schema
@@ -50,7 +49,6 @@ public final class PegelPortalMvConfiguration implements Configuration {
 			KEY_TIMESTAMP = "timestamp", KEY_LEVEL = "level",
 			KEY_LEVEL_UNIT = "levelUnit", KEY_EFFLUENT = "effluent",
 			KEY_EFFLUENT_UNIT = "effluentUnit", KEY_AGENCY = "agency";
-
 
 	@Override
 	public DataSource getDataSource() {
@@ -73,7 +71,6 @@ public final class PegelPortalMvConfiguration implements Configuration {
 				"http://www.pegelportal-mv.de/impressum.html");
 
 		List<OdsView> odsViews = new LinkedList<OdsView>();
-
 
 		// db schema
 		{
@@ -99,12 +96,14 @@ public final class PegelPortalMvConfiguration implements Configuration {
 			Map<String, GenericValueType> restName = new HashMap<String, GenericValueType>();
 			restName.put("mv-stations", VALUETYPE_NULL);
 
-			ObjectType restNameType = new MapObjectType("restName", restName, null);
+			ObjectType restNameType = new MapObjectType("restName", restName,
+					null);
 
 			ppReferencedObjects.put("restName", restNameType);
 
 			MapObjectType pegelPortalType = new MapObjectType(
-					"de-pegelportal-mv-station", ppAttributes, ppReferencedObjects);
+					"de-pegelportal-mv-station", ppAttributes,
+					ppReferencedObjects);
 
 			dbSchema = pegelPortalType;
 		}
@@ -118,7 +117,8 @@ public final class PegelPortalMvConfiguration implements Configuration {
 
 		// ods views
 		{
-			odsViews.add(new OdsView("_design/pegelportal-mv", "getSingleStation",
+			odsViews.add(new OdsView("_design/pegelportal-mv",
+					"getSingleStation",
 					"function(doc) { if(doc.dataType == 'MV-Station') emit(doc.station, doc)}"));
 
 			odsViews.add(new OdsView("_design/pegelportal-mv", "getMetadata",
@@ -127,7 +127,8 @@ public final class PegelPortalMvConfiguration implements Configuration {
 			odsViews.add(new OdsView("_design/pegelportal-mv",
 					"getAllStationsFlat",
 					"function(doc) { if(doc.dataType == 'MV-Station') emit (null, doc.station) }"));
-			odsViews.add(new OdsView("_design/pegelportal-mv", "getAllStations",
+			odsViews.add(new OdsView("_design/pegelportal-mv",
+					"getAllStations",
 					"function(doc) { if(doc.dataType == 'MV-Station') emit (null, doc) }"));
 			odsViews.add(new OdsView(
 					"_design/pegelportal-mv",
@@ -145,21 +146,20 @@ public final class PegelPortalMvConfiguration implements Configuration {
 					"function(doc) { if(doc.name == 'de-pegelportal-mv-station') emit (null, doc._id) }"));
 		}
 
-		return new DataSource(sourceId, url, sourceSchema, dbSchema, metaData, odsViews);
+		return new DataSource(sourceId, url, sourceSchema, dbSchema, dbSchema,
+				metaData, odsViews);
 	}
 
-
 	@Override
-	public FilterChain<Void,?> getFilterChain(DbAccessor<JsonNode> accessor) {
+	public FilterChain<Void, ?> getFilterChain(DbAccessor<JsonNode> accessor) {
 		DataSource source = getDataSource();
 
-		FilterChain<Void, String> chain = FilterChain
-			.instance(GrabberFactory.getHttpGrabber(source, "UTF-8"));
+		FilterChain<Void, String> chain = FilterChain.instance(GrabberFactory
+				.getHttpGrabber(source, "UTF-8"));
 
-		chain
-			.setNextFilter(new PegelPortalMvTranslator(source))
-			.setNextFilter(new DbInsertionFilter(accessor, source))
-			.setNextFilter(new NotificationFilter(source));
+		chain.setNextFilter(new PegelPortalMvTranslator(source))
+				.setNextFilter(new DbInsertionFilter(accessor, source))
+				.setNextFilter(new NotificationFilter(source));
 
 		return chain;
 
