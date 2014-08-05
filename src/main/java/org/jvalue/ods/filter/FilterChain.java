@@ -18,37 +18,39 @@
 package org.jvalue.ods.filter;
 
 import org.jvalue.ods.utils.Assert;
+import org.jvalue.ods.utils.DeepCopy;
 
+public final class FilterChain<P, R> {
 
-public final class FilterChain<P,R> {
-
-	public static <P,R> FilterChain<P,R> instance(Filter<P,R> filter) {
-		return new FilterChain<P,R>(filter);
+	public static <P, R> FilterChain<P, R> instance(Filter<P, R> filter) {
+		return new FilterChain<P, R>(filter);
 	}
 
+	private final Filter<P, R> filter;
+	private FilterChain<R, ?> nextChain;
 
-	private final Filter<P,R> filter;
-	private FilterChain<R,?> nextChain;
-
-
-	private FilterChain(Filter<P,R> filter) {
+	private FilterChain(Filter<P, R> filter) {
 		Assert.assertNotNull(filter);
 		this.filter = filter;
 	}
 
-
-	public <T> FilterChain<R,T> setNextFilter(Filter<R,T> filter) {
+	public <T> FilterChain<R, T> setNextFilter(Filter<R, T> filter) {
 		Assert.assertNotNull(filter);
-		FilterChain<R,T> nextChain = new FilterChain<R,T>(filter);
+		FilterChain<R, T> nextChain = new FilterChain<R, T>(filter);
 		this.nextChain = nextChain;
 		return nextChain;
 	}
 
-
 	public void filter(P param) {
-		R ret = filter.filter(param);
-		if (nextChain != null) nextChain.filter(ret);
-	}
 
+		// maybe some other generics magic would be nicer, but P
+		// does not always implement serializable for example
+		@SuppressWarnings("unchecked")
+		P copy = (P) DeepCopy.copyObject(param);
+
+		R ret = filter.filter(copy);
+		if (nextChain != null)
+			nextChain.filter(ret);
+	}
 
 }
