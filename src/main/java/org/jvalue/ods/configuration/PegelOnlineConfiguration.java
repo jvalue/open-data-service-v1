@@ -39,6 +39,7 @@ import org.jvalue.ods.db.DbInsertionFilter;
 import org.jvalue.ods.filter.FilterChain;
 import org.jvalue.ods.grabber.GrabberFactory;
 import org.jvalue.ods.notifications.NotificationFilter;
+import org.jvalue.ods.qa.DataAdditionFilter;
 import org.jvalue.ods.qa.improvement.CombineSourceFilter;
 import org.jvalue.ods.qa.improvement.RenameSourceFilter;
 import org.jvalue.ods.translator.TranslatorFactory;
@@ -542,6 +543,7 @@ final class PegelOnlineConfiguration implements Configuration {
 		FilterChain<Void, JsonNode> chain = FilterChain.instance(GrabberFactory
 				.getJsonGrabber(source));
 		chain.setNextFilter(TranslatorFactory.getJsonTranslator())
+				.setNextFilter(new DataAdditionFilter(source))
 				.setNextFilter(new DbInsertionFilter(accessor, source))
 				.setNextFilter(new CombineSourceFilter())
 				.setNextFilter(new RenameSourceFilter())

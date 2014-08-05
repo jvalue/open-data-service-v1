@@ -40,13 +40,12 @@ import org.jvalue.ods.db.DbInsertionFilter;
 import org.jvalue.ods.filter.FilterChain;
 import org.jvalue.ods.grabber.GrabberFactory;
 import org.jvalue.ods.notifications.NotificationFilter;
+import org.jvalue.ods.qa.DataAdditionFilter;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-
 final class OsmConfiguration implements Configuration {
 
-	
 	@Override
 	public DataSource getDataSource() {
 		String sourceId = "org-openstreetmap";
@@ -99,12 +98,13 @@ final class OsmConfiguration implements Configuration {
 			Map<String, GenericValueType> restName = new HashMap<String, GenericValueType>();
 			restName.put("osm", VALUETYPE_NULL);
 
-			ObjectType restNameType = new MapObjectType("restName", restName, null);
+			ObjectType restNameType = new MapObjectType("restName", restName,
+					null);
 
 			osmReferencedObjects.put("restName", restNameType);
 
-			MapObjectType osmType = new MapObjectType("de-osm-data", osmAttributes,
-					osmReferencedObjects);
+			MapObjectType osmType = new MapObjectType("de-osm-data",
+					osmAttributes, osmReferencedObjects);
 
 			dbSchema = osmType;
 		}
@@ -154,21 +154,21 @@ final class OsmConfiguration implements Configuration {
 			odsViews.add(new OdsView("_design/osm", "getClassObjectId",
 					"function(doc) { if(doc.name == 'de-osm-data') emit (null, doc._id) }"));
 
-			return new DataSource(sourceId, url, sourceSchema, dbSchema, dbSchema, metaData, odsViews);
+			return new DataSource(sourceId, url, sourceSchema, dbSchema,
+					dbSchema, metaData, odsViews);
 		}
 	}
 
-
 	@Override
-	public FilterChain<Void,?> getFilterChain(DbAccessor<JsonNode> accessor) {
+	public FilterChain<Void, ?> getFilterChain(DbAccessor<JsonNode> accessor) {
 		DataSource source = getDataSource();
 
-		FilterChain<Void, File> chain = FilterChain
-			.instance(GrabberFactory.getResourceGrabber(source));
-		chain
-			.setNextFilter(new OsmTranslator())
-			.setNextFilter(new DbInsertionFilter(accessor, source))
-			.setNextFilter(new NotificationFilter(source));
+		FilterChain<Void, File> chain = FilterChain.instance(GrabberFactory
+				.getResourceGrabber(source));
+		chain.setNextFilter(new OsmTranslator())
+				.setNextFilter(new DataAdditionFilter(source))
+				.setNextFilter(new DbInsertionFilter(accessor, source))
+				.setNextFilter(new NotificationFilter(source));
 		return chain;
 	}
 

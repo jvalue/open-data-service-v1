@@ -32,7 +32,6 @@ import org.ektorp.http.HttpClient;
 import org.ektorp.http.StdHttpClient;
 import org.ektorp.impl.StdCouchDbConnector;
 import org.ektorp.impl.StdCouchDbInstance;
-import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.logger.Logging;
@@ -46,7 +45,6 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 	private String databaseName;
 	private boolean isConnected = false;
 
-
 	protected CouchDbAccessor(String databaseName) {
 		if ((databaseName == null) || (databaseName.isEmpty())) {
 			String errorMessage = "databaseName is null or empty";
@@ -57,12 +55,10 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 		this.databaseName = databaseName;
 	}
 
-
 	@Override
 	public boolean isConnected() {
 		return isConnected;
 	}
-
 
 	private void createDbIfNotExist() {
 		try {
@@ -77,7 +73,6 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 		}
 	}
 
-
 	private void checkDbState() {
 		if (!isConnected) {
 			String errorMessage = "The database is not connected";
@@ -89,7 +84,6 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 
 	}
 
-
 	@Override
 	public void connect() {
 		HttpClient httpClient = new StdHttpClient.Builder().build();
@@ -99,7 +93,6 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 		db = new StdCouchDbConnector(databaseName, dbInstance);
 		isConnected = true;
 	}
-
 
 	@Override
 	public <T> T getDocument(Class<T> c, String id) {
@@ -126,7 +119,6 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 		return ret;
 	}
 
-
 	@Override
 	public void insert(Object data) {
 		if (data == null) {
@@ -143,7 +135,6 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 			throw new DbException(ex);
 		}
 	}
-
 
 	@Override
 	public void update(Object data) {
@@ -163,10 +154,10 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 
 	}
 
-
 	@Override
 	public void delete(Object data) {
-		if (data == null) throw new NullPointerException("data was null");
+		if (data == null)
+			throw new NullPointerException("data was null");
 		checkDbState();
 		try {
 			db.delete(data);
@@ -174,7 +165,6 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 			throw new DbException(ex);
 		}
 	}
-
 
 	@Override
 	public void deleteDatabase() {
@@ -265,7 +255,8 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 	 * @see org.jvalue.ods.db.DbAccessor#executeBulk(java.util.Collection)
 	 */
 	@Override
-	public void executeBulk(Collection<Map<String, Object>> objects, ObjectType schema) {
+	public void executeBulk(Collection<Map<String, Object>> objects,
+			ObjectType schema) {
 
 		if (objects == null) {
 			throw new IllegalArgumentException("objects is null");
@@ -273,35 +264,6 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 
 		checkDbState();
 
-		if (schema != null) {
-
-			for (Map<String, Object> mv : objects) {
-
-				MapObjectType ms = null;
-				try {
-
-					MapObjectType mot = (MapObjectType) schema;
-
-					ms = (MapObjectType) mot.getReferencedObjects().get(
-							"objectType");
-					String s = (String) ms.getAttributes().keySet().toArray()[0];
-
-					mv.put("dataType", s);
-					
-					if (!mv.containsKey("dataQualityStatus")) {
-						mv.put("dataQualityStatus", "raw");
-					}
-					
-				} catch (Exception ex) {
-					Logging.error(this.getClass(), ex.getMessage()
-							+ "Schema does not contain objectType.");
-					System.err.println(ex.getMessage()
-							+ "Schema does not contain objectType.");
-					throw ex;
-				}
-
-			}
-		}
 		try {
 
 			db.executeBulk(objects);
