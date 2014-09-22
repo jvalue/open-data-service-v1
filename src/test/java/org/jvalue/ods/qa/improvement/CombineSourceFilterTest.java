@@ -10,13 +10,13 @@ public class CombineSourceFilterTest {
 	@Test
 	public void testFilterEmptyObject() {
 		List<Object> list = new LinkedList<Object>();
-		Object ge_ret = new CombineSourceFilter().filter(list);
+		new CombineSourceFilter(null, null).filter(list);
 
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testFilterNull() {
-		new CombineSourceFilter().filter(null);
+		new CombineSourceFilter(null, null).filter(null);
 
 	}
 

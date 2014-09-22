@@ -24,12 +24,16 @@ import java.util.List;
 import java.util.Map;
 
 import org.jvalue.EnumType;
+import org.jvalue.ExactValueRestriction;
 import org.jvalue.ValueType;
+import org.jvalue.numbers.Range;
+import org.jvalue.numbers.RangeBound;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.qa.valueTypes.Coordinate;
 import org.jvalue.si.QuantityUnit;
+import org.jvalue.si.QuantityUnitType;
 import org.jvalue.si.SiUnit;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -55,8 +59,16 @@ public class PegelOnlineQualityAssurance {
 	/**
 	 * Check value types.
 	 */
-	public void checkValueTypes(Map<String, ValueType<?>> valueTypes) {
+	public void checkValueTypes() {
 
+		
+		Map<String, ValueType<?>> valueTypes = new HashMap<>();
+		valueTypes.put("waterLevelTrend", createWaterLevelTrendType());
+		valueTypes.put("waterLevel", createWaterLevelType());
+		valueTypes.put("temperature", createTemperatureType());
+		valueTypes.put("electricalConductivity",
+				createElectricalConductivityType());
+		
 		try {
 
 			List<JsonNode> nodes = null;
@@ -167,4 +179,44 @@ public class PegelOnlineQualityAssurance {
 		}
 	}
 
+
+	private static EnumType createWaterLevelTrendType() {
+		ExactValueRestriction<String> a = new ExactValueRestriction<String>(
+				"-1");
+		ExactValueRestriction<String> b = new ExactValueRestriction<String>("0");
+		ExactValueRestriction<String> c = new ExactValueRestriction<String>("1");
+		ExactValueRestriction<String> d = new ExactValueRestriction<String>(
+				"-999");
+
+		EnumType trendType = new EnumType(a.or(b).or(c).or(d));
+		return trendType;
+	}
+
+	private static QuantityUnitType createWaterLevelType() {
+
+		RangeBound<Double> low = new RangeBound<Double>(0.0);
+		RangeBound<Double> high = new RangeBound<Double>(Double.MAX_VALUE);
+		Range<Double> range = new Range<Double>(low, high);
+		return new QuantityUnitType(range, SiUnit.m);
+	}
+
+	private static QuantityUnitType createTemperatureType() {
+
+		RangeBound<Double> low = new RangeBound<Double>(0.0);
+		RangeBound<Double> high = new RangeBound<Double>(Double.MAX_VALUE);
+		Range<Double> range = new Range<Double>(low, high);
+		return new QuantityUnitType(range, SiUnit.K);
+	}
+
+	private static QuantityUnitType createElectricalConductivityType() {
+
+		RangeBound<Double> low = new RangeBound<Double>(0.0);
+		RangeBound<Double> high = new RangeBound<Double>(Double.MAX_VALUE);
+		Range<Double> range = new Range<Double>(low, high);
+		return new QuantityUnitType(range, SiUnit.s.divide(SiUnit.m));
+	}
+	
+	
+	
+	
 }

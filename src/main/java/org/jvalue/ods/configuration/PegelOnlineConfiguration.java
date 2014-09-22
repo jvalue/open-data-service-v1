@@ -33,7 +33,9 @@ import org.jvalue.ods.data.metadata.OdsMetaData;
 import org.jvalue.ods.data.objecttypes.ListObjectType;
 import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.objecttypes.ObjectType;
+import org.jvalue.ods.data.valuetypes.AllowedValueTypes;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
+import org.jvalue.ods.data.valuetypes.MapComplexValueType;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbInsertionFilter;
 import org.jvalue.ods.filter.FilterChain;
@@ -545,11 +547,35 @@ final class PegelOnlineConfiguration implements Configuration {
 		chain.setNextFilter(TranslatorFactory.getJsonTranslator())
 				.setNextFilter(new DataAdditionFilter(source))
 				.setNextFilter(new DbInsertionFilter(accessor, source))
-				.setNextFilter(new CombineSourceFilter())
+				.setNextFilter(new CombineSourceFilter(createSourceCoordinateStructure(), createDestinationCoordinateStructure()))
 				.setNextFilter(new RenameSourceFilter())
 				.setNextFilter(new DbInsertionFilter(accessor, source))
 				.setNextFilter(new NotificationFilter(source));
 		return chain;
 	}
 
+	
+	private static MapComplexValueType createSourceCoordinateStructure() {
+
+		Map<String, GenericValueType> station = new HashMap<String, GenericValueType>();
+
+		station.put("longitude", AllowedValueTypes.VALUETYPE_NUMBER);
+		station.put("latitude", AllowedValueTypes.VALUETYPE_NUMBER);
+		MapComplexValueType stationSchema = new MapComplexValueType(station);
+
+		return stationSchema;
+	}
+
+	private static MapComplexValueType createDestinationCoordinateStructure() {
+
+		Map<String, GenericValueType> coordinate = new HashMap<String, GenericValueType>();
+
+		coordinate.put("coordinate", null);
+		MapComplexValueType coordinateSchema = new MapComplexValueType(
+				coordinate);
+
+		return coordinateSchema;
+	}
+
+	
 }

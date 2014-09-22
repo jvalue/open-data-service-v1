@@ -23,23 +23,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.jvalue.EnumType;
-import org.jvalue.ExactValueRestriction;
-import org.jvalue.ValueType;
-import org.jvalue.numbers.Range;
-import org.jvalue.numbers.RangeBound;
-import org.jvalue.ods.data.valuetypes.AllowedValueTypes;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.data.valuetypes.ListComplexValueType;
 import org.jvalue.ods.data.valuetypes.MapComplexValueType;
 import org.jvalue.ods.data.valuetypes.SimpleValueType;
 import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.logger.Logging;
-import org.jvalue.ods.qa.PegelOnlineQualityAssurance;
-import org.jvalue.si.QuantityUnitType;
-import org.jvalue.si.SiUnit;
 
 public final class CombineSourceFilter implements Filter<Object, Object> {
+
+	private MapComplexValueType sourceCoordinateStructure;
+	private MapComplexValueType destinationCoordinateStructure;
+	
+	public CombineSourceFilter(
+			MapComplexValueType sourceCoordinateStructure,
+			MapComplexValueType destinationCoordinateStructure) {
+		this.sourceCoordinateStructure = sourceCoordinateStructure;
+		this.destinationCoordinateStructure = destinationCoordinateStructure;
+	}
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -48,16 +49,6 @@ public final class CombineSourceFilter implements Filter<Object, Object> {
 		if (data == null) {
 			throw new IllegalArgumentException();
 		}
-
-		Map<String, ValueType<?>> valueTypes = new HashMap<>();
-		valueTypes.put("waterLevelTrend", createWaterLevelTrendType());
-		valueTypes.put("waterLevel", createWaterLevelType());
-		valueTypes.put("temperature", createTemperatureType());
-		valueTypes.put("electricalConductivity",
-				createElectricalConductivityType());
-
-		MapComplexValueType sourceCoordinateStructure = createSourceCoordinateStructure();
-		MapComplexValueType destinationCoordinateStructure = createDestinationCoordinateStructure();
 
 		List<Object> improvedObjects = new LinkedList<Object>();
 
@@ -88,7 +79,6 @@ public final class CombineSourceFilter implements Filter<Object, Object> {
 			improvedObjects.add(gv);
 		}
 
-		new PegelOnlineQualityAssurance().checkValueTypes(valueTypes);
 
 		return improvedObjects;
 	}
@@ -178,63 +168,4 @@ public final class CombineSourceFilter implements Filter<Object, Object> {
 		}
 
 	}
-
-	private static MapComplexValueType createSourceCoordinateStructure() {
-
-		Map<String, GenericValueType> station = new HashMap<String, GenericValueType>();
-
-		station.put("longitude", AllowedValueTypes.VALUETYPE_NUMBER);
-		station.put("latitude", AllowedValueTypes.VALUETYPE_NUMBER);
-		MapComplexValueType stationSchema = new MapComplexValueType(station);
-
-		return stationSchema;
-	}
-
-	private static MapComplexValueType createDestinationCoordinateStructure() {
-
-		Map<String, GenericValueType> coordinate = new HashMap<String, GenericValueType>();
-
-		coordinate.put("coordinate", null);
-		MapComplexValueType coordinateSchema = new MapComplexValueType(
-				coordinate);
-
-		return coordinateSchema;
-	}
-
-	private static EnumType createWaterLevelTrendType() {
-		ExactValueRestriction<String> a = new ExactValueRestriction<String>(
-				"-1");
-		ExactValueRestriction<String> b = new ExactValueRestriction<String>("0");
-		ExactValueRestriction<String> c = new ExactValueRestriction<String>("1");
-		ExactValueRestriction<String> d = new ExactValueRestriction<String>(
-				"-999");
-
-		EnumType trendType = new EnumType(a.or(b).or(c).or(d));
-		return trendType;
-	}
-
-	private static QuantityUnitType createWaterLevelType() {
-
-		RangeBound<Double> low = new RangeBound<Double>(0.0);
-		RangeBound<Double> high = new RangeBound<Double>(Double.MAX_VALUE);
-		Range<Double> range = new Range<Double>(low, high);
-		return new QuantityUnitType(range, SiUnit.m);
-	}
-
-	private static QuantityUnitType createTemperatureType() {
-
-		RangeBound<Double> low = new RangeBound<Double>(0.0);
-		RangeBound<Double> high = new RangeBound<Double>(Double.MAX_VALUE);
-		Range<Double> range = new Range<Double>(low, high);
-		return new QuantityUnitType(range, SiUnit.K);
-	}
-
-	private static QuantityUnitType createElectricalConductivityType() {
-
-		RangeBound<Double> low = new RangeBound<Double>(0.0);
-		RangeBound<Double> high = new RangeBound<Double>(Double.MAX_VALUE);
-		Range<Double> range = new Range<Double>(low, high);
-		return new QuantityUnitType(range, SiUnit.s.divide(SiUnit.m));
-	}
-
 }
