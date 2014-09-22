@@ -32,13 +32,20 @@ import org.jvalue.ods.logger.Logging;
 
 public final class RenameSourceFilter implements Filter<Object, Object> {
 
+	private MapComplexValueType sourceStructure;
+	private MapComplexValueType destinationStructure;
+	private String newName;
+
+	public RenameSourceFilter(MapComplexValueType sourceStructure,
+			MapComplexValueType destinationStructure, String newName) {
+		this.sourceStructure = sourceStructure;
+		this.destinationStructure = destinationStructure;
+		this.newName = newName;
+	}
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public Object filter(Object data) {
-
-		MapComplexValueType sourceStructure = createSourceWaterStructure();
-		MapComplexValueType destinationStructure = createDestinationWaterStructure();
-		String newName = "BodyOfWater";
 
 		List<Object> improvedObjects = new LinkedList<Object>();
 
@@ -162,25 +169,6 @@ public final class RenameSourceFilter implements Filter<Object, Object> {
 
 		}
 
-	}
-
-	private static MapComplexValueType createSourceWaterStructure() {
-
-		Map<String, GenericValueType> station = new HashMap<String, GenericValueType>();
-
-		station.put("water", new MapComplexValueType(null));
-		MapComplexValueType stationSchema = new MapComplexValueType(station);
-
-		return stationSchema;
-	}
-
-	private static MapComplexValueType createDestinationWaterStructure() {
-
-		Map<String, GenericValueType> station = new HashMap<String, GenericValueType>();
-		station.put("BodyOfWater", null);
-		MapComplexValueType stationSchema = new MapComplexValueType(station);
-
-		return stationSchema;
 	}
 
 }

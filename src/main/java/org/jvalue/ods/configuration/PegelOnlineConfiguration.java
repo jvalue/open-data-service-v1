@@ -548,7 +548,7 @@ final class PegelOnlineConfiguration implements Configuration {
 				.setNextFilter(new DataAdditionFilter(source))
 				.setNextFilter(new DbInsertionFilter(accessor, source))
 				.setNextFilter(new CombineSourceFilter(createSourceCoordinateStructure(), createDestinationCoordinateStructure()))
-				.setNextFilter(new RenameSourceFilter())
+				.setNextFilter(new RenameSourceFilter(createSourceWaterStructure(), createDestinationWaterStructure(), "BodyOfWater"))
 				.setNextFilter(new DbInsertionFilter(accessor, source))
 				.setNextFilter(new NotificationFilter(source));
 		return chain;
@@ -577,5 +577,24 @@ final class PegelOnlineConfiguration implements Configuration {
 		return coordinateSchema;
 	}
 
+	
+	private static MapComplexValueType createSourceWaterStructure() {
+
+		Map<String, GenericValueType> station = new HashMap<String, GenericValueType>();
+
+		station.put("water", new MapComplexValueType(null));
+		MapComplexValueType stationSchema = new MapComplexValueType(station);
+
+		return stationSchema;
+	}
+
+	private static MapComplexValueType createDestinationWaterStructure() {
+
+		Map<String, GenericValueType> station = new HashMap<String, GenericValueType>();
+		station.put("BodyOfWater", null);
+		MapComplexValueType stationSchema = new MapComplexValueType(station);
+
+		return stationSchema;
+	}
 	
 }

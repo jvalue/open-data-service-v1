@@ -32,14 +32,14 @@ import org.jvalue.ods.logger.Logging;
 
 public final class CombineSourceFilter implements Filter<Object, Object> {
 
-	private MapComplexValueType sourceCoordinateStructure;
-	private MapComplexValueType destinationCoordinateStructure;
+	private MapComplexValueType sourceStructure;
+	private MapComplexValueType destinationStructure;
 	
 	public CombineSourceFilter(
-			MapComplexValueType sourceCoordinateStructure,
-			MapComplexValueType destinationCoordinateStructure) {
-		this.sourceCoordinateStructure = sourceCoordinateStructure;
-		this.destinationCoordinateStructure = destinationCoordinateStructure;
+			MapComplexValueType sourceStructure,
+			MapComplexValueType destinationStructure) {
+		this.sourceStructure = sourceStructure;
+		this.destinationStructure = destinationStructure;
 	}
 
 	@Override
@@ -63,9 +63,9 @@ public final class CombineSourceFilter implements Filter<Object, Object> {
 		for (Object gv : oldObjects) {
 
 			Map<String, Object> map = new HashMap<String, Object>();
-			traverseSchema(sourceCoordinateStructure, gv, map);
+			traverseSchema(sourceStructure, gv, map);
 
-			insertCombinedValue(gv, map, destinationCoordinateStructure);
+			insertCombinedValue(gv, map, destinationStructure);
 
 			Map<String, Object> finalMo = (Map<String, Object>) gv;
 			finalMo.put("dataQualityStatus", "improved");
