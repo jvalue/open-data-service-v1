@@ -42,6 +42,7 @@ import org.jvalue.ods.filter.FilterChain;
 import org.jvalue.ods.grabber.GrabberFactory;
 import org.jvalue.ods.notifications.NotificationFilter;
 import org.jvalue.ods.qa.DataAdditionFilter;
+import org.jvalue.ods.qa.PegelOnlineQualityAssurance;
 import org.jvalue.ods.qa.improvement.CombineSourceFilter;
 import org.jvalue.ods.qa.improvement.RenameSourceFilter;
 import org.jvalue.ods.translator.TranslatorFactory;
@@ -547,14 +548,20 @@ final class PegelOnlineConfiguration implements Configuration {
 		chain.setNextFilter(TranslatorFactory.getJsonTranslator())
 				.setNextFilter(new DataAdditionFilter(source))
 				.setNextFilter(new DbInsertionFilter(accessor, source))
-				.setNextFilter(new CombineSourceFilter(createSourceCoordinateStructure(), createDestinationCoordinateStructure()))
-				.setNextFilter(new RenameSourceFilter(createSourceWaterStructure(), createDestinationWaterStructure(), "BodyOfWater"))
+				.setNextFilter(
+						new CombineSourceFilter(
+								createSourceCoordinateStructure(),
+								createDestinationCoordinateStructure()))
+				.setNextFilter(
+						new RenameSourceFilter(createSourceWaterStructure(),
+								createDestinationWaterStructure(),
+								"BodyOfWater"))
 				.setNextFilter(new DbInsertionFilter(accessor, source))
+				.setNextFilter(new PegelOnlineQualityAssurance())
 				.setNextFilter(new NotificationFilter(source));
 		return chain;
 	}
 
-	
 	private static MapComplexValueType createSourceCoordinateStructure() {
 
 		Map<String, GenericValueType> station = new HashMap<String, GenericValueType>();
@@ -577,7 +584,6 @@ final class PegelOnlineConfiguration implements Configuration {
 		return coordinateSchema;
 	}
 
-	
 	private static MapComplexValueType createSourceWaterStructure() {
 
 		Map<String, GenericValueType> station = new HashMap<String, GenericValueType>();
@@ -596,5 +602,5 @@ final class PegelOnlineConfiguration implements Configuration {
 
 		return stationSchema;
 	}
-	
+
 }
