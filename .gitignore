@@ -13,6 +13,7 @@
 /.settings
 .classpath
 .project
+.idea
 googleApi.key
 
 # Allow #
