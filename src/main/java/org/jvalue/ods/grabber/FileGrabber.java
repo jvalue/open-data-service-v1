@@ -24,9 +24,9 @@ import java.net.URL;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.logger.Logging;
 
-final class ResourceGrabber extends Grabber<File> {
+final class FileGrabber extends Grabber<File> {
 
-	public ResourceGrabber(DataSource source) {
+	public FileGrabber(DataSource source) {
 		super(source);
 	}
 

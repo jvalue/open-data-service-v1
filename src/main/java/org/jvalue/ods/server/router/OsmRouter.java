@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.jvalue.ods.db.DbAccessor;
-import org.jvalue.ods.db.exception.DbException;
+import org.jvalue.ods.db.DbException;
 import org.jvalue.ods.server.restlet.BaseRestlet;
 import org.jvalue.ods.server.restlet.ExecuteQueryRestlet;
 import org.jvalue.ods.server.utils.RestletResult;

@@ -32,7 +32,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.db.exception.DbException;
+import org.jvalue.ods.db.DbException;
 
 import com.fasterxml.jackson.databind.JsonNode;
 

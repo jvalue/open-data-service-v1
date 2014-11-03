@@ -22,7 +22,6 @@ import org.ektorp.support.DesignDocument.View;
 import org.ektorp.support.DesignDocumentFactory;
 import org.ektorp.support.StdDesignDocumentFactory;
 import org.jvalue.ods.data.OdsView;
-import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.logger.Logging;
 
 import com.fasterxml.jackson.databind.JsonNode;

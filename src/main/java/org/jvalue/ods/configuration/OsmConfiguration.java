@@ -17,15 +17,7 @@
  */
 package org.jvalue.ods.configuration;
 
-import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_NULL;
-import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_NUMBER;
-import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_STRING;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.OdsView;
@@ -42,7 +34,15 @@ import org.jvalue.ods.grabber.GrabberFactory;
 import org.jvalue.ods.notifications.NotificationFilter;
 import org.jvalue.ods.qa.DataAdditionFilter;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import java.io.File;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_NULL;
+import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_NUMBER;
+import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_STRING;
 
 final class OsmConfiguration implements Configuration {
 
@@ -164,7 +164,7 @@ final class OsmConfiguration implements Configuration {
 		DataSource source = getDataSource();
 
 		FilterChain<Void, File> chain = FilterChain.instance(GrabberFactory
-				.getResourceGrabber(source));
+				.getFileGrabber(source));
 		chain.setNextFilter(new OsmTranslator())
 				.setNextFilter(new DataAdditionFilter(source))
 				.setNextFilter(new DbInsertionFilter(accessor, source))

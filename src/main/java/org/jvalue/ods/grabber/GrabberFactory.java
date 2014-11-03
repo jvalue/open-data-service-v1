@@ -40,8 +40,8 @@ public final class GrabberFactory {
 	}
 
 
-	public static Grabber<File> getResourceGrabber(DataSource source) {
-		return new ResourceGrabber(source);
+	public static Grabber<File> getFileGrabber(DataSource source) {
+		return new FileGrabber(source);
 	}
 
 

@@ -33,7 +33,6 @@ import org.ektorp.http.StdHttpClient;
 import org.ektorp.impl.StdCouchDbConnector;
 import org.ektorp.impl.StdCouchDbInstance;
 import org.jvalue.ods.data.objecttypes.ObjectType;
-import org.jvalue.ods.db.exception.DbException;
 import org.jvalue.ods.logger.Logging;
 
 import com.fasterxml.jackson.databind.JsonNode;
