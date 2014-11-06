@@ -38,7 +38,7 @@ import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.data.valuetypes.MapComplexValueType;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbInsertionFilter;
-import org.jvalue.ods.filter.FilterChain;
+import org.jvalue.ods.filter.FilterChainElement;
 import org.jvalue.ods.grabber.GrabberFactory;
 import org.jvalue.ods.notifications.NotificationFilter;
 import org.jvalue.ods.qa.DataAdditionFilter;
@@ -540,10 +540,10 @@ final class PegelOnlineConfiguration implements Configuration {
 	}
 
 	@Override
-	public FilterChain<Void, ?> getFilterChain(DbAccessor<JsonNode> accessor) {
+	public FilterChainElement<Void, ?> getFilterChain(DbAccessor<JsonNode> accessor) {
 		DataSource source = getDataSource();
 
-		FilterChain<Void, JsonNode> chain = FilterChain.instance(GrabberFactory
+		FilterChainElement<Void, JsonNode> chain = FilterChainElement.instance(GrabberFactory
 				.getJsonGrabber(source));
 		chain.setNextFilter(TranslatorFactory.getJsonTranslator())
 				.setNextFilter(new DataAdditionFilter(source))

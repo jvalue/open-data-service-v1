@@ -26,36 +26,36 @@ import org.jvalue.ods.utils.Assert;
 
 public final class FilterChainManager {
 
-	private final Set<FilterChain<Void, ?>> filterChains = new HashSet<FilterChain<Void, ?>>();
+	private final Set<FilterChainElement<Void, ?>> filterChains = new HashSet<FilterChainElement<Void, ?>>();
 
 
-	public void register(FilterChain<Void, ?> chain) {
+	public void register(FilterChainElement<Void, ?> chain) {
 		Assert.assertNotNull(chain);
 		filterChains.add(chain);
 	}
 
 
-	public void unregister(FilterChain<Void, ?> chain) {
+	public void unregister(FilterChainElement<Void, ?> chain) {
 		Assert.assertNotNull(chain);
 		filterChains.remove(chain);
 	}
 
 
-	public boolean isRegistered(FilterChain<Void, ?> chain) {
+	public boolean isRegistered(FilterChainElement<Void, ?> chain) {
 		Assert.assertNotNull(chain);
 		return filterChains.contains(chain);
 	}
 
 
 	public void startFilterChains() {
-		for (FilterChain<Void, ?> chain : filterChains) {
+		for (FilterChainElement<Void, ?> chain : filterChains) {
 			chain.filter(null);
 		}
 	}
 
 
-	public Set<FilterChain<Void, ?>> getRegistered() {
-		return new HashSet<FilterChain <Void,?>>(filterChains);
+	public Set<FilterChainElement<Void, ?>> getRegistered() {
+		return new HashSet<FilterChainElement<Void,?>>(filterChains);
 	}
 
 }

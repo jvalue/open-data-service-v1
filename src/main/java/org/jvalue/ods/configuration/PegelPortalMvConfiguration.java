@@ -36,7 +36,7 @@ import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbInsertionFilter;
-import org.jvalue.ods.filter.FilterChain;
+import org.jvalue.ods.filter.FilterChainElement;
 import org.jvalue.ods.grabber.GrabberFactory;
 import org.jvalue.ods.notifications.NotificationFilter;
 import org.jvalue.ods.qa.DataAdditionFilter;
@@ -152,10 +152,10 @@ public final class PegelPortalMvConfiguration implements Configuration {
 	}
 
 	@Override
-	public FilterChain<Void, ?> getFilterChain(DbAccessor<JsonNode> accessor) {
+	public FilterChainElement<Void, ?> getFilterChain(DbAccessor<JsonNode> accessor) {
 		DataSource source = getDataSource();
 
-		FilterChain<Void, String> chain = FilterChain.instance(GrabberFactory
+		FilterChainElement<Void, String> chain = FilterChainElement.instance(GrabberFactory
 				.getHttpGrabber(source, "UTF-8"));
 
 		chain.setNextFilter(new PegelPortalMvTranslator(source))

@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import org.jvalue.ods.filter.FilterChain;
+import org.jvalue.ods.filter.FilterChainElement;
 import org.jvalue.ods.logger.Logging;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -62,13 +62,13 @@ public class DeepCopy {
 				try {
 					os.close();
 				} catch (IOException e) {
-					Logging.error(FilterChain.class, e.getMessage());
+					Logging.error(FilterChainElement.class, e.getMessage());
 				} finally {
 					if (is != null) {
 						try {
 							is.close();
 						} catch (IOException e) {
-							Logging.error(FilterChain.class, e.getMessage());
+							Logging.error(FilterChainElement.class, e.getMessage());
 						}
 					}
 				}

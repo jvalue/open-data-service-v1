@@ -18,14 +18,14 @@ public final class FilterChainManagerTest {
 	@Test
 	public final void testAddRemoveFilter() {
 
-		List<FilterChain<Void, Void>> chains = new LinkedList<>();
-		chains.add(FilterChain.instance(new DummyFilter()));
-		chains.add(FilterChain.instance(new DummyFilter()));
-		chains.add(FilterChain.instance(new DummyFilter()));
+		List<FilterChainElement<Void, Void>> chains = new LinkedList<>();
+		chains.add(FilterChainElement.instance(new DummyFilter()));
+		chains.add(FilterChainElement.instance(new DummyFilter()));
+		chains.add(FilterChainElement.instance(new DummyFilter()));
 
 		FilterChainManager manager = new FilterChainManager();
 
-		for (FilterChain<Void,?> chain : chains) {
+		for (FilterChainElement<Void,?> chain : chains) {
 			assertFalse(manager.isRegistered(chain));
 			manager.register(chain);
 			assertTrue(manager.isRegistered(chain));
@@ -35,7 +35,7 @@ public final class FilterChainManagerTest {
 		manager.startFilterChains();
 		assertEquals(3, filterCount);
 
-		for (FilterChain<Void,?> chain : chains) {
+		for (FilterChainElement<Void,?> chain : chains) {
 			manager.unregister(chain);
 			assertFalse(manager.isRegistered(chain));
 			assertFalse(manager.getRegistered().contains(chain));

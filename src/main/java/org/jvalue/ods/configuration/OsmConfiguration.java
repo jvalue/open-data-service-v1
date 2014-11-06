@@ -29,7 +29,7 @@ import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbInsertionFilter;
-import org.jvalue.ods.filter.FilterChain;
+import org.jvalue.ods.filter.FilterChainElement;
 import org.jvalue.ods.grabber.GrabberFactory;
 import org.jvalue.ods.notifications.NotificationFilter;
 import org.jvalue.ods.qa.DataAdditionFilter;
@@ -160,10 +160,10 @@ final class OsmConfiguration implements Configuration {
 	}
 
 	@Override
-	public FilterChain<Void, ?> getFilterChain(DbAccessor<JsonNode> accessor) {
+	public FilterChainElement<Void, ?> getFilterChain(DbAccessor<JsonNode> accessor) {
 		DataSource source = getDataSource();
 
-		FilterChain<Void, File> chain = FilterChain.instance(GrabberFactory
+		FilterChainElement<Void, File> chain = FilterChainElement.instance(GrabberFactory
 				.getFileGrabber(source));
 		chain.setNextFilter(new OsmTranslator())
 				.setNextFilter(new DataAdditionFilter(source))

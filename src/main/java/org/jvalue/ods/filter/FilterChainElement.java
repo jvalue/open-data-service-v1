@@ -20,23 +20,23 @@ package org.jvalue.ods.filter;
 import org.jvalue.ods.utils.Assert;
 import org.jvalue.ods.utils.DeepCopy;
 
-public final class FilterChain<P, R> {
+public final class FilterChainElement<P, R> {
 
-	public static <P, R> FilterChain<P, R> instance(Filter<P, R> filter) {
-		return new FilterChain<P, R>(filter);
+	public static <P, R> FilterChainElement<P, R> instance(Filter<P, R> filter) {
+		return new FilterChainElement<P, R>(filter);
 	}
 
 	private final Filter<P, R> filter;
-	private FilterChain<R, ?> nextChain;
+	private FilterChainElement<R, ?> nextChain;
 
-	private FilterChain(Filter<P, R> filter) {
+	private FilterChainElement(Filter<P, R> filter) {
 		Assert.assertNotNull(filter);
 		this.filter = filter;
 	}
 
-	public <T> FilterChain<R, T> setNextFilter(Filter<R, T> filter) {
+	public <T> FilterChainElement<R, T> setNextFilter(Filter<R, T> filter) {
 		Assert.assertNotNull(filter);
-		FilterChain<R, T> nextChain = new FilterChain<R, T>(filter);
+		FilterChainElement<R, T> nextChain = new FilterChainElement<R, T>(filter);
 		this.nextChain = nextChain;
 		return nextChain;
 	}

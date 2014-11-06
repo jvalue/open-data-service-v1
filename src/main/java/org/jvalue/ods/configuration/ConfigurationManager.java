@@ -24,7 +24,7 @@ import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.OdsView;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbUtils;
-import org.jvalue.ods.filter.FilterChain;
+import org.jvalue.ods.filter.FilterChainElement;
 import org.jvalue.ods.filter.FilterChainManager;
 import org.jvalue.ods.utils.Assert;
 
@@ -55,7 +55,7 @@ public final class ConfigurationManager {
 
 		for (Configuration configuration : configurations) {
 			DataSource source = configuration.getDataSource();
-			FilterChain<Void, ?> chain = configuration.getFilterChain(accessor);
+			FilterChainElement<Void, ?> chain = configuration.getFilterChain(accessor);
 
 			filterManager.register(chain);
 

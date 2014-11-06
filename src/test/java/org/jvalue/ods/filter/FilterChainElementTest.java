@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 
-public final class FilterChainTest {
+public final class FilterChainElementTest {
 
 	private int filterCount = 0;
 
@@ -15,7 +15,7 @@ public final class FilterChainTest {
 
 		String value = "dummy";
 
-		FilterChain<String, String> chain = FilterChain.instance(new DummyFilter(value));
+		FilterChainElement<String, String> chain = FilterChainElement.instance(new DummyFilter(value));
 		chain
 			.setNextFilter(new DummyFilter(value))
 			.setNextFilter(new DummyFilter(value))
