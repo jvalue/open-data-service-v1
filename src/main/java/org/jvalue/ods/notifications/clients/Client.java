@@ -17,17 +17,18 @@
  */
 package org.jvalue.ods.notifications.clients;
 
-import org.jvalue.ods.utils.Assert;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
+import org.ektorp.support.CouchDbDocument;
+import org.jvalue.ods.utils.Assert;
+
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 @JsonTypeInfo(use=Id.CLASS, include=As.PROPERTY, property="class")
-public abstract class Client {
+public abstract class Client extends CouchDbDocument {
 
 	private final String clientId, source;
 
