@@ -17,13 +17,6 @@
  */
 package org.jvalue.ods.server;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import org.jvalue.ods.grabber.DataGrabberMain;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.server.restlet.DefaultRestlet;
 import org.jvalue.ods.server.router.RouterFactory;
@@ -31,10 +24,16 @@ import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.routing.Router;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map.Entry;
+import java.util.Set;
+
 /**
  * The Class ContainerRestletApp.
  */
-public class ContainerRestletApp extends Application implements Runnable {
+public class ContainerRestletApp extends Application {
 
 	/*
 	 * (non-Javadoc)
@@ -43,8 +42,6 @@ public class ContainerRestletApp extends Application implements Runnable {
 	 */
 	@Override
 	public Restlet createInboundRoot() {
-		(new Thread(this)).start();
-
 		org.jvalue.ods.server.router.Router<Restlet> odsRouter = RouterFactory
 				.createOdsRouter();
 		org.jvalue.ods.server.router.Router<Restlet> poRouter = RouterFactory
@@ -103,30 +100,6 @@ public class ContainerRestletApp extends Application implements Runnable {
 		}
 
 		return router;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Runnable#run()
-	 */
-	@Override
-	public void run() {
-		while (true) {
-			try {
-				DataGrabberMain.initialize();
-				DataGrabberMain.updateData();
-			} catch (Exception ex) {
-				Logging.error(DataGrabberMain.class, ex.getMessage());
-				ex.printStackTrace();
-			} finally {
-				try {
-					Thread.sleep(2000000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
 	}
 
 }

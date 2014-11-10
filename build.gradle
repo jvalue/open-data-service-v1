@@ -43,14 +43,13 @@ mainClassName = "org.jvalue.ods.server.DataServerMain"
 
 dependencies {
     cargo "org.codehaus.cargo:cargo-ant:1.4.5"
-    
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.2.3'
-    compile 'com.fasterxml.jackson.core:jackson-core:2.2.3'
-    compile 'com.fasterxml.jackson.core:jackson-annotations:2.2.3'
+
+    compile 'io.dropwizard:dropwizard-core:0.7.+'
+    compile 'com.google.inject:guice:4.0-beta5'
+    compile 'org.ektorp:org.ektorp:1.4.+'
 	compile 'org.restlet.jee:org.restlet:2.1.6'
 	compile 'org.restlet.jee:org.restlet.ext.jackson:2.1.6'
 	compile 'org.restlet.jee:org.restlet.ext.servlet:2.1.6'
-	compile 'org.ektorp:org.ektorp:1.4.1'
 	compile 'org.openstreetmap.osmosis:osmosis-core:0.43.1'
 	compile 'org.openstreetmap.osmosis:osmosis-xml:0.43.1'
 	compile 'com.github.fge:json-schema-validator:2.1.7'

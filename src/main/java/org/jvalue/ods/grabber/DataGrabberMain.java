@@ -16,56 +16,77 @@
  */
 package org.jvalue.ods.grabber;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import org.jvalue.ods.administration.AdministrationLogging;
 import org.jvalue.ods.configuration.ConfigurationManager;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.filter.FilterChainManager;
+import org.jvalue.ods.logger.Logging;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import io.dropwizard.lifecycle.Managed;
 
 
-public class DataGrabberMain {
+public class DataGrabberMain implements Managed {
 
-	private static DbAccessor<JsonNode> accessor;
-	private static FilterChainManager filterManager;
+	private final DataGrabberThread grabberThread = new DataGrabberThread();
 
-	private static boolean initialized = false;
-
-	public static void main(String[] args) {
-		initialize();
-		updateData();
+	@Override
+	public void start() {
+		new Thread(grabberThread).start();
 	}
 
 
-	public static void initialize() {		
-		AdministrationLogging.log("Initialize started");
-		
-		accessor = DbFactory.createDbAccessor("ods");
-		filterManager = new FilterChainManager();
-
-		ConfigurationManager.configureAll(accessor, filterManager);
-		initialized = true;
-		
-		AdministrationLogging.log("Initialize completed");
+	@Override
+	public void stop() {
+		grabberThread.stop();
 	}
 
 
-	public static boolean isInitialized() {
-		return initialized;
+	private static final class DataGrabberThread implements Runnable {
+
+		private boolean stopped = false;
+
+		@Override
+		public void run() {
+			while (true) {
+				try {
+					if (stopped) return;
+					grabData();
+				} catch (Exception ex) {
+					Logging.error(DataGrabberMain.class, ex.getMessage());
+					ex.printStackTrace();
+				} finally {
+					try {
+						Thread.sleep(2000000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+
+
+		private void grabData() {
+			AdministrationLogging.log("Initialize started");
+			DbAccessor<JsonNode> accessor = DbFactory.createDbAccessor("ods");
+			FilterChainManager filterManager = new FilterChainManager();
+			ConfigurationManager.configureAll(accessor, filterManager);
+			AdministrationLogging.log("Initialize completed");
+
+			AdministrationLogging.log("Update started");
+			accessor = DbFactory.createDbAccessor("ods");
+			accessor.connect();
+			filterManager.startFilterChains();
+			AdministrationLogging.log("Update completed");
+		}
+
+
+		public void stop() {
+			this.stopped = true;
+		}
+
 	}
-
-
-	public static void updateData() {
-		AdministrationLogging.log("Update started");
-
-		accessor = DbFactory.createDbAccessor("ods");
-		accessor.connect();
-
-		filterManager.startFilterChains();
-
-		AdministrationLogging.log("Update completed");
-	}
-
 
 }
