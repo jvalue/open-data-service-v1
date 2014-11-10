@@ -17,11 +17,6 @@
  */
 package org.jvalue.ods.notifications;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.notifications.clients.Client;
@@ -35,6 +30,11 @@ import org.jvalue.ods.notifications.sender.NotificationSender;
 import org.jvalue.ods.notifications.sender.SenderResult;
 import org.jvalue.ods.utils.Assert;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 
 public final class NotificationManager {
 
@@ -43,35 +43,32 @@ public final class NotificationManager {
 	public static NotificationManager getInstance() {
 		if (instance == null) {
 			ClientDatastore store = ClientDatastoreFactory.getClientDatastore();
-			instance = new NotificationManager(store);
-			instance.addDefinition(
-					GcmClient.class, 
-					DefinitionFactory.getGcmDefinition());
-			instance.addDefinition(
-					HttpClient.class, 
-					DefinitionFactory.getRestDefinition());
+			instance = new Builder(store)
+					.definition(
+							GcmClient.class,
+							DefinitionFactory.getGcmDefinition())
+					.definition(
+							HttpClient.class,
+							DefinitionFactory.getRestDefinition())
+					.build();
 		}
 		return instance;
 	}
 
 
 	private final ClientDatastore clientStore;
-	private final Map<Class<?>, NotificationDefinition<?>> definitions = new HashMap<>();
+	private final Map<Class<?>, NotificationDefinition<?>> definitions;
 
-	NotificationManager(ClientDatastore clientStore) {
-		Assert.assertNotNull(clientStore);
+
+	private NotificationManager(
+			ClientDatastore clientStore,
+			Map<Class<?>, NotificationDefinition<?>> definitions) {
+
+		Assert.assertNotNull(clientStore, definitions);
 		this.clientStore = clientStore;
+		this.definitions = definitions;
 	}
 
-
-	<T extends Client> void addDefinition(
-			Class<T> clientType, 
-			NotificationDefinition<T> definition) {
-
-		definitions.put(clientType, definition);
-
-	}
-	
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	public void notifySourceChanged(DataSource source, Object data) {
@@ -133,6 +130,34 @@ public final class NotificationManager {
 
 	public Set<Client> getAllClients() {
 		return clientStore.getAll();
+	}
+
+
+
+	public static class Builder {
+
+		private final ClientDatastore clientStore;
+		private final Map<Class<?>, NotificationDefinition<?>> definitions;
+
+		public Builder(ClientDatastore clientStore) {
+			Assert.assertNotNull(clientStore);
+			this.clientStore = clientStore;
+			this.definitions = new HashMap<>();
+		}
+
+
+		public <T extends Client> Builder definition(
+				Class<T> clientType,
+				NotificationDefinition<T> definition) {
+			definitions.put(clientType, definition);
+			return this;
+		}
+
+
+		public NotificationManager build() {
+			return new NotificationManager(clientStore, definitions);
+		}
+
 	}
 
 }
