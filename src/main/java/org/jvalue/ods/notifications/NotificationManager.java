@@ -20,11 +20,8 @@ package org.jvalue.ods.notifications;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.notifications.clients.Client;
-import org.jvalue.ods.notifications.clients.GcmClient;
-import org.jvalue.ods.notifications.clients.HttpClient;
 import org.jvalue.ods.notifications.db.ClientDatastore;
 import org.jvalue.ods.notifications.db.ClientDatastoreFactory;
-import org.jvalue.ods.notifications.definitions.DefinitionFactory;
 import org.jvalue.ods.notifications.definitions.NotificationDefinition;
 import org.jvalue.ods.notifications.sender.NotificationSender;
 import org.jvalue.ods.notifications.sender.SenderResult;
@@ -32,6 +29,7 @@ import org.jvalue.ods.utils.Assert;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -43,6 +41,7 @@ public final class NotificationManager {
 	public static NotificationManager getInstance() {
 		if (instance == null) {
 			ClientDatastore store = ClientDatastoreFactory.getClientDatastore();
+			/*
 			instance = new Builder(store)
 					.definition(
 							GcmClient.class,
@@ -51,21 +50,23 @@ public final class NotificationManager {
 							HttpClient.class,
 							DefinitionFactory.getRestDefinition())
 					.build();
+					*/
+			// TODO!
 		}
 		return instance;
 	}
 
 
-	private final ClientDatastore clientStore;
+	private final ClientRepository clientRepository;
 	private final Map<Class<?>, NotificationDefinition<?>> definitions;
 
 
 	private NotificationManager(
-			ClientDatastore clientStore,
+			ClientRepository clientRepository,
 			Map<Class<?>, NotificationDefinition<?>> definitions) {
 
-		Assert.assertNotNull(clientStore, definitions);
-		this.clientStore = clientStore;
+		Assert.assertNotNull(clientRepository, definitions);
+		this.clientRepository = clientRepository;
 		this.definitions = definitions;
 	}
 
@@ -73,8 +74,7 @@ public final class NotificationManager {
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	public void notifySourceChanged(DataSource source, Object data) {
 		Assert.assertNotNull(source);
-		for (Client client : clientStore.getAll()) {
-			if (!client.getSource().equals(source.getId())) continue;
+		for (Client client : clientRepository.findBySource(source.getId())) {
 			NotificationSender sender = definitions.get(client.getClass()).getNotificationSender();
 			if (sender == null) {
 				Logging.error(NotificationManager.class, "Failed to get NotificationSender for client " + client.getClientId());
@@ -118,30 +118,32 @@ public final class NotificationManager {
 
 	public void registerClient(Client client) {
 		Assert.assertNotNull(client);
-		clientStore.add(client);
+		clientRepository.add(client);
 	}
 
 
 	public void unregisterClient(String clientId) {
 		Assert.assertNotNull(clientId);
-		clientStore.remove(clientId);
+		for (Client client : clientRepository.findByClientId(clientId)) {
+			clientRepository.remove(client);
+		}
 	}
 
 
 	public Set<Client> getAllClients() {
-		return clientStore.getAll();
+		return new HashSet<Client>(clientRepository.getAll());
 	}
 
 
 
 	public static class Builder {
 
-		private final ClientDatastore clientStore;
+		private final ClientRepository clientRepository;
 		private final Map<Class<?>, NotificationDefinition<?>> definitions;
 
-		public Builder(ClientDatastore clientStore) {
-			Assert.assertNotNull(clientStore);
-			this.clientStore = clientStore;
+		public Builder(ClientRepository clientRepository) {
+			Assert.assertNotNull(clientRepository);
+			this.clientRepository = clientRepository;
 			this.definitions = new HashMap<>();
 		}
 
@@ -155,7 +157,7 @@ public final class NotificationManager {
 
 
 		public NotificationManager build() {
-			return new NotificationManager(clientStore, definitions);
+			return new NotificationManager(clientRepository, definitions);
 		}
 
 	}
