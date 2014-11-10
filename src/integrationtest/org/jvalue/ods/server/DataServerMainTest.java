@@ -16,11 +16,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package integration.org.jvalue.ods.server;
+package org.jvalue.ods.server;
 
 import org.junit.Test;
 import org.jvalue.ods.logger.Logging;
-import org.jvalue.ods.server.DataServerMain;
 
 /**
  * The Class DataServerMainTest.

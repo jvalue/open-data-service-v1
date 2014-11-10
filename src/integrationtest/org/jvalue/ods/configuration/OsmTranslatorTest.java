@@ -1,7 +1,7 @@
 /*
  * 
  */
-package integration.org.jvalue.ods.configuration;
+package org.jvalue.ods.configuration;
 
 
 /**

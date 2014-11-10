@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package integration.org.jvalue.ods.db;
+package org.jvalue.ods.db;
 
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
@@ -30,9 +30,6 @@ import org.ektorp.support.CouchDbDocument;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.jvalue.ods.db.DbAccessor;
-import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.db.DbException;
 
 import com.fasterxml.jackson.databind.JsonNode;
 

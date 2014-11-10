@@ -15,7 +15,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package integration.org.jvalue.ods.translator;
+package org.jvalue.ods.translator;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -32,7 +32,6 @@ import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.data.valuetypes.ListComplexValueType;
 import org.jvalue.ods.data.valuetypes.MapComplexValueType;
 import org.jvalue.ods.grabber.GrabberFactory;
-import org.jvalue.ods.translator.TranslatorFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
