@@ -24,13 +24,13 @@ public final class ClientRepository extends CouchDbRepositorySupport<Client> {
 
 	@GenerateView
 	public List<Client> findByClientId(String clientId) {
-		return queryView("by_clientId");
+		return queryView("by_clientId", clientId);
 	}
 
 
 	@GenerateView
 	public List<Client> findBySource(String source) {
-		return queryView("by_source");
+		return queryView("by_source", source);
 	}
 
 }

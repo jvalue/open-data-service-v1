@@ -1,24 +1,7 @@
 package org.jvalue.ods.notifications;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Set;
-
-import org.junit.Before;
-import org.junit.Test;
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.data.DummyDataSource;
 import org.jvalue.ods.notifications.clients.Client;
-import org.jvalue.ods.notifications.clients.DummyClient;
-import org.jvalue.ods.notifications.db.DummyClientDatastore;
-import org.jvalue.ods.notifications.definitions.NotificationDefinition;
-import org.jvalue.ods.notifications.rest.RestAdapter;
-import org.jvalue.ods.notifications.sender.NotificationSender;
-import org.jvalue.ods.notifications.sender.SenderResult;
-import org.restlet.Request;
 
 
 public final class NotificationManagerTest {
@@ -31,6 +14,7 @@ public final class NotificationManagerTest {
 	private int notifyCalledCount;
 
 
+	/*
 	@Before
 	public final void setup() {
 
@@ -223,5 +207,6 @@ public final class NotificationManagerTest {
 		}
 
 	}
+	*/
 
 }
