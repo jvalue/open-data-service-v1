@@ -1,7 +1,12 @@
 package org.jvalue.ods.main;
 
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+
+import org.jvalue.ods.db.DbModule;
 import org.jvalue.ods.grabber.DataGrabberMain;
+import org.jvalue.ods.notifications.NotificationsModule;
 
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
@@ -29,7 +34,10 @@ public final class OdsApplication extends Application<OdsConfiguration> {
 
 	@Override
 	public void run(OdsConfiguration configuration, Environment environment) {
-		// Injector injector = Guice.createInjector();
+		Injector injector = Guice.createInjector(
+				new DbModule(),
+				new NotificationsModule());
+
 
 		// start data grabbing
 		environment.lifecycle().manage(new DataGrabberMain());
