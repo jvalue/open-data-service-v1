@@ -20,8 +20,6 @@ package org.jvalue.ods.notifications;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.notifications.clients.Client;
-import org.jvalue.ods.notifications.db.ClientDatastore;
-import org.jvalue.ods.notifications.db.ClientDatastoreFactory;
 import org.jvalue.ods.notifications.definitions.NotificationDefinition;
 import org.jvalue.ods.notifications.sender.NotificationSender;
 import org.jvalue.ods.notifications.sender.SenderResult;
@@ -40,7 +38,6 @@ public final class NotificationManager {
 
 	public static NotificationManager getInstance() {
 		if (instance == null) {
-			ClientDatastore store = ClientDatastoreFactory.getClientDatastore();
 			/*
 			instance = new Builder(store)
 					.definition(
