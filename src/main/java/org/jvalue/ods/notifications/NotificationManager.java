@@ -20,14 +20,13 @@ package org.jvalue.ods.notifications;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.notifications.clients.Client;
-import org.jvalue.ods.notifications.definitions.NotificationDefinition;
 import org.jvalue.ods.notifications.sender.NotificationSender;
 import org.jvalue.ods.notifications.sender.SenderResult;
 import org.jvalue.ods.utils.Assert;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -54,17 +53,18 @@ public final class NotificationManager {
 	}
 
 
+
 	private final ClientRepository clientRepository;
-	private final Map<Class<?>, NotificationDefinition<?>> definitions;
+	private final Map<Class<?>, NotificationSender<?>> sender;
 
 
 	private NotificationManager(
 			ClientRepository clientRepository,
-			Map<Class<?>, NotificationDefinition<?>> definitions) {
+			Map<Class<?>, NotificationSender<?>> sender) {
 
-		Assert.assertNotNull(clientRepository, definitions);
+		Assert.assertNotNull(clientRepository, sender);
 		this.clientRepository = clientRepository;
-		this.definitions = definitions;
+		this.sender = sender;
 	}
 
 
@@ -72,7 +72,7 @@ public final class NotificationManager {
 	public void notifySourceChanged(DataSource source, Object data) {
 		Assert.assertNotNull(source);
 		for (Client client : clientRepository.findBySource(source.getId())) {
-			NotificationSender sender = definitions.get(client.getClass()).getNotificationSender();
+			NotificationSender sender = this.sender.get(client.getClass());
 			if (sender == null) {
 				Logging.error(NotificationManager.class, "Failed to get NotificationSender for client " + client.getClientId());
 				continue;
@@ -108,11 +108,6 @@ public final class NotificationManager {
 	}
 
 
-	public Collection<NotificationDefinition<?>> getNotificationDefinitions() {
-		return definitions.values();
-	}
-
-
 	public void registerClient(Client client) {
 		Assert.assertNotNull(client);
 		clientRepository.add(client);
@@ -132,29 +127,39 @@ public final class NotificationManager {
 	}
 
 
+	public boolean isClientRegistered(String clientId) {
+		return !clientRepository.findByClientId(clientId).isEmpty();
+	}
+
+
+	public Client getClientById(String clientId) throws ClientNotRegisteredException {
+		if (isClientRegistered(clientId)) throw new ClientNotRegisteredException(clientId);
+		List<Client> clients = clientRepository.findByClientId(clientId);
+		return clients.get(0);
+	}
 
 	public static class Builder {
 
 		private final ClientRepository clientRepository;
-		private final Map<Class<?>, NotificationDefinition<?>> definitions;
+		private final Map<Class<?>, NotificationSender<?>> sender;
 
 		public Builder(ClientRepository clientRepository) {
 			Assert.assertNotNull(clientRepository);
 			this.clientRepository = clientRepository;
-			this.definitions = new HashMap<>();
+			this.sender = new HashMap<>();
 		}
 
 
-		public <T extends Client> Builder definition(
+		public <T extends Client> Builder sender(
 				Class<T> clientType,
-				NotificationDefinition<T> definition) {
-			definitions.put(clientType, definition);
+				NotificationSender<T> sender) {
+			this.sender.put(clientType, sender);
 			return this;
 		}
 
 
 		public NotificationManager build() {
-			return new NotificationManager(clientRepository, definitions);
+			return new NotificationManager(clientRepository, sender);
 		}
 
 	}

@@ -17,14 +17,14 @@
  */
 package org.jvalue.ods.server.router;
 
-import java.util.Set;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import org.jvalue.ods.administration.AdministrationRouter;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.restlet.Restlet;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import java.util.Set;
 
 
 public final class RouterFactory {
@@ -74,11 +74,6 @@ public final class RouterFactory {
 
 	public static Router<Restlet> createOdsRouter() {
 		return new OdsRouter(getOdsDbAccessor());
-	}
-
-
-	public static Router<Restlet> createNotificationRouter() {
-		return new NotificationRouter();
 	}
 
 

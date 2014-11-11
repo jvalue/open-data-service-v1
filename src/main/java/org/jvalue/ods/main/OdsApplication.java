@@ -8,6 +8,8 @@ import org.jvalue.ods.db.DbModule;
 import org.jvalue.ods.grabber.DataGrabberMain;
 import org.jvalue.ods.notifications.NotificationsModule;
 
+import javax.ws.rs.core.Context;
+
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -33,6 +35,7 @@ public final class OdsApplication extends Application<OdsConfiguration> {
 
 
 	@Override
+	@Context
 	public void run(OdsConfiguration configuration, Environment environment) {
 		Injector injector = Guice.createInjector(
 				new DbModule(),

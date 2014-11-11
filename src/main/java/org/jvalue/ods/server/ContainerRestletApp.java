@@ -54,8 +54,6 @@ public class ContainerRestletApp extends Application {
 				.createOverpassRouter();
 		org.jvalue.ods.server.router.Router<Restlet> osmRouter = RouterFactory
 				.createOsmRouter();
-		org.jvalue.ods.server.router.Router<Restlet> notificationRouter = RouterFactory
-				.createNotificationRouter();
 		org.jvalue.ods.server.router.Router<Restlet> routesRouter = RouterFactory
 				.createRoutesRouter();
 		org.jvalue.ods.server.router.Router<Restlet> administrationRouter = RouterFactory
@@ -68,7 +66,6 @@ public class ContainerRestletApp extends Application {
 		combinedRouter.putAll(noRouter.getRoutes());
 		combinedRouter.putAll(ovRouter.getRoutes());
 		combinedRouter.putAll(osmRouter.getRoutes());
-		combinedRouter.putAll(notificationRouter.getRoutes());
 		combinedRouter.putAll(routesRouter.getRoutes());
 		combinedRouter.putAll(administrationRouter.getRoutes());
 
