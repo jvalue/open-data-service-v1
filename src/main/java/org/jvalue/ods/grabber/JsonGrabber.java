@@ -20,7 +20,7 @@ package org.jvalue.ods.grabber;
 import java.io.IOException;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.utils.Log;
 import org.jvalue.ods.utils.HttpUtils;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -44,7 +44,7 @@ final class JsonGrabber extends Grabber<JsonNode> {
 			rootNode = mapper.readTree(json);
 
 		} catch (IOException e) {
-			Logging.error(this.getClass(), e.getMessage());
+			Log.error(e.getMessage());
 		}
 		
 		return rootNode;

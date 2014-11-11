@@ -17,7 +17,7 @@
  */
 package org.jvalue.ods.server;
 
-import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.utils.Log;
 import org.restlet.Application;
 import org.restlet.Component;
 import org.restlet.data.Protocol;
@@ -44,7 +44,7 @@ public class RestletServer {
 	public RestletServer(int port) throws Exception {
 		if (port < 1024 || port > 49151) {
 			String errorMessage = "port not between 1024 and 49151";
-			Logging.error(this.getClass(), errorMessage);
+			Log.error(errorMessage);
 			throw new IllegalArgumentException(
 					"port not between 1024 and 49151");
 		}
@@ -76,7 +76,7 @@ public class RestletServer {
 			component.stop();
 		} catch (Exception e) {
 			String errorMessage = "Component could not be stopped";
-			Logging.error(this.getClass(), errorMessage);
+			Log.error(errorMessage);
 			System.err.println(errorMessage);
 		}
 	}

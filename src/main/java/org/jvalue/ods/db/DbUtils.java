@@ -16,15 +16,15 @@
  */
 package org.jvalue.ods.db;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import org.ektorp.UpdateConflictException;
 import org.ektorp.support.DesignDocument;
 import org.ektorp.support.DesignDocument.View;
 import org.ektorp.support.DesignDocumentFactory;
 import org.ektorp.support.StdDesignDocumentFactory;
 import org.jvalue.ods.data.OdsView;
-import org.jvalue.ods.logger.Logging;
-
-import com.fasterxml.jackson.databind.JsonNode;
+import org.jvalue.ods.utils.Log;
 
 
 public final class DbUtils {
@@ -56,7 +56,7 @@ public final class DbUtils {
 
 		} catch (UpdateConflictException ex) {
 			System.err.println("Design Document already exists." + ex.getMessage());
-			Logging.error(DbUtils.class, "Design Document already exists." + ex.getMessage());
+			Log.error("Design Document already exists." + ex.getMessage());
 		}
 	}
 

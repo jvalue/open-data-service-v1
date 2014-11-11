@@ -17,7 +17,7 @@
  */
 package org.jvalue.ods.translator;
 
-import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.utils.Log;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -33,7 +33,7 @@ final class JsonTranslator extends Translator<JsonNode> {
 		try {
 			return mapper.treeToValue(jsonNode, Object.class);
 		} catch (JsonProcessingException jpe) {
-			Logging.error(JsonTranslator.class, jpe.getMessage());
+			Log.error(jpe.getMessage());
 			return null;
 		}
 	}

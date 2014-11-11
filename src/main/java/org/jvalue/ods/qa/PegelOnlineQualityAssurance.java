@@ -17,21 +17,21 @@
  */
 package org.jvalue.ods.qa;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import org.jvalue.EnumType;
 import org.jvalue.ExactValueRestriction;
 import org.jvalue.numbers.Range;
 import org.jvalue.numbers.RangeBound;
 import org.jvalue.ods.filter.Filter;
-import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.utils.Log;
 import org.jvalue.ods.qa.valueTypes.Coordinate;
 import org.jvalue.si.QuantityUnit;
 import org.jvalue.si.QuantityUnitType;
 import org.jvalue.si.SiUnit;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The Class PegelOnlineQualityAssurance.
@@ -62,7 +62,7 @@ public class PegelOnlineQualityAssurance implements Filter<Object, Object> {
 
 			String errmsg = "PegelOnlineAssurance error, argument neither list nor map";
 			System.err.println(errmsg);
-			Logging.error(this.getClass(), errmsg);
+			Log.error(errmsg);
 
 			return param;
 		}
@@ -94,7 +94,7 @@ public class PegelOnlineQualityAssurance implements Filter<Object, Object> {
 						String errmsg = "Invalid coordinate: " + latitude + ","
 								+ longitude;
 						System.err.println(errmsg);
-						Logging.error(this.getClass(), errmsg);
+						Log.error(errmsg);
 					}
 				} else {
 					// no coordinates for this station
@@ -110,7 +110,7 @@ public class PegelOnlineQualityAssurance implements Filter<Object, Object> {
 				if (!kmIsValid) {
 					String errmsg = "Improbable km: " + km;
 					System.err.println(errmsg);
-					Logging.error(this.getClass(), errmsg);
+					Log.error(errmsg);
 				}
 
 				List<Object> timeseries = (List<Object>) doc.get("timeseries");
@@ -128,7 +128,7 @@ public class PegelOnlineQualityAssurance implements Filter<Object, Object> {
 						String errmsg = "Improbable equidistance: "
 								+ equidistance;
 						System.err.println(errmsg);
-						Logging.error(this.getClass(), errmsg);
+						Log.error(errmsg);
 					}
 
 					HashMap<String, Object> currentMeasurement = (HashMap<String, Object>) doc2
@@ -144,7 +144,7 @@ public class PegelOnlineQualityAssurance implements Filter<Object, Object> {
 					if (!trendIsValid) {
 						String errmsg = "Invalid trend: " + trend;
 						System.err.println(errmsg);
-						Logging.error(this.getClass(), errmsg);
+						Log.error(errmsg);
 					}
 
 					String shortname = (String) doc2.get("shortname");
@@ -162,7 +162,7 @@ public class PegelOnlineQualityAssurance implements Filter<Object, Object> {
 						if (!valueIsValid) {
 							String errmsg = "Improbable water level: " + value;
 							System.err.println(errmsg);
-							Logging.error(this.getClass(), errmsg);
+							Log.error(errmsg);
 						}
 
 						String stateMnwMhw = (String) currentMeasurement
@@ -179,7 +179,7 @@ public class PegelOnlineQualityAssurance implements Filter<Object, Object> {
 							String errmsg = "Impossible stateMnwMhw: "
 									+ stateMnwMhw;
 							System.err.println(errmsg);
-							Logging.error(this.getClass(), errmsg);
+							Log.error(errmsg);
 						}
 
 						boolean stateNswHswIsValid = stateType
@@ -189,7 +189,7 @@ public class PegelOnlineQualityAssurance implements Filter<Object, Object> {
 							String errmsg = "Impossible stateNswHsw: "
 									+ stateNswHsw;
 							System.err.println(errmsg);
-							Logging.error(this.getClass(), errmsg);
+							Log.error(errmsg);
 						}
 
 					} else if (shortname.toString().equals("WT")) {
@@ -205,7 +205,7 @@ public class PegelOnlineQualityAssurance implements Filter<Object, Object> {
 							String errmsg = "Improbable water temperature: "
 									+ value;
 							System.err.println(errmsg);
-							Logging.error(this.getClass(), errmsg);
+							Log.error(errmsg);
 						}
 
 					} else if (shortname.toString().equals("LF")) {
@@ -224,7 +224,7 @@ public class PegelOnlineQualityAssurance implements Filter<Object, Object> {
 							String errmsg = "Improbable electrical conductivity: "
 									+ value;
 							System.err.println(errmsg);
-							Logging.error(this.getClass(), errmsg);
+							Log.error(errmsg);
 						}
 
 					} else if (shortname.toString().equals("Q")) {
@@ -239,7 +239,7 @@ public class PegelOnlineQualityAssurance implements Filter<Object, Object> {
 						if (!valueIsValid) {
 							String errmsg = "Improbable runoff: " + value;
 							System.err.println(errmsg);
-							Logging.error(this.getClass(), errmsg);
+							Log.error(errmsg);
 						}
 
 					}
@@ -248,7 +248,7 @@ public class PegelOnlineQualityAssurance implements Filter<Object, Object> {
 				String errmsg = "PegelOnlineAssurance error";
 				System.err.println(errmsg);
 				e.printStackTrace();
-				Logging.error(this.getClass(), errmsg);
+				Log.error(errmsg);
 				continue;
 			}
 		}

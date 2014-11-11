@@ -17,12 +17,12 @@
  */
 package org.jvalue.ods.grabber;
 
+import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.utils.Log;
+
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
-
-import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.logger.Logging;
 
 final class FileGrabber extends Grabber<File> {
 
@@ -38,7 +38,7 @@ final class FileGrabber extends Grabber<File> {
 		try {
 			file = new File(sourceUrl.toURI());
 		} catch (URISyntaxException e) {
-			Logging.error(this.getClass(), e.getMessage());
+			Log.error(e.getMessage());
 		}
 		return file;
 	}

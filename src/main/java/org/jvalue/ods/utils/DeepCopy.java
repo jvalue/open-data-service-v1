@@ -17,16 +17,13 @@
  */
 package org.jvalue.ods.utils;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-
-import org.jvalue.ods.filter.FilterChainElement;
-import org.jvalue.ods.logger.Logging;
-
-import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * The Class DeepCopy.
@@ -62,13 +59,13 @@ public class DeepCopy {
 				try {
 					os.close();
 				} catch (IOException e) {
-					Logging.error(FilterChainElement.class, e.getMessage());
+					Log.error(e.getMessage());
 				} finally {
 					if (is != null) {
 						try {
 							is.close();
 						} catch (IOException e) {
-							Logging.error(FilterChainElement.class, e.getMessage());
+							Log.error(e.getMessage());
 						}
 					}
 				}

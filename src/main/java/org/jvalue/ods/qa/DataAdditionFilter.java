@@ -17,13 +17,13 @@
  */
 package org.jvalue.ods.qa;
 
-import java.util.List;
-import java.util.Map;
-
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.filter.Filter;
-import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.utils.Log;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * The Class DataAdditionFilter.
@@ -76,7 +76,7 @@ public class DataAdditionFilter implements Filter<Object, Object> {
 
 			}
 		} catch (Exception e) {
-			Logging.error(this.getClass(), e.getMessage()
+			Log.error(e.getMessage()
 					+ "Mandatory DataAdditionFilter failed");
 			System.err.println(e.getMessage()
 					+ "Mandatory DataAdditionFilter failed");

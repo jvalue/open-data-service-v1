@@ -17,18 +17,18 @@
  */
 package org.jvalue.ods.qa.improvement;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.data.valuetypes.ListComplexValueType;
 import org.jvalue.ods.data.valuetypes.MapComplexValueType;
 import org.jvalue.ods.data.valuetypes.SimpleValueType;
 import org.jvalue.ods.filter.Filter;
-import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.utils.Log;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public final class CombineSourceFilter implements Filter<Object, Object> {
 
@@ -56,8 +56,7 @@ public final class CombineSourceFilter implements Filter<Object, Object> {
 		try {
 			oldObjects = (List<Object>) data;
 		} catch (Exception e) {
-			Logging.error(this.getClass(),
-					"Cannot cast data to list, aborting CombineSourceFilter");
+			Log.error("Cannot cast data to list, aborting CombineSourceFilter");
 			return data;
 		}
 		for (Object gv : oldObjects) {
@@ -74,7 +73,7 @@ public final class CombineSourceFilter implements Filter<Object, Object> {
 				((Map<String, Object>) gv).remove("_id");
 				((Map<String, Object>) gv).remove("_rev");
 			} catch (Exception e) {
-				Logging.error(this.getClass(), e.getMessage());
+				Log.error(e.getMessage());
 			}
 			improvedObjects.add(gv);
 		}
@@ -132,7 +131,7 @@ public final class CombineSourceFilter implements Filter<Object, Object> {
 						((Map<String, Object>) object).put(e.getKey(), mv);
 					} else {
 						String errmsg = "Invalid combinedSchema.";
-						Logging.error(this.getClass(), errmsg);
+						Log.error(errmsg);
 						System.err.println(errmsg);
 						throw new RuntimeException(errmsg);
 					}
@@ -153,7 +152,7 @@ public final class CombineSourceFilter implements Filter<Object, Object> {
 
 			if (!(object instanceof List)) {
 				String errmsg = "Invalid combinedSchema.";
-				Logging.error(this.getClass(), errmsg);
+				Log.error(errmsg);
 				System.err.println(errmsg);
 				throw new RuntimeException(errmsg);
 			}

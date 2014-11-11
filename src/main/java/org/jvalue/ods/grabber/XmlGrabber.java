@@ -1,17 +1,17 @@
 package org.jvalue.ods.grabber;
 
+import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.utils.Log;
+import org.jvalue.ods.utils.HttpUtils;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+
 import java.io.File;
 import java.io.StringReader;
 import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.logger.Logging;
-import org.jvalue.ods.utils.HttpUtils;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
 
 
 final class XmlGrabber extends Grabber<Document> {
@@ -44,7 +44,7 @@ final class XmlGrabber extends Grabber<Document> {
 			doc.getDocumentElement().normalize();
 			return doc;
 		} catch (Exception ex) {
-			Logging.info(this.getClass(), ex.getMessage());
+			Log.info(ex.getMessage());
 			return null;
 		}
 

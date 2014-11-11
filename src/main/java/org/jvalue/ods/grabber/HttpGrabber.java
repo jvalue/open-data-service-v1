@@ -17,12 +17,12 @@
  */
 package org.jvalue.ods.grabber;
 
-import java.io.IOException;
-
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.utils.Log;
 import org.jvalue.ods.utils.Assert;
 import org.jvalue.ods.utils.HttpUtils;
+
+import java.io.IOException;
 
 
 final class HttpGrabber extends Grabber<String> {
@@ -41,7 +41,7 @@ final class HttpGrabber extends Grabber<String> {
 		try {
 			return HttpUtils.readUrl(dataSource.getUrl(), encoding);
 		} catch (IOException io) {
-			Logging.error(this.getClass(), io.getMessage());
+			Log.error(io.getMessage());
 			return null;
 		}
 	}

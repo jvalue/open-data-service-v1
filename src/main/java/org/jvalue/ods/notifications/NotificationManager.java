@@ -20,9 +20,8 @@ package org.jvalue.ods.notifications;
 import com.google.inject.Inject;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.utils.Log;
 import org.jvalue.ods.notifications.clients.Client;
-import org.jvalue.ods.notifications.sender.Sender;
 import org.jvalue.ods.notifications.sender.SenderResult;
 import org.jvalue.ods.notifications.sender.SenderVisitor;
 import org.jvalue.ods.utils.Assert;
@@ -65,16 +64,16 @@ public final class NotificationManager {
 						errorMsg = errorMsg + " (" + result.getErrorCause().getMessage();
 					if (result.getErrorMsg() != null)
 						errorMsg = errorMsg + " (" + result.getErrorMsg();
-					Logging.error(NotificationManager.class, errorMsg);
+					Log.error(errorMsg);
 					break;
 
 				case REMOVE_CLIENT:
-					Logging.info(Sender.class, "Unregistering client " + result.getOldClient().getClientId());
+					Log.info("Unregistering client " + result.getOldClient().getClientId());
 					unregisterClient(result.getOldClient().getClientId());
 					break;
 					
 				case UPDATE_CLIENT:
-					Logging.info(Sender.class, "Updating client id to " + result.getNewClient().getClientId());
+					Log.info("Updating client id to " + result.getNewClient().getClientId());
 					unregisterClient(result.getOldClient().getClientId());
 					registerClient(result.getNewClient());
 					break;

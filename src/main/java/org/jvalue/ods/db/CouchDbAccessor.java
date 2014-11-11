@@ -17,10 +17,7 @@
  */
 package org.jvalue.ods.db;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import org.ektorp.CouchDbConnector;
 import org.ektorp.CouchDbInstance;
@@ -33,9 +30,12 @@ import org.ektorp.http.StdHttpClient;
 import org.ektorp.impl.StdCouchDbConnector;
 import org.ektorp.impl.StdCouchDbInstance;
 import org.jvalue.ods.data.objecttypes.ObjectType;
-import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.utils.Log;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class CouchDbAccessor implements DbAccessor<JsonNode> {
 
@@ -47,7 +47,7 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 	protected CouchDbAccessor(String databaseName) {
 		if ((databaseName == null) || (databaseName.isEmpty())) {
 			String errorMessage = "databaseName is null or empty";
-			Logging.error(this.getClass(), errorMessage);
+			Log.error(errorMessage);
 			throw new IllegalArgumentException(errorMessage);
 		}
 
@@ -65,7 +65,7 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 				dbInstance.createDatabase(databaseName);
 			}
 		} catch (Exception ex) {
-			Logging.error(this.getClass(), ex.getMessage());
+			Log.error(ex.getMessage());
 			System.err.println("CouchDb needs to be installed!\n"
 					+ ex.getMessage());
 			throw new DbException(ex);
@@ -75,7 +75,7 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 	private void checkDbState() {
 		if (!isConnected) {
 			String errorMessage = "The database is not connected";
-			Logging.error(this.getClass(), errorMessage);
+			Log.error(errorMessage);
 			throw new IllegalStateException(errorMessage);
 		}
 
@@ -122,7 +122,7 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 	public void insert(Object data) {
 		if (data == null) {
 			String errorMessage = "data is null";
-			Logging.error(this.getClass(), errorMessage);
+			Log.error(errorMessage);
 			throw new IllegalArgumentException(errorMessage);
 		}
 
@@ -139,7 +139,7 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 	public void update(Object data) {
 		if (data == null) {
 			String errorMessage = "data is null";
-			Logging.error(this.getClass(), errorMessage);
+			Log.error(errorMessage);
 			throw new IllegalArgumentException(errorMessage);
 		}
 
@@ -176,7 +176,7 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 				dbInstance.deleteDatabase(databaseName);
 			}
 		} catch (Exception ex) {
-			Logging.error(this.getClass(), ex.getMessage());
+			Log.error(ex.getMessage());
 			System.err.println("CouchDb needs to be installed!\n"
 					+ ex.getMessage());
 			throw new DbException(ex);
@@ -238,7 +238,7 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 		List<Row> l = vq.getRows();
 
 		if (l.isEmpty()) {
-			Logging.info(this.getClass(), "Empty result list.\n" + q.toString());
+			Log.info("Empty result list.\n" + q.toString());
 		} else {
 			for (Row r : l) {
 				ret.add(r.getValueAsNode());
@@ -267,7 +267,7 @@ public class CouchDbAccessor implements DbAccessor<JsonNode> {
 
 			db.executeBulk(objects);
 		} catch (Exception ex) {
-			Logging.error(this.getClass(), ex.getMessage());
+			Log.error(ex.getMessage());
 			System.err.println("Bulk operation on db failed!\n"
 					+ ex.getMessage());
 			throw new DbException(ex);

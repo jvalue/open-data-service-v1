@@ -19,7 +19,7 @@
 package org.jvalue.ods.server;
 
 import org.junit.Test;
-import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.utils.Log;
 
 /**
  * The Class DataServerMainTest.
@@ -37,7 +37,7 @@ public class DataServerMainTest {
 		try {
 			DataServerMain.main(new String[0]);
 		} catch (java.net.BindException ex) {
-			Logging.error(this.getClass(), "Address already bound");
+			Log.error(this.getClass(), "Address already bound");
 		}
 	}
 

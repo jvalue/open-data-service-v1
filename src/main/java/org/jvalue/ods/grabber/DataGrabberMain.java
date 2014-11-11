@@ -23,7 +23,7 @@ import org.jvalue.ods.configuration.ConfigurationManager;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.filter.FilterChainManager;
-import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.utils.Log;
 
 import io.dropwizard.lifecycle.Managed;
 
@@ -55,7 +55,7 @@ public class DataGrabberMain implements Managed {
 					if (stopped) return;
 					grabData();
 				} catch (Exception ex) {
-					Logging.error(DataGrabberMain.class, ex.getMessage());
+					Log.error(ex.getMessage());
 					ex.printStackTrace();
 				} finally {
 					try {

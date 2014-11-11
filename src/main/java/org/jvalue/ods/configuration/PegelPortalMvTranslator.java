@@ -34,7 +34,7 @@ import org.jvalue.ods.data.objecttypes.ListObjectType;
 import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.data.valuetypes.SimpleValueType;
-import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.utils.Log;
 import org.jvalue.ods.translator.Translator;
 import org.jvalue.ods.utils.Assert;
 
@@ -133,7 +133,7 @@ final class PegelPortalMvTranslator extends Translator<String> {
 
 	private Object unknownFormat() {
 		String error = "Unknown html format found while parsing source";
-		Logging.error(this.getClass(), error);
+		Log.error(error);
 		System.err.println(error);
 		return null;
 	}

@@ -25,8 +25,6 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.nio.charset.Charset;
 
-import org.jvalue.ods.logger.Logging;
-
 
 public class HttpUtils {
 
@@ -56,11 +54,11 @@ public class HttpUtils {
 			rd.close();
 		} catch (SocketTimeoutException ste) {
 			String errorMessage = "socket timeout";
-			Logging.error(HttpUtils.class, errorMessage);
+			Log.error(errorMessage);
 			throw new IOException(errorMessage);
 		} catch (IOException ioe) {
 			String errorMessage = "An I/O Exception occured while trying to read from HTTP server.";
-			Logging.error(HttpUtils.class, errorMessage);
+			Log.error(errorMessage);
 			throw new IOException(errorMessage);
 		} finally {
 			// close stream and connection
@@ -70,7 +68,7 @@ public class HttpUtils {
 				}
 			} catch (IOException e) {
 				String errorMessage = "An I/O Exception occured while trying to read from HTTP server.";
-				Logging.error(HttpUtils.class, errorMessage);
+				Log.error(errorMessage);
 			} finally {
 				if (conn != null) {
 					conn.disconnect();

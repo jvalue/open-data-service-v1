@@ -17,22 +17,22 @@
  */
 package org.jvalue.ods.administration;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.utils.Log;
 import org.jvalue.ods.server.router.Router;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
 import org.restlet.data.MediaType;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The Class PoiRouter.
@@ -83,7 +83,7 @@ public class AdministrationRouter implements Router<Restlet> {
 
 				} catch (Exception ex) {
 					System.err.println(ex.getMessage());
-					Logging.error(this.getClass(), ex.getMessage());
+					Log.error(ex.getMessage());
 				}
 
 				response.setEntity(message, MediaType.TEXT_PLAIN);

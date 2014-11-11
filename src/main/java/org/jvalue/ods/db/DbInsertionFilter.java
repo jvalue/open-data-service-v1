@@ -23,7 +23,7 @@ import java.util.Map;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.filter.Filter;
-import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.utils.Log;
 import org.jvalue.ods.utils.Assert;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -55,7 +55,7 @@ public final class DbInsertionFilter implements Filter<Object, Object> {
 
 		} else {
 			String errmsg = "data must be a list or map.";
-			Logging.error(this.getClass(), errmsg);
+			Log.error(errmsg);
 			throw new RuntimeException(errmsg);
 		}
 		return data;

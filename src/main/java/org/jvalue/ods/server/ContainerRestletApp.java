@@ -17,7 +17,7 @@
  */
 package org.jvalue.ods.server;
 
-import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.utils.Log;
 import org.jvalue.ods.server.restlet.DefaultRestlet;
 import org.jvalue.ods.server.router.RouterFactory;
 import org.restlet.Application;
@@ -76,7 +76,7 @@ public class ContainerRestletApp extends Application {
 
 		if (combinedRouter.isEmpty()) {
 			String errorMessage = "routes are empty";
-			Logging.error(this.getClass(), errorMessage);
+			Log.error(errorMessage);
 			throw new IllegalArgumentException(errorMessage);
 		}
 

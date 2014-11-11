@@ -7,7 +7,7 @@ import com.google.android.gcm.server.Result;
 import com.google.inject.Inject;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.utils.Log;
 import org.jvalue.ods.main.GcmApiKey;
 import org.jvalue.ods.notifications.clients.ClientFactory;
 import org.jvalue.ods.notifications.clients.GcmClient;
@@ -70,8 +70,8 @@ public final class GcmSender extends Sender<GcmClient> {
 			Result result = results.get(i);
 			String messageId = result.getMessageId();
 			if (messageId != null) {
-				Logging.info(Sender.class, "Succesfully sent message to device: "
-					+ regId + "; messageId = " + messageId);
+				Log.info("Succesfully sent message to device: "
+						+ regId + "; messageId = " + messageId);
 				String canonicalRegId = result.getCanonicalRegistrationId();
 				if (canonicalRegId != null) {
 					// same device has more than on registration id: update it
