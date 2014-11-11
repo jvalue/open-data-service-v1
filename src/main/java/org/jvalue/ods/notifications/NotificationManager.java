@@ -20,7 +20,7 @@ package org.jvalue.ods.notifications;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.notifications.clients.Client;
-import org.jvalue.ods.notifications.sender.NotificationSender;
+import org.jvalue.ods.notifications.sender.Sender;
 import org.jvalue.ods.notifications.sender.SenderResult;
 import org.jvalue.ods.utils.Assert;
 
@@ -55,12 +55,12 @@ public final class NotificationManager {
 
 
 	private final ClientRepository clientRepository;
-	private final Map<Class<?>, NotificationSender<?>> sender;
+	private final Map<Class<?>, Sender<?>> sender;
 
 
 	private NotificationManager(
 			ClientRepository clientRepository,
-			Map<Class<?>, NotificationSender<?>> sender) {
+			Map<Class<?>, Sender<?>> sender) {
 
 		Assert.assertNotNull(clientRepository, sender);
 		this.clientRepository = clientRepository;
@@ -72,7 +72,7 @@ public final class NotificationManager {
 	public void notifySourceChanged(DataSource source, Object data) {
 		Assert.assertNotNull(source);
 		for (Client client : clientRepository.findBySource(source.getId())) {
-			NotificationSender sender = this.sender.get(client.getClass());
+			Sender sender = this.sender.get(client.getClass());
 			if (sender == null) {
 				Logging.error(NotificationManager.class, "Failed to get NotificationSender for client " + client.getClientId());
 				continue;
@@ -93,12 +93,12 @@ public final class NotificationManager {
 					break;
 
 				case REMOVE_CLIENT:
-					Logging.info(NotificationSender.class, "Unregistering client " + result.getOldClient().getClientId());
+					Logging.info(Sender.class, "Unregistering client " + result.getOldClient().getClientId());
 					unregisterClient(result.getOldClient().getClientId());
 					break;
 					
 				case UPDATE_CLIENT:
-					Logging.info(NotificationSender.class, "Updating client id to " + result.getNewClient().getClientId());
+					Logging.info(Sender.class, "Updating client id to " + result.getNewClient().getClientId());
 					unregisterClient(result.getOldClient().getClientId());
 					registerClient(result.getNewClient());
 					break;
@@ -141,7 +141,7 @@ public final class NotificationManager {
 	public static class Builder {
 
 		private final ClientRepository clientRepository;
-		private final Map<Class<?>, NotificationSender<?>> sender;
+		private final Map<Class<?>, Sender<?>> sender;
 
 		public Builder(ClientRepository clientRepository) {
 			Assert.assertNotNull(clientRepository);
@@ -152,7 +152,7 @@ public final class NotificationManager {
 
 		public <T extends Client> Builder sender(
 				Class<T> clientType,
-				NotificationSender<T> sender) {
+				Sender<T> sender) {
 			this.sender.put(clientType, sender);
 			return this;
 		}

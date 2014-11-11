@@ -13,13 +13,13 @@ public final class SenderFactory {
 	private static HttpSender restSender;
 
 
-	public static NotificationSender<GcmClient> getGcmSender() {
+	public static Sender<GcmClient> getGcmSender() {
 		if (gcmSender == null) gcmSender = new GcmSender("/googleApi.key");
 		return gcmSender;
 	}
 
 
-	public static NotificationSender<HttpClient> getRestSender() {
+	public static Sender<HttpClient> getRestSender() {
 		if (restSender == null) restSender = new HttpSender();
 		return restSender;
 	}

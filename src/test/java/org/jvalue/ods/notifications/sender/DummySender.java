@@ -4,7 +4,7 @@ import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.notifications.clients.DummyClient;
 
 
-final class DummyNotificationSender extends NotificationSender<DummyClient> {
+final class DummySender extends Sender<DummyClient> {
 
 	@Override
 	public SenderResult notifySourceChanged(

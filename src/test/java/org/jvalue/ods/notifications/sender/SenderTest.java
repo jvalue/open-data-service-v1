@@ -7,12 +7,12 @@ import static org.junit.Assert.assertNull;
 import org.junit.Test;
 
 
-public final class NotificationSenderTest {
+public final class SenderTest {
 
 	@Test
 	public final void testSuccessResult() {
 
-		DummyNotificationSender sender = new DummyNotificationSender();
+		DummySender sender = new DummySender();
 
 		SenderResult success = sender.getSuccessResult();
 		assertNotNull(success);
@@ -28,7 +28,7 @@ public final class NotificationSenderTest {
 	@Test
 	public final void testErrorMsgResult() {
 
-		DummyNotificationSender sender = new DummyNotificationSender();
+		DummySender sender = new DummySender();
 
 		SenderResult error = sender.getErrorResult("error");
 		assertNotNull(error);
@@ -44,7 +44,7 @@ public final class NotificationSenderTest {
 	@Test
 	public final void testErrorCauseResult() {
 
-		DummyNotificationSender sender = new DummyNotificationSender();
+		DummySender sender = new DummySender();
 		Exception exception = new RuntimeException("error");
 
 		SenderResult error = sender.getErrorResult(exception);

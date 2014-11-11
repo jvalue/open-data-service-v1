@@ -15,22 +15,21 @@ import com.google.android.gcm.server.Constants;
 import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.MulticastResult;
 import com.google.android.gcm.server.Result;
-import com.google.android.gcm.server.Sender;
 
 
-final class GcmSender extends NotificationSender<GcmClient> {
+final class GcmSender extends Sender<GcmClient> {
 	
 	static final String 
 		DATA_KEY_SOURCE = "source",
 		DATA_KEY_DEBUG = "debug";
 
 	
-	private final Sender sender;
+	private final com.google.android.gcm.server.Sender sender;
 
 	GcmSender(String apiKeyResource) {
 		String apiKey = new GcmApiKey(apiKeyResource).toString();
 		if (apiKey == null) sender = null;
-		else sender = new Sender(apiKey);
+		else sender = new com.google.android.gcm.server.Sender(apiKey);
 	}
 	
 	
@@ -72,7 +71,7 @@ final class GcmSender extends NotificationSender<GcmClient> {
 			Result result = results.get(i);
 			String messageId = result.getMessageId();
 			if (messageId != null) {
-				Logging.info(NotificationSender.class, "Succesfully sent message to device: " 
+				Logging.info(Sender.class, "Succesfully sent message to device: "
 					+ regId + "; messageId = " + messageId);
 				String canonicalRegId = result.getCanonicalRegistrationId();
 				if (canonicalRegId != null) {

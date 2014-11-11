@@ -11,7 +11,7 @@ import org.jvalue.ods.utils.RestException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
-final class HttpSender extends NotificationSender<HttpClient> {
+final class HttpSender extends Sender<HttpClient> {
 
 	private static final ObjectMapper mapper = new ObjectMapper();
 	

@@ -4,7 +4,7 @@ import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.notifications.clients.Client;
 
 
-public abstract class NotificationSender<T extends Client> {
+public abstract class Sender<T extends Client> {
 	
 	public abstract SenderResult notifySourceChanged(
 			T client, 

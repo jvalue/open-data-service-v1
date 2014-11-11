@@ -13,14 +13,14 @@ public final class SenderFactoryTest {
 	public void testGet() {
 
 		try {
-			NotificationSender<?> sender1 = SenderFactory.getGcmSender();
+			Sender<?> sender1 = SenderFactory.getGcmSender();
 			assertNotNull(sender1);
 			assertTrue(sender1 == SenderFactory.getGcmSender());
 		} catch (Exception e) {
 			assertFalse(GcmApiKeyHelper.isApiKeyPresent());
 		}
 
-		NotificationSender<?> sender2 = SenderFactory.getRestSender();
+		Sender<?> sender2 = SenderFactory.getRestSender();
 		assertNotNull(sender2);
 		assertTrue(sender2 == SenderFactory.getRestSender());
 	}
