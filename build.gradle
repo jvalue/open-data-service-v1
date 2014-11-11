@@ -39,7 +39,12 @@ task uberjar(type: Jar) {
 	from {configurations.compile.collect {zipTree(it)}}
 }
 
-mainClassName = "org.jvalue.ods.server.DataServerMain"
+mainClassName = "org.jvalue.ods.main.OdsApplication"
+// mainClassName = "org.jvalue.ods.server.DataServerMain"
+
+run() {
+    args 'server', 'ods-configuration.yml'
+}
 
 dependencies {
     cargo "org.codehaus.cargo:cargo-ant:1.4.5"

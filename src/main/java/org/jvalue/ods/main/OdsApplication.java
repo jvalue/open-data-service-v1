@@ -7,6 +7,7 @@ import com.google.inject.Injector;
 import org.jvalue.ods.db.DbModule;
 import org.jvalue.ods.grabber.DataGrabberMain;
 import org.jvalue.ods.notifications.NotificationsModule;
+import org.jvalue.ods.rest.NotificationClientRegistrationApi;
 
 import javax.ws.rs.core.Context;
 
@@ -14,7 +15,7 @@ import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
-public final class OdsApplication extends Application<OdsConfiguration> {
+public final class OdsApplication extends Application<OdsConfig> {
 
 
 	public static void main(String[] args) throws Exception {
@@ -29,21 +30,23 @@ public final class OdsApplication extends Application<OdsConfiguration> {
 
 
 	@Override
-	public void initialize(Bootstrap<OdsConfiguration>configuration) {
+	public void initialize(Bootstrap<OdsConfig>configuration) {
 		// nothing to do here
 	}
 
 
 	@Override
 	@Context
-	public void run(OdsConfiguration configuration, Environment environment) {
+	public void run(OdsConfig configuration, Environment environment) {
 		Injector injector = Guice.createInjector(
+				new ConfigModule(configuration),
 				new DbModule(),
 				new NotificationsModule());
 
 
 		// start data grabbing
 		environment.lifecycle().manage(new DataGrabberMain());
+		environment.jersey().register(injector.getInstance(NotificationClientRegistrationApi.class));
 	}
 
 }

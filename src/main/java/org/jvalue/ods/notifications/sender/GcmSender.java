@@ -4,9 +4,11 @@ import com.google.android.gcm.server.Constants;
 import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.MulticastResult;
 import com.google.android.gcm.server.Result;
+import com.google.inject.Inject;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.logger.Logging;
+import org.jvalue.ods.main.GcmApiKey;
 import org.jvalue.ods.notifications.clients.ClientFactory;
 import org.jvalue.ods.notifications.clients.GcmClient;
 
@@ -24,13 +26,11 @@ public final class GcmSender extends Sender<GcmClient> {
 		DATA_KEY_DEBUG = "debug";
 
 	
-	private final com.google.android.gcm.server.Sender sender;
+	private final com.google.android.gcm.server.Sender gcmSender;
 
-	GcmSender() {
-		String apiKeyResource = "/googleApi.key";
-		String apiKey = new GcmApiKey(apiKeyResource).toString();
-		if (apiKey == null) sender = null;
-		else sender = new com.google.android.gcm.server.Sender(apiKey);
+	@Inject
+	GcmSender(@GcmApiKey String gcmApiKey) {
+		gcmSender = new com.google.android.gcm.server.Sender(gcmApiKey);
 	}
 	
 	
@@ -39,8 +39,6 @@ public final class GcmSender extends Sender<GcmClient> {
 			GcmClient client, 
 			DataSource source, 
 			Object data) {
-
-		if (sender == null) return getErrorResult("api key not set");
 
 		// gather data
 		Map<String,String> payload = new HashMap<String,String>();
@@ -60,7 +58,7 @@ public final class GcmSender extends Sender<GcmClient> {
 
 		MulticastResult multicastResult;
 		try {
-			multicastResult = sender.send(builder.build(), devices, 5);
+			multicastResult = gcmSender.send(builder.build(), devices, 5);
 		} catch (IOException io) {
 			return getErrorResult(io);
 		}

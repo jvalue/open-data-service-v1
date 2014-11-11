@@ -14,9 +14,9 @@
 .classpath
 .project
 .idea
-googleApi.key
 
 # Allow #
 logging.log
 gradle.properties
 
+ods-configuration.yml
