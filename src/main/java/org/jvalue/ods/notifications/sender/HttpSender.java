@@ -1,17 +1,17 @@
 package org.jvalue.ods.notifications.sender;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.notifications.clients.HttpClient;
 import org.jvalue.ods.utils.RestCall;
 import org.jvalue.ods.utils.RestException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 
-final class HttpSender extends Sender<HttpClient> {
+public final class HttpSender extends Sender<HttpClient> {
 
 	private static final ObjectMapper mapper = new ObjectMapper();
 	

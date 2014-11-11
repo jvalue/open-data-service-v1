@@ -1,23 +1,23 @@
 package org.jvalue.ods.notifications.sender;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.android.gcm.server.Constants;
+import com.google.android.gcm.server.Message;
+import com.google.android.gcm.server.MulticastResult;
+import com.google.android.gcm.server.Result;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.notifications.clients.ClientFactory;
 import org.jvalue.ods.notifications.clients.GcmClient;
 
-import com.google.android.gcm.server.Constants;
-import com.google.android.gcm.server.Message;
-import com.google.android.gcm.server.MulticastResult;
-import com.google.android.gcm.server.Result;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
-final class GcmSender extends Sender<GcmClient> {
+public final class GcmSender extends Sender<GcmClient> {
 	
 	static final String 
 		DATA_KEY_SOURCE = "source",
@@ -26,7 +26,8 @@ final class GcmSender extends Sender<GcmClient> {
 	
 	private final com.google.android.gcm.server.Sender sender;
 
-	GcmSender(String apiKeyResource) {
+	GcmSender() {
+		String apiKeyResource = "/googleApi.key";
 		String apiKey = new GcmApiKey(apiKeyResource).toString();
 		if (apiKey == null) sender = null;
 		else sender = new com.google.android.gcm.server.Sender(apiKey);

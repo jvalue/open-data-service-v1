@@ -17,68 +17,44 @@
  */
 package org.jvalue.ods.notifications;
 
+import com.google.inject.Inject;
+
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.logger.Logging;
 import org.jvalue.ods.notifications.clients.Client;
 import org.jvalue.ods.notifications.sender.Sender;
 import org.jvalue.ods.notifications.sender.SenderResult;
+import org.jvalue.ods.notifications.sender.SenderVisitor;
 import org.jvalue.ods.utils.Assert;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 
 public final class NotificationManager {
 
-	private static NotificationManager instance;
-
-	public static NotificationManager getInstance() {
-		if (instance == null) {
-			/*
-			instance = new Builder(store)
-					.definition(
-							GcmClient.class,
-							DefinitionFactory.getGcmDefinition())
-					.definition(
-							HttpClient.class,
-							DefinitionFactory.getRestDefinition())
-					.build();
-					*/
-			// TODO!
-		}
-		return instance;
-	}
-
-
-
 	private final ClientRepository clientRepository;
-	private final Map<Class<?>, Sender<?>> sender;
+	private final SenderVisitor senderVisitor;
 
 
-	private NotificationManager(
+	@Inject
+	NotificationManager(
 			ClientRepository clientRepository,
-			Map<Class<?>, Sender<?>> sender) {
+			SenderVisitor senderVisitor) {
 
-		Assert.assertNotNull(clientRepository, sender);
 		this.clientRepository = clientRepository;
-		this.sender = sender;
+		this.senderVisitor = senderVisitor;
 	}
 
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	public void notifySourceChanged(DataSource source, Object data) {
 		Assert.assertNotNull(source);
-		for (Client client : clientRepository.findBySource(source.getId())) {
-			Sender sender = this.sender.get(client.getClass());
-			if (sender == null) {
-				Logging.error(NotificationManager.class, "Failed to get NotificationSender for client " + client.getClientId());
-				continue;
-			}
 
-			SenderResult result = sender.notifySourceChanged(client, source, data);
+		SenderVisitor.DataEntry dataEntry = new SenderVisitor.DataEntry(source, data);
+		for (Client client : clientRepository.findBySource(source.getId())) {
+			SenderResult result = client.accept(senderVisitor, dataEntry);
 			switch(result.getStatus()) {
 				case SUCCESS:
 					continue;
@@ -133,35 +109,9 @@ public final class NotificationManager {
 
 
 	public Client getClientById(String clientId) throws ClientNotRegisteredException {
-		if (isClientRegistered(clientId)) throw new ClientNotRegisteredException(clientId);
+		if (!isClientRegistered(clientId)) throw new ClientNotRegisteredException(clientId);
 		List<Client> clients = clientRepository.findByClientId(clientId);
 		return clients.get(0);
-	}
-
-	public static class Builder {
-
-		private final ClientRepository clientRepository;
-		private final Map<Class<?>, Sender<?>> sender;
-
-		public Builder(ClientRepository clientRepository) {
-			Assert.assertNotNull(clientRepository);
-			this.clientRepository = clientRepository;
-			this.sender = new HashMap<>();
-		}
-
-
-		public <T extends Client> Builder sender(
-				Class<T> clientType,
-				Sender<T> sender) {
-			this.sender.put(clientType, sender);
-			return this;
-		}
-
-
-		public NotificationManager build() {
-			return new NotificationManager(clientRepository, sender);
-		}
-
 	}
 
 }

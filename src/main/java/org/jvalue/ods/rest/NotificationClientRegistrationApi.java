@@ -1,6 +1,8 @@
 package org.jvalue.ods.rest;
 
 
+import com.google.inject.Inject;
+
 import org.jvalue.ods.notifications.NotificationManager;
 import org.jvalue.ods.notifications.clients.Client;
 import org.jvalue.ods.notifications.clients.ClientFactory;
@@ -57,6 +59,7 @@ public class NotificationClientRegistrationApi {
 
 	protected final NotificationManager manager;
 
+	@Inject
 	NotificationClientRegistrationApi(NotificationManager manager) {
 		this.manager = manager;
 	}
@@ -70,7 +73,9 @@ public class NotificationClientRegistrationApi {
 
 		assertIsValidClientType(clientType);
 		try {
-			return adapters.get(clientType).toClient(form);
+			Client client = adapters.get(clientType).toClient(form);
+			manager.registerClient(client);
+			return client;
 		} catch (IllegalArgumentException iae) {
 			throw new WebApplicationException(Response.status(400).entity("failed to parse content").build());
 		}
@@ -119,7 +124,7 @@ public class NotificationClientRegistrationApi {
 
 	private void assertIsValidClientType(String clientTypePath, String clientId) {
 		assertIsValidClientType(clientTypePath);
-		if (manager.isClientRegistered(clientId)) throw new ClientNotRegisteredException(clientId);
+		if (!manager.isClientRegistered(clientId)) throw new ClientNotRegisteredException(clientId);
 		Client client = manager.getClientById(clientId);
 		if (!client.getClass().equals(adapters.get(clientTypePath).clientClass)) throw new ClientNotRegisteredException(clientId);
 	}

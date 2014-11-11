@@ -31,7 +31,8 @@ public final class NotificationFilter implements Filter<Object, Object> {
 
 	@Override
 	public Object filter(Object data) {
-		NotificationManager.getInstance().notifySourceChanged(source, data);
+		// TODO
+		// NotificationManager.getInstance().notifySourceChanged(source, data);
 		return data;
 	}
 
