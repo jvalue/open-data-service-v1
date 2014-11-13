@@ -1,8 +1,11 @@
 package org.jvalue.ods.filter.grabber;
 
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.utils.Log;
 import org.jvalue.ods.utils.HttpUtils;
+import org.jvalue.ods.utils.Log;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -17,7 +20,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 final class XmlGrabber extends Grabber<Document> {
 
 
-	public XmlGrabber(DataSource source) {
+	@Inject
+	XmlGrabber(@Assisted DataSource source) {
 		super(source);
 	}
 

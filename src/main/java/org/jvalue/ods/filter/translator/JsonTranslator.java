@@ -28,6 +28,9 @@ final class JsonTranslator extends Translator<JsonNode> {
 
 	private static final ObjectMapper mapper = new ObjectMapper();
 
+	JsonTranslator() {  }
+
+
 	@Override
 	public Object translate(JsonNode jsonNode) {
 		try {

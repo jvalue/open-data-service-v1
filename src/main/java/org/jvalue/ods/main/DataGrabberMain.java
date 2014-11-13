@@ -16,13 +16,6 @@
  */
 package org.jvalue.ods.main;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
-import org.jvalue.ods.administration.AdministrationLogging;
-import org.jvalue.ods.configuration.ConfigurationManager;
-import org.jvalue.ods.db.DbAccessor;
-import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.filter.FilterChainManager;
 import org.jvalue.ods.utils.Log;
 
 import io.dropwizard.lifecycle.Managed;
@@ -69,6 +62,7 @@ public class DataGrabberMain implements Managed {
 
 
 		private void grabData() {
+			/*
 			AdministrationLogging.log("Initialize started");
 			DbAccessor<JsonNode> accessor = DbFactory.createDbAccessor("ods");
 			FilterChainManager filterManager = new FilterChainManager();
@@ -80,6 +74,7 @@ public class DataGrabberMain implements Managed {
 			accessor.connect();
 			filterManager.startFilterChains();
 			AdministrationLogging.log("Update completed");
+			*/
 		}
 
 

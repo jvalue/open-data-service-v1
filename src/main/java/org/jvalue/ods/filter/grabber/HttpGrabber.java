@@ -17,10 +17,13 @@
  */
 package org.jvalue.ods.filter.grabber;
 
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.utils.Log;
 import org.jvalue.ods.utils.Assert;
 import org.jvalue.ods.utils.HttpUtils;
+import org.jvalue.ods.utils.Log;
 
 import java.io.IOException;
 
@@ -29,7 +32,8 @@ final class HttpGrabber extends Grabber<String> {
 
 	private final String encoding;
 
-	public HttpGrabber(DataSource source, String encoding) {
+	@Inject
+	HttpGrabber(@Assisted DataSource source, String encoding) {
 		super(source);
 		Assert.assertNotNull(encoding);
 		this.encoding = encoding;

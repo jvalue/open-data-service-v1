@@ -17,6 +17,9 @@
  */
 package org.jvalue.ods.filter.grabber;
 
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.utils.Log;
 
@@ -26,7 +29,8 @@ import java.net.URL;
 
 final class FileGrabber extends Grabber<File> {
 
-	public FileGrabber(DataSource source) {
+	@Inject
+	FileGrabber(@Assisted DataSource source) {
 		super(source);
 	}
 

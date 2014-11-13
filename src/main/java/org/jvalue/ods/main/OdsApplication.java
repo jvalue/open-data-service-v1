@@ -5,6 +5,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 import org.jvalue.ods.db.DbModule;
+import org.jvalue.ods.filter.FilterModule;
 import org.jvalue.ods.notifications.NotificationsModule;
 import org.jvalue.ods.rest.NotificationClientRegistrationApi;
 
@@ -40,8 +41,8 @@ public final class OdsApplication extends Application<OdsConfig> {
 		Injector injector = Guice.createInjector(
 				new ConfigModule(configuration),
 				new DbModule(),
-				new NotificationsModule());
-
+				new NotificationsModule(),
+				new FilterModule());
 
 		// start data grabbing
 		environment.lifecycle().manage(new DataGrabberMain());

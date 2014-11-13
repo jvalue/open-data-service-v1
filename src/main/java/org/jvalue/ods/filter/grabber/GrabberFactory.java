@@ -17,36 +17,20 @@
  */
 package org.jvalue.ods.filter.grabber;
 
-import java.io.File;
-
-import org.jvalue.ods.data.DataSource;
-import org.w3c.dom.Document;
-
 import com.fasterxml.jackson.databind.JsonNode;
 
+import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.filter.Filter;
+import org.w3c.dom.Document;
 
-public final class GrabberFactory {
-
-	private GrabberFactory() { }
-
-
-	public static Grabber<Document> getXmlGrabber(DataSource source) {
-		return new XmlGrabber(source);
-	}
+import java.io.File;
 
 
-	public static Grabber<JsonNode> getJsonGrabber(DataSource source) {
-		return new JsonGrabber(source);
-	}
+public interface GrabberFactory {
 
-
-	public static Grabber<File> getFileGrabber(DataSource source) {
-		return new FileGrabber(source);
-	}
-
-
-	public static Grabber<String> getHttpGrabber(DataSource source, String encoding) {
-		return new HttpGrabber(source, encoding);
-	}
+	public Filter<Void, Document> createXmlGrabber(DataSource source);
+	public Filter<Void, JsonNode> createJsonNodeGrabber(DataSource source);
+	public Filter<Void, File> createFileGrabber(DataSource source);
+	public Filter<Void, String> createHttpGrabber(DataSource source, String encoding);
 
 }

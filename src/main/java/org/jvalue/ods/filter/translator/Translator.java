@@ -20,7 +20,7 @@ package org.jvalue.ods.filter.translator;
 import org.jvalue.ods.filter.Filter;
 
 
-public abstract class Translator<T> implements Filter<T, Object> {
+abstract class Translator<T> implements Filter<T, Object> {
 
 	@Override
 	public final Object filter(T value) {

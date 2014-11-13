@@ -15,23 +15,33 @@
  */
 package org.jvalue.ods.filter;
 
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.filter.Filter;
+import org.jvalue.ods.notifications.NotificationManager;
 import org.jvalue.ods.utils.Assert;
 
 
-public final class NotificationFilter implements Filter<Object, Object> {
+final class NotificationFilter implements Filter<Object, Object> {
 
+	private final NotificationManager notificationManager;
 	private final DataSource source;
 
-	public NotificationFilter(DataSource source) {
+	@Inject
+	public NotificationFilter(
+			NotificationManager notificationManager,
+			@Assisted DataSource source) {
+
 		Assert.assertNotNull(source);
+		this.notificationManager = notificationManager;
 		this.source = source;
 	}
 
+
 	@Override
 	public Object filter(Object data) {
-		// NotificationManager.getInstance().notifySourceChanged(source, data);
+		notificationManager.notifySourceChanged(source, data);
 		return data;
 	}
 

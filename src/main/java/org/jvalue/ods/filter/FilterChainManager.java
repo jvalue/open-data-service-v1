@@ -17,16 +17,19 @@
  */
 package org.jvalue.ods.filter;
 
+import org.jvalue.ods.utils.Assert;
+
 import java.util.HashSet;
 import java.util.Set;
-
-import org.jvalue.ods.utils.Assert;
 
 
 
 public final class FilterChainManager {
 
 	private final Set<FilterChainElement<Void, ?>> filterChains = new HashSet<FilterChainElement<Void, ?>>();
+
+
+	FilterChainManager() { }
 
 
 	public void register(FilterChainElement<Void, ?> chain) {

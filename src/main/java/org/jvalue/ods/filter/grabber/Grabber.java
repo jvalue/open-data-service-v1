@@ -22,7 +22,7 @@ import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.utils.Assert;
 
 
-public abstract class Grabber<T> implements Filter<Void, T> {
+abstract class Grabber<T> implements Filter<Void, T> {
 
 	protected final DataSource dataSource;
 

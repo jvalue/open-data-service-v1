@@ -13,6 +13,8 @@ import java.util.Map;
 
 final class XmlTranslator extends Translator<Document> {
 
+	XmlTranslator() { }
+
 	@Override
 	public Object translate(Document xmlDocument) {
 		Node rootNode = xmlDocument.getFirstChild();
