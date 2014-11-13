@@ -22,7 +22,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.data.OdsView;
 import org.jvalue.ods.data.metadata.JacksonMetaData;
 import org.jvalue.ods.data.metadata.OdsMetaData;
 import org.jvalue.ods.data.objecttypes.ListObjectType;
@@ -31,7 +30,9 @@ import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.data.valuetypes.AllowedValueTypes;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.data.valuetypes.MapComplexValueType;
-import org.jvalue.ods.db.DbAccessor;
+import org.jvalue.ods.db.DbFactory;
+import org.jvalue.ods.db.OdsView;
+import org.jvalue.ods.db.SourceDataRepository;
 import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.filter.FilterChainElement;
 import org.jvalue.ods.filter.FilterFactory;
@@ -48,19 +49,19 @@ import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_STRING;
 
 final class PegelOnlineConfiguration implements Configuration {
 
-	private final DbAccessor<JsonNode> dbAccessor;
+	private final SourceDataRepository dataRepository;
 	private final FilterFactory filterFactory;
 	private final GrabberFactory grabberFactory;
 	private final Provider<Filter<JsonNode, Object>> translatorProvider;
 
 	@Inject
 	public PegelOnlineConfiguration(
-			DbAccessor<JsonNode> dbAccessor,
+			DbFactory dbFactory,
 			FilterFactory filterFactory,
 			GrabberFactory grabberFactory,
 			Provider<Filter<JsonNode, Object>> translatorProvider) {
 
-		this.dbAccessor = dbAccessor;
+		this.dataRepository = dbFactory.createSourceDataRepository("pegelonline");
 		this.filterFactory = filterFactory;
 		this.grabberFactory = grabberFactory;
 		this.translatorProvider = translatorProvider;
@@ -485,6 +486,7 @@ final class PegelOnlineConfiguration implements Configuration {
 		}
 
 		// ods views
+		/*
 		{
 			// improved data quality
 
@@ -549,10 +551,11 @@ final class PegelOnlineConfiguration implements Configuration {
 					"_design/pegelonline",
 					"getClassObjectIdRaw",
 					"function(doc) { if(doc.name == 'de-pegelonline-station' && doc.dataQualityStatus == 'raw') emit (null, doc._id) }"));
-
 		}
+					*/
+
 		return new DataSource(sourceId, url, sourceSchema, rawDbSchema,
-				improvedDbSchema, metaData, odsViews);
+				improvedDbSchema, metaData, new LinkedList<OdsView>());
 	}
 
 	@Override
