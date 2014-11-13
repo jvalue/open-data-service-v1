@@ -15,26 +15,32 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.db;
+package org.jvalue.ods.filter;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+
+import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.db.DbAccessor;
+import org.jvalue.ods.utils.Assert;
+import org.jvalue.ods.utils.Log;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.filter.Filter;
-import org.jvalue.ods.utils.Log;
-import org.jvalue.ods.utils.Assert;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
-
-public final class DbInsertionFilter implements Filter<Object, Object> {
+final class DbInsertionFilter implements Filter<Object, Object> {
 
 	private final DbAccessor<JsonNode> accessor;
 	private final DataSource source;
 
-	public DbInsertionFilter(DbAccessor<JsonNode> accessor, DataSource source) {
+	@Inject
+	DbInsertionFilter(
+			DbAccessor<JsonNode> accessor,
+			@Assisted DataSource source) {
+
 		Assert.assertNotNull(accessor, source);
 		this.accessor = accessor;
 		this.source = source;
