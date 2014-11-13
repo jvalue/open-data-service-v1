@@ -7,7 +7,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 import org.ektorp.CouchDbConnector;
 import org.ektorp.CouchDbInstance;
@@ -22,9 +21,7 @@ public class DbModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		// TODO this not not yet perfect, as it does not get a CouchDbInstance injected
-		install(new FactoryModuleBuilder()
-				.implement(new TypeLiteral<DbAccessor<JsonNode>>() { }, CouchDbAccessor.class)
-				.build(DbFactory.class));
+		bind(new TypeLiteral<DbAccessor<JsonNode>>() { }).toInstance(new CouchDbAccessor("ods"));
 	}
 
 
