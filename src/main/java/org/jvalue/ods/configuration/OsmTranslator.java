@@ -17,14 +17,7 @@
  */
 package org.jvalue.ods.configuration;
 
-import java.io.File;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import org.jvalue.ods.filter.translator.Translator;
+import org.jvalue.ods.filter.Filter;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
@@ -38,10 +31,17 @@ import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 import org.openstreetmap.osmosis.xml.common.CompressionMethod;
 import org.openstreetmap.osmosis.xml.v0_6.XmlReader;
 
-final class OsmTranslator extends Translator<File> {
+import java.io.File;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+final class OsmTranslator implements Filter<File, Object> {
 
 	@Override
-	public Object translate(File file) {
+	public Object filter(File file) {
 		final List<Object> resultList = new LinkedList<Object>();
 
 		Sink sinkImplementation = new Sink() {

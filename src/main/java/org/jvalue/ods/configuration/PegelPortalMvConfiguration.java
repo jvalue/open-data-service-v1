@@ -17,14 +17,8 @@
  */
 package org.jvalue.ods.configuration;
 
-import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_NULL;
-import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_NUMBER;
-import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_STRING;
-
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.inject.Inject;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.OdsView;
@@ -35,13 +29,18 @@ import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.db.DbAccessor;
-import org.jvalue.ods.db.DbInsertionFilter;
 import org.jvalue.ods.filter.FilterChainElement;
+import org.jvalue.ods.filter.FilterFactory;
 import org.jvalue.ods.filter.grabber.GrabberFactory;
-import org.jvalue.ods.filter.NotificationFilter;
-import org.jvalue.ods.qa.DataAdditionFilter;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_NULL;
+import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_NUMBER;
+import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_STRING;
 
 public final class PegelPortalMvConfiguration implements Configuration {
 
@@ -50,6 +49,23 @@ public final class PegelPortalMvConfiguration implements Configuration {
 			KEY_TIMESTAMP = "timestamp", KEY_LEVEL = "level",
 			KEY_LEVEL_UNIT = "levelUnit", KEY_EFFLUENT = "effluent",
 			KEY_EFFLUENT_UNIT = "effluentUnit", KEY_AGENCY = "agency";
+
+
+	private final DbAccessor<JsonNode> dbAccessor;
+	private final FilterFactory filterFactory;
+	private final GrabberFactory grabberFactory;
+
+	@Inject
+	public PegelPortalMvConfiguration(
+			DbAccessor<JsonNode> dbAccessor,
+			FilterFactory filterFactory,
+			GrabberFactory grabberFactory) {
+
+		this.dbAccessor = dbAccessor;
+		this.filterFactory = filterFactory;
+		this.grabberFactory = grabberFactory;
+	}
+
 
 	@Override
 	public DataSource getDataSource() {
@@ -152,16 +168,15 @@ public final class PegelPortalMvConfiguration implements Configuration {
 	}
 
 	@Override
-	public FilterChainElement<Void, ?> getFilterChain(DbAccessor<JsonNode> accessor) {
+	public FilterChainElement<Void, ?> getFilterChain() {
 		DataSource source = getDataSource();
 
-		FilterChainElement<Void, String> chain = FilterChainElement.instance(GrabberFactory
-				.getHttpGrabber(source, "UTF-8"));
+		FilterChainElement<Void, String> chain = FilterChainElement.instance(
+				grabberFactory.createHttpGrabber(source, "UTF-8"));
 
 		chain.setNextFilter(new PegelPortalMvTranslator(source))
-				.setNextFilter(new DataAdditionFilter(source))
-				.setNextFilter(new DbInsertionFilter(accessor, source))
-				.setNextFilter(new NotificationFilter(source));
+				.setNextFilter(filterFactory.createDbInsertionFilter(source))
+				.setNextFilter(filterFactory.createNotificationFilter(source));
 
 		return chain;
 

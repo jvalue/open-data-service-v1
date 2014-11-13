@@ -17,11 +17,6 @@
  */
 package org.jvalue.ods.configuration;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -34,13 +29,18 @@ import org.jvalue.ods.data.objecttypes.ListObjectType;
 import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.data.valuetypes.SimpleValueType;
-import org.jvalue.ods.utils.Log;
-import org.jvalue.ods.filter.translator.Translator;
+import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.utils.Assert;
+import org.jvalue.ods.utils.Log;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 
 
-final class PegelPortalMvTranslator extends Translator<String> {
+final class PegelPortalMvTranslator implements Filter<String, Object> {
 
 	private static final Map<String, Integer> tableMapping = new HashMap<String, Integer>();
 	static {
@@ -62,7 +62,7 @@ final class PegelPortalMvTranslator extends Translator<String> {
 
 
 	@Override
-	public Object translate(String httpContent) {
+	public Object filter(String httpContent) {
 		Document doc = Jsoup.parse(httpContent);
 
 

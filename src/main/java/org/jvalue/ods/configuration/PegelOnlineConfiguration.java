@@ -17,14 +17,9 @@
  */
 package org.jvalue.ods.configuration;
 
-import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_NULL;
-import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_NUMBER;
-import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_STRING;
-
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.OdsView;
@@ -37,19 +32,40 @@ import org.jvalue.ods.data.valuetypes.AllowedValueTypes;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.data.valuetypes.MapComplexValueType;
 import org.jvalue.ods.db.DbAccessor;
-import org.jvalue.ods.db.DbInsertionFilter;
+import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.filter.FilterChainElement;
+import org.jvalue.ods.filter.FilterFactory;
 import org.jvalue.ods.filter.grabber.GrabberFactory;
-import org.jvalue.ods.filter.NotificationFilter;
-import org.jvalue.ods.qa.DataAdditionFilter;
-import org.jvalue.ods.qa.PegelOnlineQualityAssurance;
-import org.jvalue.ods.qa.improvement.CombineSourceFilter;
-import org.jvalue.ods.qa.improvement.RenameSourceFilter;
-import org.jvalue.ods.filter.translator.TranslatorFactory;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_NULL;
+import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_NUMBER;
+import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_STRING;
 
 final class PegelOnlineConfiguration implements Configuration {
+
+	private final DbAccessor<JsonNode> dbAccessor;
+	private final FilterFactory filterFactory;
+	private final GrabberFactory grabberFactory;
+	private final Provider<Filter<JsonNode, Object>> translatorProvider;
+
+	@Inject
+	public PegelOnlineConfiguration(
+			DbAccessor<JsonNode> dbAccessor,
+			FilterFactory filterFactory,
+			GrabberFactory grabberFactory,
+			Provider<Filter<JsonNode, Object>> translatorProvider) {
+
+		this.dbAccessor = dbAccessor;
+		this.filterFactory = filterFactory;
+		this.grabberFactory = grabberFactory;
+		this.translatorProvider = translatorProvider;
+	}
+
 
 	@Override
 	public DataSource getDataSource() {
@@ -540,25 +556,28 @@ final class PegelOnlineConfiguration implements Configuration {
 	}
 
 	@Override
-	public FilterChainElement<Void, ?> getFilterChain(DbAccessor<JsonNode> accessor) {
+	public FilterChainElement<Void, ?> getFilterChain() {
 		DataSource source = getDataSource();
 
-		FilterChainElement<Void, JsonNode> chain = FilterChainElement.instance(GrabberFactory
-				.getJsonGrabber(source));
-		chain.setNextFilter(TranslatorFactory.getJsonTranslator())
-				.setNextFilter(new DataAdditionFilter(source))
-				.setNextFilter(new DbInsertionFilter(accessor, source))
-				.setNextFilter(
-						new CombineSourceFilter(
-								createSourceCoordinateStructure(),
-								createDestinationCoordinateStructure()))
-				.setNextFilter(
-						new RenameSourceFilter(createSourceWaterStructure(),
-								createDestinationWaterStructure(),
-								"BodyOfWater"))
-				.setNextFilter(new DbInsertionFilter(accessor, source))
-				.setNextFilter(new PegelOnlineQualityAssurance())
-				.setNextFilter(new NotificationFilter(source));
+		FilterChainElement<Void, JsonNode> chain = FilterChainElement.instance(
+				grabberFactory.createJsonNodeGrabber(source));
+
+		chain
+				.setNextFilter(translatorProvider.get())
+				// .setNextFilter(new DataAdditionFilter(source))
+				.setNextFilter(filterFactory.createDbInsertionFilter(source))
+				// .setNextFilter(
+						// new CombineSourceFilter(
+								// createSourceCoordinateStructure(),
+								// createDestinationCoordinateStructure()))
+				// .setNextFilter(
+						// new RenameSourceFilter(createSourceWaterStructure(),
+								// createDestinationWaterStructure(),
+								// "BodyOfWater"))
+				// .setNextFilter(new DbInsertionFilter(accessor, source))
+				// .setNextFilter(new PegelOnlineQualityAssurance())
+				.setNextFilter(filterFactory.createNotificationFilter(source));
+
 		return chain;
 	}
 

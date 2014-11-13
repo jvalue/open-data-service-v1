@@ -18,6 +18,8 @@
 package org.jvalue.ods.configuration;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.OdsView;
@@ -28,11 +30,10 @@ import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.db.DbAccessor;
-import org.jvalue.ods.db.DbInsertionFilter;
+import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.filter.FilterChainElement;
+import org.jvalue.ods.filter.FilterFactory;
 import org.jvalue.ods.filter.grabber.GrabberFactory;
-import org.jvalue.ods.filter.NotificationFilter;
-import org.jvalue.ods.qa.DataAdditionFilter;
 
 import java.io.File;
 import java.util.HashMap;
@@ -45,6 +46,25 @@ import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_NUMBER;
 import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_STRING;
 
 final class OsmConfiguration implements Configuration {
+
+	private final DbAccessor<JsonNode> dbAccessor;
+	private final FilterFactory filterFactory;
+	private final GrabberFactory grabberFactory;
+	private final Provider<Filter<JsonNode, Object>> translatorProvider;
+
+	@Inject
+	public OsmConfiguration(
+			DbAccessor<JsonNode> dbAccessor,
+			FilterFactory filterFactory,
+			GrabberFactory grabberFactory,
+			Provider<Filter<JsonNode, Object>> translatorProvider) {
+
+		this.dbAccessor = dbAccessor;
+		this.filterFactory = filterFactory;
+		this.grabberFactory = grabberFactory;
+		this.translatorProvider = translatorProvider;
+	}
+
 
 	@Override
 	public DataSource getDataSource() {
@@ -160,15 +180,18 @@ final class OsmConfiguration implements Configuration {
 	}
 
 	@Override
-	public FilterChainElement<Void, ?> getFilterChain(DbAccessor<JsonNode> accessor) {
+	public FilterChainElement<Void, ?> getFilterChain() {
 		DataSource source = getDataSource();
 
-		FilterChainElement<Void, File> chain = FilterChainElement.instance(GrabberFactory
-				.getFileGrabber(source));
-		chain.setNextFilter(new OsmTranslator())
-				.setNextFilter(new DataAdditionFilter(source))
-				.setNextFilter(new DbInsertionFilter(accessor, source))
-				.setNextFilter(new NotificationFilter(source));
+		FilterChainElement<Void, File> chain = FilterChainElement.instance(
+				grabberFactory.createFileGrabber(source));
+
+		chain
+				.setNextFilter(new OsmTranslator())
+				// .setNextFilter(new DataAdditionFilter(source))
+				.setNextFilter(filterFactory.createDbInsertionFilter(source))
+				.setNextFilter(filterFactory.createNotificationFilter(source));
+
 		return chain;
 	}
 

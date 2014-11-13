@@ -18,15 +18,12 @@
 package org.jvalue.ods.configuration;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.filter.FilterChainElement;
-
-import com.fasterxml.jackson.databind.JsonNode;
 
 
 interface Configuration {
 
 	public DataSource getDataSource();
-	public FilterChainElement<Void,?> getFilterChain(DbAccessor<JsonNode> accessor);
+	public FilterChainElement<Void,?> getFilterChain();
 
 }
