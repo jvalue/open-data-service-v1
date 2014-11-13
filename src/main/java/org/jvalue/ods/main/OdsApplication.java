@@ -45,7 +45,7 @@ public final class OdsApplication extends Application<OdsConfig> {
 				new FilterModule());
 
 		// start data grabbing
-		environment.lifecycle().manage(new DataGrabberMain());
+		environment.lifecycle().manage(injector.getInstance(DataGrabberManager.class));
 		environment.jersey().register(injector.getInstance(NotificationClientRegistrationApi.class));
 	}
 
