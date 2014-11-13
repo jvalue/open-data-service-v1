@@ -18,6 +18,8 @@
 package org.jvalue.ods.db;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 import org.ektorp.CouchDbConnector;
 import org.ektorp.CouchDbInstance;
@@ -37,14 +39,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class CouchDbAccessor implements DbAccessor<JsonNode> {
+class CouchDbAccessor implements DbAccessor<JsonNode> {
 
 	private CouchDbConnector db;
 	private CouchDbInstance dbInstance;
 	private String databaseName;
 	private boolean isConnected = false;
 
-	protected CouchDbAccessor(String databaseName) {
+	@Inject
+	CouchDbAccessor(@Assisted String databaseName) {
 		if ((databaseName == null) || (databaseName.isEmpty())) {
 			String errorMessage = "databaseName is null or empty";
 			Log.error(errorMessage);

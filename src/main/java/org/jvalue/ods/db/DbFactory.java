@@ -19,31 +19,9 @@ package org.jvalue.ods.db;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-/**
- * A factory for creating DbAccessor objects.
- */
-public class DbFactory {
 
-	/**
-	 * Creates a new DbAccessor object.
-	 * 
-	 * @param databaseName
-	 *            the database name
-	 * @return the db accessor
-	 */
-	public static DbAccessor<JsonNode> createDbAccessor(String databaseName) {
-		return new CouchDbAccessor(databaseName);
-	}
+public interface DbFactory {
 
-	/**
-	 * Creates a new DbAccessor object.
-	 * 
-	 * @param databaseName
-	 *            the database name
-	 * @return the db accessor
-	 */
-	public static DbAccessor<JsonNode> createMockDbAccessor(String databaseName) {
-		return new MockDbAccessor(databaseName);
-	}
+	public DbAccessor<JsonNode> create(String databaseName);
 
 }
