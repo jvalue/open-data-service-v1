@@ -17,20 +17,12 @@
  */
 package org.jvalue.ods.server.router;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.jvalue.ods.data.DummyDataSource;
-import org.jvalue.ods.data.metadata.JacksonMetaData;
-import org.jvalue.ods.filter.grabber.GrabberFactory;
-import org.jvalue.ods.server.restlet.BaseRestlet;
-import org.jvalue.ods.server.utils.RestletResult;
-import org.jvalue.ods.filter.translator.TranslatorFactory;
-import org.restlet.Request;
 import org.restlet.Restlet;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.HashMap;
+import java.util.Map;
 
 
 class OverpassRouter implements Router<Restlet> {
@@ -42,6 +34,7 @@ class OverpassRouter implements Router<Restlet> {
 	public Map<String, Restlet> getRoutes() {
 		Map<String, Restlet> routes = new HashMap<String, Restlet>();
 
+		/*
 		Restlet overpassLocationRestlet = new BaseRestlet() {
 			@Override
 			protected RestletResult doGet(Request request) {
@@ -75,6 +68,7 @@ class OverpassRouter implements Router<Restlet> {
 
 		routes.put("/services/de/overpass/{location}", overpassLocationRestlet);
 		routes.put("/services/de/overpass/metadata", metadataRestlet);
+		*/
 
 		return routes;
 	}

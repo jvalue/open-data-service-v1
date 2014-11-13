@@ -21,6 +21,7 @@ import java.util.LinkedList;
 
 import org.jvalue.ods.data.metadata.JacksonMetaData;
 import org.jvalue.ods.data.objecttypes.MapObjectType;
+import org.jvalue.ods.db.OdsView;
 
 public final class DummyDataSource {
 

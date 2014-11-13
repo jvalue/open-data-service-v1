@@ -20,9 +20,8 @@ package org.jvalue.ods.administration;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import org.jvalue.ods.db.DbAccessor;
-import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.utils.Log;
 import org.jvalue.ods.server.router.Router;
+import org.jvalue.ods.utils.Log;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
@@ -49,7 +48,8 @@ public class AdministrationRouter implements Router<Restlet> {
 	 * Instantiates a new routes router.
 	 */
 	public AdministrationRouter() {
-		this.dbAccessor = DbFactory.createDbAccessor("adminlog");
+		// TODO
+		// this.dbAccessor = DbFactory.createDbAccessor("adminlog");
 	}
 
 	/*

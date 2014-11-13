@@ -21,7 +21,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import org.jvalue.ods.administration.AdministrationRouter;
 import org.jvalue.ods.db.DbAccessor;
-import org.jvalue.ods.db.DbFactory;
 import org.restlet.Restlet;
 
 import java.util.Set;
@@ -78,7 +77,9 @@ public final class RouterFactory {
 
 
 	private static DbAccessor<JsonNode> getOdsDbAccessor() {
-		return DbFactory.createDbAccessor("ods");
+		return null;
+		// TODO
+		// return DbFactory.createDbAccessor("ods");
 	}
 
 }

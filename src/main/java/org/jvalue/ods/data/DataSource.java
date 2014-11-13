@@ -22,6 +22,7 @@ import java.util.List;
 import org.jvalue.ods.data.metadata.OdsMetaData;
 import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.objecttypes.ObjectType;
+import org.jvalue.ods.db.OdsView;
 import org.jvalue.ods.utils.Assert;
 
 public class DataSource {

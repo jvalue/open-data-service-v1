@@ -17,27 +17,24 @@
  */
 package org.jvalue.ods.server.router;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.data.DummyDataSource;
+import org.jvalue.ods.db.DbAccessor;
+import org.jvalue.ods.server.restlet.BaseRestlet;
+import org.jvalue.ods.server.utils.RestletResult;
+import org.jvalue.ods.utils.Assert;
+import org.restlet.Request;
+import org.restlet.Restlet;
+import org.restlet.data.Status;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-
-import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.data.DummyDataSource;
-import org.jvalue.ods.db.DbAccessor;
-import org.jvalue.ods.filter.grabber.GrabberFactory;
-import org.jvalue.ods.server.restlet.BaseRestlet;
-import org.jvalue.ods.server.utils.RestletResult;
-import org.jvalue.ods.filter.translator.TranslatorFactory;
-import org.jvalue.ods.utils.Assert;
-import org.restlet.Request;
-import org.restlet.Restlet;
-import org.restlet.data.Status;
-import org.w3c.dom.Document;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 class RoutesRouter implements Router<Restlet> {
 
@@ -116,9 +113,13 @@ class RoutesRouter implements Router<Restlet> {
 				DataSource ds = DummyDataSource.newInstance(
 						"org-yournavigation", source);
 
+				/*
 				Document xmlDocument = GrabberFactory.getXmlGrabber(ds).grabSource();
 				Object data = TranslatorFactory.getXmlTranslator().translate(xmlDocument);
-				return RestletResult.newSuccessResult(mapper.valueToTree(data));
+				*/
+				// return RestletResult.newSuccessResult(mapper.valueToTree(data));
+				// TODO
+				return null;
 			}
 		};
 

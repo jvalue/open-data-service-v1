@@ -18,13 +18,8 @@ package org.jvalue.ods.db;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import org.ektorp.UpdateConflictException;
-import org.ektorp.support.DesignDocument;
-import org.ektorp.support.DesignDocument.View;
 import org.ektorp.support.DesignDocumentFactory;
 import org.ektorp.support.StdDesignDocumentFactory;
-import org.jvalue.ods.data.OdsView;
-import org.jvalue.ods.utils.Log;
 
 
 public final class DbUtils {
@@ -32,17 +27,19 @@ public final class DbUtils {
 	private static final DesignDocumentFactory designFactory = new StdDesignDocumentFactory();
 
 	public static void createView(final DbAccessor<JsonNode> accessor, final OdsView view) {
-		if (accessor == null || view == null) 
+		throw new UnsupportedOperationException("noooo, you should not be using this anymore ;)")
+		/*
+		if (accessor == null || view == null)
 			throw new NullPointerException("params cannot be null");
 
 		DesignDocument document = null;
 		boolean update = true;
 
 		try {
-			document = accessor.getDocument(DesignDocument.class, view.getIdPath());
+			document = accessor.getDocument(DesignDocument.class, view.getDesignDocId());
 		} catch (DbException e) {
 			document = designFactory.newDesignDocumentInstance();
-			document.setId(view.getIdPath());
+			document.setId(view.getDesignDocId());
 			update = false;
 		}
 
@@ -58,6 +55,7 @@ public final class DbUtils {
 			System.err.println("Design Document already exists." + ex.getMessage());
 			Log.error("Design Document already exists." + ex.getMessage());
 		}
+		*/
 	}
 
 

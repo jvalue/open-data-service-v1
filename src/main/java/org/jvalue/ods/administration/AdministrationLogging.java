@@ -17,24 +17,14 @@
  */
 package org.jvalue.ods.administration;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import org.jvalue.ods.db.DbAccessor;
-import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.utils.Log;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-
 public final class AdministrationLogging {
 
 	private AdministrationLogging() { }
 
 	public static void log(String content) {
+		System.out.println(content);
+		// TODO
+		/*
 		try {
 			DbAccessor<JsonNode> accessor = DbFactory
 					.createDbAccessor("adminlog");
@@ -53,6 +43,7 @@ public final class AdministrationLogging {
 		} catch (Exception ex) {
 			Log.error(ex.getMessage());
 		}
+		*/
 	}
 
 }
