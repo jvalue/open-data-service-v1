@@ -35,7 +35,7 @@ import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.data.valuetypes.SimpleValueType;
 import org.jvalue.ods.utils.Log;
-import org.jvalue.ods.translator.Translator;
+import org.jvalue.ods.filter.translator.Translator;
 import org.jvalue.ods.utils.Assert;
 
 

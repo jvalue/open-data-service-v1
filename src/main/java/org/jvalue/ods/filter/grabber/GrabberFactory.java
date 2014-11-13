@@ -15,31 +15,38 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.translator;
+package org.jvalue.ods.filter.grabber;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import java.io.File;
 
-import org.junit.Test;
-import org.jvalue.ods.data.DummyDataSource;
-import org.jvalue.ods.grabber.GrabberFactory;
+import org.jvalue.ods.data.DataSource;
 import org.w3c.dom.Document;
 
+import com.fasterxml.jackson.databind.JsonNode;
 
-public class XmlTranslatorTest {
 
-	@Test
-	public void testTranslate() {
-		Document xmlDocument = GrabberFactory.getXmlGrabber(DummyDataSource.newInstance("osm", "/nbgcity.osm")).filter(null);
-		Object data = TranslatorFactory.getXmlTranslator().filter(xmlDocument);		
-		assertNotNull(data);
+public final class GrabberFactory {
+
+	private GrabberFactory() { }
+
+
+	public static Grabber<Document> getXmlGrabber(DataSource source) {
+		return new XmlGrabber(source);
 	}
 
 
-	@Test
-	public void testTranslateNotExistingFile() {
-		Document xmlDocument = GrabberFactory.getXmlGrabber(DummyDataSource.newInstance("osm", "NotExistingFile")).filter(null);		
-		assertNull(xmlDocument);
+	public static Grabber<JsonNode> getJsonGrabber(DataSource source) {
+		return new JsonGrabber(source);
+	}
+
+
+	public static Grabber<File> getFileGrabber(DataSource source) {
+		return new FileGrabber(source);
+	}
+
+
+	public static Grabber<String> getHttpGrabber(DataSource source, String encoding) {
+		return new HttpGrabber(source, encoding);
 	}
 
 }

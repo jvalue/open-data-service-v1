@@ -24,10 +24,10 @@ import java.util.Map;
 
 import org.jvalue.ods.data.DummyDataSource;
 import org.jvalue.ods.data.metadata.JacksonMetaData;
-import org.jvalue.ods.grabber.GrabberFactory;
+import org.jvalue.ods.filter.grabber.GrabberFactory;
 import org.jvalue.ods.server.restlet.BaseRestlet;
 import org.jvalue.ods.server.utils.RestletResult;
-import org.jvalue.ods.translator.TranslatorFactory;
+import org.jvalue.ods.filter.translator.TranslatorFactory;
 import org.restlet.Request;
 import org.restlet.Restlet;
 

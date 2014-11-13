@@ -15,32 +15,31 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.grabber;
+package org.jvalue.ods.filter.translator;
 
-import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.utils.Log;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
-import java.io.File;
-import java.net.URISyntaxException;
-import java.net.URL;
+import org.junit.Test;
+import org.jvalue.ods.data.DummyDataSource;
+import org.jvalue.ods.filter.grabber.GrabberFactory;
+import org.w3c.dom.Document;
 
-final class FileGrabber extends Grabber<File> {
 
-	public FileGrabber(DataSource source) {
-		super(source);
+public class XmlTranslatorTest {
+
+	@Test
+	public void testTranslate() {
+		Document xmlDocument = GrabberFactory.getXmlGrabber(DummyDataSource.newInstance("osm", "/nbgcity.osm")).filter(null);
+		Object data = TranslatorFactory.getXmlTranslator().filter(xmlDocument);		
+		assertNotNull(data);
 	}
 
 
-	@Override
-	public File grabSource() {
-		File file = null;
-		URL sourceUrl = getClass().getResource(dataSource.getUrl());
-		try {
-			file = new File(sourceUrl.toURI());
-		} catch (URISyntaxException e) {
-			Log.error(e.getMessage());
-		}
-		return file;
+	@Test
+	public void testTranslateNotExistingFile() {
+		Document xmlDocument = GrabberFactory.getXmlGrabber(DummyDataSource.newInstance("osm", "NotExistingFile")).filter(null);		
+		assertNull(xmlDocument);
 	}
 
 }

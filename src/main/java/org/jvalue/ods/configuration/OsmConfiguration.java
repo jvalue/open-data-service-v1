@@ -30,8 +30,8 @@ import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.DbInsertionFilter;
 import org.jvalue.ods.filter.FilterChainElement;
-import org.jvalue.ods.grabber.GrabberFactory;
-import org.jvalue.ods.notifications.NotificationFilter;
+import org.jvalue.ods.filter.grabber.GrabberFactory;
+import org.jvalue.ods.filter.NotificationFilter;
 import org.jvalue.ods.qa.DataAdditionFilter;
 
 import java.io.File;

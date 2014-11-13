@@ -15,19 +15,27 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jvalue.ods.translator;
+package org.jvalue.ods.filter.translator;
 
-import org.jvalue.ods.filter.Filter;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.jvalue.ods.utils.Log;
 
 
-public abstract class Translator<T> implements Filter<T, Object> {
+final class JsonTranslator extends Translator<JsonNode> {
+
+	private static final ObjectMapper mapper = new ObjectMapper();
 
 	@Override
-	public final Object filter(T value) {
-		return translate(value);
+	public Object translate(JsonNode jsonNode) {
+		try {
+			return mapper.treeToValue(jsonNode, Object.class);
+		} catch (JsonProcessingException jpe) {
+			Log.error(jpe.getMessage());
+			return null;
+		}
 	}
-
-
-	public abstract Object translate(T value);
 
 }

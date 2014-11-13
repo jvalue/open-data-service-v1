@@ -15,38 +15,32 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.grabber;
-
-import java.io.File;
+package org.jvalue.ods.filter.grabber;
 
 import org.jvalue.ods.data.DataSource;
-import org.w3c.dom.Document;
+import org.jvalue.ods.utils.Log;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
 
+final class FileGrabber extends Grabber<File> {
 
-public final class GrabberFactory {
-
-	private GrabberFactory() { }
-
-
-	public static Grabber<Document> getXmlGrabber(DataSource source) {
-		return new XmlGrabber(source);
+	public FileGrabber(DataSource source) {
+		super(source);
 	}
 
 
-	public static Grabber<JsonNode> getJsonGrabber(DataSource source) {
-		return new JsonGrabber(source);
-	}
-
-
-	public static Grabber<File> getFileGrabber(DataSource source) {
-		return new FileGrabber(source);
-	}
-
-
-	public static Grabber<String> getHttpGrabber(DataSource source, String encoding) {
-		return new HttpGrabber(source, encoding);
+	@Override
+	public File grabSource() {
+		File file = null;
+		URL sourceUrl = getClass().getResource(dataSource.getUrl());
+		try {
+			file = new File(sourceUrl.toURI());
+		} catch (URISyntaxException e) {
+			Log.error(e.getMessage());
+		}
+		return file;
 	}
 
 }
