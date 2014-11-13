@@ -21,7 +21,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.nio.charset.Charset;
 
@@ -33,48 +32,31 @@ public class HttpUtils {
 	public static String readUrl(String stringUrl, String charsetName) throws IOException {
 		Assert.assertNotNull(stringUrl, charsetName);
 
-		// using string builder for best performance of string concatenation
-		StringBuilder sb = new StringBuilder();
-		HttpURLConnection conn = null;
-		BufferedReader rd = null;
+		BufferedReader reader = null;
 		try {
 
 			URL url = new URL(stringUrl);
-			conn = (HttpURLConnection) url.openConnection();
-			conn.setRequestMethod("GET");
-			conn.setReadTimeout(10000);
-			conn.setConnectTimeout(10000);
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestMethod("GET");
 
-			rd = new BufferedReader(new InputStreamReader(
-					conn.getInputStream(), Charset.forName(charsetName)));
+			reader = new BufferedReader(new InputStreamReader(
+					connection.getInputStream(),
+					Charset.forName(charsetName)));
+
+			StringBuilder stringBuilder = new StringBuilder();
 			String line;
-			while ((line = rd.readLine()) != null) {
-				sb.append(line);
+			while ((line = reader.readLine()) != null) {
+				stringBuilder.append(line);
 			}
-			rd.close();
-		} catch (SocketTimeoutException ste) {
-			String errorMessage = "socket timeout";
-			Log.error(errorMessage);
-			throw new IOException(errorMessage);
-		} catch (IOException ioe) {
-			String errorMessage = "An I/O Exception occured while trying to read from HTTP server.";
-			Log.error(errorMessage);
-			throw new IOException(errorMessage);
+			return stringBuilder.toString();
+
 		} finally {
-			// close stream and connection
 			try {
-				if (rd != null) {
-					rd.close();
-				}
+				if (reader != null)  reader.close();
 			} catch (IOException e) {
-				String errorMessage = "An I/O Exception occured while trying to read from HTTP server.";
-				Log.error(errorMessage);
-			} finally {
-				if (conn != null) {
-					conn.disconnect();
-				}
+				Log.error("Failed to close reader", e);
 			}
 		}
-		return sb.toString();
 	}
+
 }
