@@ -7,7 +7,7 @@ import com.google.inject.name.Names;
 
 public final class ConfigurationModule extends AbstractModule {
 
-	private final static String
+	public final static String
 			NAME_PEGELONLINE_CONFIGURATION = "PegelOnlineConfiguration",
 			NAME_PEGELPORTAL_MV_CONFIGURATION = "PegelPortalMvConfiguration",
 			NAME_OSM_CONFIGURATION = "OsmConfiguration";
@@ -15,10 +15,17 @@ public final class ConfigurationModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
+
 		bind(ConfigurationManager.class).in(Singleton.class);
-		bind(PegelOnlineConfiguration.class).annotatedWith(Names.named(NAME_PEGELONLINE_CONFIGURATION));
-		bind(PegelPortalMvConfiguration.class).annotatedWith(Names.named(NAME_PEGELPORTAL_MV_CONFIGURATION));
-		bind(OsmConfiguration.class).annotatedWith(Names.named(NAME_OSM_CONFIGURATION));
+		bind(Configuration.class)
+				.annotatedWith(Names.named(NAME_PEGELONLINE_CONFIGURATION))
+				.to(PegelOnlineConfiguration.class);
+		bind(Configuration.class)
+				.annotatedWith(Names.named(NAME_PEGELPORTAL_MV_CONFIGURATION))
+				.to(PegelPortalMvConfiguration.class);
+		bind(Configuration.class)
+				.annotatedWith(Names.named(NAME_OSM_CONFIGURATION))
+				.to(OsmConfiguration.class);
 	}
 
 }

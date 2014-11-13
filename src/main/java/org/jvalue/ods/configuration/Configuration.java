@@ -21,7 +21,7 @@ import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.filter.FilterChainElement;
 
 
-interface Configuration {
+public interface Configuration {
 
 	public DataSource getDataSource();
 	public FilterChainElement<Void,?> getFilterChain();
