@@ -3,7 +3,12 @@ package org.jvalue.ods.main;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Key;
+import com.google.inject.name.Names;
 
+import org.jvalue.ods.configuration.Configuration;
+import org.jvalue.ods.configuration.ConfigurationManager;
+import org.jvalue.ods.configuration.ConfigurationModule;
 import org.jvalue.ods.db.DbModule;
 import org.jvalue.ods.filter.FilterModule;
 import org.jvalue.ods.notifications.NotificationsModule;
@@ -40,9 +45,19 @@ public final class OdsApplication extends Application<OdsConfig> {
 	public void run(OdsConfig configuration, Environment environment) {
 		Injector injector = Guice.createInjector(
 				new ConfigModule(configuration),
+				new ConfigurationModule(),
 				new DbModule(),
 				new NotificationsModule(),
 				new FilterModule());
+
+		// static configuration for now
+		ConfigurationManager configManager = injector.getInstance(ConfigurationManager.class);
+		configManager.addConfiguration(
+				injector.getInstance(
+						Key.get(
+								Configuration.class,
+								Names.named(ConfigurationModule.NAME_PEGELONLINE_CONFIGURATION))));
+		configManager.configureAll();
 
 		// start data grabbing
 		environment.lifecycle().manage(injector.getInstance(DataGrabberManager.class));
