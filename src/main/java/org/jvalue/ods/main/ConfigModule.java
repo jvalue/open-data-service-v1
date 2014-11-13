@@ -15,6 +15,7 @@ public final class ConfigModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		bind(String.class).annotatedWith(GcmApiKey.class).toInstance(config.getGcmApiKey());
+		bind(Long.class).annotatedWith(GrabberUpdateInterval.class).toInstance(config.getGrabberUpdateInterval());
 	}
 
 }
