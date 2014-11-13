@@ -14,7 +14,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.filter.grabber;
+package org.jvalue.ods.main;
 
 import com.fasterxml.jackson.databind.JsonNode;
 

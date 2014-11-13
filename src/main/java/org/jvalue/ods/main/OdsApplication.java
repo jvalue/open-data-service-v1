@@ -5,7 +5,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 import org.jvalue.ods.db.DbModule;
-import org.jvalue.ods.filter.grabber.DataGrabberMain;
 import org.jvalue.ods.notifications.NotificationsModule;
 import org.jvalue.ods.rest.NotificationClientRegistrationApi;
 
