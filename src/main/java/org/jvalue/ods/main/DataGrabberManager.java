@@ -18,8 +18,8 @@ package org.jvalue.ods.main;
 
 import com.google.inject.Inject;
 
-import org.jvalue.ods.administration.AdministrationLogging;
 import org.jvalue.ods.filter.FilterChainManager;
+import org.jvalue.ods.utils.Log;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -50,12 +50,14 @@ class DataGrabberManager implements Managed {
 
 	@Override
 	public void start() {
+		Log.info("starting grabber scheduler");
 		executorService.scheduleAtFixedRate(grabberRunnable, 0, grabberUpdateInterval, TimeUnit.SECONDS);
 	}
 
 
 	@Override
 	public void stop() {
+		Log.info("stopping grabber scheduler");
 		executorService.shutdown();
 	}
 
@@ -80,11 +82,13 @@ class DataGrabberManager implements Managed {
 			AdministrationLogging.log("Initialize completed");
 			*/
 
-			// accessor = DbFactory.createDbAccessor("ods");
-			// accessor.connect();
-			AdministrationLogging.log("Update started");
-			filterChainManager.startFilterChains();
-			AdministrationLogging.log("Update completed");
+			try {
+				Log.info("starting filter chains");
+				filterChainManager.startFilterChains();
+				Log.info("stopping filter chains");
+			} catch (Throwable throwable) {
+				Log.error("error while running grabber", throwable);
+			}
 		}
 
 	}
