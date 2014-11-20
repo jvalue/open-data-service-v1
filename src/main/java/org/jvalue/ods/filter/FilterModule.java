@@ -8,13 +8,13 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 
-import org.jvalue.ods.filter.adapter.GrabberModule;
+import org.jvalue.ods.filter.adapter.AdapterModule;
 
 public final class FilterModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		install(new GrabberModule());
+		install(new AdapterModule());
 		install(new FactoryModuleBuilder()
 				.implement(
 						new TypeLiteral<Filter<ArrayNode, ArrayNode>>() { },

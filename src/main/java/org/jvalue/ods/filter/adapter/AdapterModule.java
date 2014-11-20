@@ -11,12 +11,13 @@ import org.w3c.dom.Document;
 
 import java.io.File;
 
-public final class GrabberModule extends AbstractModule {
+public final class AdapterModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
 		install(new FactoryModuleBuilder()
-				.implement(new TypeLiteral<Filter<Void, Document>>() { }, XmlSourceAdapter.class)
+				.implement(new TypeLiteral<Filter<Void, Document>>() {
+				}, XmlSourceAdapter.class)
 				.implement(new TypeLiteral<Filter<Void, ArrayNode>>() { }, JsonSourceAdapter.class)
 				.implement(new TypeLiteral<Filter<Void, File>>() { }, FileSourceAdapter.class)
 				.build(SourceAdapterFactory.class));
