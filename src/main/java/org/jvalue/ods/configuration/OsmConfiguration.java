@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
+import org.jvalue.ods.data.DataSourceConfiguration;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.db.OdsView;
 import org.jvalue.ods.data.metadata.JacksonMetaData;
@@ -45,7 +46,7 @@ import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_NULL;
 import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_NUMBER;
 import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_STRING;
 
-final class OsmConfiguration implements Configuration {
+final class OsmConfiguration implements DataSourceConfiguration {
 
 	private final DbAccessor<JsonNode> dbAccessor;
 	private final FilterFactory filterFactory;

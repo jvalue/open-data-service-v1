@@ -2,8 +2,9 @@ package org.jvalue.ods.configuration;
 
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Singleton;
 import com.google.inject.name.Names;
+
+import org.jvalue.ods.data.DataSourceConfiguration;
 
 public final class ConfigurationModule extends AbstractModule {
 
@@ -16,8 +17,7 @@ public final class ConfigurationModule extends AbstractModule {
 	@Override
 	protected void configure() {
 
-		bind(ConfigurationManager.class).in(Singleton.class);
-		bind(Configuration.class)
+		bind(DataSourceConfiguration.class)
 				.annotatedWith(Names.named(NAME_PEGELONLINE_CONFIGURATION))
 				.to(PegelOnlineConfiguration.class);
 		/*

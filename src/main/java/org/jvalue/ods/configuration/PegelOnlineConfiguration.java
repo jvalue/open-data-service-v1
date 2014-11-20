@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
+import org.jvalue.ods.data.DataSourceConfiguration;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.metadata.JacksonMetaData;
 import org.jvalue.ods.data.metadata.OdsMetaData;
@@ -48,7 +49,7 @@ import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_NULL;
 import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_NUMBER;
 import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_STRING;
 
-final class PegelOnlineConfiguration implements Configuration {
+final class PegelOnlineConfiguration implements DataSourceConfiguration {
 
 	private final SourceDataRepository dataRepository;
 	private final FilterFactory filterFactory;

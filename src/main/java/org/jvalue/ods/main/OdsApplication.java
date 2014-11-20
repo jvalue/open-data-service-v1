@@ -6,8 +6,8 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
 
-import org.jvalue.ods.configuration.Configuration;
-import org.jvalue.ods.configuration.ConfigurationManager;
+import org.jvalue.ods.data.DataSourceConfiguration;
+import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.configuration.ConfigurationModule;
 import org.jvalue.ods.db.DbModule;
 import org.jvalue.ods.filter.FilterModule;
@@ -51,13 +51,12 @@ public final class OdsApplication extends Application<OdsConfig> {
 				new FilterModule());
 
 		// static configuration for now
-		ConfigurationManager configManager = injector.getInstance(ConfigurationManager.class);
+		DataSourceManager configManager = injector.getInstance(DataSourceManager.class);
 		configManager.addConfiguration(
 				injector.getInstance(
 						Key.get(
-								Configuration.class,
+								DataSourceConfiguration.class,
 								Names.named(ConfigurationModule.NAME_PEGELONLINE_CONFIGURATION))));
-		configManager.configureAll();
 
 		// start data grabbing
 		environment.lifecycle().manage(injector.getInstance(DataGrabberManager.class));

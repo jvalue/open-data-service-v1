@@ -14,51 +14,34 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.configuration;
+package org.jvalue.ods.data;
 
 import com.google.inject.Inject;
 
-import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.filter.FilterChainManager;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public final class ConfigurationManager {
+public final class DataSourceManager {
 
-	private final List<Configuration> configurations = new LinkedList<>();
+	// TODO persisting!
+
+	private final List<DataSourceConfiguration> configurations = new LinkedList<>();
 	private final FilterChainManager filterChainManager;
 
 	@Inject
-	ConfigurationManager(FilterChainManager filterChainManager) {
+	DataSourceManager(FilterChainManager filterChainManager) {
 		this.filterChainManager = filterChainManager;
 	}
 
 
-	public void addConfiguration(Configuration configuration) {
+	public void addConfiguration(DataSourceConfiguration configuration) {
 		this.configurations.add(configuration);
+		filterChainManager.register(configuration.getFilterChain());
+		// TODO insert db schema (raw and improved)
+		// TODO insert metadata
+		// TODO create common views??
 	}
-
-
-	public void configureAll() {
-		for (Configuration configuration : configurations) {
-			DataSource source = configuration.getDataSource();
-			filterChainManager.register(configuration.getFilterChain());
-			// TODO insert db schema (raw and improved)
-			// TODO insert metadata
-			// TODO create common views??
-		}
-	}
-
-	/*
-	private static void createCommonViews(DbAccessor<JsonNode> accessor) {
-		DbUtils.createView(accessor, new OdsView("_design/ods",
-				"getClassObjectByType",
-				"function(doc) { if(doc.name) emit (doc.name, doc) }"));
-		DbUtils.createView(accessor, new OdsView("_design/ods",
-				"getAllClassObjects",
-				"function(doc) { if(doc.name) emit (null, doc) }"));
-	}
-	*/
 
 }

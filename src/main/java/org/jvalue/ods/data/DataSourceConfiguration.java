@@ -15,15 +15,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.configuration;
+package org.jvalue.ods.data;
 
-import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.filter.FilterChainElement;
 
 
-public interface Configuration {
+// TODO in the near future this will be a call and final!
+public interface DataSourceConfiguration {
 
 	public DataSource getDataSource();
-	public FilterChainElement<Void,?> getFilterChain();
+	public FilterChainElement<Void, ?> getFilterChain();
 
 }
