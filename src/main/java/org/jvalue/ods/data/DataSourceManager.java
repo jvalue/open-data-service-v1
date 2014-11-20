@@ -18,16 +18,20 @@ package org.jvalue.ods.data;
 
 import com.google.inject.Inject;
 
+import org.jvalue.ods.db.SourceDataRepository;
 import org.jvalue.ods.filter.FilterChainManager;
+import org.jvalue.ods.utils.Assert;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public final class DataSourceManager {
 
 	// TODO persisting!
 
-	private final List<DataSourceConfiguration> configurations = new LinkedList<>();
+	private final Map<String, DataSourceConfiguration> configurations = new HashMap<>();
 	private final FilterChainManager filterChainManager;
 
 	@Inject
@@ -37,11 +41,27 @@ public final class DataSourceManager {
 
 
 	public void addConfiguration(DataSourceConfiguration configuration) {
-		this.configurations.add(configuration);
+		Assert.assertNotNull(configuration);
+		this.configurations.put(configuration.getDataSource().getId(), configuration);
 		filterChainManager.register(configuration.getFilterChain());
 		// TODO insert db schema (raw and improved)
 		// TODO insert metadata
 		// TODO create common views??
+	}
+
+
+	public List<DataSource> getAllDataSources() {
+		List<DataSource> sources = new LinkedList<DataSource>();
+		for (DataSourceConfiguration config : configurations.values()) {
+			sources.add(config.getDataSource());
+		}
+		return sources;
+	}
+
+
+	public SourceDataRepository getDataRepositoryForSourceId(String sourceId) {
+		Assert.assertNotNull(sourceId);
+		return configurations.get(sourceId).getDataRepository();
 	}
 
 }
