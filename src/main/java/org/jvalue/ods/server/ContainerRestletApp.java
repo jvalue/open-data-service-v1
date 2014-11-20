@@ -56,8 +56,6 @@ public class ContainerRestletApp extends Application {
 				.createOsmRouter();
 		org.jvalue.ods.server.router.Router<Restlet> routesRouter = RouterFactory
 				.createRoutesRouter();
-		org.jvalue.ods.server.router.Router<Restlet> administrationRouter = RouterFactory
-				.createAdministrationRouter();
 
 		HashMap<String, Restlet> combinedRouter = new LinkedHashMap<String, Restlet>();
 		combinedRouter.putAll(odsRouter.getRoutes());
@@ -67,7 +65,6 @@ public class ContainerRestletApp extends Application {
 		combinedRouter.putAll(ovRouter.getRoutes());
 		combinedRouter.putAll(osmRouter.getRoutes());
 		combinedRouter.putAll(routesRouter.getRoutes());
-		combinedRouter.putAll(administrationRouter.getRoutes());
 
 		// must be last router, generates api output
 		org.jvalue.ods.server.router.Router<Restlet> apiRouter = RouterFactory

@@ -19,7 +19,6 @@ package org.jvalue.ods.server.router;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import org.jvalue.ods.administration.AdministrationRouter;
 import org.jvalue.ods.db.DbAccessor;
 import org.restlet.Restlet;
 
@@ -63,11 +62,6 @@ public final class RouterFactory {
 
 	public static Router<Restlet> createRoutesRouter() {
 		return new RoutesRouter(getOdsDbAccessor());
-	}
-
-
-	public static Router<Restlet> createAdministrationRouter() {
-		return new AdministrationRouter();
 	}
 
 
