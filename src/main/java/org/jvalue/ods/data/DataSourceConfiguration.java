@@ -17,6 +17,7 @@
  */
 package org.jvalue.ods.data;
 
+import org.jvalue.ods.db.SourceDataRepository;
 import org.jvalue.ods.filter.FilterChainElement;
 
 
@@ -25,5 +26,6 @@ public interface DataSourceConfiguration {
 
 	public DataSource getDataSource();
 	public FilterChainElement<Void, ?> getFilterChain();
+	public SourceDataRepository getDataRepository();
 
 }

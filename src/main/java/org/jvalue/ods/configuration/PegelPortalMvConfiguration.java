@@ -20,9 +20,8 @@ package org.jvalue.ods.configuration;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 
-import org.jvalue.ods.data.DataSourceConfiguration;
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.db.OdsView;
+import org.jvalue.ods.data.DataSourceConfiguration;
 import org.jvalue.ods.data.metadata.JacksonMetaData;
 import org.jvalue.ods.data.metadata.OdsMetaData;
 import org.jvalue.ods.data.objecttypes.ListObjectType;
@@ -30,6 +29,8 @@ import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.db.DbAccessor;
+import org.jvalue.ods.db.OdsView;
+import org.jvalue.ods.db.SourceDataRepository;
 import org.jvalue.ods.filter.FilterChainElement;
 import org.jvalue.ods.filter.FilterFactory;
 import org.jvalue.ods.filter.grabber.GrabberFactory;
@@ -184,6 +185,12 @@ public final class PegelPortalMvConfiguration implements DataSourceConfiguration
 
 		return chain;
 
+	}
+
+
+	@Override
+	public SourceDataRepository getDataRepository() {
+		return null;
 	}
 
 }

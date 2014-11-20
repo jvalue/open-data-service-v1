@@ -561,6 +561,7 @@ final class PegelOnlineConfiguration implements DataSourceConfiguration {
 				improvedDbSchema, metaData, new LinkedList<OdsView>());
 	}
 
+
 	@Override
 	public FilterChainElement<Void, ?> getFilterChain() {
 		DataSource source = getDataSource();
@@ -586,6 +587,13 @@ final class PegelOnlineConfiguration implements DataSourceConfiguration {
 
 		return chain;
 	}
+
+
+	@Override
+	public SourceDataRepository getDataRepository() {
+		return dataRepository;
+	}
+
 
 	private static MapComplexValueType createSourceCoordinateStructure() {
 
