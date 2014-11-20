@@ -1,6 +1,7 @@
 package org.jvalue.ods.notifications.sender;
 
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.inject.Inject;
 
 import org.jvalue.ods.data.DataSource;
@@ -39,9 +40,9 @@ public final class SenderVisitor implements ClientVisitor<SenderVisitor.DataEntr
 	public static class DataEntry {
 
 		private final DataSource source;
-		private final Object data;
+		private final ArrayNode data;
 
-		public DataEntry(DataSource source, Object data) {
+		public DataEntry(DataSource source, ArrayNode data) {
 			this.source = source;
 			this.data = data;
 		}
@@ -50,7 +51,7 @@ public final class SenderVisitor implements ClientVisitor<SenderVisitor.DataEntr
 			return source;
 		}
 
-		public Object getData() {
+		public ArrayNode getData() {
 			return data;
 		}
 

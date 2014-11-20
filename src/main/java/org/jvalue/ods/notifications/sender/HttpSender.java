@@ -1,6 +1,6 @@
 package org.jvalue.ods.notifications.sender;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.notifications.clients.HttpClient;
@@ -13,14 +13,11 @@ import java.net.URLEncoder;
 
 public final class HttpSender extends Sender<HttpClient> {
 
-	private static final ObjectMapper mapper = new ObjectMapper();
-	
-
 	@Override
 	public SenderResult notifySourceChanged(
 			HttpClient client, 
 			DataSource source, 
-			Object data) {
+			ArrayNode data) {
 
 		try {
 			RestCall.Builder builder = new RestCall.Builder(
@@ -30,7 +27,7 @@ public final class HttpSender extends Sender<HttpClient> {
 
 			if (client.getSendData()) {
 				String jsonString = URLEncoder.encode(
-						mapper.valueToTree(data).toString(),
+						data.toString(),
 						"UTF-8");
 				builder.content("application/json", jsonString.getBytes());
 			}

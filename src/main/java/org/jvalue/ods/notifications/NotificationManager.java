@@ -17,14 +17,15 @@
  */
 package org.jvalue.ods.notifications;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.inject.Inject;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.utils.Log;
 import org.jvalue.ods.notifications.clients.Client;
 import org.jvalue.ods.notifications.sender.SenderResult;
 import org.jvalue.ods.notifications.sender.SenderVisitor;
 import org.jvalue.ods.utils.Assert;
+import org.jvalue.ods.utils.Log;
 
 import java.util.HashSet;
 import java.util.List;
@@ -47,8 +48,7 @@ public final class NotificationManager {
 	}
 
 
-	@SuppressWarnings({"rawtypes", "unchecked"})
-	public void notifySourceChanged(DataSource source, Object data) {
+	public void notifySourceChanged(DataSource source, ArrayNode data) {
 		Assert.assertNotNull(source);
 
 		SenderVisitor.DataEntry dataEntry = new SenderVisitor.DataEntry(source, data);

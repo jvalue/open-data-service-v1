@@ -177,9 +177,9 @@ public final class PegelPortalMvConfiguration implements Configuration {
 		FilterChainElement<Void, String> chain = FilterChainElement.instance(
 				grabberFactory.createHttpGrabber(source, "UTF-8"));
 
-		chain.setNextFilter(new PegelPortalMvTranslator(source))
+		chain.setNextFilter(new PegelPortalMvTranslator(source));
 				// .setNextFilter(filterFactory.createDbInsertionFilter(source))
-				.setNextFilter(filterFactory.createNotificationFilter(source));
+				// .setNextFilter(filterFactory.createNotificationFilter(source));
 
 		return chain;
 

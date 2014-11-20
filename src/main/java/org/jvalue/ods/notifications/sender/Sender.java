@@ -1,5 +1,7 @@
 package org.jvalue.ods.notifications.sender;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
+
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.notifications.clients.Client;
 
@@ -9,7 +11,7 @@ public abstract class Sender<T extends Client> {
 	public abstract SenderResult notifySourceChanged(
 			T client, 
 			DataSource source, 
-			Object data);
+			ArrayNode data);
 
 
 	protected SenderResult getSuccessResult() {

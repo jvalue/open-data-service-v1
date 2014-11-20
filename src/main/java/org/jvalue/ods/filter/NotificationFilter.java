@@ -15,6 +15,7 @@
  */
 package org.jvalue.ods.filter;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
@@ -23,7 +24,7 @@ import org.jvalue.ods.notifications.NotificationManager;
 import org.jvalue.ods.utils.Assert;
 
 
-final class NotificationFilter implements Filter<Object, Object> {
+final class NotificationFilter implements Filter<ArrayNode, ArrayNode> {
 
 	private final NotificationManager notificationManager;
 	private final DataSource source;
@@ -40,7 +41,7 @@ final class NotificationFilter implements Filter<Object, Object> {
 
 
 	@Override
-	public Object filter(Object data) {
+	public ArrayNode filter(ArrayNode data) {
 		notificationManager.notifySourceChanged(source, data);
 		return data;
 	}

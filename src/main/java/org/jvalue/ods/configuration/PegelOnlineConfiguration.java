@@ -18,6 +18,7 @@
 package org.jvalue.ods.configuration;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -563,11 +564,11 @@ final class PegelOnlineConfiguration implements Configuration {
 	public FilterChainElement<Void, ?> getFilterChain() {
 		DataSource source = getDataSource();
 
-		FilterChainElement<Void, JsonNode> chain = FilterChainElement.instance(
+		FilterChainElement<Void, ArrayNode> chain = FilterChainElement.instance(
 				grabberFactory.createJsonNodeGrabber(source));
 
 		chain
-				.setNextFilter(translatorProvider.get())
+				// .setNextFilter(translatorProvider.get())
 				// .setNextFilter(new DataAdditionFilter(source))
 				.setNextFilter(filterFactory.createDbInsertionFilter(source, dataRepository))
 				// .setNextFilter(

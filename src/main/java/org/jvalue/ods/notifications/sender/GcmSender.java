@@ -1,5 +1,6 @@
 package org.jvalue.ods.notifications.sender;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.android.gcm.server.Constants;
 import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.MulticastResult;
@@ -7,10 +8,10 @@ import com.google.android.gcm.server.Result;
 import com.google.inject.Inject;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.utils.Log;
 import org.jvalue.ods.main.GcmApiKey;
 import org.jvalue.ods.notifications.clients.ClientFactory;
 import org.jvalue.ods.notifications.clients.GcmClient;
+import org.jvalue.ods.utils.Log;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public final class GcmSender extends Sender<GcmClient> {
 	public SenderResult notifySourceChanged(
 			GcmClient client, 
 			DataSource source, 
-			Object data) {
+			ArrayNode data) {
 
 		// gather data
 		Map<String,String> payload = new HashMap<String,String>();

@@ -19,17 +19,17 @@ package org.jvalue.ods.filter.grabber;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.utils.HttpUtils;
-import org.jvalue.ods.utils.Log;
 
 import java.io.IOException;
+import java.net.URL;
 
 
-final class JsonGrabber extends Grabber<JsonNode> {
+final class JsonGrabber extends Grabber<ArrayNode> {
 	
 	private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -40,17 +40,19 @@ final class JsonGrabber extends Grabber<JsonNode> {
 
 
 	@Override
-	public JsonNode grabSource() {
-		JsonNode rootNode = null;
+	public ArrayNode grabSource() {
 		try {
-			String json = HttpUtils.readUrl(dataSource.getUrl(), "UTF-8");
-			rootNode = mapper.readTree(json);
+			JsonNode node = mapper.readTree(new URL(dataSource.getUrl()));
+			if (node instanceof ArrayNode) return (ArrayNode) node;
+			else {
+				ArrayNode arrayNode = mapper.createArrayNode();
+				arrayNode.add(node);
+				return arrayNode;
+			}
 
 		} catch (IOException e) {
-			Log.error(e.getMessage());
+			throw new IllegalStateException("failed to get JSON from source", e);
 		}
-		
-		return rootNode;
 	}
 
 }

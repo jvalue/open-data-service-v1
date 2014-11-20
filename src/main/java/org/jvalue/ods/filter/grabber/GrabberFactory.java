@@ -17,7 +17,7 @@
  */
 package org.jvalue.ods.filter.grabber;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.filter.Filter;
@@ -29,7 +29,7 @@ import java.io.File;
 public interface GrabberFactory {
 
 	public Filter<Void, Document> createXmlGrabber(DataSource source);
-	public Filter<Void, JsonNode> createJsonNodeGrabber(DataSource source);
+	public Filter<Void, ArrayNode> createJsonNodeGrabber(DataSource source);
 	public Filter<Void, File> createFileGrabber(DataSource source);
 	public Filter<Void, String> createHttpGrabber(DataSource source, String encoding);
 

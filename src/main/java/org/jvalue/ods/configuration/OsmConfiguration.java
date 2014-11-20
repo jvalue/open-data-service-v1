@@ -190,10 +190,10 @@ final class OsmConfiguration implements Configuration {
 				grabberFactory.createFileGrabber(source));
 
 		chain
-				.setNextFilter(new OsmTranslator())
+				.setNextFilter(new OsmTranslator());
 				// .setNextFilter(new DataAdditionFilter(source))
 				// .setNextFilter(filterFactory.createDbInsertionFilter(source))
-				.setNextFilter(filterFactory.createNotificationFilter(source));
+				// .setNextFilter(filterFactory.createNotificationFilter(source));
 
 		return chain;
 	}

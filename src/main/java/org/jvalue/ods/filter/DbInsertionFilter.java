@@ -18,6 +18,7 @@
 package org.jvalue.ods.filter;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
@@ -25,10 +26,8 @@ import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.db.SourceDataRepository;
 import org.jvalue.ods.utils.Assert;
 
-import java.util.List;
 
-
-final class DbInsertionFilter implements Filter<Object, Object> {
+final class DbInsertionFilter implements Filter<ArrayNode, ArrayNode> {
 
 	private final SourceDataRepository dataRepository;
 	private final DataSource source;
@@ -45,13 +44,8 @@ final class DbInsertionFilter implements Filter<Object, Object> {
 
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public Object filter(Object data) {
-		if (!(data instanceof List)) throw new IllegalArgumentException("can only work with lists");
-
-		List<JsonNode> list = (List<JsonNode>) data;
-		for (JsonNode node : list) dataRepository.add(node);
-
+	public ArrayNode filter(ArrayNode data) {
+		for (JsonNode node : data) dataRepository.add(node);
 		return data;
 	}
 
