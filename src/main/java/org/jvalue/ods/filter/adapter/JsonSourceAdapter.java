@@ -1,4 +1,5 @@
-/*  Open Data Service
+/*
+    Open Data Service
     Copyright (C) 2013  Tsysin Konstantin, Reischl Patrick
 
     This program is free software: you can redistribute it and/or modify
@@ -13,38 +14,45 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-    
  */
-package org.jvalue.ods.filter.grabber;
+package org.jvalue.ods.filter.adapter;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.utils.Log;
 
-import java.io.File;
-import java.net.URISyntaxException;
+import java.io.IOException;
 import java.net.URL;
 
-final class FileGrabber extends Grabber<File> {
+
+final class JsonSourceAdapter extends SourceAdapter<ArrayNode> {
+	
+	private static final ObjectMapper mapper = new ObjectMapper();
 
 	@Inject
-	FileGrabber(@Assisted DataSource source) {
+	JsonSourceAdapter(@Assisted DataSource source) {
 		super(source);
 	}
 
 
 	@Override
-	public File grabSource() {
-		File file = null;
-		URL sourceUrl = getClass().getResource(dataSource.getUrl());
+	public ArrayNode grabSource() {
 		try {
-			file = new File(sourceUrl.toURI());
-		} catch (URISyntaxException e) {
-			Log.error(e.getMessage());
+			JsonNode node = mapper.readTree(new URL(dataSource.getUrl()));
+			if (node instanceof ArrayNode) return (ArrayNode) node;
+			else {
+				ArrayNode arrayNode = mapper.createArrayNode();
+				arrayNode.add(node);
+				return arrayNode;
+			}
+
+		} catch (IOException e) {
+			throw new IllegalStateException("failed to get JSON from source", e);
 		}
-		return file;
 	}
 
 }

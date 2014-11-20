@@ -33,7 +33,7 @@ import org.jvalue.ods.db.OdsView;
 import org.jvalue.ods.db.SourceDataRepository;
 import org.jvalue.ods.filter.FilterChainElement;
 import org.jvalue.ods.filter.FilterFactory;
-import org.jvalue.ods.filter.grabber.GrabberFactory;
+import org.jvalue.ods.filter.adapter.SourceAdapterFactory;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -55,17 +55,17 @@ public final class PegelPortalMvConfiguration implements DataSourceConfiguration
 
 	private final SourceDataRepository dataRepository;
 	private final FilterFactory filterFactory;
-	private final GrabberFactory grabberFactory;
+	private final SourceAdapterFactory sourceAdapterFactory;
 
 	@Inject
 	public PegelPortalMvConfiguration(
 			DbFactory dbFactory,
 			FilterFactory filterFactory,
-			GrabberFactory grabberFactory) {
+			SourceAdapterFactory sourceAdapterFactory) {
 
 		this.dataRepository = dbFactory.createSourceDataRepository("pegelportalMv");
 		this.filterFactory = filterFactory;
-		this.grabberFactory = grabberFactory;
+		this.sourceAdapterFactory = sourceAdapterFactory;
 	}
 
 

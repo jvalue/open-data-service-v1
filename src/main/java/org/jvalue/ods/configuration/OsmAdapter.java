@@ -38,7 +38,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-final class OsmTranslator implements Filter<File, Object> {
+final class OsmAdapter implements Filter<File, Object> {
 
 	@Override
 	public Object filter(File file) {

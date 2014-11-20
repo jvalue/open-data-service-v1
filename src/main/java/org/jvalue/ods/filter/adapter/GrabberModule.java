@@ -1,4 +1,4 @@
-package org.jvalue.ods.filter.grabber;
+package org.jvalue.ods.filter.adapter;
 
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -16,11 +16,11 @@ public final class GrabberModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		install(new FactoryModuleBuilder()
-				.implement(new TypeLiteral<Filter<Void, Document>>() { }, XmlGrabber.class)
-				.implement(new TypeLiteral<Filter<Void, ArrayNode>>() { }, JsonGrabber.class)
-				.implement(new TypeLiteral<Filter<Void, File>>() { }, FileGrabber.class)
-				.implement(new TypeLiteral<Filter<Void, String>>() { }, HttpGrabber.class)
-				.build(GrabberFactory.class));
+				.implement(new TypeLiteral<Filter<Void, Document>>() { }, XmlSourceAdapter.class)
+				.implement(new TypeLiteral<Filter<Void, ArrayNode>>() { }, JsonSourceAdapter.class)
+				.implement(new TypeLiteral<Filter<Void, File>>() { }, FileSourceAdapter.class)
+				.implement(new TypeLiteral<Filter<Void, String>>() { }, HttpSourceAdapter.class)
+				.build(SourceAdapterFactory.class));
 	}
 
 }

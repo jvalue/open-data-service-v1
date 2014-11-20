@@ -8,7 +8,7 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 
-import org.jvalue.ods.filter.grabber.GrabberModule;
+import org.jvalue.ods.filter.adapter.GrabberModule;
 
 public final class FilterModule extends AbstractModule {
 

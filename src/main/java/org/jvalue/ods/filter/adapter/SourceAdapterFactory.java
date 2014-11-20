@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.filter.grabber;
+package org.jvalue.ods.filter.adapter;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
@@ -26,11 +26,11 @@ import org.w3c.dom.Document;
 import java.io.File;
 
 
-public interface GrabberFactory {
+public interface SourceAdapterFactory {
 
-	public Filter<Void, Document> createXmlGrabber(DataSource source);
-	public Filter<Void, ArrayNode> createJsonNodeGrabber(DataSource source);
-	public Filter<Void, File> createFileGrabber(DataSource source);
-	public Filter<Void, String> createHttpGrabber(DataSource source, String encoding);
+	public Filter<Void, Document> createXmlSourceAdapter(DataSource source);
+	public Filter<Void, ArrayNode> createJsonSourceAdapter(DataSource source);
+	public Filter<Void, File> createFileSourceAdapter(DataSource source);
+	public Filter<Void, String> createHttpSourceGrabber(DataSource source, String encoding);
 
 }

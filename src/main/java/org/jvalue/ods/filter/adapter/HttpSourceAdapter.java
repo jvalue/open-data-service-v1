@@ -15,29 +15,39 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.filter.grabber;
+package org.jvalue.ods.filter.adapter;
+
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.utils.Assert;
+import org.jvalue.ods.utils.HttpUtils;
+import org.jvalue.ods.utils.Log;
+
+import java.io.IOException;
 
 
-abstract class Grabber<T> implements Filter<Void, T> {
+final class HttpSourceAdapter extends SourceAdapter<String> {
 
-	protected final DataSource dataSource;
+	private final String encoding;
 
-	protected Grabber(DataSource dataSource) {
-		Assert.assertNotNull(dataSource);
-		this.dataSource = dataSource;
+	@Inject
+	HttpSourceAdapter(@Assisted DataSource source, String encoding) {
+		super(source);
+		Assert.assertNotNull(encoding);
+		this.encoding = encoding;
 	}
 
 
 	@Override
-	public final T filter(Void param) {
-		return grabSource();
+	public String grabSource() {
+		try {
+			return HttpUtils.readUrl(dataSource.getUrl(), encoding);
+		} catch (IOException io) {
+			Log.error(io.getMessage());
+			return null;
+		}
 	}
-
-
-	public abstract T grabSource();
 
 }

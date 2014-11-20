@@ -1,4 +1,4 @@
-package org.jvalue.ods.filter.grabber;
+package org.jvalue.ods.filter.adapter;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -17,11 +17,11 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 
-final class XmlGrabber extends Grabber<Document> {
+final class XmlSourceAdapter extends SourceAdapter<Document> {
 
 
 	@Inject
-	XmlGrabber(@Assisted DataSource source) {
+	XmlSourceAdapter(@Assisted DataSource source) {
 		super(source);
 	}
 

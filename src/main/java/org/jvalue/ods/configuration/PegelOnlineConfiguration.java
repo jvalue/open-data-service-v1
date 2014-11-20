@@ -35,7 +35,7 @@ import org.jvalue.ods.db.OdsView;
 import org.jvalue.ods.db.SourceDataRepository;
 import org.jvalue.ods.filter.FilterChainElement;
 import org.jvalue.ods.filter.FilterFactory;
-import org.jvalue.ods.filter.grabber.GrabberFactory;
+import org.jvalue.ods.filter.adapter.SourceAdapterFactory;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -50,17 +50,17 @@ final class PegelOnlineConfiguration implements DataSourceConfiguration {
 
 	private final SourceDataRepository dataRepository;
 	private final FilterFactory filterFactory;
-	private final GrabberFactory grabberFactory;
+	private final SourceAdapterFactory sourceAdapterFactory;
 
 	@Inject
 	public PegelOnlineConfiguration(
 			DbFactory dbFactory,
 			FilterFactory filterFactory,
-			GrabberFactory grabberFactory) {
+			SourceAdapterFactory sourceAdapterFactory) {
 
 		this.dataRepository = dbFactory.createSourceDataRepository("pegelonline");
 		this.filterFactory = filterFactory;
-		this.grabberFactory = grabberFactory;
+		this.sourceAdapterFactory = sourceAdapterFactory;
 	}
 
 
@@ -561,7 +561,7 @@ final class PegelOnlineConfiguration implements DataSourceConfiguration {
 		DataSource source = getDataSource();
 
 		FilterChainElement<Void, ArrayNode> chain = FilterChainElement.instance(
-				grabberFactory.createJsonNodeGrabber(source));
+				sourceAdapterFactory.createJsonSourceAdapter(source));
 
 		chain
 				.setNextFilter(filterFactory.createDbInsertionFilter(source, dataRepository))

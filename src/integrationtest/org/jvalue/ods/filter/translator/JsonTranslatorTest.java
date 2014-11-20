@@ -31,7 +31,7 @@ import org.jvalue.ods.data.valuetypes.AllowedValueTypes;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.data.valuetypes.ListComplexValueType;
 import org.jvalue.ods.data.valuetypes.MapComplexValueType;
-import org.jvalue.ods.filter.grabber.GrabberFactory;
+import org.jvalue.ods.filter.adapter.SourceAdapterFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -43,14 +43,14 @@ public class JsonTranslatorTest {
 
 	@Test
 	public void testTranslate() {
-		JsonNode jsonNode = GrabberFactory.getJsonGrabber(DummyDataSource.newInstance("testUrl", testUrl)).filter(null);
+		JsonNode jsonNode = SourceAdapterFactory.getJsonGrabber(DummyDataSource.newInstance("testUrl", testUrl)).filter(null);
 		Object data = TranslatorFactory.getJsonTranslator().filter(jsonNode);
 		assertNotNull(data);
 	}
 
 	@Test
 	public void testTranslateInvalidSource() {
-		JsonNode jsonNode = GrabberFactory.getJsonGrabber(DummyDataSource.newInstance("invalidSource", "invalidSource")).filter(null);
+		JsonNode jsonNode = SourceAdapterFactory.getJsonGrabber(DummyDataSource.newInstance("invalidSource", "invalidSource")).filter(null);
 		assertNull(jsonNode);
 	}
 

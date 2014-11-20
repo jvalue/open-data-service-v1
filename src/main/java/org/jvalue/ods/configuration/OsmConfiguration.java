@@ -35,7 +35,7 @@ import org.jvalue.ods.db.SourceDataRepository;
 import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.filter.FilterChainElement;
 import org.jvalue.ods.filter.FilterFactory;
-import org.jvalue.ods.filter.grabber.GrabberFactory;
+import org.jvalue.ods.filter.adapter.SourceAdapterFactory;
 
 import java.io.File;
 import java.util.HashMap;
@@ -51,19 +51,19 @@ final class OsmConfiguration implements DataSourceConfiguration {
 
 	private final DbAccessor<JsonNode> dbAccessor;
 	private final FilterFactory filterFactory;
-	private final GrabberFactory grabberFactory;
+	private final SourceAdapterFactory sourceAdapterFactory;
 	private final Provider<Filter<JsonNode, Object>> translatorProvider;
 
 	@Inject
 	public OsmConfiguration(
 			DbAccessor<JsonNode> dbAccessor,
 			FilterFactory filterFactory,
-			GrabberFactory grabberFactory,
+			SourceAdapterFactory sourceAdapterFactory,
 			Provider<Filter<JsonNode, Object>> translatorProvider) {
 
 		this.dbAccessor = dbAccessor;
 		this.filterFactory = filterFactory;
-		this.grabberFactory = grabberFactory;
+		this.sourceAdapterFactory = sourceAdapterFactory;
 		this.translatorProvider = translatorProvider;
 	}
 
@@ -189,10 +189,10 @@ final class OsmConfiguration implements DataSourceConfiguration {
 		DataSource source = getDataSource();
 
 		FilterChainElement<Void, File> chain = FilterChainElement.instance(
-				grabberFactory.createFileGrabber(source));
+				sourceAdapterFactory.createFileSourceAdapter(source));
 
 		chain
-				.setNextFilter(new OsmTranslator());
+				.setNextFilter(new OsmAdapter());
 				// .setNextFilter(new DataAdditionFilter(source))
 				// .setNextFilter(filterFactory.createDbInsertionFilter(source))
 				// .setNextFilter(filterFactory.createNotificationFilter(source));

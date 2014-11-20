@@ -22,7 +22,7 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 import org.jvalue.ods.data.DummyDataSource;
-import org.jvalue.ods.filter.grabber.GrabberFactory;
+import org.jvalue.ods.filter.adapter.SourceAdapterFactory;
 import org.w3c.dom.Document;
 
 
@@ -30,7 +30,7 @@ public class XmlTranslatorTest {
 
 	@Test
 	public void testTranslate() {
-		Document xmlDocument = GrabberFactory.getXmlGrabber(DummyDataSource.newInstance("osm", "/nbgcity.osm")).filter(null);
+		Document xmlDocument = SourceAdapterFactory.getXmlGrabber(DummyDataSource.newInstance("osm", "/nbgcity.osm")).filter(null);
 		Object data = TranslatorFactory.getXmlTranslator().filter(xmlDocument);		
 		assertNotNull(data);
 	}
@@ -38,7 +38,7 @@ public class XmlTranslatorTest {
 
 	@Test
 	public void testTranslateNotExistingFile() {
-		Document xmlDocument = GrabberFactory.getXmlGrabber(DummyDataSource.newInstance("osm", "NotExistingFile")).filter(null);		
+		Document xmlDocument = SourceAdapterFactory.getXmlGrabber(DummyDataSource.newInstance("osm", "NotExistingFile")).filter(null);
 		assertNull(xmlDocument);
 	}
 
