@@ -23,10 +23,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
 
 @Path("/notification/client/{clientType}")
 @Produces(MediaType.APPLICATION_JSON)
@@ -77,7 +75,7 @@ public class NotificationClientRegistrationApi {
 			manager.registerClient(client);
 			return client;
 		} catch (IllegalArgumentException iae) {
-			throw new WebApplicationException(Response.status(400).entity("failed to parse content").build());
+			throw RestUtils.createJsonFormattedException("failed to parse content (" + iae.getMessage() + ")", 400);
 		}
 	}
 
@@ -118,25 +116,15 @@ public class NotificationClientRegistrationApi {
 
 
 	private void assertIsValidClientType(String clientTypePath) {
-		if (!adapters.containsKey(clientTypePath)) throw new WebApplicationException(404);
+		if (!adapters.containsKey(clientTypePath)) throw RestUtils.createJsonFormattedException("invalid client type", 404);
 	}
 
 
 	private void assertIsValidClientType(String clientTypePath, String clientId) {
 		assertIsValidClientType(clientTypePath);
-		if (!manager.isClientRegistered(clientId)) throw new ClientNotRegisteredException(clientId);
+		if (!manager.isClientRegistered(clientId)) throw RestUtils.createJsonFormattedException("client not registered", 400);
 		Client client = manager.getClientById(clientId);
-		if (!client.getClass().equals(adapters.get(clientTypePath).clientClass)) throw new ClientNotRegisteredException(clientId);
-	}
-
-
-	private static class ClientNotRegisteredException extends WebApplicationException {
-		public ClientNotRegisteredException(String clientId) {
-			super(Response
-					.status(Response.Status.BAD_REQUEST)
-					.entity("clientId \"" + clientId + "\" is not registered")
-					.build());
-		}
+		if (!client.getClass().equals(adapters.get(clientTypePath).clientClass)) throw RestUtils.createJsonFormattedException("client not registered", 400);
 	}
 
 
