@@ -17,13 +17,11 @@
  */
 package org.jvalue.ods.configuration;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
-import org.jvalue.ods.data.DataSourceConfiguration;
 import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.data.DataSourceConfiguration;
 import org.jvalue.ods.data.metadata.JacksonMetaData;
 import org.jvalue.ods.data.metadata.OdsMetaData;
 import org.jvalue.ods.data.objecttypes.ListObjectType;
@@ -35,7 +33,6 @@ import org.jvalue.ods.data.valuetypes.MapComplexValueType;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.OdsView;
 import org.jvalue.ods.db.SourceDataRepository;
-import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.filter.FilterChainElement;
 import org.jvalue.ods.filter.FilterFactory;
 import org.jvalue.ods.filter.grabber.GrabberFactory;
@@ -54,19 +51,16 @@ final class PegelOnlineConfiguration implements DataSourceConfiguration {
 	private final SourceDataRepository dataRepository;
 	private final FilterFactory filterFactory;
 	private final GrabberFactory grabberFactory;
-	private final Provider<Filter<JsonNode, Object>> translatorProvider;
 
 	@Inject
 	public PegelOnlineConfiguration(
 			DbFactory dbFactory,
 			FilterFactory filterFactory,
-			GrabberFactory grabberFactory,
-			Provider<Filter<JsonNode, Object>> translatorProvider) {
+			GrabberFactory grabberFactory) {
 
 		this.dataRepository = dbFactory.createSourceDataRepository("pegelonline");
 		this.filterFactory = filterFactory;
 		this.grabberFactory = grabberFactory;
-		this.translatorProvider = translatorProvider;
 	}
 
 
@@ -570,9 +564,9 @@ final class PegelOnlineConfiguration implements DataSourceConfiguration {
 				grabberFactory.createJsonNodeGrabber(source));
 
 		chain
-				// .setNextFilter(translatorProvider.get())
-				// .setNextFilter(new DataAdditionFilter(source))
 				.setNextFilter(filterFactory.createDbInsertionFilter(source, dataRepository))
+				.setNextFilter(filterFactory.createNotificationFilter(source));
+				// .setNextFilter(new DataAdditionFilter(source))
 				// .setNextFilter(
 						// new CombineSourceFilter(
 								// createSourceCoordinateStructure(),
@@ -583,7 +577,6 @@ final class PegelOnlineConfiguration implements DataSourceConfiguration {
 								// "BodyOfWater"))
 				// .setNextFilter(new DbInsertionFilter(accessor, source))
 				// .setNextFilter(new PegelOnlineQualityAssurance())
-				.setNextFilter(filterFactory.createNotificationFilter(source));
 
 		return chain;
 	}

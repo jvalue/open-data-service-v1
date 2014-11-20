@@ -9,13 +9,11 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 
 import org.jvalue.ods.filter.grabber.GrabberModule;
-import org.jvalue.ods.filter.translator.TranslatorModule;
 
 public final class FilterModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		install(new TranslatorModule());
 		install(new GrabberModule());
 		install(new FactoryModuleBuilder()
 				.implement(
