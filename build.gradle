@@ -49,7 +49,7 @@ run() {
 dependencies {
     cargo "org.codehaus.cargo:cargo-ant:1.4.5"
 
-    compile 'io.dropwizard:dropwizard-core:0.7.+'
+    compile 'io.dropwizard:dropwizard-core:0.8.0-rc1'
     compile 'com.google.inject:guice:4.0-beta5'
     compile 'com.google.inject.extensions:guice-assistedinject:4.0-beta5'
     compile 'org.ektorp:org.ektorp:1.4.+'
