@@ -138,6 +138,8 @@ final class OsmConfiguration implements Configuration {
 
 		// ods views
 		{
+		/*
+
 			odsViews.add(new OdsView(
 					"_design/osm",
 					"getNodeById",
@@ -174,6 +176,7 @@ final class OsmConfiguration implements Configuration {
 			odsViews.add(new OdsView("_design/osm", "getClassObjectId",
 					"function(doc) { if(doc.name == 'de-osm-data') emit (null, doc._id) }"));
 
+*/
 			return new DataSource(sourceId, url, sourceSchema, dbSchema,
 					dbSchema, metaData, odsViews);
 		}
@@ -189,7 +192,7 @@ final class OsmConfiguration implements Configuration {
 		chain
 				.setNextFilter(new OsmTranslator())
 				// .setNextFilter(new DataAdditionFilter(source))
-				.setNextFilter(filterFactory.createDbInsertionFilter(source))
+				// .setNextFilter(filterFactory.createDbInsertionFilter(source))
 				.setNextFilter(filterFactory.createNotificationFilter(source));
 
 		return chain;

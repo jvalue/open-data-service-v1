@@ -133,6 +133,7 @@ public final class PegelPortalMvConfiguration implements Configuration {
 		}
 
 		// ods views
+		/*
 		{
 			odsViews.add(new OdsView("_design/pegelportal-mv",
 					"getSingleStation",
@@ -155,6 +156,7 @@ public final class PegelPortalMvConfiguration implements Configuration {
 			odsViews.add(new OdsView(
 					"_design/pegelportal-mv",
 					"getClassObject",
+
 					"function(doc) { if(doc.name == 'de-pegelportal-mv-station') emit (null, doc) }"));
 
 			odsViews.add(new OdsView(
@@ -162,6 +164,7 @@ public final class PegelPortalMvConfiguration implements Configuration {
 					"getClassObjectId",
 					"function(doc) { if(doc.name == 'de-pegelportal-mv-station') emit (null, doc._id) }"));
 		}
+		*/
 
 		return new DataSource(sourceId, url, sourceSchema, dbSchema, dbSchema,
 				metaData, odsViews);
@@ -175,7 +178,7 @@ public final class PegelPortalMvConfiguration implements Configuration {
 				grabberFactory.createHttpGrabber(source, "UTF-8"));
 
 		chain.setNextFilter(new PegelPortalMvTranslator(source))
-				.setNextFilter(filterFactory.createDbInsertionFilter(source))
+				// .setNextFilter(filterFactory.createDbInsertionFilter(source))
 				.setNextFilter(filterFactory.createNotificationFilter(source));
 
 		return chain;

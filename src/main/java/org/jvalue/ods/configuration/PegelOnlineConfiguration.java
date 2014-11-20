@@ -74,7 +74,8 @@ final class PegelOnlineConfiguration implements Configuration {
 		String url = "http://pegelonline.wsv.de/webservices/rest-api/v2/"
 				+ "stations.json?includeTimeseries=true"
 				+ "&includeCurrentMeasurement=true"
-				+ "&includeCharacteristicValues=true";
+				+ "&includeCharacteristicValues=true"
+				+ "&waters=ELBE";
 
 		ListObjectType sourceSchema;
 		MapObjectType improvedDbSchema;
@@ -568,7 +569,7 @@ final class PegelOnlineConfiguration implements Configuration {
 		chain
 				.setNextFilter(translatorProvider.get())
 				// .setNextFilter(new DataAdditionFilter(source))
-				.setNextFilter(filterFactory.createDbInsertionFilter(source))
+				.setNextFilter(filterFactory.createDbInsertionFilter(source, dataRepository))
 				// .setNextFilter(
 						// new CombineSourceFilter(
 								// createSourceCoordinateStructure(),
