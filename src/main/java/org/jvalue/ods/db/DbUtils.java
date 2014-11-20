@@ -27,7 +27,7 @@ public final class DbUtils {
 	private static final DesignDocumentFactory designFactory = new StdDesignDocumentFactory();
 
 	public static void createView(final DbAccessor<JsonNode> accessor, final OdsView view) {
-		throw new UnsupportedOperationException("noooo, you should not be using this anymore ;)")
+		throw new UnsupportedOperationException("noooo, you should not be using this anymore ;)");
 		/*
 		if (accessor == null || view == null)
 			throw new NullPointerException("params cannot be null");

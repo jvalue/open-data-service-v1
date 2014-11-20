@@ -22,27 +22,24 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.db.DbAccessor;
+import org.jvalue.ods.db.SourceDataRepository;
 import org.jvalue.ods.utils.Assert;
-import org.jvalue.ods.utils.Log;
 
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 
 final class DbInsertionFilter implements Filter<Object, Object> {
 
-	private final DbAccessor<JsonNode> accessor;
+	private final SourceDataRepository dataRepository;
 	private final DataSource source;
 
 	@Inject
 	DbInsertionFilter(
-			DbAccessor<JsonNode> accessor,
+			@Assisted SourceDataRepository dataRepository,
 			@Assisted DataSource source) {
 
-		Assert.assertNotNull(accessor, source);
-		this.accessor = accessor;
+		Assert.assertNotNull(source);
+		this.dataRepository = dataRepository;
 		this.source = source;
 	}
 
@@ -50,20 +47,11 @@ final class DbInsertionFilter implements Filter<Object, Object> {
 	@Override
 	@SuppressWarnings("unchecked")
 	public Object filter(Object data) {
-		if (data instanceof List) {
-			List<Map<String, Object>> list = (List<Map<String, Object>>) data;
-			accessor.executeBulk(list, source.getImprovedDbSchema());
+		if (!(data instanceof List)) throw new IllegalArgumentException("can only work with lists");
 
-		} else if (data instanceof Map) {
-			List<Map<String, Object>> list = new LinkedList<>();
-			list.add((Map<String, Object>) data);
-			accessor.executeBulk(list, source.getImprovedDbSchema());
+		List<JsonNode> list = (List<JsonNode>) data;
+		for (JsonNode node : list) dataRepository.add(node);
 
-		} else {
-			String errmsg = "data must be a list or map.";
-			Log.error(errmsg);
-			throw new RuntimeException(errmsg);
-		}
 		return data;
 	}
 
