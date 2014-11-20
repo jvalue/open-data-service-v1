@@ -17,6 +17,10 @@
  */
 package org.jvalue.ods.configuration;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -31,16 +35,14 @@ import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.data.valuetypes.SimpleValueType;
 import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.utils.Assert;
-import org.jvalue.ods.utils.Log;
+import org.jvalue.ods.utils.HttpUtils;
 
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 
 
-final class PegelPortalMvTranslator implements Filter<String, Object> {
+final class PegelPortalMvAdapter implements Filter<Void, ArrayNode> {
 
 	private static final Map<String, Integer> tableMapping = new HashMap<String, Integer>();
 	static {
@@ -55,34 +57,33 @@ final class PegelPortalMvTranslator implements Filter<String, Object> {
 	
 	private final DataSource source;
 
-	public PegelPortalMvTranslator(DataSource source) {
+	public PegelPortalMvAdapter(DataSource source) {
 		Assert.assertNotNull(source);
 		this.source = source;
 	}
 
 
 	@Override
-	public Object filter(String httpContent) {
-		Document doc = Jsoup.parse(httpContent);
-
-
-		Elements header = doc.select("#pegeltab thead tr");
-		Elements body = doc.select("#pegeltab tbody tr");
-
-		if (header.isEmpty() || body.isEmpty())
-			return null;
-		if (header.size() > 1)
-			return unknownFormat();
-
+	public ArrayNode filter(Void nothing) {
 		try {
+			String httpContent = HttpUtils.readUrl(source.getUrl(), "UTF-8");
+			Document doc = Jsoup.parse(httpContent);
+
+			Elements header = doc.select("#pegeltab thead tr");
+			Elements body = doc.select("#pegeltab tbody tr");
+
+			if (header.isEmpty() || body.isEmpty())
+				throw new IllegalStateException("unknown format");
+			if (header.size() > 1)
+				throw new IllegalStateException("unknown format");
 
 			Map<String, GenericValueType> mapValueTypes = ((MapObjectType) ((ListObjectType) 
 						source.getDataSourceSchema())
 					.getReferencedObjects().get(0)).getAttributes();
 
-			List<Object> objectList = new LinkedList<Object>();
+			ArrayNode arrayNode = new ArrayNode(JsonNodeFactory.instance);
 			for (Element row : body) {
-				Map<String, Object> objectMap = new HashMap<String, Object>();
+				ObjectNode objectNode = new ObjectNode(JsonNodeFactory.instance);
 				for (Map.Entry<String, Integer> e : tableMapping.entrySet()) {
 
 					String key = e.getKey();
@@ -93,31 +94,27 @@ final class PegelPortalMvTranslator implements Filter<String, Object> {
 					if (value.equals(""))
 						continue;
 
-					objectMap.put(
-							key,
-							createValue(value, type.getName()));
+					if (type.getName().equals("java.lang.String")) {
+						objectNode.put(key, StringEscapeUtils.unescapeHtml4(value));
+					} else if (type.getName().equals("java.lang.Number")) {
+						objectNode.put(key, new Double(value));
+					} else {
+						throw new IllegalArgumentException("Unknown type " + type.getName());
+					}
 				}
 
-				objectMap.put(PegelPortalMvConfiguration.KEY_LEVEL_UNIT, "cm ü PNP");
-				objectMap.put(PegelPortalMvConfiguration.KEY_EFFLUENT_UNIT, "m³/s");
+				objectNode.put(PegelPortalMvConfiguration.KEY_LEVEL_UNIT, "cm ü PNP");
+				objectNode.put(PegelPortalMvConfiguration.KEY_EFFLUENT_UNIT, "m³/s");
 
-				objectList.add(objectMap);
+				arrayNode.add(objectNode);
 			}
 
-			return objectList;
+			return arrayNode;
 		} catch (Exception e) {
-			return unknownFormat();
+			throw new IllegalStateException(e);
 		}
 	}
 
-	private Object createValue(String value, String type) {
-		if (type.equals("java.lang.String"))
-			return StringEscapeUtils.unescapeHtml4(value);
-		else if (type.equals("java.lang.Number"))
-			return new Double(value);
-		else
-			throw new IllegalArgumentException("Unknown type " + type);
-	}
 
 	private String extractText(Element element) {
 		StringBuilder builder = new StringBuilder();
@@ -131,10 +128,4 @@ final class PegelPortalMvTranslator implements Filter<String, Object> {
 		return builder.toString();
 	}
 
-	private Object unknownFormat() {
-		String error = "Unknown html format found while parsing source";
-		Log.error(error);
-		System.err.println(error);
-		return null;
-	}
 }

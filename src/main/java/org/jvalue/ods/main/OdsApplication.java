@@ -62,6 +62,11 @@ public final class OdsApplication extends Application<OdsConfig> {
 						Key.get(
 								DataSourceConfiguration.class,
 								Names.named(ConfigurationModule.NAME_PEGELONLINE_CONFIGURATION))));
+		configManager.addConfiguration(
+				injector.getInstance(
+						Key.get(
+								DataSourceConfiguration.class,
+								Names.named(ConfigurationModule.NAME_PEGELPORTAL_MV_CONFIGURATION))));
 
 		// start data grabbing
 		environment.lifecycle().manage(injector.getInstance(DataGrabberManager.class));

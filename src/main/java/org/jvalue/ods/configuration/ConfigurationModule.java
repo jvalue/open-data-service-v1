@@ -20,10 +20,10 @@ public final class ConfigurationModule extends AbstractModule {
 		bind(DataSourceConfiguration.class)
 				.annotatedWith(Names.named(NAME_PEGELONLINE_CONFIGURATION))
 				.to(PegelOnlineConfiguration.class);
-		/*
-		bind(Configuration.class)
+		bind(DataSourceConfiguration.class)
 				.annotatedWith(Names.named(NAME_PEGELPORTAL_MV_CONFIGURATION))
 				.to(PegelPortalMvConfiguration.class);
+		/*
 		bind(Configuration.class)
 				.annotatedWith(Names.named(NAME_OSM_CONFIGURATION))
 				.to(OsmConfiguration.class);
