@@ -19,7 +19,6 @@ public final class GrabberModule extends AbstractModule {
 				.implement(new TypeLiteral<Filter<Void, Document>>() { }, XmlSourceAdapter.class)
 				.implement(new TypeLiteral<Filter<Void, ArrayNode>>() { }, JsonSourceAdapter.class)
 				.implement(new TypeLiteral<Filter<Void, File>>() { }, FileSourceAdapter.class)
-				.implement(new TypeLiteral<Filter<Void, String>>() { }, HttpSourceAdapter.class)
 				.build(SourceAdapterFactory.class));
 	}
 
