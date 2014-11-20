@@ -24,6 +24,7 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.filter.FilterException;
 
 import java.io.IOException;
 import java.net.URL;
@@ -40,7 +41,7 @@ final class JsonSourceAdapter extends SourceAdapter<ArrayNode> {
 
 
 	@Override
-	public ArrayNode grabSource() {
+	public ArrayNode grabSource() throws FilterException {
 		try {
 			JsonNode node = mapper.readTree(new URL(dataSource.getUrl()));
 			if (node instanceof ArrayNode) return (ArrayNode) node;
@@ -51,7 +52,7 @@ final class JsonSourceAdapter extends SourceAdapter<ArrayNode> {
 			}
 
 		} catch (IOException e) {
-			throw new IllegalStateException("failed to get JSON from source", e);
+			throw new FilterException("failed to parse JSON",  e);
 		}
 	}
 

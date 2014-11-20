@@ -21,7 +21,7 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.utils.Log;
+import org.jvalue.ods.filter.FilterException;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -36,15 +36,13 @@ final class FileSourceAdapter extends SourceAdapter<File> {
 
 
 	@Override
-	public File grabSource() {
-		File file = null;
+	public File grabSource() throws FilterException {
 		URL sourceUrl = getClass().getResource(dataSource.getUrl());
 		try {
-			file = new File(sourceUrl.toURI());
+			return new File(sourceUrl.toURI());
 		} catch (URISyntaxException e) {
-			Log.error(e.getMessage());
+			throw new FilterException(e);
 		}
-		return file;
 	}
 
 }

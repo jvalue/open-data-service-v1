@@ -18,6 +18,7 @@
 package org.jvalue.ods.filter;
 
 import org.jvalue.ods.utils.Assert;
+import org.jvalue.ods.utils.Log;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -52,7 +53,11 @@ public final class FilterChainManager {
 
 	public void startFilterChains() {
 		for (FilterChainElement<Void, ?> chain : filterChains) {
-			chain.filter(null);
+			try {
+				chain.filter(null);
+			} catch (FilterException e) {
+				Log.error("error while running filter", e);
+			}
 		}
 	}
 

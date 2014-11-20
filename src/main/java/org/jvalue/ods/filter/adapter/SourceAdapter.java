@@ -19,6 +19,7 @@ package org.jvalue.ods.filter.adapter;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.filter.Filter;
+import org.jvalue.ods.filter.FilterException;
 import org.jvalue.ods.utils.Assert;
 
 
@@ -33,11 +34,11 @@ abstract class SourceAdapter<T> implements Filter<Void, T> {
 
 
 	@Override
-	public final T filter(Void param) {
+	public final T filter(Void param) throws FilterException {
 		return grabSource();
 	}
 
 
-	public abstract T grabSource();
+	public abstract T grabSource() throws FilterException;
 
 }

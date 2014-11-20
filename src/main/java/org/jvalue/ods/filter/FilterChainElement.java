@@ -41,7 +41,7 @@ public final class FilterChainElement<P, R> {
 		return nextChain;
 	}
 
-	public void filter(P param) {
+	public void filter(P param) throws FilterException {
 
 		// maybe some other generics magic would be nicer, but P
 		// does not always implement serializable for example

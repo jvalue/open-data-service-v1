@@ -4,8 +4,8 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.filter.FilterException;
 import org.jvalue.ods.utils.HttpUtils;
-import org.jvalue.ods.utils.Log;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -27,7 +27,7 @@ final class XmlSourceAdapter extends SourceAdapter<Document> {
 
 
 	@Override
-	public Document grabSource() {
+	public Document grabSource() throws FilterException {
 
 		try {
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory
@@ -48,8 +48,7 @@ final class XmlSourceAdapter extends SourceAdapter<Document> {
 			doc.getDocumentElement().normalize();
 			return doc;
 		} catch (Exception ex) {
-			Log.info(ex.getMessage());
-			return null;
+			throw new FilterException("failed to parse XML", ex);
 		}
 
 	}

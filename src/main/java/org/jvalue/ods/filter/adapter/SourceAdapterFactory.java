@@ -31,6 +31,5 @@ public interface SourceAdapterFactory {
 	public Filter<Void, Document> createXmlSourceAdapter(DataSource source);
 	public Filter<Void, ArrayNode> createJsonSourceAdapter(DataSource source);
 	public Filter<Void, File> createFileSourceAdapter(DataSource source);
-	public Filter<Void, String> createHttpSourceGrabber(DataSource source, String encoding);
 
 }

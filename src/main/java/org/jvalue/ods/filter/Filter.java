@@ -19,6 +19,6 @@ package org.jvalue.ods.filter;
 
 public interface Filter<P,R> {
 
-	public R filter(P param);
+	public R filter(P param) throws FilterException;
 
 }
