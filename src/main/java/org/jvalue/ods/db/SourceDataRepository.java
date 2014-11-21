@@ -12,11 +12,13 @@ import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.DesignDocument;
 import org.ektorp.support.DesignDocumentFactory;
 import org.ektorp.support.StdDesignDocumentFactory;
+import org.ektorp.support.View;
 import org.jvalue.ods.utils.Assert;
 import org.jvalue.ods.utils.Log;
 
 import java.util.List;
 
+@View( name = "all", map = "function(doc) { emit(null, doc) }")
 public final class SourceDataRepository extends CouchDbRepositorySupport<JsonNode> {
 
 	private static final String DESIGN_DOCUMENT_ID = "_design/" + SourceDataRepository.class.getSimpleName();
