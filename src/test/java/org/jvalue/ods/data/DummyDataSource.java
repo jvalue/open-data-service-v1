@@ -17,23 +17,20 @@
  */
 package org.jvalue.ods.data;
 
-import java.util.LinkedList;
-
-import org.jvalue.ods.data.metadata.JacksonMetaData;
-import org.jvalue.ods.data.objecttypes.MapObjectType;
-import org.jvalue.ods.db.OdsView;
-
 public final class DummyDataSource {
 
 	private DummyDataSource() {
 	}
 
 	public static DataSource newInstance(String id, String url) {
+		/*
 		return new DataSource(id, url, new MapObjectType("dummy", null, null),
 				new MapObjectType("dummy", null, null), new MapObjectType(
 						"dummy", null, null), new JacksonMetaData("dummy",
 						"dummy", "dummy", "dummy", "dummy", "dummy", "dummy"),
 				new LinkedList<OdsView>());
+				*/
+		return null;
 	}
 
 }

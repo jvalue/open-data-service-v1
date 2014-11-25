@@ -21,7 +21,6 @@ import org.jvalue.ods.db.SourceDataRepository;
 import org.jvalue.ods.filter.FilterChainElement;
 import org.jvalue.ods.utils.Assert;
 
-
 public final class DataSourceConfiguration {
 
 	private final DataSource dataSource;

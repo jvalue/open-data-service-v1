@@ -17,13 +17,16 @@
  */
 package org.jvalue.ods.data;
 
-import java.util.List;
+import com.google.common.base.Objects;
 
 import org.jvalue.ods.data.metadata.OdsMetaData;
 import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.db.OdsView;
 import org.jvalue.ods.utils.Assert;
+import org.jvalue.ods.utils.JsonPropertyKey;
+
+import java.util.List;
 
 public class DataSource {
 
@@ -34,13 +37,19 @@ public class DataSource {
 	private final ObjectType improvedDbSchema;
 	private final OdsMetaData metaData;
 	private final List<OdsView> odsViews;
+	private final JsonPropertyKey domainIdKey;
 
-	public DataSource(String id, String url, ObjectType sourceschema,
-			MapObjectType rawDbSchema, MapObjectType improvedDbSchema,
-			OdsMetaData metaData, List<OdsView> odsViews) {
+	public DataSource(
+			String id,
+			String url,
+			ObjectType sourceschema,
+			MapObjectType rawDbSchema,
+			MapObjectType improvedDbSchema,
+			OdsMetaData metaData,
+			List<OdsView> odsViews,
+			JsonPropertyKey domainIdKey) {
 
-		Assert.assertNotNull(id, url, sourceschema, rawDbSchema,
-				improvedDbSchema, metaData, odsViews);
+		Assert.assertNotNull(id, url, sourceschema, rawDbSchema, improvedDbSchema, metaData, odsViews, domainIdKey);
 
 		this.id = id;
 		this.url = url;
@@ -49,61 +58,68 @@ public class DataSource {
 		this.improvedDbSchema = improvedDbSchema;
 		this.metaData = metaData;
 		this.odsViews = odsViews;
+		this.domainIdKey = domainIdKey;
 	}
+
 
 	public String getId() {
 		return id;
 	}
 
+
 	public String getUrl() {
 		return url;
 	}
+
 
 	public ObjectType getDataSourceSchema() {
 		return dataSourceSchema;
 	}
 
+
 	public ObjectType getImprovedDbSchema() {
 		return improvedDbSchema;
 	}
+
 
 	public ObjectType getRawDbSchema() {
 		return rawDbSchema;
 	}
 
+
 	public OdsMetaData getMetaData() {
 		return metaData;
 	}
+
 
 	public List<OdsView> getOdsViews() {
 		return odsViews;
 	}
 
+
+	public JsonPropertyKey getDomainIdKey() {
+		return domainIdKey;
+	}
+
+
 	@Override
 	public boolean equals(Object other) {
-		if (other == null || !(other instanceof DataSource))
-			return false;
+		if (other == null || !(other instanceof DataSource)) return false;
+		if (other == this) return true;
 		DataSource source = (DataSource) other;
-		return source.id.equals(id) && source.url.equals(url)
-				&& source.dataSourceSchema.equals(dataSourceSchema)
-				&& source.rawDbSchema.equals(rawDbSchema)
-				&& source.improvedDbSchema.equals(improvedDbSchema)
-				&& source.metaData.equals(metaData)
-				&& source.odsViews.equals(odsViews);
+		return Objects.equal(id, source.id)
+				&& Objects.equal(url, source.url)
+				&& Objects.equal(dataSourceSchema, source.dataSourceSchema)
+				&& Objects.equal(rawDbSchema, source.rawDbSchema)
+				&& Objects.equal(improvedDbSchema, source.improvedDbSchema)
+				&& Objects.equal(metaData, source.metaData)
+				&& Objects.equal(odsViews, source.odsViews)
+				&& Objects.equal(domainIdKey, source.domainIdKey);
 	}
 
 	@Override
 	public int hashCode() {
-		final int MULT = 17;
-		int hash = 13;
-		hash = hash + MULT * id.hashCode();
-		hash = hash + MULT * url.hashCode();
-		hash = hash + MULT * dataSourceSchema.hashCode();
-		hash = hash + MULT * rawDbSchema.hashCode();
-		hash = hash + MULT * improvedDbSchema.hashCode();
-		hash = hash + MULT * metaData.hashCode();
-		hash = hash + MULT * odsViews.hashCode();
-		return hash;
+		return Objects.hashCode(id, url, dataSourceSchema, rawDbSchema, improvedDbSchema, metaData, odsViews, domainIdKey);
 	}
 
 }

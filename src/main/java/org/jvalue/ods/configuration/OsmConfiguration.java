@@ -177,8 +177,8 @@ final class OsmConfiguration {
 					"function(doc) { if(doc.name == 'de-osm-data') emit (null, doc._id) }"));
 
 */
-			return new DataSource(sourceId, url, sourceSchema, dbSchema,
-					dbSchema, metaData, odsViews);
+			// return new DataSource(sourceId, url, sourceSchema, dbSchema, dbSchema, metaData, odsViews);
+			return null;
 		}
 	}
 

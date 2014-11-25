@@ -55,10 +55,10 @@ public final class PegelOnlineConfigurationFactory {
 			FilterFactory filterFactory,
 			SourceAdapterFactory sourceAdapterFactory) {
 
-		SourceDataRepository dataRepository = dbFactory.createSourceDataRepository("pegelonline", new JsonPropertyKey.Builder().stringPath("uuid").build());
 		DataSource dataSource = createDataSource();
+		SourceDataRepository dataRepository = dbFactory.createSourceDataRepository("pegelonline", dataSource.getDomainIdKey());
 		FilterChainElement<Void, ?> filterChain = createFilterChain(dataSource, dataRepository, sourceAdapterFactory, filterFactory);
-		this.configuration = new DataSourceConfiguration(dataSource, filterChain,  dataRepository);
+		this.configuration = new DataSourceConfiguration(dataSource, filterChain, dataRepository);
 
 	}
 
@@ -554,8 +554,14 @@ public final class PegelOnlineConfigurationFactory {
 		}
 					*/
 
-		return new DataSource(sourceId, url, sourceSchema, rawDbSchema,
-				improvedDbSchema, metaData, new LinkedList<OdsView>());
+		return new DataSource(
+				sourceId,
+				url,
+				sourceSchema,
+				rawDbSchema,
+				improvedDbSchema,
+				metaData,
+				new LinkedList<OdsView>(), new JsonPropertyKey.Builder().stringPath("uuid").build());
 	}
 
 

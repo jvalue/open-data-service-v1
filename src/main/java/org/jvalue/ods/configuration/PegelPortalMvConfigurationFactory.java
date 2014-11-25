@@ -61,7 +61,7 @@ public final class PegelPortalMvConfigurationFactory {
 			FilterFactory filterFactory) {
 
 		DataSource dataSource = createDataSource();
-		SourceDataRepository dataRepository = dbFactory.createSourceDataRepository("pegelportalMv", new JsonPropertyKey.Builder().stringPath("station").build());
+		SourceDataRepository dataRepository = dbFactory.createSourceDataRepository("pegelportalMv", dataSource.getDomainIdKey());
 		FilterChainElement<Void, ?> filterChain = createFilterChain(dataSource, dataRepository, filterFactory);
 		this.configuration = new DataSourceConfiguration(dataSource, filterChain, dataRepository);
 	}
@@ -136,8 +136,15 @@ public final class PegelPortalMvConfigurationFactory {
 			sourceSchema = new ListObjectType(null, stationList);
 		}
 
-		return new DataSource(sourceId, url, sourceSchema, dbSchema, dbSchema,
-				metaData, odsViews);
+		return new DataSource(
+				sourceId,
+				url,
+				sourceSchema,
+				dbSchema,
+				dbSchema,
+				metaData,
+				odsViews,
+				new JsonPropertyKey.Builder().stringPath("station").build());
 	}
 
 
