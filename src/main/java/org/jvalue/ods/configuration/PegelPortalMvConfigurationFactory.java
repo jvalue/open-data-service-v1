@@ -23,8 +23,7 @@ import com.google.inject.Inject;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.DataSourceConfiguration;
-import org.jvalue.ods.data.metadata.JacksonMetaData;
-import org.jvalue.ods.data.metadata.OdsMetaData;
+import org.jvalue.ods.data.DataSourceMetaData;
 import org.jvalue.ods.data.objecttypes.ListObjectType;
 import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.objecttypes.ObjectType;
@@ -80,7 +79,7 @@ public final class PegelPortalMvConfigurationFactory {
 		ListObjectType sourceSchema;
 		MapObjectType dbSchema;
 
-		OdsMetaData metaData = new JacksonMetaData(
+		DataSourceMetaData metaData = new DataSourceMetaData(
 				sourceId,
 				"pegelportal-mv",
 				"Landesamt für Umwelt, Naturschutz und Geologie",

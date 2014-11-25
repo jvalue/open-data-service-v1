@@ -20,7 +20,6 @@ package org.jvalue.ods.data;
 import com.fasterxml.jackson.core.JsonPointer;
 import com.google.common.base.Objects;
 
-import org.jvalue.ods.data.metadata.OdsMetaData;
 import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.db.DbView;
@@ -35,7 +34,7 @@ public class DataSource {
 	private final ObjectType dataSourceSchema;
 	private final ObjectType rawDbSchema;
 	private final ObjectType improvedDbSchema;
-	private final OdsMetaData metaData;
+	private final DataSourceMetaData metaData;
 	private final List<DbView> dbViews;
 	private final JsonPointer domainIdKey;
 
@@ -45,7 +44,7 @@ public class DataSource {
 			ObjectType sourceschema,
 			MapObjectType rawDbSchema,
 			MapObjectType improvedDbSchema,
-			OdsMetaData metaData,
+			DataSourceMetaData metaData,
 			List<DbView> dbViews,
 			JsonPointer domainIdKey) {
 
@@ -87,7 +86,7 @@ public class DataSource {
 	}
 
 
-	public OdsMetaData getMetaData() {
+	public DataSourceMetaData getMetaData() {
 		return metaData;
 	}
 
