@@ -4,6 +4,7 @@ package org.jvalue.ods.utils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Objects;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public final class JsonPropertyKey {
 	private final List<Entry> entries;
 
 	private JsonPropertyKey(List<Entry> entries) {
-		this.entries = entries;
+		this.entries = Collections.unmodifiableList(entries);
 	}
 
 
@@ -23,6 +24,11 @@ public final class JsonPropertyKey {
 		}
 		if (node.isMissingNode()) return null;
 		else return node;
+	}
+
+
+	public List<Entry> getEntries() {
+		return entries;
 	}
 
 
@@ -62,7 +68,7 @@ public final class JsonPropertyKey {
 	}
 
 
-	private static final class Entry {
+	public static final class Entry {
 		private final String stringKey;
 		private final int intKey;
 

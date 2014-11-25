@@ -36,6 +36,7 @@ import org.jvalue.ods.db.SourceDataRepository;
 import org.jvalue.ods.filter.FilterChainElement;
 import org.jvalue.ods.filter.FilterFactory;
 import org.jvalue.ods.filter.adapter.SourceAdapterFactory;
+import org.jvalue.ods.utils.JsonPropertyKey;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -58,7 +59,7 @@ final class PegelOnlineConfiguration implements DataSourceConfiguration {
 			FilterFactory filterFactory,
 			SourceAdapterFactory sourceAdapterFactory) {
 
-		this.dataRepository = dbFactory.createSourceDataRepository("pegelonline");
+		this.dataRepository = dbFactory.createSourceDataRepository("pegelonline", new JsonPropertyKey.Builder().stringPath("uuid").build());
 		this.filterFactory = filterFactory;
 		this.sourceAdapterFactory = sourceAdapterFactory;
 	}

@@ -34,6 +34,7 @@ import org.jvalue.ods.db.SourceDataRepository;
 import org.jvalue.ods.filter.FilterChainElement;
 import org.jvalue.ods.filter.FilterFactory;
 import org.jvalue.ods.filter.adapter.SourceAdapterFactory;
+import org.jvalue.ods.utils.JsonPropertyKey;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -63,7 +64,7 @@ public final class PegelPortalMvConfiguration implements DataSourceConfiguration
 			FilterFactory filterFactory,
 			SourceAdapterFactory sourceAdapterFactory) {
 
-		this.dataRepository = dbFactory.createSourceDataRepository("pegelportalMv");
+		this.dataRepository = dbFactory.createSourceDataRepository("pegelportalMv", new JsonPropertyKey.Builder().stringPath("station").build());
 		this.filterFactory = filterFactory;
 		this.sourceAdapterFactory = sourceAdapterFactory;
 	}
