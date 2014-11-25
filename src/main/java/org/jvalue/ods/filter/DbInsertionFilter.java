@@ -19,6 +19,7 @@ package org.jvalue.ods.filter;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
@@ -45,7 +46,19 @@ final class DbInsertionFilter implements Filter<ArrayNode, ArrayNode> {
 
 	@Override
 	public ArrayNode filter(ArrayNode data) {
-		for (JsonNode node : data) dataRepository.add(node);
+		for (JsonNode node : data) {
+			String domainKey = source.getDomainIdKey().getProperty(node).asText();
+			JsonNode oldNode = dataRepository.findByDomainId(domainKey);
+			if (oldNode == null) {
+				dataRepository.add(node);
+			}
+			else {
+				ObjectNode objectNode = (ObjectNode) node;
+				objectNode.put("_id", oldNode.get("_id").asText());
+				objectNode.put("_rev", oldNode.get("_rev").asText());
+				dataRepository.update(objectNode);
+			}
+		}
 		return data;
 	}
 

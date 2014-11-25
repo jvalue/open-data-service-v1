@@ -36,18 +36,23 @@ public final class SourceDataRepository extends CouchDbRepositorySupport<JsonNod
 
 		String domainIdViewName = "findByDomainId";
 		StringBuilder mapBuilder = new StringBuilder();
-		mapBuilder.append("function(doc, id) { if (doc");
+		mapBuilder.append("function(doc) { if (");
+		StringBuilder keyBuilder = new StringBuilder();
+		keyBuilder.append("doc");
 		for (JsonPropertyKey.Entry entry : domainIdKey.getEntries()) {
 			if (entry.isString()) {
-				mapBuilder.append(".");
-				mapBuilder.append(entry.getString());
+				keyBuilder.append(".");
+				keyBuilder.append(entry.getString());
 			} else {
-				mapBuilder.append("[");
-				mapBuilder.append(entry.getInt());
-				mapBuilder.append("]");
+				keyBuilder.append("[");
+				keyBuilder.append(entry.getInt());
+				keyBuilder.append("]");
 			}
 		}
-		mapBuilder.append(" == id) emit(null, doc) }");
+		mapBuilder.append(keyBuilder.toString());
+		mapBuilder.append(") emit(");
+		mapBuilder.append(keyBuilder.toString());
+		mapBuilder.append(", doc) }");
 		this.domainIdView = new OdsView(domainIdViewName, mapBuilder.toString());
 		if (!containsView(domainIdView)) addView(domainIdView);
 	}
