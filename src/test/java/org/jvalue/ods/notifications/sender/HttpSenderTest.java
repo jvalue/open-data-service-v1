@@ -1,15 +1,15 @@
 package org.jvalue.ods.notifications.sender;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.DummyDataSource;
 import org.jvalue.ods.notifications.clients.ClientFactory;
 import org.jvalue.ods.notifications.clients.HttpClient;
 import org.jvalue.ods.utils.RestException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 
 public final class HttpSenderTest {
@@ -39,7 +39,7 @@ public final class HttpSenderTest {
 		SenderResult result = sender.notifySourceChanged(
 				dataClient, 
 				source, 
-				"hello");
+				null);
 
 		assertNotNull(result);
 		assertEquals(result.getStatus(), SenderResult.Status.ERROR);

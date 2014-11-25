@@ -1,8 +1,8 @@
 package org.jvalue.ods.filter;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 
 public final class FilterChainElementTest {
@@ -11,7 +11,7 @@ public final class FilterChainElementTest {
 
 
 	@Test
-	public final void testChain() {
+	public final void testChain() throws FilterException {
 
 		String value = "dummy";
 
