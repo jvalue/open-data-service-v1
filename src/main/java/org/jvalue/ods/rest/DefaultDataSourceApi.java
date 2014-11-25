@@ -7,6 +7,7 @@ import com.google.inject.Inject;
 
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.db.SourceDataRepository;
+import org.jvalue.ods.utils.JsonPropertyKey;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -48,15 +49,17 @@ public class DefaultDataSourceApi {
 
 		// remove the first dash
 		String[] pathElements = attribute.substring(1).split("/");
+		JsonPropertyKey.Builder keyBuilder = new JsonPropertyKey.Builder();
 		for (String pathElement : pathElements) {
 			// check for array indices
 			Integer idx = Ints.tryParse(pathElement);
-			if (idx != null) node = node.path(idx.intValue());
-			else node = node.path(pathElement);
+			if (idx != null) keyBuilder.intPath(idx.intValue());
+			else keyBuilder.stringPath(pathElement);
 		}
 
-		if (node == null) throw RestUtils.createNotFoundException();
-		return node;
+		JsonNode result = keyBuilder.build().getProperty(node);
+		if (result == null) throw RestUtils.createNotFoundException();
+		return result;
 	}
 
 
