@@ -9,6 +9,7 @@ import org.jvalue.ods.configuration.PegelOnlineConfigurationFactory;
 import org.jvalue.ods.configuration.PegelPortalMvConfigurationFactory;
 import org.jvalue.ods.data.DataModule;
 import org.jvalue.ods.data.DataSourceManager;
+import org.jvalue.ods.rest.DbExceptionMapper;
 import org.jvalue.ods.db.DbModule;
 import org.jvalue.ods.filter.FilterModule;
 import org.jvalue.ods.notifications.NotificationsModule;
@@ -63,6 +64,7 @@ public final class OdsApplication extends Application<OdsConfig> {
 		environment.lifecycle().manage(injector.getInstance(DataGrabberManager.class));
 		environment.jersey().register(injector.getInstance(NotificationClientRegistrationApi.class));
 		environment.jersey().register(injector.getInstance(DefaultDataSourceApi.class));
+		environment.jersey().register(new DbExceptionMapper());
 	}
 
 }
