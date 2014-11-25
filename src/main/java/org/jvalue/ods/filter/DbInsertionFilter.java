@@ -47,7 +47,7 @@ final class DbInsertionFilter implements Filter<ArrayNode, ArrayNode> {
 	@Override
 	public ArrayNode filter(ArrayNode data) {
 		for (JsonNode node : data) {
-			String domainKey = source.getDomainIdKey().getProperty(node).asText();
+			String domainKey = data.at(source.getDomainIdKey()).asText();
 			JsonNode oldNode = dataRepository.findByDomainId(domainKey);
 			if (oldNode == null) {
 				dataRepository.add(node);

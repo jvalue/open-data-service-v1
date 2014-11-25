@@ -17,6 +17,7 @@
  */
 package org.jvalue.ods.data;
 
+import com.fasterxml.jackson.core.JsonPointer;
 import com.google.common.base.Objects;
 
 import org.jvalue.ods.data.metadata.OdsMetaData;
@@ -24,7 +25,6 @@ import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.db.DbView;
 import org.jvalue.ods.utils.Assert;
-import org.jvalue.ods.utils.JsonPropertyKey;
 
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class DataSource {
 	private final ObjectType improvedDbSchema;
 	private final OdsMetaData metaData;
 	private final List<DbView> dbViews;
-	private final JsonPropertyKey domainIdKey;
+	private final JsonPointer domainIdKey;
 
 	public DataSource(
 			String id,
@@ -47,7 +47,7 @@ public class DataSource {
 			MapObjectType improvedDbSchema,
 			OdsMetaData metaData,
 			List<DbView> dbViews,
-			JsonPropertyKey domainIdKey) {
+			JsonPointer domainIdKey) {
 
 		Assert.assertNotNull(id, url, sourceschema, rawDbSchema, improvedDbSchema, metaData, dbViews, domainIdKey);
 
@@ -97,7 +97,7 @@ public class DataSource {
 	}
 
 
-	public JsonPropertyKey getDomainIdKey() {
+	public JsonPointer getDomainIdKey() {
 		return domainIdKey;
 	}
 

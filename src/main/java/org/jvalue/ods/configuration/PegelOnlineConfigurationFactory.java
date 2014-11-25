@@ -17,6 +17,7 @@
  */
 package org.jvalue.ods.configuration;
 
+import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.inject.Inject;
 
@@ -34,7 +35,6 @@ import org.jvalue.ods.db.SourceDataRepository;
 import org.jvalue.ods.filter.FilterChainElement;
 import org.jvalue.ods.filter.FilterFactory;
 import org.jvalue.ods.filter.adapter.SourceAdapterFactory;
-import org.jvalue.ods.utils.JsonPropertyKey;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -425,7 +425,6 @@ public final class PegelOnlineConfigurationFactory {
 
 			characteristicValuesReferencedObjects.put("occurrences",
 					occurrencesType);
-
 			MapObjectType characteristicValuesGot = new MapObjectType(
 					"de-pegelonline-characteristicValues",
 					characteristicValuesAttributes,
@@ -561,7 +560,8 @@ public final class PegelOnlineConfigurationFactory {
 				rawDbSchema,
 				improvedDbSchema,
 				metaData,
-				new LinkedList<DbView>(), new JsonPropertyKey.Builder().stringPath("uuid").build());
+				new LinkedList<DbView>(),
+				JsonPointer.compile("/uuid"));
 	}
 
 

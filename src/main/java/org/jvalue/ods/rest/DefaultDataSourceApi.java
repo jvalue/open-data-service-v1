@@ -1,13 +1,12 @@
 package org.jvalue.ods.rest;
 
 
+import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.primitives.Ints;
 import com.google.inject.Inject;
 
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.db.SourceDataRepository;
-import org.jvalue.ods.utils.JsonPropertyKey;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -38,28 +37,24 @@ public class DefaultDataSourceApi {
 
 
 	@GET
-	@Path("/{objectId}{attribute:(/.*)?}")
+	@Path("/{objectId}{pointer:(/.*)?}")
 	public JsonNode getObjectAttribute(
 			@PathParam("sourceId") String sourceId,
 			@PathParam("objectId") String objectId,
-			@PathParam("attribute") String attribute) {
+			@PathParam("pointer") String pointer) {
 
 		JsonNode node = getSingleObject(sourceId, objectId);
-		if (attribute.isEmpty() || attribute.equals("/")) return node;
+		if (pointer.isEmpty() || pointer.equals("/")) return node;
 
-		// remove the first dash
-		String[] pathElements = attribute.substring(1).split("/");
-		JsonPropertyKey.Builder keyBuilder = new JsonPropertyKey.Builder();
-		for (String pathElement : pathElements) {
-			// check for array indices
-			Integer idx = Ints.tryParse(pathElement);
-			if (idx != null) keyBuilder.intPath(idx.intValue());
-			else keyBuilder.stringPath(pathElement);
+		try {
+			JsonPointer jsonPointer = JsonPointer.compile(pointer);
+			JsonNode result = node.at(jsonPointer);
+			if (result.isMissingNode()) throw RestUtils.createNotFoundException();
+			return result;
+		} catch (IllegalArgumentException iae) {
+			// thrown by JsonPointer.compile
+			throw RestUtils.createNotFoundException();
 		}
-
-		JsonNode result = keyBuilder.build().getProperty(node);
-		if (result == null) throw RestUtils.createNotFoundException();
-		return result;
 	}
 
 

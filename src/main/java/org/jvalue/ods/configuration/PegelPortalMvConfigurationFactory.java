@@ -17,6 +17,7 @@
  */
 package org.jvalue.ods.configuration;
 
+import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.inject.Inject;
 
@@ -33,7 +34,6 @@ import org.jvalue.ods.db.DbView;
 import org.jvalue.ods.db.SourceDataRepository;
 import org.jvalue.ods.filter.FilterChainElement;
 import org.jvalue.ods.filter.FilterFactory;
-import org.jvalue.ods.utils.JsonPropertyKey;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -144,7 +144,7 @@ public final class PegelPortalMvConfigurationFactory {
 				dbSchema,
 				metaData,
 				dbViews,
-				new JsonPropertyKey.Builder().stringPath("station").build());
+				JsonPointer.compile("/station"));
 	}
 
 

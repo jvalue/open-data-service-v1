@@ -1,6 +1,7 @@
 package org.jvalue.ods.db;
 
 
+import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -14,7 +15,6 @@ import org.ektorp.support.DesignDocumentFactory;
 import org.ektorp.support.StdDesignDocumentFactory;
 import org.ektorp.support.View;
 import org.jvalue.ods.utils.Assert;
-import org.jvalue.ods.utils.JsonPropertyKey;
 import org.jvalue.ods.utils.Log;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public final class SourceDataRepository extends CouchDbRepositorySupport<JsonNod
 	private final DbView domainIdView;
 
 	@Inject
-	SourceDataRepository(CouchDbInstance couchDbInstance, @Assisted String databaseName, @Assisted JsonPropertyKey domainIdKey) {
+	SourceDataRepository(CouchDbInstance couchDbInstance, @Assisted String databaseName, @Assisted JsonPointer domainIdKey) {
 		super(JsonNode.class, couchDbInstance.createConnector(databaseName, true));
 		this.connector = couchDbInstance.createConnector(databaseName, true);
 		initStandardDesignDocument();
@@ -39,15 +39,17 @@ public final class SourceDataRepository extends CouchDbRepositorySupport<JsonNod
 		mapBuilder.append("function(doc) { if (");
 		StringBuilder keyBuilder = new StringBuilder();
 		keyBuilder.append("doc");
-		for (JsonPropertyKey.Entry entry : domainIdKey.getEntries()) {
-			if (entry.isString()) {
+		JsonPointer pointer = domainIdKey;
+		while (pointer != null && pointer.matches()) {
+			if (pointer.mayMatchProperty()) {
 				keyBuilder.append(".");
-				keyBuilder.append(entry.getString());
+				keyBuilder.append(pointer.getMatchingProperty());
 			} else {
 				keyBuilder.append("[");
-				keyBuilder.append(entry.getInt());
+				keyBuilder.append(pointer.getMatchingIndex());
 				keyBuilder.append("]");
 			}
+			pointer = pointer.tail();
 		}
 		mapBuilder.append(keyBuilder.toString());
 		mapBuilder.append(") emit(");
