@@ -1,9 +1,12 @@
 package org.jvalue.ods.rest;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.primitives.Ints;
 import com.google.inject.Inject;
 
 import org.jvalue.ods.data.DataSourceManager;
+import org.jvalue.ods.db.SourceDataRepository;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -33,9 +36,41 @@ public class DefaultDataSourceApi {
 	}
 
 
+	@GET
+	@Path("/{objectId}{attribute:(/.*)?}")
+	public JsonNode getObjectAttribute(
+			@PathParam("sourceId") String sourceId,
+			@PathParam("objectId") String objectId,
+			@PathParam("attribute") String attribute) {
+
+		JsonNode node = getSingleObject(sourceId, objectId);
+		if (attribute.isEmpty() || attribute.equals("/")) return node;
+
+		// remove the first dash
+		String[] pathElements = attribute.substring(1).split("/");
+		for (String pathElement : pathElements) {
+			// check for array indices
+			Integer idx = Ints.tryParse(pathElement);
+			if (idx != null) node = node.path(idx.intValue());
+			else node = node.path(pathElement);
+		}
+
+		if (node == null) throw RestUtils.createNotFoundException();
+		return node;
+	}
+
+
+	private JsonNode getSingleObject(String sourceId, String objectId) {
+		assertIsValidSource(sourceId);
+		SourceDataRepository repo = sourceManager.getDataRepositoryForSourceId(sourceId);
+		if (!repo.contains(objectId)) throw RestUtils.createNotFoundException();
+		return sourceManager.getDataRepositoryForSourceId(sourceId).get(objectId);
+	}
+
+
 	private void assertIsValidSource(String sourceId) {
 		if (sourceManager.getDataRepositoryForSourceId(sourceId) == null) {
-			throw RestUtils.createJsonFormattedException("invalid source id", 404);
+			throw RestUtils.createNotFoundException();
 		}
 	}
 

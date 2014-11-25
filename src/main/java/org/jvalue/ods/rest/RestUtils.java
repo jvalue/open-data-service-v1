@@ -13,6 +13,10 @@ public class RestUtils {
 	private RestUtils() { }
 
 
+	public static WebApplicationException createNotFoundException() {
+		return createJsonFormattedException("not found", 404);
+	}
+
 	public static WebApplicationException createJsonFormattedException(String message, int status) {
 		ObjectNode node = new ObjectNode(JsonNodeFactory.instance);
 		node.put("message", message);
@@ -25,4 +29,5 @@ public class RestUtils {
 						.build());
 
 	}
+
 }
