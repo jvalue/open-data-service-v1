@@ -5,7 +5,6 @@ apply plugin: 'war'
 apply plugin: 'cargo'
 
 repositories {
-	maven { url 'http://maven.restlet.org' }
 	maven { url 'https://raw.github.com/slorber/gcm-server-repository/master/releases/' }
 	mavenCentral()
 }
@@ -40,7 +39,6 @@ task uberjar(type: Jar) {
 }
 
 mainClassName = "org.jvalue.ods.main.OdsApplication"
-// mainClassName = "org.jvalue.ods.server.DataServerMain"
 
 run() {
     args 'server', 'ods-configuration.yml'
@@ -53,14 +51,10 @@ dependencies {
     compile 'com.google.inject:guice:4.0-beta5'
     compile 'com.google.inject.extensions:guice-assistedinject:4.0-beta5'
     compile 'org.ektorp:org.ektorp:1.4.+'
-	compile 'org.restlet.jee:org.restlet:2.1.6'
-	compile 'org.restlet.jee:org.restlet.ext.jackson:2.1.6'
-	compile 'org.restlet.jee:org.restlet.ext.servlet:2.1.6'
-	compile 'org.openstreetmap.osmosis:osmosis-core:0.43.1'
-	compile 'org.openstreetmap.osmosis:osmosis-xml:0.43.1'
-	compile 'com.github.fge:json-schema-validator:2.1.7'
-	compile 'org.jsoup:jsoup:1.7.3'
-	compile 'org.apache.commons:commons-lang3:3.3.2'
+	compile 'org.openstreetmap.osmosis:osmosis-core:0.43.+'
+	compile 'org.openstreetmap.osmosis:osmosis-xml:0.43.+'
+	compile 'org.jsoup:jsoup:1.7.+'
+	compile 'org.apache.commons:commons-lang3:3.3.+'
 	compile 'com.google.android.gcm:gcm-server:1.0.2'
 	compile files('./lib/jvalue_test.jar')
 	testCompile 'junit:junit:4.11'
@@ -71,11 +65,6 @@ idea.project.ipr {
     withXml { provider ->
         provider.node.component.find { it.@name == 'VcsDirectoryMappings' }.mapping.@vcs = 'Git'
     }
-}
-
-task grabData(type: JavaExec, dependsOn: 'classes') {
-    main = 'org.jvalue.ods.main.DataGrabberMain'
-	classpath = sourceSets.main.runtimeClasspath
 }
 
 // integration test

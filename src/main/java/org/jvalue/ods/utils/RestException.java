@@ -19,7 +19,7 @@ package org.jvalue.ods.utils;
 
 import java.io.IOException;
 
-import org.restlet.data.Status;
+import javax.ws.rs.core.Response.Status;
 
 
 public final class RestException extends Exception {

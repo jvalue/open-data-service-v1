@@ -28,7 +28,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.restlet.data.Status;
+import javax.ws.rs.core.Response.Status;
+
 
 public final class RestCall {
 
@@ -120,8 +121,8 @@ public final class RestCall {
 			}
 
 
-			Status status = Status.valueOf(conn.getResponseCode());
-			if (status.isError()) throw new RestException(status);
+			Status status = Status.fromStatusCode(conn.getResponseCode());
+			if (!status.getFamily().equals(Status.Family.SUCCESSFUL)) throw new RestException(status);
 
 			dataReader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			StringBuilder dataBuilder = new StringBuilder();
