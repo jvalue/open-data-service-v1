@@ -28,7 +28,6 @@ import org.jvalue.ods.data.objecttypes.ListObjectType;
 import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
-import org.jvalue.ods.db.DbAccessor;
 import org.jvalue.ods.db.OdsView;
 import org.jvalue.ods.db.SourceDataRepository;
 import org.jvalue.ods.filter.Filter;
@@ -48,19 +47,16 @@ import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_STRING;
 
 final class OsmConfiguration {
 
-	private final DbAccessor<JsonNode> dbAccessor;
 	private final FilterFactory filterFactory;
 	private final SourceAdapterFactory sourceAdapterFactory;
 	private final Provider<Filter<JsonNode, Object>> translatorProvider;
 
 	@Inject
 	public OsmConfiguration(
-			DbAccessor<JsonNode> dbAccessor,
 			FilterFactory filterFactory,
 			SourceAdapterFactory sourceAdapterFactory,
 			Provider<Filter<JsonNode, Object>> translatorProvider) {
 
-		this.dbAccessor = dbAccessor;
 		this.filterFactory = filterFactory;
 		this.sourceAdapterFactory = sourceAdapterFactory;
 		this.translatorProvider = translatorProvider;
