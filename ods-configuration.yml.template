@@ -1,2 +1,5 @@
 gcmApiKey: YOUR KEY HERE
 grabberUpdateInterval: 300
+
+server:
+  applicationContextPath: /ods/api/v1
