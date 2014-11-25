@@ -19,13 +19,39 @@ package org.jvalue.ods.data;
 
 import org.jvalue.ods.db.SourceDataRepository;
 import org.jvalue.ods.filter.FilterChainElement;
+import org.jvalue.ods.utils.Assert;
 
 
-// TODO in the near future this will be a call and final!
-public interface DataSourceConfiguration {
+public final class DataSourceConfiguration {
 
-	public DataSource getDataSource();
-	public FilterChainElement<Void, ?> getFilterChain();
-	public SourceDataRepository getDataRepository();
+	private final DataSource dataSource;
+	private final FilterChainElement<Void, ?> filterChain;
+	private final SourceDataRepository dataRepository;
+
+	public DataSourceConfiguration(
+			DataSource dataSource,
+			FilterChainElement<Void, ?> filterChain,
+			SourceDataRepository dataRepository) {
+
+		Assert.assertNotNull(dataSource, filterChain, dataRepository);
+		this.dataSource = dataSource;
+		this.filterChain = filterChain;
+		this.dataRepository = dataRepository;
+	}
+
+
+	public DataSource getDataSource() {
+		return dataSource;
+	}
+
+
+	public FilterChainElement<Void, ?> getFilterChain() {
+		return filterChain;
+	}
+
+
+	public SourceDataRepository getDataRepository() {
+		return dataRepository;
+	}
 
 }

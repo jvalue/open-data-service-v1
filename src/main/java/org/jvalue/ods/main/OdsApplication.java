@@ -3,13 +3,12 @@ package org.jvalue.ods.main;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Key;
-import com.google.inject.name.Names;
 
-import org.jvalue.ods.data.DataModule;
-import org.jvalue.ods.data.DataSourceConfiguration;
-import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.configuration.ConfigurationModule;
+import org.jvalue.ods.configuration.PegelOnlineConfigurationFactory;
+import org.jvalue.ods.configuration.PegelPortalMvConfigurationFactory;
+import org.jvalue.ods.data.DataModule;
+import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.db.DbModule;
 import org.jvalue.ods.filter.FilterModule;
 import org.jvalue.ods.notifications.NotificationsModule;
@@ -57,16 +56,8 @@ public final class OdsApplication extends Application<OdsConfig> {
 
 		// static configuration for now
 		DataSourceManager configManager = injector.getInstance(DataSourceManager.class);
-		configManager.addConfiguration(
-				injector.getInstance(
-						Key.get(
-								DataSourceConfiguration.class,
-								Names.named(ConfigurationModule.NAME_PEGELONLINE_CONFIGURATION))));
-		configManager.addConfiguration(
-				injector.getInstance(
-						Key.get(
-								DataSourceConfiguration.class,
-								Names.named(ConfigurationModule.NAME_PEGELPORTAL_MV_CONFIGURATION))));
+		configManager.addConfiguration(injector.getInstance(PegelOnlineConfigurationFactory.class).createConfiguration());
+		configManager.addConfiguration(injector.getInstance(PegelPortalMvConfigurationFactory.class).createConfiguration());
 
 		// start data grabbing
 		environment.lifecycle().manage(injector.getInstance(DataGrabberManager.class));

@@ -46,12 +46,12 @@ final class PegelPortalMvAdapter implements Filter<Void, ArrayNode> {
 
 	private static final Map<String, Integer> tableMapping = new HashMap<String, Integer>();
 	static {
-		tableMapping.put(PegelPortalMvConfiguration.KEY_STATION, 0);
-		tableMapping.put(PegelPortalMvConfiguration.KEY_WATER, 1);
-		tableMapping.put(PegelPortalMvConfiguration.KEY_TIMESTAMP, 2);
-		tableMapping.put(PegelPortalMvConfiguration.KEY_LEVEL, 3);
-		tableMapping.put(PegelPortalMvConfiguration.KEY_EFFLUENT, 4);
-		tableMapping.put(PegelPortalMvConfiguration.KEY_AGENCY, 8);
+		tableMapping.put(PegelPortalMvConfigurationFactory.KEY_STATION, 0);
+		tableMapping.put(PegelPortalMvConfigurationFactory.KEY_WATER, 1);
+		tableMapping.put(PegelPortalMvConfigurationFactory.KEY_TIMESTAMP, 2);
+		tableMapping.put(PegelPortalMvConfigurationFactory.KEY_LEVEL, 3);
+		tableMapping.put(PegelPortalMvConfigurationFactory.KEY_EFFLUENT, 4);
+		tableMapping.put(PegelPortalMvConfigurationFactory.KEY_AGENCY, 8);
 	}
 
 	
@@ -103,8 +103,8 @@ final class PegelPortalMvAdapter implements Filter<Void, ArrayNode> {
 					}
 				}
 
-				objectNode.put(PegelPortalMvConfiguration.KEY_LEVEL_UNIT, "cm ü PNP");
-				objectNode.put(PegelPortalMvConfiguration.KEY_EFFLUENT_UNIT, "m³/s");
+				objectNode.put(PegelPortalMvConfigurationFactory.KEY_LEVEL_UNIT, "cm ü PNP");
+				objectNode.put(PegelPortalMvConfigurationFactory.KEY_EFFLUENT_UNIT, "m³/s");
 
 				arrayNode.add(objectNode);
 			}

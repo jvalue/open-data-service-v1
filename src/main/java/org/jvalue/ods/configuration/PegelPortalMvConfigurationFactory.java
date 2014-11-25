@@ -33,7 +33,6 @@ import org.jvalue.ods.db.OdsView;
 import org.jvalue.ods.db.SourceDataRepository;
 import org.jvalue.ods.filter.FilterChainElement;
 import org.jvalue.ods.filter.FilterFactory;
-import org.jvalue.ods.filter.adapter.SourceAdapterFactory;
 import org.jvalue.ods.utils.JsonPropertyKey;
 
 import java.util.HashMap;
@@ -45,7 +44,7 @@ import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_NULL;
 import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_NUMBER;
 import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_STRING;
 
-public final class PegelPortalMvConfiguration implements DataSourceConfiguration {
+public final class PegelPortalMvConfigurationFactory {
 
 	// keys used in the json schema
 	public static final String KEY_STATION = "station", KEY_WATER = "water",
@@ -54,24 +53,26 @@ public final class PegelPortalMvConfiguration implements DataSourceConfiguration
 			KEY_EFFLUENT_UNIT = "effluentUnit", KEY_AGENCY = "agency";
 
 
-	private final SourceDataRepository dataRepository;
-	private final FilterFactory filterFactory;
-	private final SourceAdapterFactory sourceAdapterFactory;
+	private final DataSourceConfiguration configuration;
 
 	@Inject
-	public PegelPortalMvConfiguration(
+	public PegelPortalMvConfigurationFactory(
 			DbFactory dbFactory,
-			FilterFactory filterFactory,
-			SourceAdapterFactory sourceAdapterFactory) {
+			FilterFactory filterFactory) {
 
-		this.dataRepository = dbFactory.createSourceDataRepository("pegelportalMv", new JsonPropertyKey.Builder().stringPath("station").build());
-		this.filterFactory = filterFactory;
-		this.sourceAdapterFactory = sourceAdapterFactory;
+		DataSource dataSource = createDataSource();
+		SourceDataRepository dataRepository = dbFactory.createSourceDataRepository("pegelportalMv", new JsonPropertyKey.Builder().stringPath("station").build());
+		FilterChainElement<Void, ?> filterChain = createFilterChain(dataSource, dataRepository, filterFactory);
+		this.configuration = new DataSourceConfiguration(dataSource, filterChain, dataRepository);
 	}
 
 
-	@Override
-	public DataSource getDataSource() {
+	public DataSourceConfiguration createConfiguration() {
+		return configuration;
+	}
+
+
+	private DataSource createDataSource() {
 
 		String sourceId = "de-pegelportal-mv";
 		String url = "http://www.pegelportal-mv.de/pegel_list.html";
@@ -139,24 +140,18 @@ public final class PegelPortalMvConfiguration implements DataSourceConfiguration
 				metaData, odsViews);
 	}
 
-	@Override
-	public FilterChainElement<Void, ?> getFilterChain() {
-		DataSource source = getDataSource();
+
+	private FilterChainElement<Void, ?> createFilterChain(DataSource dataSource, SourceDataRepository dataRepository, FilterFactory filterFactory) {
+
 
 		FilterChainElement<Void, ArrayNode> chain = FilterChainElement.instance(
-				new PegelPortalMvAdapter(source));
+				new PegelPortalMvAdapter(dataSource));
 
-		chain.setNextFilter(filterFactory.createDbInsertionFilter(source, dataRepository))
-				.setNextFilter(filterFactory.createNotificationFilter(source));
+		chain.setNextFilter(filterFactory.createDbInsertionFilter(dataSource, dataRepository))
+				.setNextFilter(filterFactory.createNotificationFilter(dataSource));
 
 		return chain;
 
-	}
-
-
-	@Override
-	public SourceDataRepository getDataRepository() {
-		return dataRepository;
 	}
 
 }

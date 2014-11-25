@@ -27,9 +27,7 @@ import org.jvalue.ods.data.metadata.OdsMetaData;
 import org.jvalue.ods.data.objecttypes.ListObjectType;
 import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.objecttypes.ObjectType;
-import org.jvalue.ods.data.valuetypes.AllowedValueTypes;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
-import org.jvalue.ods.data.valuetypes.MapComplexValueType;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.OdsView;
 import org.jvalue.ods.db.SourceDataRepository;
@@ -47,26 +45,30 @@ import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_NULL;
 import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_NUMBER;
 import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_STRING;
 
-final class PegelOnlineConfiguration implements DataSourceConfiguration {
+public final class PegelOnlineConfigurationFactory {
 
-	private final SourceDataRepository dataRepository;
-	private final FilterFactory filterFactory;
-	private final SourceAdapterFactory sourceAdapterFactory;
+	private final DataSourceConfiguration configuration;
 
 	@Inject
-	public PegelOnlineConfiguration(
+	public PegelOnlineConfigurationFactory(
 			DbFactory dbFactory,
 			FilterFactory filterFactory,
 			SourceAdapterFactory sourceAdapterFactory) {
 
-		this.dataRepository = dbFactory.createSourceDataRepository("pegelonline", new JsonPropertyKey.Builder().stringPath("uuid").build());
-		this.filterFactory = filterFactory;
-		this.sourceAdapterFactory = sourceAdapterFactory;
+		SourceDataRepository dataRepository = dbFactory.createSourceDataRepository("pegelonline", new JsonPropertyKey.Builder().stringPath("uuid").build());
+		DataSource dataSource = createDataSource();
+		FilterChainElement<Void, ?> filterChain = createFilterChain(dataSource, dataRepository, sourceAdapterFactory, filterFactory);
+		this.configuration = new DataSourceConfiguration(dataSource, filterChain,  dataRepository);
+
 	}
 
 
-	@Override
-	public DataSource getDataSource() {
+	public DataSourceConfiguration createConfiguration() {
+		return configuration;
+	}
+
+
+	private DataSource createDataSource() {
 		String sourceId = "de-pegelonline";
 		String url = "http://pegelonline.wsv.de/webservices/rest-api/v2/"
 				+ "stations.json?includeTimeseries=true"
@@ -557,16 +559,17 @@ final class PegelOnlineConfiguration implements DataSourceConfiguration {
 	}
 
 
-	@Override
-	public FilterChainElement<Void, ?> getFilterChain() {
-		DataSource source = getDataSource();
-
+	private FilterChainElement<Void, ?> createFilterChain(
+			DataSource dataSource,
+			SourceDataRepository dataRepository,
+			SourceAdapterFactory sourceAdapterFactory,
+			FilterFactory filterFactory) {
 		FilterChainElement<Void, ArrayNode> chain = FilterChainElement.instance(
-				sourceAdapterFactory.createJsonSourceAdapter(source));
+				sourceAdapterFactory.createJsonSourceAdapter(dataSource));
 
 		chain
-				.setNextFilter(filterFactory.createDbInsertionFilter(source, dataRepository))
-				.setNextFilter(filterFactory.createNotificationFilter(source));
+				.setNextFilter(filterFactory.createDbInsertionFilter(dataSource, dataRepository))
+				.setNextFilter(filterFactory.createNotificationFilter(dataSource));
 				// .setNextFilter(new DataAdditionFilter(source))
 				// .setNextFilter(
 						// new CombineSourceFilter(
@@ -583,12 +586,7 @@ final class PegelOnlineConfiguration implements DataSourceConfiguration {
 	}
 
 
-	@Override
-	public SourceDataRepository getDataRepository() {
-		return dataRepository;
-	}
-
-
+	/*
 	private static MapComplexValueType createSourceCoordinateStructure() {
 
 		Map<String, GenericValueType> station = new HashMap<String, GenericValueType>();
@@ -629,5 +627,5 @@ final class PegelOnlineConfiguration implements DataSourceConfiguration {
 
 		return stationSchema;
 	}
-
+	*/
 }
