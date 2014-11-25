@@ -28,7 +28,7 @@ import org.jvalue.ods.data.objecttypes.ListObjectType;
 import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
-import org.jvalue.ods.db.OdsView;
+import org.jvalue.ods.db.DbView;
 import org.jvalue.ods.db.SourceDataRepository;
 import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.filter.FilterChainElement;
@@ -79,7 +79,7 @@ final class OsmConfiguration {
 				"http://www.openstreetmap.org",
 				"http://www.openstreetmap.org/copyright");
 
-		List<OdsView> odsViews = new LinkedList<OdsView>();
+		List<DbView> dbViews = new LinkedList<DbView>();
 
 		// db schema
 		{

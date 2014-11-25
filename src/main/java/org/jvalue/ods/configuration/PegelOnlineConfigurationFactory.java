@@ -29,7 +29,7 @@ import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.db.OdsView;
+import org.jvalue.ods.db.DbView;
 import org.jvalue.ods.db.SourceDataRepository;
 import org.jvalue.ods.filter.FilterChainElement;
 import org.jvalue.ods.filter.FilterFactory;
@@ -92,7 +92,7 @@ public final class PegelOnlineConfigurationFactory {
 				"https://www.pegelonline.wsv.de",
 				"http://www.pegelonline.wsv.de/gast/nutzungsbedingungen");
 
-		List<OdsView> odsViews = new LinkedList<OdsView>();
+		List<DbView> dbViews = new LinkedList<DbView>();
 
 		// improved db schema
 		{
@@ -561,7 +561,7 @@ public final class PegelOnlineConfigurationFactory {
 				rawDbSchema,
 				improvedDbSchema,
 				metaData,
-				new LinkedList<OdsView>(), new JsonPropertyKey.Builder().stringPath("uuid").build());
+				new LinkedList<DbView>(), new JsonPropertyKey.Builder().stringPath("uuid").build());
 	}
 
 

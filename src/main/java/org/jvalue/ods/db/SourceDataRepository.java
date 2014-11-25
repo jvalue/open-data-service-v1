@@ -26,7 +26,7 @@ public final class SourceDataRepository extends CouchDbRepositorySupport<JsonNod
 	private static final DesignDocumentFactory designFactory = new StdDesignDocumentFactory();
 
 	private final CouchDbConnector connector;
-	private final OdsView domainIdView;
+	private final DbView domainIdView;
 
 	@Inject
 	SourceDataRepository(CouchDbInstance couchDbInstance, @Assisted String databaseName, @Assisted JsonPropertyKey domainIdKey) {
@@ -53,7 +53,7 @@ public final class SourceDataRepository extends CouchDbRepositorySupport<JsonNod
 		mapBuilder.append(") emit(");
 		mapBuilder.append(keyBuilder.toString());
 		mapBuilder.append(", doc) }");
-		this.domainIdView = new OdsView(domainIdViewName, mapBuilder.toString());
+		this.domainIdView = new DbView(domainIdViewName, mapBuilder.toString());
 		if (!containsView(domainIdView)) addView(domainIdView);
 	}
 
@@ -66,18 +66,18 @@ public final class SourceDataRepository extends CouchDbRepositorySupport<JsonNod
 	}
 
 
-	public List<JsonNode> executeQuery(OdsView view, String param) {
+	public List<JsonNode> executeQuery(DbView view, String param) {
 		return queryView(view.getViewName(), param);
 	}
 
 
-	public List<JsonNode> executeQuery(OdsView view) {
+	public List<JsonNode> executeQuery(DbView view) {
 		return queryView(view.getViewName());
 	}
 
 
-	public void addView(OdsView odsView) {
-		Assert.assertNotNull(odsView);
+	public void addView(DbView dbView) {
+		Assert.assertNotNull(dbView);
 
 		DesignDocument designDocument;
 		boolean update = false;
@@ -90,8 +90,8 @@ public final class SourceDataRepository extends CouchDbRepositorySupport<JsonNod
 			designDocument.setId(DESIGN_DOCUMENT_ID);
 		}
 
-		DesignDocument.View view = new DesignDocument.View(odsView.getMapFunction());
-		designDocument.addView(odsView.getViewName(), view);
+		DesignDocument.View view = new DesignDocument.View(dbView.getMapFunction());
+		designDocument.addView(dbView.getViewName(), view);
 
 		try {
 			if (update) connector.update(designDocument);
@@ -102,12 +102,12 @@ public final class SourceDataRepository extends CouchDbRepositorySupport<JsonNod
 	}
 
 
-	public boolean containsView(OdsView odsView) {
-		Assert.assertNotNull(odsView);
+	public boolean containsView(DbView dbView) {
+		Assert.assertNotNull(dbView);
 
 		if (!connector.contains(DESIGN_DOCUMENT_ID)) return false;
 		DesignDocument designDocument = connector.get(DesignDocument.class, DESIGN_DOCUMENT_ID);
-		return designDocument.containsView(odsView.getViewName());
+		return designDocument.containsView(dbView.getViewName());
 	}
 
 }

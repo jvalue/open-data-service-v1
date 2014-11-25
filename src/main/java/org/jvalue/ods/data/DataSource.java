@@ -22,7 +22,7 @@ import com.google.common.base.Objects;
 import org.jvalue.ods.data.metadata.OdsMetaData;
 import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.objecttypes.ObjectType;
-import org.jvalue.ods.db.OdsView;
+import org.jvalue.ods.db.DbView;
 import org.jvalue.ods.utils.Assert;
 import org.jvalue.ods.utils.JsonPropertyKey;
 
@@ -36,7 +36,7 @@ public class DataSource {
 	private final ObjectType rawDbSchema;
 	private final ObjectType improvedDbSchema;
 	private final OdsMetaData metaData;
-	private final List<OdsView> odsViews;
+	private final List<DbView> dbViews;
 	private final JsonPropertyKey domainIdKey;
 
 	public DataSource(
@@ -46,10 +46,10 @@ public class DataSource {
 			MapObjectType rawDbSchema,
 			MapObjectType improvedDbSchema,
 			OdsMetaData metaData,
-			List<OdsView> odsViews,
+			List<DbView> dbViews,
 			JsonPropertyKey domainIdKey) {
 
-		Assert.assertNotNull(id, url, sourceschema, rawDbSchema, improvedDbSchema, metaData, odsViews, domainIdKey);
+		Assert.assertNotNull(id, url, sourceschema, rawDbSchema, improvedDbSchema, metaData, dbViews, domainIdKey);
 
 		this.id = id;
 		this.url = url;
@@ -57,7 +57,7 @@ public class DataSource {
 		this.rawDbSchema = rawDbSchema;
 		this.improvedDbSchema = improvedDbSchema;
 		this.metaData = metaData;
-		this.odsViews = odsViews;
+		this.dbViews = dbViews;
 		this.domainIdKey = domainIdKey;
 	}
 
@@ -92,8 +92,8 @@ public class DataSource {
 	}
 
 
-	public List<OdsView> getOdsViews() {
-		return odsViews;
+	public List<DbView> getDbViews() {
+		return dbViews;
 	}
 
 
@@ -113,13 +113,13 @@ public class DataSource {
 				&& Objects.equal(rawDbSchema, source.rawDbSchema)
 				&& Objects.equal(improvedDbSchema, source.improvedDbSchema)
 				&& Objects.equal(metaData, source.metaData)
-				&& Objects.equal(odsViews, source.odsViews)
+				&& Objects.equal(dbViews, source.dbViews)
 				&& Objects.equal(domainIdKey, source.domainIdKey);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(id, url, dataSourceSchema, rawDbSchema, improvedDbSchema, metaData, odsViews, domainIdKey);
+		return Objects.hashCode(id, url, dataSourceSchema, rawDbSchema, improvedDbSchema, metaData, dbViews, domainIdKey);
 	}
 
 }

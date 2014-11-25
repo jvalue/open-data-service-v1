@@ -22,11 +22,11 @@ import com.google.common.base.Objects;
 
 import org.jvalue.ods.utils.Assert;
 
-public final class OdsView {
+public final class DbView {
 
 	private final String viewName, mapFunction;
 
-	public OdsView(String viewName, String mapFunction) {
+	public DbView(String viewName, String mapFunction) {
 		Assert.assertNotNull(viewName, mapFunction);
 		this.viewName = viewName;
 		this.mapFunction = mapFunction;
@@ -44,8 +44,8 @@ public final class OdsView {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other == null || !(other instanceof OdsView)) return false;
-		OdsView view = (OdsView) other;
+		if (other == null || !(other instanceof DbView)) return false;
+		DbView view = (DbView) other;
 		return Objects.equal(viewName, view.viewName)
 				&& Objects.equal(mapFunction, view.mapFunction);
 
