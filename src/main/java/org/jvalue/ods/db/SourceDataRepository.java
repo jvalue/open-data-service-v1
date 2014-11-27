@@ -40,7 +40,7 @@ public final class SourceDataRepository extends CouchDbRepositorySupport<JsonNod
 		StringBuilder keyBuilder = new StringBuilder();
 		keyBuilder.append("doc");
 		JsonPointer pointer = domainIdKey;
-		while (pointer != null && pointer.matches()) {
+		while (pointer != null && !pointer.toString().isEmpty()) {
 			if (pointer.mayMatchProperty()) {
 				keyBuilder.append(".");
 				keyBuilder.append(pointer.getMatchingProperty());
@@ -99,6 +99,7 @@ public final class SourceDataRepository extends CouchDbRepositorySupport<JsonNod
 			if (update) connector.update(designDocument);
 			else connector.create(designDocument);
 		} catch (UpdateConflictException uce) {
+			// TODO throw some meaningful exception
 			Log.error("failed to add view", uce);
 		}
 	}
