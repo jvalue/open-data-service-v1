@@ -17,8 +17,28 @@
  */
 package org.jvalue.ods.filter;
 
-public interface Filter<P,R> {
+import org.jvalue.ods.utils.Assert;
 
-	public R filter(P param) throws FilterException;
+public abstract class Filter<P, R> {
+
+	private Filter<R, ?> nextFilter;
+
+	public Filter() { }
+
+
+	public <T> Filter<R, T> setNextFilter(Filter<R, T> nextFilter) {
+		Assert.assertNotNull(nextFilter);
+		this.nextFilter = nextFilter;
+		return nextFilter;
+	}
+
+
+	public final void filter(P param) throws FilterException {
+		R result = doFilter(param);
+		if (nextFilter != null) nextFilter.filter(result);
+	}
+
+
+	protected abstract R doFilter(P param) throws FilterException;
 
 }

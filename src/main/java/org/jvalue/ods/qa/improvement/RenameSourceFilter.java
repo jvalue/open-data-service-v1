@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public final class RenameSourceFilter implements Filter<Object, Object> {
+public final class RenameSourceFilter extends Filter<Object, Object> {
 
 	private MapComplexValueType sourceStructure;
 	private MapComplexValueType destinationStructure;
@@ -45,7 +45,7 @@ public final class RenameSourceFilter implements Filter<Object, Object> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Object filter(Object data) {
+	protected Object doFilter(Object data) {
 
 		List<Object> improvedObjects = new LinkedList<Object>();
 

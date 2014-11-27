@@ -1,13 +1,13 @@
 package org.jvalue.ods.filter;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 
 public final class FilterChainManagerTest {
@@ -18,14 +18,14 @@ public final class FilterChainManagerTest {
 	@Test
 	public final void testAddRemoveFilter() {
 
-		List<FilterChainElement<Void, Void>> chains = new LinkedList<>();
-		chains.add(FilterChainElement.instance(new DummyFilter()));
-		chains.add(FilterChainElement.instance(new DummyFilter()));
-		chains.add(FilterChainElement.instance(new DummyFilter()));
+		List<Filter<Void, Void>> chains = new LinkedList<>();
+		chains.add(new DummyFilter());
+		chains.add(new DummyFilter());
+		chains.add(new DummyFilter());
 
 		FilterChainManager manager = new FilterChainManager();
 
-		for (FilterChainElement<Void,?> chain : chains) {
+		for (Filter<Void,?> chain : chains) {
 			assertFalse(manager.isRegistered(chain));
 			manager.register(chain);
 			assertTrue(manager.isRegistered(chain));
@@ -35,7 +35,7 @@ public final class FilterChainManagerTest {
 		manager.startFilterChains();
 		assertEquals(3, filterCount);
 
-		for (FilterChainElement<Void,?> chain : chains) {
+		for (Filter<Void,?> chain : chains) {
 			manager.unregister(chain);
 			assertFalse(manager.isRegistered(chain));
 			assertFalse(manager.getRegistered().contains(chain));
@@ -44,10 +44,10 @@ public final class FilterChainManagerTest {
 	}
 
 
-	private class DummyFilter implements Filter<Void, Void> {
+	private class DummyFilter extends Filter<Void, Void> {
 
 		@Override
-		public Void filter(Void param) {
+		protected Void doFilter(Void param) {
 			filterCount++;
 			return null;
 		}

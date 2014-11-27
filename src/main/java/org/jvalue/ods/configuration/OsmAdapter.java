@@ -38,10 +38,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-final class OsmAdapter implements Filter<File, Object> {
+final class OsmAdapter extends Filter<File, Object> {
 
 	@Override
-	public Object filter(File file) {
+	protected Object doFilter(File file) {
 		final List<Object> resultList = new LinkedList<Object>();
 
 		Sink sinkImplementation = new Sink() {

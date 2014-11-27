@@ -24,7 +24,7 @@ import org.jvalue.ods.notifications.NotificationManager;
 import org.jvalue.ods.utils.Assert;
 
 
-final class NotificationFilter implements Filter<ArrayNode, ArrayNode> {
+final class NotificationFilter extends Filter<ArrayNode, ArrayNode> {
 
 	private final NotificationManager notificationManager;
 	private final DataSource source;
@@ -41,7 +41,7 @@ final class NotificationFilter implements Filter<ArrayNode, ArrayNode> {
 
 
 	@Override
-	public ArrayNode filter(ArrayNode data) {
+	protected ArrayNode doFilter(ArrayNode data) {
 		notificationManager.notifySourceChanged(source, data);
 		return data;
 	}

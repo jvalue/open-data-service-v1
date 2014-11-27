@@ -23,7 +23,7 @@ import org.jvalue.ods.filter.FilterException;
 import org.jvalue.ods.utils.Assert;
 
 
-abstract class SourceAdapter<T> implements Filter<Void, T> {
+abstract class SourceAdapter<T> extends Filter<Void, T> {
 
 	protected final DataSource dataSource;
 
@@ -34,7 +34,7 @@ abstract class SourceAdapter<T> implements Filter<Void, T> {
 
 
 	@Override
-	public final T filter(Void param) throws FilterException {
+	protected final T doFilter(Void param) throws FilterException {
 		return grabSource();
 	}
 

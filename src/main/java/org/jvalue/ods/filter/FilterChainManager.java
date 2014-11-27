@@ -27,32 +27,32 @@ import java.util.Set;
 
 public final class FilterChainManager {
 
-	private final Set<FilterChainElement<Void, ?>> filterChains = new HashSet<FilterChainElement<Void, ?>>();
+	private final Set<Filter<Void, ?>> filterChains = new HashSet<Filter<Void, ?>>();
 
 
 	FilterChainManager() { }
 
 
-	public void register(FilterChainElement<Void, ?> chain) {
+	public void register(Filter<Void, ?> chain) {
 		Assert.assertNotNull(chain);
 		filterChains.add(chain);
 	}
 
 
-	public void unregister(FilterChainElement<Void, ?> chain) {
+	public void unregister(Filter<Void, ?> chain) {
 		Assert.assertNotNull(chain);
 		filterChains.remove(chain);
 	}
 
 
-	public boolean isRegistered(FilterChainElement<Void, ?> chain) {
+	public boolean isRegistered(Filter<Void, ?> chain) {
 		Assert.assertNotNull(chain);
 		return filterChains.contains(chain);
 	}
 
 
 	public void startFilterChains() {
-		for (FilterChainElement<Void, ?> chain : filterChains) {
+		for (Filter<Void, ?> chain : filterChains) {
 			try {
 				chain.filter(null);
 			} catch (FilterException e) {
@@ -62,8 +62,8 @@ public final class FilterChainManager {
 	}
 
 
-	public Set<FilterChainElement<Void, ?>> getRegistered() {
-		return new HashSet<FilterChainElement<Void,?>>(filterChains);
+	public Set<Filter<Void, ?>> getRegistered() {
+		return new HashSet<Filter<Void,?>>(filterChains);
 	}
 
 }

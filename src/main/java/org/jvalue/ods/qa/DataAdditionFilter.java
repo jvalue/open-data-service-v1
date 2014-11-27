@@ -28,7 +28,7 @@ import java.util.Map;
 /**
  * The Class DataAdditionFilter.
  */
-public class DataAdditionFilter implements Filter<Object, Object> {
+public class DataAdditionFilter extends Filter<Object, Object> {
 
 	/** The source. */
 	private DataSource source;
@@ -50,7 +50,7 @@ public class DataAdditionFilter implements Filter<Object, Object> {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public Object filter(Object object) {
+	protected Object doFilter(Object object) {
 
 		try {
 

@@ -36,7 +36,7 @@ import java.util.Map;
 /**
  * The Class PegelOnlineQualityAssurance.
  */
-public class PegelOnlineQualityAssurance implements Filter<Object, Object> {
+public class PegelOnlineQualityAssurance extends Filter<Object, Object> {
 
 	/**
 	 * Instantiates a new pegel online quality assurance.
@@ -49,7 +49,7 @@ public class PegelOnlineQualityAssurance implements Filter<Object, Object> {
 	 * Check value types.
 	 */
 	@SuppressWarnings("unchecked")
-	public Object filter(Object param) {
+	protected Object doFilter(Object param) {
 
 		List<Object> nodes = null;
 

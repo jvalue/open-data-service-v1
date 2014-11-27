@@ -31,7 +31,7 @@ import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.DbView;
 import org.jvalue.ods.db.SourceDataRepository;
-import org.jvalue.ods.filter.FilterChainElement;
+import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.filter.FilterFactory;
 import org.jvalue.ods.filter.adapter.SourceAdapterFactory;
 
@@ -56,7 +56,7 @@ public final class PegelOnlineConfigurationFactory {
 
 		DataSource dataSource = createDataSource();
 		SourceDataRepository dataRepository = dbFactory.createSourceDataRepository("pegelonline", dataSource.getDomainIdKey());
-		FilterChainElement<Void, ?> filterChain = createFilterChain(dataSource, dataRepository, sourceAdapterFactory, filterFactory);
+		Filter<Void, ?> filterChain = createFilterChain(dataSource, dataRepository, sourceAdapterFactory, filterFactory);
 		this.configuration = new DataSourceConfiguration(dataSource, filterChain, dataRepository);
 
 	}
@@ -564,13 +564,12 @@ public final class PegelOnlineConfigurationFactory {
 	}
 
 
-	private FilterChainElement<Void, ?> createFilterChain(
+	private Filter<Void, ?> createFilterChain(
 			DataSource dataSource,
 			SourceDataRepository dataRepository,
 			SourceAdapterFactory sourceAdapterFactory,
 			FilterFactory filterFactory) {
-		FilterChainElement<Void, ArrayNode> chain = FilterChainElement.instance(
-				sourceAdapterFactory.createJsonSourceAdapter(dataSource));
+		Filter<Void, ArrayNode> chain = sourceAdapterFactory.createJsonSourceAdapter(dataSource);
 
 		chain
 				.setNextFilter(filterFactory.createDbInsertionFilter(dataSource, dataRepository))

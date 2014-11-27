@@ -42,7 +42,7 @@ import java.util.Map;
 
 
 
-final class PegelPortalMvAdapter implements Filter<Void, ArrayNode> {
+final class PegelPortalMvAdapter extends Filter<Void, ArrayNode> {
 
 	private static final Map<String, Integer> tableMapping = new HashMap<String, Integer>();
 	static {
@@ -64,7 +64,7 @@ final class PegelPortalMvAdapter implements Filter<Void, ArrayNode> {
 
 
 	@Override
-	public ArrayNode filter(Void nothing) {
+	protected ArrayNode doFilter(Void nothing) {
 		try {
 			String httpContent = HttpUtils.readUrl(source.getUrl(), "UTF-8");
 			Document doc = Jsoup.parse(httpContent);

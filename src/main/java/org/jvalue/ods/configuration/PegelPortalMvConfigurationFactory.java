@@ -31,7 +31,7 @@ import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.DbView;
 import org.jvalue.ods.db.SourceDataRepository;
-import org.jvalue.ods.filter.FilterChainElement;
+import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.filter.FilterFactory;
 
 import java.util.HashMap;
@@ -61,7 +61,7 @@ public final class PegelPortalMvConfigurationFactory {
 
 		DataSource dataSource = createDataSource();
 		SourceDataRepository dataRepository = dbFactory.createSourceDataRepository("pegelportalMv", dataSource.getDomainIdKey());
-		FilterChainElement<Void, ?> filterChain = createFilterChain(dataSource, dataRepository, filterFactory);
+		Filter<Void, ?> filterChain = createFilterChain(dataSource, dataRepository, filterFactory);
 		this.configuration = new DataSourceConfiguration(dataSource, filterChain, dataRepository);
 	}
 
@@ -147,12 +147,12 @@ public final class PegelPortalMvConfigurationFactory {
 	}
 
 
-	private FilterChainElement<Void, ?> createFilterChain(DataSource dataSource, SourceDataRepository dataRepository, FilterFactory filterFactory) {
+	private Filter<Void, ?> createFilterChain(
+			DataSource dataSource,
+			SourceDataRepository dataRepository,
+			FilterFactory filterFactory) {
 
-
-		FilterChainElement<Void, ArrayNode> chain = FilterChainElement.instance(
-				new PegelPortalMvAdapter(dataSource));
-
+		Filter<Void, ArrayNode> chain = new PegelPortalMvAdapter(dataSource);
 		chain.setNextFilter(filterFactory.createDbInsertionFilter(dataSource, dataRepository))
 				.setNextFilter(filterFactory.createNotificationFilter(dataSource));
 

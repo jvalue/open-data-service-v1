@@ -28,7 +28,7 @@ import org.jvalue.ods.db.SourceDataRepository;
 import org.jvalue.ods.utils.Assert;
 
 
-final class DbInsertionFilter implements Filter<ArrayNode, ArrayNode> {
+final class DbInsertionFilter extends Filter<ArrayNode, ArrayNode> {
 
 	private final SourceDataRepository dataRepository;
 	private final DataSource source;
@@ -45,7 +45,7 @@ final class DbInsertionFilter implements Filter<ArrayNode, ArrayNode> {
 
 
 	@Override
-	public ArrayNode filter(ArrayNode data) {
+	protected ArrayNode doFilter(ArrayNode data) {
 		for (JsonNode node : data) {
 			String domainKey = data.at(source.getDomainIdKey()).asText();
 			JsonNode oldNode = dataRepository.findByDomainId(domainKey);

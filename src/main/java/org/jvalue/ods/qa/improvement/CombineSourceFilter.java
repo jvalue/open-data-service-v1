@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public final class CombineSourceFilter implements Filter<Object, Object> {
+public final class CombineSourceFilter extends Filter<Object, Object> {
 
 	private MapComplexValueType sourceStructure;
 	private MapComplexValueType destinationStructure;
@@ -44,7 +44,7 @@ public final class CombineSourceFilter implements Filter<Object, Object> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Object filter(Object data) {
+	protected Object doFilter(Object data) {
 
 		if (data == null) {
 			throw new IllegalArgumentException();

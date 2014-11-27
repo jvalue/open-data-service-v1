@@ -30,7 +30,6 @@ import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.db.DbView;
 import org.jvalue.ods.db.SourceDataRepository;
 import org.jvalue.ods.filter.Filter;
-import org.jvalue.ods.filter.FilterChainElement;
 import org.jvalue.ods.filter.FilterFactory;
 import org.jvalue.ods.filter.adapter.SourceAdapterFactory;
 
@@ -177,11 +176,10 @@ final class OsmConfiguration {
 		}
 	}
 
-	public FilterChainElement<Void, ?> getFilterChain() {
+	public Filter<Void, ?> getFilterChain() {
 		DataSource source = getDataSource();
 
-		FilterChainElement<Void, File> chain = FilterChainElement.instance(
-				sourceAdapterFactory.createFileSourceAdapter(source));
+		Filter<Void, File> chain = sourceAdapterFactory.createFileSourceAdapter(source);
 
 		chain
 				.setNextFilter(new OsmAdapter());

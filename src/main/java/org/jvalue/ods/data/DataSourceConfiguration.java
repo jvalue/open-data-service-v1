@@ -18,18 +18,18 @@
 package org.jvalue.ods.data;
 
 import org.jvalue.ods.db.SourceDataRepository;
-import org.jvalue.ods.filter.FilterChainElement;
+import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.utils.Assert;
 
 public final class DataSourceConfiguration {
 
 	private final DataSource dataSource;
-	private final FilterChainElement<Void, ?> filterChain;
+	private final Filter<Void, ?> filterChain;
 	private final SourceDataRepository dataRepository;
 
 	public DataSourceConfiguration(
 			DataSource dataSource,
-			FilterChainElement<Void, ?> filterChain,
+			Filter<Void, ?> filterChain,
 			SourceDataRepository dataRepository) {
 
 		Assert.assertNotNull(dataSource, filterChain, dataRepository);
@@ -44,7 +44,7 @@ public final class DataSourceConfiguration {
 	}
 
 
-	public FilterChainElement<Void, ?> getFilterChain() {
+	public Filter<Void, ?> getFilterChain() {
 		return filterChain;
 	}
 
