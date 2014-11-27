@@ -8,6 +8,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.db.SourceDataRepository;
+import org.jvalue.ods.filter.reference.FilterChainMetaData;
+import org.jvalue.ods.filter.reference.FilterChainReference;
+import org.jvalue.ods.filter.reference.FilterReference;
 
 import java.util.LinkedList;
 import java.util.List;

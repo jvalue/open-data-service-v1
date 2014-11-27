@@ -6,6 +6,8 @@ import com.google.inject.name.Named;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.db.SourceDataRepository;
+import org.jvalue.ods.filter.reference.FilterName;
+import org.jvalue.ods.filter.reference.FilterType;
 
 public interface FilterFactory {
 

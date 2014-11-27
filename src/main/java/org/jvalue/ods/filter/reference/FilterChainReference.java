@@ -1,4 +1,4 @@
-package org.jvalue.ods.filter;
+package org.jvalue.ods.filter.reference;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

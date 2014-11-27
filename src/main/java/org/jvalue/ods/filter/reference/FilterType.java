@@ -1,4 +1,4 @@
-package org.jvalue.ods.filter;
+package org.jvalue.ods.filter.reference;
 
 
 public enum FilterType {

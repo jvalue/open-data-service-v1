@@ -7,6 +7,8 @@ import com.google.inject.name.Named;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.db.SourceDataRepository;
+import org.jvalue.ods.filter.reference.FilterChainReference;
+import org.jvalue.ods.filter.reference.FilterReference;
 import org.jvalue.ods.utils.Assert;
 
 import java.lang.reflect.InvocationTargetException;
