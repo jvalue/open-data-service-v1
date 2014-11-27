@@ -20,7 +20,7 @@ public class DbModule extends AbstractModule {
 		bind(CouchDbInstance.class).toInstance(couchDbInstance);
 		bind(CouchDbConnector.class).annotatedWith(Names.named(NotificationClientRepository.DATABASE_NAME)).toInstance(notificationsConnector);
 		install(new FactoryModuleBuilder()
-				.implement(SourceDataRepository.class, SourceDataRepository.class)
+				.implement(DataRepository.class, DataRepository.class)
 				.build(DbFactory.class));
 	}
 

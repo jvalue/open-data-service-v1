@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 
 import org.jvalue.ods.data.DataSourceManager;
-import org.jvalue.ods.db.SourceDataRepository;
+import org.jvalue.ods.db.DataRepository;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -60,7 +60,7 @@ public class DefaultDataSourceApi {
 
 	private JsonNode getSingleObject(String sourceId, String objectId) {
 		assertIsValidSource(sourceId);
-		SourceDataRepository repo = sourceManager.getDataRepositoryForSourceId(sourceId);
+		DataRepository repo = sourceManager.getDataRepositoryForSourceId(sourceId);
 		if (!repo.contains(objectId)) throw RestUtils.createNotFoundException();
 		return sourceManager.getDataRepositoryForSourceId(sourceId).get(objectId);
 	}

@@ -27,8 +27,8 @@ import org.jvalue.ods.data.objecttypes.ListObjectType;
 import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
+import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DbView;
-import org.jvalue.ods.db.SourceDataRepository;
 import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.filter.FilterFactory;
 
@@ -189,7 +189,7 @@ final class OsmConfiguration {
 	}
 
 
-	public SourceDataRepository getDataRepository() {
+	public DataRepository getDataRepository() {
 		return null;
 	}
 

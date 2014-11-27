@@ -28,9 +28,9 @@ import org.jvalue.ods.data.objecttypes.ListObjectType;
 import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
+import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.DbView;
-import org.jvalue.ods.db.SourceDataRepository;
 import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.filter.FilterFactory;
 
@@ -53,7 +53,7 @@ public final class PegelOnlineConfigurationFactory {
 			FilterFactory filterFactory) {
 
 		DataSource dataSource = createDataSource();
-		SourceDataRepository dataRepository = dbFactory.createSourceDataRepository("pegelonline", dataSource.getDomainIdKey());
+		DataRepository dataRepository = dbFactory.createSourceDataRepository("pegelonline", dataSource.getDomainIdKey());
 		Filter<Void, ?> filterChain = createFilterChain(dataSource, dataRepository, filterFactory);
 		this.configuration = new DataSourceConfiguration(dataSource, filterChain, dataRepository);
 
@@ -563,7 +563,7 @@ public final class PegelOnlineConfigurationFactory {
 
 	private Filter<Void, ?> createFilterChain(
 			DataSource dataSource,
-			SourceDataRepository dataRepository,
+			DataRepository dataRepository,
 			FilterFactory filterFactory) {
 		Filter<Void, ArrayNode> chain = filterFactory.createJsonSourceAdapter(dataSource);
 

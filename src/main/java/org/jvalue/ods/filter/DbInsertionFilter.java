@@ -24,18 +24,18 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.db.SourceDataRepository;
+import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.utils.Assert;
 
 
 final class DbInsertionFilter extends Filter<ArrayNode, ArrayNode> {
 
-	private final SourceDataRepository dataRepository;
+	private final DataRepository dataRepository;
 	private final DataSource source;
 
 	@Inject
 	DbInsertionFilter(
-			@Assisted SourceDataRepository dataRepository,
+			@Assisted DataRepository dataRepository,
 			@Assisted DataSource source) {
 
 		Assert.assertNotNull(source);

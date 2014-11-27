@@ -18,7 +18,7 @@ import org.jvalue.ods.utils.Log;
 
 import java.util.List;
 
-public final class SourceDataRepository extends CouchDbRepositorySupport<JsonNode> {
+public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 
 	private static final String DESIGN_DOCUMENT_ID = "_design/" + JsonNode.class.getSimpleName();
 	private static final DesignDocumentFactory designFactory = new StdDesignDocumentFactory();
@@ -27,7 +27,7 @@ public final class SourceDataRepository extends CouchDbRepositorySupport<JsonNod
 	private final DbView domainIdView;
 
 	@Inject
-	SourceDataRepository(CouchDbInstance couchDbInstance, @Assisted String databaseName, @Assisted JsonPointer domainIdKey) {
+	DataRepository(CouchDbInstance couchDbInstance, @Assisted String databaseName, @Assisted JsonPointer domainIdKey) {
 		super(JsonNode.class, couchDbInstance.createConnector(databaseName, true));
 		this.connector = couchDbInstance.createConnector(databaseName, true);
 		initStandardDesignDocument();

@@ -5,6 +5,6 @@ import com.fasterxml.jackson.core.JsonPointer;
 
 public interface DbFactory {
 
-	public SourceDataRepository createSourceDataRepository(String databasename, JsonPointer domainIdKey);
+	public DataRepository createSourceDataRepository(String databasename, JsonPointer domainIdKey);
 
 }

@@ -7,7 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.db.SourceDataRepository;
+import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.filter.reference.FilterChainMetaData;
 import org.jvalue.ods.filter.reference.FilterChainReference;
 import org.jvalue.ods.filter.reference.FilterReference;
@@ -27,7 +27,7 @@ public final class FilterChainFactoryTest {
 	@SuppressWarnings("unchecked")
 	public void testCreation(
 			@Mocked final DataSource dataSource,
-			@Mocked final SourceDataRepository dataRepository,
+			@Mocked final DataRepository dataRepository,
 			@Mocked final FilterFactory filterFactory,
 			@Mocked final Filter<Void, ArrayNode> startFilter,
 			@Mocked final Filter<ArrayNode, ArrayNode> middleFilter,

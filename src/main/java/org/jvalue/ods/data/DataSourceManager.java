@@ -18,7 +18,7 @@ package org.jvalue.ods.data;
 
 import com.google.inject.Inject;
 
-import org.jvalue.ods.db.SourceDataRepository;
+import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.filter.FilterChainManager;
 import org.jvalue.ods.utils.Assert;
 
@@ -59,7 +59,7 @@ public final class DataSourceManager {
 	}
 
 
-	public SourceDataRepository getDataRepositoryForSourceId(String sourceId) {
+	public DataRepository getDataRepositoryForSourceId(String sourceId) {
 		Assert.assertNotNull(sourceId);
 		return configurations.get(sourceId).getDataRepository();
 	}

@@ -6,7 +6,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.db.SourceDataRepository;
+import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.filter.reference.FilterChainReference;
 import org.jvalue.ods.filter.reference.FilterReference;
 import org.jvalue.ods.utils.Assert;
@@ -30,7 +30,7 @@ public final class FilterChainFactory {
 	public Filter<Void, ArrayNode> createFilterChain(
 			FilterChainReference chainReference,
 			DataSource dataSource,
-			SourceDataRepository dataRepository) {
+			DataRepository dataRepository) {
 
 		Assert.assertNotNull(chainReference, dataSource, dataRepository);
 
@@ -55,7 +55,7 @@ public final class FilterChainFactory {
 	private Filter createFilterFromAnnotation(
 			String annotationValue,
 			DataSource dataSource,
-			SourceDataRepository dataRepository) {
+			DataRepository dataRepository) {
 
 		for (Method method : FilterFactory.class.getDeclaredMethods()) {
 			Named named = method.getAnnotation(Named.class);
@@ -65,7 +65,7 @@ public final class FilterChainFactory {
 			List<Object> arguments = new LinkedList<>();
 			for (Class<?> parameterType : method.getParameterTypes()) {
 				if (parameterType.equals(DataSource.class)) arguments.add(dataSource);
-				else if (parameterType.equals(SourceDataRepository.class)) arguments.add(dataRepository);
+				else if (parameterType.equals(DataRepository.class)) arguments.add(dataRepository);
 				else throw new IllegalStateException("what to do with parameter " + parameterType.toString());
 			}
 
