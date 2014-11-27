@@ -7,17 +7,18 @@ import org.jvalue.ods.utils.Assert;
 
 import java.util.List;
 
+
 public final class FilterChainReference {
 
 	private final List<FilterReference> filterReferences;
 	private final FilterChainMetaData metaData;
 
 	@JsonCreator
-	public FilterChainReference(
+	FilterChainReference(
 			@JsonProperty("filterReferences") List<FilterReference> filterReferences,
 			@JsonProperty("metaData") FilterChainMetaData metaData) {
 
-		Assert.assertNotNull(filterReferences, metaData);
+		Assert.assertNotNull(filterReferences, metaData);;
 		this.filterReferences = filterReferences;
 		this.metaData = metaData;
 	}

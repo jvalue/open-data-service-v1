@@ -38,14 +38,11 @@ public final class FilterChainFactory {
 		Filter<?, ArrayNode> lastFilter = null;
 
 		for (FilterReference filterReference : chainReference.getFilterReferences()) {
-			Filter filter = createFilterFromAnnotation(filterReference.getFilterKey(), dataSource, dataRepository);
+			Filter filter = createFilterFromAnnotation(filterReference.getFilterName(), dataSource, dataRepository);
 			if (firstFilter == null) {
 				firstFilter = (Filter<Void, ArrayNode>) filter;
 				lastFilter = (Filter<?, ArrayNode>) filter;
 			} else {
-				System.out.println("setting last filter");
-				if (lastFilter == null) System.out.println("last filter is null");
-				if (filter == null) System.out.println("filter is null");
 				lastFilter = (Filter<?, ArrayNode>) lastFilter.setNextFilter(filter);
 			}
 		}
@@ -64,8 +61,6 @@ public final class FilterChainFactory {
 			Named named = method.getAnnotation(Named.class);
 			if (named == null) throw new IllegalArgumentException("named annotation not found");
 			if (!annotationValue.equals(named.value())) continue;
-
-			System.out.println("calling method " + method.getName());
 
 			List<Object> arguments = new LinkedList<>();
 			for (Class<?> parameterType : method.getParameterTypes()) {

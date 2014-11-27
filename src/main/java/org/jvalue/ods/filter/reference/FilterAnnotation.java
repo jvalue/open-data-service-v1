@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.METHOD;
 
 @BindingAnnotation @Target({ METHOD }) @Retention(RetentionPolicy.RUNTIME)
-public @interface FilterName {
+public @interface FilterAnnotation {
 	String name();
 	FilterType filterType();
 }

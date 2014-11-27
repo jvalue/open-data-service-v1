@@ -11,6 +11,7 @@ import org.jvalue.ods.db.SourceDataRepository;
 import org.jvalue.ods.filter.reference.FilterChainMetaData;
 import org.jvalue.ods.filter.reference.FilterChainReference;
 import org.jvalue.ods.filter.reference.FilterReference;
+import org.jvalue.ods.filter.reference.FilterReferenceManager;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -40,11 +41,12 @@ public final class FilterChainFactoryTest {
 			middleFilter.setNextFilter(middleFilter); times = 1; result = middleFilter;
 		}};
 
+		FilterReferenceManager referenceManager = new FilterReferenceManager();
 		List<FilterReference> references = new LinkedList<>();
-		references.add(new FilterReference(FilterFactory.NAME_JSON_SOURCE_ADAPTER));
-		references.add(new FilterReference(FilterFactory.NAME_DB_INSERTION_FILTER));
-		references.add(new FilterReference(FilterFactory.NAME_NOTIFICATION_FILTER));
-		final FilterChainReference chainReference = new FilterChainReference(references, metaData);
+		references.add(referenceManager.getFilterReferenceByName(FilterFactory.NAME_JSON_SOURCE_ADAPTER));
+		references.add(referenceManager.getFilterReferenceByName(FilterFactory.NAME_DB_INSERTION_FILTER));
+		references.add(referenceManager.getFilterReferenceByName(FilterFactory.NAME_NOTIFICATION_FILTER));
+		final FilterChainReference chainReference = referenceManager.createFilterChainReference(references, metaData);
 
 		final FilterChainFactory chainFactory = new FilterChainFactory(filterFactory);
 		Filter<Void, ArrayNode> resultFilter = chainFactory.createFilterChain(chainReference, dataSource, dataRepository);
