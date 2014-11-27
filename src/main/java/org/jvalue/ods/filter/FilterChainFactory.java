@@ -24,23 +24,27 @@ public final class FilterChainFactory {
 	}
 
 
-	public Filter<ArrayNode, ArrayNode> createFilterChain(
+	@SuppressWarnings("unchecked")
+	public Filter<Void, ArrayNode> createFilterChain(
 			FilterChainReference chainReference,
 			DataSource dataSource,
 			SourceDataRepository dataRepository) {
 
 		Assert.assertNotNull(chainReference, dataSource, dataRepository);
 
-		Filter<ArrayNode, ArrayNode> firstFilter = null;
-		Filter<ArrayNode, ArrayNode> lastFilter = null;
+		Filter<Void, ArrayNode> firstFilter = null;
+		Filter<?, ArrayNode> lastFilter = null;
 
 		for (FilterReference filterReference : chainReference.getFilterReferences()) {
-			Filter<ArrayNode, ArrayNode> filter = createFilterFromAnnotation(filterReference.getFilterKey(), dataSource, dataRepository);
+			Filter filter = createFilterFromAnnotation(filterReference.getFilterKey(), dataSource, dataRepository);
 			if (firstFilter == null) {
-				firstFilter = filter;
-				lastFilter = filter;
+				firstFilter = (Filter<Void, ArrayNode>) filter;
+				lastFilter = (Filter<?, ArrayNode>) filter;
 			} else {
-				lastFilter = lastFilter.setNextFilter(filter);
+				System.out.println("setting last filter");
+				if (lastFilter == null) System.out.println("last filter is null");
+				if (filter == null) System.out.println("filter is null");
+				lastFilter = (Filter<?, ArrayNode>) lastFilter.setNextFilter(filter);
 			}
 		}
 
@@ -48,8 +52,8 @@ public final class FilterChainFactory {
 	}
 
 
-	@SuppressWarnings("unchecked")
-	private Filter<ArrayNode, ArrayNode> createFilterFromAnnotation(
+	@SuppressWarnings("rawTypes")
+	private Filter createFilterFromAnnotation(
 			String annotationValue,
 			DataSource dataSource,
 			SourceDataRepository dataRepository) {
@@ -59,6 +63,8 @@ public final class FilterChainFactory {
 			if (named == null) throw new IllegalArgumentException("named annotation not found");
 			if (!annotationValue.equals(named.value())) continue;
 
+			System.out.println("calling method " + method.getName());
+
 			List<Object> arguments = new LinkedList<>();
 			for (Class<?> parameterType : method.getParameterTypes()) {
 				if (parameterType.equals(DataSource.class)) arguments.add(dataSource);
@@ -66,24 +72,8 @@ public final class FilterChainFactory {
 				else throw new IllegalStateException("what to do with parameter " + parameterType.toString());
 			}
 
-
-
-	/*
-	public interface FilterFactory {
-
-		static final String
-				NAME_DB_INSERTION_FILTER = "DbInsertionFilter",
-				NAME_NOTIFICATION_FILTER = "NotificationFilter";
-
-		@FilterName(NAME_NOTIFICATION_FILTER) @Named(NAME_NOTIFICATION_FILTER) public Filter<ArrayNode, ArrayNode> createNotificationFilter(DataSource source);
-		@FilterName(NAME_DB_INSERTION_FILTER) @Named(NAME_DB_INSERTION_FILTER) public Filter<ArrayNode, ArrayNode> createDbInsertionFilter(
-				DataSource source,
-				SourceDataRepository dataRepository);
-
-	}
-	*/
 			try {
-				return (Filter<ArrayNode, ArrayNode>) method.invoke(filterFactory, arguments.toArray());
+				return (Filter) method.invoke(filterFactory, arguments.toArray());
 			} catch (IllegalAccessException | InvocationTargetException ie) {
 				throw new IllegalStateException(ie);
 			}

@@ -30,7 +30,7 @@ import java.io.IOException;
 import java.net.URL;
 
 
-final class JsonSourceAdapter extends SourceAdapter<ArrayNode> {
+final class JsonSourceAdapter extends SourceAdapter {
 	
 	private static final ObjectMapper mapper = new ObjectMapper();
 

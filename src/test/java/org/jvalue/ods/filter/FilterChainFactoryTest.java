@@ -20,26 +20,32 @@ import mockit.integration.junit4.JMockit;
 public final class FilterChainFactoryTest {
 
 	@Test
+	@SuppressWarnings("unchecked")
 	public void testCreation(
 			@Mocked final DataSource dataSource,
 			@Mocked final SourceDataRepository dataRepository,
 			@Mocked final FilterFactory filterFactory,
-			@Mocked final Filter<ArrayNode, ArrayNode> filter,
+			@Mocked final Filter<Void, ArrayNode> startFilter,
+			@Mocked final Filter<ArrayNode, ArrayNode> middleFilter,
 			@Mocked FilterChainMetaData metaData) {
 
 		new Expectations() {{
-			filterFactory.createDbInsertionFilter(dataSource, dataRepository); times = 1; result = filter;
-			filterFactory.createNotificationFilter(dataSource); times = 1; result = filter;
+			filterFactory.createJsonSourceAdapter(dataSource); times = 1; result = startFilter;
+			filterFactory.createDbInsertionFilter(dataSource, dataRepository); times = 1; result = middleFilter;
+			startFilter.setNextFilter(middleFilter); times = 1; result = middleFilter;
+			filterFactory.createNotificationFilter(dataSource); times = 1; result = middleFilter;
+			middleFilter.setNextFilter(middleFilter); times = 1; result = middleFilter;
 		}};
 
 		List<FilterReference> references = new LinkedList<>();
+		references.add(new FilterReference(FilterFactory.NAME_JSON_SOURCE_ADAPTER));
 		references.add(new FilterReference(FilterFactory.NAME_DB_INSERTION_FILTER));
 		references.add(new FilterReference(FilterFactory.NAME_NOTIFICATION_FILTER));
 		final FilterChainReference chainReference = new FilterChainReference(references, metaData);
 
 		final FilterChainFactory chainFactory = new FilterChainFactory(filterFactory);
-		Filter<ArrayNode, ArrayNode> resultFilter = chainFactory.createFilterChain(chainReference, dataSource, dataRepository);
-		Assert.assertTrue(resultFilter == filter);
+		Filter<Void, ArrayNode> resultFilter = chainFactory.createFilterChain(chainReference, dataSource, dataRepository);
+		Assert.assertTrue(resultFilter == startFilter);
 	}
 
 }

@@ -31,9 +31,7 @@ import org.jvalue.ods.db.DbView;
 import org.jvalue.ods.db.SourceDataRepository;
 import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.filter.FilterFactory;
-import org.jvalue.ods.filter.adapter.SourceAdapterFactory;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,17 +44,14 @@ import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_STRING;
 final class OsmConfiguration {
 
 	private final FilterFactory filterFactory;
-	private final SourceAdapterFactory sourceAdapterFactory;
 	private final Provider<Filter<JsonNode, Object>> translatorProvider;
 
 	@Inject
 	public OsmConfiguration(
 			FilterFactory filterFactory,
-			SourceAdapterFactory sourceAdapterFactory,
 			Provider<Filter<JsonNode, Object>> translatorProvider) {
 
 		this.filterFactory = filterFactory;
-		this.sourceAdapterFactory = sourceAdapterFactory;
 		this.translatorProvider = translatorProvider;
 	}
 
@@ -177,8 +172,9 @@ final class OsmConfiguration {
 	}
 
 	public Filter<Void, ?> getFilterChain() {
-		DataSource source = getDataSource();
 
+		/*
+		DataSource source = getDataSource();
 		Filter<Void, File> chain = sourceAdapterFactory.createFileSourceAdapter(source);
 
 		chain
@@ -186,8 +182,10 @@ final class OsmConfiguration {
 				// .setNextFilter(new DataAdditionFilter(source))
 				// .setNextFilter(filterFactory.createDbInsertionFilter(source))
 				// .setNextFilter(filterFactory.createNotificationFilter(source));
-
 		return chain;
+				*/
+		return null;
+
 	}
 
 

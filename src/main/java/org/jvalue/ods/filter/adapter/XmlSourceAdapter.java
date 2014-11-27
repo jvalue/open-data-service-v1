@@ -1,23 +1,27 @@
 package org.jvalue.ods.filter.adapter;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.filter.FilterException;
-import org.jvalue.ods.utils.HttpUtils;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
-
-import java.io.File;
-import java.io.StringReader;
-import java.net.URL;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 
-final class XmlSourceAdapter extends SourceAdapter<Document> {
+final class XmlSourceAdapter extends SourceAdapter {
+
+	/*
+	private static final DocumentBuilder documentBuilder;
+	private static final ObjectMapper mapper = new ObjectMapper();
+
+	static {
+		try {
+			documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+		} catch(ParserConfigurationException pce) {
+			throw new RuntimeException(pce);
+		}
+	}
+	*/
 
 
 	@Inject
@@ -27,30 +31,28 @@ final class XmlSourceAdapter extends SourceAdapter<Document> {
 
 
 	@Override
-	public Document grabSource() throws FilterException {
-
+	public ArrayNode grabSource() throws FilterException {
+		/*
 		try {
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory
-					.newInstance();
-			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-
 			Document doc = null;
 			String sourceUrlString = dataSource.getUrl();
 			if (!sourceUrlString.startsWith("http")) {
 				URL sourceUrl = getClass().getResource(sourceUrlString);
 				File xmlFile = new File(sourceUrl.toURI());
-				doc = dBuilder.parse(xmlFile);
+				doc = documentBuilder.parse(xmlFile);
 			} else {
 				String data = HttpUtils.readUrl(sourceUrlString, "UTF-8");
-				doc = dBuilder.parse(new InputSource(new StringReader(data)));
+				doc = documentBuilder.parse(new InputSource(new StringReader(data)));
 			}
 
 			doc.getDocumentElement().normalize();
-			return doc;
+			// TODO needs conversion here
+
 		} catch (Exception ex) {
 			throw new FilterException("failed to parse XML", ex);
 		}
-
+		*/
+		return null;
 	}
 
 }

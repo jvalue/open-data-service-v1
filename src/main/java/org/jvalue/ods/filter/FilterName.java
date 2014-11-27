@@ -11,5 +11,6 @@ import static java.lang.annotation.ElementType.METHOD;
 
 @BindingAnnotation @Target({ METHOD }) @Retention(RetentionPolicy.RUNTIME)
 public @interface FilterName {
-	String value();
+	String name();
+	FilterType filterType();
 }

@@ -14,8 +14,7 @@ public final class FilterModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		install(new AdapterModule());
-		install(new FactoryModuleBuilder()
+		FactoryModuleBuilder factoryModuleBuilder = new FactoryModuleBuilder()
 				.implement(
 						new TypeLiteral<Filter<ArrayNode, ArrayNode>>() { },
 						Names.named(FilterFactory.NAME_NOTIFICATION_FILTER),
@@ -23,8 +22,10 @@ public final class FilterModule extends AbstractModule {
 				.implement(
 						new TypeLiteral<Filter<ArrayNode, ArrayNode>>() { },
 						Names.named(FilterFactory.NAME_DB_INSERTION_FILTER),
-						DbInsertionFilter.class)
-				.build(FilterFactory.class));
+						DbInsertionFilter.class);
+
+		install(new AdapterModule(factoryModuleBuilder));
+		install(factoryModuleBuilder.build(FilterFactory.class));
 		bind(FilterChainManager.class).in(Singleton.class);
 	}
 

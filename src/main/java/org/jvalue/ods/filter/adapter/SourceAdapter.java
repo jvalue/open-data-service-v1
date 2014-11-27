@@ -17,13 +17,15 @@
  */
 package org.jvalue.ods.filter.adapter;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
+
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.filter.FilterException;
 import org.jvalue.ods.utils.Assert;
 
 
-abstract class SourceAdapter<T> extends Filter<Void, T> {
+abstract class SourceAdapter extends Filter<Void, ArrayNode> {
 
 	protected final DataSource dataSource;
 
@@ -34,11 +36,11 @@ abstract class SourceAdapter<T> extends Filter<Void, T> {
 
 
 	@Override
-	protected final T doFilter(Void param) throws FilterException {
+	protected final ArrayNode doFilter(Void param) throws FilterException {
 		return grabSource();
 	}
 
 
-	public abstract T grabSource() throws FilterException;
+	public abstract ArrayNode grabSource() throws FilterException;
 
 }

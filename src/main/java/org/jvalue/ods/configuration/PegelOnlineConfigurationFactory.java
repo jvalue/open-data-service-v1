@@ -33,7 +33,6 @@ import org.jvalue.ods.db.DbView;
 import org.jvalue.ods.db.SourceDataRepository;
 import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.filter.FilterFactory;
-import org.jvalue.ods.filter.adapter.SourceAdapterFactory;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -51,12 +50,11 @@ public final class PegelOnlineConfigurationFactory {
 	@Inject
 	public PegelOnlineConfigurationFactory(
 			DbFactory dbFactory,
-			FilterFactory filterFactory,
-			SourceAdapterFactory sourceAdapterFactory) {
+			FilterFactory filterFactory) {
 
 		DataSource dataSource = createDataSource();
 		SourceDataRepository dataRepository = dbFactory.createSourceDataRepository("pegelonline", dataSource.getDomainIdKey());
-		Filter<Void, ?> filterChain = createFilterChain(dataSource, dataRepository, sourceAdapterFactory, filterFactory);
+		Filter<Void, ?> filterChain = createFilterChain(dataSource, dataRepository, filterFactory);
 		this.configuration = new DataSourceConfiguration(dataSource, filterChain, dataRepository);
 
 	}
@@ -567,9 +565,8 @@ public final class PegelOnlineConfigurationFactory {
 	private Filter<Void, ?> createFilterChain(
 			DataSource dataSource,
 			SourceDataRepository dataRepository,
-			SourceAdapterFactory sourceAdapterFactory,
 			FilterFactory filterFactory) {
-		Filter<Void, ArrayNode> chain = sourceAdapterFactory.createJsonSourceAdapter(dataSource);
+		Filter<Void, ArrayNode> chain = filterFactory.createJsonSourceAdapter(dataSource);
 
 		chain
 				.setNextFilter(filterFactory.createDbInsertionFilter(dataSource, dataRepository))
