@@ -13,8 +13,8 @@ public interface FilterFactory {
 			NAME_DB_INSERTION_FILTER = "DbInsertionFilter",
 			NAME_NOTIFICATION_FILTER = "NotificationFilter";
 
-	public @Named(NAME_NOTIFICATION_FILTER) Filter<ArrayNode, ArrayNode> createNotificationFilter(DataSource source);
-	public @Named(NAME_DB_INSERTION_FILTER) Filter<ArrayNode, ArrayNode> createDbInsertionFilter(
+	@FilterName(NAME_NOTIFICATION_FILTER) @Named(NAME_NOTIFICATION_FILTER) public Filter<ArrayNode, ArrayNode> createNotificationFilter(DataSource source);
+	@FilterName(NAME_DB_INSERTION_FILTER) @Named(NAME_DB_INSERTION_FILTER) public Filter<ArrayNode, ArrayNode> createDbInsertionFilter(
 			DataSource source,
 			SourceDataRepository dataRepository);
 
