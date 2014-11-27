@@ -2,6 +2,7 @@ package org.jvalue.ods.db;
 
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 import org.ektorp.CouchDbConnector;
 import org.ektorp.support.CouchDbRepositorySupport;
@@ -14,8 +15,10 @@ import java.util.List;
 @View( name = "all", map = "function(doc) { if (doc.clientId && doc.source) emit( null, doc)}")
 public final class NotificationClientRepository extends CouchDbRepositorySupport<Client> {
 
+	static final String DATABASE_NAME = "notificationClients";
+
 	@Inject
-	NotificationClientRepository(@NotificationsDb CouchDbConnector connector) {
+	NotificationClientRepository(@Named(DATABASE_NAME) CouchDbConnector connector) {
 		super(Client.class, connector);
 		initStandardDesignDocument();
 	}
