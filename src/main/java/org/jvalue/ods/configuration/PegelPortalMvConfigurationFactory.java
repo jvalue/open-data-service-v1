@@ -29,7 +29,6 @@ import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.db.DbView;
 import org.jvalue.ods.db.SourceDataRepository;
 import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.filter.FilterFactory;
@@ -90,8 +89,6 @@ public final class PegelPortalMvConfigurationFactory {
 				"http://www.pegelportal-mv.de/",
 				"http://www.pegelportal-mv.de/impressum.html");
 
-		List<DbView> dbViews = new LinkedList<DbView>();
-
 		// db schema
 		{
 			Map<String, GenericValueType> ppAttributes = new HashMap<String, GenericValueType>();
@@ -142,7 +139,6 @@ public final class PegelPortalMvConfigurationFactory {
 				dbSchema,
 				dbSchema,
 				metaData,
-				dbViews,
 				JsonPointer.compile("/station"));
 	}
 

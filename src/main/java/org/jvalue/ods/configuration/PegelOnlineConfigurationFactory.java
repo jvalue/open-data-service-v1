@@ -557,7 +557,6 @@ public final class PegelOnlineConfigurationFactory {
 				rawDbSchema,
 				improvedDbSchema,
 				metaData,
-				new LinkedList<DbView>(),
 				JsonPointer.compile("/uuid"));
 	}
 

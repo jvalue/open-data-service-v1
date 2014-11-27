@@ -22,10 +22,7 @@ import com.google.common.base.Objects;
 
 import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.objecttypes.ObjectType;
-import org.jvalue.ods.db.DbView;
 import org.jvalue.ods.utils.Assert;
-
-import java.util.List;
 
 public class DataSource {
 
@@ -35,7 +32,6 @@ public class DataSource {
 	private final ObjectType rawDbSchema;
 	private final ObjectType improvedDbSchema;
 	private final DataSourceMetaData metaData;
-	private final List<DbView> dbViews;
 	private final JsonPointer domainIdKey;
 
 	public DataSource(
@@ -45,10 +41,9 @@ public class DataSource {
 			MapObjectType rawDbSchema,
 			MapObjectType improvedDbSchema,
 			DataSourceMetaData metaData,
-			List<DbView> dbViews,
 			JsonPointer domainIdKey) {
 
-		Assert.assertNotNull(id, url, sourceschema, rawDbSchema, improvedDbSchema, metaData, dbViews, domainIdKey);
+		Assert.assertNotNull(id, url, sourceschema, rawDbSchema, improvedDbSchema, metaData, domainIdKey);
 
 		this.id = id;
 		this.url = url;
@@ -56,7 +51,6 @@ public class DataSource {
 		this.rawDbSchema = rawDbSchema;
 		this.improvedDbSchema = improvedDbSchema;
 		this.metaData = metaData;
-		this.dbViews = dbViews;
 		this.domainIdKey = domainIdKey;
 	}
 
@@ -91,11 +85,6 @@ public class DataSource {
 	}
 
 
-	public List<DbView> getDbViews() {
-		return dbViews;
-	}
-
-
 	public JsonPointer getDomainIdKey() {
 		return domainIdKey;
 	}
@@ -112,13 +101,12 @@ public class DataSource {
 				&& Objects.equal(rawDbSchema, source.rawDbSchema)
 				&& Objects.equal(improvedDbSchema, source.improvedDbSchema)
 				&& Objects.equal(metaData, source.metaData)
-				&& Objects.equal(dbViews, source.dbViews)
 				&& Objects.equal(domainIdKey, source.domainIdKey);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(id, url, dataSourceSchema, rawDbSchema, improvedDbSchema, metaData, dbViews, domainIdKey);
+		return Objects.hashCode(id, url, dataSourceSchema, rawDbSchema, improvedDbSchema, metaData, domainIdKey);
 	}
 
 }
