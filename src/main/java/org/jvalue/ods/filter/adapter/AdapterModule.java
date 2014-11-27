@@ -15,8 +15,7 @@ public final class AdapterModule extends AbstractModule {
 	public AdapterModule(FactoryModuleBuilder factoryModuleBuilder) {
 		factoryModuleBuilder
 				.implement(
-						new TypeLiteral<Filter<Void, ArrayNode>>() {
-						},
+						new TypeLiteral<Filter<Void, ArrayNode>>() { },
 						Names.named(FilterFactory.NAME_JSON_SOURCE_ADAPTER),
 						JsonSourceAdapter.class);
 	}
