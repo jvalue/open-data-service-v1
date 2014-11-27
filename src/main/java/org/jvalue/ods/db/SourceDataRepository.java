@@ -13,13 +13,11 @@ import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.DesignDocument;
 import org.ektorp.support.DesignDocumentFactory;
 import org.ektorp.support.StdDesignDocumentFactory;
-import org.ektorp.support.View;
 import org.jvalue.ods.utils.Assert;
 import org.jvalue.ods.utils.Log;
 
 import java.util.List;
 
-@View( name = "all", map = "function(doc) { emit(null, doc) }")
 public final class SourceDataRepository extends CouchDbRepositorySupport<JsonNode> {
 
 	private static final String DESIGN_DOCUMENT_ID = "_design/" + JsonNode.class.getSimpleName();
@@ -34,29 +32,11 @@ public final class SourceDataRepository extends CouchDbRepositorySupport<JsonNod
 		this.connector = couchDbInstance.createConnector(databaseName, true);
 		initStandardDesignDocument();
 
-		String domainIdViewName = "findByDomainId";
-		StringBuilder mapBuilder = new StringBuilder();
-		mapBuilder.append("function(doc) { if (");
-		StringBuilder keyBuilder = new StringBuilder();
-		keyBuilder.append("doc");
-		JsonPointer pointer = domainIdKey;
-		while (pointer != null && !pointer.toString().isEmpty()) {
-			if (pointer.mayMatchProperty()) {
-				keyBuilder.append(".");
-				keyBuilder.append(pointer.getMatchingProperty());
-			} else {
-				keyBuilder.append("[");
-				keyBuilder.append(pointer.getMatchingIndex());
-				keyBuilder.append("]");
-			}
-			pointer = pointer.tail();
-		}
-		mapBuilder.append(keyBuilder.toString());
-		mapBuilder.append(") emit(");
-		mapBuilder.append(keyBuilder.toString());
-		mapBuilder.append(", doc) }");
-		this.domainIdView = new DbView(domainIdViewName, mapBuilder.toString());
+		domainIdView = createDomainIdView(domainIdKey);
 		if (!containsView(domainIdView)) addView(domainIdView);
+
+		DbView allView = createAllView(domainIdKey);
+		if (!containsView(allView)) addView(allView);
 	}
 
 
@@ -111,6 +91,51 @@ public final class SourceDataRepository extends CouchDbRepositorySupport<JsonNod
 		if (!connector.contains(DESIGN_DOCUMENT_ID)) return false;
 		DesignDocument designDocument = connector.get(DesignDocument.class, DESIGN_DOCUMENT_ID);
 		return designDocument.containsView(dbView.getViewName());
+	}
+
+
+	private DbView createDomainIdView(JsonPointer domainIdKey) {
+		String domainIdViewName = "findByDomainId";
+		String domainIdProperty = createDomainIdJavascriptProperty(domainIdKey);
+
+		StringBuilder mapBuilder = new StringBuilder();
+		mapBuilder.append("function(doc) { if (");
+		mapBuilder.append(domainIdProperty);
+		mapBuilder.append(") emit(");
+		mapBuilder.append(domainIdProperty);
+		mapBuilder.append(", doc) }");
+		return new DbView(domainIdViewName, mapBuilder.toString());
+	}
+
+
+	private DbView createAllView(JsonPointer domainIdKey) {
+		String domainIdViewName = "all";
+		String domainIdProperty = createDomainIdJavascriptProperty(domainIdKey);
+
+		StringBuilder mapBuilder = new StringBuilder();
+		mapBuilder.append("function(doc) { if (");
+		mapBuilder.append(domainIdProperty);
+		mapBuilder.append(") emit(null,doc) }");
+		return new DbView(domainIdViewName, mapBuilder.toString());
+	}
+
+
+	private String createDomainIdJavascriptProperty(JsonPointer domainIdKey) {
+		StringBuilder keyBuilder = new StringBuilder();
+		keyBuilder.append("doc");
+		JsonPointer pointer = domainIdKey;
+		while (pointer != null && !pointer.toString().isEmpty()) {
+			if (pointer.mayMatchProperty()) {
+				keyBuilder.append(".");
+				keyBuilder.append(pointer.getMatchingProperty());
+			} else {
+				keyBuilder.append("[");
+				keyBuilder.append(pointer.getMatchingIndex());
+				keyBuilder.append("]");
+			}
+			pointer = pointer.tail();
+		}
+		return keyBuilder.toString();
 	}
 
 }
