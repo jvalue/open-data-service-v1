@@ -4,6 +4,7 @@ package org.jvalue.ods.notifications;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 
+import org.jvalue.ods.db.NotificationClientRepository;
 import org.jvalue.ods.notifications.clients.GcmClient;
 import org.jvalue.ods.notifications.clients.HttpClient;
 import org.jvalue.ods.notifications.sender.GcmSender;
@@ -15,7 +16,7 @@ public class NotificationsModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(ClientRepository.class);
+		bind(NotificationClientRepository.class);
 		bind(new TypeLiteral<Sender<GcmClient>>(){ }).to(GcmSender.class);
 		bind(new TypeLiteral<Sender<HttpClient>>(){ }).to(HttpSender.class);
 		bind(SenderVisitor.class);

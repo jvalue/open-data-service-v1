@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.inject.Inject;
 
 import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.db.NotificationClientRepository;
 import org.jvalue.ods.notifications.clients.Client;
 import org.jvalue.ods.notifications.sender.SenderResult;
 import org.jvalue.ods.notifications.sender.SenderVisitor;
@@ -34,13 +35,13 @@ import java.util.Set;
 
 public final class NotificationManager {
 
-	private final ClientRepository clientRepository;
+	private final NotificationClientRepository clientRepository;
 	private final SenderVisitor senderVisitor;
 
 
 	@Inject
 	NotificationManager(
-			ClientRepository clientRepository,
+			NotificationClientRepository clientRepository,
 			SenderVisitor senderVisitor) {
 
 		this.clientRepository = clientRepository;

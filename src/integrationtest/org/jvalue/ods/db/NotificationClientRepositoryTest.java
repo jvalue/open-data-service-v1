@@ -1,4 +1,4 @@
-package org.jvalue.ods.notifications;
+package org.jvalue.ods.db;
 
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -16,18 +16,18 @@ import org.jvalue.ods.notifications.clients.ClientVisitor;
 
 import java.util.List;
 
-public class ClientRepositoryTest {
+public class NotificationClientRepositoryTest {
 
 	private static final String DATABASE_NAME = "test_notification_clients";
 
 	private CouchDbInstance couchDbInstance;
-	private ClientRepository clientRepository;
+	private NotificationClientRepository clientRepository;
 
 
 	@Before
 	public void setupClientRepository() {
 		this.couchDbInstance = new StdCouchDbInstance(new StdHttpClient.Builder().build());
-		this.clientRepository = new ClientRepository(couchDbInstance.createConnector(DATABASE_NAME, true));
+		this.clientRepository = new NotificationClientRepository(couchDbInstance.createConnector(DATABASE_NAME, true));
 	}
 
 
