@@ -23,7 +23,7 @@ public final class HttpSender extends Sender<HttpClient> {
 			RestCall.Builder builder = new RestCall.Builder(
 					RestCall.RequestType.POST, 
 					client.getRestUrl())
-				.parameter(client.getSourceParam(), source.getId());
+				.parameter(client.getSourceParam(), source.getSourceId());
 
 			if (client.getSendData()) {
 				String jsonString = URLEncoder.encode(

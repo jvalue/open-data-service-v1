@@ -53,7 +53,7 @@ public final class NotificationManager {
 		Assert.assertNotNull(source);
 
 		SenderVisitor.DataEntry dataEntry = new SenderVisitor.DataEntry(source, data);
-		for (Client client : clientRepository.findBySource(source.getId())) {
+		for (Client client : clientRepository.findBySource(source.getSourceId())) {
 			SenderResult result = client.accept(senderVisitor, dataEntry);
 			switch(result.getStatus()) {
 				case SUCCESS:

@@ -20,13 +20,14 @@ package org.jvalue.ods.data;
 import com.fasterxml.jackson.core.JsonPointer;
 import com.google.common.base.Objects;
 
+import org.ektorp.support.CouchDbDocument;
 import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.utils.Assert;
 
-public class DataSource {
+public final class DataSource extends CouchDbDocument {
 
-	private final String id;
+	private final String sourceId;
 	private final String url;
 	private final ObjectType dataSourceSchema;
 	private final ObjectType rawDbSchema;
@@ -34,8 +35,9 @@ public class DataSource {
 	private final DataSourceMetaData metaData;
 	private final JsonPointer domainIdKey;
 
+
 	public DataSource(
-			String id,
+			String sourceId,
 			String url,
 			ObjectType sourceschema,
 			MapObjectType rawDbSchema,
@@ -43,9 +45,9 @@ public class DataSource {
 			DataSourceMetaData metaData,
 			JsonPointer domainIdKey) {
 
-		Assert.assertNotNull(id, url, sourceschema, rawDbSchema, improvedDbSchema, metaData, domainIdKey);
+		Assert.assertNotNull(sourceId, url, sourceschema, rawDbSchema, improvedDbSchema, metaData, domainIdKey);
 
-		this.id = id;
+		this.sourceId = sourceId;
 		this.url = url;
 		this.dataSourceSchema = sourceschema;
 		this.rawDbSchema = rawDbSchema;
@@ -55,8 +57,8 @@ public class DataSource {
 	}
 
 
-	public String getId() {
-		return id;
+	public String getSourceId() {
+		return sourceId;
 	}
 
 
@@ -95,7 +97,7 @@ public class DataSource {
 		if (other == null || !(other instanceof DataSource)) return false;
 		if (other == this) return true;
 		DataSource source = (DataSource) other;
-		return Objects.equal(id, source.id)
+		return Objects.equal(sourceId, source.sourceId)
 				&& Objects.equal(url, source.url)
 				&& Objects.equal(dataSourceSchema, source.dataSourceSchema)
 				&& Objects.equal(rawDbSchema, source.rawDbSchema)
@@ -106,7 +108,7 @@ public class DataSource {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(id, url, dataSourceSchema, rawDbSchema, improvedDbSchema, metaData, domainIdKey);
+		return Objects.hashCode(sourceId, url, dataSourceSchema, rawDbSchema, improvedDbSchema, metaData, domainIdKey);
 	}
 
 }

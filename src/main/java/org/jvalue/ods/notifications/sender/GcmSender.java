@@ -43,10 +43,10 @@ public final class GcmSender extends Sender<GcmClient> {
 
 		// gather data
 		Map<String,String> payload = new HashMap<String,String>();
-		payload.put(DATA_KEY_SOURCE, source.getId());
+		payload.put(DATA_KEY_SOURCE, source.getSourceId());
 		payload.put(DATA_KEY_DEBUG, Boolean.TRUE.toString());
 
-		String collapseKey = source.getId();
+		String collapseKey = source.getSourceId();
 
 		final List<String> devices = new ArrayList<String>();
 		devices.add(client.getGcmClientId());

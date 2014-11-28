@@ -42,7 +42,7 @@ public final class DataSourceManager {
 
 	public void addConfiguration(DataSourceConfiguration configuration) {
 		Assert.assertNotNull(configuration);
-		this.configurations.put(configuration.getDataSource().getId(), configuration);
+		this.configurations.put(configuration.getDataSource().getSourceId(), configuration);
 		filterChainManager.register(configuration.getFilterChain());
 		// TODO insert db schema (raw and improved)
 		// TODO insert metadata
