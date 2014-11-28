@@ -17,14 +17,14 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-@Path("/datasources/{sourceId}")
+@Path("/datasources/{sourceId}/data")
 @Produces(MediaType.APPLICATION_JSON)
-public class DefaultDataSourceApi {
+public class DataApi {
 
 	private final DataRepositoryCache dataRepositoryCache;
 
 	@Inject
-	public DefaultDataSourceApi(DataRepositoryCache dataRepositoryCache) {
+	public DataApi(DataRepositoryCache dataRepositoryCache) {
 		this.dataRepositoryCache = dataRepositoryCache;
 	}
 
