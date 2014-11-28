@@ -18,24 +18,13 @@
 package org.jvalue.ods.configuration;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
-import org.jsoup.select.Elements;
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.data.objecttypes.ListObjectType;
-import org.jvalue.ods.data.objecttypes.MapObjectType;
-import org.jvalue.ods.data.valuetypes.GenericValueType;
-import org.jvalue.ods.data.valuetypes.SimpleValueType;
 import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.utils.Assert;
-import org.jvalue.ods.utils.HttpUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -65,6 +54,7 @@ final class PegelPortalMvAdapter extends Filter<Void, ArrayNode> {
 
 	@Override
 	protected ArrayNode doFilter(Void nothing) {
+		/*
 		try {
 			String httpContent = HttpUtils.readUrl(source.getUrl(), "UTF-8");
 			Document doc = Jsoup.parse(httpContent);
@@ -78,7 +68,7 @@ final class PegelPortalMvAdapter extends Filter<Void, ArrayNode> {
 				throw new IllegalStateException("unknown format");
 
 			Map<String, GenericValueType> mapValueTypes = ((MapObjectType) ((ListObjectType) 
-						source.getSourceSchema())
+						source.getSchema())
 					.getReferencedObjects().get(0)).getAttributes();
 
 			ArrayNode arrayNode = new ArrayNode(JsonNodeFactory.instance);
@@ -113,6 +103,8 @@ final class PegelPortalMvAdapter extends Filter<Void, ArrayNode> {
 		} catch (Exception e) {
 			throw new IllegalStateException(e);
 		}
+		*/
+		return null;
 	}
 
 

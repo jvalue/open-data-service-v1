@@ -18,18 +18,16 @@
 package org.jvalue.ods.configuration;
 
 import com.fasterxml.jackson.core.JsonPointer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.DataSourceConfiguration;
 import org.jvalue.ods.data.DataSourceMetaData;
-import org.jvalue.ods.data.objecttypes.ListObjectType;
-import org.jvalue.ods.data.objecttypes.MapObjectType;
-import org.jvalue.ods.data.objecttypes.ObjectType;
-import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.db.DbView;
 import org.jvalue.ods.filter.FilterFactory;
 import org.jvalue.ods.filter.reference.FilterChainMetaData;
 import org.jvalue.ods.filter.reference.FilterChainReference;
@@ -38,16 +36,12 @@ import org.jvalue.ods.filter.reference.FilterReferenceManager;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-
-import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_NULL;
-import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_NUMBER;
-import static org.jvalue.ods.data.valuetypes.AllowedValueTypes.VALUETYPE_STRING;
 
 public final class PegelOnlineConfigurationFactory {
+
+	private static final ObjectMapper mapper = new ObjectMapper();
 
 	private final DataSourceConfiguration configuration;
 
@@ -83,10 +77,6 @@ public final class PegelOnlineConfigurationFactory {
 			throw new RuntimeException(mue);
 		}
 
-		ListObjectType sourceSchema;
-		MapObjectType improvedDbSchema;
-		MapObjectType rawDbSchema;
-
 		DataSourceMetaData metaData = new DataSourceMetaData(
 				sourceId,
 				"pegelonline",
@@ -99,6 +89,19 @@ public final class PegelOnlineConfigurationFactory {
 				"https://www.pegelonline.wsv.de",
 				"http://www.pegelonline.wsv.de/gast/nutzungsbedingungen");
 
+		ObjectNode schema = new ObjectNode(JsonNodeFactory.instance);
+
+		return new DataSource(
+				sourceId,
+				url,
+				JsonPointer.compile("/uuid"),
+				schema,
+				metaData);
+
+		/*
+		ListObjectType sourceSchema;
+		MapObjectType improvedDbSchema;
+		MapObjectType rawDbSchema;
 		List<DbView> dbViews = new LinkedList<DbView>();
 
 		// improved db schema
@@ -559,15 +562,6 @@ public final class PegelOnlineConfigurationFactory {
 					"function(doc) { if(doc.name == 'de-pegelonline-station' && doc.dataQualityStatus == 'raw') emit (null, doc._id) }"));
 		}
 					*/
-
-		return new DataSource(
-				sourceId,
-				url,
-				// sourceSchema,
-				// rawDbSchema,
-				// improvedDbSchema,
-				metaData,
-				JsonPointer.compile("/uuid"));
 	}
 
 

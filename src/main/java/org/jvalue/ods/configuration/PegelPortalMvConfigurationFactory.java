@@ -143,11 +143,9 @@ public final class PegelPortalMvConfigurationFactory {
 		return new DataSource(
 				sourceId,
 				url,
-				// sourceSchema,
-				// dbSchema,
-				// dbSchema,
-				metaData,
-				JsonPointer.compile("/station"));
+				JsonPointer.compile("/station"),
+				null,
+				metaData);
 	}
 
 
