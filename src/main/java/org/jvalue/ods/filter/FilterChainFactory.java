@@ -32,6 +32,8 @@ public final class FilterChainFactory {
 			DataSource dataSource,
 			DataRepository dataRepository) {
 
+		// TODO don't pass these arguments here if FilterChainReference already contains the source id!!
+
 		Assert.assertNotNull(chainReference, dataSource, dataRepository);
 
 		Filter<Void, ArrayNode> firstFilter = null;

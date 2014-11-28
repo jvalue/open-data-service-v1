@@ -46,7 +46,7 @@ public final class FilterChainFactoryTest {
 		references.add(referenceManager.getFilterReferenceByName(FilterFactory.NAME_JSON_SOURCE_ADAPTER));
 		references.add(referenceManager.getFilterReferenceByName(FilterFactory.NAME_DB_INSERTION_FILTER));
 		references.add(referenceManager.getFilterReferenceByName(FilterFactory.NAME_NOTIFICATION_FILTER));
-		final FilterChainReference chainReference = referenceManager.createFilterChainReference(references, metaData);
+		final FilterChainReference chainReference = referenceManager.createFilterChainReference("someId", references, metaData);
 
 		final FilterChainFactory chainFactory = new FilterChainFactory(filterFactory);
 		Filter<Void, ArrayNode> resultFilter = chainFactory.createFilterChain(chainReference, dataSource, dataRepository);
