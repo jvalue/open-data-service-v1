@@ -17,6 +17,7 @@ import org.jvalue.ods.filter.FilterChainManager;
 import org.jvalue.ods.filter.FilterModule;
 import org.jvalue.ods.notifications.NotificationsModule;
 import org.jvalue.ods.rest.DataApi;
+import org.jvalue.ods.rest.DataSourceApi;
 import org.jvalue.ods.rest.DbExceptionMapper;
 import org.jvalue.ods.rest.NotificationClientRegistrationApi;
 import org.jvalue.ods.rest.RestModule;
@@ -86,8 +87,9 @@ public final class OdsApplication extends Application<OdsConfig> {
 
 		// start data grabbing
 		environment.lifecycle().manage(injector.getInstance(DataGrabberManager.class));
-		environment.jersey().register(injector.getInstance(NotificationClientRegistrationApi.class));
+		environment.jersey().register(injector.getInstance(DataSourceApi.class));
 		environment.jersey().register(injector.getInstance(DataApi.class));
+		environment.jersey().register(injector.getInstance(NotificationClientRegistrationApi.class));
 		environment.jersey().register(new DbExceptionMapper());
 	}
 
