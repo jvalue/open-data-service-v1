@@ -27,7 +27,6 @@ import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.filter.FilterException;
 
 import java.io.IOException;
-import java.net.URL;
 
 
 final class JsonSourceAdapter extends SourceAdapter {
@@ -43,7 +42,7 @@ final class JsonSourceAdapter extends SourceAdapter {
 	@Override
 	public ArrayNode grabSource() throws FilterException {
 		try {
-			JsonNode node = mapper.readTree(new URL(dataSource.getUrl()));
+			JsonNode node = mapper.readTree(dataSource.getUrl());
 			if (node instanceof ArrayNode) return (ArrayNode) node;
 			else {
 				ArrayNode arrayNode = mapper.createArrayNode();

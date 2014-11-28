@@ -33,6 +33,8 @@ import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.filter.FilterFactory;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -74,7 +76,12 @@ public final class PegelPortalMvConfigurationFactory {
 	private DataSource createDataSource() {
 
 		String sourceId = "de-pegelportal-mv";
-		String url = "http://www.pegelportal-mv.de/pegel_list.html";
+		URL url;
+		try {
+			url = new URL("http://www.pegelportal-mv.de/pegel_list.html");
+		} catch (MalformedURLException mue) {
+			throw new RuntimeException(mue);
+		}
 
 		ListObjectType sourceSchema;
 		MapObjectType dbSchema;

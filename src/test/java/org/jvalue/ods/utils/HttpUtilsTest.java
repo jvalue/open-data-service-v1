@@ -17,9 +17,10 @@
  */
 package org.jvalue.ods.utils;
 
-import java.io.IOException;
-
 import org.junit.Test;
+
+import java.io.IOException;
+import java.net.URL;
 
 
 public class HttpUtilsTest {
@@ -33,15 +34,9 @@ public class HttpUtilsTest {
 	}
 
 
-	@Test(expected = IOException.class)
-	public void testHttpJsonReaderWithInvalidUrl() throws IOException {
-		HttpUtils.readUrl("invalidUrl", "UTF-8");
-	}
-
-
 	@Test()
 	public void testGetJSON() throws IOException {
-		HttpUtils.readUrl(testUrl, "UTF-8");
+		HttpUtils.readUrl(new URL(testUrl), "UTF-8");
 	}
 
 }

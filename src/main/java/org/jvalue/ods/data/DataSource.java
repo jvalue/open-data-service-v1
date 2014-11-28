@@ -30,10 +30,12 @@ import org.jvalue.ods.utils.Assert;
 import org.jvalue.ods.utils.JsonPointerDeserializer;
 import org.jvalue.ods.utils.JsonPointerSerializer;
 
+import java.net.URL;
+
 public final class DataSource extends CouchDbDocument {
 
 	private final String sourceId;
-	private final String url;
+	private final URL url;
 	private final DataSourceMetaData metaData;
 	@JsonSerialize(using = JsonPointerSerializer.class)
 	@JsonDeserialize(using = JsonPointerDeserializer.class)
@@ -48,7 +50,7 @@ public final class DataSource extends CouchDbDocument {
 	@JsonCreator
 	public DataSource(
 			@JsonProperty("sourceId") String sourceId,
-			@JsonProperty("url") String url,
+			@JsonProperty("url") URL url,
 			// @JsonProperty("sourceSchema") ObjectType sourceSchema,
 			// @JsonProperty("rawDbSchema") MapObjectType rawDbSchema,
 			// @JsonProperty("improvedDbSchema") MapObjectType improvedDbSchema,
@@ -72,7 +74,7 @@ public final class DataSource extends CouchDbDocument {
 	}
 
 
-	public String getUrl() {
+	public URL getUrl() {
 		return url;
 	}
 

@@ -36,6 +36,8 @@ import org.jvalue.ods.filter.reference.FilterChainReference;
 import org.jvalue.ods.filter.reference.FilterReference;
 import org.jvalue.ods.filter.reference.FilterReferenceManager;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -70,11 +72,16 @@ public final class PegelOnlineConfigurationFactory {
 
 	private DataSource createDataSource() {
 		String sourceId = "de-pegelonline";
-		String url = "http://pegelonline.wsv.de/webservices/rest-api/v2/"
-				+ "stations.json?includeTimeseries=true"
-				+ "&includeCurrentMeasurement=true"
-				+ "&includeCharacteristicValues=true"
-				+ "&waters=ELBE";
+		URL url;
+		try {
+			url = new URL("http://pegelonline.wsv.de/webservices/rest-api/v2/"
+					+ "stations.json?includeTimeseries=true"
+					+ "&includeCurrentMeasurement=true"
+					+ "&includeCharacteristicValues=true"
+					+ "&waters=ELBE");
+		} catch (MalformedURLException mue) {
+			throw new RuntimeException(mue);
+		}
 
 		ListObjectType sourceSchema;
 		MapObjectType improvedDbSchema;

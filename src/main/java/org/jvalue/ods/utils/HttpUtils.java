@@ -29,13 +29,11 @@ public class HttpUtils {
 
 	private HttpUtils () { } 
 
-	public static String readUrl(String stringUrl, String charsetName) throws IOException {
-		Assert.assertNotNull(stringUrl, charsetName);
+	public static String readUrl(URL url, String charsetName) throws IOException {
+		Assert.assertNotNull(url, charsetName);
 
 		BufferedReader reader = null;
 		try {
-
-			URL url = new URL(stringUrl);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
 
