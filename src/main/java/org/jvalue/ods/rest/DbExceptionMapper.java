@@ -10,7 +10,7 @@ public final class DbExceptionMapper implements ExceptionMapper<DocumentNotFound
 
 	@Override
 	public Response toResponse(DocumentNotFoundException dnfe) {
-		throw RestUtils.createNotFoundException();
+		return RestUtils.createNotFoundException().getResponse();
 	}
 
 }

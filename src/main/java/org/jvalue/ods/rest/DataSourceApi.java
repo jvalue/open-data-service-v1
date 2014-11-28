@@ -28,13 +28,7 @@ public final class DataSourceApi extends AbstractApi {
 
 	@GET
 	public List<DataSource> getAllSources() {
-		try {
-			List<DataSource> sources = sourceRepository.getAll();
-			for (DataSource source : sources) System.out.println("found source " + source.getSourceId());
-			return sources;
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+		return sourceRepository.getAll();
 	}
 
 
