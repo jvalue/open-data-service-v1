@@ -20,9 +20,9 @@ package org.jvalue.ods.data;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonPointer;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Objects;
 
 import org.ektorp.support.CouchDbDocument;
@@ -41,7 +41,7 @@ public final class DataSource extends CouchDbDocument {
 	@JsonSerialize(using = JsonPointerSerializer.class)
 	@JsonDeserialize(using = JsonPointerDeserializer.class)
 	private final JsonPointer domainIdKey;
-	private final ObjectNode schema;
+	private final JsonNode schema;
 
 	// TODO tmp fix as schema are currently not JSON capable
 	private final ObjectType rawDbSchema = null;
@@ -53,7 +53,7 @@ public final class DataSource extends CouchDbDocument {
 			@JsonProperty("sourceId") String sourceId,
 			@JsonProperty("url") URL url,
 			@JsonProperty("domainIdKey") JsonPointer domainIdKey,
-			@JsonProperty("schema") ObjectNode schema,
+			@JsonProperty("schema") JsonNode schema,
 			@JsonProperty("metaData") DataSourceMetaData metaData) {
 
 		Assert.assertNotNull(sourceId, url, domainIdKey, schema, metaData);
@@ -76,7 +76,7 @@ public final class DataSource extends CouchDbDocument {
 	}
 
 
-	public ObjectNode getSchema() {
+	public JsonNode getSchema() {
 		return schema;
 	}
 
