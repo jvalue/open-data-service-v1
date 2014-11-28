@@ -7,6 +7,8 @@ import com.google.inject.name.Named;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.db.DataRepository;
+import org.jvalue.ods.db.DataRepositoryCache;
+import org.jvalue.ods.db.DataSourceRepository;
 import org.jvalue.ods.filter.reference.FilterChainReference;
 import org.jvalue.ods.filter.reference.FilterReference;
 import org.jvalue.ods.utils.Assert;
@@ -19,22 +21,33 @@ import java.util.List;
 public final class FilterChainFactory {
 
 	private final FilterFactory filterFactory;
+	private final DataSourceRepository dataSourceRepository;
+	private final DataRepositoryCache dataRepositoryCache;
 
 	@Inject
-	public FilterChainFactory(FilterFactory filterFactory) {
+	public FilterChainFactory(
+			FilterFactory filterFactory,
+			DataSourceRepository dataSourceRepository,
+			DataRepositoryCache dataRepositoryCache) {
+
 		this.filterFactory = filterFactory;
+		this.dataSourceRepository = dataSourceRepository;
+		this.dataRepositoryCache = dataRepositoryCache;
 	}
 
 
 	@SuppressWarnings("unchecked")
-	public Filter<Void, ArrayNode> createFilterChain(
-			FilterChainReference chainReference,
-			DataSource dataSource,
-			DataRepository dataRepository) {
+	public Filter<Void, ArrayNode> createFilterChain(FilterChainReference chainReference) {
+		Assert.assertNotNull(chainReference);
 
-		// TODO don't pass these arguments here if FilterChainReference already contains the source id!!
+		String sourceId = chainReference.getDataSourceId();
+		List<DataSource> sources = dataSourceRepository.findBySourceId(sourceId);
+		Assert.assertFalse(sources.isEmpty() || sources.size() > 1, "found more than one source for id " + sourceId);
+		DataSource dataSource = sources.get(0);
 
-		Assert.assertNotNull(chainReference, dataSource, dataRepository);
+		DataRepository dataRepository = dataRepositoryCache.getRepositoryForSourceId(sourceId);
+		Assert.assertFalse(dataRepository == null, "no DataRepository found for id + " + sourceId);
+
 
 		Filter<Void, ArrayNode> firstFilter = null;
 		Filter<?, ArrayNode> lastFilter = null;

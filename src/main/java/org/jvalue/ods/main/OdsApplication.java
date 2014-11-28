@@ -80,7 +80,7 @@ public final class OdsApplication extends Application<OdsConfig> {
 			}
 			FilterChainManager chainManager = injector.getInstance(FilterChainManager.class);
 			FilterChainFactory chainFactory = injector.getInstance(FilterChainFactory.class);
-			chainManager.register(chainFactory.createFilterChain(pegelonlineConfig.getFilterChainReference(), pegelonlineConfig.getDataSource(), pegelonlineConfig.getDataRepository()));
+			chainManager.register(chainFactory.createFilterChain(pegelonlineConfig.getFilterChainReference()));
 		}
 
 
