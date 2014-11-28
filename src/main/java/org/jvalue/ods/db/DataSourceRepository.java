@@ -2,9 +2,9 @@ package org.jvalue.ods.db;
 
 
 import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
+import com.google.inject.name.Named;
 
-import org.ektorp.CouchDbInstance;
+import org.ektorp.CouchDbConnector;
 import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.GenerateView;
 import org.ektorp.support.View;
@@ -15,9 +15,11 @@ import java.util.List;
 @View( name = "all", map = "function(doc) { if (doc.sourceId && doc.domainIdKey ) emit( null, doc)}")
 public final class DataSourceRepository extends CouchDbRepositorySupport<DataSource> {
 
+	static final String DATABASE_NAME = "dataSources";
+
 	@Inject
-	DataSourceRepository(CouchDbInstance couchDbInstance, @Assisted String databaseName) {
-		super(DataSource.class, couchDbInstance.createConnector(databaseName, true));
+	DataSourceRepository(@Named(DATABASE_NAME) CouchDbConnector connector) {
+		super(DataSource.class, connector);
 		initStandardDesignDocument();
 	}
 
