@@ -17,9 +17,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-@Path("/datasources/{sourceId}/data")
+@Path(AbstractApi.BASE_URL + "/{sourceId}/data")
 @Produces(MediaType.APPLICATION_JSON)
-public class DataApi {
+public final class DataApi extends AbstractApi {
 
 	private final DataRepositoryCache dataRepositoryCache;
 

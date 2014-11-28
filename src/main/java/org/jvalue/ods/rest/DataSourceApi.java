@@ -14,9 +14,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-@Path("/datasources")
+@Path(AbstractApi.BASE_URL)
 @Produces(MediaType.APPLICATION_JSON)
-public class DataSourceApi {
+public final class DataSourceApi extends AbstractApi {
 
 	private final DataSourceRepository sourceRepository;
 
