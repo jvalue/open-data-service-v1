@@ -22,20 +22,20 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.google.common.base.Objects;
 
 import org.ektorp.support.CouchDbDocument;
 import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.utils.Assert;
 import org.jvalue.ods.utils.JsonPointerDeserializer;
+import org.jvalue.ods.utils.JsonPointerSerializer;
 
 public final class DataSource extends CouchDbDocument {
 
 	private final String sourceId;
 	private final String url;
 	private final DataSourceMetaData metaData;
-	@JsonSerialize(using = ToStringSerializer.class)
+	@JsonSerialize(using = JsonPointerSerializer.class)
 	@JsonDeserialize(using = JsonPointerDeserializer.class)
 	private final JsonPointer domainIdKey;
 
