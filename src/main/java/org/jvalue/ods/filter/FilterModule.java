@@ -9,6 +9,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 
 import org.jvalue.ods.filter.adapter.AdapterModule;
+import org.jvalue.ods.filter.reference.ReferenceModule;
 
 public final class FilterModule extends AbstractModule {
 
@@ -16,17 +17,21 @@ public final class FilterModule extends AbstractModule {
 	protected void configure() {
 		FactoryModuleBuilder factoryModuleBuilder = new FactoryModuleBuilder()
 				.implement(
-						new TypeLiteral<Filter<ArrayNode, ArrayNode>>() { },
+						new TypeLiteral<Filter<ArrayNode, ArrayNode>>() {
+						},
 						Names.named(FilterFactory.NAME_NOTIFICATION_FILTER),
 						NotificationFilter.class)
 				.implement(
-						new TypeLiteral<Filter<ArrayNode, ArrayNode>>() { },
+						new TypeLiteral<Filter<ArrayNode, ArrayNode>>() {
+						},
 						Names.named(FilterFactory.NAME_DB_INSERTION_FILTER),
 						DbInsertionFilter.class);
 
 		install(new AdapterModule(factoryModuleBuilder));
+		install(new ReferenceModule());
 		install(factoryModuleBuilder.build(FilterFactory.class));
 		bind(FilterChainManager.class).in(Singleton.class);
+		bind(FilterChainFactory.class).in(Singleton.class);
 	}
 
 }

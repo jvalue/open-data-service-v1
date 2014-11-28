@@ -5,8 +5,8 @@ import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 
-import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.db.DataRepository;
+import org.jvalue.ods.db.DataRepositoryCache;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -21,18 +21,18 @@ import javax.ws.rs.core.MediaType;
 @Produces(MediaType.APPLICATION_JSON)
 public class DefaultDataSourceApi {
 
-	private final DataSourceManager sourceManager;
+	private final DataRepositoryCache dataRepositoryCache;
 
 	@Inject
-	public DefaultDataSourceApi(DataSourceManager sourceManager) {
-		this.sourceManager = sourceManager;
+	public DefaultDataSourceApi(DataRepositoryCache dataRepositoryCache) {
+		this.dataRepositoryCache = dataRepositoryCache;
 	}
 
 
 	@GET
 	public List<Object> getAll(@PathParam("sourceId") String sourceId) throws Exception {
-		assertIsValidSource(sourceId);
-		return new LinkedList<Object>(sourceManager.getDataRepositoryForSourceId(sourceId).getAll());
+		DataRepository repository = assertIsValidSource(sourceId);
+		return new LinkedList<Object>(repository.getAll());
 	}
 
 
@@ -59,17 +59,16 @@ public class DefaultDataSourceApi {
 
 
 	private JsonNode getSingleObject(String sourceId, String objectId) {
-		assertIsValidSource(sourceId);
-		DataRepository repo = sourceManager.getDataRepositoryForSourceId(sourceId);
-		if (!repo.contains(objectId)) throw RestUtils.createNotFoundException();
-		return sourceManager.getDataRepositoryForSourceId(sourceId).get(objectId);
+		DataRepository repository = assertIsValidSource(sourceId);
+		if (!repository.contains(objectId)) throw RestUtils.createNotFoundException();
+		return repository.get(objectId);
 	}
 
 
-	private void assertIsValidSource(String sourceId) {
-		if (sourceManager.getDataRepositoryForSourceId(sourceId) == null) {
-			throw RestUtils.createNotFoundException();
-		}
+	private DataRepository assertIsValidSource(String sourceId) {
+		DataRepository repository = dataRepositoryCache.getRepositoryForSourceId(sourceId);
+		if (repository == null)  throw RestUtils.createNotFoundException();
+		return repository;
 	}
 
 }

@@ -18,7 +18,6 @@
 package org.jvalue.ods.configuration;
 
 import com.fasterxml.jackson.core.JsonPointer;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.inject.Inject;
 
 import org.jvalue.ods.data.DataSource;
@@ -31,8 +30,11 @@ import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.DbView;
-import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.filter.FilterFactory;
+import org.jvalue.ods.filter.reference.FilterChainMetaData;
+import org.jvalue.ods.filter.reference.FilterChainReference;
+import org.jvalue.ods.filter.reference.FilterReference;
+import org.jvalue.ods.filter.reference.FilterReferenceManager;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -50,12 +52,13 @@ public final class PegelOnlineConfigurationFactory {
 	@Inject
 	public PegelOnlineConfigurationFactory(
 			DbFactory dbFactory,
-			FilterFactory filterFactory) {
+			FilterFactory filterFactory,
+			FilterReferenceManager referenceManager) {
 
 		DataSource dataSource = createDataSource();
 		DataRepository dataRepository = dbFactory.createSourceDataRepository("pegelonline", dataSource.getDomainIdKey());
-		Filter<Void, ?> filterChain = createFilterChain(dataSource, dataRepository, filterFactory);
-		this.configuration = new DataSourceConfiguration(dataSource, filterChain, dataRepository);
+		FilterChainReference chainReference = createFilterChainReference(referenceManager, dataSource.getSourceId());
+		this.configuration = new DataSourceConfiguration(dataSource, chainReference, dataRepository);
 
 	}
 
@@ -553,36 +556,23 @@ public final class PegelOnlineConfigurationFactory {
 		return new DataSource(
 				sourceId,
 				url,
-				sourceSchema,
-				rawDbSchema,
-				improvedDbSchema,
+				// sourceSchema,
+				// rawDbSchema,
+				// improvedDbSchema,
 				metaData,
 				JsonPointer.compile("/uuid"));
 	}
 
 
-	private Filter<Void, ?> createFilterChain(
-			DataSource dataSource,
-			DataRepository dataRepository,
-			FilterFactory filterFactory) {
-		Filter<Void, ArrayNode> chain = filterFactory.createJsonSourceAdapter(dataSource);
+	private FilterChainReference createFilterChainReference(
+			FilterReferenceManager referenceManager,
+			String dataSourceId) {
 
-		chain
-				.setNextFilter(filterFactory.createDbInsertionFilter(dataSource, dataRepository))
-				.setNextFilter(filterFactory.createNotificationFilter(dataSource));
-				// .setNextFilter(new DataAdditionFilter(source))
-				// .setNextFilter(
-						// new CombineSourceFilter(
-								// createSourceCoordinateStructure(),
-								// createDestinationCoordinateStructure()))
-				// .setNextFilter(
-						// new RenameSourceFilter(createSourceWaterStructure(),
-								// createDestinationWaterStructure(),
-								// "BodyOfWater"))
-				// .setNextFilter(new DbInsertionFilter(accessor, source))
-				// .setNextFilter(new PegelOnlineQualityAssurance())
-
-		return chain;
+		List<FilterReference> filter = new LinkedList<>();
+		filter.add(referenceManager.getFilterReferenceByName("JsonSourceAdapter"));
+		filter.add(referenceManager.getFilterReferenceByName("DbInsertionFilter"));
+		filter.add(referenceManager.getFilterReferenceByName("NotificationFilter"));
+		return referenceManager.createFilterChainReference(dataSourceId, filter, new FilterChainMetaData(0));
 	}
 
 

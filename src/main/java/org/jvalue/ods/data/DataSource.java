@@ -17,11 +17,12 @@
  */
 package org.jvalue.ods.data;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonPointer;
 import com.google.common.base.Objects;
 
 import org.ektorp.support.CouchDbDocument;
-import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.utils.Assert;
 
@@ -29,29 +30,32 @@ public final class DataSource extends CouchDbDocument {
 
 	private final String sourceId;
 	private final String url;
-	private final ObjectType dataSourceSchema;
-	private final ObjectType rawDbSchema;
-	private final ObjectType improvedDbSchema;
 	private final DataSourceMetaData metaData;
 	private final JsonPointer domainIdKey;
 
+	// TODO tmp fix as schema are currently not JSON capable
+	private final ObjectType sourceSchema = null;
+	private final ObjectType rawDbSchema = null;
+	private final ObjectType improvedDbSchema = null;
 
+
+	@JsonCreator
 	public DataSource(
-			String sourceId,
-			String url,
-			ObjectType sourceschema,
-			MapObjectType rawDbSchema,
-			MapObjectType improvedDbSchema,
-			DataSourceMetaData metaData,
-			JsonPointer domainIdKey) {
+			@JsonProperty("sourceId") String sourceId,
+			@JsonProperty("url") String url,
+			// @JsonProperty("sourceSchema") ObjectType sourceSchema,
+			// @JsonProperty("rawDbSchema") MapObjectType rawDbSchema,
+			// @JsonProperty("improvedDbSchema") MapObjectType improvedDbSchema,
+			@JsonProperty("metaData") DataSourceMetaData metaData,
+			@JsonProperty("domainIdKey") JsonPointer domainIdKey) {
 
-		Assert.assertNotNull(sourceId, url, sourceschema, rawDbSchema, improvedDbSchema, metaData, domainIdKey);
+		Assert.assertNotNull(sourceId, url, metaData, domainIdKey);
 
 		this.sourceId = sourceId;
 		this.url = url;
-		this.dataSourceSchema = sourceschema;
-		this.rawDbSchema = rawDbSchema;
-		this.improvedDbSchema = improvedDbSchema;
+		// this.sourceSchema = sourceSchema;
+		// this.rawDbSchema = rawDbSchema;
+		// this.improvedDbSchema = improvedDbSchema;
 		this.metaData = metaData;
 		this.domainIdKey = domainIdKey;
 	}
@@ -67,8 +71,8 @@ public final class DataSource extends CouchDbDocument {
 	}
 
 
-	public ObjectType getDataSourceSchema() {
-		return dataSourceSchema;
+	public ObjectType getSourceSchema() {
+		return sourceSchema;
 	}
 
 
@@ -99,7 +103,7 @@ public final class DataSource extends CouchDbDocument {
 		DataSource source = (DataSource) other;
 		return Objects.equal(sourceId, source.sourceId)
 				&& Objects.equal(url, source.url)
-				&& Objects.equal(dataSourceSchema, source.dataSourceSchema)
+				&& Objects.equal(sourceSchema, source.sourceSchema)
 				&& Objects.equal(rawDbSchema, source.rawDbSchema)
 				&& Objects.equal(improvedDbSchema, source.improvedDbSchema)
 				&& Objects.equal(metaData, source.metaData)
@@ -108,7 +112,7 @@ public final class DataSource extends CouchDbDocument {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(sourceId, url, dataSourceSchema, rawDbSchema, improvedDbSchema, metaData, domainIdKey);
+		return Objects.hashCode(sourceId, url, sourceSchema, rawDbSchema, improvedDbSchema, metaData, domainIdKey);
 	}
 
 }

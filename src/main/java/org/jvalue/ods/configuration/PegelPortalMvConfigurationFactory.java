@@ -61,7 +61,8 @@ public final class PegelPortalMvConfigurationFactory {
 		DataSource dataSource = createDataSource();
 		DataRepository dataRepository = dbFactory.createSourceDataRepository("pegelportalMv", dataSource.getDomainIdKey());
 		Filter<Void, ?> filterChain = createFilterChain(dataSource, dataRepository, filterFactory);
-		this.configuration = new DataSourceConfiguration(dataSource, filterChain, dataRepository);
+		// this.configuration = new DataSourceConfiguration(dataSource, filterChain, dataRepository);
+		this.configuration = null; // TODO
 	}
 
 
@@ -135,9 +136,9 @@ public final class PegelPortalMvConfigurationFactory {
 		return new DataSource(
 				sourceId,
 				url,
-				sourceSchema,
-				dbSchema,
-				dbSchema,
+				// sourceSchema,
+				// dbSchema,
+				// dbSchema,
 				metaData,
 				JsonPointer.compile("/station"));
 	}

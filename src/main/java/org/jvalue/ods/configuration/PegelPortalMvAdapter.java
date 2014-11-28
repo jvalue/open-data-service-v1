@@ -78,7 +78,7 @@ final class PegelPortalMvAdapter extends Filter<Void, ArrayNode> {
 				throw new IllegalStateException("unknown format");
 
 			Map<String, GenericValueType> mapValueTypes = ((MapObjectType) ((ListObjectType) 
-						source.getDataSourceSchema())
+						source.getSourceSchema())
 					.getReferencedObjects().get(0)).getAttributes();
 
 			ArrayNode arrayNode = new ArrayNode(JsonNodeFactory.instance);
