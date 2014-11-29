@@ -4,6 +4,7 @@ package org.jvalue.ods.main;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
+import org.ektorp.DocumentNotFoundException;
 import org.jvalue.ods.configuration.ConfigurationModule;
 import org.jvalue.ods.configuration.PegelOnlineConfigurationFactory;
 import org.jvalue.ods.data.DataModule;
@@ -71,7 +72,9 @@ public final class OdsApplication extends Application<OdsConfig> {
 
 			// insert data source
 			DataSourceRepository sourceRepository = injector.getInstance(DataSourceRepository.class);
-			if (sourceRepository.findBySourceId(pegelonlineConfig.getDataSource().getSourceId()).isEmpty()) {
+			try {
+				sourceRepository.findBySourceId(pegelonlineConfig.getDataSource().getSourceId());
+			} catch (DocumentNotFoundException dnfe) {
 				sourceRepository.add(pegelonlineConfig.getDataSource());
 			}
 

@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 import org.ektorp.CouchDbConnector;
+import org.ektorp.DocumentNotFoundException;
 import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.GenerateView;
 import org.ektorp.support.View;
@@ -25,9 +26,11 @@ public final class DataSourceRepository extends CouchDbRepositorySupport<DataSou
 
 
 	@GenerateView
-	public List<DataSource> findBySourceId(String sourceId) {
-		return queryView("by_sourceId", sourceId);
+	public DataSource findBySourceId(String sourceId) {
+		List<DataSource> sources = queryView("by_sourceId", sourceId);
+		if (sources.isEmpty()) throw new DocumentNotFoundException(sourceId);
+		if (sources.size() > 1) throw new IllegalStateException("sound more than one source for sourceId " + sourceId);
+		return sources.get(0);
 	}
-
 
 }

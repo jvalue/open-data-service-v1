@@ -43,7 +43,7 @@ public final class FilterChainApi extends AbstractApi {
 
 	@GET
 	public List<FilterChainReference> getAllFilterChains(@PathParam("sourceId") String sourceId) {
-		assertIsValidSource(sourceId);
+		sourceRepository.findBySourceId(sourceId);
 		return referenceRepository.findByDataSourceId(sourceId);
 	}
 
@@ -54,7 +54,7 @@ public final class FilterChainApi extends AbstractApi {
 			@PathParam("sourceId") String sourceId,
 			@PathParam("chainId") String chainId) {
 
-		assertIsValidSource(sourceId);
+		sourceRepository.findBySourceId(sourceId);
 		return referenceRepository.get(chainId);
 	}
 
@@ -64,7 +64,7 @@ public final class FilterChainApi extends AbstractApi {
 			@PathParam("sourceId") String sourceId,
 			List<String> filterNames) {
 
-		DataSource source = assertIsValidSource(sourceId);
+		DataSource source = sourceRepository.findBySourceId(sourceId);
 		List<FilterReference> filterReferences = new LinkedList<>();
 		for (String filterName : filterNames) {
 			FilterReference reference = referenceManager.getFilterReferenceByName(filterName);
@@ -85,14 +85,6 @@ public final class FilterChainApi extends AbstractApi {
 		} catch (FilterReferenceManager.InvalidFilterReferenceListException ifre) {
 			throw RestUtils.createJsonFormattedException(ifre.getMessage(), 400);
 		}
-	}
-
-
-	private DataSource assertIsValidSource(String sourceId) {
-		List<DataSource> sources = sourceRepository.findBySourceId(sourceId);
-		if (sources.isEmpty()) throw RestUtils.createNotFoundException();
-		if (sources.size() > 1) throw new IllegalStateException("found more than one source of id " + sourceId);
-		return sources.get(0);
 	}
 
 }

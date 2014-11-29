@@ -39,7 +39,7 @@ public final class DataSourceApi extends AbstractApi {
 	@GET
 	@Path("/{sourceId}")
 	public DataSource getSingleSource(@PathParam("sourceId") String sourceId) {
-		return assertIsValidSource(sourceId);
+		return sourceRepository.findBySourceId(sourceId);
 	}
 
 
@@ -52,15 +52,7 @@ public final class DataSourceApi extends AbstractApi {
 	@DELETE
 	@Path("/{sourceId}")
 	public void deleteSource(@PathParam("sourceId") String sourceId) {
-		sourceRepository.remove(assertIsValidSource(sourceId));
-	}
-
-
-	private DataSource assertIsValidSource(String sourceId) {
-		List<DataSource> sources = sourceRepository.findBySourceId(sourceId);
-		if (sources.isEmpty()) throw RestUtils.createNotFoundException();
-		if (sources.size() > 1) throw new IllegalStateException("found more than one source of id " + sourceId);
-		return sources.get(0);
+		sourceRepository.remove(sourceRepository.findBySourceId(sourceId));
 	}
 
 }

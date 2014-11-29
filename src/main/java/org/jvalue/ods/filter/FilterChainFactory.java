@@ -41,9 +41,7 @@ public final class FilterChainFactory {
 		Assert.assertNotNull(chainReference);
 
 		String sourceId = chainReference.getDataSourceId();
-		List<DataSource> sources = dataSourceRepository.findBySourceId(sourceId);
-		Assert.assertFalse(sources.isEmpty() || sources.size() > 1, "found more than one source for id " + sourceId);
-		DataSource dataSource = sources.get(0);
+		DataSource dataSource = dataSourceRepository.findBySourceId(sourceId);
 
 		DataRepository dataRepository = dataRepositoryCache.getRepositoryForSourceId(sourceId);
 		Assert.assertFalse(dataRepository == null, "no DataRepository found for id + " + sourceId);
