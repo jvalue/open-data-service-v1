@@ -8,7 +8,7 @@ import java.util.Map;
 
 public final class DataRepositoryCache {
 
-	private final Map<String, DataRepository> repositories = new HashMap<String, DataRepository>();
+	private final Map<String, DataRepository> repositories = new HashMap<>();
 
 
 	public DataRepositoryCache() { }
@@ -17,6 +17,12 @@ public final class DataRepositoryCache {
 	public void putRepository(String dataSourceId, DataRepository repository) {
 		Assert.assertNotNull(dataSourceId, repository);
 		repositories.put(dataSourceId, repository);
+	}
+
+
+	public DataRepository removeRepository(String dataSourceId) {
+		Assert.assertNotNull(dataSourceId);
+		return repositories.remove(dataSourceId);
 	}
 
 

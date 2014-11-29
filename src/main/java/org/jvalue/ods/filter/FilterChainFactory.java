@@ -43,6 +43,7 @@ public final class FilterChainFactory {
 		String sourceId = chainReference.getDataSourceId();
 		DataSource dataSource = dataSourceRepository.findBySourceId(sourceId);
 
+
 		DataRepository dataRepository = dataRepositoryCache.getRepositoryForSourceId(sourceId);
 		Assert.assertFalse(dataRepository == null, "no DataRepository found for id + " + sourceId);
 

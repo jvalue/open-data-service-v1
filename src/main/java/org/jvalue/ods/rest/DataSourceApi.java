@@ -9,10 +9,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.inject.Inject;
 
-import org.ektorp.DocumentNotFoundException;
 import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.data.DataSourceMetaData;
-import org.jvalue.ods.db.DataSourceRepository;
 import org.jvalue.ods.utils.Assert;
 import org.jvalue.ods.utils.JsonPointerDeserializer;
 import org.jvalue.ods.utils.JsonPointerSerializer;
@@ -34,36 +33,32 @@ import javax.ws.rs.core.MediaType;
 @Consumes(MediaType.APPLICATION_JSON)
 public final class DataSourceApi extends AbstractApi {
 
-	private final DataSourceRepository sourceRepository;
+	private final DataSourceManager sourceManager;
 
 	@Inject
-	public DataSourceApi(DataSourceRepository sourceRepository) {
-		this.sourceRepository = sourceRepository;
+	public DataSourceApi(DataSourceManager sourceManager) {
+		this.sourceManager = sourceManager;
 	}
 
 
 	@GET
 	public List<DataSource> getAllSources() {
-		return sourceRepository.getAll();
+		return sourceManager.getAll();
 	}
 
 
 	@GET
 	@Path("/{sourceId}")
 	public DataSource getSingleSource(@PathParam("sourceId") String sourceId) {
-		return sourceRepository.findBySourceId(sourceId);
+		return sourceManager.findBySourceId(sourceId);
 	}
 
 
 	@PUT
 	@Path("/{sourceId}")
 	public DataSource addSource(@PathParam("sourceId") String sourceId, DataSourceDescription sourceDescription) {
-		try {
-			sourceRepository.findBySourceId(sourceId);
+		if (sourceManager.isValidSourceId(sourceId))
 			throw RestUtils.createJsonFormattedException("source with id " + sourceId + " already exists", 409);
-		} catch (DocumentNotFoundException dnfe) {
-			// source does not exist --> continue;
-		}
 
 		DataSource source = new DataSource(
 				sourceId,
@@ -71,7 +66,7 @@ public final class DataSourceApi extends AbstractApi {
 				sourceDescription.domainIdKey,
 				sourceDescription.schema,
 				sourceDescription.metaData);
-		sourceRepository.add(source);
+		sourceManager.add(source);
 		return source;
 	}
 
@@ -79,7 +74,7 @@ public final class DataSourceApi extends AbstractApi {
 	@DELETE
 	@Path("/{sourceId}")
 	public void deleteSource(@PathParam("sourceId") String sourceId) {
-		sourceRepository.remove(sourceRepository.findBySourceId(sourceId));
+		sourceManager.remove(sourceManager.findBySourceId(sourceId));
 	}
 
 
