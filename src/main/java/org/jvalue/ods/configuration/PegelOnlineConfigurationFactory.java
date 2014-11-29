@@ -574,7 +574,7 @@ public final class PegelOnlineConfigurationFactory {
 		filter.add(referenceManager.getFilterReferenceByName("DbInsertionFilter"));
 		filter.add(referenceManager.getFilterReferenceByName("NotificationFilter"));
 		try {
-			return referenceManager.createFilterChainReference(dataSourceId, filter, new FilterChainMetaData(0));
+			return referenceManager.createFilterChainReference("MainFilter", filter, new FilterChainMetaData(0), dataSourceId);
 		} catch (Exception e) { throw new RuntimeException(e); }
 	}
 

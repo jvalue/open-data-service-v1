@@ -29,7 +29,7 @@ public final class DataSourceRepository extends CouchDbRepositorySupport<DataSou
 	public DataSource findBySourceId(String sourceId) {
 		List<DataSource> sources = queryView("by_sourceId", sourceId);
 		if (sources.isEmpty()) throw new DocumentNotFoundException(sourceId);
-		if (sources.size() > 1) throw new IllegalStateException("sound more than one source for sourceId " + sourceId);
+		if (sources.size() > 1) throw new IllegalStateException("found more than one source for sourceId " + sourceId);
 		return sources.get(0);
 	}
 

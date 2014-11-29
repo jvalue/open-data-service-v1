@@ -1,6 +1,7 @@
 package org.jvalue.ods.rest;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.inject.Inject;
 
 import org.jvalue.ods.data.DataSource;
@@ -10,6 +11,7 @@ import org.jvalue.ods.filter.reference.FilterChainMetaData;
 import org.jvalue.ods.filter.reference.FilterChainReference;
 import org.jvalue.ods.filter.reference.FilterReference;
 import org.jvalue.ods.filter.reference.FilterReferenceManager;
+import org.jvalue.ods.utils.Assert;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -49,24 +51,24 @@ public final class FilterChainApi extends AbstractApi {
 
 
 	@GET
-	@Path("/{chainId}")
+	@Path("/{filterChainId}")
 	public FilterChainReference getSingleFilterChain(
 			@PathParam("sourceId") String sourceId,
-			@PathParam("chainId") String chainId) {
+			@PathParam("filterChainId") String filterChainId) {
 
 		sourceRepository.findBySourceId(sourceId);
-		return referenceRepository.get(chainId);
+		return referenceRepository.findByFilterChainId(filterChainId);
 	}
 
 
 	@POST
 	public FilterChainReference addFilterChain(
 			@PathParam("sourceId") String sourceId,
-			List<String> filterNames) {
+			FilterChainReferenceDescription description) {
 
 		DataSource source = sourceRepository.findBySourceId(sourceId);
 		List<FilterReference> filterReferences = new LinkedList<>();
-		for (String filterName : filterNames) {
+		for (String filterName : description.getFilterNames()) {
 			FilterReference reference = referenceManager.getFilterReferenceByName(filterName);
 			if (reference == null) {
 				throw RestUtils.createJsonFormattedException("unknown filter '" + filterName + "'", 400);
@@ -76,9 +78,10 @@ public final class FilterChainApi extends AbstractApi {
 
 		try {
 			FilterChainReference chainReference = referenceManager.createFilterChainReference(
-					source.getSourceId(),
+					description.getFilterChainId(),
 					filterReferences,
-					new FilterChainMetaData(-1));
+					new FilterChainMetaData(-1),
+					source.getSourceId());
 
 			referenceRepository.add(chainReference);
 			return chainReference;
@@ -87,4 +90,30 @@ public final class FilterChainApi extends AbstractApi {
 		}
 	}
 
+
+	private static final class FilterChainReferenceDescription {
+
+		private final String filterChainId;
+		private final List<String> filterNames;
+
+		public FilterChainReferenceDescription(
+				@JsonProperty("filterChainId") String filterChainId,
+				@JsonProperty("filterNames") List<String> filterNames) {
+
+			Assert.assertNotNull(filterChainId, filterNames);
+			this.filterChainId = filterChainId;
+			this.filterNames = filterNames;
+		}
+
+
+		public String getFilterChainId() {
+			return filterChainId;
+		}
+
+
+		public List<String> getFilterNames() {
+			return filterNames;
+		}
+
+	}
 }

@@ -36,14 +36,15 @@ public final class FilterReferenceManager {
 
 
 	public FilterChainReference createFilterChainReference(
-			String dataSourceId,
+			String filterChainId,
 			List<FilterReference> filterReferences,
-			FilterChainMetaData metaData)
+			FilterChainMetaData metaData,
+			String dataSourceId)
 			throws InvalidFilterReferenceListException {
 
-		Assert.assertNotNull(dataSourceId, filterReferences, metaData);
+		Assert.assertNotNull(filterChainId, filterReferences, metaData, dataSourceId);
 		assertIsValidFilterReferenceList(filterReferences);
-		return new FilterChainReference(dataSourceId, filterReferences, metaData);
+		return new FilterChainReference(filterChainId, filterReferences, metaData, dataSourceId);
 	}
 
 

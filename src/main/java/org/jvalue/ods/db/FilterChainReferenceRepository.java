@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 import org.ektorp.CouchDbConnector;
+import org.ektorp.DocumentNotFoundException;
 import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.GenerateView;
 import org.ektorp.support.View;
@@ -25,6 +26,15 @@ public final class FilterChainReferenceRepository extends CouchDbRepositorySuppo
 	@GenerateView
 	public List<FilterChainReference> findByDataSourceId(String dataSourceId) {
 		return queryView("by_dataSourceId", dataSourceId);
+	}
+
+
+	@GenerateView
+	public FilterChainReference findByFilterChainId(String filterChainId) {
+		List<FilterChainReference> chains = queryView("by_filterChainId", filterChainId);
+		if (chains.isEmpty()) throw new DocumentNotFoundException(filterChainId);
+		if (chains.size() > 1) throw new IllegalStateException("found more than one filter chain for filterChainId " + filterChainId);
+		return chains.get(0);
 	}
 
 }
