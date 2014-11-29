@@ -5,6 +5,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 import org.ektorp.DocumentNotFoundException;
+import org.ektorp.support.CouchDbDocument;
 import org.jvalue.ods.configuration.ConfigurationModule;
 import org.jvalue.ods.configuration.PegelOnlineConfigurationFactory;
 import org.jvalue.ods.data.DataModule;
@@ -17,6 +18,7 @@ import org.jvalue.ods.filter.FilterChainFactory;
 import org.jvalue.ods.filter.FilterChainManager;
 import org.jvalue.ods.filter.FilterModule;
 import org.jvalue.ods.notifications.NotificationsModule;
+import org.jvalue.ods.rest.CouchDbJsonMixin;
 import org.jvalue.ods.rest.DataApi;
 import org.jvalue.ods.rest.DataSourceApi;
 import org.jvalue.ods.rest.DbExceptionMapper;
@@ -46,7 +48,7 @@ public final class OdsApplication extends Application<OdsConfig> {
 
 	@Override
 	public void initialize(Bootstrap<OdsConfig>configuration) {
-		// nothing to do here
+		configuration.getObjectMapper().addMixInAnnotations(CouchDbDocument.class, CouchDbJsonMixin.class);
 	}
 
 
