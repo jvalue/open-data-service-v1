@@ -17,53 +17,157 @@
  */
 package org.jvalue.ods.filter;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.google.common.base.Objects;
+import com.google.inject.Inject;
+
+import org.ektorp.DocumentNotFoundException;
+import org.jvalue.ods.db.FilterChainReferenceRepository;
+import org.jvalue.ods.filter.reference.FilterChainReference;
 import org.jvalue.ods.utils.Assert;
 import org.jvalue.ods.utils.Log;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
+import io.dropwizard.lifecycle.Managed;
 
 
+public final class FilterChainManager implements Managed {
 
-public final class FilterChainManager {
+	private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
-	private final Set<Filter<Void, ?>> filterChains = new HashSet<Filter<Void, ?>>();
+	private final FilterChainFactory filterChainFactory;
+	private final FilterChainReferenceRepository referenceRepository;
+
+	private final Map<FilterKey, ScheduledFuture<?>> runningTasks = new HashMap<>();
 
 
-	FilterChainManager() { }
+	@Inject
+	FilterChainManager(
+			FilterChainFactory filterChainFactory,
+			FilterChainReferenceRepository referenceRepository) {
 
-
-	public void register(Filter<Void, ?> chain) {
-		Assert.assertNotNull(chain);
-		filterChains.add(chain);
+		this.filterChainFactory = filterChainFactory;
+		this.referenceRepository = referenceRepository;
 	}
 
 
-	public void unregister(Filter<Void, ?> chain) {
-		Assert.assertNotNull(chain);
-		filterChains.remove(chain);
+	public void add(FilterChainReference reference) {
+		Assert.assertNotNull(reference);
+		referenceRepository.add(reference);
+		startFilterChain(reference);
 	}
 
 
-	public boolean isRegistered(Filter<Void, ?> chain) {
-		Assert.assertNotNull(chain);
-		return filterChains.contains(chain);
+	public void remove(FilterChainReference reference) {
+		Assert.assertNotNull(reference);
+		referenceRepository.remove(reference);
+		ScheduledFuture<?> task = runningTasks.remove(new FilterKey(reference.getDataSourceId(), reference.getFilterChainId()));
+		task.cancel(false);
 	}
 
 
-	public void startFilterChains() {
-		for (Filter<Void, ?> chain : filterChains) {
-			try {
-				chain.filter(null);
-			} catch (FilterException e) {
-				Log.error("error while running filter", e);
-			}
+	public FilterChainReference get(String dataSourceId, String filterChainId) {
+		Assert.assertNotNull(dataSourceId, filterChainId);
+		return referenceRepository.findByFilterChainAndSourceId(dataSourceId, filterChainId);
+	}
+
+
+	public List<FilterChainReference> getAllForSource(String dataSourceId) {
+		Assert.assertNotNull(dataSourceId);
+		return referenceRepository.findByDataSourceId(dataSourceId);
+	}
+
+
+	public boolean filterChainExists(String sourceId, String filterChainId) {
+		try {
+			get(sourceId, filterChainId);
+			return true;
+		} catch (DocumentNotFoundException dnfe) {
+			return false;
 		}
 	}
 
 
-	public Set<Filter<Void, ?>> getRegistered() {
-		return new HashSet<Filter<Void,?>>(filterChains);
+	@Override
+	public void start() {
+		for (FilterChainReference reference : referenceRepository.getAll()) {
+			startFilterChain(reference);
+		}
 	}
 
+
+	@Override
+	public void stop() {
+		executorService.shutdown();
+	}
+
+
+	private void startFilterChain(FilterChainReference reference) {
+		FilterKey key = new FilterKey(reference.getDataSourceId(), reference.getFilterChainId());
+		ScheduledFuture<?> task = executorService.scheduleAtFixedRate(
+				new FilterRunnable(key),
+				0,
+				reference.getMetaData().getExecutionPeriod(),
+				TimeUnit.SECONDS);
+
+		runningTasks.put(key, task);
+	}
+
+
+	private final class FilterRunnable implements Runnable {
+
+		private final FilterKey key;
+
+		public FilterRunnable(FilterKey key) {
+			this.key = key;
+		}
+
+
+		@Override
+		public void run() {
+			try {
+				Log.info("starting filter chain \"" + key.filterChainId + "\" for source \"" + key.dataSourceId + "\"");
+				Filter<Void, ArrayNode> filterChain = filterChainFactory.createFilterChain(get(key.dataSourceId, key.filterChainId));
+				filterChain.filter(null);
+				Log.info("stopping filter chain \"" + key.filterChainId + "\" for source \"" + key.dataSourceId + "\"");
+			} catch (Throwable throwable) {
+				Log.error("error while running filter chain", throwable);
+			}
+		}
+
+	}
+
+
+	private static final class FilterKey {
+		private final String dataSourceId, filterChainId;
+
+		public FilterKey(String dataSourceId, String filterChainId) {
+			this.dataSourceId = dataSourceId;
+			this.filterChainId = filterChainId;
+		}
+
+
+		@Override
+		public boolean equals(Object other) {
+			if (other == null || !(other instanceof FilterKey)) return false;
+			if (other == this) return true;
+			FilterKey key = (FilterKey) other;
+			return Objects.equal(dataSourceId, key.dataSourceId)
+					&& Objects.equal(filterChainId, key.filterChainId);
+		}
+
+
+		@Override
+		public int hashCode() {
+			return Objects.hashCode(dataSourceId, filterChainId);
+		}
+
+	}
 }

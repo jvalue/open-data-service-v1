@@ -4,16 +4,10 @@ package org.jvalue.ods.main;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-import org.ektorp.DocumentNotFoundException;
 import org.jvalue.ods.configuration.ConfigurationModule;
-import org.jvalue.ods.configuration.PegelOnlineConfigurationFactory;
 import org.jvalue.ods.data.DataModule;
-import org.jvalue.ods.data.DataSourceConfiguration;
-import org.jvalue.ods.db.DataRepositoryCache;
-import org.jvalue.ods.db.DataSourceRepository;
+import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.db.DbModule;
-import org.jvalue.ods.db.FilterChainReferenceRepository;
-import org.jvalue.ods.filter.FilterChainFactory;
 import org.jvalue.ods.filter.FilterChainManager;
 import org.jvalue.ods.filter.FilterModule;
 import org.jvalue.ods.notifications.NotificationsModule;
@@ -68,6 +62,7 @@ public final class OdsApplication extends Application<OdsConfig> {
 				new FilterModule(),
 				new DataModule());
 
+		/*
 		// static configuration for now
 		{
 			DataSourceConfiguration pegelonlineConfig = injector.getInstance(PegelOnlineConfigurationFactory.class).createConfiguration();
@@ -93,10 +88,12 @@ public final class OdsApplication extends Application<OdsConfig> {
 			FilterChainFactory chainFactory = injector.getInstance(FilterChainFactory.class);
 			chainManager.register(chainFactory.createFilterChain(pegelonlineConfig.getFilterChainReference()));
 		}
+		*/
 
 
 		// start data grabbing
-		environment.lifecycle().manage(injector.getInstance(DataGrabberManager.class));
+		environment.lifecycle().manage(injector.getInstance(DataSourceManager.class));
+		environment.lifecycle().manage(injector.getInstance(FilterChainManager.class));
 		environment.jersey().register(injector.getInstance(DataSourceApi.class));
 		environment.jersey().register(injector.getInstance(DataApi.class));
 		environment.jersey().register(injector.getInstance(FilterChainApi.class));

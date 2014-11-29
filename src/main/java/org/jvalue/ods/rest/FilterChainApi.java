@@ -4,10 +4,9 @@ package org.jvalue.ods.rest;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.inject.Inject;
 
-import org.ektorp.DocumentNotFoundException;
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.db.DataSourceRepository;
-import org.jvalue.ods.db.FilterChainReferenceRepository;
+import org.jvalue.ods.data.DataSourceManager;
+import org.jvalue.ods.filter.FilterChainManager;
 import org.jvalue.ods.filter.reference.FilterChainMetaData;
 import org.jvalue.ods.filter.reference.FilterChainReference;
 import org.jvalue.ods.filter.reference.FilterReference;
@@ -28,26 +27,26 @@ import javax.ws.rs.core.MediaType;
 @Produces(MediaType.APPLICATION_JSON)
 public final class FilterChainApi extends AbstractApi {
 
-	private final DataSourceRepository sourceRepository;
-	private final FilterChainReferenceRepository referenceRepository;
+	private final DataSourceManager sourceManager;
+	private final FilterChainManager chainManager;
 	private final FilterReferenceManager referenceManager;
 
 	@Inject
 	public FilterChainApi(
-			DataSourceRepository sourceRepository,
-			FilterChainReferenceRepository referenceRepository,
+			DataSourceManager sourceManager,
+			FilterChainManager chainManager,
 			FilterReferenceManager referenceManager) {
 
-		this.sourceRepository = sourceRepository;
-		this.referenceRepository = referenceRepository;
+		this.sourceManager = sourceManager;
+		this.chainManager = chainManager;
 		this.referenceManager = referenceManager;
 	}
 
 
 	@GET
 	public List<FilterChainReference> getAllFilterChains(@PathParam("sourceId") String sourceId) {
-		sourceRepository.findBySourceId(sourceId);
-		return referenceRepository.findByDataSourceId(sourceId);
+		sourceManager.findBySourceId(sourceId);
+		return chainManager.getAllForSource(sourceId);
 	}
 
 
@@ -57,8 +56,8 @@ public final class FilterChainApi extends AbstractApi {
 			@PathParam("sourceId") String sourceId,
 			@PathParam("filterChainId") String filterChainId) {
 
-		sourceRepository.findBySourceId(sourceId);
-		return referenceRepository.findByFilterChainId(filterChainId);
+		sourceManager.findBySourceId(sourceId);
+		return chainManager.get(sourceId, filterChainId);
 	}
 
 
@@ -69,14 +68,10 @@ public final class FilterChainApi extends AbstractApi {
 			@PathParam("filterChainId") String filterChainId,
 			FilterChainReferenceDescription description) {
 
-		try {
-			referenceRepository.findByFilterChainId(filterChainId);
+		if (chainManager.filterChainExists(sourceId, filterChainId))
 			throw RestUtils.createJsonFormattedException("filter chain with id " + filterChainId + " already exists", 409);
-		} catch(DocumentNotFoundException dnfe) {
-			// chain not present --> continue;
-		}
 
-		DataSource source = sourceRepository.findBySourceId(sourceId);
+		DataSource source = sourceManager.findBySourceId(sourceId);
 		List<FilterReference> filterReferences = new LinkedList<>();
 		for (String filterName : description.filterNames) {
 			FilterReference reference = referenceManager.getFilterReferenceByName(filterName);
@@ -93,7 +88,7 @@ public final class FilterChainApi extends AbstractApi {
 					new FilterChainMetaData(-1),
 					source.getSourceId());
 
-			referenceRepository.add(chainReference);
+			chainManager.add(chainReference);
 			return chainReference;
 		} catch (FilterReferenceManager.InvalidFilterReferenceListException ifre) {
 			throw RestUtils.createJsonFormattedException(ifre.getMessage(), 400);

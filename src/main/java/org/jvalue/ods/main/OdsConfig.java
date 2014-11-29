@@ -11,25 +11,17 @@ import io.dropwizard.Configuration;
 public final class OdsConfig extends Configuration {
 
 	@NotNull private final String gcmApiKey;
-	@NotNull private final long grabberUpdateInterval; // measured in seconds
 
 	@JsonCreator
 	public OdsConfig(
-			@JsonProperty("gcmApiKey") String gcmApiKey,
-			@JsonProperty("grabberUpdateInterval") long grabberUpdateInterval) {
+			@JsonProperty("gcmApiKey") String gcmApiKey) {
 
 		this.gcmApiKey = gcmApiKey;
-		this.grabberUpdateInterval = grabberUpdateInterval;
 	}
 
 
 	public String getGcmApiKey() {
 		return gcmApiKey;
-	}
-
-
-	public long getGrabberUpdateInterval() {
-		return grabberUpdateInterval;
 	}
 
 }

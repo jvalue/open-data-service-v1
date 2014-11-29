@@ -9,19 +9,21 @@ import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DataRepositoryCache;
 import org.jvalue.ods.db.DataSourceRepository;
 import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.db.FilterChainReferenceRepository;
+import org.jvalue.ods.filter.FilterChainManager;
 import org.jvalue.ods.filter.reference.FilterChainReference;
 import org.jvalue.ods.utils.Assert;
 
 import java.util.List;
 
-public final class DataSourceManager {
+import io.dropwizard.lifecycle.Managed;
+
+public final class DataSourceManager implements Managed {
 
 	private final DataSourceRepository dataSourceRepository;
 	private final DataRepositoryCache dataRepositoryCache;
 	private final CouchDbInstance dbInstance;
 	private final DbFactory dbFactory;
-	private final FilterChainReferenceRepository filterChainReferenceRepository;
+	private final FilterChainManager filterChainManager;
 
 	@Inject
 	public DataSourceManager(
@@ -29,13 +31,13 @@ public final class DataSourceManager {
 			DataRepositoryCache dataRepositoryCache,
 			CouchDbInstance dbInstance,
 			DbFactory dbFactory,
-			FilterChainReferenceRepository filterChainReferenceRepository) {
+			FilterChainManager filterChainManager) {
 
 		this.dataSourceRepository = dataSourceRepository;
 		this.dataRepositoryCache = dataRepositoryCache;
 		this.dbInstance = dbInstance;
 		this.dbFactory = dbFactory;
-		this.filterChainReferenceRepository = filterChainReferenceRepository;
+		this.filterChainManager = filterChainManager;
 	}
 
 
@@ -43,8 +45,7 @@ public final class DataSourceManager {
 		Assert.assertNotNull(source);
 
 		// create data repository
-		DataRepository dataRepository = dbFactory.createSourceDataRepository(source.getSourceId(), source.getDomainIdKey());
-		dataRepositoryCache.putRepository(source.getSourceId(), dataRepository);
+		createDataRepository(source);
 
 		// store source
 		dataSourceRepository.add(source);
@@ -62,8 +63,8 @@ public final class DataSourceManager {
 		dbInstance.deleteDatabase(source.getSourceId());
 
 		// delete filter chains
-		for (FilterChainReference reference : filterChainReferenceRepository.findByDataSourceId(source.getSourceId())) {
-			filterChainReferenceRepository.remove(reference);
+		for (FilterChainReference reference : filterChainManager.getAllForSource(source.getSourceId())) {
+			filterChainManager.remove(reference);
 		}
 	}
 
@@ -85,6 +86,25 @@ public final class DataSourceManager {
 		} catch (DocumentNotFoundException dnfe) {
 			return false;
 		}
+	}
+
+
+	@Override
+	public void start() {
+		for (DataSource source : dataSourceRepository.getAll()) { createDataRepository(source);
+		}
+	}
+
+
+	@Override
+	public void stop() {
+		// nothing to do here
+	}
+
+
+	private void createDataRepository(DataSource source) {
+		DataRepository dataRepository = dbFactory.createSourceDataRepository(source.getSourceId(), source.getDomainIdKey());
+		dataRepositoryCache.putRepository(source.getSourceId(), dataRepository);
 	}
 
 }

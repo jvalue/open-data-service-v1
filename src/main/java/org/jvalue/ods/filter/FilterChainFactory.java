@@ -45,7 +45,7 @@ public final class FilterChainFactory {
 
 
 		DataRepository dataRepository = dataRepositoryCache.getRepositoryForSourceId(sourceId);
-		Assert.assertFalse(dataRepository == null, "no DataRepository found for id + " + sourceId);
+		Assert.assertFalse(dataRepository == null, "no DataRepository found for id " + sourceId);
 
 
 		Filter<Void, ArrayNode> firstFilter = null;

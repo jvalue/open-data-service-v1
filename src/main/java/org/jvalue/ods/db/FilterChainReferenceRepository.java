@@ -30,11 +30,16 @@ public final class FilterChainReferenceRepository extends CouchDbRepositorySuppo
 
 
 	@GenerateView
-	public FilterChainReference findByFilterChainId(String filterChainId) {
-		List<FilterChainReference> chains = queryView("by_filterChainId", filterChainId);
-		if (chains.isEmpty()) throw new DocumentNotFoundException(filterChainId);
-		if (chains.size() > 1) throw new IllegalStateException("found more than one filter chain for filterChainId " + filterChainId);
-		return chains.get(0);
+	public List<FilterChainReference> findByFilterChainId(String filterChainId) {
+		return queryView("by_filterChainId", filterChainId);
+	}
+
+
+	public FilterChainReference findByFilterChainAndSourceId(String dataSourceId, String filterChainId) {
+		List<FilterChainReference> references = findByDataSourceId(dataSourceId);
+		for (FilterChainReference reference : references)
+			if (reference.getFilterChainId().equals(filterChainId)) return reference;
+		throw new DocumentNotFoundException(dataSourceId + "/" + filterChainId);
 	}
 
 }
