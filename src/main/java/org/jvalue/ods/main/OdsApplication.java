@@ -5,7 +5,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 import org.ektorp.DocumentNotFoundException;
-import org.ektorp.support.CouchDbDocument;
 import org.jvalue.ods.configuration.ConfigurationModule;
 import org.jvalue.ods.configuration.PegelOnlineConfigurationFactory;
 import org.jvalue.ods.data.DataModule;
@@ -18,13 +17,15 @@ import org.jvalue.ods.filter.FilterChainFactory;
 import org.jvalue.ods.filter.FilterChainManager;
 import org.jvalue.ods.filter.FilterModule;
 import org.jvalue.ods.notifications.NotificationsModule;
-import org.jvalue.ods.rest.CouchDbJsonMixin;
 import org.jvalue.ods.rest.DataApi;
 import org.jvalue.ods.rest.DataSourceApi;
 import org.jvalue.ods.rest.DbExceptionMapper;
 import org.jvalue.ods.rest.FilterChainApi;
+import org.jvalue.ods.rest.JsonMixins;
 import org.jvalue.ods.rest.NotificationClientRegistrationApi;
 import org.jvalue.ods.rest.RestModule;
+
+import java.util.Map;
 
 import javax.ws.rs.core.Context;
 
@@ -48,7 +49,10 @@ public final class OdsApplication extends Application<OdsConfig> {
 
 	@Override
 	public void initialize(Bootstrap<OdsConfig>configuration) {
-		configuration.getObjectMapper().addMixInAnnotations(CouchDbDocument.class, CouchDbJsonMixin.class);
+		JsonMixins mixins = new JsonMixins();
+		for (Map.Entry<Class<?>, Class<?>> mixinPair : mixins.getMixins().entrySet()) {
+			configuration.getObjectMapper().addMixInAnnotations(mixinPair.getKey(), mixinPair.getValue());
+		}
 	}
 
 
