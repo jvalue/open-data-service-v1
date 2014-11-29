@@ -35,23 +35,43 @@ public final class FilterReferenceManager {
 	}
 
 
-	public FilterChainReference createFilterChainReference(String dataSourceId, List<FilterReference> filterReferences, FilterChainMetaData metaData) {
+	public FilterChainReference createFilterChainReference(
+			String dataSourceId,
+			List<FilterReference> filterReferences,
+			FilterChainMetaData metaData)
+			throws InvalidFilterReferenceListException {
+
 		Assert.assertNotNull(dataSourceId, filterReferences, metaData);
-		Assert.assertTrue(isValidFilterReferenceList(filterReferences), "invalid filter list");
+		assertIsValidFilterReferenceList(filterReferences);
 		return new FilterChainReference(dataSourceId, filterReferences, metaData);
 	}
 
 
-	private boolean isValidFilterReferenceList(List<FilterReference> filterReferences) {
-		Assert.assertNotNull(filterReferences);
-		if (filterReferences.get(0) == null || !filterReferences.get(0).getFilterType().equals(FilterType.OUTPUT_FILTER)) return false;
+	private void assertIsValidFilterReferenceList(List<FilterReference> references) throws InvalidFilterReferenceListException {
+		if (references.isEmpty()) throw new InvalidFilterReferenceListException();
+		if (!references.get(0).getFilterType().equals(FilterType.OUTPUT_FILTER)) throw new InvalidFilterReferenceListException(references.get(0));
 		FilterReference lastReference =  null;
-		for (FilterReference filterReference : filterReferences) {
-			if (filterReference == null) return false;
-			if (lastReference != null && !lastReference.getFilterType().isValidNextFilter(filterReference.getFilterType())) return false;
-			lastReference =  filterReference;
+		for (FilterReference reference : references) {
+			if (lastReference != null && !lastReference.getFilterType().isValidNextFilter(reference.getFilterType()))
+				throw new InvalidFilterReferenceListException(lastReference, reference);
+			lastReference = reference;
 		}
-		return true;
+	}
+
+
+	public static class InvalidFilterReferenceListException extends Exception {
+
+		InvalidFilterReferenceListException() {
+			super("filter chain cannot be empty");
+		}
+
+		InvalidFilterReferenceListException(FilterReference firstReference) {
+			super("filter chain must start with "  + FilterType.INPUT_FILTER + " but found "  + firstReference.getFilterType());
+		}
+
+		InvalidFilterReferenceListException(FilterReference filter1, FilterReference filter2) {
+			super(filter1.getFilterType() + " cannot be followed by " + filter2.getFilterType());
+		}
 	}
 
 }

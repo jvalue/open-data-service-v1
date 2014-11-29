@@ -74,13 +74,17 @@ public final class FilterChainApi extends AbstractApi {
 			filterReferences.add(reference);
 		}
 
-		FilterChainReference chainReference = referenceManager.createFilterChainReference(
-				source.getSourceId(),
-				filterReferences,
-				new FilterChainMetaData(-1));
+		try {
+			FilterChainReference chainReference = referenceManager.createFilterChainReference(
+					source.getSourceId(),
+					filterReferences,
+					new FilterChainMetaData(-1));
 
-		referenceRepository.add(chainReference);
-		return chainReference;
+			referenceRepository.add(chainReference);
+			return chainReference;
+		} catch (FilterReferenceManager.InvalidFilterReferenceListException ifre) {
+			throw RestUtils.createJsonFormattedException(ifre.getMessage(), 400);
+		}
 	}
 
 

@@ -35,7 +35,8 @@ public final class FilterChainFactoryTest {
 			@Mocked final DataRepository dataRepository,
 			@Mocked final Filter<Void, ArrayNode> startFilter,
 			@Mocked final Filter<ArrayNode, ArrayNode> middleFilter,
-			@Mocked FilterChainMetaData metaData) {
+			@Mocked FilterChainMetaData metaData)
+			throws Exception {
 
 		new Expectations() {{
 			sourceRepository.findBySourceId(anyString); result = dataSource;
