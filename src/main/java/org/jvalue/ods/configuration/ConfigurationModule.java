@@ -8,7 +8,6 @@ public final class ConfigurationModule extends AbstractModule {
 	@Override
 	protected void configure() {
 
-		bind(PegelOnlineConfigurationFactory.class);
 		bind(PegelPortalMvConfigurationFactory.class);
 		/*
 		bind(Configuration.class)
