@@ -78,7 +78,7 @@ public final class DataSourceManager implements Managed {
 
 	public DataRepository getDataRepository(DataSource source) {
 		Assert.assertNotNull(source);
-		return dataRepositoryCache.getForKey(source.getSourceId());
+		return dataRepositoryCache.get(source.getSourceId());
 	}
 
 

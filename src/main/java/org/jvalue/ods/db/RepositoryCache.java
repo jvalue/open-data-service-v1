@@ -27,7 +27,7 @@ public final class RepositoryCache<T extends CouchDbRepositorySupport<?>> {
 	}
 
 
-	public T getForKey(String key) {
+	public T get(String key) {
 		Assert.assertNotNull(key);
 		return repositories.get(key);
 	}

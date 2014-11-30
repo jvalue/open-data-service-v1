@@ -80,7 +80,7 @@ public final class FilterChainManager {
 		Assert.assertNotNull(reference);
 
 		// remove from repository
-		referenceRepositoryCache.getForKey(source.getSourceId()).remove(reference);
+		referenceRepositoryCache.get(source.getSourceId()).remove(reference);
 
 		// stop running task
 		ScheduledFuture<?> task = runningTasks.remove(new FilterKey(source.getSourceId(), reference.getFilterChainId()));
@@ -95,19 +95,19 @@ public final class FilterChainManager {
 
 	public FilterChainReference get(DataSource source, String filterChainId) {
 		Assert.assertNotNull(source, filterChainId);
-		return referenceRepositoryCache.getForKey(source.getSourceId()).findByFilterChainId(filterChainId);
+		return referenceRepositoryCache.get(source.getSourceId()).findByFilterChainId(filterChainId);
 	}
 
 
 	public List<FilterChainReference> getAllForSource(DataSource source) {
 		Assert.assertNotNull(source);
-		return referenceRepositoryCache.getForKey(source.getSourceId()).getAll();
+		return referenceRepositoryCache.get(source.getSourceId()).getAll();
 	}
 
 
 	public boolean filterChainExists(DataSource source, String filterChainId) {
 		try {
-			FilterChainReferenceRepository referenceRepository = referenceRepositoryCache.getForKey(source.getSourceId());
+			FilterChainReferenceRepository referenceRepository = referenceRepositoryCache.get(source.getSourceId());
 			if (referenceRepository == null) return false;
 			referenceRepository.get(filterChainId);
 			return true;

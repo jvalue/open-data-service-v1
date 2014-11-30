@@ -21,19 +21,19 @@ public final class RepositoryCacheTest {
 
 		cache.put("key1", repository);
 		Assert.assertEquals(1, cache.getAll().size());
-		Assert.assertNotNull(cache.getForKey("key1"));
+		Assert.assertNotNull(cache.get("key1"));
 
 		cache.put("key2", repository);
 		Assert.assertEquals(2, cache.getAll().size());
-		Assert.assertNotNull(cache.getForKey("key2"));
+		Assert.assertNotNull(cache.get("key2"));
 
 		cache.remove("key2");
 		Assert.assertEquals(1, cache.getAll().size());
-		Assert.assertNull(cache.getForKey("key2"));
+		Assert.assertNull(cache.get("key2"));
 
 		cache.remove("key1");
 		Assert.assertEquals(0, cache.getAll().size());
-		Assert.assertNull(cache.getForKey("key1"));
+		Assert.assertNull(cache.get("key1"));
 	}
 
 }
