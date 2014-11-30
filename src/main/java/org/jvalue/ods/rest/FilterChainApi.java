@@ -18,6 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -101,6 +102,18 @@ public final class FilterChainApi extends AbstractApi {
 		} catch (FilterReferenceManager.InvalidFilterReferenceListException ifre) {
 			throw RestUtils.createJsonFormattedException(ifre.getMessage(), 400);
 		}
+	}
+
+
+	@DELETE
+	@Path("/{filterChainId}")
+	public void removeFilterChain(
+			@PathParam("sourceId") String sourceId,
+			@PathParam("filterChainId") String filterChainId) {
+
+		DataSource source = sourceManager.findBySourceId(sourceId);
+		FilterChainReference reference = chainManager.get(source, filterChainId);
+		chainManager.remove(source, reference);
 	}
 
 
