@@ -5,8 +5,8 @@ import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 
+import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.db.DataRepository;
-import org.jvalue.ods.db.RepositoryCache;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -21,11 +21,11 @@ import javax.ws.rs.core.MediaType;
 @Produces(MediaType.APPLICATION_JSON)
 public final class DataApi extends AbstractApi {
 
-	private final RepositoryCache<DataRepository> dataRepositoryCache;
+	private final DataSourceManager sourceManager;
 
 	@Inject
-	public DataApi(RepositoryCache<DataRepository> dataRepositoryCache) {
-		this.dataRepositoryCache = dataRepositoryCache;
+	public DataApi(DataSourceManager sourceManager) {
+		this.sourceManager = sourceManager;
 	}
 
 
@@ -66,9 +66,8 @@ public final class DataApi extends AbstractApi {
 
 
 	private DataRepository assertIsValidSource(String sourceId) {
-		DataRepository repository = dataRepositoryCache.getForKey(sourceId);
-		if (repository == null)  throw RestUtils.createNotFoundException();
-		return repository;
+		sourceManager.findBySourceId(sourceId);
+		return sourceManager.getDataRepository(sourceId);
 	}
 
 }

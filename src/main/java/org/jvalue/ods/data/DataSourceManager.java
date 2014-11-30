@@ -79,6 +79,12 @@ public final class DataSourceManager implements Managed {
 	}
 
 
+	public DataRepository getDataRepository(String sourceId) {
+		Assert.assertNotNull(sourceId);
+		return dataRepositoryCache.getForKey(sourceId);
+	}
+
+
 	public boolean isValidSourceId(String sourceId) {
 		try {
 			findBySourceId(sourceId);
