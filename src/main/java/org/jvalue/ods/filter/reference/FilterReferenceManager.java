@@ -38,7 +38,7 @@ public final class FilterReferenceManager {
 	public FilterChainReference createFilterChainReference(
 			String filterChainId,
 			List<FilterReference> filterReferences,
-			FilterChainMetaData metaData)
+			FilterChainExecutionInterval metaData)
 			throws InvalidFilterReferenceListException {
 
 		Assert.assertNotNull(filterChainId, filterReferences, metaData);

@@ -37,7 +37,6 @@ import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 
 public final class FilterChainManager {
@@ -154,8 +153,8 @@ public final class FilterChainManager {
 		ScheduledFuture<?> task = executorService.scheduleAtFixedRate(
 				new FilterRunnable(reference, source, dataRepository),
 				0,
-				reference.getMetaData().getExecutionPeriod(),
-				TimeUnit.SECONDS);
+				reference.getExecutionInterval().getPeriod(),
+				reference.getExecutionInterval().getUnit());
 
 		runningTasks.put(key, task);
 	}

@@ -13,18 +13,18 @@ public final class FilterChainReference extends CouchDbDocument {
 
 	private final String filterChainId;
 	private final List<FilterReference> filterReferences;
-	private final FilterChainMetaData metaData;
+	private final FilterChainExecutionInterval executionInterval;
 
 	@JsonCreator
 	FilterChainReference(
 			@JsonProperty("filterChainId") String filterChainId,
 			@JsonProperty("filterReferences") List<FilterReference> filterReferences,
-			@JsonProperty("metaData") FilterChainMetaData metaData) {
+			@JsonProperty("executionInterval") FilterChainExecutionInterval executionInterval) {
 
-		Assert.assertNotNull(filterChainId, filterReferences, metaData);
+		Assert.assertNotNull(filterChainId, filterReferences, executionInterval);
 		this.filterChainId = filterChainId;
 		this.filterReferences = filterReferences;
-		this.metaData = metaData;
+		this.executionInterval = executionInterval;
 	}
 
 
@@ -38,8 +38,8 @@ public final class FilterChainReference extends CouchDbDocument {
 	}
 
 
-	public FilterChainMetaData getMetaData() {
-		return metaData;
+	public FilterChainExecutionInterval getExecutionInterval() {
+		return executionInterval;
 	}
 
 }

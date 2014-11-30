@@ -10,7 +10,7 @@ import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.RepositoryCache;
 import org.jvalue.ods.db.DataSourceRepository;
-import org.jvalue.ods.filter.reference.FilterChainMetaData;
+import org.jvalue.ods.filter.reference.FilterChainExecutionInterval;
 import org.jvalue.ods.filter.reference.FilterChainReference;
 import org.jvalue.ods.filter.reference.FilterReference;
 import org.jvalue.ods.filter.reference.FilterReferenceManager;
@@ -35,7 +35,7 @@ public final class FilterChainFactoryTest {
 			@Mocked final DataRepository dataRepository,
 			@Mocked final Filter<Void, ArrayNode> startFilter,
 			@Mocked final Filter<ArrayNode, ArrayNode> middleFilter,
-			@Mocked FilterChainMetaData metaData)
+			@Mocked FilterChainExecutionInterval metaData)
 			throws Exception {
 
 		new Expectations() {{
