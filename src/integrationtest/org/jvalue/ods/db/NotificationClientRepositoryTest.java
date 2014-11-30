@@ -5,35 +5,25 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.ektorp.CouchDbInstance;
-import org.ektorp.http.StdHttpClient;
-import org.ektorp.impl.StdCouchDbInstance;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.jvalue.ods.notifications.clients.Client;
 import org.jvalue.ods.notifications.clients.ClientVisitor;
 
 import java.util.List;
 
-public class NotificationClientRepositoryTest {
+public class NotificationClientRepositoryTest extends AbstractDbTest {
 
-	private static final String DATABASE_NAME = "test_notification_clients";
-
-	private CouchDbInstance couchDbInstance;
 	private NotificationClientRepository clientRepository;
 
-
-	@Before
-	public void setupClientRepository() {
-		this.couchDbInstance = new StdCouchDbInstance(new StdHttpClient.Builder().build());
-		this.clientRepository = new NotificationClientRepository(couchDbInstance.createConnector(DATABASE_NAME, true));
+	public NotificationClientRepositoryTest() {
+		super("test_notification_clients");
 	}
 
 
-	@After
-	public void deleteClientRepository() {
-		this.couchDbInstance.deleteDatabase(DATABASE_NAME);
+	@Override
+	protected void createDatabase(CouchDbInstance couchDbInstance, String databaseName) {
+		clientRepository = new NotificationClientRepository(couchDbInstance.createConnector(databaseName, true));
 	}
 
 

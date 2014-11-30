@@ -8,6 +8,7 @@ import com.google.inject.assistedinject.Assisted;
 
 import org.ektorp.CouchDbConnector;
 import org.ektorp.CouchDbInstance;
+import org.ektorp.DocumentNotFoundException;
 import org.ektorp.UpdateConflictException;
 import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.DesignDocument;
@@ -42,7 +43,7 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 
 	public JsonNode findByDomainId(String domainId) {
 		List<JsonNode> resultList = executeQuery(domainIdView, domainId);
-		if (resultList.isEmpty()) return null;
+		if (resultList.isEmpty()) throw new DocumentNotFoundException(domainId);
 		else if (resultList.size() == 1) return resultList.get(0);
 		else throw new IllegalStateException("found more than one element for given domain id");
 	}

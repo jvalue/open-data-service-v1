@@ -85,7 +85,7 @@ task integrationTest(type: Test) {
   classpath = sourceSets.integrationTest.runtimeClasspath
 }
 
-//build.dependsOn integrationTest
+build.dependsOn integrationTest
 
 tasks.withType(Compile) {
 	options.compilerArgs << "-Xlint:unchecked"
