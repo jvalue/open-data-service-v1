@@ -107,7 +107,9 @@ public final class FilterChainManager {
 
 	public boolean filterChainExists(DataSource source, String filterChainId) {
 		try {
-			referenceRepositoryCache.getForKey(source.getSourceId()).get(filterChainId);
+			FilterChainReferenceRepository referenceRepository = referenceRepositoryCache.getForKey(source.getSourceId());
+			if (referenceRepository == null) return false;
+			referenceRepository.get(filterChainId);
 			return true;
 		} catch (DocumentNotFoundException dnfe) {
 			return false;
@@ -117,7 +119,7 @@ public final class FilterChainManager {
 
 	/**
 	 * Called once during lifecycle initialization.
-	 * @param sources All sources including their data repositories to create the acutal
+	 * @param sources All sources including their data repositories to create the actual
 	 *                filter chain and start them.
 	 */
 	public void startAllFilterChains(Map<DataSource, DataRepository> sources) {
