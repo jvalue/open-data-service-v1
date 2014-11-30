@@ -29,15 +29,11 @@ import org.jvalue.ods.data.DataSourceMetaData;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.filter.FilterFactory;
-import org.jvalue.ods.filter.reference.FilterChainMetaData;
 import org.jvalue.ods.filter.reference.FilterChainReference;
-import org.jvalue.ods.filter.reference.FilterReference;
 import org.jvalue.ods.filter.reference.FilterReferenceManager;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.LinkedList;
-import java.util.List;
 
 public final class PegelOnlineConfigurationFactory {
 
@@ -569,6 +565,7 @@ public final class PegelOnlineConfigurationFactory {
 			FilterReferenceManager referenceManager,
 			String dataSourceId) {
 
+		/*
 		List<FilterReference> filter = new LinkedList<>();
 		filter.add(referenceManager.getFilterReferenceByName("JsonSourceAdapter"));
 		filter.add(referenceManager.getFilterReferenceByName("DbInsertionFilter"));
@@ -576,6 +573,8 @@ public final class PegelOnlineConfigurationFactory {
 		try {
 			return referenceManager.createFilterChainReference("MainFilter", filter, new FilterChainMetaData(0), dataSourceId);
 		} catch (Exception e) { throw new RuntimeException(e); }
+		*/
+		return null;
 	}
 
 

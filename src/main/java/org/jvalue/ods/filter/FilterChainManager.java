@@ -22,7 +22,11 @@ import com.google.common.base.Objects;
 import com.google.inject.Inject;
 
 import org.ektorp.DocumentNotFoundException;
+import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.db.DataRepository;
+import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.FilterChainReferenceRepository;
+import org.jvalue.ods.db.RepositoryCache;
 import org.jvalue.ods.filter.reference.FilterChainReference;
 import org.jvalue.ods.utils.Assert;
 import org.jvalue.ods.utils.Log;
@@ -35,15 +39,14 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import io.dropwizard.lifecycle.Managed;
 
-
-public final class FilterChainManager implements Managed {
+public final class FilterChainManager {
 
 	private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
 	private final FilterChainFactory filterChainFactory;
-	private final FilterChainReferenceRepository referenceRepository;
+	private final RepositoryCache<FilterChainReferenceRepository> referenceRepositoryCache;
+	private final DbFactory dbFactory;
 
 	private final Map<FilterKey, ScheduledFuture<?>> runningTasks = new HashMap<>();
 
@@ -51,43 +54,61 @@ public final class FilterChainManager implements Managed {
 	@Inject
 	FilterChainManager(
 			FilterChainFactory filterChainFactory,
-			FilterChainReferenceRepository referenceRepository) {
+			RepositoryCache<FilterChainReferenceRepository> referenceRepositoryCache,
+			DbFactory dbFactory) {
 
 		this.filterChainFactory = filterChainFactory;
-		this.referenceRepository = referenceRepository;
+		this.referenceRepositoryCache = referenceRepositoryCache;
+		this.dbFactory = dbFactory;
 	}
 
 
-	public void add(FilterChainReference reference) {
+	public void add(DataSource source, DataRepository dataRepository, FilterChainReference reference) {
 		Assert.assertNotNull(reference);
+
+		// create filter chain repository
+		FilterChainReferenceRepository referenceRepository = createFilterChainRepository(source);
+
+		// add reference
 		referenceRepository.add(reference);
-		startFilterChain(reference);
+
+		// start filter chain
+		startFilterChain(source, dataRepository, reference);
 	}
 
 
-	public void remove(FilterChainReference reference) {
+	public void remove(DataSource source, FilterChainReference reference) {
 		Assert.assertNotNull(reference);
-		referenceRepository.remove(reference);
-		ScheduledFuture<?> task = runningTasks.remove(new FilterKey(reference.getDataSourceId(), reference.getFilterChainId()));
+
+		// remove from repository
+		referenceRepositoryCache.getForKey(source.getSourceId()).remove(reference);
+
+		// stop running task
+		ScheduledFuture<?> task = runningTasks.remove(new FilterKey(source.getSourceId(), reference.getFilterChainId()));
 		task.cancel(false);
 	}
 
 
-	public FilterChainReference get(String dataSourceId, String filterChainId) {
-		Assert.assertNotNull(dataSourceId, filterChainId);
-		return referenceRepository.findByFilterChainAndSourceId(dataSourceId, filterChainId);
+	public void removeAll(DataSource source) {
+		referenceRepositoryCache.remove(source.getSourceId());
 	}
 
 
-	public List<FilterChainReference> getAllForSource(String dataSourceId) {
-		Assert.assertNotNull(dataSourceId);
-		return referenceRepository.findByDataSourceId(dataSourceId);
+	public FilterChainReference get(DataSource source, String filterChainId) {
+		Assert.assertNotNull(source, filterChainId);
+		return referenceRepositoryCache.getForKey(source.getSourceId()).findByFilterChainId(filterChainId);
 	}
 
 
-	public boolean filterChainExists(String sourceId, String filterChainId) {
+	public List<FilterChainReference> getAllForSource(DataSource source) {
+		Assert.assertNotNull(source);
+		return referenceRepositoryCache.getForKey(source.getSourceId()).getAll();
+	}
+
+
+	public boolean filterChainExists(DataSource source, String filterChainId) {
 		try {
-			get(sourceId, filterChainId);
+			referenceRepositoryCache.getForKey(source.getSourceId()).get(filterChainId);
 			return true;
 		} catch (DocumentNotFoundException dnfe) {
 			return false;
@@ -95,24 +116,43 @@ public final class FilterChainManager implements Managed {
 	}
 
 
-	@Override
-	public void start() {
-		for (FilterChainReference reference : referenceRepository.getAll()) {
-			startFilterChain(reference);
+	/**
+	 * Called once during lifecycle initialization.
+	 * @param sources All sources including their data repositories to create the acutal
+	 *                filter chain and start them.
+	 */
+	public void startAllFilterChains(Map<DataSource, DataRepository> sources) {
+		for (Map.Entry<DataSource, DataRepository> sourceEntry : sources.entrySet()) {
+			// create repository
+			FilterChainReferenceRepository referenceRepository = createFilterChainRepository(sourceEntry.getKey());
+
+			// start chain
+			for (FilterChainReference reference : referenceRepository.getAll()) {
+				startFilterChain(sourceEntry.getKey(), sourceEntry.getValue(), reference);
+			}
 		}
 	}
 
 
-	@Override
-	public void stop() {
+	/**
+	 * Called once at lifecycle end.
+	 */
+	public void stopAllFilterChains() {
 		executorService.shutdown();
 	}
 
 
-	private void startFilterChain(FilterChainReference reference) {
-		FilterKey key = new FilterKey(reference.getDataSourceId(), reference.getFilterChainId());
+	private FilterChainReferenceRepository createFilterChainRepository(DataSource source) {
+		FilterChainReferenceRepository referenceRepository = dbFactory.createFilterChainReferenceRepository(source.getSourceId());
+		referenceRepositoryCache.put(source.getSourceId(), referenceRepository);
+		return referenceRepository;
+	}
+
+
+	private void startFilterChain(DataSource source, DataRepository dataRepository, FilterChainReference reference) {
+		FilterKey key = new FilterKey(source.getSourceId(), reference.getFilterChainId());
 		ScheduledFuture<?> task = executorService.scheduleAtFixedRate(
-				new FilterRunnable(key),
+				new FilterRunnable(reference, source, dataRepository),
 				0,
 				reference.getMetaData().getExecutionPeriod(),
 				TimeUnit.SECONDS);
@@ -123,20 +163,25 @@ public final class FilterChainManager implements Managed {
 
 	private final class FilterRunnable implements Runnable {
 
-		private final FilterKey key;
+		private final FilterChainReference reference;
+		private final DataSource source;
+		private final DataRepository dataRepository;
 
-		public FilterRunnable(FilterKey key) {
-			this.key = key;
+		public FilterRunnable(FilterChainReference reference, DataSource source, DataRepository dataRepository) {
+			this.reference = reference;
+			this.source = source;
+			this.dataRepository = dataRepository;
 		}
 
 
 		@Override
 		public void run() {
 			try {
-				Log.info("starting filter chain \"" + key.filterChainId + "\" for source \"" + key.dataSourceId + "\"");
-				Filter<Void, ArrayNode> filterChain = filterChainFactory.createFilterChain(get(key.dataSourceId, key.filterChainId));
+				Log.info("starting filter chain \"" + reference.getFilterChainId() + "\" for source \"" + source.getSourceId() + "\"");
+				// TODO pass all arguments
+				Filter<Void, ArrayNode> filterChain = filterChainFactory.createFilterChain(reference, source, dataRepository);
 				filterChain.filter(null);
-				Log.info("stopping filter chain \"" + key.filterChainId + "\" for source \"" + key.dataSourceId + "\"");
+				Log.info("stopping filter chain \"" + reference.getFilterChainId() + "\" for source \"" + source.getSourceId() + "\"");
 			} catch (Throwable throwable) {
 				Log.error("error while running filter chain", throwable);
 			}

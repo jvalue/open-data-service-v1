@@ -8,7 +8,6 @@ import org.jvalue.ods.configuration.ConfigurationModule;
 import org.jvalue.ods.data.DataModule;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.db.DbModule;
-import org.jvalue.ods.filter.FilterChainManager;
 import org.jvalue.ods.filter.FilterModule;
 import org.jvalue.ods.notifications.NotificationsModule;
 import org.jvalue.ods.rest.DataApi;
@@ -93,7 +92,6 @@ public final class OdsApplication extends Application<OdsConfig> {
 
 		// start data grabbing
 		environment.lifecycle().manage(injector.getInstance(DataSourceManager.class));
-		environment.lifecycle().manage(injector.getInstance(FilterChainManager.class));
 		environment.jersey().register(injector.getInstance(DataSourceApi.class));
 		environment.jersey().register(injector.getInstance(DataApi.class));
 		environment.jersey().register(injector.getInstance(FilterChainApi.class));

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 
+import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.db.DataRepository;
 
@@ -66,8 +67,8 @@ public final class DataApi extends AbstractApi {
 
 
 	private DataRepository assertIsValidSource(String sourceId) {
-		sourceManager.findBySourceId(sourceId);
-		return sourceManager.getDataRepository(sourceId);
+		DataSource source = sourceManager.findBySourceId(sourceId);
+		return sourceManager.getDataRepository(source);
 	}
 
 }

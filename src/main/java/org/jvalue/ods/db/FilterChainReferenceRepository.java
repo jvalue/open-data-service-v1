@@ -2,9 +2,9 @@ package org.jvalue.ods.db;
 
 
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
+import com.google.inject.assistedinject.Assisted;
 
-import org.ektorp.CouchDbConnector;
+import org.ektorp.CouchDbInstance;
 import org.ektorp.DocumentNotFoundException;
 import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.GenerateView;
@@ -17,29 +17,18 @@ import java.util.List;
 public final class FilterChainReferenceRepository extends CouchDbRepositorySupport<FilterChainReference> {
 
 	@Inject
-	FilterChainReferenceRepository(@Named(DataSourceRepository.DATABASE_NAME) CouchDbConnector connector) {
-		super(FilterChainReference.class, connector);
+	FilterChainReferenceRepository(CouchDbInstance couchDbInstance, @Assisted String databaseName) {
+		super(FilterChainReference.class, couchDbInstance.createConnector(databaseName, true));
 		initStandardDesignDocument();
 	}
 
 
 	@GenerateView
-	public List<FilterChainReference> findByDataSourceId(String dataSourceId) {
-		return queryView("by_dataSourceId", dataSourceId);
-	}
-
-
-	@GenerateView
-	public List<FilterChainReference> findByFilterChainId(String filterChainId) {
-		return queryView("by_filterChainId", filterChainId);
-	}
-
-
-	public FilterChainReference findByFilterChainAndSourceId(String dataSourceId, String filterChainId) {
-		List<FilterChainReference> references = findByDataSourceId(dataSourceId);
-		for (FilterChainReference reference : references)
-			if (reference.getFilterChainId().equals(filterChainId)) return reference;
-		throw new DocumentNotFoundException(dataSourceId + "/" + filterChainId);
+	public FilterChainReference findByFilterChainId(String filterChainId) {
+		List<FilterChainReference> chains = queryView("by_filterChainId", filterChainId);
+		if (chains.isEmpty()) throw new DocumentNotFoundException(filterChainId);
+		if (chains.size() > 1) throw new IllegalStateException("found more than one filter chain for id " + filterChainId);
+		return chains.get(0);
 	}
 
 }

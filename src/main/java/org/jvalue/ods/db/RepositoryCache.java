@@ -4,6 +4,7 @@ package org.jvalue.ods.db;
 import org.ektorp.support.CouchDbRepositorySupport;
 import org.jvalue.ods.utils.Assert;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +30,11 @@ public final class RepositoryCache<T extends CouchDbRepositorySupport<?>> {
 	public T getForKey(String key) {
 		Assert.assertNotNull(key);
 		return repositories.get(key);
+	}
+
+
+	public Collection<T> getAll() {
+		return repositories.values();
 	}
 
 }

@@ -39,8 +39,6 @@ public final class FilterChainFactoryTest {
 			throws Exception {
 
 		new Expectations() {{
-			sourceRepository.findBySourceId(anyString); result = dataSource;
-			repositoryCache.getForKey(anyString); result = dataRepository;
 			filterFactory.createJsonSourceAdapter(dataSource); times = 1; result = startFilter;
 			filterFactory.createDbInsertionFilter(dataSource, dataRepository); times = 1; result = middleFilter;
 			startFilter.setNextFilter(middleFilter); times = 1; result = middleFilter;
@@ -53,10 +51,10 @@ public final class FilterChainFactoryTest {
 		references.add(referenceManager.getFilterReferenceByName(FilterFactory.NAME_JSON_SOURCE_ADAPTER));
 		references.add(referenceManager.getFilterReferenceByName(FilterFactory.NAME_DB_INSERTION_FILTER));
 		references.add(referenceManager.getFilterReferenceByName(FilterFactory.NAME_NOTIFICATION_FILTER));
-		final FilterChainReference chainReference = referenceManager.createFilterChainReference("someFilter", references, metaData, "someId");
+		final FilterChainReference chainReference = referenceManager.createFilterChainReference("someFilter", references, metaData);
 
-		final FilterChainFactory chainFactory = new FilterChainFactory(filterFactory, sourceRepository, repositoryCache);
-		Filter<Void, ArrayNode> resultFilter = chainFactory.createFilterChain(chainReference);
+		final FilterChainFactory chainFactory = new FilterChainFactory(filterFactory);
+		Filter<Void, ArrayNode> resultFilter = chainFactory.createFilterChain(chainReference, dataSource, dataRepository);
 		Assert.assertTrue(resultFilter == startFilter);
 	}
 

@@ -25,10 +25,10 @@ public class DbModule extends AbstractModule {
 		bind(CouchDbConnector.class).annotatedWith(Names.named(NotificationClientRepository.DATABASE_NAME)).toInstance(notificationsConnector);
 		install(new FactoryModuleBuilder()
 				.implement(DataRepository.class, DataRepository.class)
+				.implement(FilterChainReferenceRepository.class, FilterChainReferenceRepository.class)
 				.build(DbFactory.class));
 
 		bind(new TypeLiteral<RepositoryCache<DataRepository>>() { }).in(Singleton.class);
-		bind(FilterChainReferenceRepository.class).in(Singleton.class);
 		bind(NotificationClientRepository.class).in(Singleton.class);
 	}
 

@@ -45,8 +45,8 @@ public final class FilterChainApi extends AbstractApi {
 
 	@GET
 	public List<FilterChainReference> getAllFilterChains(@PathParam("sourceId") String sourceId) {
-		sourceManager.findBySourceId(sourceId);
-		return chainManager.getAllForSource(sourceId);
+		DataSource source = sourceManager.findBySourceId(sourceId);
+		return chainManager.getAllForSource(source);
 	}
 
 
@@ -56,8 +56,8 @@ public final class FilterChainApi extends AbstractApi {
 			@PathParam("sourceId") String sourceId,
 			@PathParam("filterChainId") String filterChainId) {
 
-		sourceManager.findBySourceId(sourceId);
-		return chainManager.get(sourceId, filterChainId);
+		DataSource source = sourceManager.findBySourceId(sourceId);
+		return chainManager.get(source, filterChainId);
 	}
 
 
@@ -68,10 +68,10 @@ public final class FilterChainApi extends AbstractApi {
 			@PathParam("filterChainId") String filterChainId,
 			FilterChainReferenceDescription description) {
 
-		if (chainManager.filterChainExists(sourceId, filterChainId))
+		DataSource source = sourceManager.findBySourceId(sourceId);
+		if (chainManager.filterChainExists(source, filterChainId))
 			throw RestUtils.createJsonFormattedException("filter chain with id " + filterChainId + " already exists", 409);
 
-		DataSource source = sourceManager.findBySourceId(sourceId);
 		List<FilterReference> filterReferences = new LinkedList<>();
 		for (String filterName : description.filterNames) {
 			FilterReference reference = referenceManager.getFilterReferenceByName(filterName);
@@ -85,10 +85,9 @@ public final class FilterChainApi extends AbstractApi {
 			FilterChainReference chainReference = referenceManager.createFilterChainReference(
 					filterChainId,
 					filterReferences,
-					new FilterChainMetaData(-1),
-					source.getSourceId());
+					new FilterChainMetaData(-1));
 
-			chainManager.add(chainReference);
+			chainManager.add(source, sourceManager.getDataRepository(source), chainReference);
 			return chainReference;
 		} catch (FilterReferenceManager.InvalidFilterReferenceListException ifre) {
 			throw RestUtils.createJsonFormattedException(ifre.getMessage(), 400);

@@ -7,8 +7,6 @@ import com.google.inject.name.Named;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.db.DataRepository;
-import org.jvalue.ods.db.RepositoryCache;
-import org.jvalue.ods.db.DataSourceRepository;
 import org.jvalue.ods.filter.reference.FilterChainReference;
 import org.jvalue.ods.filter.reference.FilterReference;
 import org.jvalue.ods.utils.Assert;
@@ -21,38 +19,26 @@ import java.util.List;
 public final class FilterChainFactory {
 
 	private final FilterFactory filterFactory;
-	private final DataSourceRepository dataSourceRepository;
-	private final RepositoryCache<DataRepository> dataRepositoryCache;
 
 	@Inject
-	public FilterChainFactory(
-			FilterFactory filterFactory,
-			DataSourceRepository dataSourceRepository,
-			RepositoryCache<DataRepository> dataRepositoryCache) {
-
+	public FilterChainFactory(FilterFactory filterFactory) {
 		this.filterFactory = filterFactory;
-		this.dataSourceRepository = dataSourceRepository;
-		this.dataRepositoryCache = dataRepositoryCache;
 	}
 
 
 	@SuppressWarnings("unchecked")
-	public Filter<Void, ArrayNode> createFilterChain(FilterChainReference chainReference) {
-		Assert.assertNotNull(chainReference);
+	public Filter<Void, ArrayNode> createFilterChain(
+			FilterChainReference chainReference,
+			DataSource source,
+			DataRepository dataRepository) {
 
-		String sourceId = chainReference.getDataSourceId();
-		DataSource dataSource = dataSourceRepository.findBySourceId(sourceId);
-
-
-		DataRepository dataRepository = dataRepositoryCache.getForKey(sourceId);
-		Assert.assertFalse(dataRepository == null, "no DataRepository found for id " + sourceId);
-
+		Assert.assertNotNull(chainReference, source, dataRepository);
 
 		Filter<Void, ArrayNode> firstFilter = null;
 		Filter<?, ArrayNode> lastFilter = null;
 
 		for (FilterReference filterReference : chainReference.getFilterReferences()) {
-			Filter filter = createFilterFromAnnotation(filterReference.getFilterName(), dataSource, dataRepository);
+			Filter filter = createFilterFromAnnotation(filterReference.getFilterName(), source, dataRepository);
 			if (firstFilter == null) {
 				firstFilter = (Filter<Void, ArrayNode>) filter;
 				lastFilter = (Filter<?, ArrayNode>) filter;

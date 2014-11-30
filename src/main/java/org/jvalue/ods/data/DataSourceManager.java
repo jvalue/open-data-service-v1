@@ -6,14 +6,15 @@ import com.google.inject.Inject;
 import org.ektorp.CouchDbInstance;
 import org.ektorp.DocumentNotFoundException;
 import org.jvalue.ods.db.DataRepository;
-import org.jvalue.ods.db.RepositoryCache;
 import org.jvalue.ods.db.DataSourceRepository;
 import org.jvalue.ods.db.DbFactory;
+import org.jvalue.ods.db.RepositoryCache;
 import org.jvalue.ods.filter.FilterChainManager;
-import org.jvalue.ods.filter.reference.FilterChainReference;
 import org.jvalue.ods.utils.Assert;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.dropwizard.lifecycle.Managed;
 
@@ -58,14 +59,10 @@ public final class DataSourceManager implements Managed {
 		// delete source
 		dataSourceRepository.remove(source);
 
-		// delete data db
+		// delete source db
 		dataRepositoryCache.remove(source.getSourceId());
+		filterChainManager.removeAll(source);
 		dbInstance.deleteDatabase(source.getSourceId());
-
-		// delete filter chains
-		for (FilterChainReference reference : filterChainManager.getAllForSource(source.getSourceId())) {
-			filterChainManager.remove(reference);
-		}
 	}
 
 
@@ -79,9 +76,9 @@ public final class DataSourceManager implements Managed {
 	}
 
 
-	public DataRepository getDataRepository(String sourceId) {
-		Assert.assertNotNull(sourceId);
-		return dataRepositoryCache.getForKey(sourceId);
+	public DataRepository getDataRepository(DataSource source) {
+		Assert.assertNotNull(source);
+		return dataRepositoryCache.getForKey(source.getSourceId());
 	}
 
 
@@ -97,20 +94,27 @@ public final class DataSourceManager implements Managed {
 
 	@Override
 	public void start() {
-		for (DataSource source : dataSourceRepository.getAll()) { createDataRepository(source);
+		// create data repositories
+		Map<DataSource, DataRepository> sources = new HashMap<>();
+		for (DataSource source : dataSourceRepository.getAll()) {
+			sources.put(source, createDataRepository(source));
 		}
+
+		// start filter chains
+		filterChainManager.startAllFilterChains(sources);
 	}
 
 
 	@Override
 	public void stop() {
-		// nothing to do here
+		filterChainManager.stopAllFilterChains();
 	}
 
 
-	private void createDataRepository(DataSource source) {
+	private DataRepository createDataRepository(DataSource source) {
 		DataRepository dataRepository = dbFactory.createSourceDataRepository(source.getSourceId(), source.getDomainIdKey());
 		dataRepositoryCache.put(source.getSourceId(), dataRepository);
+		return dataRepository;
 	}
 
 }
