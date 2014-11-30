@@ -3,6 +3,7 @@ package org.jvalue.ods.db;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
+import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 
@@ -26,7 +27,7 @@ public class DbModule extends AbstractModule {
 				.implement(DataRepository.class, DataRepository.class)
 				.build(DbFactory.class));
 
-		bind(DataRepositoryCache.class).in(Singleton.class);
+		bind(new TypeLiteral<RepositoryCache<DataRepository>>() { }).in(Singleton.class);
 		bind(FilterChainReferenceRepository.class).in(Singleton.class);
 		bind(NotificationClientRepository.class).in(Singleton.class);
 	}

@@ -7,7 +7,7 @@ import com.google.inject.name.Named;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.db.DataRepository;
-import org.jvalue.ods.db.DataRepositoryCache;
+import org.jvalue.ods.db.RepositoryCache;
 import org.jvalue.ods.db.DataSourceRepository;
 import org.jvalue.ods.filter.reference.FilterChainReference;
 import org.jvalue.ods.filter.reference.FilterReference;
@@ -22,13 +22,13 @@ public final class FilterChainFactory {
 
 	private final FilterFactory filterFactory;
 	private final DataSourceRepository dataSourceRepository;
-	private final DataRepositoryCache dataRepositoryCache;
+	private final RepositoryCache<DataRepository> dataRepositoryCache;
 
 	@Inject
 	public FilterChainFactory(
 			FilterFactory filterFactory,
 			DataSourceRepository dataSourceRepository,
-			DataRepositoryCache dataRepositoryCache) {
+			RepositoryCache<DataRepository> dataRepositoryCache) {
 
 		this.filterFactory = filterFactory;
 		this.dataSourceRepository = dataSourceRepository;
@@ -44,7 +44,7 @@ public final class FilterChainFactory {
 		DataSource dataSource = dataSourceRepository.findBySourceId(sourceId);
 
 
-		DataRepository dataRepository = dataRepositoryCache.getRepositoryForSourceId(sourceId);
+		DataRepository dataRepository = dataRepositoryCache.getForKey(sourceId);
 		Assert.assertFalse(dataRepository == null, "no DataRepository found for id " + sourceId);
 
 

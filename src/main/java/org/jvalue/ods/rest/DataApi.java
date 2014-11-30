@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 
 import org.jvalue.ods.db.DataRepository;
-import org.jvalue.ods.db.DataRepositoryCache;
+import org.jvalue.ods.db.RepositoryCache;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -21,10 +21,10 @@ import javax.ws.rs.core.MediaType;
 @Produces(MediaType.APPLICATION_JSON)
 public final class DataApi extends AbstractApi {
 
-	private final DataRepositoryCache dataRepositoryCache;
+	private final RepositoryCache<DataRepository> dataRepositoryCache;
 
 	@Inject
-	public DataApi(DataRepositoryCache dataRepositoryCache) {
+	public DataApi(RepositoryCache<DataRepository> dataRepositoryCache) {
 		this.dataRepositoryCache = dataRepositoryCache;
 	}
 
@@ -66,7 +66,7 @@ public final class DataApi extends AbstractApi {
 
 
 	private DataRepository assertIsValidSource(String sourceId) {
-		DataRepository repository = dataRepositoryCache.getRepositoryForSourceId(sourceId);
+		DataRepository repository = dataRepositoryCache.getForKey(sourceId);
 		if (repository == null)  throw RestUtils.createNotFoundException();
 		return repository;
 	}

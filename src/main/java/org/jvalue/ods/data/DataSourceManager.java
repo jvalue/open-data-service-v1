@@ -6,7 +6,7 @@ import com.google.inject.Inject;
 import org.ektorp.CouchDbInstance;
 import org.ektorp.DocumentNotFoundException;
 import org.jvalue.ods.db.DataRepository;
-import org.jvalue.ods.db.DataRepositoryCache;
+import org.jvalue.ods.db.RepositoryCache;
 import org.jvalue.ods.db.DataSourceRepository;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.filter.FilterChainManager;
@@ -20,7 +20,7 @@ import io.dropwizard.lifecycle.Managed;
 public final class DataSourceManager implements Managed {
 
 	private final DataSourceRepository dataSourceRepository;
-	private final DataRepositoryCache dataRepositoryCache;
+	private final RepositoryCache<DataRepository> dataRepositoryCache;
 	private final CouchDbInstance dbInstance;
 	private final DbFactory dbFactory;
 	private final FilterChainManager filterChainManager;
@@ -28,7 +28,7 @@ public final class DataSourceManager implements Managed {
 	@Inject
 	public DataSourceManager(
 			DataSourceRepository dataSourceRepository,
-			DataRepositoryCache dataRepositoryCache,
+			RepositoryCache<DataRepository> dataRepositoryCache,
 			CouchDbInstance dbInstance,
 			DbFactory dbFactory,
 			FilterChainManager filterChainManager) {
@@ -59,7 +59,7 @@ public final class DataSourceManager implements Managed {
 		dataSourceRepository.remove(source);
 
 		// delete data db
-		dataRepositoryCache.removeRepository(source.getSourceId());
+		dataRepositoryCache.remove(source.getSourceId());
 		dbInstance.deleteDatabase(source.getSourceId());
 
 		// delete filter chains
@@ -104,7 +104,7 @@ public final class DataSourceManager implements Managed {
 
 	private void createDataRepository(DataSource source) {
 		DataRepository dataRepository = dbFactory.createSourceDataRepository(source.getSourceId(), source.getDomainIdKey());
-		dataRepositoryCache.putRepository(source.getSourceId(), dataRepository);
+		dataRepositoryCache.put(source.getSourceId(), dataRepository);
 	}
 
 }

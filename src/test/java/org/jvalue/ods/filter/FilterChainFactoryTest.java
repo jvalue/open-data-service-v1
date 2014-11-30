@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.db.DataRepository;
-import org.jvalue.ods.db.DataRepositoryCache;
+import org.jvalue.ods.db.RepositoryCache;
 import org.jvalue.ods.db.DataSourceRepository;
 import org.jvalue.ods.filter.reference.FilterChainMetaData;
 import org.jvalue.ods.filter.reference.FilterChainReference;
@@ -30,7 +30,7 @@ public final class FilterChainFactoryTest {
 	public void testCreation(
 			@Mocked final FilterFactory filterFactory,
 			@Mocked final DataSourceRepository sourceRepository,
-			@Mocked final DataRepositoryCache repositoryCache,
+			@Mocked final RepositoryCache<DataRepository> repositoryCache,
 			@Mocked final DataSource dataSource,
 			@Mocked final DataRepository dataRepository,
 			@Mocked final Filter<Void, ArrayNode> startFilter,
@@ -40,7 +40,7 @@ public final class FilterChainFactoryTest {
 
 		new Expectations() {{
 			sourceRepository.findBySourceId(anyString); result = dataSource;
-			repositoryCache.getRepositoryForSourceId(anyString); result = dataRepository;
+			repositoryCache.getForKey(anyString); result = dataRepository;
 			filterFactory.createJsonSourceAdapter(dataSource); times = 1; result = startFilter;
 			filterFactory.createDbInsertionFilter(dataSource, dataRepository); times = 1; result = middleFilter;
 			startFilter.setNextFilter(middleFilter); times = 1; result = middleFilter;
