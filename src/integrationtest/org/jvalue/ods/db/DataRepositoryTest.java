@@ -18,7 +18,7 @@ public final class DataRepositoryTest extends AbstractDbTest {
 	private DataRepository repository;
 
 	public DataRepositoryTest() {
-		super("test_datarepository");
+		super(DataRepositoryTest.class.getSimpleName());
 	}
 
 

@@ -17,7 +17,7 @@ public class NotificationClientRepositoryTest extends AbstractDbTest {
 	private NotificationClientRepository clientRepository;
 
 	public NotificationClientRepositoryTest() {
-		super("test_notification_clients");
+		super(NotificationClientRepositoryTest.class.getSimpleName());
 	}
 
 
