@@ -14,6 +14,7 @@ import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.DesignDocument;
 import org.ektorp.support.DesignDocumentFactory;
 import org.ektorp.support.StdDesignDocumentFactory;
+import org.jvalue.ods.data.DataView;
 import org.jvalue.ods.utils.Assert;
 import org.jvalue.ods.utils.Log;
 
@@ -25,7 +26,7 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 	private static final DesignDocumentFactory designFactory = new StdDesignDocumentFactory();
 
 	private final CouchDbConnector connector;
-	private final DbView domainIdView;
+	private final DataView domainIdView;
 
 	@Inject
 	DataRepository(CouchDbInstance couchDbInstance, @Assisted String databaseName, @Assisted JsonPointer domainIdKey) {
@@ -36,7 +37,7 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 		domainIdView = createDomainIdView(domainIdKey);
 		if (!containsView(domainIdView)) addView(domainIdView);
 
-		DbView allView = createAllView(domainIdKey);
+		DataView allView = createAllView(domainIdKey);
 		if (!containsView(allView)) addView(allView);
 	}
 
@@ -49,18 +50,18 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 	}
 
 
-	public List<JsonNode> executeQuery(DbView view, String param) {
-		return queryView(view.getViewName(), param);
+	public List<JsonNode> executeQuery(DataView view, String param) {
+		return queryView(view.getViewId(), param);
 	}
 
 
-	public List<JsonNode> executeQuery(DbView view) {
-		return queryView(view.getViewName());
+	public List<JsonNode> executeQuery(DataView view) {
+		return queryView(view.getViewId());
 	}
 
 
-	public void addView(DbView dbView) {
-		Assert.assertNotNull(dbView);
+	public void addView(DataView dataView) {
+		Assert.assertNotNull(dataView);
 
 		DesignDocument designDocument;
 		boolean update = false;
@@ -73,8 +74,10 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 			designDocument.setId(DESIGN_DOCUMENT_ID);
 		}
 
-		DesignDocument.View view = new DesignDocument.View(dbView.getMapFunction());
-		designDocument.addView(dbView.getViewName(), view);
+		DesignDocument.View view;
+		if (dataView.getReduceFunction() == null) view = new DesignDocument.View(dataView.getMapFunction());
+		else view = new DesignDocument.View(dataView.getMapFunction(), dataView.getReduceFunction());
+		designDocument.addView(dataView.getViewId(), view);
 
 		try {
 			if (update) connector.update(designDocument);
@@ -86,16 +89,16 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 	}
 
 
-	public boolean containsView(DbView dbView) {
-		Assert.assertNotNull(dbView);
+	public boolean containsView(DataView dataView) {
+		Assert.assertNotNull(dataView);
 
 		if (!connector.contains(DESIGN_DOCUMENT_ID)) return false;
 		DesignDocument designDocument = connector.get(DesignDocument.class, DESIGN_DOCUMENT_ID);
-		return designDocument.containsView(dbView.getViewName());
+		return designDocument.containsView(dataView.getViewId());
 	}
 
 
-	private DbView createDomainIdView(JsonPointer domainIdKey) {
+	private DataView createDomainIdView(JsonPointer domainIdKey) {
 		String domainIdViewName = "findByDomainId";
 		String domainIdProperty = createDomainIdJavascriptProperty(domainIdKey);
 
@@ -105,11 +108,11 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 		mapBuilder.append(") emit(");
 		mapBuilder.append(domainIdProperty);
 		mapBuilder.append(", doc) }");
-		return new DbView(domainIdViewName, mapBuilder.toString());
+		return new DataView(domainIdViewName, mapBuilder.toString());
 	}
 
 
-	private DbView createAllView(JsonPointer domainIdKey) {
+	private DataView createAllView(JsonPointer domainIdKey) {
 		String domainIdViewName = "all";
 		String domainIdProperty = createDomainIdJavascriptProperty(domainIdKey);
 
@@ -117,7 +120,7 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 		mapBuilder.append("function(doc) { if (");
 		mapBuilder.append(domainIdProperty);
 		mapBuilder.append(") emit(null,doc) }");
-		return new DbView(domainIdViewName, mapBuilder.toString());
+		return new DataView(domainIdViewName, mapBuilder.toString());
 	}
 
 

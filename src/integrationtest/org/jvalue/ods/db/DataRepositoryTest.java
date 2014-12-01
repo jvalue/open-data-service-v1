@@ -10,6 +10,7 @@ import org.ektorp.CouchDbInstance;
 import org.ektorp.DocumentNotFoundException;
 import org.junit.Assert;
 import org.junit.Test;
+import org.jvalue.ods.data.DataView;
 
 public final class DataRepositoryTest extends AbstractDbTest {
 
@@ -59,7 +60,7 @@ public final class DataRepositoryTest extends AbstractDbTest {
 
 	@Test
 	public void testCreateView() {
-		DbView view = createDbView();
+		DataView view = createDbView();
 		Assert.assertFalse(repository.containsView(view));
 		repository.addView(view);
 		Assert.assertTrue(repository.containsView(view));
@@ -68,7 +69,7 @@ public final class DataRepositoryTest extends AbstractDbTest {
 
 	@Test
 	public void testExecuteView() {
-		DbView view = createDbView();
+		DataView view = createDbView();
 		repository.addView(view);
 		repository.add(createObjectNode("id1", "hello"));
 		repository.add(createObjectNode("id2", "world"));
@@ -88,8 +89,8 @@ public final class DataRepositoryTest extends AbstractDbTest {
 	}
 
 
-	private DbView createDbView() {
-		return new DbView("testView", "function(doc) { if(doc.somethingElse) emit(doc.somethingElse, doc) }");
+	private DataView createDbView() {
+		return new DataView("testView", "function(doc) { if(doc.somethingElse) emit(doc.somethingElse, doc) }");
 	}
 
 
