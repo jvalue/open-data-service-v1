@@ -33,6 +33,12 @@ public final class RepositoryCache<T extends CouchDbRepositorySupport<?>> {
 	}
 
 
+	public boolean contains(String key) {
+		Assert.assertNotNull(key);
+		return repositories.containsKey(key);
+	}
+
+
 	public Collection<T> getAll() {
 		return repositories.values();
 	}

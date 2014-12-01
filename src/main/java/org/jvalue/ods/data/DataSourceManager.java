@@ -25,6 +25,7 @@ public final class DataSourceManager implements Managed {
 	private final CouchDbInstance dbInstance;
 	private final DbFactory dbFactory;
 	private final FilterChainManager filterChainManager;
+	private final DataViewManager dataViewManager;
 
 	@Inject
 	public DataSourceManager(
@@ -32,13 +33,15 @@ public final class DataSourceManager implements Managed {
 			RepositoryCache<DataRepository> dataRepositoryCache,
 			CouchDbInstance dbInstance,
 			DbFactory dbFactory,
-			FilterChainManager filterChainManager) {
+			FilterChainManager filterChainManager,
+			DataViewManager dataViewManager) {
 
 		this.dataSourceRepository = dataSourceRepository;
 		this.dataRepositoryCache = dataRepositoryCache;
 		this.dbInstance = dbInstance;
 		this.dbFactory = dbFactory;
 		this.filterChainManager = filterChainManager;
+		this.dataViewManager = dataViewManager;
 	}
 
 
@@ -62,6 +65,7 @@ public final class DataSourceManager implements Managed {
 		// delete source db
 		dataRepositoryCache.remove(source.getSourceId());
 		filterChainManager.removeAll(source);
+		dataViewManager.removeAll(source);
 		dbInstance.deleteDatabase(source.getSourceId());
 	}
 

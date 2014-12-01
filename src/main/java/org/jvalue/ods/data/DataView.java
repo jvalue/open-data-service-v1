@@ -23,11 +23,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 
+import org.ektorp.support.CouchDbDocument;
 import org.jvalue.ods.utils.Assert;
 
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public final class DataView {
+public final class DataView extends CouchDbDocument {
 
 	private final String viewId;
 	private final String mapFunction, reduceFunction;
