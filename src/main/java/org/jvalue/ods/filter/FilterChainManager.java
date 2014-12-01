@@ -32,6 +32,7 @@ import org.jvalue.ods.utils.Assert;
 import org.jvalue.ods.utils.Log;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -63,7 +64,7 @@ public final class FilterChainManager {
 
 
 	public void add(DataSource source, DataRepository dataRepository, FilterChainReference reference) {
-		Assert.assertNotNull(reference);
+		Assert.assertNotNull(source, dataRepository, reference);
 
 		// create filter chain repository
 		FilterChainReferenceRepository referenceRepository = createFilterChainRepository(source);
@@ -77,7 +78,7 @@ public final class FilterChainManager {
 
 
 	public void remove(DataSource source, FilterChainReference reference) {
-		Assert.assertNotNull(reference);
+		Assert.assertNotNull(source, reference);
 
 		// remove from repository
 		referenceRepositoryCache.get(source.getSourceId()).remove(reference);
@@ -95,13 +96,17 @@ public final class FilterChainManager {
 
 	public FilterChainReference get(DataSource source, String filterChainId) {
 		Assert.assertNotNull(source, filterChainId);
-		return referenceRepositoryCache.get(source.getSourceId()).findByFilterChainId(filterChainId);
+		FilterChainReferenceRepository repository = referenceRepositoryCache.get(source.getSourceId());
+		if (repository == null) throw new DocumentNotFoundException(filterChainId);
+		else return repository.findByFilterChainId(filterChainId);
 	}
 
 
 	public List<FilterChainReference> getAllForSource(DataSource source) {
 		Assert.assertNotNull(source);
-		return referenceRepositoryCache.get(source.getSourceId()).getAll();
+		FilterChainReferenceRepository repository = referenceRepositoryCache.get(source.getSourceId());
+		if (repository == null) return new LinkedList<>();
+		else return repository.getAll();
 	}
 
 
@@ -179,7 +184,6 @@ public final class FilterChainManager {
 		public void run() {
 			try {
 				Log.info("starting filter chain \"" + reference.getFilterChainId() + "\" for source \"" + source.getSourceId() + "\"");
-				// TODO pass all arguments
 				Filter<Void, ArrayNode> filterChain = filterChainFactory.createFilterChain(reference, source, dataRepository);
 				filterChain.filter(null);
 				Log.info("stopping filter chain \"" + reference.getFilterChainId() + "\" for source \"" + source.getSourceId() + "\"");
