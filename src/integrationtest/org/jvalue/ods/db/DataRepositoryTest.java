@@ -74,7 +74,7 @@ public final class DataRepositoryTest extends AbstractDbTest {
 		repository.add(createObjectNode("id1", "hello"));
 		repository.add(createObjectNode("id2", "world"));
 
-		Assert.assertEquals(2, repository.executeQuery(view).size());
+		Assert.assertEquals(2, repository.executeQuery(view, null).size());
 		Assert.assertEquals(1, repository.executeQuery(view, "hello").size());
 		Assert.assertEquals(1, repository.executeQuery(view, "world").size());
 		Assert.assertEquals(0, repository.executeQuery(view, "foo").size());

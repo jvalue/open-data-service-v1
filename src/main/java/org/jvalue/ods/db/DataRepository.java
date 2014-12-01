@@ -9,14 +9,12 @@ import com.google.inject.assistedinject.Assisted;
 import org.ektorp.CouchDbConnector;
 import org.ektorp.CouchDbInstance;
 import org.ektorp.DocumentNotFoundException;
-import org.ektorp.UpdateConflictException;
 import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.DesignDocument;
 import org.ektorp.support.DesignDocumentFactory;
 import org.ektorp.support.StdDesignDocumentFactory;
 import org.jvalue.ods.data.DataView;
 import org.jvalue.ods.utils.Assert;
-import org.jvalue.ods.utils.Log;
 
 import java.util.List;
 
@@ -51,12 +49,8 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 
 
 	public List<JsonNode> executeQuery(DataView view, String param) {
-		return queryView(view.getViewId(), param);
-	}
-
-
-	public List<JsonNode> executeQuery(DataView view) {
-		return queryView(view.getViewId());
+		if (param == null) return queryView(view.getViewId());
+		else return queryView(view.getViewId(), param);
 	}
 
 
@@ -79,13 +73,18 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 		else view = new DesignDocument.View(dataView.getMapFunction(), dataView.getReduceFunction());
 		designDocument.addView(dataView.getViewId(), view);
 
-		try {
-			if (update) connector.update(designDocument);
-			else connector.create(designDocument);
-		} catch (UpdateConflictException uce) {
-			// TODO throw some meaningful exception
-			Log.error("failed to add view", uce);
-		}
+		if (update) connector.update(designDocument);
+		else connector.create(designDocument);
+	}
+
+
+	public void removeView(DataView view) {
+		Assert.assertNotNull(view);
+
+		if (!connector.contains(DESIGN_DOCUMENT_ID)) return;
+		DesignDocument designDocument = connector.get(DesignDocument.class, DESIGN_DOCUMENT_ID);
+		designDocument.removeView(view.getViewId());
+		connector.update(designDocument);
 	}
 
 

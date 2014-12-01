@@ -61,7 +61,7 @@ public final class DataViewManager {
 	public void remove(DataSource source, DataRepository dataRepository, DataView dataView) {
 		Assert.assertNotNull(source, dataView);
 		assertViewRepository(source).remove(dataView);
-		// TODO remove from data repository
+		dataRepository.removeView(dataView);
 	}
 
 
@@ -92,15 +92,9 @@ public final class DataViewManager {
 	}
 
 
-	public List<JsonNode> executeView(DataRepository dataRepository, DataView view) {
-		return executeView(dataRepository, view, null);
-	}
-
-
 	public List<JsonNode> executeView(DataRepository dataRepository, DataView view, String argument) {
 		Assert.assertNotNull(dataRepository, view);
-		if (argument == null) return dataRepository.executeQuery(view);
-		else return dataRepository.executeQuery(view, argument);
+		return dataRepository.executeQuery(view, argument);
 	}
 
 
