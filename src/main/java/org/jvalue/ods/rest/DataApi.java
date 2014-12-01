@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 
-import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.db.DataRepository;
 
@@ -41,10 +40,10 @@ public final class DataApi extends AbstractApi {
 	@Path("/{objectId}{pointer:(/.*)?}")
 	public JsonNode getObjectAttribute(
 			@PathParam("sourceId") String sourceId,
-			@PathParam("objectId") String objectId,
+			@PathParam("objectId") String domainId,
 			@PathParam("pointer") String pointer) {
 
-		JsonNode node = getSingleObject(sourceId, objectId);
+		JsonNode node = getSingleObject(sourceId, domainId);
 		if (pointer.isEmpty() || pointer.equals("/")) return node;
 
 		try {
@@ -59,16 +58,14 @@ public final class DataApi extends AbstractApi {
 	}
 
 
-	private JsonNode getSingleObject(String sourceId, String objectId) {
+	private JsonNode getSingleObject(String sourceId, String domainId) {
 		DataRepository repository = assertIsValidSource(sourceId);
-		if (!repository.contains(objectId)) throw RestUtils.createNotFoundException();
-		return repository.get(objectId);
+		return repository.findByDomainId(domainId);
 	}
 
 
 	private DataRepository assertIsValidSource(String sourceId) {
-		DataSource source = sourceManager.findBySourceId(sourceId);
-		return sourceManager.getDataRepository(source);
+		return sourceManager.getDataRepository(sourceManager.findBySourceId(sourceId));
 	}
 
 }
