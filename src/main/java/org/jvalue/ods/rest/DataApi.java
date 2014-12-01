@@ -3,6 +3,7 @@ package org.jvalue.ods.rest;
 
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 
 import org.jvalue.ods.data.DataSourceManager;
@@ -32,7 +33,7 @@ public final class DataApi extends AbstractApi {
 	@GET
 	public List<Object> getAll(@PathParam("sourceId") String sourceId) throws Exception {
 		DataRepository repository = assertIsValidSource(sourceId);
-		return new LinkedList<Object>(repository.getAll());
+		return new LinkedList<Object>(filterDbIdAndRev(repository.getAll()));
 	}
 
 
@@ -43,8 +44,8 @@ public final class DataApi extends AbstractApi {
 			@PathParam("objectId") String domainId,
 			@PathParam("pointer") String pointer) {
 
-		JsonNode node = getSingleObject(sourceId, domainId);
-		if (pointer.isEmpty() || pointer.equals("/")) return node;
+		JsonNode node = assertIsValidSource(sourceId).findByDomainId(domainId);
+		if (pointer.isEmpty() || pointer.equals("/")) return filterDbIdAndRev(node);
 
 		try {
 			JsonPointer jsonPointer = JsonPointer.compile(pointer);
@@ -58,9 +59,17 @@ public final class DataApi extends AbstractApi {
 	}
 
 
-	private JsonNode getSingleObject(String sourceId, String domainId) {
-		DataRepository repository = assertIsValidSource(sourceId);
-		return repository.findByDomainId(domainId);
+	private List<JsonNode> filterDbIdAndRev(List<JsonNode> nodes) {
+		for (JsonNode node : nodes) filterDbIdAndRev(node);
+		return nodes;
+	}
+
+
+	private JsonNode filterDbIdAndRev(JsonNode node) {
+		ObjectNode objectNode = (ObjectNode) node;
+		objectNode.remove("_id");
+		objectNode.remove("_rev");
+		return objectNode;
 	}
 
 
