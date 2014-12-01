@@ -66,7 +66,7 @@ public final class FilterReferenceManager {
 		}
 
 		InvalidFilterReferenceListException(FilterReference firstReference) {
-			super("filter chain must start with "  + FilterType.INPUT_FILTER + " but found "  + firstReference.getFilterType());
+			super("filter chain must start with "  + FilterType.OUTPUT_FILTER + " but found "  + firstReference.getFilterType());
 		}
 
 		InvalidFilterReferenceListException(FilterReference filter1, FilterReference filter2) {
