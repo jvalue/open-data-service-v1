@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
+import org.ektorp.DocumentNotFoundException;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.utils.Assert;
@@ -48,15 +49,17 @@ final class DbInsertionFilter extends Filter<ArrayNode, ArrayNode> {
 	protected ArrayNode doFilter(ArrayNode data) {
 		for (JsonNode node : data) {
 			String domainKey = node.at(source.getDomainIdKey()).asText();
-			JsonNode oldNode = dataRepository.findByDomainId(domainKey);
-			if (oldNode == null) {
-				dataRepository.add(node);
-			}
-			else {
+			try {
+				// update existing element
+				JsonNode oldNode = dataRepository.findByDomainId(domainKey);
 				ObjectNode objectNode = (ObjectNode) node;
 				objectNode.put("_id", oldNode.get("_id").asText());
 				objectNode.put("_rev", oldNode.get("_rev").asText());
 				dataRepository.update(objectNode);
+
+			} catch (DocumentNotFoundException dnfe) {
+				// insert new element
+				dataRepository.add(node);
 			}
 		}
 		return data;
