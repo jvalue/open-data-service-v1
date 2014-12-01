@@ -83,16 +83,24 @@ public final class FilterChainManagerTest {
 	}
 
 
-	@Test(expected = DocumentNotFoundException.class)
+	@Test
 	public void testEmptyGet(
-			@Mocked DataSource source) {
+			@Mocked DataSource source,
+			@Mocked final FilterChainReferenceRepository referenceRepository) {
 
 		new Expectations() {{
+			repositoryCache.contains(anyString);
+			result = true;
 			repositoryCache.get(anyString);
-			result = null;
+			result = referenceRepository;
 		}};
 
 		manager.get(source, FILTER_CHAIN_ID);
+
+		new Verifications() {{
+			repositoryCache.get(anyString);
+			times = 1;
+		}};
 	}
 
 
@@ -108,12 +116,18 @@ public final class FilterChainManagerTest {
 
 	@Test
 	public void testEmptyChainExists(
-			@Mocked DataSource source) {
+			@Mocked DataSource source,
+			@Mocked final FilterChainReferenceRepository referenceRepository) {
 
 		new Expectations() {{
+			repositoryCache.contains(anyString);
+			result = true;
 			repositoryCache.get(anyString);
-			result = null;
+			result = referenceRepository;
+			referenceRepository.findByFilterChainId(anyString);
+			result = new DocumentNotFoundException("");
 		}};
+
 		Assert.assertFalse(manager.filterChainExists(source, FILTER_CHAIN_ID));
 	}
 

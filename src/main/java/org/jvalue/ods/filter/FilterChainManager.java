@@ -32,7 +32,6 @@ import org.jvalue.ods.utils.Assert;
 import org.jvalue.ods.utils.Log;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -67,7 +66,7 @@ public final class FilterChainManager {
 		Assert.assertNotNull(source, dataRepository, reference);
 
 		// create filter chain repository
-		FilterChainReferenceRepository referenceRepository = createFilterChainRepository(source);
+		FilterChainReferenceRepository referenceRepository = assertFilterChainRepository(source);
 
 		// add reference
 		referenceRepository.add(reference);
@@ -96,25 +95,19 @@ public final class FilterChainManager {
 
 	public FilterChainReference get(DataSource source, String filterChainId) {
 		Assert.assertNotNull(source, filterChainId);
-		FilterChainReferenceRepository repository = referenceRepositoryCache.get(source.getSourceId());
-		if (repository == null) throw new DocumentNotFoundException(filterChainId);
-		else return repository.findByFilterChainId(filterChainId);
+		return assertFilterChainRepository(source).findByFilterChainId(filterChainId);
 	}
 
 
 	public List<FilterChainReference> getAllForSource(DataSource source) {
 		Assert.assertNotNull(source);
-		FilterChainReferenceRepository repository = referenceRepositoryCache.get(source.getSourceId());
-		if (repository == null) return new LinkedList<>();
-		else return repository.getAll();
+		return assertFilterChainRepository(source).getAll();
 	}
 
 
 	public boolean filterChainExists(DataSource source, String filterChainId) {
 		try {
-			FilterChainReferenceRepository referenceRepository = referenceRepositoryCache.get(source.getSourceId());
-			if (referenceRepository == null) return false;
-			referenceRepository.get(filterChainId);
+			get(source, filterChainId);
 			return true;
 		} catch (DocumentNotFoundException dnfe) {
 			return false;
@@ -129,11 +122,8 @@ public final class FilterChainManager {
 	 */
 	public void startAllFilterChains(Map<DataSource, DataRepository> sources) {
 		for (Map.Entry<DataSource, DataRepository> sourceEntry : sources.entrySet()) {
-			// create repository
-			FilterChainReferenceRepository referenceRepository = createFilterChainRepository(sourceEntry.getKey());
-
 			// start chain
-			for (FilterChainReference reference : referenceRepository.getAll()) {
+			for (FilterChainReference reference : assertFilterChainRepository(sourceEntry.getKey()).getAll()) {
 				startFilterChain(sourceEntry.getKey(), sourceEntry.getValue(), reference);
 			}
 		}
@@ -148,9 +138,12 @@ public final class FilterChainManager {
 	}
 
 
-	private FilterChainReferenceRepository createFilterChainRepository(DataSource source) {
-		FilterChainReferenceRepository referenceRepository = dbFactory.createFilterChainReferenceRepository(source.getSourceId());
-		referenceRepositoryCache.put(source.getSourceId(), referenceRepository);
+	private FilterChainReferenceRepository assertFilterChainRepository(DataSource source) {
+		String key = source.getSourceId();
+		if (referenceRepositoryCache.contains(key)) return referenceRepositoryCache.get(key);
+
+		FilterChainReferenceRepository referenceRepository = dbFactory.createFilterChainReferenceRepository(key);
+		referenceRepositoryCache.put(key, referenceRepository);
 		return referenceRepository;
 	}
 
