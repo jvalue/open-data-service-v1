@@ -3,8 +3,8 @@ package org.jvalue.ods.rest;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import org.ektorp.support.CouchDbDocument;
 import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.data.DataView;
 import org.jvalue.ods.filter.reference.FilterChainReference;
 
 import java.util.HashMap;
@@ -12,9 +12,6 @@ import java.util.Map;
 
 
 public class JsonMixins {
-
-	@JsonIgnoreProperties({"_id", "_rev"})
-	private static interface CouchDbMixin { }
 
 	@JsonIgnoreProperties({"_id", "_rev"})
 	private static interface DataSourceMixin {
@@ -26,13 +23,18 @@ public class JsonMixins {
 		@JsonProperty("id") String getFilterChainId();
 	}
 
+	@JsonIgnoreProperties({"_id", "_rev"})
+	private static interface DataViewMixin {
+		@JsonProperty("id") String getViewId();
+	}
+
 
 	private final Map<Class<?>, Class<?>> mixins = new HashMap<>();
 
 	public JsonMixins() {
-		mixins.put(CouchDbDocument.class, CouchDbMixin.class);
 		mixins.put(DataSource.class, DataSourceMixin.class);
 		mixins.put(FilterChainReference.class, FilterChainReferenceMixin.class);
+		mixins.put(DataView.class, DataViewMixin.class);
 	}
 
 
