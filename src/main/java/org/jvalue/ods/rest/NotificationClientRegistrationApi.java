@@ -1,15 +1,22 @@
 package org.jvalue.ods.rest;
 
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.inject.Inject;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.notifications.NotificationManager;
 import org.jvalue.ods.notifications.clients.Client;
+import org.jvalue.ods.notifications.clients.GcmClient;
+import org.jvalue.ods.notifications.clients.HttpClient;
 
 import java.util.List;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -42,10 +49,11 @@ public final class NotificationClientRegistrationApi extends AbstractApi {
 	public Client registerClient(
 			@PathParam("sourceId") String sourceId,
 			@PathParam("clientId") String clientId,
-			Client client) {
+			@Valid ClientDescription clientDescription) {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		if (notificationManager.contains(source, clientId)) throw RestUtils.createJsonFormattedException("client with id " + clientId + " already exists", 409);
+		Client client = clientDescription.toClient(clientId);
 		notificationManager.add(source, sourceManager.getDataRepository(source), client);
 		return client;
 	}
@@ -80,6 +88,48 @@ public final class NotificationClientRegistrationApi extends AbstractApi {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		return notificationManager.getAll(source);
+	}
+
+
+	@JsonTypeInfo(
+			use = JsonTypeInfo.Id.NAME,
+			include = JsonTypeInfo.As.PROPERTY,
+			property = "type",
+			visible = true
+	)
+	@JsonSubTypes({
+			@JsonSubTypes.Type(value = HttpClientDescription.class, name = HttpClient.CLIENT_TYPE),
+			@JsonSubTypes.Type(value = GcmClientDescription.class, name = GcmClient.CLIENT_TYPE)
+	})
+	@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+	private static abstract class ClientDescription {
+		@NotNull protected String type;
+
+		public abstract Client toClient(String clientId);
+	}
+
+
+	private static final class HttpClientDescription extends ClientDescription {
+		@NotNull private String restUrl;
+		@NotNull private String sourceParam;
+		@NotNull private boolean sendData;
+
+		@Override
+		public Client toClient(String clientId) {
+			return new HttpClient(clientId, restUrl, sourceParam, sendData);
+		}
+
+	}
+
+
+	private static final class GcmClientDescription extends ClientDescription {
+		@NotNull private String gcmClientId;
+
+		@Override
+		public Client toClient(String clientId) {
+			return new GcmClient(clientId, gcmClientId);
+		}
+
 	}
 
 }

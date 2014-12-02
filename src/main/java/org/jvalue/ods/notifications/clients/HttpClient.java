@@ -26,7 +26,7 @@ import org.jvalue.ods.utils.Assert;
 
 public final class HttpClient extends Client {
 
-	static final String CLIENT_TYPE = "HTTP";
+	public static final String CLIENT_TYPE = "HTTP";
 
 	private final String restUrl, sourceParam;
 	private final boolean sendData;

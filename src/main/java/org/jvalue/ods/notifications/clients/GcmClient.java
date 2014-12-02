@@ -26,7 +26,7 @@ import org.jvalue.ods.utils.Assert;
 
 public final class GcmClient extends Client {
 
-	static final String CLIENT_TYPE = "GCM";
+	public static final String CLIENT_TYPE = "GCM";
 
 	private final String gcmClientId;
 

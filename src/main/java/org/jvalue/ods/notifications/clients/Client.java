@@ -17,7 +17,6 @@
  */
 package org.jvalue.ods.notifications.clients;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
@@ -29,7 +28,6 @@ import org.jvalue.ods.utils.Assert;
 
 
 
-@JsonIgnoreProperties(ignoreUnknown=true)
 @JsonTypeInfo(
 		use = Id.NAME,
 		include = As.PROPERTY,
