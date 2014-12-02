@@ -66,14 +66,13 @@ public final class FilterChainManagerTest {
 		Assert.assertEquals(1, filterRunCount);
 
 		// remove chain
-		manager.remove(source, reference);
+		manager.remove(source, dataRepository, reference);
 		Thread.sleep(50);
 		Assert.assertEquals(1, filterRunCount);
 
 		new Verifications() {{
 			// add chain
 			dbFactory.createFilterChainReferenceRepository(anyString);
-			times = 1;
 			referenceRepository.add(reference);
 			repositoryCache.put(anyString, referenceRepository);
 
@@ -108,7 +107,7 @@ public final class FilterChainManagerTest {
 	public void testEmptyGetAll(
 			@Mocked DataSource source) {
 
-		List<FilterChainReference> references = manager.getAllForSource(source);
+		List<FilterChainReference> references = manager.getAll(source);
 		Assert.assertNotNull(references);
 		Assert.assertEquals(0, references.size());
 	}
@@ -128,7 +127,7 @@ public final class FilterChainManagerTest {
 			result = new DocumentNotFoundException("");
 		}};
 
-		Assert.assertFalse(manager.filterChainExists(source, FILTER_CHAIN_ID));
+		Assert.assertFalse(manager.contains(source, FILTER_CHAIN_ID));
 	}
 
 

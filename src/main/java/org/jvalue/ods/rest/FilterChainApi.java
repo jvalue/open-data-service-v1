@@ -53,7 +53,7 @@ public final class FilterChainApi extends AbstractApi {
 	@GET
 	public List<FilterChainReference> getAllFilterChains(@PathParam("sourceId") String sourceId) {
 		DataSource source = sourceManager.findBySourceId(sourceId);
-		return chainManager.getAllForSource(source);
+		return chainManager.getAll(source);
 	}
 
 
@@ -79,7 +79,7 @@ public final class FilterChainApi extends AbstractApi {
 		assertIsValidPeriod(description.executionInterval.getPeriod());
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
-		if (chainManager.filterChainExists(source, filterChainId))
+		if (chainManager.contains(source, filterChainId))
 			throw RestUtils.createJsonFormattedException("filter chain with id " + filterChainId + " already exists", 409);
 
 		List<FilterReference> filterReferences = new LinkedList<>();
@@ -113,7 +113,7 @@ public final class FilterChainApi extends AbstractApi {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		FilterChainReference reference = chainManager.get(source, filterChainId);
-		chainManager.remove(source, reference);
+		chainManager.remove(source, sourceManager.getDataRepository(source), reference);
 	}
 
 
