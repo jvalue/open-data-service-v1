@@ -17,26 +17,28 @@
  */
 package org.jvalue.ods.notifications.clients;
 
-import org.jvalue.ods.utils.Assert;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Objects;
+
+import org.jvalue.ods.utils.Assert;
 
 
 public final class HttpClient extends Client {
+
+	static final String CLIENT_TYPE = "HTTP";
 
 	private final String restUrl, sourceParam;
 	private final boolean sendData;
 
 	@JsonCreator
-	HttpClient(
+	public HttpClient(
 			@JsonProperty("clientId") String clientId, 
-			@JsonProperty("source") String source, 
-			@JsonProperty("restUrl") String restUrl, 
+			@JsonProperty("restUrl") String restUrl,
 			@JsonProperty("sourceParam") String sourceParam,
 			@JsonProperty("sendData") boolean sendData) {
 
-		super(clientId, source);
+		super(clientId, CLIENT_TYPE);
 		Assert.assertNotNull(restUrl, sourceParam);
 		this.restUrl = restUrl;
 		this.sourceParam = sourceParam;
@@ -61,29 +63,17 @@ public final class HttpClient extends Client {
 
 	@Override
 	public boolean equals(Object other) {
-		return super.equals(other) && equalsIgnoreId(other);
+		if (!super.equals(other)) return false;
+		HttpClient client = (HttpClient) other;
+		return Objects.equal(restUrl, client.restUrl)
+				&& Objects.equal(sourceParam, client.sourceParam)
+				&& Objects.equal(sendData, client.sendData);
 	}
 
 	
 	@Override
-	public boolean equalsIgnoreId(Object other) {
-		if (!super.equalsIgnoreId(other)) return false;
-		if (!(other instanceof HttpClient)) return false;
-
-		HttpClient client = (HttpClient) other;
-		return client.restUrl.equals(restUrl) 
-			&& client.sourceParam.equals(sourceParam) 
-			&& client.sendData == sendData;
-	}
-
-
-	@Override
 	public int hashCode() {
-		int hash = super.hashCode();
-		hash = hash + HASH_MULT * restUrl.hashCode();
-		hash = hash + HASH_MULT * sourceParam.hashCode();
-		hash = hash + Boolean.valueOf(sendData).hashCode();
-		return hash;
+		return Objects.hashCode(super.hashCode(), restUrl, sourceParam, sendData);
 	}
 
 

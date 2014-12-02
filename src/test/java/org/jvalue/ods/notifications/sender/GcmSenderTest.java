@@ -1,15 +1,14 @@
 package org.jvalue.ods.notifications.sender;
 
+import org.junit.Test;
+import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.data.DummyDataSource;
+import org.jvalue.ods.notifications.clients.GcmClient;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
-import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.data.DummyDataSource;
-import org.jvalue.ods.notifications.clients.ClientFactory;
-import org.jvalue.ods.notifications.clients.GcmClient;
 
 
 public final class GcmSenderTest {
@@ -18,7 +17,7 @@ public final class GcmSenderTest {
 	public final void testFail() {
 		
 		GcmSender sender = new GcmSender(GcmApiKeyHelper.getResourceName());
-		GcmClient client = ClientFactory.newGcmClient("dummy", "dummy");
+		GcmClient client = new GcmClient("dummy", "dummy");
 		DataSource source = DummyDataSource.newInstance("dummy", "dummy");
 
 		try {

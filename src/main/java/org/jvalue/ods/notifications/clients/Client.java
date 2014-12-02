@@ -18,24 +18,36 @@
 package org.jvalue.ods.notifications.clients;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.google.common.base.Objects;
 
 import org.ektorp.support.CouchDbDocument;
 import org.jvalue.ods.utils.Assert;
 
 
+
 @JsonIgnoreProperties(ignoreUnknown=true)
-@JsonTypeInfo(use=Id.CLASS, include=As.PROPERTY, property="class")
+@JsonTypeInfo(
+		use = Id.NAME,
+		include = As.PROPERTY,
+		property = "type",
+		visible = true
+)
+@JsonSubTypes({
+		@JsonSubTypes.Type(value = HttpClient.class, name = HttpClient.CLIENT_TYPE),
+		@JsonSubTypes.Type(value = GcmClient.class, name = GcmClient.CLIENT_TYPE)
+})
 public abstract class Client extends CouchDbDocument {
 
-	private final String clientId, source;
+	private final String clientId, type;
 
-	protected Client(String clientId, String source) {
-		Assert.assertNotNull(clientId, source);
+	protected Client(String clientId, String type) {
+		Assert.assertNotNull(clientId, type);
 		this.clientId = clientId;
-		this.source = source;
+		this.type = type;
 	}
 
 
@@ -44,32 +56,24 @@ public abstract class Client extends CouchDbDocument {
 	}
 
 
-	public final String getSource() {
-		return source;
+	public final String getType() {
+		return type;
 	}
 
 
 	@Override
 	public boolean equals(Object other) {
-		return equalsIgnoreId(other) && ((Client) other).clientId.equals(clientId);
-	}
-
-
-	public boolean equalsIgnoreId(Object other) {
 		if (other == null || !(other instanceof Client)) return false;
 		if (other == this) return true;
 		Client client = (Client) other;
-		return client.source.equals(source);
+		return Objects.equal(clientId, client.clientId)
+				&& Objects.equal(type, client.type);
 	}
 
 
-	protected final static int HASH_MULT = 17;
 	@Override
 	public int hashCode() {
-		int hash = 13;
-		hash = hash + HASH_MULT * clientId.hashCode();
-		hash = hash + HASH_MULT * source.hashCode();
-		return hash;
+		return Objects.hashCode(clientId, type);
 	}
 
 

@@ -20,31 +20,31 @@ package org.jvalue.ods.notifications;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.inject.Inject;
 
+import org.jvalue.ods.data.AbstractDataSourcePropertyManager;
 import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.db.DataRepository;
+import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.NotificationClientRepository;
+import org.jvalue.ods.db.RepositoryCache;
 import org.jvalue.ods.notifications.clients.Client;
 import org.jvalue.ods.notifications.sender.SenderResult;
 import org.jvalue.ods.notifications.sender.SenderVisitor;
 import org.jvalue.ods.utils.Assert;
 import org.jvalue.ods.utils.Log;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
+public final class NotificationManager extends AbstractDataSourcePropertyManager<Client, NotificationClientRepository> {
 
-public final class NotificationManager {
-
-	private final NotificationClientRepository clientRepository;
 	private final SenderVisitor senderVisitor;
 
 
 	@Inject
 	NotificationManager(
-			NotificationClientRepository clientRepository,
+			RepositoryCache<NotificationClientRepository> repositoryCache,
+			DbFactory dbFactory,
 			SenderVisitor senderVisitor) {
 
-		this.clientRepository = clientRepository;
+		super(repositoryCache, dbFactory);
 		this.senderVisitor = senderVisitor;
 	}
 
@@ -53,7 +53,7 @@ public final class NotificationManager {
 		Assert.assertNotNull(source);
 
 		SenderVisitor.DataEntry dataEntry = new SenderVisitor.DataEntry(source, data);
-		for (Client client : clientRepository.findBySource(source.getSourceId())) {
+		for (Client client : getAll(source)) {
 			SenderResult result = client.accept(senderVisitor, dataEntry);
 			switch(result.getStatus()) {
 				case SUCCESS:
@@ -70,48 +70,36 @@ public final class NotificationManager {
 
 				case REMOVE_CLIENT:
 					Log.info("Unregistering client " + result.getOldClient().getClientId());
-					unregisterClient(result.getOldClient().getClientId());
+					remove(source, null, result.getOldClient());
 					break;
 					
 				case UPDATE_CLIENT:
 					Log.info("Updating client id to " + result.getNewClient().getClientId());
-					unregisterClient(result.getOldClient().getClientId());
-					registerClient(result.getNewClient());
+					remove(source, null, result.getOldClient());
+					add(source, null, result.getNewClient());
 					break;
-
 			}
 		}
 	}
 
 
-	public void registerClient(Client client) {
-		Assert.assertNotNull(client);
-		clientRepository.add(client);
+	@Override
+	protected void doAdd(DataSource source, DataRepository dataRepository, Client client) { }
+
+
+	@Override
+	protected void doRemove(DataSource source, DataRepository dataRepository, Client client) { }
+
+
+	@Override
+	protected Client doGet(NotificationClientRepository repository, String clientId) {
+		return repository.findByClientId(clientId);
 	}
 
 
-	public void unregisterClient(String clientId) {
-		Assert.assertNotNull(clientId);
-		for (Client client : clientRepository.findByClientId(clientId)) {
-			clientRepository.remove(client);
-		}
-	}
-
-
-	public Set<Client> getAllClients() {
-		return new HashSet<Client>(clientRepository.getAll());
-	}
-
-
-	public boolean isClientRegistered(String clientId) {
-		return !clientRepository.findByClientId(clientId).isEmpty();
-	}
-
-
-	public Client getClientById(String clientId) throws ClientNotRegisteredException {
-		if (!isClientRegistered(clientId)) throw new ClientNotRegisteredException(clientId);
-		List<Client> clients = clientRepository.findByClientId(clientId);
-		return clients.get(0);
+	@Override
+	protected NotificationClientRepository createNewRepository(String sourceId, DbFactory dbFactory) {
+		return dbFactory.createNotificationClientRepository(sourceId);
 	}
 
 }

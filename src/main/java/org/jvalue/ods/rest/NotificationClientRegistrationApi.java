@@ -3,141 +3,83 @@ package org.jvalue.ods.rest;
 
 import com.google.inject.Inject;
 
+import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.notifications.NotificationManager;
 import org.jvalue.ods.notifications.clients.Client;
-import org.jvalue.ods.notifications.clients.ClientFactory;
-import org.jvalue.ods.notifications.clients.GcmClient;
-import org.jvalue.ods.notifications.clients.HttpClient;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 
-@Path("/notification/client/{clientType}")
+@Path(AbstractApi.BASE_URL + "/{sourceId}/notifications")
 @Produces(MediaType.APPLICATION_JSON)
-public class NotificationClientRegistrationApi {
+@Consumes(MediaType.APPLICATION_JSON)
+public final class NotificationClientRegistrationApi extends AbstractApi {
 
-	private static final Map<String, ClientRestAdapter> adapters = new HashMap<>();
-
-	static {
-		adapters.put("gcm", new ClientRestAdapter(GcmClient.class) {
-			@Override
-			public Client toClient(MultivaluedMap<String, String> values) {
-				return ClientFactory.newGcmClient(
-						values.getFirst("source"),
-						values.getFirst("gcmClientId"));
-			}
-		});
-		adapters.put("http", new ClientRestAdapter(HttpClient.class) {
-			@Override
-			public Client toClient(MultivaluedMap<String, String> values) {
-				return ClientFactory.newHttpClient(
-						values.getFirst("source"),
-						values.getFirst("restUrl"),
-						values.getFirst("sourceParam"),
-						Boolean.valueOf(values.getFirst("sendData")));
-			}
-		});
-	}
-
-
-
-	protected final NotificationManager manager;
+	private final DataSourceManager sourceManager;
+	private final NotificationManager notificationManager;
 
 	@Inject
-	NotificationClientRegistrationApi(NotificationManager manager) {
-		this.manager = manager;
+	NotificationClientRegistrationApi(
+			DataSourceManager sourceManager,
+			NotificationManager notificationManager) {
+
+		this.sourceManager = sourceManager;
+		this.notificationManager = notificationManager;
 	}
 
 
-	@POST
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@PUT
+	@Path("/{clientId}")
 	public Client registerClient(
-			@PathParam("clientType") String clientType,
-			MultivaluedMap<String, String> form) {
+			@PathParam("sourceId") String sourceId,
+			@PathParam("clientId") String clientId,
+			Client client) {
 
-		assertIsValidClientType(clientType);
-		try {
-			Client client = adapters.get(clientType).toClient(form);
-			manager.registerClient(client);
-			return client;
-		} catch (IllegalArgumentException iae) {
-			throw RestUtils.createJsonFormattedException("failed to parse content (" + iae.getMessage() + ")", 400);
-		}
+		DataSource source = sourceManager.findBySourceId(sourceId);
+		if (notificationManager.contains(source, clientId)) throw RestUtils.createJsonFormattedException("client with id " + clientId + " already exists", 409);
+		notificationManager.add(source, sourceManager.getDataRepository(source), client);
+		return client;
 	}
 
 
 	@DELETE
 	@Path("/{clientId}")
 	public void unregisterClient(
-			@PathParam("clientType") String clientType,
+			@PathParam("sourceId") String sourceId,
 			@PathParam("clientId") String clientId) {
 
-		assertIsValidClientType(clientType, clientId);
-		manager.unregisterClient(clientId);
+		DataSource source = sourceManager.findBySourceId(sourceId);
+		Client client = notificationManager.get(source, clientId);
+		notificationManager.remove(source, sourceManager.getDataRepository(source), client);
 	}
 
 
 	@GET
 	@Path("/{clientId}")
-	public Client getClient(
-			@PathParam("clientType") String clientType,
+	public Client getSingleClient(
+			@PathParam("sourceId") String sourceId,
 			@PathParam("clientId") String clientId) {
 
-		assertIsValidClientType(clientType, clientId);
-		return manager.getClientById(clientId);
+		DataSource source = sourceManager.findBySourceId(sourceId);
+		return notificationManager.get(source, clientId);
 	}
 
 
 	@GET
-	public List<Client> getAllClients(@PathParam("clientType") String clientType) {
-		assertIsValidClientType(clientType);
-		Set<Client> clients = manager.getAllClients();
-		Iterator<Client> iter = clients.iterator();
-		while (iter.hasNext()) {
-			if (!iter.next().getClass().equals(adapters.get(clientType).clientClass)) iter.remove();
-		}
-		return new LinkedList<>(clients);
-	}
+	public List<Client> getAllClients(
+			@PathParam("sourceId") String sourceId) {
 
-
-
-	private void assertIsValidClientType(String clientTypePath) {
-		if (!adapters.containsKey(clientTypePath)) throw RestUtils.createJsonFormattedException("invalid client type", 404);
-	}
-
-
-	private void assertIsValidClientType(String clientTypePath, String clientId) {
-		assertIsValidClientType(clientTypePath);
-		if (!manager.isClientRegistered(clientId)) throw RestUtils.createJsonFormattedException("client not registered", 400);
-		Client client = manager.getClientById(clientId);
-		if (!client.getClass().equals(adapters.get(clientTypePath).clientClass)) throw RestUtils.createJsonFormattedException("client not registered", 400);
-	}
-
-
-	private abstract static class ClientRestAdapter {
-
-		private final Class<? extends Client> clientClass;
-
-		public ClientRestAdapter(Class<? extends Client> clientClass) {
-			this.clientClass = clientClass;
-		}
-
-		public abstract Client toClient(MultivaluedMap<String, String> values);
-
+		DataSource source = sourceManager.findBySourceId(sourceId);
+		return notificationManager.getAll(source);
 	}
 
 }

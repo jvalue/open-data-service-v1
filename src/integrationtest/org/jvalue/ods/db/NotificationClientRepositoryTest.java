@@ -23,7 +23,7 @@ public class NotificationClientRepositoryTest extends AbstractDbTest {
 
 	@Override
 	protected void createDatabase(CouchDbInstance couchDbInstance, String databaseName) {
-		clientRepository = new NotificationClientRepository(couchDbInstance.createConnector(databaseName, true));
+		clientRepository = new NotificationClientRepository(couchDbInstance, NotificationClientRepositoryTest.class.getSimpleName());
 	}
 
 
@@ -41,11 +41,8 @@ public class NotificationClientRepositoryTest extends AbstractDbTest {
 		List<Client> clients = clientRepository.getAll();
 		Assert.assertTrue(clients.contains(client1) && clients.contains(client2));
 
-		clients = clientRepository.findByClientId("id1");
-		Assert.assertTrue(clients.contains(client1) && !clients.contains(client2));
-
-		clients = clientRepository.findBySource("source2");
-		Assert.assertTrue(!clients.contains(client1) && clients.contains(client2));
+		Client client = clientRepository.get("id1");
+		Assert.assertNotNull(client);
 	}
 
 

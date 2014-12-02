@@ -1,8 +1,8 @@
 package org.jvalue.ods.notifications.clients; 
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 
 public final class ClientVisitorTest {
@@ -12,8 +12,8 @@ public final class ClientVisitorTest {
 
 		DummyClientVisitor visitor = new DummyClientVisitor();
 
-		GcmClient gcmClient = new GcmClient("", "", "");
-		HttpClient httpClient = new HttpClient("", "", "", "", true);
+		GcmClient gcmClient = new GcmClient("", "");
+		HttpClient httpClient = new HttpClient("", "", "", true);
 
 		assertEquals(gcmClient.accept(visitor, "param"), "param");
 		assertEquals(httpClient.accept(visitor, "param"), "param");

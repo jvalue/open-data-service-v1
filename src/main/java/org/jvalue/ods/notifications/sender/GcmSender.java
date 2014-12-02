@@ -9,7 +9,6 @@ import com.google.inject.Inject;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.main.GcmApiKey;
-import org.jvalue.ods.notifications.clients.ClientFactory;
 import org.jvalue.ods.notifications.clients.GcmClient;
 import org.jvalue.ods.utils.Log;
 
@@ -77,8 +76,8 @@ public final class GcmSender extends Sender<GcmClient> {
 				if (canonicalRegId != null) {
 					// same device has more than on registration id: update it
 					return getUpdateClientResult(
-							client, 
-							ClientFactory.newGcmClient(client.getSource(), canonicalRegId));
+							client,
+							new GcmClient(client.getClientId(), client.getGcmClientId()));
 				}
 			} else {
 				String error = result.getErrorCodeName();

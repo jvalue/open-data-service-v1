@@ -1,11 +1,9 @@
 package org.jvalue.ods.notifications.clients; 
 
+import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
-
-import org.junit.Test;
 
 
 public final class ClientTest {
@@ -29,11 +27,6 @@ public final class ClientTest {
 		assertEquals(client1.hashCode(), client2.hashCode());
 		assertNotEquals(client1.hashCode(), client3.hashCode());
 		assertNotEquals(client1.hashCode(), client4.hashCode());
-
-		assertTrue(client1.equalsIgnoreId(client2));
-		assertTrue(client1.equalsIgnoreId(client3));
-		assertFalse(client1.equalsIgnoreId(client4));
-		
 	}
 
 
@@ -42,7 +35,7 @@ public final class ClientTest {
 
 		DummyClient client = new DummyClient("0", "source");
 		assertEquals(client.getClientId(), "0");
-		assertEquals(client.getSource(), "source");
+		assertEquals(client.getType(), "source");
 
 	}
 

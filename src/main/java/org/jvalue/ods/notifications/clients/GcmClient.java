@@ -17,23 +17,25 @@
  */
 package org.jvalue.ods.notifications.clients;
 
-import org.jvalue.ods.utils.Assert;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Objects;
+
+import org.jvalue.ods.utils.Assert;
 
 
 public final class GcmClient extends Client {
 
+	static final String CLIENT_TYPE = "GCM";
+
 	private final String gcmClientId;
 
 	@JsonCreator
-	GcmClient(
+	public GcmClient(
 			@JsonProperty("clientId") String clientId, 
-			@JsonProperty("source") String source,
 			@JsonProperty("gcmClientId") String gcmClientId) {
 
-		super(clientId, source);
+		super(clientId, CLIENT_TYPE);
 		Assert.assertNotNull(gcmClientId);
 		this.gcmClientId = gcmClientId;
 	}
@@ -46,24 +48,15 @@ public final class GcmClient extends Client {
 
 	@Override
 	public boolean equals(Object other) {
-		return super.equals(other) && equalsIgnoreId(other);
-	}
-
-
-	@Override
-	public boolean equalsIgnoreId(Object other) {
-		if (!super.equalsIgnoreId(other)) return false;
-		if (!(other instanceof GcmClient)) return false;
+		if (!super.equals(other)) return false;
 		GcmClient client = (GcmClient) other;
-		return gcmClientId.equals(client.gcmClientId);
+		return Objects.equal(gcmClientId, client.gcmClientId);
 	}
 
 
 	@Override
 	public int hashCode() {
-		int hash = super.hashCode();
-		hash = hash + HASH_MULT * gcmClientId.hashCode();
-		return hash;
+		return Objects.hashCode(super.hashCode(), gcmClientId);
 	}
 
 
