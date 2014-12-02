@@ -1,9 +1,13 @@
 package org.jvalue.ods.notifications.sender;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.data.DummyDataSource;
 import org.jvalue.ods.notifications.clients.GcmClient;
+
+import mockit.Expectations;
+import mockit.Mocked;
+import mockit.integration.junit4.JMockit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -11,14 +15,20 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 
+@RunWith(JMockit.class)
 public final class GcmSenderTest {
 
 	@Test
-	public final void testFail() {
-		
+	public final void testFail(
+			@Mocked final DataSource source) {
+
+		new Expectations() {{
+			source.getSourceId();
+			result = "someSourceId";
+		}};
+
 		GcmSender sender = new GcmSender(GcmApiKeyHelper.getResourceName());
 		GcmClient client = new GcmClient("dummy", "dummy");
-		DataSource source = DummyDataSource.newInstance("dummy", "dummy");
 
 		try {
 			SenderResult result = sender.notifySourceChanged(client, source, null);
