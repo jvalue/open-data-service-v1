@@ -27,6 +27,7 @@ public final class DataViewApi extends AbstractApi {
 
 	private final DataSourceManager sourceManager;
 	private final DataViewManager viewManager;
+	private final JsonDbPropertyFilter jsonFilter = new JsonDbPropertyFilter();
 
 	@Inject
 	public DataViewApi(
@@ -57,7 +58,7 @@ public final class DataViewApi extends AbstractApi {
 		DataView view = viewManager.get(source, viewId);
 
 		if (!execute) return view;
-		else return viewManager.executeView(sourceManager.getDataRepository(source), view, argument);
+		else return jsonFilter.filter(viewManager.executeView(sourceManager.getDataRepository(source), view, argument));
 	}
 
 
