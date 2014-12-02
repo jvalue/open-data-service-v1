@@ -21,12 +21,7 @@ public class DbModule extends AbstractModule {
 
 		bind(CouchDbInstance.class).toInstance(couchDbInstance);
 		bind(CouchDbConnector.class).annotatedWith(Names.named(DataSourceRepository.DATABASE_NAME)).toInstance(dataSourceConnector);
-		install(new FactoryModuleBuilder()
-				.implement(DataRepository.class, DataRepository.class)
-				.implement(FilterChainReferenceRepository.class, FilterChainReferenceRepository.class)
-				.implement(DataViewRepository.class, DataViewRepository.class)
-				.implement(NotificationClientRepository.class, NotificationClientRepository.class)
-				.build(DbFactory.class));
+		install(new FactoryModuleBuilder().build(DbFactory.class));
 
 		bind(new TypeLiteral<RepositoryCache<DataRepository>>() { }).in(Singleton.class);
 	}

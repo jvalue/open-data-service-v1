@@ -46,7 +46,7 @@ run() {
 
 dependencies {
     cargo "org.codehaus.cargo:cargo-ant:1.4.5"
-
+    compile 'org.glassfish.jersey.media:jersey-media-multipart:2.13'
     compile 'io.dropwizard:dropwizard-core:0.8.0-rc1'
     compile 'com.google.inject:guice:4.0-beta5'
     compile 'com.google.inject.extensions:guice-assistedinject:4.0-beta5'

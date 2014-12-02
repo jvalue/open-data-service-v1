@@ -9,5 +9,6 @@ public interface DbFactory {
 	public FilterChainReferenceRepository createFilterChainReferenceRepository(String databaseName);
 	public DataViewRepository createDataViewRepository(String databaseName);
 	public NotificationClientRepository createNotificationClientRepository(String databaseName);
+	public PluginMetaDataRepository createPluginMetaDataRepository(String databaseName);
 
 }

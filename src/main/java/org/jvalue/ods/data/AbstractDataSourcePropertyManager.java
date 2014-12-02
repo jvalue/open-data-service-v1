@@ -44,7 +44,7 @@ public abstract class AbstractDataSourcePropertyManager<T, R extends CouchDbRepo
 
 
 	public final void add(DataSource source, DataRepository dataRepository, T data) {
-		Assert.assertNotNull(source, dataRepository, data);
+		Assert.assertNotNull(source, data);
 		assertRepository(source).add(data);
 		doAdd(source, dataRepository, data);
 	}
@@ -94,6 +94,11 @@ public abstract class AbstractDataSourcePropertyManager<T, R extends CouchDbRepo
 		} catch (DocumentNotFoundException dnfe) {
 			return false;
 		}
+	}
+
+
+	protected R getRepository(DataSource source) {
+		return assertRepository(source);
 	}
 
 

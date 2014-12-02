@@ -4,6 +4,7 @@ package org.jvalue.ods.main;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.jvalue.ods.configuration.ConfigurationModule;
 import org.jvalue.ods.data.DataModule;
 import org.jvalue.ods.data.DataSourceManager;
@@ -17,6 +18,7 @@ import org.jvalue.ods.rest.DbExceptionMapper;
 import org.jvalue.ods.rest.FilterChainApi;
 import org.jvalue.ods.rest.JsonMixins;
 import org.jvalue.ods.rest.NotificationClientRegistrationApi;
+import org.jvalue.ods.rest.PluginApi;
 import org.jvalue.ods.rest.RestModule;
 
 import java.util.Map;
@@ -64,11 +66,13 @@ public final class OdsApplication extends Application<OdsConfig> {
 
 		// start data grabbing
 		environment.lifecycle().manage(injector.getInstance(DataSourceManager.class));
+		environment.jersey().getResourceConfig().register(MultiPartFeature.class);
 		environment.jersey().register(injector.getInstance(DataSourceApi.class));
 		environment.jersey().register(injector.getInstance(DataApi.class));
 		environment.jersey().register(injector.getInstance(FilterChainApi.class));
 		environment.jersey().register(injector.getInstance(DataViewApi.class));
 		environment.jersey().register(injector.getInstance(NotificationClientRegistrationApi.class));
+		environment.jersey().register(injector.getInstance(PluginApi.class));
 		environment.jersey().register(new DbExceptionMapper());
 	}
 
