@@ -50,7 +50,7 @@ public final class PluginMetaDataRepository extends CouchDbRepositorySupport<Plu
 		Map<String, Attachment> attachments = metaData.getAttachments();
 		Attachment attachment = attachments.get(metaData.getPluginId());
 		if (attachment == null) throw new IllegalStateException("did not find any attachments for plugin " + metaData.getPluginId());
-		return connector.getAttachment(metaData.getId(), attachment.getId());
+		return connector.getAttachment(metaData.getId(), metaData.getPluginId());
 	}
 
 }

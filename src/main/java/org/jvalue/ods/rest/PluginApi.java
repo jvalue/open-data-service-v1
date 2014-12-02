@@ -15,12 +15,15 @@ import java.io.InputStream;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 
 @Path(AbstractApi.BASE_URL + "/{sourceId}/plugins")
@@ -48,7 +51,7 @@ public final class PluginApi extends AbstractApi {
 	@PUT
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Path("/{pluginId}")
-	public PluginMetaData uploadFile(
+	public PluginMetaData add(
 			@PathParam("sourceId") String sourceId,
 			@PathParam("pluginId") String pluginId,
 			@FormDataParam("file") InputStream fileInputStream,
@@ -78,12 +81,32 @@ public final class PluginApi extends AbstractApi {
 
 
 	@GET
+	@Produces({MediaType.APPLICATION_JSON, MediaType.MULTIPART_FORM_DATA})
 	@Path("/{pluginId}")
-	public PluginMetaData getSingle(
+	public Response get(
+			@PathParam("sourceId") String sourceId,
+			@PathParam("pluginId") String pluginId,
+			@QueryParam("download") boolean download) {
+
+		DataSource source = sourceManager.findBySourceId(sourceId);
+		PluginMetaData metaData = pluginManager.get(source, pluginId);
+		if (!download) return Response.ok(metaData, MediaType.APPLICATION_JSON).build();
+		else {
+			InputStream stream = pluginManager.getFile(source, metaData);
+			return Response.ok(stream, MediaType.MULTIPART_FORM_DATA_TYPE).header("Content-Disposition", "attachment; filename=\"" + pluginId + "\"").build();
+		}
+	}
+
+
+	@DELETE
+	@Path("/{pluginId}")
+	public void delete(
 			@PathParam("sourceId") String sourceId,
 			@PathParam("pluginId") String pluginId) {
 
-		return pluginManager.get(sourceManager.findBySourceId(sourceId), pluginId);
+		DataSource source = sourceManager.findBySourceId(sourceId);
+		pluginManager.remove(source, sourceManager.getDataRepository(source), pluginManager.get(source, pluginId));
 	}
+
 
 }
