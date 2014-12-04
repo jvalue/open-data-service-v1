@@ -19,7 +19,7 @@ public final class FilterReferenceManager {
 	static {
 		for (Method method : FilterFactory.class.getDeclaredMethods()) {
 			if (!Filter.class.isAssignableFrom(method.getReturnType())) continue;
-			FilterAnnotation annotation = method.getAnnotation(FilterAnnotation.class);
+			FilterName annotation = method.getAnnotation(FilterName.class);
 			filterReferences.put(annotation.name(), new FilterReference(annotation.name(), annotation.filterType()));
 		}
 	}

@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.METHOD;
 
 @Target({ METHOD }) @Retention(RetentionPolicy.RUNTIME)
-public @interface FilterAnnotation {
+public @interface FilterName {
 	String name();
 	FilterType filterType();
 }
