@@ -1,14 +1,11 @@
 package org.jvalue.ods.db;
 
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import org.ektorp.CouchDbInstance;
 import org.junit.Assert;
 import org.junit.Test;
 import org.jvalue.ods.notifications.clients.Client;
-import org.jvalue.ods.notifications.clients.ClientVisitor;
+import org.jvalue.ods.notifications.clients.GcmClient;
 
 import java.util.List;
 
@@ -29,8 +26,8 @@ public class NotificationClientRepositoryTest extends AbstractDbTest {
 
 	@Test
 	public void testCustomViews() {
-		Client client1 = new DummyClient("id1", "source1");
-		Client client2 = new DummyClient("id2", "source2");
+		Client client1 = new GcmClient("id1", "someGcmId1");
+		Client client2 = new GcmClient("id2", "someGcmId2");
 
 		clientRepository.add(client1);
 		Assert.assertEquals(client1, clientRepository.get(client1.getId()));
@@ -41,24 +38,8 @@ public class NotificationClientRepositoryTest extends AbstractDbTest {
 		List<Client> clients = clientRepository.getAll();
 		Assert.assertTrue(clients.contains(client1) && clients.contains(client2));
 
-		Client client = clientRepository.get("id1");
+		Client client = clientRepository.findByClientId("id1");
 		Assert.assertNotNull(client);
-	}
-
-
-	public static final class DummyClient extends Client {
-
-		@JsonCreator
-		public DummyClient(
-				@JsonProperty("clientId") String clientId,
-				@JsonProperty("source") String source) {
-			super(clientId, source);
-		}
-
-		public <P,R> R accept(ClientVisitor<P,R> visitor, P param) {
-			return null;
-		}
-
 	}
 
 }
