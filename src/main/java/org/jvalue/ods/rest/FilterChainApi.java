@@ -10,10 +10,11 @@ import org.jvalue.ods.filter.FilterChainManager;
 import org.jvalue.ods.filter.reference.FilterChainExecutionInterval;
 import org.jvalue.ods.filter.reference.FilterChainReference;
 import org.jvalue.ods.filter.reference.FilterReference;
-import org.jvalue.ods.filter.reference.FilterReferenceManager;
+import org.jvalue.ods.filter.reference.FilterReferenceFactory;
 import org.jvalue.ods.utils.Assert;
 
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -36,17 +37,17 @@ public final class FilterChainApi extends AbstractApi {
 
 	private final DataSourceManager sourceManager;
 	private final FilterChainManager chainManager;
-	private final FilterReferenceManager referenceManager;
+	private final FilterReferenceFactory referenceFactory;
 
 	@Inject
 	public FilterChainApi(
 			DataSourceManager sourceManager,
 			FilterChainManager chainManager,
-			FilterReferenceManager referenceManager) {
+			FilterReferenceFactory referenceFactory) {
 
 		this.sourceManager = sourceManager;
 		this.chainManager = chainManager;
-		this.referenceManager = referenceManager;
+		this.referenceFactory = referenceFactory;
 	}
 
 
@@ -82,25 +83,22 @@ public final class FilterChainApi extends AbstractApi {
 		if (chainManager.contains(source, filterChainId))
 			throw RestUtils.createJsonFormattedException("filter chain with id " + filterChainId + " already exists", 409);
 
-		List<FilterReference> filterReferences = new LinkedList<>();
-		for (String filterName : description.filterNames) {
-			FilterReference reference = referenceManager.getFilterReferenceByName(filterName);
-			if (reference == null) {
-				throw RestUtils.createJsonFormattedException("unknown filter '" + filterName + "'", 400);
-			}
-			filterReferences.add(reference);
-		}
-
 		try {
-			FilterChainReference chainReference = referenceManager.createFilterChainReference(
+			List<FilterReference> filterReferences = new LinkedList<>();
+			for (String filterName : description.filterNames) {
+				FilterReference reference = referenceFactory.createFilterReference(filterName, new HashMap<String, Object>());
+				filterReferences.add(reference);
+			}
+
+			FilterChainReference chainReference = referenceFactory.createFilterChainReference(
 					filterChainId,
 					filterReferences,
 					description.executionInterval);
 
 			chainManager.add(source, sourceManager.getDataRepository(source), chainReference);
 			return chainReference;
-		} catch (FilterReferenceManager.InvalidFilterReferenceListException ifre) {
-			throw RestUtils.createJsonFormattedException(ifre.getMessage(), 400);
+		} catch (FilterReferenceFactory.InvalidFilterException ife) {
+			throw RestUtils.createJsonFormattedException(ife.getMessage(), 400);
 		}
 	}
 

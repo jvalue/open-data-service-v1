@@ -7,29 +7,31 @@ import com.google.common.base.Objects;
 
 import org.jvalue.ods.utils.Assert;
 
+import java.util.Map;
+
 public final class FilterReference {
 
-	private final String filterName;
-	private final FilterType filterType;
+	private final String name;
+	private final Map<String, Object> arguments;
 
 	@JsonCreator
 	FilterReference(
-		 	@JsonProperty("filterName") String filterName,
-			@JsonProperty("filterType") FilterType filterType) {
+		 	@JsonProperty("name") String name,
+			@JsonProperty("arguments") Map<String, Object> arguments) {
 
-		Assert.assertNotNull(filterName, filterType);
-		this.filterName = filterName;
-		this.filterType = filterType;
+		Assert.assertNotNull(name, arguments);
+		this.name = name;
+		this.arguments = arguments;
 	}
 
 
-	public String getFilterName() {
-		return filterName;
+	public String getName() {
+		return name;
 	}
 
 
-	public FilterType getFilterType() {
-		return filterType;
+	public Map<String, Object> getArguments() {
+		return arguments;
 	}
 
 
@@ -38,14 +40,14 @@ public final class FilterReference {
 		if (other == null || !(other instanceof FilterReference)) return false;
 		if (other == this) return true;
 		FilterReference reference = (FilterReference) other;
-		return Objects.equal(filterName, reference.filterName)
-				&& Objects.equal(filterType, reference.filterType);
+		return Objects.equal(name, reference.name)
+				&& Objects.equal(arguments, reference.arguments);
 	}
 
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(filterName, filterType);
+		return Objects.hashCode(name, arguments);
 	}
 
 }

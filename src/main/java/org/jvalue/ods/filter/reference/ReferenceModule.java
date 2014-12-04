@@ -8,7 +8,7 @@ public final class ReferenceModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(FilterReferenceManager.class).in(Singleton.class);
+		bind(FilterReferenceFactory.class).in(Singleton.class);
 	}
 
 }

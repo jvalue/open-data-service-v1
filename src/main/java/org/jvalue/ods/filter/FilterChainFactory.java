@@ -38,7 +38,7 @@ public final class FilterChainFactory {
 		Filter<?, ArrayNode> lastFilter = null;
 
 		for (FilterReference filterReference : chainReference.getFilterReferences()) {
-			Filter filter = createFilterFromAnnotation(filterReference.getFilterName(), source, dataRepository);
+			Filter filter = createFilterFromAnnotation(filterReference.getName(), source, dataRepository);
 			if (firstFilter == null) {
 				firstFilter = (Filter<Void, ArrayNode>) filter;
 				lastFilter = (Filter<?, ArrayNode>) filter;

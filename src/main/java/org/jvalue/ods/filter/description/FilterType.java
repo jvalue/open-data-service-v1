@@ -1,4 +1,4 @@
-package org.jvalue.ods.filter.reference;
+package org.jvalue.ods.filter.description;
 
 
 import java.util.EnumSet;
