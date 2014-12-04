@@ -1,6 +1,7 @@
 package org.jvalue.ods.rest;
 
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.inject.Inject;
 
@@ -17,6 +18,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.ws.rs.DELETE;
@@ -74,10 +76,10 @@ public final class FilterChainApi extends AbstractApi {
 	public FilterChainReference addFilterChain(
 			@PathParam("sourceId") String sourceId,
 			@PathParam("filterChainId") String filterChainId,
-			FilterChainReferenceDescription description) {
+			FilterChain filterChain) {
 
-		assertIsValidTimeUnit(description.executionInterval.getUnit());
-		assertIsValidPeriod(description.executionInterval.getPeriod());
+		assertIsValidTimeUnit(filterChain.executionInterval.getUnit());
+		assertIsValidPeriod(filterChain.executionInterval.getPeriod());
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		if (chainManager.contains(source, filterChainId))
@@ -85,15 +87,15 @@ public final class FilterChainApi extends AbstractApi {
 
 		try {
 			List<FilterReference> filterReferences = new LinkedList<>();
-			for (String filterName : description.filterNames) {
-				FilterReference reference = referenceFactory.createFilterReference(filterName, new HashMap<String, Object>());
+			for (Filter filter : filterChain.filters) {
+				FilterReference reference = referenceFactory.createFilterReference(filter.name, filter.arguments);
 				filterReferences.add(reference);
 			}
 
 			FilterChainReference chainReference = referenceFactory.createFilterChainReference(
 					filterChainId,
 					filterReferences,
-					description.executionInterval);
+					filterChain.executionInterval);
 
 			chainManager.add(source, sourceManager.getDataRepository(source), chainReference);
 			return chainReference;
@@ -135,18 +137,38 @@ public final class FilterChainApi extends AbstractApi {
 	}
 
 
-	private static final class FilterChainReferenceDescription {
+	private static final class FilterChain {
 
-		private final List<String> filterNames;
+		private final List<Filter> filters;
 		private final FilterChainExecutionInterval executionInterval;
 
-		public FilterChainReferenceDescription(
-				@JsonProperty("filterNames") List<String> filterNames,
+		@JsonCreator
+		public FilterChain(
+				@JsonProperty("filters") List<Filter> filters,
 				@JsonProperty("executionInterval") FilterChainExecutionInterval executionInterval) {
 
-			Assert.assertNotNull(filterNames, executionInterval);
-			this.filterNames = filterNames;
+			Assert.assertNotNull(filters, executionInterval);
+			this.filters = filters;
 			this.executionInterval = executionInterval;
+		}
+
+	}
+
+
+	private static final class Filter {
+
+		private final String name;
+		private final Map<String, Object> arguments;
+
+		@JsonCreator
+		public Filter(
+				@JsonProperty("name") String name,
+				@JsonProperty("arguments") Map<String, Object> arguments) {
+
+			Assert.assertNotNull(name);
+			this.name = name;
+			if (arguments == null) this.arguments = new HashMap<>();
+			else this.arguments = arguments;
 		}
 
 	}

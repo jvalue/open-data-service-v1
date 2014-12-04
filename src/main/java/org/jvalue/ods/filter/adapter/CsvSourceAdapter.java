@@ -23,40 +23,47 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.filter.FilterException;
 import org.jvalue.ods.utils.Log;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URLConnection;
+import java.nio.charset.Charset;
 
 
 final class CsvSourceAdapter extends SourceAdapter {
 
+	private final CSVFormat csvFormat;
+
 	@Inject
-	CsvSourceAdapter(@Assisted DataSource source) {
+	CsvSourceAdapter(@Assisted DataSource source, @Assisted String csvFormatString) {
 		super(source);
+		if (csvFormatString.equals(("DEFAULT"))) csvFormat = CSVFormat.DEFAULT;
+		else if (csvFormatString.equals(("EXCEL"))) csvFormat = CSVFormat.EXCEL;
+		else if (csvFormatString.equals(("MYSQL"))) csvFormat = CSVFormat.MYSQL;
+		else if (csvFormatString.equals(("RFC4180"))) csvFormat = CSVFormat.RFC4180;
+		else if (csvFormatString.equals(("TDF"))) csvFormat = CSVFormat.TDF;
+		else throw new IllegalArgumentException("unknown csv format \"" + csvFormatString + "\"");
 	}
 
 
 	@Override
 	public ArrayNode grabSource() throws FilterException {
-		BufferedReader reader = null;
+		CSVParser parser = null;
 		try {
-			URLConnection connection = dataSource.getUrl().openConnection();
-			reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			String line;
-
-			// read header line
-			line = reader.readLine();
-			String[] keys = line.split(",");
-
 			ArrayNode array = new ArrayNode(JsonNodeFactory.instance);
-			while ((line = reader.readLine()) != null) {
-				String[] values = line.split(",");
-				array.add(createObject(keys, values));
+			parser = CSVParser.parse(dataSource.getUrl(), Charset.forName("UTF-8"), csvFormat);
+
+			CSVRecord firstRecord = null;
+			for (CSVRecord record : parser) {
+				if (firstRecord == null) {
+					firstRecord = record;
+					continue;
+				}
+				array.add(createObject(firstRecord, record));
 			}
 
 			return array;
@@ -64,17 +71,15 @@ final class CsvSourceAdapter extends SourceAdapter {
 		} catch (IOException ioe) {
 			throw new FilterException(ioe);
 		} finally {
-			if (reader != null) {
-				try { reader.close(); } catch(IOException ioe) { Log.error("failed to close reader", ioe); }
-			}
+			if (parser != null) try { parser.close(); } catch (IOException ioe) { Log.error("failed to close parser"); }
 		}
 	}
 
 
-	private ObjectNode createObject(String[] keys, String[] values) {
+	private ObjectNode createObject(CSVRecord keys, CSVRecord values) {
 		ObjectNode node = new ObjectNode(JsonNodeFactory.instance);
-		for (int i = 0; i < keys.length; ++i) {
-			node.put(keys[i], values[i]);
+		for (int i = 0; i < keys.size(); ++i) {
+			node.put(keys.get(i), values.get(i));
 		}
 		return node;
 	}

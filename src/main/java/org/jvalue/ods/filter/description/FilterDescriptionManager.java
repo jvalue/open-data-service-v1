@@ -28,7 +28,7 @@ public final class FilterDescriptionManager {
 			Class<?>[] argTypes = method.getParameterTypes();
 			for (int i = 0; i < argAnnotations.length; ++i) {
 				for (Annotation annotation : argAnnotations[i]) {
-					if (annotation instanceof FilterCreationMethod) {
+					if (annotation instanceof FilterArgument) {
 						FilterArgument arg = (FilterArgument) annotation;
 						requiredFilterArgs.put(arg.value(), argTypes[i]);
 						break;

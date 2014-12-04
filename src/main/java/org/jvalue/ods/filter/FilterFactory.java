@@ -6,6 +6,7 @@ import com.google.inject.name.Named;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.db.DataRepository;
+import org.jvalue.ods.filter.description.FilterArgument;
 import org.jvalue.ods.filter.description.FilterCreationMethod;
 import org.jvalue.ods.filter.description.FilterType;
 
@@ -25,7 +26,7 @@ public interface FilterFactory {
 
 	@FilterCreationMethod(name = NAME_CSV_SOURCE_ADAPTER, filterType = FilterType.OUTPUT_FILTER)
 	@Named(NAME_CSV_SOURCE_ADAPTER)
-	public Filter<Void, ArrayNode> createCsvSourceAdapter(DataSource source);
+	public Filter<Void, ArrayNode> createCsvSourceAdapter(DataSource source, @FilterArgument("csvFormat") String csvFormat);
 
 
 	@FilterCreationMethod(name = NAME_NOTIFICATION_FILTER, filterType =  FilterType.INPUT_OUTPUT_FILTER)
