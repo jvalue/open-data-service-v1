@@ -59,6 +59,8 @@ dependencies {
 	compile files('./lib/jvalue_test.jar')
     testCompile 'org.jmockit:jmockit:1.13'
     testCompile 'junit:junit:4.11'
+    testCompile 'com.squareup.retrofit:retrofit:1.8.+'
+    testCompile 'com.squareup.retrofit:converter-jackson:1.8.+'
 }
 
 

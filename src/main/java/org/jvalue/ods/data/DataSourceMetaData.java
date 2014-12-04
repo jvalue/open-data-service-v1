@@ -85,7 +85,7 @@ public final class DataSourceMetaData extends CouchDbDocument {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other == null || !(other instanceof DataSource)) return false;
+		if (other == null || !(other instanceof DataSourceMetaData)) return false;
 		if (other == this) return true;
 		DataSourceMetaData data = (DataSourceMetaData) other;
 		return Objects.equal(name, data.name)
