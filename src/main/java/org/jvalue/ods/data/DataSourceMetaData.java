@@ -18,6 +18,7 @@
 package org.jvalue.ods.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Objects;
 
 import org.ektorp.support.CouchDbDocument;
 import org.jvalue.ods.utils.Assert;
@@ -79,6 +80,27 @@ public final class DataSourceMetaData extends CouchDbDocument {
 
 	public String getTermsOfUse() {
 		return termsOfUse;
+	}
+
+
+	@Override
+	public boolean equals(Object other) {
+		if (other == null || !(other instanceof DataSource)) return false;
+		if (other == this) return true;
+		DataSourceMetaData data = (DataSourceMetaData) other;
+		return Objects.equal(name, data.name)
+				&& Objects.equal(title, data.title)
+				&& Objects.equal(author, data.author)
+				&& Objects.equal(authorEmail, data.authorEmail)
+				&& Objects.equal(notes, data.notes)
+				&& Objects.equal(url, data.url)
+				&& Objects.equal(termsOfUse, data.termsOfUse);
+	}
+
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(name, title, author, authorEmail, notes, url, termsOfUse);
 	}
 
 }
