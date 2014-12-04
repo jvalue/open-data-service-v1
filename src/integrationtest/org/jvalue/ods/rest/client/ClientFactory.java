@@ -1,8 +1,6 @@
 package org.jvalue.ods.rest.client;
 
 
-import org.jvalue.ods.rest.FilterChainApi;
-
 import retrofit.RestAdapter;
 import retrofit.converter.JacksonConverter;
 
@@ -28,6 +26,11 @@ public final class ClientFactory {
 
 	public FilterChainClient getFilterChainClient() {
 		return restAdapter.create(FilterChainClient.class);
+	}
+
+
+	public DataViewClient getDataViewClient() {
+		return restAdapter.create(DataViewClient.class);
 	}
 
 }
