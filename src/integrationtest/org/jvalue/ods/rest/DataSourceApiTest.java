@@ -3,7 +3,7 @@ package org.jvalue.ods.rest;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.jvalue.ods.rest.retrofit.DataSource;
+import org.jvalue.ods.rest.model.DataSource;
 
 import java.util.List;
 

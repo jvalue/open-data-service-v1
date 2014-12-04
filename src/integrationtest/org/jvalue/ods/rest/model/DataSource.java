@@ -1,4 +1,4 @@
-package org.jvalue.ods.rest.retrofit;
+package org.jvalue.ods.rest.model;
 
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;

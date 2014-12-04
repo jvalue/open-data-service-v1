@@ -1,5 +1,7 @@
-package org.jvalue.ods.rest.retrofit;
+package org.jvalue.ods.rest.client;
 
+
+import org.jvalue.ods.rest.FilterChainApi;
 
 import retrofit.RestAdapter;
 import retrofit.converter.JacksonConverter;
@@ -21,6 +23,11 @@ public final class ClientFactory {
 
 	public DataSourceClient getDataSourceClient() {
 		return restAdapter.create(DataSourceClient.class);
+	}
+
+
+	public FilterChainClient getFilterChainClient() {
+		return restAdapter.create(FilterChainClient.class);
 	}
 
 }

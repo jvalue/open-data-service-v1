@@ -1,4 +1,4 @@
-package org.jvalue.ods.rest.retrofit;
+package org.jvalue.ods.rest.client;
 
 
 interface BaseClient {

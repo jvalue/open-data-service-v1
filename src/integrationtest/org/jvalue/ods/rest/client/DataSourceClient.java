@@ -1,5 +1,7 @@
-package org.jvalue.ods.rest.retrofit;
+package org.jvalue.ods.rest.client;
 
+
+import org.jvalue.ods.rest.model.DataSource;
 
 import java.util.List;
 
