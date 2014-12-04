@@ -13,12 +13,19 @@ public interface FilterFactory {
 
 	static final String
 			NAME_JSON_SOURCE_ADAPTER = "JsonSourceAdapter",
+			NAME_CSV_SOURCE_ADAPTER = "CsvSourceAdapter",
 			NAME_DB_INSERTION_FILTER = "DbInsertionFilter",
 			NAME_NOTIFICATION_FILTER = "NotificationFilter";
+
 
 	@FilterAnnotation(name = NAME_JSON_SOURCE_ADAPTER, filterType = FilterType.OUTPUT_FILTER)
 	@Named(NAME_JSON_SOURCE_ADAPTER)
 	public Filter<Void, ArrayNode> createJsonSourceAdapter(DataSource source);
+
+
+	@FilterAnnotation(name = NAME_CSV_SOURCE_ADAPTER, filterType = FilterType.OUTPUT_FILTER)
+	@Named(NAME_CSV_SOURCE_ADAPTER)
+	public Filter<Void, ArrayNode> createCsvSourceAdapter(DataSource source);
 
 
 	@FilterAnnotation(name = NAME_NOTIFICATION_FILTER, filterType =  FilterType.INPUT_OUTPUT_FILTER)

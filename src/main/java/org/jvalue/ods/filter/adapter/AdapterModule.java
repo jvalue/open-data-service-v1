@@ -17,7 +17,11 @@ public final class AdapterModule extends AbstractModule {
 				.implement(
 						new TypeLiteral<Filter<Void, ArrayNode>>() { },
 						Names.named(FilterFactory.NAME_JSON_SOURCE_ADAPTER),
-						JsonSourceAdapter.class);
+						JsonSourceAdapter.class)
+				.implement(
+						new TypeLiteral<Filter<Void, ArrayNode>>() { },
+						Names.named(FilterFactory.NAME_CSV_SOURCE_ADAPTER),
+						CsvSourceAdapter.class);
 	}
 
 	@Override
