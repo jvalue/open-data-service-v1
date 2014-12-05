@@ -9,7 +9,7 @@ import java.util.Map;
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public final class FilterReference {
+public final class Filter {
 
 	public String name;
 	public Map<String, Object> arguments;

@@ -33,4 +33,9 @@ public final class ClientFactory {
 		return restAdapter.create(DataViewClient.class);
 	}
 
+
+	public DataClient getDataClient() {
+		return restAdapter.create(DataClient.class);
+	}
+
 }

@@ -115,7 +115,7 @@ public final class FilterReferenceFactoryTest {
 
 		FilterChainReference reference = factory.createFilterChainReference(chainId, filterList, executionInterval);
 		Assert.assertEquals(chainId, reference.getFilterChainId());
-		Assert.assertEquals(filterList, reference.getFilterReferences());
+		Assert.assertEquals(filterList, reference.getFilters());
 		Assert.assertEquals(executionInterval, reference.getExecutionInterval());
 	}
 

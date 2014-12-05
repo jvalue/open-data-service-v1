@@ -36,7 +36,7 @@ public final class FilterChainFactoryTest {
 			refs.add(newInstance(FilterReference.class, FilterFactory.NAME_DB_INSERTION_FILTER, new HashMap<String, Object>()));
 			refs.add(newInstance(FilterReference.class, FilterFactory.NAME_NOTIFICATION_FILTER, new HashMap<String, Object>()));
 
-			chainReference.getFilterReferences();
+			chainReference.getFilters();
 			result = refs;
 		}};
 

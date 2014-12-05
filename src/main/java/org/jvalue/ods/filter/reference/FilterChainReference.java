@@ -12,18 +12,18 @@ import java.util.List;
 public final class FilterChainReference extends CouchDbDocument {
 
 	private final String filterChainId;
-	private final List<FilterReference> filterReferences;
+	private final List<FilterReference> filters;
 	private final FilterChainExecutionInterval executionInterval;
 
 	@JsonCreator
 	FilterChainReference(
 			@JsonProperty("filterChainId") String filterChainId,
-			@JsonProperty("filterReferences") List<FilterReference> filterReferences,
+			@JsonProperty("filters") List<FilterReference> filters,
 			@JsonProperty("executionInterval") FilterChainExecutionInterval executionInterval) {
 
-		Assert.assertNotNull(filterChainId, filterReferences, executionInterval);
+		Assert.assertNotNull(filterChainId, filters, executionInterval);
 		this.filterChainId = filterChainId;
-		this.filterReferences = filterReferences;
+		this.filters = filters;
 		this.executionInterval = executionInterval;
 	}
 
@@ -33,8 +33,8 @@ public final class FilterChainReference extends CouchDbDocument {
 	}
 
 
-	public List<FilterReference> getFilterReferences() {
-		return filterReferences;
+	public List<FilterReference> getFilters() {
+		return filters;
 	}
 
 

@@ -10,11 +10,10 @@ import java.util.List;
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class FilterChainReference {
+public class FilterChain {
 
 	public String id;
-	public List<FilterReference> filterReferences;
-	public List<String> filterNames;
+	public List<Filter> filters;
 	public FilterChainExecutionInterval executionInterval;
 
 }

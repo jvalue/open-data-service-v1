@@ -39,7 +39,7 @@ public final class FilterChainFactory {
 		Filter<Void, ArrayNode> firstFilter = null;
 		Filter<?, ArrayNode> lastFilter = null;
 
-		for (FilterReference filterReference : chainReference.getFilterReferences()) {
+		for (FilterReference filterReference : chainReference.getFilters()) {
 			Filter filter = createFilterFromAnnotation(filterReference, source, dataRepository);
 			if (firstFilter == null) {
 				firstFilter = (Filter<Void, ArrayNode>) filter;

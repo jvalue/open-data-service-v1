@@ -5,7 +5,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.jvalue.ods.filter.reference.FilterChainExecutionInterval;
 import org.jvalue.ods.rest.client.FilterChainClient;
-import org.jvalue.ods.rest.model.FilterChainReference;
+import org.jvalue.ods.rest.model.Filter;
+import org.jvalue.ods.rest.model.FilterChain;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,22 +24,25 @@ public final class FilterChainApiTest extends AbstractDataSourceTest {
 		final String filterId = FilterChainApiTest.class.getSimpleName();
 		{
 			// check empty
-			List<FilterChainReference> references = filterClient.getAll(sourceId);
+			List<FilterChain> references = filterClient.getAll(sourceId);
 			Assert.assertEquals(0, references.size());
 		}
 
 		{
 			// add and get
-			FilterChainReference reference = new FilterChainReference();
+			final Filter adapter = new Filter();
+			adapter.name = "JsonSourceAdapter";
+
+			final FilterChain reference = new FilterChain();
 			reference.executionInterval = new FilterChainExecutionInterval(100, TimeUnit.MINUTES);
-			reference.filterNames = new LinkedList<>();
-			reference.filterNames.add("JsonSourceAdapter");
+			reference.filters = new LinkedList<>();
+			reference.filters.add(adapter);
 
 			filterClient.add(sourceId, filterId, reference);
-			FilterChainReference receivedReference = filterClient.get(sourceId, filterId);
+			FilterChain receivedReference = filterClient.get(sourceId, filterId);
 			Assert.assertEquals(filterId, receivedReference.id);
 			Assert.assertEquals(reference.executionInterval, receivedReference.executionInterval);
-			Assert.assertEquals(reference.filterNames.size(), receivedReference.filterReferences.size());
+			Assert.assertEquals(reference.filters.size(), receivedReference.filters.size());
 		}
 
 		{

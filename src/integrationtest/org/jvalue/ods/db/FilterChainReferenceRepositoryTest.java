@@ -44,7 +44,7 @@ public class FilterChainReferenceRepositoryTest extends AbstractDbTest {
 
 	private FilterChainReference createChain(String id) throws Exception {
 		String json = "{\"filterChainId\":\"" + id + "\","
-				+ "\"filterReferences\": [],"
+				+ "\"filters\": [],"
 				+ "\"executionInterval\":{"
 				+ "\"period\":0, \"unit\":\"SECONDS\""
 				+ "}}";
