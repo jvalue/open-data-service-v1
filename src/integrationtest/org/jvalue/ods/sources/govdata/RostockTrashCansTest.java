@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 
-public final class RostockTrashCans extends AbstractDataSourceTest {
+public final class RostockTrashCansTest extends AbstractDataSourceTest {
 
 	@Test
 	public void testTrashCanSource() throws Exception {

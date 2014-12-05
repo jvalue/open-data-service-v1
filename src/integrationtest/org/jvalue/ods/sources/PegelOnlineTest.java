@@ -15,7 +15,7 @@ import java.net.URL;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 
-public final class PegelOnline extends AbstractDataSourceTest {
+public final class PegelOnlineTest extends AbstractDataSourceTest {
 
 	@Test
 	public void testTrashCanSource() throws Exception {
