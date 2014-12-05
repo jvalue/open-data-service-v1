@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.ektorp.CouchDbInstance;
 import org.ektorp.DocumentNotFoundException;
+import org.junit.Assert;
 import org.junit.Test;
 import org.jvalue.ods.filter.reference.FilterChainReference;
-import org.jvalue.ods.utils.Assert;
 
 public class FilterChainReferenceRepositoryTest extends AbstractDbTest {
 
@@ -39,6 +39,16 @@ public class FilterChainReferenceRepositoryTest extends AbstractDbTest {
 	@Test(expected = DocumentNotFoundException.class)
 	public void testInvalidId() {
 		repository.findByFilterChainId("missingId");
+	}
+
+
+	@Test
+	public void testGetAll() throws Exception {
+		repository.add(createChain("id1"));
+		repository.add(createChain("id2"));
+		repository.add(createChain("id3"));
+
+		Assert.assertEquals(3, repository.getAll().size());
 	}
 
 

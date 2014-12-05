@@ -13,7 +13,7 @@ import org.jvalue.ods.filter.reference.FilterChainReference;
 
 import java.util.List;
 
-@View( name = "all", map = "function(doc) { if (doc.filterReferences) emit(null, doc) }")
+@View( name = "all", map = "function(doc) { if (doc.filterChainId) emit(null, doc) }")
 public final class FilterChainReferenceRepository extends CouchDbRepositorySupport<FilterChainReference> {
 
 	@Inject
