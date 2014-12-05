@@ -92,6 +92,10 @@ public final class NotificationManager extends AbstractDataSourcePropertyManager
 
 
 	@Override
+	protected void doRemoveAll(DataSource source) { }
+
+
+	@Override
 	protected Client doGet(NotificationClientRepository repository, String clientId) {
 		return repository.findByClientId(clientId);
 	}

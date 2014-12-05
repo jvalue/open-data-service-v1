@@ -64,8 +64,13 @@ public final class FilterChainManager extends AbstractDataSourcePropertyManager<
 
 	@Override
 	protected void doRemove(DataSource source, DataRepository dataRepository, FilterChainReference reference) {
-		ScheduledFuture<?> task = runningTasks.remove(new FilterKey(source.getSourceId(), reference.getFilterChainId()));
-		task.cancel(false);
+		stopFilterChain(source, reference);
+	}
+
+
+	@Override
+	protected void doRemoveAll(DataSource source) {
+		for (FilterChainReference reference : getAll(source)) stopFilterChain(source, reference);
 	}
 
 
@@ -114,6 +119,12 @@ public final class FilterChainManager extends AbstractDataSourcePropertyManager<
 				reference.getExecutionInterval().getUnit());
 
 		runningTasks.put(key, task);
+	}
+
+
+	private void stopFilterChain(DataSource source, FilterChainReference reference) {
+		ScheduledFuture<?> task = runningTasks.remove(new FilterKey(source.getSourceId(), reference.getFilterChainId()));
+		task.cancel(false);
 	}
 
 

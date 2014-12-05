@@ -64,6 +64,10 @@ public final class PluginMetaDataManager extends AbstractDataSourcePropertyManag
 
 
 	@Override
+	protected void doRemoveAll(DataSource source) { }
+
+
+	@Override
 	protected PluginMetaData doGet(PluginMetaDataRepository repository, String pluginId) {
 		return repository.findByPluginId(pluginId);
 	}

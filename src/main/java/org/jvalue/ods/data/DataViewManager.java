@@ -60,6 +60,10 @@ public final class DataViewManager extends AbstractDataSourcePropertyManager<Dat
 
 
 	@Override
+	protected void doRemoveAll(DataSource source) { }
+
+
+	@Override
 	protected DataView doGet(DataViewRepository repository, String viewId) {
 		return repository.findByViewId(viewId);
 	}

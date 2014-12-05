@@ -64,12 +64,16 @@ public abstract class AbstractDataSourcePropertyManager<T, R extends CouchDbRepo
 
 
 	public final void removeAll(DataSource source) {
+		doRemoveAll(source);
 		R repository = assertRepository(source);
 		for (T item : repository.getAll()) {
 			repository.remove(item);
 		}
 		repositoryCache.remove(source.getSourceId());
 	}
+
+
+	protected abstract void doRemoveAll(DataSource source);
 
 
 	public final T get(DataSource source, String propertyId) {
