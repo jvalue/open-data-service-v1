@@ -10,7 +10,7 @@ import java.util.List;
 
 import retrofit.RetrofitError;
 
-public final class DataViewApiTest extends AbstractDataSourceTest {
+public final class DataViewApiTest extends AbstractApiTest {
 
 	private static final DataViewClient viewClient = clientFactory.getDataViewClient();
 

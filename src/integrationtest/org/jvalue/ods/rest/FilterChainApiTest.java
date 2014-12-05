@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 import retrofit.RetrofitError;
 
-public final class FilterChainApiTest extends AbstractDataSourceTest {
+public final class FilterChainApiTest extends AbstractApiTest {
 
 	private static final FilterChainClient filterClient = clientFactory.getFilterChainClient();
 

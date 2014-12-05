@@ -9,7 +9,7 @@ import java.util.List;
 
 import retrofit.RetrofitError;
 
-public final class DataSourceApiTest extends AbstractDataSourceTest {
+public final class DataSourceApiTest extends AbstractApiTest {
 
 	@Test
 	public void testCrud() throws Exception {

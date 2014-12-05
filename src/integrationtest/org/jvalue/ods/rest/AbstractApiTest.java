@@ -15,7 +15,7 @@ import java.net.URL;
 import java.util.UUID;
 
 
-public abstract class AbstractDataSourceTest {
+public abstract class AbstractApiTest {
 
 	protected static final ClientFactory clientFactory = new ClientFactory();
 	protected static final DataSourceClient sourceClient = clientFactory.getDataSourceClient();
