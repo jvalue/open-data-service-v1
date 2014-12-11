@@ -6,9 +6,15 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.jvalue.ods.data.DataSource;
 
+import mockit.Mocked;
+import mockit.integration.junit4.JMockit;
 
+
+@RunWith(JMockit.class)
 public final class JsonSourceAdapterTest extends AbstractSourceAdapterTest {
 
 	private static final ArrayNode JSON_ARRAY;
@@ -21,21 +27,11 @@ public final class JsonSourceAdapterTest extends AbstractSourceAdapterTest {
 	}
 
 
-	@Override
-	protected SourceAdapter getSourceAdapter(DataSource source) {
-		return new JsonSourceAdapter(source);
-	}
-
-
-	@Override
-	protected String getContent() {
-		return JSON_ARRAY.toString();
-	}
-
-
-	@Override
-	protected void assertEqualsContent(ArrayNode jsonArray) {
-		Assert.assertEquals(JSON_ARRAY, jsonArray);
+	@Test
+	public void testBasicAdapter(@Mocked DataSource source) throws Exception {
+		SourceAdapter adapter = new JsonSourceAdapter(source);
+		ArrayNode jsonResult = testAdapterWithAllProtocols(source, adapter, JSON_ARRAY.toString());
+		Assert.assertEquals(JSON_ARRAY, jsonResult);
 	}
 
 }

@@ -3,8 +3,7 @@ package org.jvalue.ods.filter.adapter;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.Assert;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.filter.adapter.server.FtpServer;
 import org.jvalue.ods.filter.adapter.server.HttpServer;
@@ -14,15 +13,17 @@ import java.util.LinkedList;
 import java.util.List;
 
 import mockit.Expectations;
-import mockit.Mocked;
-import mockit.integration.junit4.JMockit;
 
 
-@RunWith(JMockit.class)
-public abstract class AbstractSourceAdapterTest {
+abstract class AbstractSourceAdapterTest {
 
-	@Test
-	public final void testAdapter(@Mocked final DataSource source) throws Exception {
+	protected final ArrayNode testAdapterWithAllProtocols(
+			final DataSource source,
+			SourceAdapter adapter,
+			String content) throws Exception {
+
+		ArrayNode jsonResult = null;
+
 		List<Server> serverList = new LinkedList<>();
 		serverList.add(new FtpServer());
 		serverList.add(new HttpServer());
@@ -33,21 +34,15 @@ public abstract class AbstractSourceAdapterTest {
 				result = server.getFileUrl();
 			}};
 
-			server.start(getContent());
-
-			SourceAdapter adapter = getSourceAdapter(source);
-			ArrayNode jsonArray = adapter.grabSource();
-			assertEqualsContent(jsonArray);
-
+			server.start(content);
+			ArrayNode json = adapter.grabSource();
 			server.stop();
+
+			if (jsonResult == null) jsonResult = json;
+			else Assert.assertEquals(jsonResult, json);
 		}
+
+		return jsonResult;
 	}
-
-
-	protected abstract SourceAdapter getSourceAdapter(DataSource source);
-
-	protected abstract String getContent();
-
-	protected abstract void assertEqualsContent(ArrayNode jsonArray);
 
 }
