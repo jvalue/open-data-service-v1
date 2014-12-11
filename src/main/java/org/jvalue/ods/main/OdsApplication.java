@@ -10,6 +10,7 @@ import org.jvalue.ods.data.DataModule;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.db.DbModule;
 import org.jvalue.ods.filter.FilterModule;
+import org.jvalue.ods.monitoring.DbHealthCheck;
 import org.jvalue.ods.notifications.NotificationsModule;
 import org.jvalue.ods.rest.DataApi;
 import org.jvalue.ods.rest.DataSourceApi;
@@ -76,6 +77,7 @@ public final class OdsApplication extends Application<OdsConfig> {
 		environment.jersey().register(injector.getInstance(PluginApi.class));
 		environment.jersey().register(injector.getInstance(FilterDescriptionApi.class));
 		environment.jersey().register(new DbExceptionMapper());
+		environment.healthChecks().register(DbHealthCheck.class.getSimpleName(), injector.getInstance(DbHealthCheck.class));
 	}
 
 }
