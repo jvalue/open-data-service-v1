@@ -21,7 +21,11 @@ public final class AdapterModule extends AbstractModule {
 				.implement(
 						new TypeLiteral<Filter<Void, ArrayNode>>() { },
 						Names.named(FilterFactory.NAME_CSV_SOURCE_ADAPTER),
-						CsvSourceAdapter.class);
+						CsvSourceAdapter.class)
+				.implement(
+						new TypeLiteral<Filter<Void, ArrayNode>>() { },
+						Names.named(FilterFactory.NAME_XML_SOURCE_ADAPTER),
+						XmlSourceAdapter.class);
 	}
 
 	@Override
