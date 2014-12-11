@@ -1,7 +1,6 @@
 package org.jvalue.ods.filter.adapter.server;
 
 
-import org.junit.runner.RunWith;
 import org.mockftpserver.fake.FakeFtpServer;
 import org.mockftpserver.fake.UserAccount;
 import org.mockftpserver.fake.filesystem.DirectoryEntry;
@@ -11,10 +10,7 @@ import org.mockftpserver.fake.filesystem.UnixFakeFileSystem;
 
 import java.net.URL;
 
-import mockit.integration.junit4.JMockit;
 
-
-@RunWith(JMockit.class)
 public final class FtpServer implements Server {
 
 	private static final String FILE_NAME = FtpServer.class.getSimpleName();

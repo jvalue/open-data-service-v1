@@ -4,16 +4,11 @@ package org.jvalue.ods.filter.adapter.server;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-import org.junit.runner.RunWith;
-
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.URL;
 
-import mockit.integration.junit4.JMockit;
 
-
-@RunWith(JMockit.class)
 public final class HttpServer implements Server {
 
 	private static final String FILE_NAME = HttpServer.class.getSimpleName();
