@@ -53,6 +53,7 @@ dependencies {
     compile 'org.ektorp:org.ektorp:1.4.+'
 	compile 'org.openstreetmap.osmosis:osmosis-core:0.43.+'
 	compile 'org.openstreetmap.osmosis:osmosis-xml:0.43.+'
+    compile 'org.openstreetmap.osmosis:osmosis-pbf:0.43.+'
 	compile 'org.jsoup:jsoup:1.7.+'
 	compile 'org.apache.commons:commons-lang3:3.3.+'
     compile 'org.apache.commons:commons-csv:1.1'

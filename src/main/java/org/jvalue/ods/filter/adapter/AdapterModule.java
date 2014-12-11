@@ -25,7 +25,11 @@ public final class AdapterModule extends AbstractModule {
 				.implement(
 						new TypeLiteral<Filter<Void, ArrayNode>>() { },
 						Names.named(FilterFactory.NAME_XML_SOURCE_ADAPTER),
-						XmlSourceAdapter.class);
+						XmlSourceAdapter.class)
+				.implement(
+						new TypeLiteral<Filter<Void, ArrayNode>>() { },
+						Names.named(FilterFactory.NAME_OSM_SOURCE_ADAPTER),
+						OsmSourceAdapter.class);
 	}
 
 	@Override

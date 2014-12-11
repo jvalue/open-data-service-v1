@@ -16,6 +16,7 @@ public interface FilterFactory {
 			NAME_JSON_SOURCE_ADAPTER = "JsonSourceAdapter",
 			NAME_CSV_SOURCE_ADAPTER = "CsvSourceAdapter",
 			NAME_XML_SOURCE_ADAPTER = "XmlSourceAdapter",
+			NAME_OSM_SOURCE_ADAPTER = "OsmSourceAdapter",
 			NAME_DB_INSERTION_FILTER = "DbInsertionFilter",
 			NAME_NOTIFICATION_FILTER = "NotificationFilter",
 			NAME_INVALID_DOCUMENT_FILTER = "InvalidDocumentFilter";
@@ -34,6 +35,11 @@ public interface FilterFactory {
 	@FilterCreationMethod(name = NAME_XML_SOURCE_ADAPTER, filterType = FilterType.OUTPUT_FILTER)
 	@Named(NAME_XML_SOURCE_ADAPTER)
 	public Filter<Void, ArrayNode> createXmlSourceAdapter(DataSource source);
+
+
+	@FilterCreationMethod(name = NAME_OSM_SOURCE_ADAPTER, filterType = FilterType.OUTPUT_FILTER)
+	@Named(NAME_OSM_SOURCE_ADAPTER)
+	public Filter<Void, ArrayNode> createOsmSourceAdapter(DataSource source);
 
 
 
