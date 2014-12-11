@@ -62,6 +62,7 @@ dependencies {
     testCompile 'junit:junit:4.11'
     testCompile 'com.squareup.retrofit:retrofit:1.8.+'
     testCompile 'com.squareup.retrofit:converter-jackson:1.8.+'
+    testCompile 'org.mockftpserver:MockFtpServer:2.5'
 }
 
 
