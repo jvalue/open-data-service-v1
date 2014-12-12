@@ -1,7 +1,7 @@
 package org.jvalue.ods.filter;
 
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 
 import org.jvalue.ods.data.DataSource;
@@ -29,23 +29,23 @@ public final class FilterChainFactory {
 
 
 	@SuppressWarnings("unchecked")
-	public Filter<Void, ArrayNode> createFilterChain(
+	public Filter<Void, ObjectNode> createFilterChain(
 			FilterChainReference chainReference,
 			DataSource source,
 			DataRepository dataRepository) {
 
 		Assert.assertNotNull(chainReference, source, dataRepository);
 
-		Filter<Void, ArrayNode> firstFilter = null;
-		Filter<?, ArrayNode> lastFilter = null;
+		Filter<Void, ObjectNode> firstFilter = null;
+		Filter<?, ObjectNode> lastFilter = null;
 
 		for (FilterReference filterReference : chainReference.getFilters()) {
 			Filter filter = createFilterFromAnnotation(filterReference, source, dataRepository);
 			if (firstFilter == null) {
-				firstFilter = (Filter<Void, ArrayNode>) filter;
-				lastFilter = (Filter<?, ArrayNode>) filter;
+				firstFilter = (Filter<Void, ObjectNode>) filter;
+				lastFilter = (Filter<?, ObjectNode>) filter;
 			} else {
-				lastFilter = (Filter<?, ArrayNode>) lastFilter.setNextFilter(filter);
+				lastFilter = (Filter<?, ObjectNode>) lastFilter.setNextFilter(filter);
 			}
 		}
 

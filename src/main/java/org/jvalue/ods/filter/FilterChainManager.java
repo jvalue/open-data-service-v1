@@ -17,7 +17,7 @@
  */
 package org.jvalue.ods.filter;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Objects;
 import com.google.inject.Inject;
 
@@ -145,7 +145,7 @@ public final class FilterChainManager extends AbstractDataSourcePropertyManager<
 		public void run() {
 			try {
 				Log.info("starting filter chain \"" + reference.getFilterChainId() + "\" for source \"" + source.getSourceId() + "\"");
-				Filter<Void, ArrayNode> filterChain = filterChainFactory.createFilterChain(reference, source, dataRepository);
+				Filter<Void, ObjectNode> filterChain = filterChainFactory.createFilterChain(reference, source, dataRepository);
 				filterChain.filter(null);
 				Log.info("stopping filter chain \"" + reference.getFilterChainId() + "\" for source \"" + source.getSourceId() + "\"");
 			} catch (Throwable throwable) {

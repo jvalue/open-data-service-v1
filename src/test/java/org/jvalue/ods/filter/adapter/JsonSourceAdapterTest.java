@@ -10,6 +10,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.jvalue.ods.data.DataSource;
 
+import java.util.List;
+
 import mockit.Mocked;
 import mockit.integration.junit4.JMockit;
 
@@ -30,8 +32,10 @@ public final class JsonSourceAdapterTest extends AbstractSourceAdapterTest {
 	@Test
 	public void testBasicAdapter(@Mocked DataSource source) throws Exception {
 		SourceAdapter adapter = new JsonSourceAdapter(source);
-		ArrayNode jsonResult = testAdapterWithAllProtocols(source, adapter, JSON_ARRAY.toString());
-		Assert.assertEquals(JSON_ARRAY, jsonResult);
+		List<ObjectNode> jsonResult = testAdapterWithAllProtocols(source, adapter, JSON_ARRAY.toString());
+		for (int i = 0; i < jsonResult.size(); ++i) {
+			Assert.assertEquals(JSON_ARRAY.get(i), jsonResult.get(i));
+		}
 	}
 
 }

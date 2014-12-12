@@ -18,7 +18,6 @@
 package org.jvalue.ods.configuration;
 
 import com.fasterxml.jackson.core.JsonPointer;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.inject.Inject;
 
 import org.jvalue.ods.data.DataSource;
@@ -154,11 +153,13 @@ public final class PegelPortalMvConfigurationFactory {
 			DataRepository dataRepository,
 			FilterFactory filterFactory) {
 
-		Filter<Void, ArrayNode> chain = new PegelPortalMvAdapter(dataSource);
+		/*
+		Filter<Void, ObjectNode> chain = new PegelPortalMvAdapter(dataSource);
 		chain.setNextFilter(filterFactory.createDbInsertionFilter(dataSource, dataRepository))
 				.setNextFilter(filterFactory.createNotificationFilter(dataSource));
-
 		return chain;
+				*/
+		return null;
 
 	}
 

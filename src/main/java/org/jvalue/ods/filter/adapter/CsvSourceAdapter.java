@@ -17,7 +17,6 @@
  */
 package org.jvalue.ods.filter.adapter;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
@@ -27,11 +26,10 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.filter.FilterException;
-import org.jvalue.ods.utils.Log;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Iterator;
 
 
 final class CsvSourceAdapter extends SourceAdapter {
@@ -41,47 +39,91 @@ final class CsvSourceAdapter extends SourceAdapter {
 	@Inject
 	CsvSourceAdapter(@Assisted DataSource source, @Assisted String csvFormatString) {
 		super(source);
-		if (csvFormatString.equals(("DEFAULT"))) csvFormat = CSVFormat.DEFAULT;
-		else if (csvFormatString.equals(("EXCEL"))) csvFormat = CSVFormat.EXCEL;
-		else if (csvFormatString.equals(("MYSQL"))) csvFormat = CSVFormat.MYSQL;
-		else if (csvFormatString.equals(("RFC4180"))) csvFormat = CSVFormat.RFC4180;
-		else if (csvFormatString.equals(("TDF"))) csvFormat = CSVFormat.TDF;
-		else throw new IllegalArgumentException("unknown csv format \"" + csvFormatString + "\"");
+		switch (csvFormatString) {
+			case "DEFAULT":
+				csvFormat = CSVFormat.DEFAULT;
+				break;
+
+			case "EXCEL":
+				csvFormat = CSVFormat.EXCEL;
+				break;
+
+			case "MYSQL":
+				csvFormat = CSVFormat.MYSQL;
+				break;
+
+			case "RFC4180":
+				csvFormat = CSVFormat.RFC4180;
+				break;
+
+			case "TDF":
+				csvFormat = CSVFormat.TDF;
+				break;
+
+			default:
+				throw new IllegalArgumentException("unknown csv format \"" + csvFormatString + "\"");
+		}
 	}
 
 
 	@Override
-	public ArrayNode grabSource() throws FilterException {
-		CSVParser parser = null;
-		try {
-			ArrayNode array = new ArrayNode(JsonNodeFactory.instance);
-			parser = CSVParser.parse(dataSource.getUrl(), Charset.forName("UTF-8"), csvFormat);
-
-			CSVRecord firstRecord = null;
-			for (CSVRecord record : parser) {
-				if (firstRecord == null) {
-					firstRecord = record;
-					continue;
-				}
-				array.add(createObject(firstRecord, record));
-			}
-
-			return array;
-
-		} catch (IOException ioe) {
-			throw new FilterException(ioe);
-		} finally {
-			if (parser != null) try { parser.close(); } catch (IOException ioe) { Log.error("failed to close parser"); }
-		}
+	protected SourceIterator doCreateIterator(DataSource source) {
+		return new CsvSourceIterator(source, csvFormat);
 	}
 
 
-	private ObjectNode createObject(CSVRecord keys, CSVRecord values) {
-		ObjectNode node = new ObjectNode(JsonNodeFactory.instance);
-		for (int i = 0; i < keys.size(); ++i) {
-			node.put(keys.get(i), values.get(i));
+	private static final class CsvSourceIterator extends SourceIterator {
+
+		private final DataSource source;
+		private final CSVFormat csvFormat;
+		private Iterator<CSVRecord> csvIterator;
+		private CSVRecord firstRecord = null;
+
+		public CsvSourceIterator(DataSource source, CSVFormat csvFormat) {
+			this.source = source;
+			this.csvFormat = csvFormat;
 		}
-		return node;
+
+
+		@Override
+		protected boolean doHasNext() {
+			try {
+				initCsvIterator();
+				return csvIterator.hasNext();
+			} catch (IOException ioe) {
+				throw new SourceAdapterException(ioe);
+			}
+		}
+
+
+		@Override
+		protected ObjectNode doNext() {
+			try {
+				initCsvIterator();
+				return createObject(firstRecord, csvIterator.next());
+			} catch (IOException ioe) {
+				throw new SourceAdapterException(ioe);
+			}
+		}
+
+
+		private void initCsvIterator() throws IOException {
+			if (csvIterator == null) {
+				CSVParser parser = CSVParser.parse(source.getUrl(), Charset.forName("UTF-8"), csvFormat);
+				csvIterator = parser.iterator();
+				firstRecord = csvIterator.next();
+			}
+		}
+
+
+		private ObjectNode createObject(CSVRecord keys, CSVRecord values) {
+			ObjectNode node = new ObjectNode(JsonNodeFactory.instance);
+			for (int i = 0; i < keys.size(); ++i) {
+				node.put(keys.get(i), values.get(i));
+			}
+			return node;
+		}
+
 	}
 
 }

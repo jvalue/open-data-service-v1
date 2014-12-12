@@ -19,32 +19,26 @@ package org.jvalue.ods.filter.adapter;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.filter.FilterException;
+import org.jvalue.ods.utils.Log;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 import crosby.binary.osmosis.OsmosisReader;
 
 
 final class OsmSourceAdapter extends SourceAdapter {
-
-	@JsonIgnoreProperties("writeableInstance")
-	private static interface EntityMixin { }
-
-	private static final ObjectMapper mapper = new ObjectMapper();
-	static {
-		mapper.addMixInAnnotations(Entity.class, EntityMixin.class);
-	}
 
 	@Inject
 	OsmSourceAdapter(@Assisted DataSource source) {
@@ -53,32 +47,112 @@ final class OsmSourceAdapter extends SourceAdapter {
 
 
 	@Override
-	public ArrayNode grabSource() throws FilterException {
-		final ArrayNode jsonArray = new ArrayNode(JsonNodeFactory.instance);
-		try {
-			OsmosisReader reader = new OsmosisReader(dataSource.getUrl().openStream());
-			reader.setSink(new Sink() {
-				@Override
-				public void process(EntityContainer entityContainer) {
-					Entity entity = entityContainer.getEntity();
-					jsonArray.add(mapper.valueToTree(entity));
-				}
+	protected SourceIterator doCreateIterator(DataSource source) {
+		return new OsmosisSourceIterator(source);
+	}
 
-				@Override
-				public void initialize(Map<String, Object> metaData) {  }
 
-				@Override
-				public void complete() {  }
+	private static final class OsmosisSourceIterator extends SourceIterator {
 
-				@Override
-				public void release() {  }
-			});
-			reader.run();
-			return jsonArray;
+		private final BlockingQueue<ObjectNode> jsonQueue = new ArrayBlockingQueue<>(100);
+		private final JsonSink jsonSink = new JsonSink(jsonQueue);
+		private final DataSource source;
 
-		} catch (IOException ioe) {
-			throw new FilterException(ioe);
+		private OsmosisReader osmosisReader = null;
+
+		public OsmosisSourceIterator(DataSource source) {
+			this.source = source;
+		}
+
+
+		@Override
+		protected boolean doHasNext() {
+			try {
+				initOsmoisReader();
+				return !jsonSink.isComplete();
+			} catch (IOException ioe) {
+				throw new SourceAdapterException(ioe);
+			}
+		}
+
+
+		@Override
+		protected ObjectNode doNext() {
+			try {
+				initOsmoisReader();
+				if (!hasNext()) throw new NoSuchElementException();
+				return jsonQueue.take();
+			} catch (IOException | InterruptedException e) {
+				throw new SourceAdapterException(e);
+			}
+		}
+
+
+		private void initOsmoisReader() throws IOException {
+			if (osmosisReader == null) {
+				osmosisReader = new OsmosisReader(source.getUrl().openStream());
+				osmosisReader.setSink(jsonSink);
+				Thread thread = new Thread(osmosisReader);
+				thread.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+					@Override
+					public void uncaughtException(Thread thread, Throwable throwable) {
+						// TODO exception is not carried back to the chain manager
+						Log.error("osmosis reader failed", throwable);
+					}
+				});
+				thread.start();
+			}
 		}
 	}
+
+
+	private static class JsonSink implements Sink {
+
+		private final BlockingQueue<ObjectNode> jsonQueue;
+		private final ObjectMapper mapper = new ObjectMapper();
+
+		private boolean complete = false;
+
+		public JsonSink(BlockingQueue<ObjectNode> jsonQueue) {
+			this.jsonQueue = jsonQueue;
+			this.mapper.addMixInAnnotations(Entity.class, EntityMixin.class);
+		}
+
+
+		@Override
+		public void process(EntityContainer entityContainer) {
+			Entity entity = entityContainer.getEntity();
+			ObjectNode jsonObject = mapper.valueToTree(entity);
+			try {
+				jsonQueue.put(jsonObject);
+			} catch (InterruptedException ie) {
+				throw new SourceAdapterException(ie);
+			}
+		}
+
+
+		@Override
+		public void initialize(Map<String, Object> metaData) {  }
+
+
+		@Override
+		public void complete() {
+			this.complete = true;
+		}
+
+
+		@Override
+		public void release() {  }
+
+
+		public boolean isComplete() {
+			return complete;
+		}
+
+
+		@JsonIgnoreProperties("writeableInstance")
+		private static interface EntityMixin { }
+	}
+
 
 }

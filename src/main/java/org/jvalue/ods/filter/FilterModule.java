@@ -2,6 +2,7 @@ package org.jvalue.ods.filter;
 
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
@@ -22,7 +23,7 @@ public final class FilterModule extends AbstractModule {
 						Names.named(FilterFactory.NAME_NOTIFICATION_FILTER),
 						NotificationFilter.class)
 				.implement(
-						new TypeLiteral<Filter<ArrayNode, ArrayNode>>() {
+						new TypeLiteral<Filter<ObjectNode, ObjectNode>>() {
 						},
 						Names.named(FilterFactory.NAME_DB_INSERTION_FILTER),
 						DbInsertionFilter.class)

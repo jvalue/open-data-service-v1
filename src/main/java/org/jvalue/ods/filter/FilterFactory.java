@@ -2,6 +2,7 @@ package org.jvalue.ods.filter;
 
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.name.Named;
 
 import org.jvalue.ods.data.DataSource;
@@ -24,22 +25,22 @@ public interface FilterFactory {
 
 	@FilterCreationMethod(name = NAME_JSON_SOURCE_ADAPTER, filterType = FilterType.OUTPUT_FILTER)
 	@Named(NAME_JSON_SOURCE_ADAPTER)
-	public Filter<Void, ArrayNode> createJsonSourceAdapter(DataSource source);
+	public Filter<Void, ObjectNode> createJsonSourceAdapter(DataSource source);
 
 
 	@FilterCreationMethod(name = NAME_CSV_SOURCE_ADAPTER, filterType = FilterType.OUTPUT_FILTER)
 	@Named(NAME_CSV_SOURCE_ADAPTER)
-	public Filter<Void, ArrayNode> createCsvSourceAdapter(DataSource source, @FilterArgument("csvFormat") String csvFormat);
+	public Filter<Void, ObjectNode> createCsvSourceAdapter(DataSource source, @FilterArgument("csvFormat") String csvFormat);
 
 
 	@FilterCreationMethod(name = NAME_XML_SOURCE_ADAPTER, filterType = FilterType.OUTPUT_FILTER)
 	@Named(NAME_XML_SOURCE_ADAPTER)
-	public Filter<Void, ArrayNode> createXmlSourceAdapter(DataSource source);
+	public Filter<Void, ObjectNode> createXmlSourceAdapter(DataSource source);
 
 
 	@FilterCreationMethod(name = NAME_OSM_SOURCE_ADAPTER, filterType = FilterType.OUTPUT_FILTER)
 	@Named(NAME_OSM_SOURCE_ADAPTER)
-	public Filter<Void, ArrayNode> createOsmSourceAdapter(DataSource source);
+	public Filter<Void, ObjectNode> createOsmSourceAdapter(DataSource source);
 
 
 
@@ -50,7 +51,7 @@ public interface FilterFactory {
 
 	@FilterCreationMethod(name = NAME_DB_INSERTION_FILTER, filterType = FilterType.INPUT_OUTPUT_FILTER)
 	@Named(NAME_DB_INSERTION_FILTER)
-	public Filter<ArrayNode, ArrayNode> createDbInsertionFilter(DataSource source, DataRepository dataRepository);
+	public Filter<ObjectNode, ObjectNode> createDbInsertionFilter(DataSource source, DataRepository dataRepository);
 
 
 	@FilterCreationMethod(name = NAME_INVALID_DOCUMENT_FILTER, filterType = FilterType.INPUT_OUTPUT_FILTER)

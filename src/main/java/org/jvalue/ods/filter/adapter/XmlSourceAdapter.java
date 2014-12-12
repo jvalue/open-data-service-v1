@@ -1,25 +1,20 @@
 package org.jvalue.ods.filter.adapter;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.dataformat.xml.XmlFactory;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.filter.FilterException;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.NoSuchElementException;
 
 
 final class XmlSourceAdapter extends SourceAdapter {
-
-	private static final ObjectMapper
-			xmlMapper = new XmlMapper(),
-			jsonMapper = new ObjectMapper();
-
 
 	@Inject
 	XmlSourceAdapter(@Assisted DataSource source) {
@@ -28,13 +23,57 @@ final class XmlSourceAdapter extends SourceAdapter {
 
 
 	@Override
-	public ArrayNode grabSource() throws FilterException {
-		try {
-			List<Object> xmlValues = xmlMapper.readValue(dataSource.getUrl(), new TypeReference<List<Object>>() {} );
-			return jsonMapper.valueToTree(xmlValues);
-		} catch (IOException e) {
-			throw new FilterException(e);
+	protected SourceIterator doCreateIterator(DataSource source) {
+		return new XmlSourceIterator(source);
+	}
+
+
+	private static final class XmlSourceIterator extends SourceIterator {
+
+		private static final ObjectMapper mapper = new ObjectMapper();
+		private final DataSource source;
+		private JsonParser jsonParser;
+
+		public XmlSourceIterator(DataSource source) {
+			this.source = source;
 		}
+
+
+		@Override
+		protected boolean doHasNext() {
+			try {
+				if (jsonParser == null) initJsonParser();
+				return jsonParser.hasCurrentToken() && jsonParser.getCurrentToken() == JsonToken.START_OBJECT;
+			} catch (IOException e) {
+				throw new SourceAdapterException(e);
+			}
+		}
+
+
+		@Override
+		protected ObjectNode doNext() {
+			try {
+				if (jsonParser == null) initJsonParser();
+				if (jsonParser.getCurrentToken() != JsonToken.START_OBJECT) throw new NoSuchElementException();
+				ObjectNode node = mapper.readTree(jsonParser);
+				jsonParser.nextToken();
+				jsonParser.nextToken();
+				return node;
+			} catch (IOException e) {
+				throw new SourceAdapterException(e);
+			}
+		}
+
+
+		private void initJsonParser() throws IOException {
+			if (jsonParser == null) {
+				jsonParser = new XmlFactory().createParser(source.getUrl());
+				if (jsonParser.nextToken() != JsonToken.START_OBJECT) throw new IllegalStateException("xml should start with an object");
+				jsonParser.nextToken();
+				jsonParser.nextToken();
+			}
+		}
+
 	}
 
 }

@@ -18,7 +18,6 @@
 package org.jvalue.ods.filter;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -29,7 +28,7 @@ import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.utils.Assert;
 
 
-final class DbInsertionFilter extends Filter<ArrayNode, ArrayNode> {
+final class DbInsertionFilter extends Filter<ObjectNode, ObjectNode> {
 
 	private final DataRepository dataRepository;
 	private final DataSource source;
@@ -46,23 +45,20 @@ final class DbInsertionFilter extends Filter<ArrayNode, ArrayNode> {
 
 
 	@Override
-	protected ArrayNode doFilter(ArrayNode data) {
-		for (JsonNode node : data) {
-			String domainKey = node.at(source.getDomainIdKey()).asText();
-			try {
-				// update existing element
-				JsonNode oldNode = dataRepository.findByDomainId(domainKey);
-				ObjectNode objectNode = (ObjectNode) node;
-				objectNode.put("_id", oldNode.get("_id").asText());
-				objectNode.put("_rev", oldNode.get("_rev").asText());
-				dataRepository.update(objectNode);
+	protected ObjectNode doFilter(ObjectNode node) {
+		String domainKey = node.at(source.getDomainIdKey()).asText();
+		try {
+			// update existing element
+			JsonNode oldNode = dataRepository.findByDomainId(domainKey);
+			node.put("_id", oldNode.get("_id").asText());
+			node.put("_rev", oldNode.get("_rev").asText());
+			dataRepository.update(node);
 
-			} catch (DocumentNotFoundException dnfe) {
-				// insert new element
-				dataRepository.add(node);
-			}
+		} catch (DocumentNotFoundException dnfe) {
+			// insert new element
+			dataRepository.add(node);
 		}
-		return data;
+		return node;
 	}
 
 }

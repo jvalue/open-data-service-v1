@@ -1,13 +1,14 @@
 package org.jvalue.ods.filter.adapter;
 
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.jvalue.ods.data.DataSource;
+
+import java.util.List;
 
 import mockit.Mocked;
 import mockit.integration.junit4.JMockit;
@@ -61,15 +62,15 @@ public final class CsvSourceAdapterTest extends AbstractSourceAdapterTest {
 			DataSource source) throws Exception {
 
 		CsvSourceAdapter adapter = new CsvSourceAdapter(source, csvFormat);
-		ArrayNode jsonResult = testAdapterWithAllProtocols(source, adapter, getCsvContent(csvDelimiter));
+		List<ObjectNode> jsonResult = testAdapterWithAllProtocols(source, adapter, getCsvContent(csvDelimiter));
 
 		Assert.assertEquals(2, jsonResult.size());
 
-		ObjectNode node = (ObjectNode) jsonResult.get(0);
+		ObjectNode node = jsonResult.get(0);
 		Assert.assertEquals("value1", node.get("key1").asText());
 		Assert.assertEquals("value2", node.get("key2").asText());
 
-		node = (ObjectNode) jsonResult.get(1);
+		node = jsonResult.get(1);
 		Assert.assertEquals("value3", node.get("key1").asText());
 		Assert.assertEquals("value4", node.get("key2").asText());
 	}

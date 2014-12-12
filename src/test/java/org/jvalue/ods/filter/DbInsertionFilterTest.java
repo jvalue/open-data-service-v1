@@ -3,7 +3,6 @@ package org.jvalue.ods.filter;
 
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -44,11 +43,11 @@ public final class DbInsertionFilterTest {
 			repository.findByDomainId(VALUE_DOMAIN_ID); result = new DocumentNotFoundException("");
 		}};
 
-		Filter<ArrayNode, ArrayNode> filter = new DbInsertionFilter(repository, source);
-		filter.filter(createObjects(VALUE_DOMAIN_ID, VALUE_DOMAIN_ID, VALUE_DOMAIN_ID, VALUE_DOMAIN_ID));
+		Filter<ObjectNode, ObjectNode> filter = new DbInsertionFilter(repository, source);
+		filter.filter(createObject(VALUE_DOMAIN_ID));
 
 		new Verifications() {{
-			repository.add((JsonNode) any); times = 4;
+			repository.add((JsonNode) any); times = 1;
 		}};
 	}
 
@@ -63,12 +62,12 @@ public final class DbInsertionFilterTest {
 			repository.findByDomainId(VALUE_DOMAIN_ID); result = addDbIdAndRev(createObject(VALUE_DOMAIN_ID));
 		}};
 
-		Filter<ArrayNode, ArrayNode> filter = new DbInsertionFilter(repository, source);
-		filter.filter(createObjects(VALUE_DOMAIN_ID, VALUE_DOMAIN_ID, VALUE_DOMAIN_ID, VALUE_DOMAIN_ID));
+		Filter<ObjectNode, ObjectNode> filter = new DbInsertionFilter(repository, source);
+		filter.filter(createObject(VALUE_DOMAIN_ID));
 
 		new Verifications() {{
 			List<JsonNode> nodeList = new LinkedList<>();
-			repository.update(withCapture(nodeList)); times = 4;
+			repository.update(withCapture(nodeList)); times = 1;
 
 			for (JsonNode node : nodeList) {
 				Assert.assertTrue(node instanceof ObjectNode);
@@ -77,15 +76,6 @@ public final class DbInsertionFilterTest {
 				Assert.assertEquals(VALUE_REV, object.get(DB_REV).asText());
 			}
 		}};
-	}
-
-
-	private ArrayNode createObjects(String... domainIds) {
-		ArrayNode arrayNode = new ArrayNode(JsonNodeFactory.instance);
-		for (String domainId : domainIds) {
-			arrayNode.add(createObject(domainId));
-		}
-		return arrayNode;
 	}
 
 

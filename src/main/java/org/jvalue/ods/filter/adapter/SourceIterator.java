@@ -15,30 +15,44 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.filter;
+package org.jvalue.ods.filter.adapter;
 
-import org.jvalue.ods.utils.Assert;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
-public abstract class Filter<P, R> {
-
-	protected Filter<R, ?> nextFilter;
-
-	public Filter() { }
+import java.io.IOException;
+import java.util.Iterator;
 
 
-	public <T> Filter<R, T> setNextFilter(Filter<R, T> nextFilter) {
-		Assert.assertNotNull(nextFilter);
-		this.nextFilter = nextFilter;
-		return nextFilter;
+abstract class SourceIterator implements Iterator<ObjectNode> {
+
+
+	@Override
+	public final boolean hasNext() {
+		try {
+			return doHasNext();
+		} catch (IOException e) {
+			throw new SourceAdapter.SourceAdapterException(e);
+		}
 	}
 
 
-	public void filter(P param) throws FilterException {
-		R result = doFilter(param);
-		if (nextFilter != null) nextFilter.filter(result);
+	@Override
+	public final ObjectNode next() {
+		try {
+			return doNext();
+		} catch (IOException e) {
+			throw new SourceAdapter.SourceAdapterException(e);
+		}
 	}
 
 
-	protected abstract R doFilter(P param) throws FilterException;
+	@Override
+	public final void remove() {
+		throw new UnsupportedOperationException();
+	}
+
+
+	protected abstract ObjectNode doNext() throws IOException;
+	protected abstract boolean doHasNext() throws IOException;
 
 }

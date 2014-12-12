@@ -17,21 +17,22 @@
  */
 package org.jvalue.ods.filter.adapter;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.filter.FilterException;
 
 import java.io.IOException;
+import java.util.NoSuchElementException;
 
 
 final class JsonSourceAdapter extends SourceAdapter {
-	
-	private static final ObjectMapper mapper = new ObjectMapper();
+
 
 	@Inject
 	JsonSourceAdapter(@Assisted DataSource source) {
@@ -40,19 +41,55 @@ final class JsonSourceAdapter extends SourceAdapter {
 
 
 	@Override
-	public ArrayNode grabSource() throws FilterException {
-		try {
-			JsonNode node = mapper.readTree(dataSource.getUrl());
-			if (node instanceof ArrayNode) return (ArrayNode) node;
-			else {
-				ArrayNode arrayNode = mapper.createArrayNode();
-				arrayNode.add(node);
-				return arrayNode;
-			}
+	protected SourceIterator doCreateIterator(DataSource source) {
+		return new JsonSourceIterator(source);
+	}
 
-		} catch (IOException e) {
-			throw new FilterException("failed to parse JSON",  e);
+
+	private static final class JsonSourceIterator extends SourceIterator {
+
+		private static final ObjectMapper mapper = new ObjectMapper();
+		private JsonParser jsonParser;
+		private final DataSource source;
+
+		public JsonSourceIterator(DataSource source) {
+			this.source = source;
+		}
+
+
+		@Override
+		protected boolean doHasNext() {
+			try {
+				initJsonParser();
+				return jsonParser.hasCurrentToken();
+			} catch (IOException e) {
+				throw new SourceAdapterException(e);
+			}
+		}
+
+
+		@Override
+		protected ObjectNode doNext() {
+			try {
+				initJsonParser();
+				if (jsonParser.getCurrentToken() != JsonToken.START_OBJECT) throw new NoSuchElementException();
+				jsonParser.nextToken();
+				return mapper.readTree(jsonParser);
+			} catch (IOException e) {
+				throw new SourceAdapterException(e);
+			}
+		}
+
+
+		private void initJsonParser() throws IOException {
+			if (jsonParser == null) {
+				jsonParser = new JsonFactory().createParser(source.getUrl());
+				if (jsonParser.nextToken() != JsonToken.START_ARRAY)
+					throw new IllegalStateException("json should start with array");
+				jsonParser.nextToken();
+			}
 		}
 	}
+
 
 }

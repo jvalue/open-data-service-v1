@@ -17,17 +17,19 @@
  */
 package org.jvalue.ods.filter.adapter;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.filter.Filter;
 import org.jvalue.ods.filter.FilterException;
 import org.jvalue.ods.utils.Assert;
 
+import java.util.Iterator;
 
-abstract class SourceAdapter extends Filter<Void, ArrayNode> {
 
-	protected final DataSource dataSource;
+abstract class SourceAdapter extends Filter<Void, ObjectNode> implements Iterable<ObjectNode> {
+
+	private final DataSource dataSource;
 
 	protected SourceAdapter(DataSource dataSource) {
 		Assert.assertNotNull(dataSource);
@@ -36,11 +38,37 @@ abstract class SourceAdapter extends Filter<Void, ArrayNode> {
 
 
 	@Override
-	protected final ArrayNode doFilter(Void param) throws FilterException {
-		return grabSource();
+	public void filter(Void param) throws FilterException {
+		try {
+			for (ObjectNode node : this) {
+				nextFilter.filter(node);
+			}
+		} catch (SourceAdapterException sae) {
+			throw new FilterException(sae);
+		}
 	}
 
 
-	public abstract ArrayNode grabSource() throws FilterException;
+	@Override
+	protected final ObjectNode doFilter(Void param) throws FilterException {
+		// nothing to do here
+		return null;
+	}
 
+
+	public final Iterator<ObjectNode> iterator() {
+		return doCreateIterator(dataSource);
+	}
+
+
+	protected abstract SourceIterator doCreateIterator(DataSource source);
+
+
+	static final class SourceAdapterException extends RuntimeException {
+
+		public SourceAdapterException(Throwable cause) {
+			super(cause);
+		}
+
+	}
 }
