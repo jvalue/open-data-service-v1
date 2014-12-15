@@ -41,7 +41,7 @@ import java.util.Map;
 final class OsmAdapter extends Filter<File, Object> {
 
 	@Override
-	protected Object doFilter(File file) {
+	protected Object doProcess(File file) {
 		final List<Object> resultList = new LinkedList<Object>();
 
 		Sink sinkImplementation = new Sink() {
@@ -87,6 +87,11 @@ final class OsmAdapter extends Filter<File, Object> {
 		return resultList;
 	}
 
+
+	@Override
+	protected void doOnComplete() {
+		// nothing to do here
+	}
 
 	private Map<String, Object> convertRelationToGenericValue(Relation relation) {
 		Map<String, Object> map = new HashMap<String, Object>();

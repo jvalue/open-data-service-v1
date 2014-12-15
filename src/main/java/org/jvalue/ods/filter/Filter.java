@@ -33,12 +33,26 @@ public abstract class Filter<P, R> {
 	}
 
 
-	public void filter(P param) throws FilterException {
-		R result = doFilter(param);
-		if (nextFilter != null) nextFilter.filter(result);
+	/**
+	 * Called to process a new element of the current data stream.
+	 */
+	public void process(P param) throws FilterException {
+		R result = doProcess(param);
+		if (nextFilter != null) nextFilter.process(result);
 	}
 
 
-	protected abstract R doFilter(P param) throws FilterException;
+	/**
+	 * Called when all elements of the current data stream have been processed. This method
+	 * can be used to clean up resources, release resources etc.
+	 */
+	public final void onComplete() throws FilterException {
+		doOnComplete();
+		if (nextFilter != null) nextFilter.onComplete();
+	}
+
+
+	protected abstract R doProcess(P param) throws FilterException;
+	protected abstract void doOnComplete() throws FilterException;
 
 }

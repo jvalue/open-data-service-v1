@@ -183,9 +183,15 @@ public final class FilterChainManagerTest {
 	private static final class DummyFilter extends Filter<Void, ArrayNode> {
 
 		@Override
-		protected ArrayNode doFilter(Void param) {
+		protected ArrayNode doProcess(Void param) {
 			filterRunCount++;
 			return null;
+		}
+
+
+		@Override
+		protected void doOnComplete() {
+			// nothing to do here
 		}
 
 	}

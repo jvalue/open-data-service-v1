@@ -7,7 +7,9 @@ import static org.junit.Assert.assertEquals;
 
 public final class FilterTest {
 
-	private int filterCount = 0;
+	private int
+			filterCount = 0,
+			completeCount = 0;
 
 
 	@Test
@@ -21,10 +23,11 @@ public final class FilterTest {
 			.setNextFilter(new DummyFilter(value))
 			.setNextFilter(new DummyFilter(value));
 
-		chain.filter(value);
+		chain.process(value);
+		chain.onComplete();
 
 		assertEquals(4, filterCount);
-
+		assertEquals(4, completeCount);
 	}
 
 
@@ -37,12 +40,17 @@ public final class FilterTest {
 		}
 
 		@Override
-		protected String doFilter(String param) {
+		protected String doProcess(String param) {
 			assertEquals(value, param);
 			filterCount++;
 			return param;
 		}
 
+
+		@Override
+		protected void doOnComplete() {
+			completeCount++;
+		}
 	}
 
 }

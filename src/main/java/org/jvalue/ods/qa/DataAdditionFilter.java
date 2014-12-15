@@ -50,7 +50,7 @@ public class DataAdditionFilter extends Filter<Object, Object> {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	protected Object doFilter(Object object) {
+	protected Object doProcess(Object object) {
 
 		try {
 
@@ -84,6 +84,12 @@ public class DataAdditionFilter extends Filter<Object, Object> {
 		}
 
 		return object;
+	}
+
+
+	@Override
+	protected void doOnComplete() {
+		// nothing to do here
 	}
 
 }

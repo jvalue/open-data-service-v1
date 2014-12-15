@@ -53,7 +53,7 @@ final class PegelPortalMvAdapter extends Filter<Void, ArrayNode> {
 
 
 	@Override
-	protected ArrayNode doFilter(Void nothing) {
+	protected ArrayNode doProcess(Void nothing) {
 		/*
 		try {
 			String httpContent = HttpUtils.readUrl(source.getUrl(), "UTF-8");
@@ -105,6 +105,12 @@ final class PegelPortalMvAdapter extends Filter<Void, ArrayNode> {
 		}
 		*/
 		return null;
+	}
+
+
+	@Override
+	protected void doOnComplete() {
+		// nothing to do here
 	}
 
 

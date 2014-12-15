@@ -44,7 +44,7 @@ public final class CombineSourceFilter extends Filter<Object, Object> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	protected Object doFilter(Object data) {
+	protected Object doProcess(Object data) {
 
 		if (data == null) {
 			throw new IllegalArgumentException();
@@ -80,6 +80,12 @@ public final class CombineSourceFilter extends Filter<Object, Object> {
 
 
 		return improvedObjects;
+	}
+
+
+	@Override
+	protected void doOnComplete() {
+		// nothing to do here
 	}
 
 	@SuppressWarnings("unchecked")

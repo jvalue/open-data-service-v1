@@ -45,7 +45,7 @@ public final class RenameSourceFilter extends Filter<Object, Object> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	protected Object doFilter(Object data) {
+	protected Object doProcess(Object data) {
 
 		List<Object> improvedObjects = new LinkedList<Object>();
 
@@ -78,6 +78,13 @@ public final class RenameSourceFilter extends Filter<Object, Object> {
 
 		return data;
 	}
+
+
+	@Override
+	protected void doOnComplete() {
+		// nothing to do here
+	}
+
 
 	@SuppressWarnings("unchecked")
 	private void traverseSchema(GenericValueType sourceStructure,

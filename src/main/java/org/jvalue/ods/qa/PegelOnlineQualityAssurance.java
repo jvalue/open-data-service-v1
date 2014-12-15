@@ -49,7 +49,7 @@ public class PegelOnlineQualityAssurance extends Filter<Object, Object> {
 	 * Check value types.
 	 */
 	@SuppressWarnings("unchecked")
-	protected Object doFilter(Object param) {
+	protected Object doProcess(Object param) {
 
 		List<Object> nodes = null;
 
@@ -255,6 +255,13 @@ public class PegelOnlineQualityAssurance extends Filter<Object, Object> {
 
 		return param;
 	}
+
+
+	@Override
+	protected void doOnComplete() {
+		// nothing to do here
+	}
+
 
 	private static EnumType createMeasurementTrendType() {
 		ExactValueRestriction<String> a = new ExactValueRestriction<String>(

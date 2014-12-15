@@ -37,7 +37,7 @@ abstract class AbstractSourceAdapterTest {
 			server.start(content);
 			CollectorFilter collectorFilter = new CollectorFilter();
 			adapter.setNextFilter(collectorFilter);
-			adapter.filter(null);
+			adapter.process(null);
 			server.stop();
 
 			// all protocols should return the same result, even if parsed incorrectly
@@ -55,11 +55,16 @@ abstract class AbstractSourceAdapterTest {
 		private final List<ObjectNode> values = new LinkedList<>();
 
 		@Override
-		protected ObjectNode doFilter(ObjectNode node) {
+		protected ObjectNode doProcess(ObjectNode node) {
 			values.add(node);
 			return node;
 		}
 
+
+		@Override
+		protected void doOnComplete() {
+			// nothing to do here
+		}
 	}
 
 }

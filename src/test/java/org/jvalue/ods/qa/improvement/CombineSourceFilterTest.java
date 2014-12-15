@@ -11,13 +11,13 @@ public class CombineSourceFilterTest {
 	@Test
 	public void testFilterEmptyObject() throws FilterException {
 		List<Object> list = new LinkedList<Object>();
-		new CombineSourceFilter(null, null).filter(list);
+		new CombineSourceFilter(null, null).process(list);
 	}
 
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testFilterNull() throws FilterException {
-		new CombineSourceFilter(null, null).filter(null);
+		new CombineSourceFilter(null, null).process(null);
 	}
 
 }

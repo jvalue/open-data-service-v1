@@ -44,7 +44,7 @@ public final class DbInsertionFilterTest {
 		}};
 
 		Filter<ObjectNode, ObjectNode> filter = new DbInsertionFilter(repository, source);
-		filter.filter(createObject(VALUE_DOMAIN_ID));
+		filter.process(createObject(VALUE_DOMAIN_ID));
 
 		new Verifications() {{
 			repository.add((JsonNode) any); times = 1;
@@ -63,7 +63,7 @@ public final class DbInsertionFilterTest {
 		}};
 
 		Filter<ObjectNode, ObjectNode> filter = new DbInsertionFilter(repository, source);
-		filter.filter(createObject(VALUE_DOMAIN_ID));
+		filter.process(createObject(VALUE_DOMAIN_ID));
 
 		new Verifications() {{
 			List<JsonNode> nodeList = new LinkedList<>();

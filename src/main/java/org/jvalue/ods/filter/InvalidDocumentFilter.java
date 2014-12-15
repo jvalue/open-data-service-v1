@@ -30,12 +30,18 @@ import java.util.Iterator;
 final class InvalidDocumentFilter extends Filter<ArrayNode, ArrayNode> {
 
 	@Override
-	protected ArrayNode doFilter(ArrayNode data) {
+	protected ArrayNode doProcess(ArrayNode data) {
 		Iterator<JsonNode> iterator = data.elements();
 		while (iterator.hasNext()) {
 			if (!iterator.next().isObject()) iterator.remove();
 		}
 		return data;
+	}
+
+
+	@Override
+	protected void doOnComplete() {
+		// nothing to do
 	}
 
 }

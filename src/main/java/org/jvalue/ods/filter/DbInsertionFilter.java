@@ -45,7 +45,7 @@ final class DbInsertionFilter extends Filter<ObjectNode, ObjectNode> {
 
 
 	@Override
-	protected ObjectNode doFilter(ObjectNode node) {
+	protected ObjectNode doProcess(ObjectNode node) {
 		String domainKey = node.at(source.getDomainIdKey()).asText();
 		try {
 			// update existing element
@@ -59,6 +59,12 @@ final class DbInsertionFilter extends Filter<ObjectNode, ObjectNode> {
 			dataRepository.add(node);
 		}
 		return node;
+	}
+
+
+	@Override
+	protected void doOnComplete() {
+		// nothing to do here
 	}
 
 }

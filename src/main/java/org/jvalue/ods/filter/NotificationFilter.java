@@ -41,9 +41,16 @@ final class NotificationFilter extends Filter<ArrayNode, ArrayNode> {
 
 
 	@Override
-	protected ArrayNode doFilter(ArrayNode data) {
+	protected ArrayNode doProcess(ArrayNode data) {
+		// TODO this should open a connection to clients and stream the data to them if necessary.
 		notificationManager.notifySourceChanged(source, data);
 		return data;
+	}
+
+
+	@Override
+	protected void doOnComplete() {
+		// TODO this should close the connection to clients.
 	}
 
 }

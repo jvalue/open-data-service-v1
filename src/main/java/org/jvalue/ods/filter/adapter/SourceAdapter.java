@@ -38,21 +38,27 @@ abstract class SourceAdapter extends Filter<Void, ObjectNode> implements Iterabl
 
 
 	@Override
-	public void filter(Void param) throws FilterException {
+	public void process(Void param) throws FilterException {
 		try {
 			for (ObjectNode node : this) {
-				nextFilter.filter(node);
+				nextFilter.process(node);
 			}
 		} catch (SourceAdapterException sae) {
-			throw new FilterException(sae);
+			throw new FilterException(sae.getCause());
 		}
 	}
 
 
 	@Override
-	protected final ObjectNode doFilter(Void param) throws FilterException {
+	protected final ObjectNode doProcess(Void param) throws FilterException {
 		// nothing to do here
 		return null;
+	}
+
+
+	@Override
+	protected final void doOnComplete() {
+		// nothing to do here
 	}
 
 

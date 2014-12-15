@@ -146,7 +146,8 @@ public final class FilterChainManager extends AbstractDataSourcePropertyManager<
 			try {
 				Log.info("starting filter chain \"" + reference.getFilterChainId() + "\" for source \"" + source.getSourceId() + "\"");
 				Filter<Void, ObjectNode> filterChain = filterChainFactory.createFilterChain(reference, source, dataRepository);
-				filterChain.filter(null);
+				filterChain.process(null);
+				filterChain.onComplete();
 				Log.info("stopping filter chain \"" + reference.getFilterChainId() + "\" for source \"" + source.getSourceId() + "\"");
 			} catch (Throwable throwable) {
 				Log.error("error while running filter chain", throwable);

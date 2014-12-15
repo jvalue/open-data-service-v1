@@ -22,7 +22,7 @@ public final class NotificationFilterTest {
 
 		Filter<ArrayNode, ArrayNode> filter = new NotificationFilter(manager, source);
 		final ArrayNode data = new ArrayNode(JsonNodeFactory.instance);
-		filter.filter(data);
+		filter.process(data);
 
 		new Verifications() {{
 			manager.notifySourceChanged(source, data);
