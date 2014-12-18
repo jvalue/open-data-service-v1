@@ -21,9 +21,9 @@ import org.jvalue.EnumType;
 import org.jvalue.ExactValueRestriction;
 import org.jvalue.numbers.Range;
 import org.jvalue.numbers.RangeBound;
-import org.jvalue.ods.filter.Filter;
-import org.jvalue.ods.utils.Log;
+import org.jvalue.ods.processor.filter.Filter;
 import org.jvalue.ods.qa.valueTypes.Coordinate;
+import org.jvalue.ods.utils.Log;
 import org.jvalue.si.QuantityUnit;
 import org.jvalue.si.QuantityUnitType;
 import org.jvalue.si.SiUnit;
@@ -36,7 +36,7 @@ import java.util.Map;
 /**
  * The Class PegelOnlineQualityAssurance.
  */
-public class PegelOnlineQualityAssurance extends Filter<Object, Object> {
+abstract class PegelOnlineQualityAssurance implements Filter<Object, Object> {
 
 	/**
 	 * Instantiates a new pegel online quality assurance.
@@ -257,7 +257,6 @@ public class PegelOnlineQualityAssurance extends Filter<Object, Object> {
 	}
 
 
-	@Override
 	protected void doOnComplete() {
 		// nothing to do here
 	}

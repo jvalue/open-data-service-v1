@@ -9,7 +9,7 @@ import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DataSourceRepository;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.RepositoryCache;
-import org.jvalue.ods.filter.FilterChainManager;
+import org.jvalue.ods.processor.ProcessorChainManager;
 import org.jvalue.ods.utils.Assert;
 
 import java.util.HashMap;
@@ -24,7 +24,7 @@ public final class DataSourceManager implements Managed {
 	private final RepositoryCache<DataRepository> dataRepositoryCache;
 	private final CouchDbInstance dbInstance;
 	private final DbFactory dbFactory;
-	private final FilterChainManager filterChainManager;
+	private final ProcessorChainManager processorChainManager;
 	private final DataViewManager dataViewManager;
 
 	@Inject
@@ -33,14 +33,14 @@ public final class DataSourceManager implements Managed {
 			RepositoryCache<DataRepository> dataRepositoryCache,
 			CouchDbInstance dbInstance,
 			DbFactory dbFactory,
-			FilterChainManager filterChainManager,
+			ProcessorChainManager processorChainManager,
 			DataViewManager dataViewManager) {
 
 		this.dataSourceRepository = dataSourceRepository;
 		this.dataRepositoryCache = dataRepositoryCache;
 		this.dbInstance = dbInstance;
 		this.dbFactory = dbFactory;
-		this.filterChainManager = filterChainManager;
+		this.processorChainManager = processorChainManager;
 		this.dataViewManager = dataViewManager;
 	}
 
@@ -64,7 +64,7 @@ public final class DataSourceManager implements Managed {
 
 		// delete source db
 		dataRepositoryCache.remove(source.getSourceId());
-		filterChainManager.removeAll(source);
+		processorChainManager.removeAll(source);
 		dataViewManager.removeAll(source);
 		dbInstance.deleteDatabase(source.getSourceId());
 	}
@@ -105,13 +105,13 @@ public final class DataSourceManager implements Managed {
 		}
 
 		// start filter chains
-		filterChainManager.startAllFilterChains(sources);
+		processorChainManager.startAllProcessorChains(sources);
 	}
 
 
 	@Override
 	public void stop() {
-		filterChainManager.stopAllFilterChains();
+		processorChainManager.stopAllProcessorChains();
 	}
 
 

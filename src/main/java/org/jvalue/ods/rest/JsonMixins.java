@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.DataView;
-import org.jvalue.ods.filter.plugin.PluginMetaData;
-import org.jvalue.ods.filter.reference.FilterChainReference;
+import org.jvalue.ods.processor.plugin.PluginMetaData;
+import org.jvalue.ods.processor.reference.ProcessorChainReference;
 import org.jvalue.ods.notifications.clients.Client;
 
 import java.util.HashMap;
@@ -21,8 +21,8 @@ public class JsonMixins {
 	}
 
 	@JsonIgnoreProperties({"_id", "_rev"})
-	private static interface FilterChainReferenceMixin {
-		@JsonProperty("id") String getFilterChainId();
+	private static interface ProcessorChainReferenceMixin {
+		@JsonProperty("id") String getProcessorChainId();
 	}
 
 	@JsonIgnoreProperties({"_id", "_rev"})
@@ -45,7 +45,7 @@ public class JsonMixins {
 
 	public JsonMixins() {
 		mixins.put(DataSource.class, DataSourceMixin.class);
-		mixins.put(FilterChainReference.class, FilterChainReferenceMixin.class);
+		mixins.put(ProcessorChainReference.class, ProcessorChainReferenceMixin.class);
 		mixins.put(DataView.class, DataViewMixin.class);
 		mixins.put(Client.class, NotificationClientMixin.class);
 		mixins.put(PluginMetaData.class, PluginMixin.class);

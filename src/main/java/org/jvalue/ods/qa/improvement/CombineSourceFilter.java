@@ -21,7 +21,7 @@ import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.data.valuetypes.ListComplexValueType;
 import org.jvalue.ods.data.valuetypes.MapComplexValueType;
 import org.jvalue.ods.data.valuetypes.SimpleValueType;
-import org.jvalue.ods.filter.Filter;
+import org.jvalue.ods.processor.filter.Filter;
 import org.jvalue.ods.utils.Log;
 
 import java.util.HashMap;
@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public final class CombineSourceFilter extends Filter<Object, Object> {
+abstract class CombineSourceFilter implements Filter<Object, Object> {
 
 	private MapComplexValueType sourceStructure;
 	private MapComplexValueType destinationStructure;
@@ -42,7 +42,6 @@ public final class CombineSourceFilter extends Filter<Object, Object> {
 		this.destinationStructure = destinationStructure;
 	}
 
-	@Override
 	@SuppressWarnings("unchecked")
 	protected Object doProcess(Object data) {
 
@@ -83,7 +82,6 @@ public final class CombineSourceFilter extends Filter<Object, Object> {
 	}
 
 
-	@Override
 	protected void doOnComplete() {
 		// nothing to do here
 	}

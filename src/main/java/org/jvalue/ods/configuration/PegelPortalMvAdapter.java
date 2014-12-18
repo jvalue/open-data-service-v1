@@ -23,7 +23,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.filter.Filter;
+import org.jvalue.ods.processor.filter.Filter;
 import org.jvalue.ods.utils.Assert;
 
 import java.util.HashMap;
@@ -31,7 +31,7 @@ import java.util.Map;
 
 
 
-final class PegelPortalMvAdapter extends Filter<Void, ArrayNode> {
+abstract class PegelPortalMvAdapter implements Filter<Void, ArrayNode> {
 
 	private static final Map<String, Integer> tableMapping = new HashMap<String, Integer>();
 	static {
@@ -52,7 +52,6 @@ final class PegelPortalMvAdapter extends Filter<Void, ArrayNode> {
 	}
 
 
-	@Override
 	protected ArrayNode doProcess(Void nothing) {
 		/*
 		try {
@@ -108,7 +107,6 @@ final class PegelPortalMvAdapter extends Filter<Void, ArrayNode> {
 	}
 
 
-	@Override
 	protected void doOnComplete() {
 		// nothing to do here
 	}

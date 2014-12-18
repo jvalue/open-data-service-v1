@@ -12,7 +12,7 @@ import org.ektorp.DocumentNotFoundException;
 import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.GenerateView;
 import org.ektorp.support.View;
-import org.jvalue.ods.filter.plugin.PluginMetaData;
+import org.jvalue.ods.processor.plugin.PluginMetaData;
 
 import java.io.InputStream;
 import java.util.List;

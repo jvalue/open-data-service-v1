@@ -7,11 +7,11 @@ import com.google.inject.Inject;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
-import org.jvalue.ods.filter.FilterChainManager;
-import org.jvalue.ods.filter.reference.FilterChainExecutionInterval;
-import org.jvalue.ods.filter.reference.FilterChainReference;
-import org.jvalue.ods.filter.reference.FilterReference;
-import org.jvalue.ods.filter.reference.FilterReferenceFactory;
+import org.jvalue.ods.processor.ProcessorChainManager;
+import org.jvalue.ods.processor.reference.ExecutionInterval;
+import org.jvalue.ods.processor.reference.ProcessorChainReference;
+import org.jvalue.ods.processor.reference.ProcessorReference;
+import org.jvalue.ods.processor.reference.ProcessorReferenceFactory;
 import org.jvalue.ods.utils.Assert;
 
 import java.util.EnumSet;
@@ -38,14 +38,14 @@ public final class FilterChainApi extends AbstractApi {
 			= EnumSet.of(TimeUnit.SECONDS, TimeUnit.MINUTES, TimeUnit.HOURS, TimeUnit.DAYS);
 
 	private final DataSourceManager sourceManager;
-	private final FilterChainManager chainManager;
-	private final FilterReferenceFactory referenceFactory;
+	private final ProcessorChainManager chainManager;
+	private final ProcessorReferenceFactory referenceFactory;
 
 	@Inject
 	public FilterChainApi(
 			DataSourceManager sourceManager,
-			FilterChainManager chainManager,
-			FilterReferenceFactory referenceFactory) {
+			ProcessorChainManager chainManager,
+			ProcessorReferenceFactory referenceFactory) {
 
 		this.sourceManager = sourceManager;
 		this.chainManager = chainManager;
@@ -54,7 +54,7 @@ public final class FilterChainApi extends AbstractApi {
 
 
 	@GET
-	public List<FilterChainReference> getAllFilterChains(@PathParam("sourceId") String sourceId) {
+	public List<ProcessorChainReference> getAllFilterChains(@PathParam("sourceId") String sourceId) {
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		return chainManager.getAll(source);
 	}
@@ -62,7 +62,7 @@ public final class FilterChainApi extends AbstractApi {
 
 	@GET
 	@Path("/{filterChainId}")
-	public FilterChainReference getSingleFilterChain(
+	public ProcessorChainReference getSingleFilterChain(
 			@PathParam("sourceId") String sourceId,
 			@PathParam("filterChainId") String filterChainId) {
 
@@ -73,7 +73,7 @@ public final class FilterChainApi extends AbstractApi {
 
 	@PUT
 	@Path("/{filterChainId}")
-	public FilterChainReference addFilterChain(
+	public ProcessorChainReference addFilterChain(
 			@PathParam("sourceId") String sourceId,
 			@PathParam("filterChainId") String filterChainId,
 			FilterChain filterChain) {
@@ -86,20 +86,20 @@ public final class FilterChainApi extends AbstractApi {
 			throw RestUtils.createJsonFormattedException("filter chain with id " + filterChainId + " already exists", 409);
 
 		try {
-			List<FilterReference> filterReferences = new LinkedList<>();
+			List<ProcessorReference> processorReferences = new LinkedList<>();
 			for (Filter filter : filterChain.filters) {
-				FilterReference reference = referenceFactory.createFilterReference(filter.name, filter.arguments);
-				filterReferences.add(reference);
+				ProcessorReference reference = referenceFactory.createProcessorReference(filter.name, filter.arguments);
+				processorReferences.add(reference);
 			}
 
-			FilterChainReference chainReference = referenceFactory.createFilterChainReference(
+			ProcessorChainReference chainReference = referenceFactory.createProcessorChainReference(
 					filterChainId,
-					filterReferences,
+					processorReferences,
 					filterChain.executionInterval);
 
 			chainManager.add(source, sourceManager.getDataRepository(source), chainReference);
 			return chainReference;
-		} catch (FilterReferenceFactory.InvalidFilterException ife) {
+		} catch (ProcessorReferenceFactory.InvalidProcessorException ife) {
 			throw RestUtils.createJsonFormattedException(ife.getMessage(), 400);
 		}
 	}
@@ -112,7 +112,7 @@ public final class FilterChainApi extends AbstractApi {
 			@PathParam("filterChainId") String filterChainId) {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
-		FilterChainReference reference = chainManager.get(source, filterChainId);
+		ProcessorChainReference reference = chainManager.get(source, filterChainId);
 		chainManager.remove(source, sourceManager.getDataRepository(source), reference);
 	}
 
@@ -140,15 +140,15 @@ public final class FilterChainApi extends AbstractApi {
 	private static final class FilterChain {
 
 		private final List<Filter> filters;
-		private final FilterChainExecutionInterval executionInterval;
+		private final ExecutionInterval executionInterval;
 
 		@JsonCreator
 		public FilterChain(
-				@JsonProperty("filters") List<Filter> filters,
-				@JsonProperty("executionInterval") FilterChainExecutionInterval executionInterval) {
+				@JsonProperty("processors") List<Filter> processors,
+				@JsonProperty("executionInterval") ExecutionInterval executionInterval) {
 
-			Assert.assertNotNull(filters, executionInterval);
-			this.filters = filters;
+			Assert.assertNotNull(processors, executionInterval);
+			this.filters = processors;
 			this.executionInterval = executionInterval;
 		}
 

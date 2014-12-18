@@ -19,7 +19,7 @@ package org.jvalue.ods.qa;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.objecttypes.MapObjectType;
-import org.jvalue.ods.filter.Filter;
+import org.jvalue.ods.processor.filter.Filter;
 import org.jvalue.ods.utils.Log;
 
 import java.util.List;
@@ -28,7 +28,7 @@ import java.util.Map;
 /**
  * The Class DataAdditionFilter.
  */
-public class DataAdditionFilter extends Filter<Object, Object> {
+abstract class DataAdditionFilter implements Filter<Object, Object> {
 
 	/** The source. */
 	private DataSource source;
@@ -46,10 +46,9 @@ public class DataAdditionFilter extends Filter<Object, Object> {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.jvalue.ods.filter.Filter#filter(java.lang.Object)
+	 * @see org.jvalue.ods.filter.filter.Filter#filter(java.lang.Object)
 	 */
 	@SuppressWarnings("unchecked")
-	@Override
 	protected Object doProcess(Object object) {
 
 		try {
@@ -87,7 +86,6 @@ public class DataAdditionFilter extends Filter<Object, Object> {
 	}
 
 
-	@Override
 	protected void doOnComplete() {
 		// nothing to do here
 	}

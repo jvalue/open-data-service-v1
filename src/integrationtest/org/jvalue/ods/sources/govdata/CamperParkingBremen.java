@@ -6,10 +6,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.junit.Test;
 import org.jvalue.ods.data.DataSourceMetaData;
-import org.jvalue.ods.filter.reference.FilterChainExecutionInterval;
+import org.jvalue.ods.processor.reference.ExecutionInterval;
 import org.jvalue.ods.rest.model.DataSource;
-import org.jvalue.ods.rest.model.Filter;
-import org.jvalue.ods.rest.model.FilterChain;
+import org.jvalue.ods.rest.model.Processor;
+import org.jvalue.ods.rest.model.ProcessorChainReference;
 import org.jvalue.ods.sources.AbstractDataSourceTest;
 
 import java.net.URL;
@@ -26,24 +26,24 @@ public final class CamperParkingBremen extends AbstractDataSourceTest {
 		source.domainIdKey = "/id";
 		source.schema = new ObjectNode(JsonNodeFactory.instance);
 
-		final FilterChain filterChain = new FilterChain();
-		filterChain.filters = new LinkedList<>();
-		filterChain.executionInterval = new FilterChainExecutionInterval(100, TimeUnit.SECONDS);
+		final ProcessorChainReference processorChain = new ProcessorChainReference();
+		processorChain.processors = new LinkedList<>();
+		processorChain.executionInterval = new ExecutionInterval(100, TimeUnit.SECONDS);
 
-		final Filter adapterFilter = new Filter();
+		final Processor adapterFilter = new Processor();
 		adapterFilter.name = "XmlSourceAdapter";
 
-		final Filter docFilter = new Filter();
+		final Processor docFilter = new Processor();
 		docFilter.name = "InvalidDocumentFilter";
 
-		final Filter dbFilter = new Filter();
+		final Processor dbFilter = new Processor();
 		dbFilter.name = "DbInsertionFilter";
 
-		filterChain.filters.add(adapterFilter);
-		filterChain.filters.add(docFilter);
-		filterChain.filters.add(dbFilter);
+		processorChain.processors.add(adapterFilter);
+		processorChain.processors.add(docFilter);
+		processorChain.processors.add(dbFilter);
 
-		runTest(source, filterChain, 2000);
+		runTest(source, processorChain, 2000);
 	}
 
 }

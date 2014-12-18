@@ -9,9 +9,9 @@ import org.jvalue.ods.configuration.ConfigurationModule;
 import org.jvalue.ods.data.DataModule;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.db.DbModule;
-import org.jvalue.ods.filter.FilterModule;
 import org.jvalue.ods.monitoring.DbHealthCheck;
 import org.jvalue.ods.notifications.NotificationsModule;
+import org.jvalue.ods.processor.ProcessorModule;
 import org.jvalue.ods.rest.DataApi;
 import org.jvalue.ods.rest.DataSourceApi;
 import org.jvalue.ods.rest.DataViewApi;
@@ -59,11 +59,11 @@ public final class OdsApplication extends Application<OdsConfig> {
 	public void run(OdsConfig configuration, Environment environment) {
 		Injector injector = Guice.createInjector(
 				new ConfigModule(configuration),
+				new ProcessorModule(),
 				new RestModule(),
 				new ConfigurationModule(),
 				new DbModule(),
 				new NotificationsModule(),
-				new FilterModule(),
 				new DataModule());
 
 		// start data grabbing

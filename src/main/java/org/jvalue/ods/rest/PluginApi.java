@@ -8,8 +8,8 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
-import org.jvalue.ods.filter.plugin.PluginMetaData;
-import org.jvalue.ods.filter.plugin.PluginMetaDataManager;
+import org.jvalue.ods.processor.plugin.PluginMetaData;
+import org.jvalue.ods.processor.plugin.PluginMetaDataManager;
 
 import java.io.InputStream;
 import java.util.List;

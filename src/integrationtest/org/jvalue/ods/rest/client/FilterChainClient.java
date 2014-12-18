@@ -1,7 +1,7 @@
 package org.jvalue.ods.rest.client;
 
 
-import org.jvalue.ods.rest.model.FilterChain;
+import org.jvalue.ods.rest.model.ProcessorChainReference;
 
 import java.util.List;
 
@@ -17,11 +17,11 @@ public interface FilterChainClient {
 	static String FILTER_URL = BaseClient.BASE_URL + "/datasources/{sourceId}/filterChains";
 
 	@GET(FILTER_URL)
-	public List<FilterChain> getAll(@Path("sourceId") String sourceId);
+	public List<ProcessorChainReference> getAll(@Path("sourceId") String sourceId);
 
 
 	@GET(FILTER_URL + "/{id}")
-	public FilterChain get(@Path("sourceId") String sourceId, @Path("id") String id);
+	public ProcessorChainReference get(@Path("sourceId") String sourceId, @Path("id") String id);
 
 
 	@DELETE(FILTER_URL + "/{id}")
@@ -29,6 +29,6 @@ public interface FilterChainClient {
 
 
 	@PUT(FILTER_URL + "/{id}")
-	public FilterChain add(@Path("sourceId") String sourceId, @Path("id") String id, @Body FilterChain filterChain);
+	public ProcessorChainReference add(@Path("sourceId") String sourceId, @Path("id") String id, @Body ProcessorChainReference processorChain);
 
 }

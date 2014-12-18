@@ -18,23 +18,23 @@
 package org.jvalue.ods.data;
 
 import org.jvalue.ods.db.DataRepository;
-import org.jvalue.ods.filter.reference.FilterChainReference;
+import org.jvalue.ods.processor.reference.ProcessorChainReference;
 import org.jvalue.ods.utils.Assert;
 
 public final class DataSourceConfiguration {
 
 	private final DataSource dataSource;
-	private final FilterChainReference filterChainReference;
+	private final ProcessorChainReference processorChainReference;
 	private final DataRepository dataRepository;
 
 	public DataSourceConfiguration(
 			DataSource dataSource,
-			FilterChainReference filterChainReference,
+			ProcessorChainReference processorChainReference,
 			DataRepository dataRepository) {
 
-		Assert.assertNotNull(dataSource, filterChainReference, dataRepository);
+		Assert.assertNotNull(dataSource, processorChainReference, dataRepository);
 		this.dataSource = dataSource;
-		this.filterChainReference = filterChainReference;
+		this.processorChainReference = processorChainReference;
 		this.dataRepository = dataRepository;
 	}
 
@@ -44,8 +44,8 @@ public final class DataSourceConfiguration {
 	}
 
 
-	public FilterChainReference getFilterChainReference() {
-		return filterChainReference;
+	public ProcessorChainReference getProcessorChainReference() {
+		return processorChainReference;
 	}
 
 

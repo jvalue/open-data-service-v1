@@ -9,7 +9,7 @@ import org.jvalue.ods.rest.client.DataClient;
 import org.jvalue.ods.rest.client.DataSourceClient;
 import org.jvalue.ods.rest.client.FilterChainClient;
 import org.jvalue.ods.rest.model.DataSource;
-import org.jvalue.ods.rest.model.FilterChain;
+import org.jvalue.ods.rest.model.ProcessorChainReference;
 
 public abstract class AbstractDataSourceTest {
 
@@ -21,7 +21,7 @@ public abstract class AbstractDataSourceTest {
 
 	protected final void runTest(
 			final DataSource source,
-			final FilterChain filterChain,
+			final ProcessorChainReference processorChain,
 			final long sleepDuration) throws Exception {
 
 		final String sourceId = getClass().getSimpleName();
@@ -35,7 +35,7 @@ public abstract class AbstractDataSourceTest {
 		Assert.assertEquals(0, data.size());
 
 		// add filter chain
-		filterClient.add(sourceId, filterId, filterChain);
+		filterClient.add(sourceId, filterId, processorChain);
 
 		// check filter execution
 		Thread.sleep(sleepDuration);

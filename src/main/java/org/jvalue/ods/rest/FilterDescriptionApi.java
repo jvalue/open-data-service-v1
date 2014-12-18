@@ -3,8 +3,8 @@ package org.jvalue.ods.rest;
 
 import com.google.inject.Inject;
 
-import org.jvalue.ods.filter.description.FilterDescription;
-import org.jvalue.ods.filter.description.FilterDescriptionManager;
+import org.jvalue.ods.processor.specification.Specification;
+import org.jvalue.ods.processor.specification.SpecificationManager;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -18,16 +18,16 @@ import javax.ws.rs.core.MediaType;
 @Produces(MediaType.APPLICATION_JSON)
 public final class FilterDescriptionApi extends AbstractApi {
 
-	private final FilterDescriptionManager descriptionManager;
+	private final SpecificationManager descriptionManager;
 
 	@Inject
-	public FilterDescriptionApi(FilterDescriptionManager descriptionManager) {
+	public FilterDescriptionApi(SpecificationManager descriptionManager) {
 		this.descriptionManager = descriptionManager;
 	}
 
 
 	@GET
-	public List<FilterDescription> getAll() {
+	public List<Specification> getAll() {
 		return new LinkedList<>(descriptionManager.getAll());
 	}
 }

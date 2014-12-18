@@ -29,8 +29,8 @@ import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.filter.Filter;
-import org.jvalue.ods.filter.FilterFactory;
+import org.jvalue.ods.processor.filter.Filter;
+import org.jvalue.ods.processor.filter.FilterFactory;
 
 import java.net.MalformedURLException;
 import java.net.URL;

@@ -3,10 +3,10 @@ package org.jvalue.ods.rest;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.jvalue.ods.filter.reference.FilterChainExecutionInterval;
+import org.jvalue.ods.processor.reference.ExecutionInterval;
 import org.jvalue.ods.rest.client.FilterChainClient;
-import org.jvalue.ods.rest.model.Filter;
-import org.jvalue.ods.rest.model.FilterChain;
+import org.jvalue.ods.rest.model.Processor;
+import org.jvalue.ods.rest.model.ProcessorChainReference;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -24,25 +24,25 @@ public final class FilterChainApiTest extends AbstractApiTest {
 		final String filterId = FilterChainApiTest.class.getSimpleName();
 		{
 			// check empty
-			List<FilterChain> references = filterClient.getAll(sourceId);
+			List<ProcessorChainReference> references = filterClient.getAll(sourceId);
 			Assert.assertEquals(0, references.size());
 		}
 
 		{
 			// add and get
-			final Filter adapter = new Filter();
+			final Processor adapter = new Processor();
 			adapter.name = "JsonSourceAdapter";
 
-			final FilterChain reference = new FilterChain();
-			reference.executionInterval = new FilterChainExecutionInterval(100, TimeUnit.MINUTES);
-			reference.filters = new LinkedList<>();
-			reference.filters.add(adapter);
+			final ProcessorChainReference reference = new ProcessorChainReference();
+			reference.executionInterval = new ExecutionInterval(100, TimeUnit.MINUTES);
+			reference.processors = new LinkedList<>();
+			reference.processors.add(adapter);
 
 			filterClient.add(sourceId, filterId, reference);
-			FilterChain receivedReference = filterClient.get(sourceId, filterId);
+			ProcessorChainReference receivedReference = filterClient.get(sourceId, filterId);
 			Assert.assertEquals(filterId, receivedReference.id);
 			Assert.assertEquals(reference.executionInterval, receivedReference.executionInterval);
-			Assert.assertEquals(reference.filters.size(), receivedReference.filters.size());
+			Assert.assertEquals(reference.processors.size(), receivedReference.processors.size());
 		}
 
 		{

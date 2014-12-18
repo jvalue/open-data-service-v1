@@ -21,7 +21,7 @@ import org.jvalue.ods.data.valuetypes.GenericValueType;
 import org.jvalue.ods.data.valuetypes.ListComplexValueType;
 import org.jvalue.ods.data.valuetypes.MapComplexValueType;
 import org.jvalue.ods.data.valuetypes.SimpleValueType;
-import org.jvalue.ods.filter.Filter;
+import org.jvalue.ods.processor.filter.Filter;
 import org.jvalue.ods.utils.Log;
 
 import java.util.HashMap;
@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public final class RenameSourceFilter extends Filter<Object, Object> {
+abstract class RenameSourceFilter implements Filter<Object, Object> {
 
 	private MapComplexValueType sourceStructure;
 	private MapComplexValueType destinationStructure;
@@ -43,7 +43,6 @@ public final class RenameSourceFilter extends Filter<Object, Object> {
 		this.newName = newName;
 	}
 
-	@Override
 	@SuppressWarnings("unchecked")
 	protected Object doProcess(Object data) {
 
@@ -80,7 +79,6 @@ public final class RenameSourceFilter extends Filter<Object, Object> {
 	}
 
 
-	@Override
 	protected void doOnComplete() {
 		// nothing to do here
 	}
