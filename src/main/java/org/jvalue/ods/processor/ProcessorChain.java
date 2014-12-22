@@ -23,9 +23,8 @@ public final class ProcessorChain {
 
 
 	public void startProcessing() throws FilterException, SourceAdapterException {
-		for (ObjectNode data : adapter) {
-			filterChain.filter(data);
-		}
+		for (ObjectNode data : adapter) filterChain.filter(data);
+		filterChain.onComplete();
 	}
 
 }

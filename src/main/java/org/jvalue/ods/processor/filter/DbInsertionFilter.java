@@ -22,16 +22,27 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
-import org.ektorp.DocumentNotFoundException;
+import org.ektorp.DocumentOperationResult;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.utils.Assert;
+
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 
 final class DbInsertionFilter extends AbstractFilter<ObjectNode, ObjectNode> {
 
 	private final DataRepository dataRepository;
 	private final DataSource source;
+
+	// for bulk operations
+	private static final int BULK_SIZE = 2000;
+	private final List<String> bulkDomainIds = new LinkedList<>();
+	private final List<ObjectNode> bulkObjects = new LinkedList<>();
+
 
 	@Inject
 	DbInsertionFilter(
@@ -45,26 +56,40 @@ final class DbInsertionFilter extends AbstractFilter<ObjectNode, ObjectNode> {
 
 
 	@Override
-	protected ObjectNode doProcess(ObjectNode node) {
+	protected ObjectNode doProcess(ObjectNode node) throws FilterException {
 		String domainKey = node.at(source.getDomainIdKey()).asText();
-		try {
-			// update existing element
-			JsonNode oldNode = dataRepository.findByDomainId(domainKey);
-			node.put("_id", oldNode.get("_id").asText());
-			node.put("_rev", oldNode.get("_rev").asText());
-			dataRepository.update(node);
-
-		} catch (DocumentNotFoundException dnfe) {
-			// insert new element
-			dataRepository.add(node);
-		}
+		bulkDomainIds.add(domainKey);
+		bulkObjects.add(node);
+		if (bulkObjects.size() >= BULK_SIZE) writeBulkData();
 		return node;
 	}
 
 
 	@Override
-	protected void doOnComplete() {
-		// nothing to do here
+	protected void doOnComplete() throws FilterException {
+		writeBulkData();
+	}
+
+
+	@SuppressWarnings("unchecked")
+	private void writeBulkData() throws FilterException {
+		Map<String, JsonNode> bulkLoaded = dataRepository.executeBulkGet(bulkDomainIds);
+
+		for (ObjectNode node : bulkObjects) {
+			String domainId = node.at(source.getDomainIdKey()).asText();
+			if (bulkLoaded.containsKey(domainId)) {
+				JsonNode oldNode = bulkLoaded.get(domainId);
+				node.put("_id", oldNode.get("_id").asText());
+				node.put("_rev", oldNode.get("_rev").asText());
+			}
+		}
+
+		Collection<DocumentOperationResult> results = dataRepository.executeBulkCreateAndUpdate((List) bulkObjects);
+		for (DocumentOperationResult result : results) {
+			if (result.isErroneous()) throw new FilterException("db insertion failed for id " + result.getId() + ", reason: " + result.getReason());
+		}
+
+		bulkObjects.clear();
 	}
 
 }

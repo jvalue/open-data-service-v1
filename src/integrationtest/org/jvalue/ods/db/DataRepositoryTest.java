@@ -12,6 +12,10 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.jvalue.ods.data.DataView;
 
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.Map;
+
 public final class DataRepositoryTest extends AbstractDbTest {
 
 	private static final String DOMAIN_ID = "domainId";
@@ -78,6 +82,28 @@ public final class DataRepositoryTest extends AbstractDbTest {
 		Assert.assertEquals(1, repository.executeQuery(view, "hello").size());
 		Assert.assertEquals(1, repository.executeQuery(view, "world").size());
 		Assert.assertEquals(0, repository.executeQuery(view, "foo").size());
+	}
+
+
+	@Test
+	public void testBulkGet() {
+		JsonNode node1 = createObjectNode("id1", "hello");
+		JsonNode node2 = createObjectNode("id2", "world");
+		repository.add(node1);
+		repository.add(node2);
+
+		JsonNode node = repository.findByDomainId("id1");
+		assertEquals(node, node1);
+
+		Collection<String> ids = new LinkedList<>();
+		ids.add("id1");
+		ids.add("id2");
+
+		Map<String, JsonNode> result = repository.executeBulkGet(ids);
+		Assert.assertEquals(2, result.size());
+
+		assertEquals(node1, result.get("id1"));
+		assertEquals(node2, result.get("id2"));
 	}
 
 

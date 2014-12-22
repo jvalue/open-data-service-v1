@@ -9,6 +9,9 @@ import com.google.inject.assistedinject.Assisted;
 import org.ektorp.CouchDbConnector;
 import org.ektorp.CouchDbInstance;
 import org.ektorp.DocumentNotFoundException;
+import org.ektorp.DocumentOperationResult;
+import org.ektorp.ViewQuery;
+import org.ektorp.ViewResult;
 import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.DesignDocument;
 import org.ektorp.support.DesignDocumentFactory;
@@ -16,7 +19,10 @@ import org.ektorp.support.StdDesignDocumentFactory;
 import org.jvalue.ods.data.DataView;
 import org.jvalue.ods.utils.Assert;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 
@@ -25,6 +31,7 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 
 	private final CouchDbConnector connector;
 	private final DataView domainIdView;
+
 
 	@Inject
 	DataRepository(CouchDbInstance couchDbInstance, @Assisted String databaseName, @Assisted JsonPointer domainIdKey) {
@@ -94,6 +101,26 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 		if (!connector.contains(DESIGN_DOCUMENT_ID)) return false;
 		DesignDocument designDocument = connector.get(DesignDocument.class, DESIGN_DOCUMENT_ID);
 		return designDocument.containsView(dataView.getViewId());
+	}
+
+
+	public Map<String, JsonNode> executeBulkGet(Collection<String> ids) {
+		ViewQuery query = new ViewQuery()
+				.designDocId(DESIGN_DOCUMENT_ID)
+				.viewName(domainIdView.getViewId())
+				.includeDocs(true)
+				.keys(ids);
+
+		Map<String, JsonNode> nodes = new HashMap<>();
+		for (ViewResult.Row row : connector.queryView(query).getRows()) {
+			nodes.put(row.getKey(), row.getDocAsNode());
+		}
+		return nodes;
+	}
+
+
+	public Collection<DocumentOperationResult> executeBulkCreateAndUpdate(Collection<JsonNode> data) {
+		return connector.executeBulk(data);
 	}
 
 
