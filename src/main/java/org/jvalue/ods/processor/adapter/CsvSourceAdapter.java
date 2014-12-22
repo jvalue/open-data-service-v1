@@ -74,45 +74,29 @@ final class CsvSourceAdapter extends AbstractSourceAdapter {
 
 	private static final class CsvSourceIterator extends SourceIterator {
 
-		private final DataSource source;
-		private final CSVFormat csvFormat;
 		private Iterator<CSVRecord> csvIterator;
-		private CSVRecord firstRecord = null;
+		private CSVRecord firstRecord;
 
-		public CsvSourceIterator(DataSource source, CSVFormat csvFormat) {
-			this.source = source;
-			this.csvFormat = csvFormat;
+		public CsvSourceIterator(DataSource source, CSVFormat csvFormat) throws SourceAdapterException {
+			try {
+				CSVParser parser = CSVParser.parse(source.getUrl(), Charset.forName("UTF-8"), csvFormat);
+				csvIterator = parser.iterator();
+				firstRecord = csvIterator.next();
+			} catch (IOException ioe) {
+				throw new SourceAdapterException(ioe);
+			}
 		}
 
 
 		@Override
 		protected boolean doHasNext() {
-			try {
-				initCsvIterator();
-				return csvIterator.hasNext();
-			} catch (IOException ioe) {
-				throw new SourceAdapterException(ioe);
-			}
+			return csvIterator.hasNext();
 		}
 
 
 		@Override
 		protected ObjectNode doNext() {
-			try {
-				initCsvIterator();
-				return createObject(firstRecord, csvIterator.next());
-			} catch (IOException ioe) {
-				throw new SourceAdapterException(ioe);
-			}
-		}
-
-
-		private void initCsvIterator() throws IOException {
-			if (csvIterator == null) {
-				CSVParser parser = CSVParser.parse(source.getUrl(), Charset.forName("UTF-8"), csvFormat);
-				csvIterator = parser.iterator();
-				firstRecord = csvIterator.next();
-			}
+			return createObject(firstRecord, csvIterator.next());
 		}
 
 
