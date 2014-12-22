@@ -12,8 +12,10 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.jvalue.ods.data.DataView;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public final class DataRepositoryTest extends AbstractDbTest {
@@ -104,6 +106,28 @@ public final class DataRepositoryTest extends AbstractDbTest {
 
 		assertEquals(node1, result.get("id1"));
 		assertEquals(node2, result.get("id2"));
+	}
+
+
+	@Test
+	public void testBulkCreateAndUpdate() {
+		JsonNode node1 = createObjectNode("id1", "hello");
+		JsonNode node2 = createObjectNode("id2", "world");
+
+		List<JsonNode> nodes = Arrays.asList(node1, node2);
+		repository.executeBulkCreateAndUpdate(nodes);
+
+		List<JsonNode> createdNodes = repository.getAll();
+		Assert.assertEquals(2, createdNodes.size());
+		for (JsonNode node : createdNodes) {
+			ObjectNode o = (ObjectNode) node;
+			o.put("somethingElse", "foobar");
+		}
+
+		repository.executeBulkCreateAndUpdate(createdNodes);
+		for (JsonNode node : createdNodes) {
+			Assert.assertEquals("foobar", node.get("somethingElse").asText());
+		}
 	}
 
 
