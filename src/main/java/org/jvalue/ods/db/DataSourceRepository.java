@@ -13,7 +13,7 @@ import org.jvalue.ods.data.DataSource;
 
 import java.util.List;
 
-@View( name = "all", map = "function(doc) { if (doc.sourceId && doc.domainIdKey ) emit( null, doc)}")
+@View( name = "all", map = "function(doc) { if (doc.sourceId && doc.domainIdKey) emit(null, doc)}")
 public final class DataSourceRepository extends CouchDbRepositorySupport<DataSource> {
 
 	static final String DATABASE_NAME = "dataSources";

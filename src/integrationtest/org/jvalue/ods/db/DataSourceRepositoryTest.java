@@ -7,12 +7,16 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.ektorp.CouchDbInstance;
 import org.ektorp.DocumentNotFoundException;
+import org.junit.Assert;
 import org.junit.Test;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.DataSourceMetaData;
-import org.jvalue.ods.utils.Assert;
 
 import java.net.URL;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class DataSourceRepositoryTest extends AbstractDbTest {
 
@@ -42,6 +46,22 @@ public class DataSourceRepositoryTest extends AbstractDbTest {
 	@Test(expected = DocumentNotFoundException.class)
 	public void testInvalidId() {
 		repository.findBySourceId("missingId");
+	}
+
+
+	@Test
+	public void testGetAll() throws Exception {
+		repository.add(createSource("id1"));
+		repository.add(createSource("id2"));
+
+		List<DataSource> sources = repository.getAll();
+		Assert.assertEquals(2, sources.size());
+
+		Set<String> ids = new HashSet<>(Arrays.asList("id1", "id2"));
+		for (DataSource source : sources) {
+			Assert.assertTrue(ids.remove(source.getSourceId()));
+		}
+		Assert.assertTrue(ids.isEmpty());
 	}
 
 
