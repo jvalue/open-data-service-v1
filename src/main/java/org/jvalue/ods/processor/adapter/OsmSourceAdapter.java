@@ -17,6 +17,7 @@
  */
 package org.jvalue.ods.processor.adapter;
 
+import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -31,7 +32,6 @@ import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -41,14 +41,14 @@ import crosby.binary.osmosis.OsmosisReader;
 final class OsmSourceAdapter extends AbstractSourceAdapter {
 
 	@Inject
-	OsmSourceAdapter(@Assisted DataSource source) {
-		super(source);
+	OsmSourceAdapter(@Assisted DataSource source, MetricRegistry registry) {
+		super(source, registry);
 	}
 
 
 	@Override
-	protected SourceIterator doCreateIterator(DataSource source) {
-		return new OsmosisSourceIterator(source);
+	protected SourceIterator doCreateIterator(DataSource source, MetricRegistry registry) {
+		return new OsmosisSourceIterator(source, registry);
 	}
 
 
@@ -56,12 +56,11 @@ final class OsmSourceAdapter extends AbstractSourceAdapter {
 
 		private final BlockingQueue<ObjectNode> jsonQueue = new ArrayBlockingQueue<>(100);
 		private final JsonSink jsonSink = new JsonSink(jsonQueue);
-		private final DataSource source;
 
 		private OsmosisReader osmosisReader = null;
 
-		public OsmosisSourceIterator(DataSource source) {
-			this.source = source;
+		public OsmosisSourceIterator(DataSource source, MetricRegistry registry) {
+			super(source, registry);
 		}
 
 
@@ -80,7 +79,6 @@ final class OsmSourceAdapter extends AbstractSourceAdapter {
 		protected ObjectNode doNext() {
 			try {
 				initOsmoisReader();
-				if (!hasNext()) throw new NoSuchElementException();
 				return jsonQueue.take();
 			} catch (IOException | InterruptedException e) {
 				throw new SourceAdapterException(e);

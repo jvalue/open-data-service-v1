@@ -17,6 +17,7 @@
  */
 package org.jvalue.ods.processor.adapter;
 
+import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
@@ -37,8 +38,8 @@ final class CsvSourceAdapter extends AbstractSourceAdapter {
 	private final CSVFormat csvFormat;
 
 	@Inject
-	CsvSourceAdapter(@Assisted DataSource source, @Assisted String csvFormatString) {
-		super(source);
+	CsvSourceAdapter(@Assisted DataSource source, @Assisted String csvFormatString, MetricRegistry registry) {
+		super(source, registry);
 		switch (csvFormatString) {
 			case "DEFAULT":
 				csvFormat = CSVFormat.DEFAULT;
@@ -67,8 +68,8 @@ final class CsvSourceAdapter extends AbstractSourceAdapter {
 
 
 	@Override
-	protected SourceIterator doCreateIterator(DataSource source) {
-		return new CsvSourceIterator(source, csvFormat);
+	protected SourceIterator doCreateIterator(DataSource source, MetricRegistry registry) {
+		return new CsvSourceIterator(source, csvFormat, registry);
 	}
 
 
@@ -77,7 +78,8 @@ final class CsvSourceAdapter extends AbstractSourceAdapter {
 		private Iterator<CSVRecord> csvIterator;
 		private CSVRecord firstRecord;
 
-		public CsvSourceIterator(DataSource source, CSVFormat csvFormat) throws SourceAdapterException {
+		public CsvSourceIterator(DataSource source, CSVFormat csvFormat, MetricRegistry registry) throws SourceAdapterException {
+			super(source, registry);
 			try {
 				CSVParser parser = CSVParser.parse(source.getUrl(), Charset.forName("UTF-8"), csvFormat);
 				csvIterator = parser.iterator();

@@ -1,5 +1,6 @@
 package org.jvalue.ods.processor.adapter;
 
+import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,31 +12,29 @@ import com.google.inject.assistedinject.Assisted;
 import org.jvalue.ods.data.DataSource;
 
 import java.io.IOException;
-import java.util.NoSuchElementException;
 
 
 final class XmlSourceAdapter extends AbstractSourceAdapter {
 
 	@Inject
-	XmlSourceAdapter(@Assisted DataSource source) {
-		super(source);
+	XmlSourceAdapter(@Assisted DataSource source, MetricRegistry registry) {
+		super(source, registry);
 	}
 
 
 	@Override
-	protected SourceIterator doCreateIterator(DataSource source) {
-		return new XmlSourceIterator(source);
+	protected SourceIterator doCreateIterator(DataSource source, MetricRegistry registry) {
+		return new XmlSourceIterator(source, registry);
 	}
 
 
 	private static final class XmlSourceIterator extends SourceIterator {
 
 		private static final ObjectMapper mapper = new ObjectMapper();
-		private final DataSource source;
 		private JsonParser jsonParser;
 
-		public XmlSourceIterator(DataSource source) {
-			this.source = source;
+		public XmlSourceIterator(DataSource source, MetricRegistry registry) {
+			super(source, registry);
 		}
 
 
@@ -54,7 +53,6 @@ final class XmlSourceAdapter extends AbstractSourceAdapter {
 		protected ObjectNode doNext() {
 			try {
 				if (jsonParser == null) initJsonParser();
-				if (jsonParser.getCurrentToken() != JsonToken.START_OBJECT) throw new NoSuchElementException();
 				ObjectNode node = mapper.readTree(jsonParser);
 				jsonParser.nextToken();
 				jsonParser.nextToken();

@@ -1,6 +1,7 @@
 package org.jvalue.ods.processor.adapter;
 
 
+import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -19,6 +20,9 @@ import mockit.integration.junit4.JMockit;
 @RunWith(JMockit.class)
 public final class JsonSourceAdapterTest extends AbstractSourceAdapterTest {
 
+	@Mocked
+	private MetricRegistry registry;
+
 	private static final ArrayNode JSON_ARRAY;
 	static {
 		JSON_ARRAY = new ArrayNode(JsonNodeFactory.instance);
@@ -31,7 +35,7 @@ public final class JsonSourceAdapterTest extends AbstractSourceAdapterTest {
 
 	@Test
 	public void testBasicAdapter(@Mocked DataSource source) throws Exception {
-		AbstractSourceAdapter adapter = new JsonSourceAdapter(source);
+		AbstractSourceAdapter adapter = new JsonSourceAdapter(source, registry);
 		List<ObjectNode> jsonResult = testAdapterWithAllProtocols(source, adapter, JSON_ARRAY.toString());
 		for (int i = 0; i < jsonResult.size(); ++i) {
 			Assert.assertEquals(JSON_ARRAY.get(i), jsonResult.get(i));

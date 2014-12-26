@@ -17,6 +17,7 @@
  */
 package org.jvalue.ods.processor.adapter;
 
+import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.jvalue.ods.data.DataSource;
@@ -28,19 +29,21 @@ import java.util.Iterator;
 abstract class AbstractSourceAdapter implements SourceAdapter {
 
 	private final DataSource dataSource;
+	private final MetricRegistry registry;
 
-	protected AbstractSourceAdapter(DataSource dataSource) {
-		Assert.assertNotNull(dataSource);
+	protected AbstractSourceAdapter(DataSource dataSource, MetricRegistry registry) {
+		Assert.assertNotNull(dataSource, registry);
 		this.dataSource = dataSource;
+		this.registry = registry;
 	}
 
 
 	public final Iterator<ObjectNode> iterator() {
-		return doCreateIterator(dataSource);
+		return doCreateIterator(dataSource, registry);
 	}
 
 
-	protected abstract SourceIterator doCreateIterator(DataSource source);
+	protected abstract SourceIterator doCreateIterator(DataSource source, MetricRegistry registry);
 
 
 }

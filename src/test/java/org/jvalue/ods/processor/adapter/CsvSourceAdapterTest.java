@@ -1,6 +1,7 @@
 package org.jvalue.ods.processor.adapter;
 
 
+import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.junit.Assert;
@@ -16,6 +17,8 @@ import mockit.integration.junit4.JMockit;
 
 @RunWith(JMockit.class)
 public final class CsvSourceAdapterTest extends AbstractSourceAdapterTest {
+
+	@Mocked MetricRegistry registry;
 
 	@Test
 	public void testDefaultAdapter(@Mocked final DataSource source) throws Exception {
@@ -61,7 +64,7 @@ public final class CsvSourceAdapterTest extends AbstractSourceAdapterTest {
 			char csvDelimiter,
 			DataSource source) throws Exception {
 
-		CsvSourceAdapter adapter = new CsvSourceAdapter(source, csvFormat);
+		CsvSourceAdapter adapter = new CsvSourceAdapter(source, csvFormat, registry);
 		List<ObjectNode> jsonResult = testAdapterWithAllProtocols(source, adapter, getCsvContent(csvDelimiter));
 
 		Assert.assertEquals(2, jsonResult.size());

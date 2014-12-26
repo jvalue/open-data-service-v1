@@ -17,6 +17,7 @@
  */
 package org.jvalue.ods.processor.adapter;
 
+import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
@@ -28,21 +29,20 @@ import com.google.inject.assistedinject.Assisted;
 import org.jvalue.ods.data.DataSource;
 
 import java.io.IOException;
-import java.util.NoSuchElementException;
 
 
 final class JsonSourceAdapter extends AbstractSourceAdapter {
 
 
 	@Inject
-	JsonSourceAdapter(@Assisted DataSource source) {
-		super(source);
+	JsonSourceAdapter(@Assisted DataSource source, MetricRegistry registry) {
+		super(source, registry);
 	}
 
 
 	@Override
-	protected SourceIterator doCreateIterator(DataSource source) {
-		return new JsonSourceIterator(source);
+	protected SourceIterator doCreateIterator(DataSource source, MetricRegistry registry) {
+		return new JsonSourceIterator(source, registry);
 	}
 
 
@@ -50,10 +50,9 @@ final class JsonSourceAdapter extends AbstractSourceAdapter {
 
 		private static final ObjectMapper mapper = new ObjectMapper();
 		private JsonParser jsonParser;
-		private final DataSource source;
 
-		public JsonSourceIterator(DataSource source) {
-			this.source = source;
+		public JsonSourceIterator(DataSource source, MetricRegistry registry) {
+			super(source, registry);
 		}
 
 
@@ -72,7 +71,6 @@ final class JsonSourceAdapter extends AbstractSourceAdapter {
 		protected ObjectNode doNext() {
 			try {
 				initJsonParser();
-				if (jsonParser.getCurrentToken() != JsonToken.START_OBJECT) throw new NoSuchElementException();
 				jsonParser.nextToken();
 				return mapper.readTree(jsonParser);
 			} catch (IOException e) {

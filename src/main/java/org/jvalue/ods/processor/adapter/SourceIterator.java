@@ -17,20 +17,38 @@
  */
 package org.jvalue.ods.processor.adapter;
 
+import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.monitoring.PauseableTimer;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 
 abstract class SourceIterator implements Iterator<ObjectNode> {
 
+	protected final DataSource source;
+	private final PauseableTimer.Context context;
+
+	public SourceIterator(DataSource source, MetricRegistry registry) {
+		this.source = source;
+		this.context = PauseableTimer.createTimer(registry, MetricRegistry.name(this.getClass(), source.getSourceId())).createContext();
+	}
+
 
 	@Override
 	public final boolean hasNext() {
+		context.resume();
 		try {
-			return doHasNext();
+			boolean hasNext = doHasNext();
+			if (hasNext) context.pause();
+			else context.stop();
+			return hasNext;
 		} catch (IOException e) {
+			context.stop();
 			throw new SourceAdapterException(e);
 		}
 	}
@@ -38,9 +56,14 @@ abstract class SourceIterator implements Iterator<ObjectNode> {
 
 	@Override
 	public final ObjectNode next() {
+		if (!hasNext()) throw new NoSuchElementException();
+		context.resume();
 		try {
-			return doNext();
+			ObjectNode nextObject = doNext();
+			context.pause();
+			return nextObject;
 		} catch (IOException e) {
+			context.stop();
 			throw new SourceAdapterException(e);
 		}
 	}
