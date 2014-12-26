@@ -17,8 +17,13 @@
  */
 package org.jvalue.ods.processor.filter;
 
+import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+
+import org.jvalue.ods.data.DataSource;
 
 import java.util.Iterator;
 
@@ -28,6 +33,13 @@ import java.util.Iterator;
  * a valid json object, such as plain text or number nodes.
  */
 final class InvalidDocumentFilter extends AbstractFilter<ArrayNode, ArrayNode> {
+
+
+	@Inject
+	InvalidDocumentFilter(@Assisted DataSource source, MetricRegistry registry) {
+		super(source, registry);
+	}
+
 
 	@Override
 	protected ArrayNode doProcess(ArrayNode data) {

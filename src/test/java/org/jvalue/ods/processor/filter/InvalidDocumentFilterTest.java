@@ -1,5 +1,6 @@
 package org.jvalue.ods.processor.filter;
 
+import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.IntNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -8,9 +9,17 @@ import com.fasterxml.jackson.databind.node.TextNode;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.jvalue.ods.processor.filter.InvalidDocumentFilter;
+import org.jvalue.ods.data.DataSource;
+
+import mockit.Mocked;
 
 public final class InvalidDocumentFilterTest {
+
+	@Mocked
+	private MetricRegistry registry;
+
+	@Mocked
+	private DataSource source;
 
 	@Test
 	public void testRemoval() {
@@ -23,7 +32,7 @@ public final class InvalidDocumentFilterTest {
 		jsonArray.add(new IntNode(42));
 		jsonArray.add(jsonObject);
 
-		InvalidDocumentFilter filter = new InvalidDocumentFilter();
+		InvalidDocumentFilter filter = new InvalidDocumentFilter(source, registry);
 		ArrayNode jsonResult = filter.doProcess(jsonArray);
 
 		Assert.assertEquals(1, jsonResult.size());

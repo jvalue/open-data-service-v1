@@ -15,13 +15,13 @@
  */
 package org.jvalue.ods.processor.filter;
 
+import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.notifications.NotificationManager;
-import org.jvalue.ods.utils.Assert;
 
 
 final class NotificationFilter extends AbstractFilter<ArrayNode, ArrayNode> {
@@ -31,10 +31,11 @@ final class NotificationFilter extends AbstractFilter<ArrayNode, ArrayNode> {
 
 	@Inject
 	public NotificationFilter(
+			@Assisted DataSource source,
 			NotificationManager notificationManager,
-			@Assisted DataSource source) {
+			MetricRegistry registry) {
 
-		Assert.assertNotNull(source);
+		super(source, registry);
 		this.notificationManager = notificationManager;
 		this.source = source;
 	}

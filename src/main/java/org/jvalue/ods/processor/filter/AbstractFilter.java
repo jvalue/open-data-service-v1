@@ -17,13 +17,25 @@
  */
 package org.jvalue.ods.processor.filter;
 
+import com.codahale.metrics.MetricRegistry;
+
+import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.monitoring.PauseableTimer;
 import org.jvalue.ods.utils.Assert;
 
 abstract class AbstractFilter<P, R> implements Filter<P, R> {
 
+	protected final DataSource source;
 	protected Filter<R, ?> nextFilter;
 
-	public AbstractFilter() { }
+	private final PauseableTimer.Context timerContext;
+
+
+	public AbstractFilter(DataSource source, MetricRegistry registry) {
+		Assert.assertNotNull(source, registry);
+		this.source = source;
+		this.timerContext = PauseableTimer.createTimer(registry, MetricRegistry.name(this.getClass(), source.getSourceId())).createContext();
+	}
 
 
 	@Override
@@ -36,14 +48,18 @@ abstract class AbstractFilter<P, R> implements Filter<P, R> {
 
 	@Override
 	public void filter(P data) throws FilterException {
+		timerContext.resume();
 		R result = doProcess(data);
+		timerContext.pause();
 		if (nextFilter != null) nextFilter.filter(result);
 	}
 
 
 	@Override
 	public final void onComplete() throws FilterException {
+		timerContext.resume();
 		doOnComplete();
+		timerContext.stop();
 		if (nextFilter != null) nextFilter.onComplete();
 	}
 

@@ -30,6 +30,6 @@ public interface FilterFactory {
 
 	@CreationMethod(name = NAME_INVALID_DOCUMENT_FILTER, filterType = ProcessorType.FILTER)
 	@Named(NAME_INVALID_DOCUMENT_FILTER)
-	public Filter<ArrayNode, ArrayNode> createInvalidDocumentFilter();
+	public Filter<ArrayNode, ArrayNode> createInvalidDocumentFilter(DataSource source);
 
 }

@@ -27,7 +27,6 @@ import org.ektorp.DocumentOperationResult;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.monitoring.PauseableTimer;
-import org.jvalue.ods.utils.Assert;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -55,7 +54,7 @@ final class DbInsertionFilter extends AbstractFilter<ObjectNode, ObjectNode> {
 			@Assisted DataSource source,
 			MetricRegistry registry) {
 
-		Assert.assertNotNull(source);
+		super(source, registry);
 		this.dataRepository = dataRepository;
 		this.source = source;
 
@@ -86,9 +85,8 @@ final class DbInsertionFilter extends AbstractFilter<ObjectNode, ObjectNode> {
 
 	@SuppressWarnings("unchecked")
 	private void writeBulkData() throws FilterException {
-		Map<String, JsonNode> bulkLoaded = dataRepository.executeBulkGet(bulkDomainIds);
-
 		timerContextBulkRead.resume();
+		Map<String, JsonNode> bulkLoaded = dataRepository.executeBulkGet(bulkDomainIds);
 		try {
 			for (ObjectNode node : bulkObjects) {
 				String domainId = node.at(source.getDomainIdKey()).asText();
