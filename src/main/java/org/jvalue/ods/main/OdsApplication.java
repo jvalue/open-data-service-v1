@@ -10,6 +10,7 @@ import org.jvalue.ods.data.DataModule;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.db.DbModule;
 import org.jvalue.ods.monitoring.DbHealthCheck;
+import org.jvalue.ods.monitoring.MonitoringModule;
 import org.jvalue.ods.notifications.NotificationsModule;
 import org.jvalue.ods.processor.ProcessorModule;
 import org.jvalue.ods.rest.DataApi;
@@ -58,6 +59,7 @@ public final class OdsApplication extends Application<OdsConfig> {
 	@Context
 	public void run(OdsConfig configuration, Environment environment) {
 		Injector injector = Guice.createInjector(
+				new MonitoringModule(environment.metrics()),
 				new ConfigModule(configuration),
 				new ProcessorModule(),
 				new RestModule(),

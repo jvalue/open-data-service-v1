@@ -17,6 +17,8 @@
  */
 package org.jvalue.ods.processor;
 
+import com.codahale.metrics.Gauge;
+import com.codahale.metrics.MetricRegistry;
 import com.google.common.base.Objects;
 import com.google.inject.Inject;
 
@@ -41,6 +43,7 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 	private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 	private final Map<ProcessorKey, ScheduledFuture<?>> runningTasks = new HashMap<>();
 
+
 	private final ProcessorChainFactory processorChainFactory;
 
 
@@ -48,10 +51,18 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 	ProcessorChainManager(
 			ProcessorChainFactory processorChainFactory,
 			RepositoryCache<ProcessorChainReferenceRepository> referenceRepositoryCache,
-			DbFactory dbFactory) {
+			DbFactory dbFactory,
+			MetricRegistry registry) {
 
 		super(referenceRepositoryCache, dbFactory);
 		this.processorChainFactory = processorChainFactory;
+		registry.register(MetricRegistry.name(ProcessorChainManager.class, "running-tasks"), new Gauge<Integer>() {
+			@Override
+			public Integer getValue() {
+				return runningTasks.size();
+			}
+		});
+
 	}
 
 

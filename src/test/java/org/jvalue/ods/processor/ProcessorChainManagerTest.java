@@ -1,6 +1,8 @@
 package org.jvalue.ods.processor;
 
 
+import com.codahale.metrics.MetricRegistry;
+
 import org.ektorp.DocumentNotFoundException;
 import org.junit.Assert;
 import org.junit.Before;
@@ -33,12 +35,13 @@ public final class ProcessorChainManagerTest {
 	@Mocked private ProcessorChainFactory chainFactory;
 	@Mocked private RepositoryCache<ProcessorChainReferenceRepository> repositoryCache;
 	@Mocked private DbFactory dbFactory;
+	@Mocked private MetricRegistry registry;
 	private ProcessorChainManager manager;
 
 
 	@Before
 	public void createFilterChainManager() {
-		manager = new ProcessorChainManager(chainFactory, repositoryCache, dbFactory);
+		manager = new ProcessorChainManager(chainFactory, repositoryCache, dbFactory, registry);
 	}
 
 
