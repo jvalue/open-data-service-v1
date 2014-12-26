@@ -15,6 +15,7 @@ public interface FilterFactory {
 	static final String
 			NAME_DB_INSERTION_FILTER = "DbInsertionFilter",
 			NAME_NOTIFICATION_FILTER = "NotificationFilter",
+			NAME_INT_TO_STRING_KEY_FILTER = "IntToStringKeyFilter",
 			NAME_INVALID_DOCUMENT_FILTER = "InvalidDocumentFilter";
 
 
@@ -26,6 +27,11 @@ public interface FilterFactory {
 	@CreationMethod(name = NAME_DB_INSERTION_FILTER, filterType = ProcessorType.FILTER)
 	@Named(NAME_DB_INSERTION_FILTER)
 	public Filter<ObjectNode, ObjectNode> createDbInsertionFilter(DataSource source, DataRepository dataRepository);
+
+
+	@CreationMethod(name = NAME_INT_TO_STRING_KEY_FILTER, filterType = ProcessorType.FILTER)
+	@Named(NAME_INT_TO_STRING_KEY_FILTER)
+	public Filter<ObjectNode, ObjectNode> createIntToStringKeyFilter(DataSource source);
 
 
 	@CreationMethod(name = NAME_INVALID_DOCUMENT_FILTER, filterType = ProcessorType.FILTER)

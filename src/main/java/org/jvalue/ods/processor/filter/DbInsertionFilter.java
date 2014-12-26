@@ -37,7 +37,6 @@ import java.util.Map;
 final class DbInsertionFilter extends AbstractFilter<ObjectNode, ObjectNode> {
 
 	private final DataRepository dataRepository;
-	private final DataSource source;
 
 	// for bulk operations
 	private static final int BULK_SIZE = 2000;
@@ -56,7 +55,6 @@ final class DbInsertionFilter extends AbstractFilter<ObjectNode, ObjectNode> {
 
 		super(source, registry);
 		this.dataRepository = dataRepository;
-		this.source = source;
 
 		PauseableTimer timerBulkRead = PauseableTimer.createTimer(registry, MetricRegistry.name(DbInsertionFilter.class, "bulk-read"));
 		PauseableTimer timerBulkWrite = PauseableTimer.createTimer(registry, MetricRegistry.name(DbInsertionFilter.class, "bulk-write"));

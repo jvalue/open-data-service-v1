@@ -24,6 +24,11 @@ public final class FilterModule extends AbstractModule {
 						Names.named(FilterFactory.NAME_DB_INSERTION_FILTER),
 						DbInsertionFilter.class)
 				.implement(
+						new TypeLiteral<Filter<ObjectNode, ObjectNode>>() {
+						},
+						Names.named(FilterFactory.NAME_INT_TO_STRING_KEY_FILTER),
+						IntToStringKeyFilter.class)
+				.implement(
 						new TypeLiteral<Filter<ArrayNode, ArrayNode>>() {
 						},
 						Names.named(FilterFactory.NAME_INVALID_DOCUMENT_FILTER),
