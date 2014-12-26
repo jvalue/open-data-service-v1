@@ -19,6 +19,7 @@ package org.jvalue.ods.processor;
 
 import com.codahale.metrics.Gauge;
 import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.Timer;
 import com.google.common.base.Objects;
 import com.google.inject.Inject;
 
@@ -42,7 +43,7 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 
 	private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 	private final Map<ProcessorKey, ScheduledFuture<?>> runningTasks = new HashMap<>();
-
+	private final Timer processorTimer;
 
 	private final ProcessorChainFactory processorChainFactory;
 
@@ -56,6 +57,7 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 
 		super(referenceRepositoryCache, dbFactory);
 		this.processorChainFactory = processorChainFactory;
+		this.processorTimer = registry.timer(MetricRegistry.name(ProcessorChainManager.class, "processing-total"));
 		registry.register(MetricRegistry.name(ProcessorChainManager.class, "running-tasks"), new Gauge<Integer>() {
 			@Override
 			public Integer getValue() {
@@ -153,6 +155,7 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 
 		@Override
 		public void run() {
+			Timer.Context timerContext = processorTimer.time();
 			try {
 				Log.info("starting processor chain \"" + reference.getProcessorChainId() + "\" for source \"" + source.getSourceId() + "\"");
 				ProcessorChain chain = processorChainFactory.createProcessorChain(reference, source, dataRepository);
@@ -160,6 +163,8 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 				Log.info("stopping processor chain \"" + reference.getProcessorChainId() + "\" for source \"" + source.getSourceId() + "\"");
 			} catch (Throwable throwable) {
 				Log.error("error while running processor chain", throwable);
+			} finally {
+				timerContext.stop();
 			}
 		}
 

@@ -1,6 +1,7 @@
 package org.jvalue.ods.processor.filter;
 
 
+import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -12,8 +13,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.db.DataRepository;
-import org.jvalue.ods.processor.filter.DbInsertionFilter;
-import org.jvalue.ods.processor.filter.AbstractFilter;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -34,6 +33,8 @@ public final class DbInsertionFilterTest {
 			VALUE_ID = "someId",
 			VALUE_REV = "someRev";
 
+	@Mocked private MetricRegistry registry;
+
 
 	@Test
 	public void testAdd(
@@ -45,7 +46,7 @@ public final class DbInsertionFilterTest {
 			repository.findByDomainId(VALUE_DOMAIN_ID); result = new DocumentNotFoundException("");
 		}};
 
-		AbstractFilter<ObjectNode, ObjectNode> filter = new DbInsertionFilter(repository, source);
+		AbstractFilter<ObjectNode, ObjectNode> filter = new DbInsertionFilter(repository, source, registry);
 		filter.filter(createObject(VALUE_DOMAIN_ID));
 
 		new Verifications() {{
@@ -64,7 +65,7 @@ public final class DbInsertionFilterTest {
 			repository.findByDomainId(VALUE_DOMAIN_ID); result = addDbIdAndRev(createObject(VALUE_DOMAIN_ID));
 		}};
 
-		AbstractFilter<ObjectNode, ObjectNode> filter = new DbInsertionFilter(repository, source);
+		AbstractFilter<ObjectNode, ObjectNode> filter = new DbInsertionFilter(repository, source, registry);
 		filter.filter(createObject(VALUE_DOMAIN_ID));
 
 		new Verifications() {{

@@ -17,6 +17,7 @@
  */
 package org.jvalue.ods.processor.filter;
 
+import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
@@ -25,6 +26,7 @@ import com.google.inject.assistedinject.Assisted;
 import org.ektorp.DocumentOperationResult;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.db.DataRepository;
+import org.jvalue.ods.monitoring.PauseableTimer;
 import org.jvalue.ods.utils.Assert;
 
 import java.util.Collection;
@@ -43,15 +45,24 @@ final class DbInsertionFilter extends AbstractFilter<ObjectNode, ObjectNode> {
 	private final List<String> bulkDomainIds = new LinkedList<>();
 	private final List<ObjectNode> bulkObjects = new LinkedList<>();
 
+	private PauseableTimer.Context timerContextBulkRead, timerContextBulkWrite;
+
+
 
 	@Inject
 	DbInsertionFilter(
 			@Assisted DataRepository dataRepository,
-			@Assisted DataSource source) {
+			@Assisted DataSource source,
+			MetricRegistry registry) {
 
 		Assert.assertNotNull(source);
 		this.dataRepository = dataRepository;
 		this.source = source;
+
+		PauseableTimer timerBulkRead = PauseableTimer.createTimer(registry, MetricRegistry.name(DbInsertionFilter.class, "bulk-read"));
+		PauseableTimer timerBulkWrite = PauseableTimer.createTimer(registry, MetricRegistry.name(DbInsertionFilter.class, "bulk-write"));
+		this.timerContextBulkRead = timerBulkRead.createContext();
+		this.timerContextBulkWrite = timerBulkWrite.createContext();
 	}
 
 
@@ -68,6 +79,8 @@ final class DbInsertionFilter extends AbstractFilter<ObjectNode, ObjectNode> {
 	@Override
 	protected void doOnComplete() throws FilterException {
 		writeBulkData();
+		timerContextBulkRead.stop();
+		timerContextBulkWrite.stop();
 	}
 
 
@@ -75,18 +88,29 @@ final class DbInsertionFilter extends AbstractFilter<ObjectNode, ObjectNode> {
 	private void writeBulkData() throws FilterException {
 		Map<String, JsonNode> bulkLoaded = dataRepository.executeBulkGet(bulkDomainIds);
 
-		for (ObjectNode node : bulkObjects) {
-			String domainId = node.at(source.getDomainIdKey()).asText();
-			if (bulkLoaded.containsKey(domainId)) {
-				JsonNode oldNode = bulkLoaded.get(domainId);
-				node.put("_id", oldNode.get("_id").asText());
-				node.put("_rev", oldNode.get("_rev").asText());
+		timerContextBulkRead.resume();
+		try {
+			for (ObjectNode node : bulkObjects) {
+				String domainId = node.at(source.getDomainIdKey()).asText();
+				if (bulkLoaded.containsKey(domainId)) {
+					JsonNode oldNode = bulkLoaded.get(domainId);
+					node.put("_id", oldNode.get("_id").asText());
+					node.put("_rev", oldNode.get("_rev").asText());
+				}
 			}
+		} finally {
+			timerContextBulkRead.pause();
 		}
 
-		Collection<DocumentOperationResult> results = dataRepository.executeBulkCreateAndUpdate((List) bulkObjects);
-		for (DocumentOperationResult result : results) {
-			if (result.isErroneous()) throw new FilterException("db insertion failed for id " + result.getId() + ", reason: " + result.getReason());
+		timerContextBulkWrite.resume();
+		try {
+			Collection<DocumentOperationResult> results = dataRepository.executeBulkCreateAndUpdate((List) bulkObjects);
+			for (DocumentOperationResult result : results) {
+				if (result.isErroneous())
+					throw new FilterException("db insertion failed for id " + result.getId() + ", reason: " + result.getReason());
+			}
+		} finally {
+			timerContextBulkWrite.pause();
 		}
 
 		bulkObjects.clear();
