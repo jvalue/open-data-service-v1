@@ -48,7 +48,7 @@ public final class DbInsertionFilterTest {
 			source.getDomainIdKey(); result = JsonPointer.compile("/" + DOMAIN_ID);
 		}};
 
-		AbstractFilter<ObjectNode, ObjectNode> filter = new DbInsertionFilter(repository, source, registry);
+		AbstractFilter<ObjectNode, ObjectNode> filter = new DbInsertionFilter(repository, source, true, registry);
 		filter.filter(createObject(VALUE_DOMAIN_ID));
 		filter.onComplete();
 
@@ -77,7 +77,7 @@ public final class DbInsertionFilterTest {
 			result = nodes;
 		}};
 
-		AbstractFilter<ObjectNode, ObjectNode> filter = new DbInsertionFilter(repository, source, registry);
+		AbstractFilter<ObjectNode, ObjectNode> filter = new DbInsertionFilter(repository, source, true, registry);
 		filter.filter(createObject(VALUE_DOMAIN_ID));
 		filter.onComplete();
 

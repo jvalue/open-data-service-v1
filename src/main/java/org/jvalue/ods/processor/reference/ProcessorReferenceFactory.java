@@ -3,6 +3,7 @@ package org.jvalue.ods.processor.reference;
 
 import com.google.inject.Inject;
 
+import org.apache.commons.lang3.ClassUtils;
 import org.jvalue.ods.processor.specification.Specification;
 import org.jvalue.ods.processor.specification.SpecificationManager;
 import org.jvalue.ods.processor.specification.ProcessorType;
@@ -31,7 +32,7 @@ public final class ProcessorReferenceFactory {
 		for (Map.Entry<String, Class<?>> entry : description.getArgumentTypes().entrySet()) {
 			Object arg = arguments.get(entry.getKey());
 			if (arg == null) throw new InvalidProcessorException("no argument named \"" + entry.getKey() + "\" found");
-			if (!entry.getValue().isAssignableFrom(arg.getClass())) throw new InvalidProcessorException("invalid argument type for \"" + entry.getKey() + "\"");
+			if (!ClassUtils.isAssignable(entry.getValue(), arg.getClass(), true)) throw new InvalidProcessorException("invalid argument type for \"" + entry.getKey() + "\"");
 		}
 
 		return new ProcessorReference(name, arguments);

@@ -37,6 +37,7 @@ import java.util.Map;
 final class DbInsertionFilter extends AbstractFilter<ObjectNode, ObjectNode> {
 
 	private final DataRepository dataRepository;
+	private final boolean updateDataIfExists;
 
 	// for bulk operations
 	private static final int BULK_SIZE = 2000;
@@ -51,10 +52,12 @@ final class DbInsertionFilter extends AbstractFilter<ObjectNode, ObjectNode> {
 	DbInsertionFilter(
 			@Assisted DataRepository dataRepository,
 			@Assisted DataSource source,
+			@Assisted boolean updateDataIfExists,
 			MetricRegistry registry) {
 
 		super(source, registry);
 		this.dataRepository = dataRepository;
+		this.updateDataIfExists = updateDataIfExists;
 
 		PauseableTimer timerBulkRead = PauseableTimer.createTimer(registry, MetricRegistry.name(DbInsertionFilter.class, "bulk-read"));
 		PauseableTimer timerBulkWrite = PauseableTimer.createTimer(registry, MetricRegistry.name(DbInsertionFilter.class, "bulk-write"));
@@ -83,19 +86,21 @@ final class DbInsertionFilter extends AbstractFilter<ObjectNode, ObjectNode> {
 
 	@SuppressWarnings("unchecked")
 	private void writeBulkData() throws FilterException {
-		timerContextBulkRead.resume();
-		Map<String, JsonNode> bulkLoaded = dataRepository.executeBulkGet(bulkDomainIds);
-		try {
-			for (ObjectNode node : bulkObjects) {
-				String domainId = node.at(source.getDomainIdKey()).asText();
-				if (bulkLoaded.containsKey(domainId)) {
-					JsonNode oldNode = bulkLoaded.get(domainId);
-					node.put("_id", oldNode.get("_id").asText());
-					node.put("_rev", oldNode.get("_rev").asText());
+		if (updateDataIfExists) {
+			timerContextBulkRead.resume();
+			Map<String, JsonNode> bulkLoaded = dataRepository.executeBulkGet(bulkDomainIds);
+			try {
+				for (ObjectNode node : bulkObjects) {
+					String domainId = node.at(source.getDomainIdKey()).asText();
+					if (bulkLoaded.containsKey(domainId)) {
+						JsonNode oldNode = bulkLoaded.get(domainId);
+						node.put("_id", oldNode.get("_id").asText());
+						node.put("_rev", oldNode.get("_rev").asText());
+					}
 				}
+			} finally {
+				timerContextBulkRead.pause();
 			}
-		} finally {
-			timerContextBulkRead.pause();
 		}
 
 		timerContextBulkWrite.resume();
