@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -78,8 +79,10 @@ public final class FilterChainApi extends AbstractApi {
 			@PathParam("filterChainId") String filterChainId,
 			FilterChain filterChain) {
 
-		assertIsValidTimeUnit(filterChain.executionInterval.getUnit());
-		assertIsValidPeriod(filterChain.executionInterval.getPeriod());
+		if (filterChain.executionInterval != null) {
+			assertIsValidTimeUnit(filterChain.executionInterval.getUnit());
+			assertIsValidPeriod(filterChain.executionInterval.getPeriod());
+		}
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		if (chainManager.contains(source, filterChainId))
@@ -87,7 +90,7 @@ public final class FilterChainApi extends AbstractApi {
 
 		try {
 			List<ProcessorReference> processorReferences = new LinkedList<>();
-			for (Filter filter : filterChain.filters) {
+			for (Filter filter : filterChain.processors) {
 				ProcessorReference reference = referenceFactory.createProcessorReference(filter.name, filter.arguments);
 				processorReferences.add(reference);
 			}
@@ -97,7 +100,8 @@ public final class FilterChainApi extends AbstractApi {
 					processorReferences,
 					filterChain.executionInterval);
 
-			chainManager.add(source, sourceManager.getDataRepository(source), chainReference);
+			if (filterChain.executionInterval != null) chainManager.add(source, sourceManager.getDataRepository(source), chainReference);
+			else chainManager.executeOnce(source, sourceManager.getDataRepository(source), chainReference);
 			return chainReference;
 		} catch (ProcessorReferenceFactory.InvalidProcessorException ife) {
 			throw RestUtils.createJsonFormattedException(ife.getMessage(), 400);
@@ -139,18 +143,9 @@ public final class FilterChainApi extends AbstractApi {
 
 	private static final class FilterChain {
 
-		private final List<Filter> filters;
-		private final ExecutionInterval executionInterval;
-
-		@JsonCreator
-		public FilterChain(
-				@JsonProperty("processors") List<Filter> processors,
-				@JsonProperty("executionInterval") ExecutionInterval executionInterval) {
-
-			Assert.assertNotNull(processors, executionInterval);
-			this.filters = processors;
-			this.executionInterval = executionInterval;
-		}
+		@NotNull
+		public List<Filter> processors;
+		public ExecutionInterval executionInterval;
 
 	}
 

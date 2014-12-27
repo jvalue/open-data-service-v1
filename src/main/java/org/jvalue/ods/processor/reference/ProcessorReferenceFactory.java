@@ -44,7 +44,7 @@ public final class ProcessorReferenceFactory {
 			ExecutionInterval executionInterval)
 			throws InvalidProcessorException {
 
-		Assert.assertNotNull(processorChainId, processorReferences, executionInterval);
+		Assert.assertNotNull(processorChainId, processorReferences);
 		assertIsValidProcessorReferenceList(processorReferences);
 		return new ProcessorChainReference(processorChainId, processorReferences, executionInterval);
 	}

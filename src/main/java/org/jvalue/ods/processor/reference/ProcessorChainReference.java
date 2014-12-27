@@ -21,7 +21,7 @@ public final class ProcessorChainReference extends CouchDbDocument {
 			@JsonProperty("processors") List<ProcessorReference> processors,
 			@JsonProperty("executionInterval") ExecutionInterval executionInterval) {
 
-		Assert.assertNotNull(processorChainId, processors, executionInterval);
+		Assert.assertNotNull(processorChainId, processors);
 		this.processorChainId = processorChainId;
 		this.processors = processors;
 		this.executionInterval = executionInterval;

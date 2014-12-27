@@ -30,6 +30,7 @@ import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.ProcessorChainReferenceRepository;
 import org.jvalue.ods.db.RepositoryCache;
 import org.jvalue.ods.processor.reference.ProcessorChainReference;
+import org.jvalue.ods.utils.Assert;
 import org.jvalue.ods.utils.Log;
 
 import java.util.HashMap;
@@ -68,8 +69,14 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 	}
 
 
+	public void executeOnce(DataSource source, DataRepository dataRepository, ProcessorChainReference reference) {
+		startProcessorChain(source, dataRepository, reference);
+	}
+
+
 	@Override
 	protected void doAdd(DataSource source, DataRepository dataRepository, ProcessorChainReference reference) {
+		Assert.assertNotNull(reference.getExecutionInterval());
 		startProcessorChain(source, dataRepository, reference);
 	}
 
@@ -124,13 +131,18 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 
 	private void startProcessorChain(DataSource source, DataRepository dataRepository, ProcessorChainReference reference) {
 		ProcessorKey key = new ProcessorKey(source.getSourceId(), reference.getProcessorChainId());
-		ScheduledFuture<?> task = executorService.scheduleAtFixedRate(
-				new ProcessorRunnable(reference, source, dataRepository),
-				0,
-				reference.getExecutionInterval().getPeriod(),
-				reference.getExecutionInterval().getUnit());
 
-		runningTasks.put(key, task);
+		Runnable runnable = new ProcessorRunnable(reference, source, dataRepository);
+		if (reference.getExecutionInterval() != null) {
+			ScheduledFuture<?> task = executorService.scheduleAtFixedRate(
+					runnable,
+					0,
+					reference.getExecutionInterval().getPeriod(),
+					reference.getExecutionInterval().getUnit());
+			runningTasks.put(key, task);
+		} else {
+			executorService.execute(runnable);
+		}
 	}
 
 
