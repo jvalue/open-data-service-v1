@@ -131,6 +131,17 @@ public final class DataRepositoryTest extends AbstractDbTest {
 	}
 
 
+	@Test
+	public void testRemoveAll() {
+		repository.add(createObjectNode("id1", "hello"));
+		repository.add(createObjectNode("id2", "world"));
+
+		Assert.assertEquals(2, repository.getAll().size());
+		repository.removeAll();
+		Assert.assertEquals(0, repository.getAll().size());
+	}
+
+
 	private ObjectNode createObjectNode(String id, String otherProperty) {
 		ObjectNode node = new ObjectNode(JsonNodeFactory.instance);
 		node.put(DOMAIN_ID, id);
