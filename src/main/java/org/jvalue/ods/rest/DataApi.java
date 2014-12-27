@@ -11,6 +11,7 @@ import org.jvalue.ods.db.DataRepository;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -34,6 +35,13 @@ public final class DataApi extends AbstractApi {
 	public List<Object> getAll(@PathParam("sourceId") String sourceId) throws Exception {
 		DataRepository repository = assertIsValidSource(sourceId);
 		return new LinkedList<Object>(jsonFilter.filter(repository.getAll()));
+	}
+
+
+	@DELETE
+	public void deleteAll(@PathParam("sourceId") String sourceId) {
+		DataRepository repository = assertIsValidSource(sourceId);
+		repository.removeAll();
 	}
 
 

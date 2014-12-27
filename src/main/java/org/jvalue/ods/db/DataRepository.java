@@ -3,6 +3,7 @@ package org.jvalue.ods.db;
 
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
@@ -21,6 +22,7 @@ import org.jvalue.ods.utils.Assert;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +33,7 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 
 	private final CouchDbConnector connector;
 	private final DataView domainIdView;
+	private final DataView revAndIdBydomainIdView;
 
 
 	@Inject
@@ -39,8 +42,11 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 		this.connector = couchDbInstance.createConnector(databaseName, true);
 		initStandardDesignDocument();
 
-		domainIdView = createDomainIdView(domainIdKey);
+		domainIdView = createObjectByDomainIdView(domainIdKey);
 		if (!containsView(domainIdView)) addView(domainIdView);
+
+		revAndIdBydomainIdView = createIdAndRevByDomainIdView(domainIdKey);
+		if (!containsView(revAndIdBydomainIdView)) addView(revAndIdBydomainIdView);
 
 		DataView allView = createAllView(domainIdKey);
 		if (!containsView(allView)) addView(allView);
@@ -124,8 +130,24 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 	}
 
 
-	private DataView createDomainIdView(JsonPointer domainIdKey) {
-		String domainIdViewName = "findByDomainId";
+	public void removeAll() {
+		ViewQuery query = new ViewQuery()
+				.designDocId(DESIGN_DOCUMENT_ID)
+				.viewName(revAndIdBydomainIdView.getViewId());
+
+		Collection<JsonNode> deletedObjects = new LinkedList<>();
+		for (ViewResult.Row row : connector.queryView(query).getRows()) {
+			ObjectNode node = (ObjectNode) row.getValueAsNode();
+			node.put("_deleted", true);
+			deletedObjects.add(node);
+		}
+
+		executeBulkCreateAndUpdate(deletedObjects);
+	}
+
+
+	private DataView createObjectByDomainIdView(JsonPointer domainIdKey) {
+		String viewName = "findObjectByDomainId";
 		String domainIdProperty = createDomainIdJavascriptProperty(domainIdKey);
 
 		StringBuilder mapBuilder = new StringBuilder();
@@ -134,19 +156,33 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 		mapBuilder.append(") emit(");
 		mapBuilder.append(domainIdProperty);
 		mapBuilder.append(", doc) }");
-		return new DataView(domainIdViewName, mapBuilder.toString());
+		return new DataView(viewName, mapBuilder.toString());
+	}
+
+
+	private DataView createIdAndRevByDomainIdView(JsonPointer domainIdKey) {
+		String viewName = "findIdAndRevByDomainId";
+		String domainIdProperty = createDomainIdJavascriptProperty(domainIdKey);
+
+		StringBuilder mapBuilder = new StringBuilder();
+		mapBuilder.append("function(doc) { if (");
+		mapBuilder.append(domainIdProperty);
+		mapBuilder.append(") emit(");
+		mapBuilder.append(domainIdProperty);
+		mapBuilder.append(", { _id : doc._id, _rev : doc._rev }) }");
+		return new DataView(viewName, mapBuilder.toString());
 	}
 
 
 	private DataView createAllView(JsonPointer domainIdKey) {
-		String domainIdViewName = "all";
+		String viewName = "all";
 		String domainIdProperty = createDomainIdJavascriptProperty(domainIdKey);
 
 		StringBuilder mapBuilder = new StringBuilder();
 		mapBuilder.append("function(doc) { if (");
 		mapBuilder.append(domainIdProperty);
 		mapBuilder.append(") emit(null,doc) }");
-		return new DataView(domainIdViewName, mapBuilder.toString());
+		return new DataView(viewName, mapBuilder.toString());
 	}
 
 
