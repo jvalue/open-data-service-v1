@@ -23,27 +23,35 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.utils.Assert;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Iterator;
 
 
 abstract class AbstractSourceAdapter implements SourceAdapter {
 
 	private final DataSource dataSource;
+	private final URL sourceUrl;
 	private final MetricRegistry registry;
 
-	protected AbstractSourceAdapter(DataSource dataSource, MetricRegistry registry) {
-		Assert.assertNotNull(dataSource, registry);
+	protected AbstractSourceAdapter(DataSource dataSource, String sourceUrl, MetricRegistry registry) {
+		Assert.assertNotNull(dataSource, sourceUrl, registry);
 		this.dataSource = dataSource;
+		try {
+			this.sourceUrl = new URL(sourceUrl);
+		} catch (MalformedURLException mue) {
+			throw new IllegalArgumentException("invalid url " + sourceUrl);
+		}
 		this.registry = registry;
 	}
 
 
 	public final Iterator<ObjectNode> iterator() {
-		return doCreateIterator(dataSource, registry);
+		return doCreateIterator(dataSource, sourceUrl, registry);
 	}
 
 
-	protected abstract SourceIterator doCreateIterator(DataSource source, MetricRegistry registry);
+	protected abstract SourceIterator doCreateIterator(DataSource source, URL sourceUrl, MetricRegistry registry);
 
 
 }

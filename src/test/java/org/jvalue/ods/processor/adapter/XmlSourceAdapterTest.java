@@ -18,18 +18,23 @@ import mockit.integration.junit4.JMockit;
 @RunWith(JMockit.class)
 public final class XmlSourceAdapterTest extends AbstractSourceAdapterTest {
 
-	@Mocked
-	MetricRegistry registry;
+	@Mocked private MetricRegistry registry;
+	@Mocked private DataSource source;
 
 	@Test
-	public void testBasicAdapter(@Mocked DataSource source) throws Exception {
+	public void testBasicAdapter() throws Exception {
 		String xmlContent = "<list><item><key>value1</key></item><item><key>value2</key></item></list>";
-		AbstractSourceAdapter adapter = new XmlSourceAdapter(source, registry);
-		List<ObjectNode> jsonResult = testAdapterWithAllProtocols(source, adapter, xmlContent);
+		List<ObjectNode> jsonResult = testAdapterWithAllProtocols(xmlContent);
 
 		Assert.assertEquals(2, jsonResult.size());
 		Assert.assertEquals("value1", jsonResult.get(0).get("key").asText());
 		Assert.assertEquals("value2", jsonResult.get(1).get("key").asText());
+	}
+
+
+	@Override
+	protected SourceAdapter createAdapter(String sourceUrl) {
+		return new XmlSourceAdapter(source, sourceUrl, registry);
 	}
 
 }

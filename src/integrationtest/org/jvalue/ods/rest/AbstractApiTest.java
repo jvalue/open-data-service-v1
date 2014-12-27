@@ -8,10 +8,9 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.jvalue.ods.data.DataSourceMetaData;
 import org.jvalue.ods.rest.client.ClientFactory;
-import org.jvalue.ods.rest.model.DataSource;
 import org.jvalue.ods.rest.client.DataSourceClient;
+import org.jvalue.ods.rest.model.DataSource;
 
-import java.net.URL;
 import java.util.UUID;
 
 
@@ -25,7 +24,6 @@ public abstract class AbstractApiTest {
 
 	static {
 		try {
-			source.url = new URL("http://localhost:8080/");
 			source.metaData = new DataSourceMetaData("", "", "", "", "", "", "");
 			source.domainIdKey = "/someId";
 			source.schema = new ObjectNode(JsonNodeFactory.instance);

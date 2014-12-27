@@ -16,7 +16,6 @@ import org.jvalue.ods.utils.Assert;
 import org.jvalue.ods.utils.JsonPointerDeserializer;
 import org.jvalue.ods.utils.JsonPointerSerializer;
 
-import java.net.URL;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -62,7 +61,6 @@ public final class DataSourceApi extends AbstractApi {
 
 		DataSource source = new DataSource(
 				sourceId,
-				sourceDescription.url,
 				sourceDescription.domainIdKey,
 				sourceDescription.schema,
 				sourceDescription.metaData);
@@ -79,7 +77,6 @@ public final class DataSourceApi extends AbstractApi {
 
 
 	private static final class DataSourceDescription {
-		private final URL url;
 		private final DataSourceMetaData metaData;
 		@JsonSerialize(using = JsonPointerSerializer.class)
 		@JsonDeserialize(using = JsonPointerDeserializer.class)
@@ -88,13 +85,11 @@ public final class DataSourceApi extends AbstractApi {
 
 		@JsonCreator
 		public DataSourceDescription(
-				@JsonProperty("url") URL url,
 				@JsonProperty("domainIdKey") JsonPointer domainIdKey,
 				@JsonProperty("schema") JsonNode schema,
 				@JsonProperty("metaData") DataSourceMetaData metaData) {
 
-			Assert.assertNotNull(url, domainIdKey, schema, metaData);
-			this.url = url;
+			Assert.assertNotNull(domainIdKey, schema, metaData);
 			this.domainIdKey = domainIdKey;
 			this.schema = schema;
 			this.metaData = metaData;

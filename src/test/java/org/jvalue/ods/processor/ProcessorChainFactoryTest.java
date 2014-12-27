@@ -53,7 +53,7 @@ public final class ProcessorChainFactoryTest {
 		chainFactory.createProcessorChain(chainReference, dataSource, dataRepository);
 
 		new Verifications() {{
-			adapterFactory.createJsonSourceAdapter((DataSource) any); times = 1;
+			adapterFactory.createJsonSourceAdapter((DataSource) any, (String) any); times = 1;
 			filterFactory.createDbInsertionFilter((DataSource) any, (DataRepository) any); times = 1;
 			filterFactory.createNotificationFilter((DataSource) any); times = 1;
 		}};

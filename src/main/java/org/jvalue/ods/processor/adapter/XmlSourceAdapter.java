@@ -12,19 +12,20 @@ import com.google.inject.assistedinject.Assisted;
 import org.jvalue.ods.data.DataSource;
 
 import java.io.IOException;
+import java.net.URL;
 
 
 final class XmlSourceAdapter extends AbstractSourceAdapter {
 
 	@Inject
-	XmlSourceAdapter(@Assisted DataSource source, MetricRegistry registry) {
-		super(source, registry);
+	XmlSourceAdapter(@Assisted DataSource source, @Assisted String sourceUrl, MetricRegistry registry) {
+		super(source, sourceUrl, registry);
 	}
 
 
 	@Override
-	protected SourceIterator doCreateIterator(DataSource source, MetricRegistry registry) {
-		return new XmlSourceIterator(source, registry);
+	protected SourceIterator doCreateIterator(DataSource source, URL sourceUrl, MetricRegistry registry) {
+		return new XmlSourceIterator(source, sourceUrl, registry);
 	}
 
 
@@ -33,8 +34,8 @@ final class XmlSourceAdapter extends AbstractSourceAdapter {
 		private static final ObjectMapper mapper = new ObjectMapper();
 		private JsonParser jsonParser;
 
-		public XmlSourceIterator(DataSource source, MetricRegistry registry) {
-			super(source, registry);
+		public XmlSourceIterator(DataSource source, URL sourceUrl, MetricRegistry registry) {
+			super(source, sourceUrl, registry);
 		}
 
 
@@ -65,7 +66,7 @@ final class XmlSourceAdapter extends AbstractSourceAdapter {
 
 		private void initJsonParser() throws IOException {
 			if (jsonParser == null) {
-				jsonParser = new XmlFactory().createParser(source.getUrl());
+				jsonParser = new XmlFactory().createParser(sourceUrl);
 				if (jsonParser.nextToken() != JsonToken.START_OBJECT) throw new IllegalStateException("xml should start with an object");
 				jsonParser.nextToken();
 				jsonParser.nextToken();

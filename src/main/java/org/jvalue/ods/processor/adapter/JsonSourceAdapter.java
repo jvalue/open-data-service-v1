@@ -29,20 +29,21 @@ import com.google.inject.assistedinject.Assisted;
 import org.jvalue.ods.data.DataSource;
 
 import java.io.IOException;
+import java.net.URL;
 
 
 final class JsonSourceAdapter extends AbstractSourceAdapter {
 
 
 	@Inject
-	JsonSourceAdapter(@Assisted DataSource source, MetricRegistry registry) {
-		super(source, registry);
+	JsonSourceAdapter(@Assisted DataSource source, @Assisted String sourceUrl, MetricRegistry registry) {
+		super(source, sourceUrl, registry);
 	}
 
 
 	@Override
-	protected SourceIterator doCreateIterator(DataSource source, MetricRegistry registry) {
-		return new JsonSourceIterator(source, registry);
+	protected SourceIterator doCreateIterator(DataSource source, URL sourceUrl, MetricRegistry registry) {
+		return new JsonSourceIterator(source, sourceUrl, registry);
 	}
 
 
@@ -51,8 +52,8 @@ final class JsonSourceAdapter extends AbstractSourceAdapter {
 		private static final ObjectMapper mapper = new ObjectMapper();
 		private JsonParser jsonParser;
 
-		public JsonSourceIterator(DataSource source, MetricRegistry registry) {
-			super(source, registry);
+		public JsonSourceIterator(DataSource source, URL sourceUrl, MetricRegistry registry) {
+			super(source, sourceUrl, registry);
 		}
 
 
@@ -81,7 +82,7 @@ final class JsonSourceAdapter extends AbstractSourceAdapter {
 
 		private void initJsonParser() throws IOException {
 			if (jsonParser == null) {
-				jsonParser = new JsonFactory().createParser(source.getUrl());
+				jsonParser = new JsonFactory().createParser(sourceUrl);
 				if (jsonParser.nextToken() != JsonToken.START_ARRAY)
 					throw new IllegalStateException("json should start with array");
 				jsonParser.nextToken();

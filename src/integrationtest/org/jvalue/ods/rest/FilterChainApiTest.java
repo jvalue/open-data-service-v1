@@ -32,6 +32,7 @@ public final class FilterChainApiTest extends AbstractApiTest {
 			// add and get
 			final Processor adapter = new Processor();
 			adapter.name = "JsonSourceAdapter";
+			adapter.arguments.put("sourceUrl", "http://localhost:8080");
 
 			final ProcessorChainReference reference = new ProcessorChainReference();
 			reference.executionInterval = new ExecutionInterval(100, TimeUnit.MINUTES);

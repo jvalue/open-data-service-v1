@@ -12,7 +12,6 @@ import org.junit.Test;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.DataSourceMetaData;
 
-import java.net.URL;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -67,7 +66,6 @@ public class DataSourceRepositoryTest extends AbstractDbTest {
 
 	private DataSource createSource(String id) throws Exception {
 		return new DataSource(id,
-				new URL("http://localhost/"),
 				JsonPointer.compile("/domainId"),
 				new ObjectNode(JsonNodeFactory.instance),
 				new DataSourceMetaData("", "", "", "", "", "", ""));

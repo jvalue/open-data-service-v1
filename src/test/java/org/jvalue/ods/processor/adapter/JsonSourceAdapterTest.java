@@ -20,8 +20,8 @@ import mockit.integration.junit4.JMockit;
 @RunWith(JMockit.class)
 public final class JsonSourceAdapterTest extends AbstractSourceAdapterTest {
 
-	@Mocked
-	private MetricRegistry registry;
+	@Mocked private MetricRegistry registry;
+	@Mocked private DataSource source;
 
 	private static final ArrayNode JSON_ARRAY;
 	static {
@@ -35,11 +35,16 @@ public final class JsonSourceAdapterTest extends AbstractSourceAdapterTest {
 
 	@Test
 	public void testBasicAdapter(@Mocked DataSource source) throws Exception {
-		AbstractSourceAdapter adapter = new JsonSourceAdapter(source, registry);
-		List<ObjectNode> jsonResult = testAdapterWithAllProtocols(source, adapter, JSON_ARRAY.toString());
+		List<ObjectNode> jsonResult = testAdapterWithAllProtocols(JSON_ARRAY.toString());
 		for (int i = 0; i < jsonResult.size(); ++i) {
 			Assert.assertEquals(JSON_ARRAY.get(i), jsonResult.get(i));
 		}
+	}
+
+
+	@Override
+	protected SourceAdapter createAdapter(String sourceUrl) {
+		return new JsonSourceAdapter(source, sourceUrl, registry);
 	}
 
 }

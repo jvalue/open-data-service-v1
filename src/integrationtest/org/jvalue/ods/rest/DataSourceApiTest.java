@@ -49,7 +49,6 @@ public final class DataSourceApiTest extends AbstractApiTest {
 
 
 	private void assertEquals(DataSource source1, DataSource source2) {
-		Assert.assertEquals(source1.url, source2.url);
 		Assert.assertEquals(source1.metaData, source2.metaData);
 		Assert.assertEquals(source1.domainIdKey, source2.domainIdKey);
 		Assert.assertEquals(source1.schema, source2.schema);

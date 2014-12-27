@@ -7,14 +7,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import org.jvalue.ods.data.DataSourceMetaData;
 
-import java.net.URL;
-
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public final class DataSource {
 
 	public String id;
-	public URL url;
 	public DataSourceMetaData metaData;
 	public String domainIdKey;
 	public JsonNode schema;

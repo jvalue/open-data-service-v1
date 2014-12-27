@@ -12,8 +12,6 @@ import org.jvalue.ods.rest.model.Processor;
 import org.jvalue.ods.rest.model.ProcessorChainReference;
 import org.jvalue.ods.sources.AbstractDataSourceTest;
 
-import java.net.URL;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 
@@ -22,7 +20,6 @@ public final class RostockTrashCansTest extends AbstractDataSourceTest {
 	@Test
 	public void testTrashCanSource() throws Exception {
 		final DataSource source = new DataSource();
-		source.url = new URL("https://geo.sv.rostock.de/download/opendata/abfallbehaelter/abfallbehaelter.csv");
 		source.metaData = new DataSourceMetaData("", "", "", "", "", "", "");
 		source.domainIdKey = "/id";
 		source.schema = new ObjectNode(JsonNodeFactory.instance);
@@ -33,7 +30,7 @@ public final class RostockTrashCansTest extends AbstractDataSourceTest {
 
 		final Processor adapterFilter = new Processor();
 		adapterFilter.name = "CsvSourceAdapter";
-		adapterFilter.arguments = new HashMap<>();
+		adapterFilter.arguments.put("sourceUrl", "https://geo.sv.rostock.de/download/opendata/abfallbehaelter/abfallbehaelter.csv");
 		adapterFilter.arguments.put("csvFormat", "DEFAULT");
 
 		final Processor dbFilter = new Processor();
@@ -42,7 +39,7 @@ public final class RostockTrashCansTest extends AbstractDataSourceTest {
 		processorChain.processors.add(adapterFilter);
 		processorChain.processors.add(dbFilter);
 
-		runTest(source, processorChain, 2000);
+		runTest(source, processorChain, 3000);
 	}
 
 }

@@ -4,38 +4,28 @@ package org.jvalue.ods.processor.adapter;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.junit.Assert;
-import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.processor.adapter.server.FtpServer;
 import org.jvalue.ods.processor.adapter.server.HttpServer;
 import org.jvalue.ods.processor.adapter.server.Server;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import mockit.Expectations;
-
 
 abstract class AbstractSourceAdapterTest {
 
-	protected final List<ObjectNode> testAdapterWithAllProtocols(
-			final DataSource source,
-			AbstractSourceAdapter adapter,
-			String content) throws Exception {
+	protected final List<ObjectNode> testAdapterWithAllProtocols(String content) throws Exception {
 
 		List<Server> serverList = new LinkedList<>();
-		// serverList.add(new FtpServer());
+		serverList.add(new FtpServer());
 		serverList.add(new HttpServer());
 
 		List<ObjectNode> jsonResult = null;
 
 		for (final Server server : serverList) {
-			new Expectations() {{
-				source.getUrl();
-				result = server.getFileUrl();
-			}};
-
 			server.start(content);
 			List<ObjectNode> tmpJsonResult = new LinkedList<>();
-			for (ObjectNode node : adapter) tmpJsonResult.add(node);
+			for (ObjectNode node : createAdapter(server.getFileUrl().toString())) tmpJsonResult.add(node);
 			server.stop();
 
 			// all protocols should return the same result, even if parsed incorrectly
@@ -46,5 +36,8 @@ abstract class AbstractSourceAdapterTest {
 		// return json for checking parsing correctness
 		return jsonResult;
 	}
+
+
+	protected abstract SourceAdapter createAdapter(String sourceUrl);
 
 }

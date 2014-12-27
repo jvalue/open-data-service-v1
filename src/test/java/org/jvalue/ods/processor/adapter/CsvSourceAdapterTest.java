@@ -19,28 +19,29 @@ import mockit.integration.junit4.JMockit;
 public final class CsvSourceAdapterTest extends AbstractSourceAdapterTest {
 
 	@Mocked MetricRegistry registry;
+	@Mocked DataSource source;
 
 	@Test
-	public void testDefaultAdapter(@Mocked final DataSource source) throws Exception {
-		testAdapter("DEFAULT", ',', source);
+	public void testDefaultAdapter() throws Exception {
+		testAdapter("DEFAULT", ',');
 	}
 
 
 	@Test
-	public void testExcelAdapter(@Mocked final DataSource source) throws Exception {
-		testAdapter("EXCEL", ',', source);
+	public void testExcelAdapter() throws Exception {
+		testAdapter("EXCEL", ',');
 	}
 
 
 	@Test
-	public void testRfcAdapter(@Mocked final DataSource source) throws Exception {
-		testAdapter("RFC4180", ',', source);
+	public void testRfcAdapter() throws Exception {
+		testAdapter("RFC4180", ',');
 	}
 
 
 	@Test
-	public void testTdfAdapter(@Mocked final DataSource source) throws Exception {
-		testAdapter("TDF", '\t', source);
+	public void testTdfAdapter() throws Exception {
+		testAdapter("TDF", '\t');
 	}
 
 
@@ -59,13 +60,11 @@ public final class CsvSourceAdapterTest extends AbstractSourceAdapterTest {
 	}
 
 
-	private void testAdapter(
-			String csvFormat,
-			char csvDelimiter,
-			DataSource source) throws Exception {
+	private String currentCsvFormat;
 
-		CsvSourceAdapter adapter = new CsvSourceAdapter(source, csvFormat, registry);
-		List<ObjectNode> jsonResult = testAdapterWithAllProtocols(source, adapter, getCsvContent(csvDelimiter));
+	private void testAdapter(String csvFormat, char csvDelimiter) throws Exception {
+		currentCsvFormat = csvFormat;
+		List<ObjectNode> jsonResult = testAdapterWithAllProtocols(getCsvContent(csvDelimiter));
 
 		Assert.assertEquals(2, jsonResult.size());
 
@@ -78,4 +77,9 @@ public final class CsvSourceAdapterTest extends AbstractSourceAdapterTest {
 		Assert.assertEquals("value4", node.get("key2").asText());
 	}
 
+
+	@Override
+	protected SourceAdapter createAdapter(String sourceUrl) {
+		return new CsvSourceAdapter(source, sourceUrl, currentCsvFormat, registry);
+	}
 }

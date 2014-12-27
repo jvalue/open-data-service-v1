@@ -31,6 +31,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -41,14 +42,14 @@ import crosby.binary.osmosis.OsmosisReader;
 final class OsmSourceAdapter extends AbstractSourceAdapter {
 
 	@Inject
-	OsmSourceAdapter(@Assisted DataSource source, MetricRegistry registry) {
-		super(source, registry);
+	OsmSourceAdapter(@Assisted DataSource source, @Assisted String sourceUrl, MetricRegistry registry) {
+		super(source, sourceUrl, registry);
 	}
 
 
 	@Override
-	protected SourceIterator doCreateIterator(DataSource source, MetricRegistry registry) {
-		return new OsmosisSourceIterator(source, registry);
+	protected SourceIterator doCreateIterator(DataSource source, URL sourceUrl, MetricRegistry registry) {
+		return new OsmosisSourceIterator(source, sourceUrl, registry);
 	}
 
 
@@ -59,8 +60,8 @@ final class OsmSourceAdapter extends AbstractSourceAdapter {
 
 		private OsmosisReader osmosisReader = null;
 
-		public OsmosisSourceIterator(DataSource source, MetricRegistry registry) {
-			super(source, registry);
+		public OsmosisSourceIterator(DataSource source, URL sourceUrl, MetricRegistry registry) {
+			super(source, sourceUrl, registry);
 		}
 
 
@@ -88,7 +89,7 @@ final class OsmSourceAdapter extends AbstractSourceAdapter {
 
 		private void initOsmoisReader() throws IOException {
 			if (osmosisReader == null) {
-				osmosisReader = new OsmosisReader(source.getUrl().openStream());
+				osmosisReader = new OsmosisReader(sourceUrl.openStream());
 				osmosisReader.setSink(jsonSink);
 				Thread thread = new Thread(osmosisReader);
 				thread.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {

@@ -22,8 +22,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.monitoring.PauseableTimer;
+import org.jvalue.ods.utils.Assert;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -31,10 +33,13 @@ import java.util.NoSuchElementException;
 abstract class SourceIterator implements Iterator<ObjectNode> {
 
 	protected final DataSource source;
+	protected final URL sourceUrl;
 	private final PauseableTimer.Context context;
 
-	public SourceIterator(DataSource source, MetricRegistry registry) {
+	public SourceIterator(DataSource source, URL sourceUrl, MetricRegistry registry) {
+		Assert.assertNotNull(source, sourceUrl, registry);
 		this.source = source;
+		this.sourceUrl = sourceUrl;
 		this.context = PauseableTimer.createTimer(registry, MetricRegistry.name(this.getClass(), source.getSourceId())).createContext();
 	}
 

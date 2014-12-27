@@ -29,6 +29,7 @@ import org.apache.commons.csv.CSVRecord;
 import org.jvalue.ods.data.DataSource;
 
 import java.io.IOException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Iterator;
 
@@ -38,8 +39,13 @@ final class CsvSourceAdapter extends AbstractSourceAdapter {
 	private final CSVFormat csvFormat;
 
 	@Inject
-	CsvSourceAdapter(@Assisted DataSource source, @Assisted String csvFormatString, MetricRegistry registry) {
-		super(source, registry);
+	CsvSourceAdapter(
+			@Assisted DataSource source,
+			@Assisted(SourceAdapterFactory.ARGUMENT_SOURCE_URL) String sourceUrl,
+			@Assisted(SourceAdapterFactory.ARGUMENT_CSV_FORMAT) String csvFormatString,
+			MetricRegistry registry) {
+
+		super(source, sourceUrl, registry);
 		switch (csvFormatString) {
 			case "DEFAULT":
 				csvFormat = CSVFormat.DEFAULT;
@@ -68,8 +74,8 @@ final class CsvSourceAdapter extends AbstractSourceAdapter {
 
 
 	@Override
-	protected SourceIterator doCreateIterator(DataSource source, MetricRegistry registry) {
-		return new CsvSourceIterator(source, csvFormat, registry);
+	protected SourceIterator doCreateIterator(DataSource source, URL sourceUrl, MetricRegistry registry) {
+		return new CsvSourceIterator(source, sourceUrl, csvFormat, registry);
 	}
 
 
@@ -78,10 +84,10 @@ final class CsvSourceAdapter extends AbstractSourceAdapter {
 		private Iterator<CSVRecord> csvIterator;
 		private CSVRecord firstRecord;
 
-		public CsvSourceIterator(DataSource source, CSVFormat csvFormat, MetricRegistry registry) throws SourceAdapterException {
-			super(source, registry);
+		public CsvSourceIterator(DataSource source, URL sourceUrl, CSVFormat csvFormat, MetricRegistry registry) throws SourceAdapterException {
+			super(source, sourceUrl, registry);
 			try {
-				CSVParser parser = CSVParser.parse(source.getUrl(), Charset.forName("UTF-8"), csvFormat);
+				CSVParser parser = CSVParser.parse(sourceUrl, Charset.forName("UTF-8"), csvFormat);
 				csvIterator = parser.iterator();
 				firstRecord = csvIterator.next();
 			} catch (IOException ioe) {

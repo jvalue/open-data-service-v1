@@ -31,12 +31,9 @@ import org.jvalue.ods.utils.Assert;
 import org.jvalue.ods.utils.JsonPointerDeserializer;
 import org.jvalue.ods.utils.JsonPointerSerializer;
 
-import java.net.URL;
-
 public final class DataSource extends CouchDbDocument {
 
 	private final String sourceId;
-	private final URL url;
 	private final DataSourceMetaData metaData;
 	@JsonSerialize(using = JsonPointerSerializer.class)
 	@JsonDeserialize(using = JsonPointerDeserializer.class)
@@ -51,15 +48,13 @@ public final class DataSource extends CouchDbDocument {
 	@JsonCreator
 	public DataSource(
 			@JsonProperty("sourceId") String sourceId,
-			@JsonProperty("url") URL url,
 			@JsonProperty("domainIdKey") JsonPointer domainIdKey,
 			@JsonProperty("schema") JsonNode schema,
 			@JsonProperty("metaData") DataSourceMetaData metaData) {
 
-		Assert.assertNotNull(sourceId, url, domainIdKey, schema, metaData);
+		Assert.assertNotNull(sourceId, domainIdKey, schema, metaData);
 
 		this.sourceId = sourceId;
-		this.url = url;
 		this.domainIdKey = domainIdKey;
 		this.schema = schema;
 		this.metaData = metaData;
@@ -68,11 +63,6 @@ public final class DataSource extends CouchDbDocument {
 
 	public String getSourceId() {
 		return sourceId;
-	}
-
-
-	public URL getUrl() {
-		return url;
 	}
 
 
@@ -102,7 +92,6 @@ public final class DataSource extends CouchDbDocument {
 		if (other == this) return true;
 		DataSource source = (DataSource) other;
 		return Objects.equal(sourceId, source.sourceId)
-				&& Objects.equal(url, source.url)
 				&& Objects.equal(schema, source.schema)
 				// && Objects.equal(rawDbSchema, source.rawDbSchema)
 				// && Objects.equal(improvedDbSchema, source.improvedDbSchema)
@@ -112,7 +101,7 @@ public final class DataSource extends CouchDbDocument {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(sourceId, url, schema, metaData, domainIdKey);
+		return Objects.hashCode(sourceId, schema, metaData, domainIdKey);
 	}
 
 }
