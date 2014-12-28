@@ -28,31 +28,24 @@ public final class HttpClient extends Client {
 
 	public static final String CLIENT_TYPE = "HTTP";
 
-	private final String restUrl, sourceParam;
+	private final String callbackUrl;
 	private final boolean sendData;
 
 	@JsonCreator
 	public HttpClient(
 			@JsonProperty("clientId") String clientId, 
-			@JsonProperty("restUrl") String restUrl,
-			@JsonProperty("sourceParam") String sourceParam,
+			@JsonProperty("callbackUrl") String callbackUrl,
 			@JsonProperty("sendData") boolean sendData) {
 
 		super(clientId, CLIENT_TYPE);
-		Assert.assertNotNull(restUrl, sourceParam);
-		this.restUrl = restUrl;
-		this.sourceParam = sourceParam;
+		Assert.assertNotNull(callbackUrl);
+		this.callbackUrl = callbackUrl;
 		this.sendData = sendData;
 	}
 
 
-	public String getRestUrl() {
-		return restUrl;
-	}
-
-
-	public String getSourceParam() {
-		return sourceParam;
+	public String getCallbackUrl() {
+		return callbackUrl;
 	}
 
 
@@ -65,15 +58,14 @@ public final class HttpClient extends Client {
 	public boolean equals(Object other) {
 		if (!super.equals(other)) return false;
 		HttpClient client = (HttpClient) other;
-		return Objects.equal(restUrl, client.restUrl)
-				&& Objects.equal(sourceParam, client.sourceParam)
+		return Objects.equal(callbackUrl, client.callbackUrl)
 				&& Objects.equal(sendData, client.sendData);
 	}
 
 	
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(super.hashCode(), restUrl, sourceParam, sendData);
+		return Objects.hashCode(super.hashCode(), callbackUrl, sendData);
 	}
 
 

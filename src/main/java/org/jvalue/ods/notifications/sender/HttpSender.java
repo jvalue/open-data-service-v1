@@ -1,14 +1,18 @@
 package org.jvalue.ods.notifications.sender;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.notifications.clients.HttpClient;
-import org.jvalue.ods.utils.RestCall;
-import org.jvalue.ods.utils.RestException;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.converter.JacksonConverter;
+import retrofit.http.Body;
+import retrofit.http.POST;
 
 
 public final class HttpSender extends Sender<HttpClient> {
@@ -19,29 +23,50 @@ public final class HttpSender extends Sender<HttpClient> {
 			DataSource source, 
 			ArrayNode data) {
 
+		RestAdapter adapter = new RestAdapter.Builder()
+				.setConverter(new JacksonConverter())
+				.setEndpoint(client.getCallbackUrl())
+				.build();
+		NewDataCallbackService callbackService = adapter.create(NewDataCallbackService.class);
+
+		NewData content;
+		if (client.getSendData()) content = new NewData(source.getSourceId(), data);
+		else content = new NewData(source.getSourceId(), null);
+
 		try {
-			RestCall.Builder builder = new RestCall.Builder(
-					RestCall.RequestType.POST, 
-					client.getRestUrl())
-				.parameter(client.getSourceParam(), source.getSourceId());
-
-			if (client.getSendData()) {
-				String jsonString = URLEncoder.encode(
-						data.toString(),
-						"UTF-8");
-				builder.content("application/json", jsonString.getBytes());
-			}
-
-			builder.build().execute();
-
-		} catch (RestException re) {
+			callbackService.onNewData(content);
+			return getSuccessResult();
+		} catch (RetrofitError re) {
 			return getErrorResult(re);
-		} catch (UnsupportedEncodingException uee) {
-			throw new RuntimeException(uee);
 		}
-
-		return getSuccessResult();
 	}
 
+
+	/**
+	 * The data (and metadata) that will be sent to the HTTP client.
+	 */
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private static final class NewData {
+
+		private String sourceId;
+		private JsonNode data;
+
+		public NewData(String sourceId, JsonNode data) {
+			this.sourceId = sourceId;
+			this.data = data;
+		}
+
+	}
+
+
+	/**
+	 * Describes the REST endpoint that HTTP clients have to implement.
+	 */
+	private static interface NewDataCallbackService {
+
+		@POST("")
+		public Response onNewData(@Body NewData data);
+
+	}
 
 }

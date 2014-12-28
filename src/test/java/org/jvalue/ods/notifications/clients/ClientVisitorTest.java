@@ -13,7 +13,7 @@ public final class ClientVisitorTest {
 		DummyClientVisitor visitor = new DummyClientVisitor();
 
 		GcmClient gcmClient = new GcmClient("", "");
-		HttpClient httpClient = new HttpClient("", "", "", true);
+		HttpClient httpClient = new HttpClient("", "", true);
 
 		assertEquals(gcmClient.accept(visitor, "param"), "param");
 		assertEquals(httpClient.accept(visitor, "param"), "param");

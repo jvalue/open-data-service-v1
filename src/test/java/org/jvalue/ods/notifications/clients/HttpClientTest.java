@@ -18,11 +18,11 @@ public final class HttpClientTest {
 	@Test
 	public final void testEquals() {
 
-		HttpClient client1 = new HttpClient("0", "url1", "param1", true);
-		HttpClient client2 = new HttpClient("0", "url1", "param1", true);
-		HttpClient client3 = new HttpClient("0", "url2", "param1", true);
-		HttpClient client4 = new HttpClient("0", "url1", "param1", false);
-		HttpClient client5 = new HttpClient("1", "url1", "param1", true);
+		HttpClient client1 = new HttpClient("0", "url1", true);
+		HttpClient client2 = new HttpClient("0", "url1", true);
+		HttpClient client3 = new HttpClient("0", "url2", true);
+		HttpClient client4 = new HttpClient("0", "url1", false);
+		HttpClient client5 = new HttpClient("1", "url1", true);
 
 		assertEquals(client1, client1);
 		assertEquals(client1, client2);
@@ -42,11 +42,9 @@ public final class HttpClientTest {
 
 	@Test
 	public final void testGet() {
-
-		HttpClient client = new HttpClient("0", "url", "param", true);
+		HttpClient client = new HttpClient("0", "url", true);
 		assertEquals(client.getClientId(), "0");
-		assertEquals(client.getRestUrl(), "url");
-		assertEquals(client.getSourceParam(), "param");
+		assertEquals(client.getCallbackUrl(), "url");
 		assertEquals(client.getSendData(), true);
 
 	}
@@ -54,8 +52,7 @@ public final class HttpClientTest {
 
 	@Test
 	public final void testJson() throws JsonProcessingException {
-
-		HttpClient client = new HttpClient("id", "url", "param", false);
+		HttpClient client = new HttpClient("id", "url", false);
 		JsonNode json = mapper.valueToTree(client);
 		assertNotNull(json);
 		assertEquals(client, mapper.treeToValue(json, HttpClient.class));

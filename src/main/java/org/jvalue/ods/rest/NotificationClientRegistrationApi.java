@@ -110,13 +110,12 @@ public final class NotificationClientRegistrationApi extends AbstractApi {
 
 
 	private static final class HttpClientDescription extends ClientDescription {
-		@NotNull private String restUrl;
-		@NotNull private String sourceParam;
+		@NotNull private String callbackUrl;
 		@NotNull private boolean sendData;
 
 		@Override
 		public Client toClient(String clientId) {
-			return new HttpClient(clientId, restUrl, sourceParam, sendData);
+			return new HttpClient(clientId, callbackUrl, sendData);
 		}
 
 	}
