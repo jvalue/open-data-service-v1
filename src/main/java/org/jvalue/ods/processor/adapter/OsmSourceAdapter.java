@@ -21,6 +21,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
@@ -55,10 +56,11 @@ final class OsmSourceAdapter extends AbstractSourceAdapter {
 
 	private static final class OsmosisSourceIterator extends SourceIterator {
 
-		private final BlockingQueue<ObjectNode> jsonQueue = new ArrayBlockingQueue<>(100);
+		private final BlockingQueue<Optional<ObjectNode>> jsonQueue = new ArrayBlockingQueue<>(100);
 		private final JsonSink jsonSink = new JsonSink(jsonQueue);
 
 		private OsmosisReader osmosisReader = null;
+		private ObjectNode currentNode = null;
 
 		public OsmosisSourceIterator(DataSource source, URL sourceUrl, MetricRegistry registry) {
 			super(source, sourceUrl, registry);
@@ -69,9 +71,13 @@ final class OsmSourceAdapter extends AbstractSourceAdapter {
 		protected boolean doHasNext() {
 			try {
 				initOsmoisReader();
-				return !jsonSink.isComplete();
-			} catch (IOException ioe) {
-				throw new SourceAdapterException(ioe);
+				if (currentNode == null) {
+					Optional<ObjectNode> optional = jsonQueue.take();
+					if (optional.isPresent()) currentNode = optional.get();
+				}
+				return currentNode != null;
+			} catch (InterruptedException | IOException e) {
+				throw new SourceAdapterException(e);
 			}
 		}
 
@@ -80,8 +86,10 @@ final class OsmSourceAdapter extends AbstractSourceAdapter {
 		protected ObjectNode doNext() {
 			try {
 				initOsmoisReader();
-				return jsonQueue.take();
-			} catch (IOException | InterruptedException e) {
+				ObjectNode retValue = currentNode;
+				currentNode = null;
+				return retValue;
+			} catch (IOException e) {
 				throw new SourceAdapterException(e);
 			}
 		}
@@ -107,12 +115,10 @@ final class OsmSourceAdapter extends AbstractSourceAdapter {
 
 	private static class JsonSink implements Sink {
 
-		private final BlockingQueue<ObjectNode> jsonQueue;
+		private final BlockingQueue<Optional<ObjectNode>> jsonQueue;
 		private final ObjectMapper mapper = new ObjectMapper();
 
-		private boolean complete = false;
-
-		public JsonSink(BlockingQueue<ObjectNode> jsonQueue) {
+		public JsonSink(BlockingQueue<Optional<ObjectNode>> jsonQueue) {
 			this.jsonQueue = jsonQueue;
 			this.mapper.addMixInAnnotations(Entity.class, EntityMixin.class);
 		}
@@ -123,7 +129,7 @@ final class OsmSourceAdapter extends AbstractSourceAdapter {
 			Entity entity = entityContainer.getEntity();
 			ObjectNode jsonObject = mapper.valueToTree(entity);
 			try {
-				jsonQueue.put(jsonObject);
+				jsonQueue.put(Optional.of(jsonObject));
 			} catch (InterruptedException ie) {
 				throw new SourceAdapterException(ie);
 			}
@@ -136,16 +142,17 @@ final class OsmSourceAdapter extends AbstractSourceAdapter {
 
 		@Override
 		public void complete() {
-			this.complete = true;
+			try {
+				jsonQueue.put(Optional.<ObjectNode>absent());
+			} catch (InterruptedException ie) {
+				throw new SourceAdapterException(ie);
+			}
 		}
 
 
 		@Override
-		public void release() {  }
-
-
-		public boolean isComplete() {
-			return complete;
+		public void release() {
+			complete();
 		}
 
 
