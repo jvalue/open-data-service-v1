@@ -1,5 +1,6 @@
 package org.jvalue.ods.notifications.sender;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -46,10 +47,11 @@ public final class HttpSender extends Sender<HttpClient> {
 	 * The data (and metadata) that will be sent to the HTTP client.
 	 */
 	@JsonInclude(JsonInclude.Include.NON_NULL)
+	@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 	private static final class NewData {
 
-		private String sourceId;
-		private JsonNode data;
+		public String sourceId;
+		public JsonNode data;
 
 		public NewData(String sourceId, JsonNode data) {
 			this.sourceId = sourceId;
@@ -64,7 +66,7 @@ public final class HttpSender extends Sender<HttpClient> {
 	 */
 	private static interface NewDataCallbackService {
 
-		@POST("")
+		@POST("/")
 		public Response onNewData(@Body NewData data);
 
 	}
