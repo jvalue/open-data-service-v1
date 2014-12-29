@@ -15,7 +15,7 @@ import org.jvalue.ods.sources.AbstractDataSourceTest;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 
-public final class CamperParkingBremen extends AbstractDataSourceTest {
+public final class CamperParkingBremenTest extends AbstractDataSourceTest {
 
 	@Test
 	public void testTrashCanSource() throws Exception {
