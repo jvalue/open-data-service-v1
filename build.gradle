@@ -81,11 +81,10 @@ idea.project.ipr {
 // integration test
 sourceSets {
   integrationTest {
+    java.srcDir file('src/integrationtest/java')
+    resources.srcDir file('src/integrationtest/resouces')
     compileClasspath = sourceSets.main.output + configurations.testRuntime
-    runtimeClasspath = output + sourceSets.main.output + configurations.testRuntime
-    java {
-      srcDir 'src/integrationtest'
-    }
+    runtimeClasspath = output + compileClasspath
   }
  }
   
