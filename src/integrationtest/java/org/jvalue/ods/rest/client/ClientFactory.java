@@ -1,6 +1,7 @@
 package org.jvalue.ods.rest.client;
 
 
+import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.converter.JacksonConverter;
 
@@ -15,6 +16,13 @@ public final class ClientFactory {
 		restAdapter = new RestAdapter.Builder()
 				.setEndpoint(SERVER_URL)
 				.setConverter(new JacksonConverter())
+				.setRequestInterceptor(new RequestInterceptor() {
+					@Override
+					public void intercept(RequestFacade request) {
+						request.addHeader("Accept", "application/json");
+						request.addHeader("Content-Type", "application/json");
+					}
+				})
 				.build();
 	}
 
