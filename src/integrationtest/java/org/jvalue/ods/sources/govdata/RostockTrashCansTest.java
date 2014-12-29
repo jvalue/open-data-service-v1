@@ -35,6 +35,7 @@ public final class RostockTrashCansTest extends AbstractDataSourceTest {
 
 		final Processor dbFilter = new Processor();
 		dbFilter.name = "DbInsertionFilter";
+		dbFilter.arguments.put("updateData", true);
 
 		processorChain.processors.add(adapterFilter);
 		processorChain.processors.add(dbFilter);

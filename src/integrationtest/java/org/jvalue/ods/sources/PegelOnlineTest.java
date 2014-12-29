@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 public final class PegelOnlineTest extends AbstractDataSourceTest {
 
 	@Test
-	public void testTrashCanSource() throws Exception {
+	public void testPegelOnlineSource() throws Exception {
 		final DataSource source = new DataSource();
 		source.metaData = new DataSourceMetaData("", "", "", "", "", "", "");
 		source.domainIdKey = "/uuid";
@@ -33,6 +33,7 @@ public final class PegelOnlineTest extends AbstractDataSourceTest {
 
 		final Processor dbFilter = new Processor();
 		dbFilter.name = "DbInsertionFilter";
+		dbFilter.arguments.put("updateData", true);
 
 		processorChain.processors.add(adapterFilter);
 		processorChain.processors.add(dbFilter);

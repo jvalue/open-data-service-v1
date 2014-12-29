@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 public final class CamperParkingBremenTest extends AbstractDataSourceTest {
 
 	@Test
-	public void testTrashCanSource() throws Exception {
+	public void testCamperParkingSource() throws Exception {
 		final DataSource source = new DataSource();
 		source.metaData = new DataSourceMetaData("", "", "", "", "", "", "");
 		source.domainIdKey = "/id";
@@ -37,6 +37,7 @@ public final class CamperParkingBremenTest extends AbstractDataSourceTest {
 
 		final Processor dbFilter = new Processor();
 		dbFilter.name = "DbInsertionFilter";
+		dbFilter.arguments.put("updateData", true);
 
 		processorChain.processors.add(adapterFilter);
 		processorChain.processors.add(docFilter);
