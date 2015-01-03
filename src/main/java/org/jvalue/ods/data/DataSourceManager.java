@@ -9,6 +9,7 @@ import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DataSourceRepository;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.RepositoryCache;
+import org.jvalue.ods.notifications.NotificationManager;
 import org.jvalue.ods.processor.ProcessorChainManager;
 import org.jvalue.ods.utils.Assert;
 
@@ -26,6 +27,7 @@ public final class DataSourceManager implements Managed {
 	private final DbFactory dbFactory;
 	private final ProcessorChainManager processorChainManager;
 	private final DataViewManager dataViewManager;
+	private final NotificationManager notificationManager;
 
 	@Inject
 	public DataSourceManager(
@@ -34,7 +36,8 @@ public final class DataSourceManager implements Managed {
 			CouchDbInstance dbInstance,
 			DbFactory dbFactory,
 			ProcessorChainManager processorChainManager,
-			DataViewManager dataViewManager) {
+			DataViewManager dataViewManager,
+			NotificationManager notificationManager) {
 
 		this.dataSourceRepository = dataSourceRepository;
 		this.dataRepositoryCache = dataRepositoryCache;
@@ -42,6 +45,7 @@ public final class DataSourceManager implements Managed {
 		this.dbFactory = dbFactory;
 		this.processorChainManager = processorChainManager;
 		this.dataViewManager = dataViewManager;
+		this.notificationManager = notificationManager;
 	}
 
 
@@ -66,6 +70,7 @@ public final class DataSourceManager implements Managed {
 		dataRepositoryCache.remove(source.getSourceId());
 		processorChainManager.removeAll(source);
 		dataViewManager.removeAll(source);
+		notificationManager.removeAll(source);
 		dbInstance.deleteDatabase(source.getSourceId());
 	}
 
