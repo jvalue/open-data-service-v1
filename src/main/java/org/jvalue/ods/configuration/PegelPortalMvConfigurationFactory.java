@@ -21,7 +21,6 @@ import com.fasterxml.jackson.core.JsonPointer;
 import com.google.inject.Inject;
 
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.data.DataSourceConfiguration;
 import org.jvalue.ods.data.DataSourceMetaData;
 import org.jvalue.ods.data.objecttypes.ListObjectType;
 import org.jvalue.ods.data.objecttypes.MapObjectType;
@@ -52,7 +51,6 @@ public final class PegelPortalMvConfigurationFactory {
 			KEY_EFFLUENT_UNIT = "effluentUnit", KEY_AGENCY = "agency";
 
 
-	private final DataSourceConfiguration configuration;
 
 	@Inject
 	public PegelPortalMvConfigurationFactory(
@@ -63,13 +61,8 @@ public final class PegelPortalMvConfigurationFactory {
 		DataRepository dataRepository = dbFactory.createSourceDataRepository("pegelportalMv", dataSource.getDomainIdKey());
 		Filter<Void, ?> filterChain = createFilterChain(dataSource, dataRepository, filterFactory);
 		// this.configuration = new DataSourceConfiguration(dataSource, filterChain, dataRepository);
-		this.configuration = null; // TODO
 	}
 
-
-	public DataSourceConfiguration createConfiguration() {
-		return configuration;
-	}
 
 
 	private DataSource createDataSource() {
