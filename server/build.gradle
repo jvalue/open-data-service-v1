@@ -1,0 +1,90 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'application'
+apply plugin: 'war'
+apply plugin: 'cargo'
+
+repositories {
+	maven { url 'https://raw.github.com/slorber/gcm-server-repository/master/releases/' }
+	mavenCentral()
+}
+
+
+buildscript {
+    repositories {
+    	jcenter()
+    }
+    dependencies {
+        classpath 'org.gradle.api.plugins:gradle-cargo-plugin:1.4'
+    }
+}
+
+cargo {
+    containerId = 'tomcat7x'
+}
+
+cargoRedeployRemote.dependsOn('war')
+cargoRunLocal.dependsOn('war')
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.10'
+}
+
+
+//task to create a jar
+task uberjar(type: Jar) {
+	from files(sourceSets.main.output.classesDir)
+	from files(sourceSets.main.output.resourcesDir)
+	from {configurations.compile.collect {zipTree(it)}}
+}
+
+mainClassName = "org.jvalue.ods.main.OdsApplication"
+
+run() {
+    args 'server', 'ods-configuration.yml'
+}
+
+dependencies {
+    cargo "org.codehaus.cargo:cargo-ant:1.4.5"
+    compile 'org.glassfish.jersey.media:jersey-media-multipart:2.13'
+    compile 'io.dropwizard:dropwizard-core:0.8.0-rc1'
+    compile 'com.squareup.retrofit:retrofit:1.8.+'
+    compile 'com.squareup.retrofit:converter-jackson:1.8.+'
+    compile 'com.google.inject:guice:4.0-beta5'
+    compile 'com.google.inject.extensions:guice-assistedinject:4.0-beta5'
+    compile 'org.ektorp:org.ektorp:1.4.+'
+	compile 'org.openstreetmap.osmosis:osmosis-core:0.43.+'
+	compile 'org.openstreetmap.osmosis:osmosis-xml:0.43.+'
+    compile 'org.openstreetmap.osmosis:osmosis-pbf:0.43.+'
+	compile 'org.jsoup:jsoup:1.7.+'
+	compile 'org.apache.commons:commons-lang3:3.3.+'
+    compile 'org.apache.commons:commons-csv:1.1'
+	compile 'com.google.android.gcm:gcm-server:1.0.2'
+    compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.4.4'
+	compile files('./lib/jvalue_test.jar')
+
+    testCompile 'org.jmockit:jmockit:1.13'
+    testCompile 'junit:junit:4.11'
+    testCompile 'org.mockftpserver:MockFtpServer:2.5'
+    testCompile 'com.squareup.okhttp:okhttp:2.1.+'
+    testCompile 'com.squareup.okhttp:okhttp-urlconnection:2.1.+'
+    testCompile 'com.squareup.okhttp:mockwebserver:2.1.+'
+}
+
+// integration test
+sourceSets {
+  integrationTest {
+    java.srcDir file('src/integrationtest/java')
+    resources.srcDir file('src/integrationtest/resouces')
+    compileClasspath = sourceSets.main.output + configurations.testRuntime
+    runtimeClasspath = output + compileClasspath
+  }
+ }
+  
+
+task integrationTest(type: Test) {
+  testClassesDir = sourceSets.integrationTest.output.classesDir
+  classpath = sourceSets.integrationTest.runtimeClasspath
+}
+
+build.dependsOn integrationTest

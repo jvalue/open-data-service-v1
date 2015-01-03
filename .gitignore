@@ -6,11 +6,11 @@
 *.ipr
 *.iws
 *.swp
-/target
-/bin
-/build
-/.gradle
-/.settings
+target
+bin
+build
+.gradle
+.settings
 .classpath
 .project
 .idea
