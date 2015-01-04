@@ -13,7 +13,7 @@ import org.jvalue.ods.api.utils.JsonPointerSerializer;
 import javax.validation.constraints.NotNull;
 
 
-public final class DataSourceDescription {
+public class DataSourceDescription {
 
 	@JsonSerialize(using = JsonPointerSerializer.class)
 	@JsonDeserialize(using = JsonPointerDeserializer.class)

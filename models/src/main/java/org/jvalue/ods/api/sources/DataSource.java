@@ -3,24 +3,14 @@ package org.jvalue.ods.api.sources;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Objects;
-
-import org.jvalue.ods.api.utils.JsonPointerDeserializer;
-import org.jvalue.ods.api.utils.JsonPointerSerializer;
 
 import javax.validation.constraints.NotNull;
 
 
-public final class DataSource {
+public final class DataSource extends DataSourceDescription {
 
 	@NotNull private final String id;
-	@JsonSerialize(using = JsonPointerSerializer.class)
-	@JsonDeserialize(using = JsonPointerDeserializer.class)
-	@NotNull private final JsonPointer domainIdKey;
-	@NotNull private final JsonNode schema;
-	@NotNull private final DataSourceMetaData metaData;
 
 	public DataSource(
 			@JsonProperty("id") String id,
@@ -28,10 +18,8 @@ public final class DataSource {
 			@JsonProperty("schema") JsonNode schema,
 			@JsonProperty("metaData") DataSourceMetaData metaData) {
 
+		super(domainIdKey, schema, metaData);
 		this.id = id;
-		this.domainIdKey = domainIdKey;
-		this.schema = schema;
-		this.metaData = metaData;
 	}
 
 
@@ -40,37 +28,18 @@ public final class DataSource {
 	}
 
 
-	public JsonNode getSchema() {
-		return schema;
-	}
-
-
-	public DataSourceMetaData getMetaData() {
-		return metaData;
-	}
-
-
-	public JsonPointer getDomainIdKey() {
-		return domainIdKey;
-	}
-
-
 	@Override
 	public boolean equals(Object other) {
-		if (other == null || !(other instanceof DataSource)) return false;
-		if (other == this) return true;
+		if (!super.equals(other)) return false;
+		if (!(other instanceof DataSource)) return false;
 		DataSource description = (DataSource) other;
-		return  Objects.equal(id, description.id)
-				&& Objects.equal(domainIdKey, description.domainIdKey)
-				&& Objects.equal(schema, description.schema)
-				&& Objects.equal(domainIdKey, description.domainIdKey)
-				&& Objects.equal(metaData, description.metaData);
+		return  Objects.equal(id, description.id);
 	}
 
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(id, domainIdKey, schema, metaData);
+		return Objects.hashCode(id, super.hashCode());
 	}
 
 }
