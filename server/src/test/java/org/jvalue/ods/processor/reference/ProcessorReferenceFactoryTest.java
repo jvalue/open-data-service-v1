@@ -5,11 +5,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.jvalue.ods.api.processors.ExecutionInterval;
 import org.jvalue.ods.processor.adapter.SourceAdapterFactory;
 import org.jvalue.ods.processor.filter.FilterFactory;
+import org.jvalue.ods.processor.specification.ProcessorType;
 import org.jvalue.ods.processor.specification.Specification;
 import org.jvalue.ods.processor.specification.SpecificationManager;
-import org.jvalue.ods.processor.specification.ProcessorType;
 
 import java.util.HashMap;
 import java.util.LinkedList;

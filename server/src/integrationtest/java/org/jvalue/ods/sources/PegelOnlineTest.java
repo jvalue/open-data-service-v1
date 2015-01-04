@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.junit.Test;
+import org.jvalue.ods.api.processors.ExecutionInterval;
 import org.jvalue.ods.api.sources.DataSourceMetaData;
-import org.jvalue.ods.processor.reference.ExecutionInterval;
 import org.jvalue.ods.rest.model.DataSource;
 import org.jvalue.ods.rest.model.Processor;
 import org.jvalue.ods.rest.model.ProcessorChainReference;

@@ -8,12 +8,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.jvalue.ods.api.processors.ExecutionInterval;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.ProcessorChainReferenceRepository;
 import org.jvalue.ods.db.RepositoryCache;
-import org.jvalue.ods.processor.reference.ExecutionInterval;
 import org.jvalue.ods.processor.reference.ProcessorChainReference;
 
 import java.util.HashMap;

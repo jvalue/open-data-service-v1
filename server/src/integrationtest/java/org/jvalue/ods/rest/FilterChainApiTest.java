@@ -3,7 +3,7 @@ package org.jvalue.ods.rest;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.jvalue.ods.processor.reference.ExecutionInterval;
+import org.jvalue.ods.api.processors.ExecutionInterval;
 import org.jvalue.ods.rest.client.FilterChainClient;
 import org.jvalue.ods.rest.model.Processor;
 import org.jvalue.ods.rest.model.ProcessorChainReference;

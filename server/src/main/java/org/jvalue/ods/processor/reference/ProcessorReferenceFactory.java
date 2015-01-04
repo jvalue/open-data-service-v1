@@ -4,9 +4,10 @@ package org.jvalue.ods.processor.reference;
 import com.google.inject.Inject;
 
 import org.apache.commons.lang3.ClassUtils;
+import org.jvalue.ods.api.processors.ExecutionInterval;
+import org.jvalue.ods.processor.specification.ProcessorType;
 import org.jvalue.ods.processor.specification.Specification;
 import org.jvalue.ods.processor.specification.SpecificationManager;
-import org.jvalue.ods.processor.specification.ProcessorType;
 import org.jvalue.ods.utils.Assert;
 
 import java.util.List;

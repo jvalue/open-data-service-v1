@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 public class ProcessorChainDescription {
 
 	@NotNull private final List<ProcessorDescription> processors;
-	@NotNull private final ExecutionInterval executionInterval;
+	private final ExecutionInterval executionInterval;
 
 	public ProcessorChainDescription(
 			@JsonProperty("processors") List<ProcessorDescription> processors,

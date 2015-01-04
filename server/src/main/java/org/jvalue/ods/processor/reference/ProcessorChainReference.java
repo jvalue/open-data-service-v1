@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.ektorp.support.CouchDbDocument;
+import org.jvalue.ods.api.processors.ExecutionInterval;
 import org.jvalue.ods.utils.Assert;
 
 import java.util.List;

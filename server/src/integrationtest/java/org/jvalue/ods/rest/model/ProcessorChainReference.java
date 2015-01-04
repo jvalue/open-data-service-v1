@@ -4,7 +4,7 @@ package org.jvalue.ods.rest.model;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import org.jvalue.ods.processor.reference.ExecutionInterval;
+import org.jvalue.ods.api.processors.ExecutionInterval;
 
 import java.util.List;
 

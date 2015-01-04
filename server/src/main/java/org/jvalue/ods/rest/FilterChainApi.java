@@ -1,27 +1,22 @@
 package org.jvalue.ods.rest;
 
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.inject.Inject;
 
+import org.jvalue.ods.api.processors.ProcessorChainDescription;
+import org.jvalue.ods.api.processors.ProcessorDescription;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.processor.ProcessorChainManager;
-import org.jvalue.ods.processor.reference.ExecutionInterval;
 import org.jvalue.ods.processor.reference.ProcessorChainReference;
 import org.jvalue.ods.processor.reference.ProcessorReference;
 import org.jvalue.ods.processor.reference.ProcessorReferenceFactory;
-import org.jvalue.ods.utils.Assert;
 
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -77,11 +72,10 @@ public final class FilterChainApi extends AbstractApi {
 	public ProcessorChainReference addFilterChain(
 			@PathParam("sourceId") String sourceId,
 			@PathParam("filterChainId") String filterChainId,
-			FilterChain filterChain) {
+			ProcessorChainDescription processorChain) {
 
-		if (filterChain.executionInterval != null) {
-			assertIsValidTimeUnit(filterChain.executionInterval.getUnit());
-			assertIsValidPeriod(filterChain.executionInterval.getPeriod());
+		if (processorChain.getExecutionInterval() != null) {
+			assertIsValidTimeUnit(processorChain.getExecutionInterval().getUnit());
 		}
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
@@ -90,17 +84,17 @@ public final class FilterChainApi extends AbstractApi {
 
 		try {
 			List<ProcessorReference> processorReferences = new LinkedList<>();
-			for (Filter filter : filterChain.processors) {
-				ProcessorReference reference = referenceFactory.createProcessorReference(filter.name, filter.arguments);
+			for (ProcessorDescription processor : processorChain.getProcessors()) {
+				ProcessorReference reference = referenceFactory.createProcessorReference(processor.getName(), processor.getArguments());
 				processorReferences.add(reference);
 			}
 
 			ProcessorChainReference chainReference = referenceFactory.createProcessorChainReference(
 					filterChainId,
 					processorReferences,
-					filterChain.executionInterval);
+					processorChain.getExecutionInterval());
 
-			if (filterChain.executionInterval != null) chainManager.add(source, sourceManager.getDataRepository(source), chainReference);
+			if (processorChain.getExecutionInterval() != null) chainManager.add(source, sourceManager.getDataRepository(source), chainReference);
 			else chainManager.executeOnce(source, sourceManager.getDataRepository(source), chainReference);
 			return chainReference;
 		} catch (ProcessorReferenceFactory.InvalidProcessorException ife) {
@@ -135,36 +129,4 @@ public final class FilterChainApi extends AbstractApi {
 		}
 	}
 
-
-	private void assertIsValidPeriod(long period) {
-		if (period <= 0) throw RestUtils.createJsonFormattedException("period must be > 0", 400);
-	}
-
-
-	private static final class FilterChain {
-
-		@NotNull
-		public List<Filter> processors;
-		public ExecutionInterval executionInterval;
-
-	}
-
-
-	private static final class Filter {
-
-		private final String name;
-		private final Map<String, Object> arguments;
-
-		@JsonCreator
-		public Filter(
-				@JsonProperty("name") String name,
-				@JsonProperty("arguments") Map<String, Object> arguments) {
-
-			Assert.assertNotNull(name);
-			this.name = name;
-			if (arguments == null) this.arguments = new HashMap<>();
-			else this.arguments = arguments;
-		}
-
-	}
 }
