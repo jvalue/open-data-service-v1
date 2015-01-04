@@ -1,14 +1,13 @@
 package org.jvalue.ods.rest;
 
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.inject.Inject;
 
+import org.jvalue.ods.api.views.DataViewDescription;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.data.DataView;
 import org.jvalue.ods.data.DataViewManager;
-import org.jvalue.ods.utils.Assert;
 
 import java.util.List;
 
@@ -73,7 +72,7 @@ public final class DataViewApi extends AbstractApi {
 		if (viewManager.contains(source, viewId))
 			throw RestUtils.createJsonFormattedException("data view with id " + viewId + " already exists", 409);
 
-		DataView view = new DataView(viewId, viewDescription.mapFunction, viewDescription.reduceFunction);
+		DataView view = new DataView(viewId, viewDescription.getMapFunction(), viewDescription.getReduceFunction());
 		viewManager.add(source, sourceManager.getDataRepository(source), view);
 		return view;
 	}
@@ -88,23 +87,6 @@ public final class DataViewApi extends AbstractApi {
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		DataView view = viewManager.get(source, viewId);
 		viewManager.remove(source, sourceManager.getDataRepository(source), view);
-	}
-
-
-	private static final class DataViewDescription {
-
-		private final String mapFunction, reduceFunction;
-
-		// reduce function is optional!
-		public DataViewDescription(
-				@JsonProperty("mapFunction") String mapFunction,
-				@JsonProperty("reduceFunction") String reduceFunction) {
-
-			Assert.assertNotNull(mapFunction);
-			this.mapFunction = mapFunction;
-			this.reduceFunction = reduceFunction;
-		}
-
 	}
 
 }
