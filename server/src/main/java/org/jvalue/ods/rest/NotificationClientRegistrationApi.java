@@ -1,11 +1,12 @@
 package org.jvalue.ods.rest;
 
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.inject.Inject;
 
+import org.jvalue.ods.api.notifications.ClientDescription;
+import org.jvalue.ods.api.notifications.ClientDescriptionVisitor;
+import org.jvalue.ods.api.notifications.GcmClientDescription;
+import org.jvalue.ods.api.notifications.HttpClientDescription;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.notifications.NotificationManager;
@@ -16,7 +17,6 @@ import org.jvalue.ods.notifications.clients.HttpClient;
 import java.util.List;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -33,6 +33,7 @@ public final class NotificationClientRegistrationApi extends AbstractApi {
 
 	private final DataSourceManager sourceManager;
 	private final NotificationManager notificationManager;
+	private final ClientAdapter clientAdapter = new ClientAdapter();
 
 	@Inject
 	NotificationClientRegistrationApi(
@@ -53,7 +54,7 @@ public final class NotificationClientRegistrationApi extends AbstractApi {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		if (notificationManager.contains(source, clientId)) throw RestUtils.createJsonFormattedException("client with id " + clientId + " already exists", 409);
-		Client client = clientDescription.toClient(clientId);
+		Client client = clientDescription.accept(clientAdapter, clientId);
 		notificationManager.add(source, sourceManager.getDataRepository(source), client);
 		return client;
 	}
@@ -91,42 +92,17 @@ public final class NotificationClientRegistrationApi extends AbstractApi {
 	}
 
 
-	@JsonTypeInfo(
-			use = JsonTypeInfo.Id.NAME,
-			include = JsonTypeInfo.As.PROPERTY,
-			property = "type",
-			visible = true
-	)
-	@JsonSubTypes({
-			@JsonSubTypes.Type(value = HttpClientDescription.class, name = HttpClient.CLIENT_TYPE),
-			@JsonSubTypes.Type(value = GcmClientDescription.class, name = GcmClient.CLIENT_TYPE)
-	})
-	@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-	private static abstract class ClientDescription {
-		@NotNull protected String type;
-
-		public abstract Client toClient(String clientId);
-	}
-
-
-	private static final class HttpClientDescription extends ClientDescription {
-		@NotNull private String callbackUrl;
-		@NotNull private boolean sendData;
+	private static final class ClientAdapter implements ClientDescriptionVisitor<String, Client> {
 
 		@Override
-		public Client toClient(String clientId) {
-			return new HttpClient(clientId, callbackUrl, sendData);
+		public Client visit(GcmClientDescription client, String clientId) {
+			return new GcmClient(clientId, client.getGcmClientId());
 		}
 
-	}
-
-
-	private static final class GcmClientDescription extends ClientDescription {
-		@NotNull private String gcmClientId;
 
 		@Override
-		public Client toClient(String clientId) {
-			return new GcmClient(clientId, gcmClientId);
+		public Client visit(HttpClientDescription client, String clientId) {
+			return new HttpClient(clientId, client.getCallbackUrl(), client.getSendData());
 		}
 
 	}
