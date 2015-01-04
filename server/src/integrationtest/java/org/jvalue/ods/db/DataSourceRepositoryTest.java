@@ -9,8 +9,8 @@ import org.ektorp.CouchDbInstance;
 import org.ektorp.DocumentNotFoundException;
 import org.junit.Assert;
 import org.junit.Test;
+import org.jvalue.ods.api.sources.DataSourceMetaData;
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.data.DataSourceMetaData;
 
 import java.util.Arrays;
 import java.util.HashSet;

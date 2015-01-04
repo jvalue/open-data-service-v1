@@ -20,8 +20,8 @@ package org.jvalue.ods.configuration;
 import com.fasterxml.jackson.core.JsonPointer;
 import com.google.inject.Inject;
 
+import org.jvalue.ods.api.sources.DataSourceMetaData;
 import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.data.DataSourceMetaData;
 import org.jvalue.ods.data.objecttypes.ListObjectType;
 import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.objecttypes.ObjectType;
