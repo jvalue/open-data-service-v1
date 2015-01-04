@@ -1,6 +1,8 @@
 package org.jvalue.ods.api.sources;
 
 
+import java.util.List;
+
 import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.DELETE;
@@ -14,6 +16,10 @@ public interface DataSourceApi {
 
 	@GET(URL_DATASOURCES + "/{sourceId}")
 	public DataSource get(@Path("sourceId") String sourceId);
+
+
+	@GET(URL_DATASOURCES)
+	public List<DataSource> getAll();
 
 
 	@PUT(URL_DATASOURCES + "/{sourceId}")
