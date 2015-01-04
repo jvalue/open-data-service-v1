@@ -9,6 +9,7 @@ import org.jvalue.ods.data.DataSourceManager;
 
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -46,7 +47,7 @@ public final class DataSourceApi extends AbstractApi {
 
 	@PUT
 	@Path("/{sourceId}")
-	public DataSource addSource(@PathParam("sourceId") String sourceId, DataSourceDescription sourceDescription) {
+	public DataSource addSource(@PathParam("sourceId") String sourceId, @Valid DataSourceDescription sourceDescription) {
 		if (sourceManager.isValidSourceId(sourceId))
 			throw RestUtils.createJsonFormattedException("source with id " + sourceId + " already exists", 409);
 

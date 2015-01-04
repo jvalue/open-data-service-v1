@@ -11,6 +11,7 @@ import org.jvalue.ods.data.DataViewManager;
 
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -66,7 +67,7 @@ public final class DataViewApi extends AbstractApi {
 	public DataView addView(
 			@PathParam("sourceId") String sourceId,
 			@PathParam("viewId") String viewId,
-			DataViewDescription viewDescription) {
+			@Valid DataViewDescription viewDescription) {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		if (viewManager.contains(source, viewId))

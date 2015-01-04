@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import javax.validation.Valid;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -72,7 +73,7 @@ public final class FilterChainApi extends AbstractApi {
 	public ProcessorChainReference addFilterChain(
 			@PathParam("sourceId") String sourceId,
 			@PathParam("filterChainId") String filterChainId,
-			ProcessorChainDescription processorChain) {
+			@Valid ProcessorChainDescription processorChain) {
 
 		if (processorChain.getExecutionInterval() != null) {
 			assertIsValidTimeUnit(processorChain.getExecutionInterval().getUnit());
