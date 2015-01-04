@@ -37,14 +37,14 @@ public class DataSourceRepositoryTest extends AbstractDbTest {
 		repository.add(createSource("id1"));
 		repository.add(createSource("id2"));
 
-		Assert.assertNotNull(repository.findBySourceId("id1"));
-		Assert.assertNotNull(repository.findBySourceId("id2"));
+		Assert.assertNotNull(repository.findById("id1"));
+		Assert.assertNotNull(repository.findById("id2"));
 	}
 
 
 	@Test(expected = DocumentNotFoundException.class)
 	public void testInvalidId() {
-		repository.findBySourceId("missingId");
+		repository.findById("missingId");
 	}
 
 

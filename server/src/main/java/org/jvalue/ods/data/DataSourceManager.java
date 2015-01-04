@@ -81,7 +81,7 @@ public final class DataSourceManager implements Managed {
 
 
 	public DataSource findBySourceId(String sourceId) throws DocumentNotFoundException {
-		return dataSourceRepository.findBySourceId(sourceId);
+		return dataSourceRepository.findById(sourceId);
 	}
 
 
