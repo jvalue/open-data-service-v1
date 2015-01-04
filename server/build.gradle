@@ -70,6 +70,7 @@ dependencies {
     testCompile 'com.squareup.okhttp:okhttp:2.1.+'
     testCompile 'com.squareup.okhttp:okhttp-urlconnection:2.1.+'
     testCompile 'com.squareup.okhttp:mockwebserver:2.1.+'
+    testCompile project(':client-retrofit')
 }
 
 // integration test

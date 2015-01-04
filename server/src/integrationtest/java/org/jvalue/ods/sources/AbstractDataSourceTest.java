@@ -4,48 +4,45 @@ package org.jvalue.ods.sources;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import org.junit.Assert;
-import org.jvalue.ods.rest.client.ClientFactory;
-import org.jvalue.ods.rest.client.DataClient;
-import org.jvalue.ods.rest.client.DataSourceClient;
-import org.jvalue.ods.rest.client.FilterChainClient;
-import org.jvalue.ods.rest.model.DataSource;
-import org.jvalue.ods.rest.model.ProcessorChainReference;
+import org.jvalue.ods.api.data.DataApi;
+import org.jvalue.ods.api.processors.ProcessorApi;
+import org.jvalue.ods.api.processors.ProcessorChainDescription;
+import org.jvalue.ods.api.sources.DataSourceApi;
+import org.jvalue.ods.api.sources.DataSourceDescription;
 
 public abstract class AbstractDataSourceTest {
 
-	private final ClientFactory clientFactory = new ClientFactory();
-	private final DataSourceClient sourceClient = clientFactory.getDataSourceClient();
-	private final FilterChainClient filterClient = clientFactory.getFilterChainClient();
-	private final DataClient dataClient = clientFactory.getDataClient();
+	private final ApiFactory apiFactory = new ApiFactory();
+	private final DataSourceApi sourceApi = apiFactory.createDataSourceApi();
+	private final ProcessorApi processorApi = apiFactory.createProcessorApi();
+	private final DataApi dataApi = apiFactory.createDataApi();
 
 
 	protected final void runTest(
-			final DataSource source,
-			final ProcessorChainReference processorChain,
+			final DataSourceDescription source,
+			final ProcessorChainDescription processorChain,
 			final long sleepDuration) throws Exception {
 
 		final String sourceId = getClass().getSimpleName();
 		final String filterId = "testFilter";
 
 		// add source
-		sourceClient.add(sourceId, source);
+		sourceApi.add(sourceId, source);
 
 		// assert empty
-		ArrayNode data = dataClient.getAll(sourceId);
+		ArrayNode data = dataApi.getAll(sourceId);
 		Assert.assertEquals(0, data.size());
 
 		// add filter chain
-		filterClient.add(sourceId, filterId, processorChain);
+		processorApi.add(sourceId, filterId, processorChain);
 
 		// check filter execution
 		Thread.sleep(sleepDuration);
-		data = dataClient.getAll(sourceId);
+		data = dataApi.getAll(sourceId);
 		Assert.assertTrue(data.size() > 0);
 
 		// cleanup
-		sourceClient.remove(sourceId);
+		sourceApi.remove(sourceId);
 	}
-
-
 
 }

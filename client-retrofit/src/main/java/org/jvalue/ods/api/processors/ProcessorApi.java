@@ -1,7 +1,7 @@
 package org.jvalue.ods.api.processors;
 
 
-import org.jvalue.ods.api.notifications.NotificationApi;
+import org.jvalue.ods.api.sources.DataSourceApi;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import retrofit.http.Path;
 
 public interface ProcessorApi {
 
-	static String URL_PROCESSOR = NotificationApi.URL_NOTIFICATIONS + "/{sourceId}/filterChains";
+	static String URL_PROCESSOR = DataSourceApi.URL_DATASOURCES + "/{sourceId}/filterChains";
 
 	@GET(URL_PROCESSOR)
 	public List<ProcessorChain> getAll(@Path("sourceId") String sourceId);

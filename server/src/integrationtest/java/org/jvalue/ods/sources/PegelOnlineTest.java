@@ -1,44 +1,39 @@
 package org.jvalue.ods.sources;
 
 
+import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.junit.Test;
 import org.jvalue.ods.api.processors.ExecutionInterval;
+import org.jvalue.ods.api.processors.Processor;
+import org.jvalue.ods.api.processors.ProcessorChainDescription;
+import org.jvalue.ods.api.sources.DataSourceDescription;
 import org.jvalue.ods.api.sources.DataSourceMetaData;
-import org.jvalue.ods.rest.model.DataSource;
-import org.jvalue.ods.rest.model.Processor;
-import org.jvalue.ods.rest.model.ProcessorChainReference;
 
-import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 
 public final class PegelOnlineTest extends AbstractDataSourceTest {
 
 	@Test
 	public void testPegelOnlineSource() throws Exception {
-		final DataSource source = new DataSource();
-		source.metaData = new DataSourceMetaData("", "", "", "", "", "", "");
-		source.domainIdKey = "/uuid";
-		source.schema = new ObjectNode(JsonNodeFactory.instance);
+		final DataSourceDescription sourceDescription = new DataSourceDescription(
+				JsonPointer.compile("/uuid"),
+				new ObjectNode(JsonNodeFactory.instance),
+				new DataSourceMetaData("", "", "", "", "", "", ""));
 
-		final ProcessorChainReference processorChain = new ProcessorChainReference();
-		processorChain.processors = new LinkedList<>();
-		processorChain.executionInterval = new ExecutionInterval(100, TimeUnit.SECONDS);
+		final ProcessorChainDescription processorChainDescription = new ProcessorChainDescription.Builder(
+				new ExecutionInterval(100, TimeUnit.SECONDS))
+				.processor(new Processor.Builder("JsonSourceAdapter")
+						.argument("sourceUrl", "http://pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true&includeCharacteristicValues=true&waters=ELBE")
+						.build())
+				.processor(new Processor.Builder("DbInsertionFilter")
+						.argument("updateData", true)
+						.build())
+				.build();
 
-		final Processor adapterFilter = new Processor();
-		adapterFilter.name = "JsonSourceAdapter";
-		adapterFilter.arguments.put("sourceUrl", "http://pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true&includeCharacteristicValues=true&waters=ELBE");
-
-		final Processor dbFilter = new Processor();
-		dbFilter.name = "DbInsertionFilter";
-		dbFilter.arguments.put("updateData", true);
-
-		processorChain.processors.add(adapterFilter);
-		processorChain.processors.add(dbFilter);
-
-		runTest(source, processorChain, 2000);
+		runTest(sourceDescription, processorChainDescription, 2000);
 	}
 
 }
