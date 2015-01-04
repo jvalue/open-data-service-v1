@@ -10,11 +10,11 @@ import javax.validation.constraints.NotNull;
 
 public class ProcessorChainDescription {
 
-	@NotNull private final List<ProcessorDescription> processors;
+	@NotNull private final List<Processor> processors;
 	private final ExecutionInterval executionInterval;
 
 	public ProcessorChainDescription(
-			@JsonProperty("processors") List<ProcessorDescription> processors,
+			@JsonProperty("processors") List<Processor> processors,
 			@JsonProperty("executionInterval") ExecutionInterval executionInterval) {
 
 		this.processors = processors;
@@ -22,7 +22,7 @@ public class ProcessorChainDescription {
 	}
 
 
-	public List<ProcessorDescription> getProcessors() {
+	public List<Processor> getProcessors() {
 		return processors;
 	}
 

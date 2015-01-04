@@ -3,8 +3,8 @@ package org.jvalue.ods.rest;
 
 import com.google.inject.Inject;
 
+import org.jvalue.ods.api.processors.Processor;
 import org.jvalue.ods.api.processors.ProcessorChainDescription;
-import org.jvalue.ods.api.processors.ProcessorDescription;
 import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.processor.ProcessorChainManager;
@@ -85,7 +85,7 @@ public final class FilterChainApi extends AbstractApi {
 
 		try {
 			List<ProcessorReference> processorReferences = new LinkedList<>();
-			for (ProcessorDescription processor : processorChain.getProcessors()) {
+			for (Processor processor : processorChain.getProcessors()) {
 				ProcessorReference reference = referenceFactory.createProcessorReference(processor.getName(), processor.getArguments());
 				processorReferences.add(reference);
 			}

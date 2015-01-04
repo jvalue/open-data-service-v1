@@ -17,18 +17,18 @@ public interface ProcessorApi {
 	static String URL_PROCESSOR = NotificationApi.URL_NOTIFICATIONS + "/{sourceId}/filterChains";
 
 	@GET(URL_PROCESSOR)
-	public List<ProcessorChainDescription> getAll(@Path("sourceId") String sourceId);
+	public List<ProcessorChain> getAll(@Path("sourceId") String sourceId);
 
 
-	@GET(URL_PROCESSOR + "/{id}")
-	public ProcessorChainDescription get(@Path("sourceId") String sourceId, @Path("id") String id);
+	@GET(URL_PROCESSOR + "/{processorId}")
+	public ProcessorChain get(@Path("sourceId") String sourceId, @Path("processorId") String processorId);
 
 
-	@DELETE(URL_PROCESSOR + "/{id}")
-	public Response remove(@Path("sourceId") String sourceId, @Path("id") String id);
+	@DELETE(URL_PROCESSOR + "/{processorId}")
+	public Response remove(@Path("sourceId") String sourceId, @Path("processorId") String processorId);
 
 
-	@PUT(URL_PROCESSOR + "/{id}")
-	public ProcessorChainDescription add(@Path("sourceId") String sourceId, @Path("id") String id, @Body ProcessorChainDescription processorChain);
+	@PUT(URL_PROCESSOR + "/{processorId}")
+	public ProcessorChain add(@Path("sourceId") String sourceId, @Path("processorId") String processorId, @Body ProcessorChainDescription processorChain);
 
 }
