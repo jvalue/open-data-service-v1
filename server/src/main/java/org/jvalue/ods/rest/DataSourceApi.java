@@ -13,8 +13,8 @@ import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.data.DataSourceMetaData;
 import org.jvalue.ods.utils.Assert;
-import org.jvalue.ods.utils.JsonPointerDeserializer;
-import org.jvalue.ods.utils.JsonPointerSerializer;
+import org.jvalue.ods.api.utils.JsonPointerDeserializer;
+import org.jvalue.ods.api.utils.JsonPointerSerializer;
 
 import java.util.List;
 

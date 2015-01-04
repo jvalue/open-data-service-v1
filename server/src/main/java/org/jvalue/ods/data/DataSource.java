@@ -28,8 +28,8 @@ import com.google.common.base.Objects;
 import org.ektorp.support.CouchDbDocument;
 import org.jvalue.ods.data.objecttypes.ObjectType;
 import org.jvalue.ods.utils.Assert;
-import org.jvalue.ods.utils.JsonPointerDeserializer;
-import org.jvalue.ods.utils.JsonPointerSerializer;
+import org.jvalue.ods.api.utils.JsonPointerDeserializer;
+import org.jvalue.ods.api.utils.JsonPointerSerializer;
 
 public final class DataSource extends CouchDbDocument {
 
