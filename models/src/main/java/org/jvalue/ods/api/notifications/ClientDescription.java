@@ -23,6 +23,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.google.common.base.Objects;
 
+import javax.validation.constraints.NotNull;
+
 
 @JsonTypeInfo(
 		use = Id.NAME,
@@ -36,7 +38,7 @@ import com.google.common.base.Objects;
 })
 public abstract class ClientDescription {
 
-	private final String type;
+	@NotNull private final String type;
 
 	protected ClientDescription(String type) {
 		this.type = type;

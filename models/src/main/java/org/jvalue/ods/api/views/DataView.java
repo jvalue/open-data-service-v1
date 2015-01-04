@@ -6,11 +6,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 
+import javax.validation.constraints.NotNull;
+
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public final class DataView extends DataViewDescription {
 
-	private final String id;
+	@NotNull private final String id;
 
 	/**
 	 * Create a new map reduce view on the data.

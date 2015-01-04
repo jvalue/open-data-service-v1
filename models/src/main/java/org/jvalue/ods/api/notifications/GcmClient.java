@@ -21,12 +21,14 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 
+import javax.validation.constraints.NotNull;
+
 
 public final class GcmClient extends Client {
 
 	static final String CLIENT_TYPE = "GCM";
 
-	private final String gcmClientId;
+	@NotNull private final String gcmClientId;
 
 	@JsonCreator
 	public GcmClient(

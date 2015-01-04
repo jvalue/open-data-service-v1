@@ -5,9 +5,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 
+import javax.validation.constraints.NotNull;
+
 public final class DataSourceMetaData {
 
-	private final String name, title, author, authorEmail, notes, url, termsOfUse;
+	@NotNull private final String name, title, author, authorEmail, notes, url, termsOfUse;
 
 	@JsonCreator
 	public DataSourceMetaData(

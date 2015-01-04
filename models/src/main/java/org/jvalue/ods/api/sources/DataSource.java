@@ -10,15 +10,17 @@ import com.google.common.base.Objects;
 import org.jvalue.ods.api.utils.JsonPointerDeserializer;
 import org.jvalue.ods.api.utils.JsonPointerSerializer;
 
+import javax.validation.constraints.NotNull;
+
 
 public final class DataSource {
 
-	private final String id;
+	@NotNull private final String id;
 	@JsonSerialize(using = JsonPointerSerializer.class)
 	@JsonDeserialize(using = JsonPointerDeserializer.class)
-	private final JsonPointer domainIdKey;
-	private final JsonNode schema;
-	private final DataSourceMetaData metaData;
+	@NotNull private final JsonPointer domainIdKey;
+	@NotNull private final JsonNode schema;
+	@NotNull private final DataSourceMetaData metaData;
 
 	public DataSource(
 			@JsonProperty("id") String id,

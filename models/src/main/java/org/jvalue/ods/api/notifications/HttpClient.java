@@ -21,12 +21,14 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 
+import javax.validation.constraints.NotNull;
+
 
 public final class HttpClient extends Client {
 
 	static final String CLIENT_TYPE = "HTTP";
 
-	private final String callbackUrl;
+	@NotNull private final String callbackUrl;
 	private final boolean sendData;
 
 	@JsonCreator
