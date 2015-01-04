@@ -1,20 +1,28 @@
 package org.jvalue.ods.api.sources;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Objects;
+
+import org.jvalue.ods.api.utils.JsonPointerDeserializer;
+import org.jvalue.ods.api.utils.JsonPointerSerializer;
 
 
 public final class DataSource {
 
 	private final String id;
-	private final String domainIdKey;
+	@JsonSerialize(using = JsonPointerSerializer.class)
+	@JsonDeserialize(using = JsonPointerDeserializer.class)
+	private final JsonPointer domainIdKey;
 	private final JsonNode schema;
 	private final DataSourceMetaData metaData;
 
 	public DataSource(
 			@JsonProperty("id") String id,
-			@JsonProperty("domainIdKey") String domainIdKey,
+			@JsonProperty("domainIdKey") JsonPointer domainIdKey,
 			@JsonProperty("schema") JsonNode schema,
 			@JsonProperty("metaData") DataSourceMetaData metaData) {
 
@@ -40,7 +48,7 @@ public final class DataSource {
 	}
 
 
-	public String getDomainIdKey() {
+	public JsonPointer getDomainIdKey() {
 		return domainIdKey;
 	}
 
