@@ -56,4 +56,10 @@ public final class GcmClient extends Client {
 		return Objects.hashCode(super.hashCode(), gcmClientId);
 	}
 
+
+	@Override
+	public <P,R> R accept(ClientVisitor<P,R> visitor, P param) {
+		return visitor.visit(this, param);
+	}
+
 }

@@ -65,4 +65,10 @@ public final class HttpClient extends Client {
 		return Objects.hashCode(super.hashCode(), callbackUrl, sendData);
 	}
 
+
+	@Override
+	public <P,R> R accept(ClientVisitor<P,R> visitor, P param) {
+		return visitor.visit(this, param);
+	}
+
 }

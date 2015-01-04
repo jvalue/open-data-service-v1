@@ -64,4 +64,10 @@ public final class HttpClientDescription extends ClientDescription {
 		return Objects.hashCode(super.hashCode(), callbackUrl, sendData);
 	}
 
+
+	@Override
+	public <P,R> R accept(ClientDescriptionVisitor<P,R> visitor, P param) {
+		return visitor.visit(this, param);
+	}
+
 }

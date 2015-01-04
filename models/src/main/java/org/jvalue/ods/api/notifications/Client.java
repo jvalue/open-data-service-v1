@@ -69,4 +69,7 @@ public abstract class Client {
 		return Objects.hashCode(id, type);
 	}
 
+
+	public abstract <P,R> R accept(ClientVisitor<P,R> visitor, P param);
+
 }

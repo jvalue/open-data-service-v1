@@ -62,4 +62,7 @@ public abstract class ClientDescription {
 		return Objects.hashCode(type);
 	}
 
+
+	public abstract <P,R> R accept(ClientDescriptionVisitor<P,R> visitor, P param);
+
 }
