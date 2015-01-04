@@ -1,1 +1,2 @@
-include ':server', ':client-retrofit'
+include ':server', ':client-retrofit', 'models'
+

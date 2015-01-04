@@ -21,6 +21,8 @@ dependencies {
     compile 'com.squareup.retrofit:converter-jackson:1.8.+'
     compile 'com.google.inject:guice:4.0-beta5'
     compile 'com.google.inject.extensions:guice-assistedinject:4.0-beta5'
+    compile project(':models')
+
     testCompile 'org.jmockit:jmockit:1.13'
     testCompile 'junit:junit:4.11'
 }
