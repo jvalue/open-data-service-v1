@@ -6,6 +6,12 @@ import org.ektorp.support.CouchDbRepositorySupport;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Adapter for converting between wrapper and plain DB objects.
+ * @param <T> type of the repository
+ * @param <D> type of the wrapper
+ * @param <V> type of the wrapper object
+ */
 abstract class RepositoryAdapter<T extends CouchDbRepositorySupport<D> & DbDocumentAdaptable<D, V>, D extends DbDocument<V>, V> {
 
 	private final T repository;
