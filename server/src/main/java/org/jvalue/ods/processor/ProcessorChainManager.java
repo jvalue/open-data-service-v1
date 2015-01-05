@@ -24,11 +24,11 @@ import com.google.common.base.Objects;
 import com.google.inject.Inject;
 
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.data.AbstractDataSourcePropertyManager;
+import org.jvalue.ods.data.AbstractDataSourcePropertyManager2;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.ProcessorChainReferenceRepository;
-import org.jvalue.ods.db.RepositoryCache;
+import org.jvalue.ods.db.RepositoryCache2;
 import org.jvalue.ods.processor.reference.ProcessorChainReference;
 import org.jvalue.ods.utils.Assert;
 import org.jvalue.ods.utils.Log;
@@ -40,7 +40,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 
 
-public final class ProcessorChainManager extends AbstractDataSourcePropertyManager<ProcessorChainReference, ProcessorChainReferenceRepository> {
+public final class ProcessorChainManager extends AbstractDataSourcePropertyManager2<ProcessorChainReference, ProcessorChainReferenceRepository> {
 
 	private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 	private final Map<ProcessorKey, ScheduledFuture<?>> runningTasks = new HashMap<>();
@@ -52,7 +52,7 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 	@Inject
 	ProcessorChainManager(
 			ProcessorChainFactory processorChainFactory,
-			RepositoryCache<ProcessorChainReferenceRepository> referenceRepositoryCache,
+			RepositoryCache2<ProcessorChainReferenceRepository> referenceRepositoryCache,
 			DbFactory dbFactory,
 			MetricRegistry registry) {
 
@@ -90,12 +90,6 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 	@Override
 	protected void doRemoveAll(DataSource source) {
 		for (ProcessorChainReference reference : getAll(source)) stopProcessorChain(source, reference);
-	}
-
-
-	@Override
-	protected ProcessorChainReference doGet(ProcessorChainReferenceRepository repository, String filterChainId) {
-		return repository.findByProcessorChainId(filterChainId);
 	}
 
 

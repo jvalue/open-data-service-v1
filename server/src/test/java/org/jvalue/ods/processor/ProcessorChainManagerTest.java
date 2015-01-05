@@ -13,7 +13,7 @@ import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.ProcessorChainReferenceRepository;
-import org.jvalue.ods.db.RepositoryCache;
+import org.jvalue.ods.db.RepositoryCache2;
 import org.jvalue.ods.processor.reference.ProcessorChainReference;
 
 import java.util.HashMap;
@@ -33,7 +33,7 @@ public final class ProcessorChainManagerTest {
 	private static final String FILTER_CHAIN_ID = "someFilterChainId";
 
 	@Mocked private ProcessorChainFactory chainFactory;
-	@Mocked private RepositoryCache<ProcessorChainReferenceRepository> repositoryCache;
+	@Mocked private RepositoryCache2<ProcessorChainReferenceRepository> repositoryCache;
 	@Mocked private DbFactory dbFactory;
 	@Mocked private MetricRegistry registry;
 	private ProcessorChainManager manager;
@@ -120,7 +120,7 @@ public final class ProcessorChainManagerTest {
 			result = true;
 			repositoryCache.get(anyString);
 			result = referenceRepository;
-			referenceRepository.findByProcessorChainId(anyString);
+			referenceRepository.findById(anyString);
 			result = new DocumentNotFoundException("");
 		}};
 

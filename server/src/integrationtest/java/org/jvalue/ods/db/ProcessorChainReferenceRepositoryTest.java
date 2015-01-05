@@ -31,14 +31,14 @@ public class ProcessorChainReferenceRepositoryTest extends AbstractDbTest {
 		repository.add(createChain("id1"));
 		repository.add(createChain("id2"));
 
-		Assert.assertNotNull(repository.findByProcessorChainId("id1"));
-		Assert.assertNotNull(repository.findByProcessorChainId("id2"));
+		Assert.assertNotNull(repository.findById("id1"));
+		Assert.assertNotNull(repository.findById("id2"));
 	}
 
 
 	@Test(expected = DocumentNotFoundException.class)
 	public void testInvalidId() {
-		repository.findByProcessorChainId("missingId");
+		repository.findById("missingId");
 	}
 
 
