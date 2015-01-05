@@ -8,13 +8,13 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-public final class ProcessorChain extends ProcessorChainDescription {
+public final class ProcessorReferenceChain extends ProcessorReferenceChainDescription {
 
 	@NotNull private final String id;
 
-	public ProcessorChain(
+	public ProcessorReferenceChain(
 			@JsonProperty("id") String id,
-			@JsonProperty("processors") List<Processor> processors,
+			@JsonProperty("processors") List<ProcessorReference> processors,
 			@JsonProperty("executionInterval") ExecutionInterval executionInterval) {
 
 		super(processors, executionInterval);
@@ -30,8 +30,8 @@ public final class ProcessorChain extends ProcessorChainDescription {
 	@Override
 	public boolean equals(Object other) {
 		if (!super.equals(other)) return false;
-		if (!(other instanceof ProcessorChain)) return false;
-		ProcessorChain chain = (ProcessorChain) other;
+		if (!(other instanceof ProcessorReferenceChain)) return false;
+		ProcessorReferenceChain chain = (ProcessorReferenceChain) other;
 		return Objects.equal(id, chain.id);
 	}
 

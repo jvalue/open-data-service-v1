@@ -3,13 +3,12 @@ package org.jvalue.ods.rest;
 
 import com.google.inject.Inject;
 
-import org.jvalue.ods.api.processors.Processor;
-import org.jvalue.ods.api.processors.ProcessorChainDescription;
+import org.jvalue.ods.api.processors.ProcessorReference;
+import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.processor.ProcessorChainManager;
 import org.jvalue.ods.processor.reference.ProcessorChainReference;
-import org.jvalue.ods.processor.reference.ProcessorReference;
 import org.jvalue.ods.processor.reference.ProcessorReferenceFactory;
 
 import java.util.EnumSet;
@@ -73,7 +72,7 @@ public final class FilterChainApi extends AbstractApi {
 	public ProcessorChainReference addFilterChain(
 			@PathParam("sourceId") String sourceId,
 			@PathParam("filterChainId") String filterChainId,
-			@Valid ProcessorChainDescription processorChain) {
+			@Valid ProcessorReferenceChainDescription processorChain) {
 
 		if (processorChain.getExecutionInterval() != null) {
 			assertIsValidTimeUnit(processorChain.getExecutionInterval().getUnit());
@@ -84,9 +83,9 @@ public final class FilterChainApi extends AbstractApi {
 			throw RestUtils.createJsonFormattedException("filter chain with id " + filterChainId + " already exists", 409);
 
 		try {
-			List<ProcessorReference> processorReferences = new LinkedList<>();
-			for (Processor processor : processorChain.getProcessors()) {
-				ProcessorReference reference = referenceFactory.createProcessorReference(processor.getName(), processor.getArguments());
+			List<org.jvalue.ods.processor.reference.ProcessorReference> processorReferences = new LinkedList<>();
+			for (ProcessorReference processor : processorChain.getProcessors()) {
+				org.jvalue.ods.processor.reference.ProcessorReference reference = referenceFactory.createProcessorReference(processor.getName(), processor.getArguments());
 				processorReferences.add(reference);
 			}
 

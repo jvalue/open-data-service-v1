@@ -11,14 +11,14 @@ import java.util.Map;
 import javax.validation.constraints.NotNull;
 
 
-public final class Processor {
+public final class ProcessorReference {
 
 	@NotNull private final String name;
 	@NotNull private final Map<String, Object> arguments;
 
 
 	@JsonCreator
-	public Processor(
+	public ProcessorReference(
 			@JsonProperty("name") String name,
 			@JsonProperty("arguments") Map<String, Object> arguments) {
 
@@ -39,9 +39,9 @@ public final class Processor {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other == null || !(other instanceof Processor)) return false;
+		if (other == null || !(other instanceof ProcessorReference)) return false;
 		if (other == this) return true;
-		Processor description = (Processor) other;
+		ProcessorReference description = (ProcessorReference) other;
 		return Objects.equal(name, description.name)
 				&& Objects.equal(arguments, description.arguments);
 	}
@@ -69,8 +69,8 @@ public final class Processor {
 		}
 
 
-		public Processor build() {
-			return new Processor(name, arguments);
+		public ProcessorReference build() {
+			return new ProcessorReference(name, arguments);
 		}
 
 	}

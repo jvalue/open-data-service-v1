@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.junit.Assert;
 import org.jvalue.ods.api.data.DataApi;
 import org.jvalue.ods.api.processors.ProcessorApi;
-import org.jvalue.ods.api.processors.ProcessorChainDescription;
+import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
 import org.jvalue.ods.api.sources.DataSourceApi;
 import org.jvalue.ods.api.sources.DataSourceDescription;
 
@@ -20,7 +20,7 @@ public abstract class AbstractDataSourceTest {
 
 	protected final void runTest(
 			final DataSourceDescription source,
-			final ProcessorChainDescription processorChain,
+			final ProcessorReferenceChainDescription processorChain,
 			final long sleepDuration) throws Exception {
 
 		final String sourceId = getClass().getSimpleName();

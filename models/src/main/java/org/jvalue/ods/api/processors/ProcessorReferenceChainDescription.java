@@ -9,13 +9,13 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-public class ProcessorChainDescription {
+public class ProcessorReferenceChainDescription {
 
-	@NotNull private final List<Processor> processors;
+	@NotNull private final List<ProcessorReference> processors;
 	private final ExecutionInterval executionInterval;
 
-	public ProcessorChainDescription(
-			@JsonProperty("processors") List<Processor> processors,
+	public ProcessorReferenceChainDescription(
+			@JsonProperty("processors") List<ProcessorReference> processors,
 			@JsonProperty("executionInterval") ExecutionInterval executionInterval) {
 
 		this.processors = processors;
@@ -23,7 +23,7 @@ public class ProcessorChainDescription {
 	}
 
 
-	public List<Processor> getProcessors() {
+	public List<ProcessorReference> getProcessors() {
 		return processors;
 	}
 
@@ -35,9 +35,9 @@ public class ProcessorChainDescription {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other == null || !(other instanceof ProcessorChainDescription)) return false;
+		if (other == null || !(other instanceof ProcessorReferenceChainDescription)) return false;
 		if (other == this) return true;
-		ProcessorChainDescription description = (ProcessorChainDescription) other;
+		ProcessorReferenceChainDescription description = (ProcessorReferenceChainDescription) other;
 		return Objects.equal(processors, description.processors)
 				&& Objects.equal(executionInterval, description.executionInterval);
 	}
@@ -51,7 +51,7 @@ public class ProcessorChainDescription {
 
 	public static final class Builder {
 
-		private final List<Processor> processors = new LinkedList<>();
+		private final List<ProcessorReference> processors = new LinkedList<>();
 		private final ExecutionInterval executionInterval;
 
 		public Builder(ExecutionInterval executionInterval) {
@@ -59,14 +59,14 @@ public class ProcessorChainDescription {
 		}
 
 
-		public Builder processor(Processor processor) {
+		public Builder processor(ProcessorReference processor) {
 			this.processors.add(processor);
 			return this;
 		}
 
 
-		public ProcessorChainDescription build() {
-			return new ProcessorChainDescription(processors, executionInterval);
+		public ProcessorReferenceChainDescription build() {
+			return new ProcessorReferenceChainDescription(processors, executionInterval);
 		}
 
 	}

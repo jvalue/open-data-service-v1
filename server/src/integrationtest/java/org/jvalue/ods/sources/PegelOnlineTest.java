@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.junit.Test;
 import org.jvalue.ods.api.processors.ExecutionInterval;
-import org.jvalue.ods.api.processors.Processor;
-import org.jvalue.ods.api.processors.ProcessorChainDescription;
+import org.jvalue.ods.api.processors.ProcessorReference;
+import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
 import org.jvalue.ods.api.sources.DataSourceDescription;
 import org.jvalue.ods.api.sources.DataSourceMetaData;
 
@@ -23,12 +23,12 @@ public final class PegelOnlineTest extends AbstractDataSourceTest {
 				new ObjectNode(JsonNodeFactory.instance),
 				new DataSourceMetaData("", "", "", "", "", "", ""));
 
-		final ProcessorChainDescription processorChainDescription = new ProcessorChainDescription.Builder(
+		final ProcessorReferenceChainDescription processorChainDescription = new ProcessorReferenceChainDescription.Builder(
 				new ExecutionInterval(100, TimeUnit.SECONDS))
-				.processor(new Processor.Builder("JsonSourceAdapter")
+				.processor(new ProcessorReference.Builder("JsonSourceAdapter")
 						.argument("sourceUrl", "http://pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true&includeCharacteristicValues=true&waters=ELBE")
 						.build())
-				.processor(new Processor.Builder("DbInsertionFilter")
+				.processor(new ProcessorReference.Builder("DbInsertionFilter")
 						.argument("updateData", true)
 						.build())
 				.build();

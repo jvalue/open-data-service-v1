@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.junit.Test;
 import org.jvalue.ods.api.processors.ExecutionInterval;
-import org.jvalue.ods.api.processors.Processor;
-import org.jvalue.ods.api.processors.ProcessorChainDescription;
+import org.jvalue.ods.api.processors.ProcessorReference;
+import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
 import org.jvalue.ods.api.sources.DataSourceDescription;
 import org.jvalue.ods.api.sources.DataSourceMetaData;
 import org.jvalue.ods.sources.AbstractDataSourceTest;
@@ -24,13 +24,13 @@ public final class RostockTrashCansTest extends AbstractDataSourceTest {
 				new ObjectNode(JsonNodeFactory.instance),
 				new DataSourceMetaData("", "", "", "", "", "", ""));
 
-		final ProcessorChainDescription processorChainDescription = new ProcessorChainDescription.Builder(
+		final ProcessorReferenceChainDescription processorChainDescription = new ProcessorReferenceChainDescription.Builder(
 				new ExecutionInterval(100, TimeUnit.SECONDS))
-				.processor(new Processor.Builder("CsvSourceAdapter")
+				.processor(new ProcessorReference.Builder("CsvSourceAdapter")
 						.argument("sourceUrl", "https://geo.sv.rostock.de/download/opendata/abfallbehaelter/abfallbehaelter.csv")
 						.argument("csvFormat", "DEFAULT")
 						.build())
-				.processor(new Processor.Builder("DbInsertionFilter")
+				.processor(new ProcessorReference.Builder("DbInsertionFilter")
 						.argument("updateData", true)
 						.build())
 				.build();

@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.junit.Test;
 import org.jvalue.ods.api.processors.ExecutionInterval;
-import org.jvalue.ods.api.processors.Processor;
-import org.jvalue.ods.api.processors.ProcessorChainDescription;
+import org.jvalue.ods.api.processors.ProcessorReference;
+import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
 import org.jvalue.ods.api.sources.DataSourceDescription;
 import org.jvalue.ods.api.sources.DataSourceMetaData;
 import org.jvalue.ods.sources.AbstractDataSourceTest;
@@ -24,14 +24,14 @@ public final class CamperParkingBremenTest extends AbstractDataSourceTest {
 				new ObjectNode(JsonNodeFactory.instance),
 				new DataSourceMetaData("", "", "", "", "", "", ""));
 
-		final ProcessorChainDescription processorChainDescription = new ProcessorChainDescription.Builder(
+		final ProcessorReferenceChainDescription processorChainDescription = new ProcessorReferenceChainDescription.Builder(
 				new ExecutionInterval(100, TimeUnit.SECONDS))
-				.processor(new Processor.Builder("XmlSourceAdapter")
+				.processor(new ProcessorReference.Builder("XmlSourceAdapter")
 						.argument("sourceUrl", "http://www.bremen.de/sixcms/detail.php?template=export_vk_d&kat=Wohnmobilstellpl%C3%A4tze")
 						.build())
-				.processor(new Processor.Builder("InvalidDocumentFilter")
+				.processor(new ProcessorReference.Builder("InvalidDocumentFilter")
 						.build())
-				.processor(new Processor.Builder("DbInsertionFilter")
+				.processor(new ProcessorReference.Builder("DbInsertionFilter")
 						.argument("updateData", true)
 						.build())
 				.build();

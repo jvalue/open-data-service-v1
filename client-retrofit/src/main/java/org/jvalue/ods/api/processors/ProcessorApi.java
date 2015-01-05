@@ -17,11 +17,11 @@ public interface ProcessorApi {
 	static String URL_PROCESSOR = DataSourceApi.URL_DATASOURCES + "/{sourceId}/filterChains";
 
 	@GET(URL_PROCESSOR)
-	public List<ProcessorChain> getAll(@Path("sourceId") String sourceId);
+	public List<ProcessorReferenceChain> getAll(@Path("sourceId") String sourceId);
 
 
 	@GET(URL_PROCESSOR + "/{processorId}")
-	public ProcessorChain get(@Path("sourceId") String sourceId, @Path("processorId") String processorId);
+	public ProcessorReferenceChain get(@Path("sourceId") String sourceId, @Path("processorId") String processorId);
 
 
 	@DELETE(URL_PROCESSOR + "/{processorId}")
@@ -29,6 +29,6 @@ public interface ProcessorApi {
 
 
 	@PUT(URL_PROCESSOR + "/{processorId}")
-	public ProcessorChain add(@Path("sourceId") String sourceId, @Path("processorId") String processorId, @Body ProcessorChainDescription processorChain);
+	public ProcessorReferenceChain add(@Path("sourceId") String sourceId, @Path("processorId") String processorId, @Body ProcessorReferenceChainDescription processorChain);
 
 }
