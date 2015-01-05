@@ -6,15 +6,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.jvalue.ods.api.processors.ExecutionInterval;
+import org.jvalue.ods.api.processors.ProcessorReference;
+import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.processor.adapter.SourceAdapterFactory;
 import org.jvalue.ods.processor.filter.FilterFactory;
 import org.jvalue.ods.processor.specification.ProcessorType;
 import org.jvalue.ods.processor.specification.Specification;
 import org.jvalue.ods.processor.specification.SpecificationManager;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -47,10 +49,11 @@ public final class ProcessorReferenceFactoryTest {
 	public void testCreateFilterReference(@Mocked final Specification description) {
 
 		final String referenceName = "someName";
-		final Map<String, Object> args = new HashMap<>();
-		args.put("key1", "hello world");
-		args.put("key2", 42);
-		args.put("key3", true);
+		final ProcessorReference reference = new ProcessorReference.Builder(referenceName)
+				.argument("key1", "hello world")
+				.argument("key2", 42)
+				.argument("key3", true)
+				.build();
 
 		new Expectations() {{
 			Map<String, Class<?>> argTypes = new HashMap<>();
@@ -65,10 +68,8 @@ public final class ProcessorReferenceFactoryTest {
 			result = argTypes;
 		}};
 
-		ProcessorReference reference = factory.createProcessorReference(referenceName, args);
-
-		Assert.assertEquals(referenceName, reference.getName());
-		Assert.assertEquals(args, reference.getArguments());
+		ProcessorReference validReference = factory.assertIsValidProcessorReference(reference);
+		Assert.assertEquals(reference, validReference);
 	}
 
 
@@ -76,8 +77,9 @@ public final class ProcessorReferenceFactoryTest {
 	public void testCreateInvalidReference(@Mocked final Specification description) {
 
 		final String referenceName = "someName";
-		final Map<String, Object> args = new HashMap<>();
-		args.put("key", "hello world");
+		final ProcessorReference reference = new ProcessorReference.Builder(referenceName)
+				.argument("key", "hello world")
+				.build();
 
 		new Expectations() {{
 			descriptionManager.getByName(referenceName);
@@ -87,7 +89,7 @@ public final class ProcessorReferenceFactoryTest {
 			result = new HashMap<String, Class<?>>();
 		}};
 
-		factory.createProcessorReference(referenceName, args);
+		factory.assertIsValidProcessorReference(reference);
 	}
 
 
@@ -108,24 +110,23 @@ public final class ProcessorReferenceFactoryTest {
 		}};
 
 		String chainId = "someId";
+		ProcessorReferenceChain reference = new ProcessorReferenceChain(
+				chainId,
+				Arrays.asList(jsonSourceFilter, dbInsertionFilter, notificationFilter),
+				new ExecutionInterval(0, TimeUnit.SECONDS));
 
-		List<ProcessorReference> filterList = new LinkedList<>();
-		filterList.add(jsonSourceFilter);
-		filterList.add(dbInsertionFilter);
-		filterList.add(notificationFilter);
 
-		ExecutionInterval executionInterval = new ExecutionInterval(0, TimeUnit.SECONDS);
-
-		ProcessorChainReference reference = factory.createProcessorChainReference(chainId, filterList, executionInterval);
-		Assert.assertEquals(chainId, reference.getProcessorChainId());
-		Assert.assertEquals(filterList, reference.getProcessors());
-		Assert.assertEquals(executionInterval, reference.getExecutionInterval());
+		ProcessorReferenceChain validReference = factory.assertIsValidReferenceChain(reference);
+		Assert.assertEquals(reference, validReference);
 	}
 
 
 	@Test(expected = ProcessorReferenceFactory.InvalidProcessorException.class)
 	public void testCreateEmptyFilterChainReference() {
-		factory.createProcessorChainReference("someId", new LinkedList<ProcessorReference>(), new ExecutionInterval(0, TimeUnit.SECONDS));
+		factory.assertIsValidReferenceChain(new ProcessorReferenceChain(
+				"someId",
+				new LinkedList<ProcessorReference>(),
+				new ExecutionInterval(0, TimeUnit.SECONDS)));
 	}
 
 
@@ -136,9 +137,10 @@ public final class ProcessorReferenceFactoryTest {
 			result = ProcessorType.FILTER;
 		}};
 
-		List<ProcessorReference> filterList = new LinkedList<>();
-		filterList.add(dbInsertionFilter);
-		factory.createProcessorChainReference("someId", filterList, new ExecutionInterval(0, TimeUnit.SECONDS));
+		factory.assertIsValidReferenceChain(new ProcessorReferenceChain(
+				"someId",
+				Arrays.asList(dbInsertionFilter),
+				new ExecutionInterval(0, TimeUnit.SECONDS)));
 	}
 
 }

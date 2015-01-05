@@ -23,13 +23,13 @@ import com.codahale.metrics.Timer;
 import com.google.common.base.Objects;
 import com.google.inject.Inject;
 
+import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.data.AbstractDataSourcePropertyManager2;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.ProcessorChainReferenceRepository;
 import org.jvalue.ods.db.RepositoryCache2;
-import org.jvalue.ods.processor.reference.ProcessorChainReference;
 import org.jvalue.ods.utils.Assert;
 import org.jvalue.ods.utils.Log;
 
@@ -40,7 +40,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 
 
-public final class ProcessorChainManager extends AbstractDataSourcePropertyManager2<ProcessorChainReference, ProcessorChainReferenceRepository> {
+public final class ProcessorChainManager extends AbstractDataSourcePropertyManager2<ProcessorReferenceChain, ProcessorChainReferenceRepository> {
 
 	private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 	private final Map<ProcessorKey, ScheduledFuture<?>> runningTasks = new HashMap<>();
@@ -69,27 +69,27 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 	}
 
 
-	public void executeOnce(DataSource source, DataRepository dataRepository, ProcessorChainReference reference) {
+	public void executeOnce(DataSource source, DataRepository dataRepository, ProcessorReferenceChain reference) {
 		startProcessorChain(source, dataRepository, reference);
 	}
 
 
 	@Override
-	protected void doAdd(DataSource source, DataRepository dataRepository, ProcessorChainReference reference) {
+	protected void doAdd(DataSource source, DataRepository dataRepository, ProcessorReferenceChain reference) {
 		Assert.assertNotNull(reference.getExecutionInterval());
 		startProcessorChain(source, dataRepository, reference);
 	}
 
 
 	@Override
-	protected void doRemove(DataSource source, DataRepository dataRepository, ProcessorChainReference reference) {
+	protected void doRemove(DataSource source, DataRepository dataRepository, ProcessorReferenceChain reference) {
 		stopProcessorChain(source, reference);
 	}
 
 
 	@Override
 	protected void doRemoveAll(DataSource source) {
-		for (ProcessorChainReference reference : getAll(source)) stopProcessorChain(source, reference);
+		for (ProcessorReferenceChain reference : getAll(source)) stopProcessorChain(source, reference);
 	}
 
 
@@ -108,7 +108,7 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 	public void startAllProcessorChains(Map<DataSource, DataRepository> sources) {
 		for (Map.Entry<DataSource, DataRepository> sourceEntry : sources.entrySet()) {
 			// start chain
-			for (ProcessorChainReference reference : getAll(sourceEntry.getKey())) {
+			for (ProcessorReferenceChain reference : getAll(sourceEntry.getKey())) {
 				startProcessorChain(sourceEntry.getKey(), sourceEntry.getValue(), reference);
 			}
 		}
@@ -123,8 +123,8 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 	}
 
 
-	private void startProcessorChain(DataSource source, DataRepository dataRepository, ProcessorChainReference reference) {
-		ProcessorKey key = new ProcessorKey(source.getId(), reference.getProcessorChainId());
+	private void startProcessorChain(DataSource source, DataRepository dataRepository, ProcessorReferenceChain reference) {
+		ProcessorKey key = new ProcessorKey(source.getId(), reference.getId());
 
 		Runnable runnable = new ProcessorRunnable(reference, source, dataRepository);
 		if (reference.getExecutionInterval() != null) {
@@ -140,19 +140,19 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 	}
 
 
-	private void stopProcessorChain(DataSource source, ProcessorChainReference reference) {
-		ScheduledFuture<?> task = runningTasks.remove(new ProcessorKey(source.getId(), reference.getProcessorChainId()));
+	private void stopProcessorChain(DataSource source, ProcessorReferenceChain reference) {
+		ScheduledFuture<?> task = runningTasks.remove(new ProcessorKey(source.getId(), reference.getId()));
 		task.cancel(false);
 	}
 
 
 	private final class ProcessorRunnable implements Runnable {
 
-		private final ProcessorChainReference reference;
+		private final ProcessorReferenceChain reference;
 		private final DataSource source;
 		private final DataRepository dataRepository;
 
-		public ProcessorRunnable(ProcessorChainReference reference, DataSource source, DataRepository dataRepository) {
+		public ProcessorRunnable(ProcessorReferenceChain reference, DataSource source, DataRepository dataRepository) {
 			this.reference = reference;
 			this.source = source;
 			this.dataRepository = dataRepository;
@@ -163,10 +163,10 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 		public void run() {
 			Timer.Context timerContext = processorTimer.time();
 			try {
-				Log.info("starting processor chain \"" + reference.getProcessorChainId() + "\" for source \"" + source.getId() + "\"");
+				Log.info("starting processor chain \"" + reference.getId() + "\" for source \"" + source.getId() + "\"");
 				ProcessorChain chain = processorChainFactory.createProcessorChain(reference, source, dataRepository);
 				chain.startProcessing();
-				Log.info("stopping processor chain \"" + reference.getProcessorChainId() + "\" for source \"" + source.getId() + "\"");
+				Log.info("stopping processor chain \"" + reference.getId() + "\" for source \"" + source.getId() + "\"");
 			} catch (Throwable throwable) {
 				Log.error("error while running processor chain", throwable);
 			} finally {

@@ -1,17 +1,18 @@
 package org.jvalue.ods.db;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.ektorp.CouchDbInstance;
 import org.ektorp.DocumentNotFoundException;
 import org.junit.Assert;
 import org.junit.Test;
-import org.jvalue.ods.processor.reference.ProcessorChainReference;
+import org.jvalue.ods.api.processors.ExecutionInterval;
+import org.jvalue.ods.api.processors.ProcessorReference;
+import org.jvalue.ods.api.processors.ProcessorReferenceChain;
+
+import java.util.LinkedList;
+import java.util.concurrent.TimeUnit;
 
 public class ProcessorChainReferenceRepositoryTest extends AbstractDbTest {
-
-	private static final ObjectMapper mapper = new ObjectMapper();
 
 	private ProcessorChainReferenceRepository repository;
 
@@ -52,13 +53,11 @@ public class ProcessorChainReferenceRepositoryTest extends AbstractDbTest {
 	}
 
 
-	private ProcessorChainReference createChain(String id) throws Exception {
-		String json = "{\"processorChainId\":\"" + id + "\","
-				+ "\"processors\": [],"
-				+ "\"executionInterval\":{"
-				+ "\"period\":0, \"unit\":\"SECONDS\""
-				+ "}}";
-		return mapper.treeToValue(mapper.readTree(json), ProcessorChainReference.class);
+	private ProcessorReferenceChain createChain(String id) throws Exception {
+		return new ProcessorReferenceChain(
+				id,
+				new LinkedList<ProcessorReference>(),
+				new ExecutionInterval(0, TimeUnit.SECONDS));
 	}
 
 }

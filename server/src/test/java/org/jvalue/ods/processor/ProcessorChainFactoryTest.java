@@ -3,12 +3,12 @@ package org.jvalue.ods.processor;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.jvalue.ods.api.processors.ProcessorReference;
+import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.processor.adapter.SourceAdapterFactory;
 import org.jvalue.ods.processor.filter.FilterFactory;
-import org.jvalue.ods.processor.reference.ProcessorChainReference;
-import org.jvalue.ods.processor.reference.ProcessorReference;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -31,7 +31,7 @@ public final class ProcessorChainFactoryTest {
 			@Mocked final SourceAdapterFactory adapterFactory,
 			@Mocked final DataSource dataSource,
 			@Mocked final DataRepository dataRepository,
-			@Mocked final ProcessorChainReference chainReference)
+			@Mocked final ProcessorReferenceChain chainReference)
 			throws Exception {
 
 		new Expectations() {{

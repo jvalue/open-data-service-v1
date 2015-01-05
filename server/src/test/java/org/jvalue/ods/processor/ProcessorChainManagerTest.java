@@ -9,12 +9,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.jvalue.ods.api.processors.ExecutionInterval;
+import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.ProcessorChainReferenceRepository;
 import org.jvalue.ods.db.RepositoryCache2;
-import org.jvalue.ods.processor.reference.ProcessorChainReference;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -49,7 +49,7 @@ public final class ProcessorChainManagerTest {
 	public void testAddAndRemove(
 			@Mocked final DataSource source,
 			@Mocked final DataRepository dataRepository,
-			@Mocked final ProcessorChainReference reference,
+			@Mocked final ProcessorReferenceChain reference,
 			@Mocked final ProcessorChainReferenceRepository referenceRepository,
 			@Mocked final ProcessorChain chain) throws Exception {
 
@@ -104,7 +104,7 @@ public final class ProcessorChainManagerTest {
 	public void testEmptyGetAll(
 			@Mocked DataSource source) {
 
-		List<ProcessorChainReference> references = manager.getAll(source);
+		List<ProcessorReferenceChain> references = manager.getAll(source);
 		Assert.assertNotNull(references);
 		Assert.assertEquals(0, references.size());
 	}
@@ -132,14 +132,14 @@ public final class ProcessorChainManagerTest {
 	public void testStartAndStopAll(
 			@Mocked final DataSource source,
 			@Mocked final DataRepository dataRepository,
-			@Mocked final ProcessorChainReference reference,
+			@Mocked final ProcessorReferenceChain reference,
 			@Mocked final ProcessorChainReferenceRepository referenceRepository,
 			@Mocked final ProcessorChain chain) throws Exception {
 
 		setupStartingFilterChain(source, dataRepository, referenceRepository, reference, chain);
 		new Expectations() {{
 			referenceRepository.getAll();
-			List<ProcessorChainReference> list = new LinkedList<>();
+			List<ProcessorReferenceChain> list = new LinkedList<>();
 			list.add(reference);
 			result = list;
 		}};
@@ -166,7 +166,7 @@ public final class ProcessorChainManagerTest {
 			final DataSource source,
 			final DataRepository dataRepository,
 			final ProcessorChainReferenceRepository referenceRepository,
-			final ProcessorChainReference reference,
+			final ProcessorReferenceChain reference,
 			final ProcessorChain chain) {
 
 		new Expectations() {{

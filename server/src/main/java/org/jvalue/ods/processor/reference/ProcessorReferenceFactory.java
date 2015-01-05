@@ -4,7 +4,8 @@ package org.jvalue.ods.processor.reference;
 import com.google.inject.Inject;
 
 import org.apache.commons.lang3.ClassUtils;
-import org.jvalue.ods.api.processors.ExecutionInterval;
+import org.jvalue.ods.api.processors.ProcessorReference;
+import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.processor.specification.ProcessorType;
 import org.jvalue.ods.processor.specification.Specification;
 import org.jvalue.ods.processor.specification.SpecificationManager;
@@ -12,6 +13,7 @@ import org.jvalue.ods.utils.Assert;
 
 import java.util.List;
 import java.util.Map;
+
 
 public final class ProcessorReferenceFactory {
 
@@ -23,32 +25,27 @@ public final class ProcessorReferenceFactory {
 	}
 
 
-	public ProcessorReference createProcessorReference(String name, Map<String, Object> arguments) throws InvalidProcessorException {
-		Assert.assertNotNull(name, arguments);
-
-		Specification description = descriptionManager.getByName(name);
-		if (description == null) throw new InvalidProcessorException("no processor found for id \"" + name + "\"");
-		if (arguments.size() != description.getArgumentTypes().size()) throw new InvalidProcessorException("expected " + description.getArgumentTypes().size() + " arguments but got " + arguments.size());
+	public ProcessorReference assertIsValidProcessorReference(ProcessorReference reference) throws InvalidProcessorException {
+		Specification description = descriptionManager.getByName(reference.getName());
+		if (description == null) throw new InvalidProcessorException("no processor found for id \"" + reference.getName() + "\"");
+		if (reference.getArguments().size() != description.getArgumentTypes().size()) throw new InvalidProcessorException("expected " + description.getArgumentTypes().size() + " arguments but got " + reference.getArguments().size());
 
 		for (Map.Entry<String, Class<?>> entry : description.getArgumentTypes().entrySet()) {
-			Object arg = arguments.get(entry.getKey());
+			Object arg = reference.getArguments().get(entry.getKey());
 			if (arg == null) throw new InvalidProcessorException("no argument named \"" + entry.getKey() + "\" found");
 			if (!ClassUtils.isAssignable(entry.getValue(), arg.getClass(), true)) throw new InvalidProcessorException("invalid argument type for \"" + entry.getKey() + "\"");
 		}
-
-		return new ProcessorReference(name, arguments);
+		return reference;
 	}
 
 
-	public ProcessorChainReference createProcessorChainReference(
-			String processorChainId,
-			List<ProcessorReference> processorReferences,
-			ExecutionInterval executionInterval)
+	public ProcessorReferenceChain assertIsValidReferenceChain(
+			ProcessorReferenceChain referenceChain)
 			throws InvalidProcessorException {
 
-		Assert.assertNotNull(processorChainId, processorReferences);
-		assertIsValidProcessorReferenceList(processorReferences);
-		return new ProcessorChainReference(processorChainId, processorReferences, executionInterval);
+		Assert.assertNotNull(referenceChain);
+		assertIsValidProcessorReferenceList(referenceChain.getProcessors());
+		return referenceChain;
 	}
 
 

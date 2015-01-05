@@ -10,7 +10,7 @@ import org.ektorp.CouchDbInstance;
 import org.ektorp.DocumentNotFoundException;
 import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.View;
-import org.jvalue.ods.processor.reference.ProcessorChainReference;
+import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ import java.util.List;
 public final class ProcessorChainReferenceRepository extends RepositoryAdapter<
 		ProcessorChainReferenceRepository.ProcessorChainReferenceCouchDbRepository,
 		ProcessorChainReferenceRepository.ProcessorReferenceChainDocument,
-		ProcessorChainReference> {
+		ProcessorReferenceChain> {
 
 	@Inject
 	ProcessorChainReferenceRepository(CouchDbInstance couchDbInstance, @Assisted String databaseName) {
@@ -29,7 +29,7 @@ public final class ProcessorChainReferenceRepository extends RepositoryAdapter<
 	@View( name = "all", map = "function(doc) { if (doc.value && doc.value.processors) emit(null, doc) }")
 	static final class ProcessorChainReferenceCouchDbRepository
 			extends CouchDbRepositorySupport<ProcessorChainReferenceRepository.ProcessorReferenceChainDocument>
-			implements DbDocumentAdaptable<ProcessorChainReferenceRepository.ProcessorReferenceChainDocument, ProcessorChainReference> {
+			implements DbDocumentAdaptable<ProcessorChainReferenceRepository.ProcessorReferenceChainDocument, ProcessorReferenceChain> {
 
 		ProcessorChainReferenceCouchDbRepository(CouchDbInstance couchDbInstance, String databaseName) {
 			super(ProcessorReferenceChainDocument.class, couchDbInstance.createConnector(databaseName, true));
@@ -38,7 +38,7 @@ public final class ProcessorChainReferenceRepository extends RepositoryAdapter<
 
 
 		@Override
-		@View(name = "by_id", map = "function(doc) { if (doc.value.processorChainId && doc.value.processors) emit(doc.value.processorChainId, doc._id) }")
+		@View(name = "by_id", map = "function(doc) { if (doc.value.id && doc.value.processors) emit(doc.value.id, doc._id) }")
 		public ProcessorReferenceChainDocument findById(String processorChainId) {
 			List<ProcessorReferenceChainDocument> chains = queryView("by_id", processorChainId);
 			if (chains.isEmpty()) throw new DocumentNotFoundException(processorChainId);
@@ -49,24 +49,24 @@ public final class ProcessorChainReferenceRepository extends RepositoryAdapter<
 
 
 		@Override
-		public ProcessorReferenceChainDocument createDbDocument(ProcessorChainReference reference) {
+		public ProcessorReferenceChainDocument createDbDocument(ProcessorReferenceChain reference) {
 			return new ProcessorReferenceChainDocument(reference);
 		}
 
 
 		@Override
-		public String getIdForValue(ProcessorChainReference reference) {
-			return reference.getProcessorChainId();
+		public String getIdForValue(ProcessorReferenceChain reference) {
+			return reference.getId();
 		}
 
 	}
 
 
-	static final class ProcessorReferenceChainDocument extends DbDocument<ProcessorChainReference> {
+	static final class ProcessorReferenceChainDocument extends DbDocument<ProcessorReferenceChain> {
 
 		@JsonCreator
 		public ProcessorReferenceChainDocument(
-				@JsonProperty("value") ProcessorChainReference reference) {
+				@JsonProperty("value") ProcessorReferenceChain reference) {
 			super(reference);
 		}
 
