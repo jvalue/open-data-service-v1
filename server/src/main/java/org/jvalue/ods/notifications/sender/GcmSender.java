@@ -7,7 +7,7 @@ import com.google.android.gcm.server.MulticastResult;
 import com.google.android.gcm.server.Result;
 import com.google.inject.Inject;
 
-import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.main.GcmApiKey;
 import org.jvalue.ods.notifications.clients.GcmClient;
 import org.jvalue.ods.utils.Log;
@@ -37,15 +37,15 @@ public final class GcmSender extends Sender<GcmClient> {
 	@Override
 	public SenderResult notifySourceChanged(
 			GcmClient client, 
-			DataSource source, 
+			DataSource source,
 			ArrayNode data) {
 
 		// gather data
 		Map<String,String> payload = new HashMap<String,String>();
-		payload.put(DATA_KEY_SOURCE, source.getSourceId());
+		payload.put(DATA_KEY_SOURCE, source.getId());
 		payload.put(DATA_KEY_DEBUG, Boolean.TRUE.toString());
 
-		String collapseKey = source.getSourceId();
+		String collapseKey = source.getId();
 
 		final List<String> devices = new ArrayList<String>();
 		devices.add(client.getGcmClientId());

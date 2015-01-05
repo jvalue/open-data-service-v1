@@ -4,7 +4,7 @@ import com.codahale.metrics.MetricRegistry;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.api.sources.DataSource;
 
 import mockit.Mocked;
 import mockit.integration.junit4.JMockit;
@@ -15,11 +15,8 @@ import static org.junit.Assert.assertEquals;
 @RunWith(JMockit.class)
 public final class AbstractFilterTest {
 
-	@Mocked
-	private DataSource source;
-
-	@Mocked
-	private MetricRegistry registry;
+	@Mocked private DataSource source;
+	@Mocked private MetricRegistry registry;
 
 	private int
 			filterCount = 0,

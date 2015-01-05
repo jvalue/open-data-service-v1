@@ -3,7 +3,7 @@ package org.jvalue.ods.processor;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.processor.adapter.SourceAdapterFactory;
 import org.jvalue.ods.processor.filter.FilterFactory;

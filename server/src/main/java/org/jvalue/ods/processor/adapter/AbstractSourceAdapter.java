@@ -20,7 +20,7 @@ package org.jvalue.ods.processor.adapter;
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.utils.Assert;
 
 import java.net.MalformedURLException;

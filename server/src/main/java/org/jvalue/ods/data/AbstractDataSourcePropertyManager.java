@@ -19,6 +19,7 @@ package org.jvalue.ods.data;
 
 import org.ektorp.DocumentNotFoundException;
 import org.ektorp.support.CouchDbRepositorySupport;
+import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.RepositoryCache;
@@ -69,7 +70,7 @@ public abstract class AbstractDataSourcePropertyManager<T, R extends CouchDbRepo
 		for (T item : repository.getAll()) {
 			repository.remove(item);
 		}
-		repositoryCache.remove(source.getSourceId());
+		repositoryCache.remove(source.getId());
 	}
 
 
@@ -107,7 +108,7 @@ public abstract class AbstractDataSourcePropertyManager<T, R extends CouchDbRepo
 
 
 	private R assertRepository(DataSource source) {
-		String key = source.getSourceId();
+		String key = source.getId();
 		if (repositoryCache.contains(key)) return repositoryCache.get(key);
 		R repository = createNewRepository(key, dbFactory);
 		repositoryCache.put(key, repository);

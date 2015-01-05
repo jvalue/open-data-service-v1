@@ -5,7 +5,7 @@ import com.google.inject.Inject;
 
 import org.jvalue.ods.api.processors.Processor;
 import org.jvalue.ods.api.processors.ProcessorChainDescription;
-import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.processor.ProcessorChainManager;
 import org.jvalue.ods.processor.reference.ProcessorChainReference;

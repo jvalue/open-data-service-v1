@@ -19,8 +19,8 @@ package org.jvalue.ods.processor.plugin;
 
 import com.google.inject.Inject;
 
+import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.data.AbstractDataSourcePropertyManager;
-import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.PluginMetaDataRepository;

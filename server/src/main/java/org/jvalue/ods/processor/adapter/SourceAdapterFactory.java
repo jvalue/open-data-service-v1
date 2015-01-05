@@ -4,7 +4,7 @@ package org.jvalue.ods.processor.adapter;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
 
-import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.processor.specification.Argument;
 import org.jvalue.ods.processor.specification.CreationMethod;
 import org.jvalue.ods.processor.specification.ProcessorType;

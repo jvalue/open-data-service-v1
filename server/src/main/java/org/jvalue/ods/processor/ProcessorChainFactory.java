@@ -4,7 +4,7 @@ package org.jvalue.ods.processor;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 
-import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.processor.adapter.SourceAdapter;
 import org.jvalue.ods.processor.adapter.SourceAdapterFactory;

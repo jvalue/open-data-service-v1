@@ -10,7 +10,7 @@ import org.ektorp.CouchDbConnector;
 import org.ektorp.DocumentNotFoundException;
 import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.View;
-import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.api.sources.DataSource;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public final class DataSourceRepository extends RepositoryAdapter<
 	}
 
 
-	@View( name = "all", map = "function(doc) { if (doc.value.sourceId && doc.value.domainIdKey) emit(null, doc)}")
+	@View( name = "all", map = "function(doc) { if (doc.value.id && doc.value.domainIdKey) emit(null, doc)}")
 	static final class DataSourceCouchDbRepository
 			extends CouchDbRepositorySupport<DataSourceRepository.DataSourceDocument>
 			implements DbDocumentAdaptable<DataSourceRepository.DataSourceDocument, DataSource> {
@@ -41,12 +41,12 @@ public final class DataSourceRepository extends RepositoryAdapter<
 
 
 		@Override
-		@View(name = "by_sourceId", map = "function(doc) { if (doc.value.sourceId) emit(doc.value.sourceId, doc._id)}")
+		@View(name = "by_id", map = "function(doc) { if (doc.value.id && doc.value.domainIdKey) emit(doc.value.id, doc._id)}")
 		public DataSourceDocument findById(String sourceId) {
-			List<DataSourceDocument> sources = queryView("by_sourceId", sourceId);
+			List<DataSourceDocument> sources = queryView("by_id", sourceId);
 			if (sources.isEmpty()) throw new DocumentNotFoundException(sourceId);
 			if (sources.size() > 1)
-				throw new IllegalStateException("found more than one source for sourceId " + sourceId);
+				throw new IllegalStateException("found more than one source for id " + sourceId);
 			return sources.get(0);
 		}
 
@@ -59,7 +59,7 @@ public final class DataSourceRepository extends RepositoryAdapter<
 
 		@Override
 		public String getIdForValue(DataSource source) {
-			return source.getSourceId();
+			return source.getId();
 		}
 	}
 

@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 
 import org.ektorp.CouchDbInstance;
 import org.ektorp.DocumentNotFoundException;
+import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DataSourceRepository;
 import org.jvalue.ods.db.DbFactory;
@@ -67,11 +68,11 @@ public final class DataSourceManager implements Managed {
 		dataSourceRepository.remove(source);
 
 		// delete source db
-		dataRepositoryCache.remove(source.getSourceId());
+		dataRepositoryCache.remove(source.getId());
 		processorChainManager.removeAll(source);
 		dataViewManager.removeAll(source);
 		notificationManager.removeAll(source);
-		dbInstance.deleteDatabase(source.getSourceId());
+		dbInstance.deleteDatabase(source.getId());
 	}
 
 
@@ -87,7 +88,7 @@ public final class DataSourceManager implements Managed {
 
 	public DataRepository getDataRepository(DataSource source) {
 		Assert.assertNotNull(source);
-		return dataRepositoryCache.get(source.getSourceId());
+		return dataRepositoryCache.get(source.getId());
 	}
 
 
@@ -121,8 +122,8 @@ public final class DataSourceManager implements Managed {
 
 
 	private DataRepository createDataRepository(DataSource source) {
-		DataRepository dataRepository = dbFactory.createSourceDataRepository(source.getSourceId(), source.getDomainIdKey());
-		dataRepositoryCache.put(source.getSourceId(), dataRepository);
+		DataRepository dataRepository = dbFactory.createSourceDataRepository(source.getId(), source.getDomainIdKey());
+		dataRepositoryCache.put(source.getId(), dataRepository);
 		return dataRepository;
 	}
 

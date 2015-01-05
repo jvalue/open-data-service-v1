@@ -9,17 +9,14 @@ import com.fasterxml.jackson.databind.node.TextNode;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.api.sources.DataSource;
 
 import mockit.Mocked;
 
 public final class InvalidDocumentFilterTest {
 
-	@Mocked
-	private MetricRegistry registry;
-
-	@Mocked
-	private DataSource source;
+	@Mocked private MetricRegistry registry;
+	@Mocked private DataSource source;
 
 	@Test
 	public void testRemoval() {

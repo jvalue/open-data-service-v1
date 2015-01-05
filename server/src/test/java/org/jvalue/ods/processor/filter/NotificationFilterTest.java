@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.notifications.NotificationManager;
 
 import mockit.Mocked;

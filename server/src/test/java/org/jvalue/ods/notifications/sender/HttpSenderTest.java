@@ -10,7 +10,7 @@ import com.squareup.okhttp.mockwebserver.RecordedRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.notifications.clients.HttpClient;
 
 import mockit.Expectations;
@@ -36,7 +36,7 @@ public final class HttpSenderTest {
 	@Before
 	public void setupSource() {
 		new Expectations() {{
-			source.getSourceId();
+			source.getId();
 			result = SOURCE_ID;
 		}};
 	}

@@ -1,6 +1,6 @@
 package org.jvalue.ods.notifications;
 
-import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.notifications.clients.Client;
 
 

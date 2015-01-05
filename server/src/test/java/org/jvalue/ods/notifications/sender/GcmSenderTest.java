@@ -2,7 +2,7 @@ package org.jvalue.ods.notifications.sender;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.notifications.clients.GcmClient;
 
 import mockit.Expectations;
@@ -23,7 +23,7 @@ public final class GcmSenderTest {
 			@Mocked final DataSource source) {
 
 		new Expectations() {{
-			source.getSourceId();
+			source.getId();
 			result = "someSourceId";
 		}};
 

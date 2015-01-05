@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.api.sources.DataSource;
 
 import mockit.Expectations;
 import mockit.Mocked;
@@ -19,8 +19,7 @@ import mockit.integration.junit4.JMockit;
 @RunWith(JMockit.class)
 public final class IntToStringKeyFilterTest {
 
-	@Mocked
-	private MetricRegistry registry;
+	@Mocked private MetricRegistry registry;
 
 
 	@Test

@@ -23,8 +23,8 @@ import com.codahale.metrics.Timer;
 import com.google.common.base.Objects;
 import com.google.inject.Inject;
 
+import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.data.AbstractDataSourcePropertyManager;
-import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.ProcessorChainReferenceRepository;
@@ -130,7 +130,7 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 
 
 	private void startProcessorChain(DataSource source, DataRepository dataRepository, ProcessorChainReference reference) {
-		ProcessorKey key = new ProcessorKey(source.getSourceId(), reference.getProcessorChainId());
+		ProcessorKey key = new ProcessorKey(source.getId(), reference.getProcessorChainId());
 
 		Runnable runnable = new ProcessorRunnable(reference, source, dataRepository);
 		if (reference.getExecutionInterval() != null) {
@@ -147,7 +147,7 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 
 
 	private void stopProcessorChain(DataSource source, ProcessorChainReference reference) {
-		ScheduledFuture<?> task = runningTasks.remove(new ProcessorKey(source.getSourceId(), reference.getProcessorChainId()));
+		ScheduledFuture<?> task = runningTasks.remove(new ProcessorKey(source.getId(), reference.getProcessorChainId()));
 		task.cancel(false);
 	}
 
@@ -169,10 +169,10 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 		public void run() {
 			Timer.Context timerContext = processorTimer.time();
 			try {
-				Log.info("starting processor chain \"" + reference.getProcessorChainId() + "\" for source \"" + source.getSourceId() + "\"");
+				Log.info("starting processor chain \"" + reference.getProcessorChainId() + "\" for source \"" + source.getId() + "\"");
 				ProcessorChain chain = processorChainFactory.createProcessorChain(reference, source, dataRepository);
 				chain.startProcessing();
-				Log.info("stopping processor chain \"" + reference.getProcessorChainId() + "\" for source \"" + source.getSourceId() + "\"");
+				Log.info("stopping processor chain \"" + reference.getProcessorChainId() + "\" for source \"" + source.getId() + "\"");
 			} catch (Throwable throwable) {
 				Log.error("error while running processor chain", throwable);
 			} finally {

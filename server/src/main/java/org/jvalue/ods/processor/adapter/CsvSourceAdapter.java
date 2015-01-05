@@ -26,7 +26,7 @@ import com.google.inject.assistedinject.Assisted;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
-import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.api.sources.DataSource;
 
 import java.io.IOException;
 import java.net.URL;

@@ -6,7 +6,7 @@ import com.google.inject.Inject;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
-import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.processor.plugin.PluginMetaData;
 import org.jvalue.ods.processor.plugin.PluginMetaDataManager;

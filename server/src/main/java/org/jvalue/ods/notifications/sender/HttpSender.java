@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
-import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.notifications.clients.HttpClient;
 
 import retrofit.RestAdapter;
@@ -21,7 +21,7 @@ public final class HttpSender extends Sender<HttpClient> {
 	@Override
 	public SenderResult notifySourceChanged(
 			HttpClient client, 
-			DataSource source, 
+			DataSource source,
 			ArrayNode data) {
 
 		RestAdapter adapter = new RestAdapter.Builder()
@@ -31,8 +31,8 @@ public final class HttpSender extends Sender<HttpClient> {
 		NewDataCallbackService callbackService = adapter.create(NewDataCallbackService.class);
 
 		NewData content;
-		if (client.getSendData()) content = new NewData(source.getSourceId(), data);
-		else content = new NewData(source.getSourceId(), null);
+		if (client.getSendData()) content = new NewData(source.getId(), data);
+		else content = new NewData(source.getId(), null);
 
 		try {
 			callbackService.onNewData(content);

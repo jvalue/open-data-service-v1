@@ -2,7 +2,7 @@ package org.jvalue.ods.notifications.sender;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
-import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.notifications.clients.DummyClient;
 
 

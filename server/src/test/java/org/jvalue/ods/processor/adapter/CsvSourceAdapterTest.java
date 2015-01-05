@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.api.sources.DataSource;
 
 import java.util.List;
 
@@ -18,8 +18,8 @@ import mockit.integration.junit4.JMockit;
 @RunWith(JMockit.class)
 public final class CsvSourceAdapterTest extends AbstractSourceAdapterTest {
 
-	@Mocked MetricRegistry registry;
-	@Mocked DataSource source;
+	@Mocked private MetricRegistry registry;
+	@Mocked private DataSource source;
 
 	@Test
 	public void testDefaultAdapter() throws Exception {

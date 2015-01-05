@@ -9,7 +9,7 @@ import com.fasterxml.jackson.dataformat.xml.XmlFactory;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
-import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.api.sources.DataSource;
 
 import java.io.IOException;
 import java.net.URL;

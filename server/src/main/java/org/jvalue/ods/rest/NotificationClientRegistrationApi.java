@@ -7,7 +7,7 @@ import org.jvalue.ods.api.notifications.ClientDescription;
 import org.jvalue.ods.api.notifications.ClientDescriptionVisitor;
 import org.jvalue.ods.api.notifications.GcmClientDescription;
 import org.jvalue.ods.api.notifications.HttpClientDescription;
-import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.notifications.NotificationManager;
 import org.jvalue.ods.notifications.clients.Client;

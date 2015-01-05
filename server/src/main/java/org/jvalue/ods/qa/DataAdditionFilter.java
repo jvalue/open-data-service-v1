@@ -17,13 +17,11 @@
  */
 package org.jvalue.ods.qa;
 
-import org.jvalue.ods.data.DataSource;
-import org.jvalue.ods.data.objecttypes.MapObjectType;
+import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.processor.filter.Filter;
 import org.jvalue.ods.utils.Log;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * The Class DataAdditionFilter.
@@ -57,6 +55,7 @@ abstract class DataAdditionFilter implements Filter<Object, Object> {
 				List<Object> list = (List<Object>) object;
 
 				for (Object o : list) {
+					/*
 					Map<String, Object> map = (Map<String, Object>) o;
 					MapObjectType schema = (MapObjectType) source
 							.getImprovedDbSchema();
@@ -71,6 +70,7 @@ abstract class DataAdditionFilter implements Filter<Object, Object> {
 					if (!map.containsKey("dataQualityStatus")) {
 						map.put("dataQualityStatus", "raw");
 					}
+					*/
 				}
 
 			}

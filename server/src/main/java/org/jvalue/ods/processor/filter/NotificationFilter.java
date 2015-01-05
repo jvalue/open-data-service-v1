@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
-import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.notifications.NotificationManager;
 
 

@@ -9,8 +9,8 @@ import org.ektorp.CouchDbInstance;
 import org.ektorp.DocumentNotFoundException;
 import org.junit.Assert;
 import org.junit.Test;
+import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceMetaData;
-import org.jvalue.ods.data.DataSource;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -58,7 +58,7 @@ public class DataSourceRepositoryTest extends AbstractDbTest {
 
 		Set<String> ids = new HashSet<>(Arrays.asList("id1", "id2"));
 		for (DataSource source : sources) {
-			Assert.assertTrue(ids.remove(source.getSourceId()));
+			Assert.assertTrue(ids.remove(source.getId()));
 		}
 		Assert.assertTrue(ids.isEmpty());
 	}

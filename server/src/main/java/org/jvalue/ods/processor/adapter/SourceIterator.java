@@ -20,7 +20,7 @@ package org.jvalue.ods.processor.adapter;
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.monitoring.PauseableTimer;
 import org.jvalue.ods.utils.Assert;
 
@@ -40,7 +40,7 @@ abstract class SourceIterator implements Iterator<ObjectNode> {
 		Assert.assertNotNull(source, sourceUrl, registry);
 		this.source = source;
 		this.sourceUrl = sourceUrl;
-		this.context = PauseableTimer.createTimer(registry, MetricRegistry.name(this.getClass(), source.getSourceId())).createContext();
+		this.context = PauseableTimer.createTimer(registry, MetricRegistry.name(this.getClass(), source.getId())).createContext();
 	}
 
 

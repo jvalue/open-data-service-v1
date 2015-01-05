@@ -17,11 +17,9 @@
  */
 package org.jvalue.ods.configuration;
 
-import com.fasterxml.jackson.core.JsonPointer;
 import com.google.inject.Inject;
 
 import org.jvalue.ods.api.sources.DataSourceMetaData;
-import org.jvalue.ods.data.DataSource;
 import org.jvalue.ods.data.objecttypes.ListObjectType;
 import org.jvalue.ods.data.objecttypes.MapObjectType;
 import org.jvalue.ods.data.objecttypes.ObjectType;
@@ -57,15 +55,15 @@ public final class PegelPortalMvConfigurationFactory {
 			DbFactory dbFactory,
 			FilterFactory filterFactory) {
 
-		DataSource dataSource = createDataSource();
-		DataRepository dataRepository = dbFactory.createSourceDataRepository("pegelportalMv", dataSource.getDomainIdKey());
-		Filter<Void, ?> filterChain = createFilterChain(dataSource, dataRepository, filterFactory);
+		// DataSource dataSource = createDataSource();
+		// DataRepository dataRepository = dbFactory.createSourceDataRepository("pegelportalMv", dataSource.getDomainIdKey());
+		// Filter<Void, ?> filterChain = createFilterChain(dataSource, dataRepository, filterFactory);
 		// this.configuration = new DataSourceConfiguration(dataSource, filterChain, dataRepository);
 	}
 
 
 
-	private DataSource createDataSource() {
+	private void createDataSource() {
 
 		String sourceId = "de-pegelportal-mv";
 		URL url;
@@ -131,17 +129,11 @@ public final class PegelPortalMvConfigurationFactory {
 			stationList.add(dbSchema);
 			sourceSchema = new ListObjectType(null, stationList);
 		}
-
-		return new DataSource(
-				sourceId,
-				JsonPointer.compile("/station"),
-				null,
-				metaData);
 	}
 
 
 	private Filter<Void, ?> createFilterChain(
-			DataSource dataSource,
+			// DataSource dataSource,
 			DataRepository dataRepository,
 			FilterFactory filterFactory) {
 

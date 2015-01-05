@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
-import org.jvalue.ods.data.DataSource;
+import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.processor.filter.Filter;
 import org.jvalue.ods.utils.Assert;
 
@@ -44,11 +44,9 @@ abstract class PegelPortalMvAdapter implements Filter<Void, ArrayNode> {
 	}
 
 	
-	private final DataSource source;
 
 	public PegelPortalMvAdapter(DataSource source) {
 		Assert.assertNotNull(source);
-		this.source = source;
 	}
 
 
