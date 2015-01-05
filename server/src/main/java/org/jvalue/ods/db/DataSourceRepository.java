@@ -33,8 +33,7 @@ public final class DataSourceRepository extends RepositoryAdapter<
 			implements DbDocumentAdaptable<DataSourceRepository.DataSourceDocument, DataSource> {
 
 
-		@Inject
-		DataSourceCouchDbRepository(@Named(DATABASE_NAME) CouchDbConnector connector) {
+		public DataSourceCouchDbRepository(CouchDbConnector connector) {
 			super(DataSourceDocument.class, connector);
 			initStandardDesignDocument();
 		}

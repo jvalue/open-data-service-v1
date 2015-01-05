@@ -12,7 +12,7 @@ import java.util.List;
  * @param <D> type of the wrapper
  * @param <V> type of the wrapper object
  */
-abstract class RepositoryAdapter<T extends CouchDbRepositorySupport<D> & DbDocumentAdaptable<D, V>, D extends DbDocument<V>, V> {
+public abstract class RepositoryAdapter<T extends CouchDbRepositorySupport<D> & DbDocumentAdaptable<D, V>, D extends DbDocument<V>, V> {
 
 	private final T repository;
 

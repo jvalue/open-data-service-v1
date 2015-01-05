@@ -24,8 +24,9 @@ public class DbModule extends AbstractModule {
 		install(new FactoryModuleBuilder().build(DbFactory.class));
 
 		bind(DataSourceRepository.class).in(Singleton.class);
+		bind(new TypeLiteral<RepositoryCache2<DataViewRepository>>() { }).in(Singleton.class);
+
 		bind(new TypeLiteral<RepositoryCache<DataRepository>>() { }).in(Singleton.class);
-		bind(new TypeLiteral<RepositoryCache<DataViewRepository>>() { }).in(Singleton.class);
 		bind(new TypeLiteral<RepositoryCache<NotificationClientRepository>>() { }).in(Singleton.class);
 		bind(new TypeLiteral<RepositoryCache<PluginMetaDataRepository>>() { }).in(Singleton.class);
 		bind(new TypeLiteral<RepositoryCache<ProcessorChainReferenceRepository>>() { }).in(Singleton.class);

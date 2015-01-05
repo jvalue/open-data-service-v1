@@ -24,18 +24,18 @@ import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DataViewRepository;
 import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.db.RepositoryCache;
+import org.jvalue.ods.db.RepositoryCache2;
 import org.jvalue.ods.utils.Assert;
 
 import java.util.List;
 
 
-public final class DataViewManager extends AbstractDataSourcePropertyManager<DataView, DataViewRepository> {
+public final class DataViewManager extends AbstractDataSourcePropertyManager2<DataView, DataViewRepository> {
 
 
 	@Inject
 	DataViewManager(
-			RepositoryCache<DataViewRepository> viewRepositoryCache,
+			RepositoryCache2<DataViewRepository> viewRepositoryCache,
 			DbFactory dbFactory) {
 
 		super(viewRepositoryCache, dbFactory);
@@ -62,12 +62,6 @@ public final class DataViewManager extends AbstractDataSourcePropertyManager<Dat
 
 	@Override
 	protected void doRemoveAll(DataSource source) { }
-
-
-	@Override
-	protected DataView doGet(DataViewRepository repository, String viewId) {
-		return repository.findByViewId(viewId);
-	}
 
 
 	@Override
