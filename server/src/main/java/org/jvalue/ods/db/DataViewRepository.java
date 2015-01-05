@@ -10,15 +10,15 @@ import org.ektorp.CouchDbInstance;
 import org.ektorp.DocumentNotFoundException;
 import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.View;
-import org.jvalue.ods.data.DataView;
+import org.jvalue.ods.api.views.DataView;
 
 import java.util.List;
 
 
 public final class DataViewRepository extends RepositoryAdapter<
-			DataViewRepository.DataViewCouchDbRepository,
-			DataViewRepository.DataViewDocument,
-			DataView> {
+		DataViewRepository.DataViewCouchDbRepository,
+		DataViewRepository.DataViewDocument,
+		DataView> {
 
 	@Inject
 	DataViewRepository(CouchDbInstance couchDbInstance, @Assisted String databaseName) {
@@ -57,7 +57,7 @@ public final class DataViewRepository extends RepositoryAdapter<
 
 		@Override
 		public String getIdForValue(DataView view) {
-			return view.getViewId();
+			return view.getId();
 		}
 
 	}

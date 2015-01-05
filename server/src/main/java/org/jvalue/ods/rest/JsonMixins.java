@@ -3,7 +3,6 @@ package org.jvalue.ods.rest;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import org.jvalue.ods.data.DataView;
 import org.jvalue.ods.notifications.clients.Client;
 import org.jvalue.ods.processor.plugin.PluginMetaData;
 import org.jvalue.ods.processor.reference.ProcessorChainReference;
@@ -17,11 +16,6 @@ public class JsonMixins {
 	@JsonIgnoreProperties({"_id", "_rev"})
 	private static interface ProcessorChainReferenceMixin {
 		@JsonProperty("id") String getProcessorChainId();
-	}
-
-	@JsonIgnoreProperties({"_id", "_rev"})
-	private static interface DataViewMixin {
-		@JsonProperty("id") String getViewId();
 	}
 
 	@JsonIgnoreProperties({"_id", "_rev"})
@@ -39,7 +33,6 @@ public class JsonMixins {
 
 	public JsonMixins() {
 		mixins.put(ProcessorChainReference.class, ProcessorChainReferenceMixin.class);
-		mixins.put(DataView.class, DataViewMixin.class);
 		mixins.put(Client.class, NotificationClientMixin.class);
 		mixins.put(PluginMetaData.class, PluginMixin.class);
 	}

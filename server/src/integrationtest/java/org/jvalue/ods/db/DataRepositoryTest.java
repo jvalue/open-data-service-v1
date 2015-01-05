@@ -10,7 +10,7 @@ import org.ektorp.CouchDbInstance;
 import org.ektorp.DocumentNotFoundException;
 import org.junit.Assert;
 import org.junit.Test;
-import org.jvalue.ods.data.DataView;
+import org.jvalue.ods.api.views.DataView;
 
 import java.util.Arrays;
 import java.util.Collection;

@@ -17,7 +17,7 @@ import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.DesignDocument;
 import org.ektorp.support.DesignDocumentFactory;
 import org.ektorp.support.StdDesignDocumentFactory;
-import org.jvalue.ods.data.DataView;
+import org.jvalue.ods.api.views.DataView;
 import org.jvalue.ods.utils.Assert;
 
 import java.util.Collection;
@@ -62,8 +62,8 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 
 
 	public List<JsonNode> executeQuery(DataView view, String param) {
-		if (param == null) return queryView(view.getViewId());
-		else return queryView(view.getViewId(), param);
+		if (param == null) return queryView(view.getId());
+		else return queryView(view.getId(), param);
 	}
 
 
@@ -84,7 +84,7 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 		DesignDocument.View view;
 		if (dataView.getReduceFunction() == null) view = new DesignDocument.View(dataView.getMapFunction());
 		else view = new DesignDocument.View(dataView.getMapFunction(), dataView.getReduceFunction());
-		designDocument.addView(dataView.getViewId(), view);
+		designDocument.addView(dataView.getId(), view);
 
 		if (update) connector.update(designDocument);
 		else connector.create(designDocument);
@@ -96,7 +96,7 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 
 		if (!connector.contains(DESIGN_DOCUMENT_ID)) return;
 		DesignDocument designDocument = connector.get(DesignDocument.class, DESIGN_DOCUMENT_ID);
-		designDocument.removeView(view.getViewId());
+		designDocument.removeView(view.getId());
 		connector.update(designDocument);
 	}
 
@@ -106,14 +106,14 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 
 		if (!connector.contains(DESIGN_DOCUMENT_ID)) return false;
 		DesignDocument designDocument = connector.get(DesignDocument.class, DESIGN_DOCUMENT_ID);
-		return designDocument.containsView(dataView.getViewId());
+		return designDocument.containsView(dataView.getId());
 	}
 
 
 	public Map<String, JsonNode> executeBulkGet(Collection<String> ids) {
 		ViewQuery query = new ViewQuery()
 				.designDocId(DESIGN_DOCUMENT_ID)
-				.viewName(domainIdView.getViewId())
+				.viewName(domainIdView.getId())
 				.includeDocs(true)
 				.keys(ids);
 
@@ -133,7 +133,7 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 	public void removeAll() {
 		ViewQuery query = new ViewQuery()
 				.designDocId(DESIGN_DOCUMENT_ID)
-				.viewName(revAndIdBydomainIdView.getViewId());
+				.viewName(revAndIdBydomainIdView.getId());
 
 		Collection<JsonNode> deletedObjects = new LinkedList<>();
 		for (ViewResult.Row row : connector.queryView(query).getRows()) {
