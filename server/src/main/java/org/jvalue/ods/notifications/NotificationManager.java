@@ -21,11 +21,11 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.inject.Inject;
 
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.data.AbstractDataSourcePropertyManager;
+import org.jvalue.ods.data.AbstractDataSourcePropertyManager2;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.NotificationClientRepository;
-import org.jvalue.ods.db.RepositoryCache;
+import org.jvalue.ods.db.RepositoryCache2;
 import org.jvalue.ods.notifications.clients.Client;
 import org.jvalue.ods.notifications.sender.SenderResult;
 import org.jvalue.ods.notifications.sender.SenderVisitor;
@@ -33,14 +33,14 @@ import org.jvalue.ods.utils.Assert;
 import org.jvalue.ods.utils.Log;
 
 
-public final class NotificationManager extends AbstractDataSourcePropertyManager<Client, NotificationClientRepository> {
+public final class NotificationManager extends AbstractDataSourcePropertyManager2<Client, NotificationClientRepository> {
 
 	private final SenderVisitor senderVisitor;
 
 
 	@Inject
 	NotificationManager(
-			RepositoryCache<NotificationClientRepository> repositoryCache,
+			RepositoryCache2<NotificationClientRepository> repositoryCache,
 			DbFactory dbFactory,
 			SenderVisitor senderVisitor) {
 
@@ -93,12 +93,6 @@ public final class NotificationManager extends AbstractDataSourcePropertyManager
 
 	@Override
 	protected void doRemoveAll(DataSource source) { }
-
-
-	@Override
-	protected Client doGet(NotificationClientRepository repository, String clientId) {
-		return repository.findByClientId(clientId);
-	}
 
 
 	@Override

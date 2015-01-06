@@ -30,15 +30,15 @@ public class NotificationClientRepositoryTest extends AbstractDbTest {
 		Client client2 = new GcmClient("id2", "someGcmId2");
 
 		clientRepository.add(client1);
-		Assert.assertEquals(client1, clientRepository.get(client1.getId()));
+		Assert.assertEquals(client1, clientRepository.findById(client1.getClientId()));
 
 		clientRepository.add(client2);
-		Assert.assertEquals(client2, clientRepository.get(client2.getId()));
+		Assert.assertEquals(client2, clientRepository.findById(client2.getClientId()));
 
 		List<Client> clients = clientRepository.getAll();
 		Assert.assertTrue(clients.contains(client1) && clients.contains(client2));
 
-		Client client = clientRepository.findByClientId("id1");
+		Client client = clientRepository.findById("id1");
 		Assert.assertNotNull(client);
 	}
 
