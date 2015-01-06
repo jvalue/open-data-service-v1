@@ -11,6 +11,7 @@ import org.ektorp.CouchDbConnector;
 import org.ektorp.CouchDbInstance;
 import org.ektorp.http.StdHttpClient;
 import org.ektorp.impl.StdCouchDbInstance;
+import org.jvalue.ods.utils.Cache;
 
 public class DbModule extends AbstractModule {
 
@@ -24,13 +25,11 @@ public class DbModule extends AbstractModule {
 		install(new FactoryModuleBuilder().build(DbFactory.class));
 
 		bind(DataSourceRepository.class).in(Singleton.class);
-		bind(new TypeLiteral<RepositoryCache2<DataViewRepository>>() { }).in(Singleton.class);
-		bind(new TypeLiteral<RepositoryCache2<ProcessorChainReferenceRepository>>() { }).in(Singleton.class);
-		bind(new TypeLiteral<RepositoryCache2<NotificationClientRepository>>() { }).in(Singleton.class);
-		bind(new TypeLiteral<RepositoryCache2<PluginMetaDataRepository>>() { }).in(Singleton.class);
-
-		bind(new TypeLiteral<RepositoryCache<DataRepository>>() { }).in(Singleton.class);
-
+		bind(new TypeLiteral<Cache<DataViewRepository>>() { }).in(Singleton.class);
+		bind(new TypeLiteral<Cache<ProcessorChainReferenceRepository>>() { }).in(Singleton.class);
+		bind(new TypeLiteral<Cache<NotificationClientRepository>>() { }).in(Singleton.class);
+		bind(new TypeLiteral<Cache<PluginMetaDataRepository>>() { }).in(Singleton.class);
+		bind(new TypeLiteral<Cache<DataRepository>>() { }).in(Singleton.class);
 	}
 
 }

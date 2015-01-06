@@ -25,7 +25,7 @@ import org.jvalue.ods.data.AbstractDataSourcePropertyManager;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.NotificationClientRepository;
-import org.jvalue.ods.db.RepositoryCache2;
+import org.jvalue.ods.utils.Cache;
 import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.notifications.sender.SenderResult;
 import org.jvalue.ods.notifications.sender.SenderVisitor;
@@ -40,7 +40,7 @@ public final class NotificationManager extends AbstractDataSourcePropertyManager
 
 	@Inject
 	NotificationManager(
-			RepositoryCache2<NotificationClientRepository> repositoryCache,
+			Cache<NotificationClientRepository> repositoryCache,
 			DbFactory dbFactory,
 			SenderVisitor senderVisitor) {
 

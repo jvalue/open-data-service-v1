@@ -25,7 +25,7 @@ import org.jvalue.ods.api.views.DataView;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DataViewRepository;
 import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.db.RepositoryCache2;
+import org.jvalue.ods.utils.Cache;
 import org.jvalue.ods.utils.Assert;
 
 import java.util.List;
@@ -36,7 +36,7 @@ public final class DataViewManager extends AbstractDataSourcePropertyManager<Dat
 
 	@Inject
 	DataViewManager(
-			RepositoryCache2<DataViewRepository> viewRepositoryCache,
+			Cache<DataViewRepository> viewRepositoryCache,
 			DbFactory dbFactory) {
 
 		super(viewRepositoryCache, dbFactory);

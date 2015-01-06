@@ -29,7 +29,7 @@ import org.jvalue.ods.data.AbstractDataSourcePropertyManager;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.ProcessorChainReferenceRepository;
-import org.jvalue.ods.db.RepositoryCache2;
+import org.jvalue.ods.utils.Cache;
 import org.jvalue.ods.utils.Assert;
 import org.jvalue.ods.utils.Log;
 
@@ -52,7 +52,7 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 	@Inject
 	ProcessorChainManager(
 			ProcessorChainFactory processorChainFactory,
-			RepositoryCache2<ProcessorChainReferenceRepository> referenceRepositoryCache,
+			Cache<ProcessorChainReferenceRepository> referenceRepositoryCache,
 			DbFactory dbFactory,
 			MetricRegistry registry) {
 

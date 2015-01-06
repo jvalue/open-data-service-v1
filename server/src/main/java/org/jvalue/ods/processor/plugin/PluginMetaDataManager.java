@@ -25,7 +25,7 @@ import org.jvalue.ods.data.AbstractDataSourcePropertyManager;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.PluginMetaDataRepository;
-import org.jvalue.ods.db.RepositoryCache2;
+import org.jvalue.ods.utils.Cache;
 import org.jvalue.ods.utils.Assert;
 
 import java.io.InputStream;
@@ -36,7 +36,7 @@ public final class PluginMetaDataManager extends AbstractDataSourcePropertyManag
 
 	@Inject
 	PluginMetaDataManager(
-			RepositoryCache2<PluginMetaDataRepository> repositoryCache,
+			Cache<PluginMetaDataRepository> repositoryCache,
 			DbFactory dbFactory) {
 
 		super(repositoryCache, dbFactory);

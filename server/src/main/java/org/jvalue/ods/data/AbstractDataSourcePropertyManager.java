@@ -22,7 +22,7 @@ import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.RepositoryAdapter;
-import org.jvalue.ods.db.RepositoryCache2;
+import org.jvalue.ods.utils.Cache;
 import org.jvalue.ods.utils.Assert;
 
 import java.util.List;
@@ -30,12 +30,12 @@ import java.util.List;
 
 public abstract class AbstractDataSourcePropertyManager<T, R extends RepositoryAdapter<?, ?, T>> {
 
-	private final RepositoryCache2<R> repositoryCache;
+	private final Cache<R> repositoryCache;
 	private final DbFactory dbFactory;
 
 
 	protected AbstractDataSourcePropertyManager(
-			RepositoryCache2<R> repositoryCache,
+			Cache<R> repositoryCache,
 			DbFactory dbFactory) {
 
 		Assert.assertNotNull(repositoryCache, dbFactory);
