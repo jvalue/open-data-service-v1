@@ -9,10 +9,10 @@ import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DataSourceRepository;
 import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.db.RepositoryCache;
 import org.jvalue.ods.notifications.NotificationManager;
 import org.jvalue.ods.processor.ProcessorChainManager;
 import org.jvalue.ods.utils.Assert;
+import org.jvalue.ods.utils.Cache;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +23,7 @@ import io.dropwizard.lifecycle.Managed;
 public final class DataSourceManager implements Managed {
 
 	private final DataSourceRepository dataSourceRepository;
-	private final RepositoryCache<DataRepository> dataRepositoryCache;
+	private final Cache<DataRepository> dataRepositoryCache;
 	private final CouchDbInstance dbInstance;
 	private final DbFactory dbFactory;
 	private final ProcessorChainManager processorChainManager;
@@ -33,7 +33,7 @@ public final class DataSourceManager implements Managed {
 	@Inject
 	public DataSourceManager(
 			DataSourceRepository dataSourceRepository,
-			RepositoryCache<DataRepository> dataRepositoryCache,
+			Cache<DataRepository> dataRepositoryCache,
 			CouchDbInstance dbInstance,
 			DbFactory dbFactory,
 			ProcessorChainManager processorChainManager,

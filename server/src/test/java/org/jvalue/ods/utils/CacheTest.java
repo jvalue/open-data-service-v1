@@ -1,31 +1,29 @@
-package org.jvalue.ods.db;
+package org.jvalue.ods.utils;
 
 
-import org.ektorp.support.CouchDbRepositorySupport;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import mockit.Mocked;
 import mockit.integration.junit4.JMockit;
 
 @RunWith(JMockit.class)
-public final class RepositoryCacheTest {
+public final class CacheTest {
 
 	@Test
-	public void testCrud(@Mocked CouchDbRepositorySupport<Object> repository) {
+	public void testCrud() {
 
-		RepositoryCache<CouchDbRepositorySupport<Object>> cache = new RepositoryCache<>();
+		Cache<String> cache = new Cache<>();
 
 		Assert.assertEquals(0, cache.getAll().size());
 
-		cache.put("key1", repository);
+		cache.put("key1", "hello");
 		Assert.assertEquals(1, cache.getAll().size());
-		Assert.assertNotNull(cache.get("key1"));
+		Assert.assertEquals("hello", cache.get("key1"));
 
-		cache.put("key2", repository);
+		cache.put("key2", "world");
 		Assert.assertEquals(2, cache.getAll().size());
-		Assert.assertNotNull(cache.get("key2"));
+		Assert.assertEquals("world", cache.get("key2"));
 
 		cache.remove("key2");
 		Assert.assertEquals(1, cache.getAll().size());
