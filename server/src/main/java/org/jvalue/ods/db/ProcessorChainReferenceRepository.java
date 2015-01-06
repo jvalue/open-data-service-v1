@@ -20,13 +20,15 @@ public final class ProcessorChainReferenceRepository extends RepositoryAdapter<
 		ProcessorChainReferenceRepository.ProcessorReferenceChainDocument,
 		ProcessorReferenceChain> {
 
+	private static final String DOCUMENT_ID = "doc.value.id != null && doc.value.processors != null";
+
 	@Inject
 	ProcessorChainReferenceRepository(CouchDbInstance couchDbInstance, @Assisted String databaseName) {
 		super(new ProcessorChainReferenceCouchDbRepository(couchDbInstance, databaseName));
 	}
 
 
-	@View( name = "all", map = "function(doc) { if (doc.value && doc.value.processors) emit(null, doc) }")
+	@View( name = "all", map = "function(doc) { if (" + DOCUMENT_ID + ") emit(null, doc) }")
 	static final class ProcessorChainReferenceCouchDbRepository
 			extends CouchDbRepositorySupport<ProcessorChainReferenceRepository.ProcessorReferenceChainDocument>
 			implements DbDocumentAdaptable<ProcessorChainReferenceRepository.ProcessorReferenceChainDocument, ProcessorReferenceChain> {
@@ -38,7 +40,7 @@ public final class ProcessorChainReferenceRepository extends RepositoryAdapter<
 
 
 		@Override
-		@View(name = "by_id", map = "function(doc) { if (doc.value.id && doc.value.processors) emit(doc.value.id, doc._id) }")
+		@View(name = "by_id", map = "function(doc) { if (" + DOCUMENT_ID + ") emit(doc.value.id, doc._id) }")
 		public ProcessorReferenceChainDocument findById(String processorChainId) {
 			List<ProcessorReferenceChainDocument> chains = queryView("by_id", processorChainId);
 			if (chains.isEmpty()) throw new DocumentNotFoundException(processorChainId);

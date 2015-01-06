@@ -20,13 +20,15 @@ public final class DataViewRepository extends RepositoryAdapter<
 		DataViewRepository.DataViewDocument,
 		DataView> {
 
+	private static final String DOCUMENT_ID = "doc.value.id != null && doc.value.mapFunction != null";
+
 	@Inject
 	DataViewRepository(CouchDbInstance couchDbInstance, @Assisted String databaseName) {
 		super(new DataViewCouchDbRepository(couchDbInstance, databaseName));
 	}
 
 
-	@View( name = "all", map = "function(doc) { if (doc.value.id && doc.value.mapFunction) emit(null, doc) }")
+	@View( name = "all", map = "function(doc) { if (" + DOCUMENT_ID + ") emit(null, doc) }")
 	static final class DataViewCouchDbRepository
 			extends CouchDbRepositorySupport<DataViewRepository.DataViewDocument>
 			implements DbDocumentAdaptable<DataViewRepository.DataViewDocument, DataView> {
@@ -39,7 +41,7 @@ public final class DataViewRepository extends RepositoryAdapter<
 
 
 		@Override
-		@View(name = "by_id", map = "function(doc) { if (doc.value.id && doc.value.mapFunction) emit(doc.value.id, doc._id) }")
+		@View(name = "by_id", map = "function(doc) { if (" + DOCUMENT_ID + ") emit(doc.value.id, doc._id) }")
 		public DataViewDocument findById(String viewId) {
 			List<DataViewDocument> views = queryView("by_id", viewId);
 			if (views.isEmpty()) throw new DocumentNotFoundException(viewId);

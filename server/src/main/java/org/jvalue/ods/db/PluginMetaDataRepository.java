@@ -25,6 +25,7 @@ public final class PluginMetaDataRepository extends RepositoryAdapter<
 		PluginMetaDataRepository.PluginMetaDataDocument,
 		PluginMetaData> {
 
+	private static final String DOCUMENT_ID = "doc.value.id != null && doc.value.author != null";
 
 	@Inject
 	PluginMetaDataRepository(CouchDbInstance couchDbInstance, @Assisted String databaseName) {
@@ -42,7 +43,7 @@ public final class PluginMetaDataRepository extends RepositoryAdapter<
 	}
 
 
-	@View( name = "all", map = "function(doc) { if (doc.value.id && doc.value.author) emit( null, doc)}")
+	@View( name = "all", map = "function(doc) { if (" + DOCUMENT_ID + ") emit( null, doc)}")
 	static final class PluginMetaDataCouchDbRepository
 			extends CouchDbRepositorySupport<PluginMetaDataRepository.PluginMetaDataDocument>
 			implements DbDocumentAdaptable<PluginMetaDataRepository.PluginMetaDataDocument, PluginMetaData> {
@@ -58,7 +59,7 @@ public final class PluginMetaDataRepository extends RepositoryAdapter<
 
 
 		@Override
-		@View(name = "by_id", map = "function(doc) { if (doc.value.id && doc.value.author) emit(doc.value.id, doc._id) }")
+		@View(name = "by_id", map = "function(doc) { if (" + DOCUMENT_ID + ") emit(doc.value.id, doc._id) }")
 		public PluginMetaDataDocument findById(String pluginId) {
 			List<PluginMetaDataDocument> plugins = queryView("by_id", pluginId);
 			if (plugins.isEmpty()) throw new DocumentNotFoundException(pluginId);

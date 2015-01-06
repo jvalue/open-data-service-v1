@@ -19,13 +19,15 @@ public final class NotificationClientRepository extends RepositoryAdapter<
 		NotificationClientRepository.ClientDocument,
 		Client> {
 
+	private static final String DOCUMENT_ID = "doc.value.id != null && doc.value.type != null";
+
 	@Inject
 	NotificationClientRepository(CouchDbInstance couchDbInstance, @Assisted String databaseName) {
 		super(new NotificationClientCouchDbRepository(couchDbInstance, databaseName));
 	}
 
 
-	@View( name = "all", map = "function(doc) { if (doc.value.id && doc.value.type) emit(null, doc)}")
+	@View( name = "all", map = "function(doc) { if (" + DOCUMENT_ID + ") emit(null, doc)}")
 	static class NotificationClientCouchDbRepository
 			extends CouchDbRepositorySupport<NotificationClientRepository.ClientDocument>
 			implements DbDocumentAdaptable<NotificationClientRepository.ClientDocument, Client> {
@@ -36,7 +38,7 @@ public final class NotificationClientRepository extends RepositoryAdapter<
 		}
 
 
-		@View(name = "by_id", map = "function(doc) { if (doc.value.id && doc.value.type) emit(doc.value.id, doc._id)}")
+		@View(name = "by_id", map = "function(doc) { if (" + DOCUMENT_ID + ") emit(doc.value.id, doc._id)}")
 		public ClientDocument findById(String clientId) {
 			List<ClientDocument> clients = queryView("by_id", clientId);
 			if (clients.isEmpty()) throw new DocumentNotFoundException(clientId);

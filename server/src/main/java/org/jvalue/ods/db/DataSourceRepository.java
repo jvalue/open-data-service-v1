@@ -20,6 +20,7 @@ public final class DataSourceRepository extends RepositoryAdapter<
 		DataSource> {
 
 	static final String DATABASE_NAME = "dataSources";
+	private static final String DOCUMENT_ID = "doc.value.id != null && doc.value.domainIdKey != null";
 
 	@Inject
 	DataSourceRepository(@Named(DATABASE_NAME) CouchDbConnector connector) {
@@ -27,7 +28,7 @@ public final class DataSourceRepository extends RepositoryAdapter<
 	}
 
 
-	@View( name = "all", map = "function(doc) { if (doc.value.id && doc.value.domainIdKey) emit(null, doc)}")
+	@View( name = "all", map = "function(doc) { if (" + DOCUMENT_ID + ") emit(null, doc)}")
 	static final class DataSourceCouchDbRepository
 			extends CouchDbRepositorySupport<DataSourceRepository.DataSourceDocument>
 			implements DbDocumentAdaptable<DataSourceRepository.DataSourceDocument, DataSource> {
@@ -40,7 +41,7 @@ public final class DataSourceRepository extends RepositoryAdapter<
 
 
 		@Override
-		@View(name = "by_id", map = "function(doc) { if (doc.value.id && doc.value.domainIdKey) emit(doc.value.id, doc._id)}")
+		@View(name = "by_id", map = "function(doc) { if (" + DOCUMENT_ID + ") emit(doc.value.id, doc._id)}")
 		public DataSourceDocument findById(String sourceId) {
 			List<DataSourceDocument> sources = queryView("by_id", sourceId);
 			if (sources.isEmpty()) throw new DocumentNotFoundException(sourceId);

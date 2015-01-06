@@ -182,7 +182,7 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 		StringBuilder mapBuilder = new StringBuilder();
 		mapBuilder.append("function(doc) { if (");
 		mapBuilder.append(domainIdProperty);
-		mapBuilder.append(") emit(null,doc) }");
+		mapBuilder.append(" != null) emit(null,doc) }");
 		return new DataView(viewName, mapBuilder.toString());
 	}
 
