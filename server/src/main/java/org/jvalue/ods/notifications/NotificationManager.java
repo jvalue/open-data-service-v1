@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.inject.Inject;
 
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.data.AbstractDataSourcePropertyManager2;
+import org.jvalue.ods.data.AbstractDataSourcePropertyManager;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.NotificationClientRepository;
@@ -33,7 +33,7 @@ import org.jvalue.ods.utils.Assert;
 import org.jvalue.ods.utils.Log;
 
 
-public final class NotificationManager extends AbstractDataSourcePropertyManager2<Client, NotificationClientRepository> {
+public final class NotificationManager extends AbstractDataSourcePropertyManager<Client, NotificationClientRepository> {
 
 	private final SenderVisitor senderVisitor;
 

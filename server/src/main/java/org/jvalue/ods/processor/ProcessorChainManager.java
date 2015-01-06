@@ -25,7 +25,7 @@ import com.google.inject.Inject;
 
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.data.AbstractDataSourcePropertyManager2;
+import org.jvalue.ods.data.AbstractDataSourcePropertyManager;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.ProcessorChainReferenceRepository;
@@ -40,7 +40,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 
 
-public final class ProcessorChainManager extends AbstractDataSourcePropertyManager2<ProcessorReferenceChain, ProcessorChainReferenceRepository> {
+public final class ProcessorChainManager extends AbstractDataSourcePropertyManager<ProcessorReferenceChain, ProcessorChainReferenceRepository> {
 
 	private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 	private final Map<ProcessorKey, ScheduledFuture<?>> runningTasks = new HashMap<>();

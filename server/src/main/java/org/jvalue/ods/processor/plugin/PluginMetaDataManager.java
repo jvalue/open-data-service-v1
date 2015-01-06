@@ -21,7 +21,7 @@ import com.google.inject.Inject;
 
 import org.jvalue.ods.api.processors.PluginMetaData;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.data.AbstractDataSourcePropertyManager2;
+import org.jvalue.ods.data.AbstractDataSourcePropertyManager;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.PluginMetaDataRepository;
@@ -31,7 +31,7 @@ import org.jvalue.ods.utils.Assert;
 import java.io.InputStream;
 
 
-public final class PluginMetaDataManager extends AbstractDataSourcePropertyManager2<PluginMetaData, PluginMetaDataRepository> {
+public final class PluginMetaDataManager extends AbstractDataSourcePropertyManager<PluginMetaData, PluginMetaDataRepository> {
 
 
 	@Inject

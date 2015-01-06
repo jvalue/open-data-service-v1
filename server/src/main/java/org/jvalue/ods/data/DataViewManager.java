@@ -31,7 +31,7 @@ import org.jvalue.ods.utils.Assert;
 import java.util.List;
 
 
-public final class DataViewManager extends AbstractDataSourcePropertyManager2<DataView, DataViewRepository> {
+public final class DataViewManager extends AbstractDataSourcePropertyManager<DataView, DataViewRepository> {
 
 
 	@Inject

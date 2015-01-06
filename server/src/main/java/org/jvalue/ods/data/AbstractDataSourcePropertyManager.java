@@ -18,24 +18,24 @@
 package org.jvalue.ods.data;
 
 import org.ektorp.DocumentNotFoundException;
-import org.ektorp.support.CouchDbRepositorySupport;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.db.RepositoryCache;
+import org.jvalue.ods.db.RepositoryAdapter;
+import org.jvalue.ods.db.RepositoryCache2;
 import org.jvalue.ods.utils.Assert;
 
 import java.util.List;
 
 
-public abstract class AbstractDataSourcePropertyManager<T, R extends CouchDbRepositorySupport<T>> {
+public abstract class AbstractDataSourcePropertyManager<T, R extends RepositoryAdapter<?, ?, T>> {
 
-	private final RepositoryCache<R> repositoryCache;
+	private final RepositoryCache2<R> repositoryCache;
 	private final DbFactory dbFactory;
 
 
 	protected AbstractDataSourcePropertyManager(
-			RepositoryCache<R> repositoryCache,
+			RepositoryCache2<R> repositoryCache,
 			DbFactory dbFactory) {
 
 		Assert.assertNotNull(repositoryCache, dbFactory);
@@ -79,11 +79,8 @@ public abstract class AbstractDataSourcePropertyManager<T, R extends CouchDbRepo
 
 	public final T get(DataSource source, String propertyId) {
 		Assert.assertNotNull(source, propertyId);
-		return doGet(assertRepository(source), propertyId);
+		return assertRepository(source).findById(propertyId);
 	}
-
-
-	protected abstract T doGet(R repository, String propertyId);
 
 
 	public final List<T> getAll(DataSource source) {
