@@ -3,13 +3,11 @@ package org.jvalue.ods.rest;
 
 import com.google.inject.Inject;
 
-import org.jvalue.ods.api.processors.ProcessorReference;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.processor.ProcessorChainManager;
-import org.jvalue.ods.processor.reference.ProcessorReferenceFactory;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -34,17 +32,14 @@ public final class FilterChainApi extends AbstractApi {
 
 	private final DataSourceManager sourceManager;
 	private final ProcessorChainManager chainManager;
-	private final ProcessorReferenceFactory referenceFactory;
 
 	@Inject
 	public FilterChainApi(
 			DataSourceManager sourceManager,
-			ProcessorChainManager chainManager,
-			ProcessorReferenceFactory referenceFactory) {
+			ProcessorChainManager chainManager) {
 
 		this.sourceManager = sourceManager;
 		this.chainManager = chainManager;
-		this.referenceFactory = referenceFactory;
 	}
 
 
@@ -81,24 +76,14 @@ public final class FilterChainApi extends AbstractApi {
 		if (chainManager.contains(source, filterChainId))
 			throw RestUtils.createJsonFormattedException("filter chain with id " + filterChainId + " already exists", 409);
 
-		try {
-			for (ProcessorReference processor : processorChain.getProcessors()) {
-				referenceFactory.assertIsValidProcessorReference(processor);
-			}
+		ProcessorReferenceChain chainReference = new ProcessorReferenceChain(
+				filterChainId,
+				processorChain.getProcessors(),
+				processorChain.getExecutionInterval());
 
-			ProcessorReferenceChain chainReference = new ProcessorReferenceChain(
-					filterChainId,
-					processorChain.getProcessors(),
-					processorChain.getExecutionInterval());
-
-			referenceFactory.assertIsValidReferenceChain(chainReference);
-
-			if (processorChain.getExecutionInterval() != null) chainManager.add(source, sourceManager.getDataRepository(source), chainReference);
-			else chainManager.executeOnce(source, sourceManager.getDataRepository(source), chainReference);
-			return chainReference;
-		} catch (ProcessorReferenceFactory.InvalidProcessorException ife) {
-			throw RestUtils.createJsonFormattedException(ife.getMessage(), 400);
-		}
+		if (processorChain.getExecutionInterval() != null) chainManager.add(source, sourceManager.getDataRepository(source), chainReference);
+		else chainManager.executeOnce(source, sourceManager.getDataRepository(source), chainReference);
+		return chainReference;
 	}
 
 

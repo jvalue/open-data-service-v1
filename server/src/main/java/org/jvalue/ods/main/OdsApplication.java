@@ -5,6 +5,11 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.hibernate.validator.HibernateValidator;
+import org.hibernate.validator.HibernateValidatorConfiguration;
+import org.hibernate.validator.cfg.ConstraintMapping;
+import org.hibernate.validator.cfg.GenericConstraintDef;
+import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
 import org.jvalue.ods.configuration.ConfigurationModule;
 import org.jvalue.ods.data.DataModule;
 import org.jvalue.ods.data.DataSourceManager;
@@ -13,6 +18,7 @@ import org.jvalue.ods.monitoring.DbHealthCheck;
 import org.jvalue.ods.monitoring.MonitoringModule;
 import org.jvalue.ods.notifications.NotificationsModule;
 import org.jvalue.ods.processor.ProcessorModule;
+import org.jvalue.ods.processor.reference.ValidChainReference;
 import org.jvalue.ods.rest.DataApi;
 import org.jvalue.ods.rest.DataSourceApi;
 import org.jvalue.ods.rest.DataViewApi;
@@ -24,9 +30,11 @@ import org.jvalue.ods.rest.JsonMixins;
 import org.jvalue.ods.rest.NotificationClientRegistrationApi;
 import org.jvalue.ods.rest.PluginApi;
 import org.jvalue.ods.rest.RestModule;
+import org.jvalue.ods.utils.GuiceConstraintValidatorFactory;
 
 import java.util.Map;
 
+import javax.validation.Validation;
 import javax.ws.rs.core.Context;
 
 import io.dropwizard.Application;
@@ -82,6 +90,17 @@ public final class OdsApplication extends Application<OdsConfig> {
 		environment.jersey().register(new DbExceptionMapper());
 		environment.jersey().register(new JsonExceptionMapper());
 		environment.healthChecks().register(DbHealthCheck.class.getSimpleName(), injector.getInstance(DbHealthCheck.class));
+
+		// setup validation for external classes
+		HibernateValidatorConfiguration validatorContext = Validation.byProvider(HibernateValidator.class).configure();
+		ConstraintMapping mapping = validatorContext.createConstraintMapping();
+		mapping.type(ProcessorReferenceChainDescription.class).constraint(new GenericConstraintDef<>(ValidChainReference.class));
+
+		// setup Guice DI for hibernate validator
+		environment.setValidator(validatorContext.addMapping(mapping)
+				.constraintValidatorFactory(new GuiceConstraintValidatorFactory(injector))
+				.buildValidatorFactory()
+				.getValidator());
 	}
 
 }
