@@ -28,7 +28,8 @@ import java.util.Map;
 
 public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 
-	private static final String DESIGN_DOCUMENT_ID = "_design/" + JsonNode.class.getSimpleName();
+	private static final String DESIGN_DOCUMENT_NAME = "Data";
+	private static final String DESIGN_DOCUMENT_ID = "_design/" + DESIGN_DOCUMENT_NAME;
 	private static final DesignDocumentFactory designFactory = new StdDesignDocumentFactory();
 
 	private final CouchDbConnector connector;
@@ -38,7 +39,7 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 
 	@Inject
 	DataRepository(CouchDbInstance couchDbInstance, @Assisted String databaseName, @Assisted JsonPointer domainIdKey) {
-		super(JsonNode.class, couchDbInstance.createConnector(databaseName, true));
+		super(JsonNode.class, couchDbInstance.createConnector(databaseName, true), DESIGN_DOCUMENT_NAME);
 		this.connector = couchDbInstance.createConnector(databaseName, true);
 		initStandardDesignDocument();
 
