@@ -2,16 +2,10 @@ package org.jvalue.ods.db;
 
 
 import org.ektorp.CouchDbInstance;
-import org.junit.Assert;
-import org.junit.Test;
 import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.api.notifications.GcmClient;
 
-import java.util.List;
-
-public class NotificationClientRepositoryTest extends AbstractDbTest {
-
-	private NotificationClientRepository clientRepository;
+public class NotificationClientRepositoryTest extends AbstractRepositoryAdapterTest<Client> {
 
 	public NotificationClientRepositoryTest() {
 		super(NotificationClientRepositoryTest.class.getSimpleName());
@@ -19,27 +13,14 @@ public class NotificationClientRepositoryTest extends AbstractDbTest {
 
 
 	@Override
-	protected void createDatabase(CouchDbInstance couchDbInstance, String databaseName) {
-		clientRepository = new NotificationClientRepository(couchDbInstance, NotificationClientRepositoryTest.class.getSimpleName());
+	protected RepositoryAdapter<?, ?, Client> doCreateAdapter(CouchDbInstance couchDbInstance, String databaseName) {
+		return new NotificationClientRepository(couchDbInstance, databaseName);
 	}
 
 
-	@Test
-	public void testCustomViews() {
-		Client client1 = new GcmClient("id1", "someGcmId1");
-		Client client2 = new GcmClient("id2", "someGcmId2");
-
-		clientRepository.add(client1);
-		Assert.assertEquals(client1, clientRepository.findById(client1.getId()));
-
-		clientRepository.add(client2);
-		Assert.assertEquals(client2, clientRepository.findById(client2.getId()));
-
-		List<Client> clients = clientRepository.getAll();
-		Assert.assertTrue(clients.contains(client1) && clients.contains(client2));
-
-		Client client = clientRepository.findById("id1");
-		Assert.assertNotNull(client);
+	@Override
+	protected Client doCreateValue(String id, String data) {
+		return new GcmClient(id, data);
 	}
 
 }

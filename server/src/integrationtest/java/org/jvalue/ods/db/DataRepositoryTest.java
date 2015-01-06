@@ -18,7 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public final class DataRepositoryTest extends AbstractDbTest {
+public final class DataRepositoryTest extends AbstractRepositoryTest {
 
 	private static final String DOMAIN_ID = "domainId";
 
@@ -30,7 +30,7 @@ public final class DataRepositoryTest extends AbstractDbTest {
 
 
 	@Override
-	protected void createDatabase(CouchDbInstance couchDbInstance, String databaseName) {
+	protected void doCreateDatabase(CouchDbInstance couchDbInstance, String databaseName) {
 		this.repository = new DataRepository(couchDbInstance, databaseName, JsonPointer.compile("/" + DOMAIN_ID));
 	}
 

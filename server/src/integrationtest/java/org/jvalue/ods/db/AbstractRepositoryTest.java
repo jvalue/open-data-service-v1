@@ -7,12 +7,12 @@ import org.ektorp.impl.StdCouchDbInstance;
 import org.junit.After;
 import org.junit.Before;
 
-public abstract class AbstractDbTest {
+public abstract class AbstractRepositoryTest {
 
 	private final String databaseName;
 	private final CouchDbInstance couchdbInstance;
 
-	public AbstractDbTest(String databaseName) {
+	public AbstractRepositoryTest(String databaseName) {
 		this.databaseName = databaseName;
 		this.couchdbInstance = new StdCouchDbInstance(new StdHttpClient.Builder().build());
 	}
@@ -20,11 +20,11 @@ public abstract class AbstractDbTest {
 
 	@Before
 	public final void createDatabase() {
-		createDatabase(couchdbInstance, databaseName);
+		doCreateDatabase(couchdbInstance, databaseName);
 	}
 
 
-	protected abstract void createDatabase(CouchDbInstance couchdbInstance, String databaseName);
+	protected abstract void doCreateDatabase(CouchDbInstance couchdbInstance, String databaseName);
 
 
 	@After
