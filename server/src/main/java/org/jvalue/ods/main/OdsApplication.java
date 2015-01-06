@@ -9,7 +9,7 @@ import org.hibernate.validator.HibernateValidator;
 import org.hibernate.validator.HibernateValidatorConfiguration;
 import org.hibernate.validator.cfg.ConstraintMapping;
 import org.hibernate.validator.cfg.GenericConstraintDef;
-import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
+import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.configuration.ConfigurationModule;
 import org.jvalue.ods.data.DataModule;
 import org.jvalue.ods.data.DataSourceManager;
@@ -94,7 +94,7 @@ public final class OdsApplication extends Application<OdsConfig> {
 		// setup validation for external classes
 		HibernateValidatorConfiguration validatorContext = Validation.byProvider(HibernateValidator.class).configure();
 		ConstraintMapping mapping = validatorContext.createConstraintMapping();
-		mapping.type(ProcessorReferenceChainDescription.class).constraint(new GenericConstraintDef<>(ValidChainReference.class));
+		mapping.type(ProcessorReferenceChain.class).constraint(new GenericConstraintDef<>(ValidChainReference.class));
 
 		// setup Guice DI for hibernate validator
 		environment.setValidator(validatorContext.addMapping(mapping)
