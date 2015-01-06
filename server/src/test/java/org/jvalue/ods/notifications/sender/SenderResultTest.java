@@ -5,7 +5,7 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 import org.jvalue.ods.api.notifications.Client;
-import org.jvalue.ods.notifications.clients.DummyClient;
+import org.jvalue.ods.notifications.DummyClient;
 
 
 public final class SenderResultTest {

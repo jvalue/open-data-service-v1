@@ -1,4 +1,4 @@
-package org.jvalue.ods.notifications.clients; 
+package org.jvalue.ods.notifications;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

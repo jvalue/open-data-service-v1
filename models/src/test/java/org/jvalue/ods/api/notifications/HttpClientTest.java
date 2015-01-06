@@ -1,33 +1,34 @@
-package org.jvalue.ods.notifications.clients; 
+package org.jvalue.ods.api.notifications;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.Test;
-import org.jvalue.ods.api.notifications.GcmClient;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
 
-public final class GcmClientTest {
+public final class HttpClientTest {
 
 	private static final ObjectMapper mapper = new ObjectMapper();
 
 	@Test
 	public final void testEquals() {
 
-		GcmClient client1 = new GcmClient("0", "0");
-		GcmClient client2 = new GcmClient("0", "0");
-		GcmClient client3 = new GcmClient("1", "0");
-		GcmClient client4 = new GcmClient("0", "1");
+		HttpClient client1 = new HttpClient("0", "url1", true);
+		HttpClient client2 = new HttpClient("0", "url1", true);
+		HttpClient client3 = new HttpClient("0", "url2", true);
+		HttpClient client4 = new HttpClient("0", "url1", false);
+		HttpClient client5 = new HttpClient("1", "url1", true);
 
 		assertEquals(client1, client1);
 		assertEquals(client1, client2);
 		assertNotEquals(client1, client3);
 		assertNotEquals(client1, client4);
+		assertNotEquals(client1, client5);
 		assertNotEquals(client1, null);
 		assertNotEquals(client1, new Object());
 
@@ -35,27 +36,26 @@ public final class GcmClientTest {
 		assertEquals(client1.hashCode(), client2.hashCode());
 		assertNotEquals(client1.hashCode(), client3.hashCode());
 		assertNotEquals(client1.hashCode(), client4.hashCode());
+		assertNotEquals(client1.hashCode(), client5.hashCode());
 	}
 
 
 	@Test
 	public final void testGet() {
-
-		GcmClient client = new GcmClient("0", "1");
+		HttpClient client = new HttpClient("0", "url", true);
 		assertEquals(client.getId(), "0");
-		assertEquals(client.getGcmClientId(), "1");
+		assertEquals(client.getCallbackUrl(), "url");
+		assertEquals(client.getSendData(), true);
 
 	}
 
-	
 
 	@Test
 	public final void testJson() throws JsonProcessingException {
-
-		GcmClient client = new GcmClient("id", "gcm");
+		HttpClient client = new HttpClient("id", "url", false);
 		JsonNode json = mapper.valueToTree(client);
 		assertNotNull(json);
-		assertEquals(client, mapper.treeToValue(json, GcmClient.class));
+		assertEquals(client, mapper.treeToValue(json, HttpClient.class));
 
 	}
 
