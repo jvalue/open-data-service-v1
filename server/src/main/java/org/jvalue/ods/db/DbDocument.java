@@ -11,7 +11,7 @@ import org.ektorp.support.CouchDbDocument;
  *
  * @param <V> type of the object contained within this wrapper.
  */
-abstract class DbDocument<V> extends CouchDbDocument {
+class DbDocument<V> extends CouchDbDocument {
 
 	private V value;
 

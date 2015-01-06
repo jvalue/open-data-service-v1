@@ -8,7 +8,7 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
-import org.jvalue.ods.processor.plugin.PluginMetaData;
+import org.jvalue.ods.api.processors.PluginMetaData;
 import org.jvalue.ods.processor.plugin.PluginMetaDataManager;
 
 import java.io.InputStream;
@@ -66,7 +66,7 @@ public final class PluginApi extends AbstractApi {
 		if (!contentType.equals(TYPE_X_JAVA_ARCHIVE) && !contentType.equals(TYPE_JAVA_ARCHIVE))
 			throw RestUtils.createJsonFormattedException("content type must be " + TYPE_X_JAVA_ARCHIVE + " or " + TYPE_JAVA_ARCHIVE, 415);
 
-		PluginMetaData metaData = new PluginMetaData(pluginId);
+		PluginMetaData metaData = new PluginMetaData(pluginId, "someDummyAuthorForNow");
 		pluginManager.addFile(source, metaData, fileInputStream, contentType);
 		return metaData;
 	}

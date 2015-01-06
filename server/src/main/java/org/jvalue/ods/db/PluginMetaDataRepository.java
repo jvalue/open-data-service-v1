@@ -1,6 +1,8 @@
 package org.jvalue.ods.db;
 
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
@@ -10,47 +12,96 @@ import org.ektorp.CouchDbConnector;
 import org.ektorp.CouchDbInstance;
 import org.ektorp.DocumentNotFoundException;
 import org.ektorp.support.CouchDbRepositorySupport;
-import org.ektorp.support.GenerateView;
 import org.ektorp.support.View;
-import org.jvalue.ods.processor.plugin.PluginMetaData;
+import org.jvalue.ods.api.processors.PluginMetaData;
 
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
-@View( name = "all", map = "function(doc) { if (doc.pluginId) emit( null, doc)}")
-public final class PluginMetaDataRepository extends CouchDbRepositorySupport<PluginMetaData> {
 
-	private final CouchDbConnector connector;
+public final class PluginMetaDataRepository extends RepositoryAdapter<
+		PluginMetaDataRepository.PluginMetaDataCouchDbRepository,
+		PluginMetaDataRepository.PluginMetaDataDocument,
+		PluginMetaData> {
+
 
 	@Inject
 	PluginMetaDataRepository(CouchDbInstance couchDbInstance, @Assisted String databaseName) {
-		super(PluginMetaData.class, couchDbInstance.createConnector(databaseName, true));
-		this.connector = couchDbInstance.createConnector(databaseName, true);
-		initStandardDesignDocument();
-	}
-
-
-	@GenerateView
-	public PluginMetaData findByPluginId(String pluginId) {
-		List<PluginMetaData> plugins = queryView("by_pluginId", pluginId);
-		if (plugins.isEmpty()) throw new DocumentNotFoundException(pluginId);
-		if (plugins.size() > 1) throw new IllegalStateException("found more than one plugin for id " + pluginId);
-		return plugins.get(0);
+		super(new PluginMetaDataCouchDbRepository(couchDbInstance, databaseName));
 	}
 
 
 	public void addAttachment(PluginMetaData metaData, InputStream stream, String contentType) {
-		AttachmentInputStream attachmentInputStream = new AttachmentInputStream(metaData.getPluginId(), stream, contentType);
-		connector.createAttachment(metaData.getId(), metaData.getRevision(), attachmentInputStream);
+		repository.addAttachment(repository.findById(metaData.getId()), stream, contentType);
 	}
 
 
 	public InputStream getAttachment(PluginMetaData metaData) {
-		Map<String, Attachment> attachments = metaData.getAttachments();
-		Attachment attachment = attachments.get(metaData.getPluginId());
-		if (attachment == null) throw new IllegalStateException("did not find any attachments for plugin " + metaData.getPluginId());
-		return connector.getAttachment(metaData.getId(), metaData.getPluginId());
+		return repository.getAttachment(repository.findById(metaData.getId()));
 	}
 
+
+	@View( name = "all", map = "function(doc) { if (doc.value.id && doc.value.author) emit( null, doc)}")
+	static final class PluginMetaDataCouchDbRepository
+			extends CouchDbRepositorySupport<PluginMetaDataRepository.PluginMetaDataDocument>
+			implements DbDocumentAdaptable<PluginMetaDataRepository.PluginMetaDataDocument, PluginMetaData> {
+
+		private final CouchDbConnector connector;
+
+		@Inject
+		PluginMetaDataCouchDbRepository(CouchDbInstance couchDbInstance, @Assisted String databaseName) {
+			super(PluginMetaDataDocument.class, couchDbInstance.createConnector(databaseName, true));
+			this.connector = couchDbInstance.createConnector(databaseName, true);
+			initStandardDesignDocument();
+		}
+
+
+		@Override
+		@View(name = "by_id", map = "function(doc) { if (doc.value.id && doc.value.author) emit(doc.value.id, doc._id) }")
+		public PluginMetaDataDocument findById(String pluginId) {
+			List<PluginMetaDataDocument> plugins = queryView("by_id", pluginId);
+			if (plugins.isEmpty()) throw new DocumentNotFoundException(pluginId);
+			if (plugins.size() > 1) throw new IllegalStateException("found more than one plugin for id " + pluginId);
+			return plugins.get(0);
+		}
+
+
+		@Override
+		public PluginMetaDataDocument createDbDocument(PluginMetaData metaData) {
+			return new PluginMetaDataDocument(metaData);
+		}
+
+
+		@Override
+		public String getIdForValue(PluginMetaData metaData) {
+			return metaData.getId();
+		}
+
+
+		public void addAttachment(PluginMetaDataDocument metaData, InputStream stream, String contentType) {
+			AttachmentInputStream attachmentInputStream = new AttachmentInputStream(metaData.getValue().getId(), stream, contentType);
+			connector.createAttachment(metaData.getId(), metaData.getRevision(), attachmentInputStream);
+		}
+
+
+		public InputStream getAttachment(PluginMetaDataDocument metaData) {
+			Map<String, Attachment> attachments = metaData.getAttachments();
+			Attachment attachment = attachments.get(metaData.getValue().getId());
+			if (attachment == null) throw new IllegalStateException("did not find any attachments for plugin " + metaData.getValue().getId());
+			return connector.getAttachment(metaData.getId(), metaData.getValue().getId());
+		}
+
+	}
+
+
+	static final class PluginMetaDataDocument extends DbDocument<PluginMetaData> {
+
+		@JsonCreator
+		public PluginMetaDataDocument(
+				@JsonProperty("value") PluginMetaData metaData) {
+			super(metaData);
+		}
+
+	}
 }

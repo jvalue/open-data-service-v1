@@ -14,7 +14,7 @@ import java.util.List;
  */
 public abstract class RepositoryAdapter<T extends CouchDbRepositorySupport<D> & DbDocumentAdaptable<D, V>, D extends DbDocument<V>, V> {
 
-	private final T repository;
+	protected final T repository;
 
 	public RepositoryAdapter(T repository) {
 		this.repository = repository;
