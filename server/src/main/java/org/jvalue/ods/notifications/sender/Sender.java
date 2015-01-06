@@ -3,7 +3,7 @@ package org.jvalue.ods.notifications.sender;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.notifications.clients.Client;
+import org.jvalue.ods.api.notifications.Client;
 
 
 public abstract class Sender<T extends Client> {

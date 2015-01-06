@@ -4,8 +4,8 @@ package org.jvalue.ods.notifications;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 
-import org.jvalue.ods.notifications.clients.GcmClient;
-import org.jvalue.ods.notifications.clients.HttpClient;
+import org.jvalue.ods.api.notifications.GcmClient;
+import org.jvalue.ods.api.notifications.HttpClient;
 import org.jvalue.ods.notifications.sender.GcmSender;
 import org.jvalue.ods.notifications.sender.HttpSender;
 import org.jvalue.ods.notifications.sender.Sender;

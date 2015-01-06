@@ -1,7 +1,7 @@
 package org.jvalue.ods.notifications;
 
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.notifications.clients.Client;
+import org.jvalue.ods.api.notifications.Client;
 
 
 public final class NotificationManagerTest {

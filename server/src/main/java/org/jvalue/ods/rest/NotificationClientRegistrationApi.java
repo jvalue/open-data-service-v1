@@ -10,9 +10,9 @@ import org.jvalue.ods.api.notifications.HttpClientDescription;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.notifications.NotificationManager;
-import org.jvalue.ods.notifications.clients.Client;
-import org.jvalue.ods.notifications.clients.GcmClient;
-import org.jvalue.ods.notifications.clients.HttpClient;
+import org.jvalue.ods.api.notifications.Client;
+import org.jvalue.ods.api.notifications.GcmClient;
+import org.jvalue.ods.api.notifications.HttpClient;
 
 import java.util.List;
 

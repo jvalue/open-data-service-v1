@@ -9,7 +9,7 @@ import com.google.inject.Inject;
 
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.main.GcmApiKey;
-import org.jvalue.ods.notifications.clients.GcmClient;
+import org.jvalue.ods.api.notifications.GcmClient;
 import org.jvalue.ods.utils.Log;
 
 import java.io.IOException;
@@ -77,7 +77,7 @@ public final class GcmSender extends Sender<GcmClient> {
 					// same device has more than on registration id: update it
 					return getUpdateClientResult(
 							client,
-							new GcmClient(client.getClientId(), client.getGcmClientId()));
+							new GcmClient(client.getId(), client.getGcmClientId()));
 				}
 			} else {
 				String error = result.getErrorCodeName();

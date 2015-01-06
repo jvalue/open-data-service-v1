@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
-import org.jvalue.ods.notifications.clients.Client;
+import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.notifications.clients.DummyClient;
 
 

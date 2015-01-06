@@ -3,7 +3,7 @@ package org.jvalue.ods.rest;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import org.jvalue.ods.notifications.clients.Client;
+import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.processor.plugin.PluginMetaData;
 
 import java.util.HashMap;

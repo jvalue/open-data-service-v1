@@ -26,7 +26,7 @@ import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.NotificationClientRepository;
 import org.jvalue.ods.db.RepositoryCache2;
-import org.jvalue.ods.notifications.clients.Client;
+import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.notifications.sender.SenderResult;
 import org.jvalue.ods.notifications.sender.SenderVisitor;
 import org.jvalue.ods.utils.Assert;
@@ -60,7 +60,7 @@ public final class NotificationManager extends AbstractDataSourcePropertyManager
 					continue;
 
 				case ERROR:
-					String errorMsg = "Failed to send notification to client " + client.getClientId();
+					String errorMsg = "Failed to send notification to client " + client.getId();
 					if (result.getErrorCause() != null) 
 						errorMsg = errorMsg + " (" + result.getErrorCause().getMessage();
 					if (result.getErrorMsg() != null)
@@ -69,12 +69,12 @@ public final class NotificationManager extends AbstractDataSourcePropertyManager
 					break;
 
 				case REMOVE_CLIENT:
-					Log.info("Unregistering client " + result.getOldClient().getClientId());
+					Log.info("Unregistering client " + result.getOldClient().getId());
 					remove(source, null, result.getOldClient());
 					break;
 					
 				case UPDATE_CLIENT:
-					Log.info("Updating client id to " + result.getNewClient().getClientId());
+					Log.info("Updating client id to " + result.getNewClient().getId());
 					remove(source, null, result.getOldClient());
 					add(source, null, result.getNewClient());
 					break;

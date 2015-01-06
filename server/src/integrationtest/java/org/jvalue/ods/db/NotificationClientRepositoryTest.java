@@ -4,8 +4,8 @@ package org.jvalue.ods.db;
 import org.ektorp.CouchDbInstance;
 import org.junit.Assert;
 import org.junit.Test;
-import org.jvalue.ods.notifications.clients.Client;
-import org.jvalue.ods.notifications.clients.GcmClient;
+import org.jvalue.ods.api.notifications.Client;
+import org.jvalue.ods.api.notifications.GcmClient;
 
 import java.util.List;
 
@@ -30,10 +30,10 @@ public class NotificationClientRepositoryTest extends AbstractDbTest {
 		Client client2 = new GcmClient("id2", "someGcmId2");
 
 		clientRepository.add(client1);
-		Assert.assertEquals(client1, clientRepository.findById(client1.getClientId()));
+		Assert.assertEquals(client1, clientRepository.findById(client1.getId()));
 
 		clientRepository.add(client2);
-		Assert.assertEquals(client2, clientRepository.findById(client2.getClientId()));
+		Assert.assertEquals(client2, clientRepository.findById(client2.getId()));
 
 		List<Client> clients = clientRepository.getAll();
 		Assert.assertTrue(clients.contains(client1) && clients.contains(client2));

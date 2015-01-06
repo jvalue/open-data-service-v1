@@ -1,6 +1,9 @@
-package org.jvalue.ods.notifications.clients; 
+package org.jvalue.ods.notifications.clients;
 
 
+import org.jvalue.ods.api.notifications.ClientVisitor;
+import org.jvalue.ods.api.notifications.GcmClient;
+import org.jvalue.ods.api.notifications.HttpClient;
 
 public final class DummyClientVisitor implements ClientVisitor<String, String> {
 

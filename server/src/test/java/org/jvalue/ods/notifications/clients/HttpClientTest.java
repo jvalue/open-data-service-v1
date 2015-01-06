@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.Test;
+import org.jvalue.ods.api.notifications.HttpClient;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -43,7 +44,7 @@ public final class HttpClientTest {
 	@Test
 	public final void testGet() {
 		HttpClient client = new HttpClient("0", "url", true);
-		assertEquals(client.getClientId(), "0");
+		assertEquals(client.getId(), "0");
 		assertEquals(client.getCallbackUrl(), "url");
 		assertEquals(client.getSendData(), true);
 

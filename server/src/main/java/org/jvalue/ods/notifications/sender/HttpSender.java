@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.notifications.clients.HttpClient;
+import org.jvalue.ods.api.notifications.HttpClient;
 
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;

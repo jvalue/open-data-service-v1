@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.inject.Inject;
 
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.notifications.clients.ClientVisitor;
-import org.jvalue.ods.notifications.clients.GcmClient;
-import org.jvalue.ods.notifications.clients.HttpClient;
+import org.jvalue.ods.api.notifications.ClientVisitor;
+import org.jvalue.ods.api.notifications.GcmClient;
+import org.jvalue.ods.api.notifications.HttpClient;
 
 public final class SenderVisitor implements ClientVisitor<SenderVisitor.DataEntry, SenderResult> {
 

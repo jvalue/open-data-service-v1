@@ -3,7 +3,7 @@ package org.jvalue.ods.notifications.sender;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.notifications.clients.GcmClient;
+import org.jvalue.ods.api.notifications.GcmClient;
 
 import mockit.Expectations;
 import mockit.Mocked;

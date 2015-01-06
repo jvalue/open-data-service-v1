@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.Test;
+import org.jvalue.ods.api.notifications.GcmClient;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -41,7 +42,7 @@ public final class GcmClientTest {
 	public final void testGet() {
 
 		GcmClient client = new GcmClient("0", "1");
-		assertEquals(client.getClientId(), "0");
+		assertEquals(client.getId(), "0");
 		assertEquals(client.getGcmClientId(), "1");
 
 	}

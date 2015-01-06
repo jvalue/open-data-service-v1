@@ -1,6 +1,8 @@
 package org.jvalue.ods.notifications.clients; 
 
 import org.junit.Test;
+import org.jvalue.ods.api.notifications.GcmClient;
+import org.jvalue.ods.api.notifications.HttpClient;
 
 import static org.junit.Assert.assertEquals;
 

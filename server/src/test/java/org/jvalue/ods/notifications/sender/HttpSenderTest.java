@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.notifications.clients.HttpClient;
+import org.jvalue.ods.api.notifications.HttpClient;
 
 import mockit.Expectations;
 import mockit.Mocked;
