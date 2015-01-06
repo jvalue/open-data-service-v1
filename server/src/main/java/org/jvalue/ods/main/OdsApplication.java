@@ -10,7 +10,6 @@ import org.hibernate.validator.HibernateValidatorConfiguration;
 import org.hibernate.validator.cfg.ConstraintMapping;
 import org.hibernate.validator.cfg.GenericConstraintDef;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
-import org.jvalue.ods.configuration.ConfigurationModule;
 import org.jvalue.ods.data.DataModule;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.db.DbModule;
@@ -72,7 +71,6 @@ public final class OdsApplication extends Application<OdsConfig> {
 				new ConfigModule(configuration),
 				new ProcessorModule(),
 				new RestModule(),
-				new ConfigurationModule(),
 				new DbModule(),
 				new NotificationsModule(),
 				new DataModule());
