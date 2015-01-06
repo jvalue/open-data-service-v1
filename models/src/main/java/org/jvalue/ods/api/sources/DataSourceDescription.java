@@ -10,6 +10,7 @@ import com.google.common.base.Objects;
 import org.jvalue.ods.api.utils.JsonPointerDeserializer;
 import org.jvalue.ods.api.utils.JsonPointerSerializer;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 
@@ -19,7 +20,7 @@ public class DataSourceDescription {
 	@JsonDeserialize(using = JsonPointerDeserializer.class)
 	@NotNull private final JsonPointer domainIdKey;
 	@NotNull private final JsonNode schema;
-	@NotNull private final DataSourceMetaData metaData;
+	@Valid @NotNull private final DataSourceMetaData metaData;
 
 	public DataSourceDescription(
 			@JsonProperty("domainIdKey") JsonPointer domainIdKey,

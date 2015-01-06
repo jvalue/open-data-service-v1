@@ -7,12 +7,13 @@ import com.google.common.base.Objects;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 public class ProcessorReferenceChainDescription {
 
-	@NotNull private final List<ProcessorReference> processors;
-	private final ExecutionInterval executionInterval;
+	@Valid @NotNull private final List<ProcessorReference> processors;
+	@Valid private final ExecutionInterval executionInterval;
 
 	public ProcessorReferenceChainDescription(
 			@JsonProperty("processors") List<ProcessorReference> processors,
