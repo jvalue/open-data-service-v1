@@ -26,6 +26,10 @@ public final class AdapterModule extends AbstractModule {
 						SourceAdapter.class,
 						Names.named(SourceAdapterFactory.NAME_OSM_SOURCE_ADAPTER),
 						OsmSourceAdapter.class)
+				.implement(
+						SourceAdapter.class,
+						Names.named(SourceAdapterFactory.NAME_PEGEL_PORTAL_MV_SOURCE_ADAPTER),
+						PegelPortalMvSourceAdapter.class)
 				.build(SourceAdapterFactory.class));
 	}
 

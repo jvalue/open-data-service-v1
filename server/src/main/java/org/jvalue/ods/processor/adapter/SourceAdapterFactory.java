@@ -15,7 +15,8 @@ public interface SourceAdapterFactory {
 			NAME_JSON_SOURCE_ADAPTER = "JsonSourceAdapter",
 			NAME_CSV_SOURCE_ADAPTER = "CsvSourceAdapter",
 			NAME_XML_SOURCE_ADAPTER = "XmlSourceAdapter",
-			NAME_OSM_SOURCE_ADAPTER = "OsmSourceAdapter";
+			NAME_OSM_SOURCE_ADAPTER = "OsmSourceAdapter",
+			NAME_PEGEL_PORTAL_MV_SOURCE_ADAPTER = "PegelPortalMvSourceAdapter";
 
 	static final String
 			ARGUMENT_SOURCE_URL = "sourceUrl",
@@ -50,4 +51,10 @@ public interface SourceAdapterFactory {
 			DataSource source,
 			@Argument(ARGUMENT_SOURCE_URL) String sourceUrl);
 
+
+	@CreationMethod(name = NAME_PEGEL_PORTAL_MV_SOURCE_ADAPTER, filterType = ProcessorType.SOURCE_ADAPTER)
+	@Named(NAME_PEGEL_PORTAL_MV_SOURCE_ADAPTER)
+	public SourceAdapter createPegelPortalMvSourceAdapter(
+			DataSource source,
+			@Argument(ARGUMENT_SOURCE_URL) String sourceUrl);
 }
