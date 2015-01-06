@@ -5,7 +5,7 @@ import com.google.inject.Inject;
 
 import org.apache.commons.lang3.ClassUtils;
 import org.jvalue.ods.api.processors.ProcessorReference;
-import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
+import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.processor.specification.ProcessorType;
 import org.jvalue.ods.processor.specification.Specification;
 import org.jvalue.ods.processor.specification.SpecificationManager;
@@ -16,7 +16,7 @@ import java.util.Map;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class ChainReferenceValidator implements ConstraintValidator<ValidChainReference, ProcessorReferenceChainDescription> {
+public class ChainReferenceValidator implements ConstraintValidator<ValidChainReference, ProcessorReferenceChain> {
 
 	private final SpecificationManager specificationManager;
 
@@ -31,7 +31,7 @@ public class ChainReferenceValidator implements ConstraintValidator<ValidChainRe
 	}
 
 	@Override
-	public boolean isValid(ProcessorReferenceChainDescription chainReference, ConstraintValidatorContext context) {
+	public boolean isValid(ProcessorReferenceChain chainReference, ConstraintValidatorContext context) {
 		if (chainReference == null) return true;
 
 		List<ProcessorReference> references = chainReference.getProcessors();

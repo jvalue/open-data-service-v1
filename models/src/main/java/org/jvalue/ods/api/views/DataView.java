@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public final class DataView extends DataViewDescription {
+public final class DataView extends AbstractDataView {
 
 	@NotNull private final String id;
 

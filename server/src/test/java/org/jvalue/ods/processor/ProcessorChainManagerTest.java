@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.jvalue.ods.api.processors.ExecutionInterval;
+import org.jvalue.ods.api.processors.ProcessorReference;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.db.DataRepository;
@@ -38,6 +39,10 @@ public final class ProcessorChainManagerTest {
 	@Mocked private MetricRegistry registry;
 	private ProcessorChainManager manager;
 
+	private final ProcessorReferenceChain reference = new ProcessorReferenceChain(
+			"someId",
+			new LinkedList<ProcessorReference>(),
+			new ExecutionInterval(75, TimeUnit.MILLISECONDS));
 
 	@Before
 	public void createFilterChainManager() {
@@ -49,11 +54,10 @@ public final class ProcessorChainManagerTest {
 	public void testAddAndRemove(
 			@Mocked final DataSource source,
 			@Mocked final DataRepository dataRepository,
-			@Mocked final ProcessorReferenceChain reference,
 			@Mocked final ProcessorChainReferenceRepository referenceRepository,
 			@Mocked final ProcessorChain chain) throws Exception {
 
-		setupStartingFilterChain(source, dataRepository, referenceRepository, reference, chain);
+		setupStartingFilterChain(source, dataRepository, referenceRepository, chain);
 
 		// add chain
 		manager.add(source, dataRepository, reference);
@@ -132,11 +136,10 @@ public final class ProcessorChainManagerTest {
 	public void testStartAndStopAll(
 			@Mocked final DataSource source,
 			@Mocked final DataRepository dataRepository,
-			@Mocked final ProcessorReferenceChain reference,
 			@Mocked final ProcessorChainReferenceRepository referenceRepository,
 			@Mocked final ProcessorChain chain) throws Exception {
 
-		setupStartingFilterChain(source, dataRepository, referenceRepository, reference, chain);
+		setupStartingFilterChain(source, dataRepository, referenceRepository, chain);
 		new Expectations() {{
 			referenceRepository.getAll();
 			List<ProcessorReferenceChain> list = new LinkedList<>();
@@ -166,15 +169,11 @@ public final class ProcessorChainManagerTest {
 			final DataSource source,
 			final DataRepository dataRepository,
 			final ProcessorChainReferenceRepository referenceRepository,
-			final ProcessorReferenceChain reference,
 			final ProcessorChain chain) {
 
 		new Expectations() {{
 			dbFactory.createFilterChainReferenceRepository(anyString);
 			result = referenceRepository;
-
-			reference.getExecutionInterval();
-			result = new ExecutionInterval(75, TimeUnit.MILLISECONDS);
 
 			chainFactory.createProcessorChain(reference, source, dataRepository);
 			result = chain;

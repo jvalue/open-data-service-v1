@@ -8,7 +8,7 @@ import com.google.common.base.Objects;
 import javax.validation.constraints.NotNull;
 
 
-public final class DataSource extends DataSourceDescription {
+public final class DataSource extends AbstractDataSource {
 
 	@NotNull private final String id;
 

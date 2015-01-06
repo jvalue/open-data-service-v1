@@ -11,24 +11,20 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.jvalue.ods.api.sources.DataSource;
+import org.jvalue.ods.api.sources.DataSourceMetaData;
 
-import mockit.Expectations;
 import mockit.Mocked;
 import mockit.integration.junit4.JMockit;
 
 @RunWith(JMockit.class)
 public final class IntToStringKeyFilterTest {
 
+
 	@Mocked private MetricRegistry registry;
 
-
 	@Test
-	public void testObjectParentNode(@Mocked final DataSource source) throws Exception {
-		new Expectations() {{
-			source.getDomainIdKey();
-			result = JsonPointer.compile("/parent/id");
-		}};
-
+	public void testObjectParentNode() throws Exception {
+		DataSource source = createDataSource("/parent/id");
 		ObjectNode baseNode = new ObjectNode(JsonNodeFactory.instance);
 		ObjectNode parentNode = baseNode.putObject("parent");
 		parentNode.put("id", 10);
@@ -40,12 +36,8 @@ public final class IntToStringKeyFilterTest {
 
 
 	@Test
-	public void testArrayParentNode(@Mocked final DataSource source) throws Exception {
-		new Expectations() {{
-			source.getDomainIdKey();
-			result = JsonPointer.compile("/parent/0");
-		}};
-
+	public void testArrayParentNode() throws Exception {
+		DataSource source = createDataSource("/parent/0");
 		ObjectNode baseNode = new ObjectNode(JsonNodeFactory.instance);
 		ArrayNode parentNode = baseNode.putArray("parent");
 		parentNode.add(10);
@@ -53,6 +45,15 @@ public final class IntToStringKeyFilterTest {
 		ObjectNode resultNode = new IntToStringKeyFilter(source, registry).doProcess(baseNode);
 
 		Assert.assertTrue(resultNode.path("parent").get(0).isTextual());
+	}
+
+
+	private DataSource createDataSource(String jsonPointer) {
+		return new DataSource(
+				"someId",
+				JsonPointer.compile(jsonPointer),
+				new ObjectNode(JsonNodeFactory.instance),
+				new DataSourceMetaData("", "", "", "", "", "", ""));
 	}
 
 }

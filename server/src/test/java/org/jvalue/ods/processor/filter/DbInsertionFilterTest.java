@@ -11,6 +11,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.jvalue.ods.api.sources.DataSource;
+import org.jvalue.ods.api.sources.DataSourceMetaData;
 import org.jvalue.ods.db.DataRepository;
 
 import java.util.Collection;
@@ -35,18 +36,20 @@ public final class DbInsertionFilterTest {
 			VALUE_ID = "someId",
 			VALUE_REV = "someRev";
 
+	private final DataSource source = new DataSource(
+			"someId",
+			JsonPointer.compile("/" + DOMAIN_ID),
+			new ObjectNode(JsonNodeFactory.instance),
+			new DataSourceMetaData("", "", "", "", "", "", ""));
+
 	@Mocked private MetricRegistry registry;
+
 
 
 	@Test
 	@SuppressWarnings("unchecked")
 	public void testAdd(
-			@Mocked final DataSource source,
 			@Mocked final DataRepository repository) throws Exception {
-
-		new Expectations() {{
-			source.getDomainIdKey(); result = JsonPointer.compile("/" + DOMAIN_ID);
-		}};
 
 		AbstractFilter<ObjectNode, ObjectNode> filter = new DbInsertionFilter(repository, source, true, registry);
 		filter.filter(createObject(VALUE_DOMAIN_ID));
@@ -61,13 +64,9 @@ public final class DbInsertionFilterTest {
 	@Test
 	@SuppressWarnings("unchecked")
 	public void testUpdate(
-			@Mocked final DataSource source,
 			@Mocked final DataRepository repository) throws Exception {
 
 		new Expectations() {{
-			source.getDomainIdKey();
-			result = JsonPointer.compile("/" + DOMAIN_ID);
-
 			Collection<String> keys = new LinkedList<>();
 			keys.add(VALUE_DOMAIN_ID);
 			Map<String, JsonNode> nodes = new HashMap<>();

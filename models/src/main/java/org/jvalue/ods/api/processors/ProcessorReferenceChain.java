@@ -8,7 +8,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-public final class ProcessorReferenceChain extends ProcessorReferenceChainDescription {
+public final class ProcessorReferenceChain extends AbstractProcessorReferenceChain {
 
 	@NotNull private final String id;
 
