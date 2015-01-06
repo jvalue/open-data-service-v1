@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.junit.After;
 import org.junit.Before;
+import org.jvalue.ods.api.notifications.NotificationApi;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceApi;
 import org.jvalue.ods.api.sources.DataSourceDescription;
@@ -19,6 +20,7 @@ import retrofit.converter.JacksonConverter;
 public abstract class AbstractApiTest {
 
 	protected final DataSourceApi dataSourceApi;
+	protected final NotificationApi notificationApi;
 
 	protected final JsonPointer domainIdKey = JsonPointer.compile("/someId");
 	protected final JsonNode schema = new ObjectNode(JsonNodeFactory.instance);
@@ -36,6 +38,7 @@ public abstract class AbstractApiTest {
 				.build();
 
 		this.dataSourceApi = restAdapter.create(DataSourceApi.class);
+		this.notificationApi = restAdapter.create(NotificationApi.class);
 	}
 
 
