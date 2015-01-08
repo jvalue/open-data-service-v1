@@ -25,10 +25,10 @@ import java.util.Iterator;
 public interface SourceAdapter extends Iterable<ObjectNode> {
 
 	/**
-	 * @return an iterator used to stream access the data of this source. Note that iterator will
-	 * throw an {@link org.jvalue.ods.processor.adapter.SourceAdapterException} in case of
-	 * any errors.
+	 * @return an iterator used to stream access the data of this source.
+	 * @throws org.jvalue.ods.processor.adapter.SourceAdapterException in case there was an error
+	 * while reading data from the source.
 	 */
-	public Iterator<ObjectNode> iterator();
+	public Iterator<ObjectNode> iterator() throws SourceAdapterException;
 
 }
