@@ -15,7 +15,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 /**
- * Cache for {@link org.jvalue.ods.notifications.sender.Sender} instance while data
+ * Cache for {@link Sender} instance while data
  * is being streamed to clients.
  */
 public final class SenderCache {

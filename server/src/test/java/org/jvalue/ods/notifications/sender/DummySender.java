@@ -6,7 +6,7 @@ import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.notifications.DummyClient;
 
 
-final class DummySender extends Sender<DummyClient> {
+final class DummySender extends AbstractSender<DummyClient> {
 
 	protected DummySender(DataSource source, DummyClient client) {
 		super(source, client);

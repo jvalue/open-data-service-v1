@@ -10,7 +10,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 
-public final class SenderTest {
+public final class AbstractSenderTest {
 
 	private final DataSource source = new DataSource("someId", null, null, null);
 	private DummySender sender;

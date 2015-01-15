@@ -21,7 +21,7 @@ import retrofit.http.Body;
 import retrofit.http.POST;
 
 
-public final class HttpSender extends Sender<HttpClient> {
+final class HttpSender extends AbstractSender<HttpClient> {
 
 	private final ArrayNode buffer = new ArrayNode(JsonNodeFactory.instance);
 

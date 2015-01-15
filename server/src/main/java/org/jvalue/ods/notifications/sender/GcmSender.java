@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public final class GcmSender extends Sender<GcmClient> {
+final class GcmSender extends AbstractSender<GcmClient> {
 	
 	static final String 
 		DATA_KEY_SOURCE = "source",
