@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.jvalue.ods.api.processors.ExecutionInterval;
 import org.jvalue.ods.api.processors.ProcessorReference;
-import org.jvalue.ods.api.processors.ProcessorReferenceChain;
+import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
 import org.jvalue.ods.processor.adapter.SourceAdapterFactory;
 import org.jvalue.ods.processor.filter.FilterFactory;
 import org.jvalue.ods.processor.specification.ProcessorType;
@@ -48,13 +48,13 @@ public final class ChainReferenceValidatorTest {
 
 
 	@Before
-	public void createFactory() {
+	public void createValidator() {
 		validator = new ChainReferenceValidator(descriptionManager);
 	}
 
 
 	@Test
-	public void testCreateFilterChainReference() {
+	public void testValidReference() {
 		new Expectations() {{
 			Map<String, Class<?>> argTypes = new HashMap<>();
 			argTypes.put("key1", String.class);
@@ -72,9 +72,7 @@ public final class ChainReferenceValidatorTest {
 			result = Deencapsulation.newInnerInstance(Specification.class, FilterFactory.NAME_NOTIFICATION_FILTER, ProcessorType.FILTER, argTypes);
 		}};
 
-		String chainId = "someId";
-		ProcessorReferenceChain reference = new ProcessorReferenceChain(
-				chainId,
+		ProcessorReferenceChainDescription reference = new ProcessorReferenceChainDescription(
 				Arrays.asList(jsonSourceFilter, dbInsertionFilter, notificationFilter),
 				new ExecutionInterval(2, TimeUnit.SECONDS));
 
@@ -82,15 +80,16 @@ public final class ChainReferenceValidatorTest {
 	}
 
 
-	public void testCreateEmptyFilterChainReference() {
-		Assert.assertFalse(validator.isValid(new ProcessorReferenceChain(
-				"someId",
+	@Test
+	public void testEmptyReference() {
+		Assert.assertFalse(validator.isValid(new ProcessorReferenceChainDescription(
 				new LinkedList<ProcessorReference>(),
 				new ExecutionInterval(2, TimeUnit.SECONDS)), context));
 	}
 
 
-	public void testCreateInvalidFilterChainReference() {
+	@Test
+	public void testMissingSourceAdapterReference() {
 		new Expectations() {{
 			Map<String, Class<?>> argTypes = new HashMap<>();
 			argTypes.put("key3", Boolean.class);
@@ -98,24 +97,23 @@ public final class ChainReferenceValidatorTest {
 			result = Deencapsulation.newInnerInstance(Specification.class, FilterFactory.NAME_NOTIFICATION_FILTER, ProcessorType.FILTER, argTypes);
 		}};
 
-		Assert.assertFalse(validator.isValid(new ProcessorReferenceChain(
-				"someId",
-				Arrays.asList(dbInsertionFilter),
+		Assert.assertFalse(validator.isValid(new ProcessorReferenceChainDescription(
+				Arrays.asList(notificationFilter),
 				new ExecutionInterval(2, TimeUnit.SECONDS)), context));
 	}
 
 
+	@Test
 	public void testMissingParameter() {
 		new Expectations()
 		{{
 			final Map<String, Class<?>> argTypes = new HashMap<>();
-			argTypes.put("key1", String.class);
+			argTypes.put("someMissingKey", String.class);
 			descriptionManager.getByName(SourceAdapterFactory.NAME_JSON_SOURCE_ADAPTER);
 			result = Deencapsulation.newInnerInstance(Specification.class, SourceAdapterFactory.NAME_JSON_SOURCE_ADAPTER, ProcessorType.SOURCE_ADAPTER, argTypes);
 		}};
 
-		Assert.assertFalse(validator.isValid(new ProcessorReferenceChain(
-				"someId",
+		Assert.assertFalse(validator.isValid(new ProcessorReferenceChainDescription(
 				Arrays.asList(jsonSourceFilter),
 				new ExecutionInterval(2, TimeUnit.SECONDS)), context));
 	}

@@ -1,4 +1,4 @@
-package org.jvalue.ods.sources;
+package org.jvalue.ods;
 
 
 import org.jvalue.ods.api.data.DataApi;
