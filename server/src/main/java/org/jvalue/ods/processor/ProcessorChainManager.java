@@ -172,17 +172,17 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 
 		@Override
 		public void run() {
+			Log.info("starting processor chain \"" + reference.getId() + "\" for source \"" + source.getId() + "\"");
+			runningTasks.add(source, reference);
 			Timer.Context timerContext = processorTimer.time();
 			try {
-				Log.info("starting processor chain \"" + reference.getId() + "\" for source \"" + source.getId() + "\"");
-				runningTasks.add(source, reference);
 				processorChainFactory.createProcessorChain(reference, source, dataRepository).startProcessing();
-				runningTasks.remove(source, reference);
-				Log.info("stopping processor chain \"" + reference.getId() + "\" for source \"" + source.getId() + "\"");
 			} catch (Throwable throwable) {
 				Log.error("error while running processor chain", throwable);
 			} finally {
 				timerContext.stop();
+				runningTasks.remove(source, reference);
+				Log.info("stopping processor chain \"" + reference.getId() + "\" for source \"" + source.getId() + "\"");
 			}
 		}
 
