@@ -1,15 +1,15 @@
 package org.jvalue.ods.notifications.sender;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.android.gcm.server.Constants;
 import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.MulticastResult;
 import com.google.android.gcm.server.Result;
 import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
-import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.main.GcmApiKey;
 import org.jvalue.ods.api.notifications.GcmClient;
+import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.utils.Log;
 
 import java.io.IOException;
@@ -29,25 +29,38 @@ public final class GcmSender extends Sender<GcmClient> {
 	private final com.google.android.gcm.server.Sender gcmSender;
 
 	@Inject
-	GcmSender(@GcmApiKey String gcmApiKey) {
-		gcmSender = new com.google.android.gcm.server.Sender(gcmApiKey);
+	GcmSender(
+			@Assisted GcmClient client,
+			com.google.android.gcm.server.Sender gcmSender) {
+
+		super(client);
+		this.gcmSender = gcmSender;
 	}
-	
-	
+
+
 	@Override
-	public SenderResult notifySourceChanged(
-			GcmClient client, 
-			DataSource source,
-			ArrayNode data) {
+	public void onNewDataStart(DataSource source) {
+		// nothing to do here
+	}
+
+
+	@Override
+	public void onNewDataItem(DataSource source, ObjectNode data) {
+		// nothing to do here
+	}
+
+
+	@Override
+	public void onNewDataComplete(DataSource source) {
 
 		// gather data
-		Map<String,String> payload = new HashMap<String,String>();
+		Map<String,String> payload = new HashMap<>();
 		payload.put(DATA_KEY_SOURCE, source.getId());
 		payload.put(DATA_KEY_DEBUG, Boolean.TRUE.toString());
 
 		String collapseKey = source.getId();
 
-		final List<String> devices = new ArrayList<String>();
+		final List<String> devices = new ArrayList<>();
 		devices.add(client.getGcmClientId());
 
 		// send
@@ -60,7 +73,8 @@ public final class GcmSender extends Sender<GcmClient> {
 		try {
 			multicastResult = gcmSender.send(builder.build(), devices, 5);
 		} catch (IOException io) {
-			return getErrorResult(io);
+			setErrorResult(io);
+			return;
 		}
 
 		// analyze the results
@@ -75,22 +89,25 @@ public final class GcmSender extends Sender<GcmClient> {
 				String canonicalRegId = result.getCanonicalRegistrationId();
 				if (canonicalRegId != null) {
 					// same device has more than on registration id: update it
-					return getUpdateClientResult(
+					setUpdateClientResult(
 							client,
-							new GcmClient(client.getId(), client.getGcmClientId()));
+							new GcmClient(client.getId(), canonicalRegId));
+					return;
 				}
 			} else {
 				String error = result.getErrorCodeName();
 				if (error.equals(Constants.ERROR_NOT_REGISTERED)) {
 					// application has been removed from device - unregister it
-					return getRemoveClientResult(client);
+					setRemoveClientResult(client);
+					return;
 				} else {
-					return getErrorResult(error);
+					setErrorResult(error);
+					return;
 				}
 			}
 		}
 
-		return getSuccessResult();
+		setSuccessResult();
 	}
 
 }

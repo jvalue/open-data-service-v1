@@ -1,8 +1,8 @@
 package org.jvalue.ods.processor.filter;
 
 import com.codahale.metrics.MetricRegistry;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,12 +24,12 @@ public final class NotificationFilterTest {
 			@Mocked final DataSource source,
 			@Mocked final NotificationManager manager) throws Exception {
 
-		AbstractFilter<ArrayNode, ArrayNode> filter = new NotificationFilter(source, manager, registry);
-		final ArrayNode data = new ArrayNode(JsonNodeFactory.instance);
+		Filter<ObjectNode, ObjectNode> filter = new NotificationFilter(source, manager, registry);
+		final ObjectNode data = new ObjectNode(JsonNodeFactory.instance);
 		filter.filter(data);
 
 		new Verifications() {{
-			manager.notifySourceChanged(source, data);
+			manager.onNewDataItem(source, data);
 		}};
 	}
 

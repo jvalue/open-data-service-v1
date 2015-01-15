@@ -1,5 +1,6 @@
 package org.jvalue.ods.notifications.sender;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -7,19 +8,15 @@ import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
 import com.squareup.okhttp.mockwebserver.RecordedRequest;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.notifications.HttpClient;
+import org.jvalue.ods.api.sources.DataSource;
 
-import mockit.Expectations;
-import mockit.Mocked;
 import mockit.integration.junit4.JMockit;
 import retrofit.RetrofitError;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 
@@ -28,18 +25,8 @@ public final class HttpSenderTest {
 
 	private static final String SOURCE_ID = "someSourceId";
 
-	@Mocked
-	private DataSource source;
-	private final HttpSender sender = new HttpSender();
-
-
-	@Before
-	public void setupSource() {
-		new Expectations() {{
-			source.getId();
-			result = SOURCE_ID;
-		}};
-	}
+	private final DataSource source = new DataSource(SOURCE_ID, null, null, null);
+	private HttpSender sender;
 
 
 	@Test
@@ -51,13 +38,16 @@ public final class HttpSenderTest {
 		String path = "/foo/bar/data/";
 		String callbackUrl = server.getUrl(path).toString();
 		ArrayNode data = new ArrayNode(JsonNodeFactory.instance);
-		data.add(0);
-		data.add(1);
+		data.addObject().put("hello", "world");
+		data.addObject().put("and", "again");
 
-		HttpClient client = new HttpClient(SOURCE_ID, callbackUrl, true);
-		SenderResult result = sender.notifySourceChanged(client, source, data);
+		setupSender(new HttpClient(SOURCE_ID, callbackUrl, true));
 
-		assertEquals(SenderResult.Status.SUCCESS, result.getStatus());
+		sender.onNewDataStart(source);
+		for (JsonNode item : data) sender.onNewDataItem(source, (ObjectNode) item);
+		sender.onNewDataComplete(source);
+
+		assertEquals(SenderResult.Status.SUCCESS, sender.getSenderResult().getStatus());
 
 		ObjectNode sentData = new ObjectNode(JsonNodeFactory.instance);
 		sentData.put("sourceId", SOURCE_ID);
@@ -70,25 +60,22 @@ public final class HttpSenderTest {
 
 
 	@Test
-	public final void testFailNoData() {
-		HttpClient client = new HttpClient("dummy", "dummy", false);
-		SenderResult result = sender.notifySourceChanged(client, source, null);
-		assertNotNull(result);
+	public final void testNoServerResponse() {
+		setupSender(new HttpClient("dummy", "dummy", false));
+
+
+		sender.onNewDataStart(source);
+		sender.onNewDataItem(source, new ObjectNode(JsonNodeFactory.instance));
+		sender.onNewDataComplete(source);
+
+		SenderResult result = sender.getSenderResult();
 		assertEquals(result.getStatus(), SenderResult.Status.ERROR);
 		assertTrue(result.getErrorCause() instanceof RetrofitError);
 	}
 
 
-	@Test
-	public final void testFail() {
-		HttpClient client = new HttpClient("dummy", "dummy", true);
-		SenderResult result = sender.notifySourceChanged(
-				client,
-				source,
-				new ArrayNode(JsonNodeFactory.instance));
-		assertNotNull(result);
-		assertEquals(result.getStatus(), SenderResult.Status.ERROR);
-		assertTrue(result.getErrorCause() instanceof RetrofitError);
+	private void setupSender(HttpClient client) {
+		sender = new HttpSender(client);
 	}
 
 }

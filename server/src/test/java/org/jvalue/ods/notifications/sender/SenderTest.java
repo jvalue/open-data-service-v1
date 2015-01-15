@@ -1,60 +1,61 @@
-package org.jvalue.ods.notifications.sender; 
+package org.jvalue.ods.notifications.sender;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.jvalue.ods.notifications.DummyClient;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import org.junit.Test;
-
 
 public final class SenderTest {
 
+	private DummySender sender;
+
+	@Before
+	public void setupSender() {
+		sender = new DummySender(new DummyClient("someId", "someSource"));
+	}
+
+
 	@Test
 	public final void testSuccessResult() {
-
-		DummySender sender = new DummySender();
-
-		SenderResult success = sender.getSuccessResult();
+		sender.setSuccessResult();
+		SenderResult success = sender.getSenderResult();
 		assertNotNull(success);
 		assertEquals(success.getStatus(), SenderResult.Status.SUCCESS);
 		assertNull(success.getOldClient());
 		assertNull(success.getNewClient());
 		assertNull(success.getErrorMsg());
 		assertNull(success.getErrorCause());
-
 	}
 
 
 	@Test
 	public final void testErrorMsgResult() {
-
-		DummySender sender = new DummySender();
-
-		SenderResult error = sender.getErrorResult("error");
+		sender.setErrorResult("error");
+		SenderResult error = sender.getSenderResult();
 		assertNotNull(error);
 		assertEquals(error.getStatus(), SenderResult.Status.ERROR);
 		assertEquals(error.getErrorMsg(), "error");
 		assertNull(error.getOldClient());
 		assertNull(error.getNewClient());
 		assertNull(error.getErrorCause());
-
 	}
 
 
 	@Test
 	public final void testErrorCauseResult() {
-
-		DummySender sender = new DummySender();
 		Exception exception = new RuntimeException("error");
-
-		SenderResult error = sender.getErrorResult(exception);
+		sender.setErrorResult(exception);
+		SenderResult error = sender.getSenderResult();
 		assertNotNull(error);
 		assertEquals(error.getStatus(), SenderResult.Status.ERROR);
 		assertEquals(error.getErrorCause(), exception);
 		assertNull(error.getOldClient());
 		assertNull(error.getNewClient());
 		assertNull(error.getErrorMsg());
-
 	}
 
 }

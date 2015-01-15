@@ -4,9 +4,14 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.assistedinject.Assisted;
 
-import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.notifications.HttpClient;
+import org.jvalue.ods.api.sources.DataSource;
+
+import javax.inject.Inject;
 
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -18,12 +23,28 @@ import retrofit.http.POST;
 
 public final class HttpSender extends Sender<HttpClient> {
 
-	@Override
-	public SenderResult notifySourceChanged(
-			HttpClient client, 
-			DataSource source,
-			ArrayNode data) {
+	private final ArrayNode buffer = new ArrayNode(JsonNodeFactory.instance);
 
+	@Inject
+	public HttpSender(@Assisted HttpClient client) {
+		super(client);
+	}
+
+
+	@Override
+	public void onNewDataStart(DataSource source) {
+		// nothing to do
+	}
+
+
+	@Override
+	public void onNewDataItem(DataSource source, ObjectNode data) {
+		if (client.getSendData()) buffer.add(data);
+	}
+
+
+	@Override
+	public void onNewDataComplete(DataSource source) {
 		RestAdapter adapter = new RestAdapter.Builder()
 				.setConverter(new JacksonConverter())
 				.setEndpoint(client.getCallbackUrl())
@@ -31,14 +52,15 @@ public final class HttpSender extends Sender<HttpClient> {
 		NewDataCallbackService callbackService = adapter.create(NewDataCallbackService.class);
 
 		NewData content;
-		if (client.getSendData()) content = new NewData(source.getId(), data);
+		if (client.getSendData()) content = new NewData(source.getId(), buffer);
 		else content = new NewData(source.getId(), null);
 
 		try {
 			callbackService.onNewData(content);
-			return getSuccessResult();
+			buffer.removeAll();
+			setSuccessResult();
 		} catch (RetrofitError re) {
-			return getErrorResult(re);
+			setErrorResult(re);
 		}
 	}
 

@@ -16,7 +16,7 @@
 package org.jvalue.ods.processor.filter;
 
 import com.codahale.metrics.MetricRegistry;
-import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
@@ -24,7 +24,7 @@ import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.notifications.NotificationManager;
 
 
-final class NotificationFilter extends AbstractFilter<ArrayNode, ArrayNode> {
+final class NotificationFilter extends AbstractFilter<ObjectNode, ObjectNode> {
 
 	private final NotificationManager notificationManager;
 	private final DataSource source;
@@ -42,16 +42,15 @@ final class NotificationFilter extends AbstractFilter<ArrayNode, ArrayNode> {
 
 
 	@Override
-	protected ArrayNode doFilter(ArrayNode data) {
-		// TODO this should open a connection to clients and stream the data to them if necessary.
-		notificationManager.notifySourceChanged(source, data);
-		return data;
+	protected ObjectNode doFilter(ObjectNode item) {
+		notificationManager.onNewDataItem(source, item);
+		return item;
 	}
 
 
 	@Override
 	protected void doOnComplete() {
-		// TODO this should close the connection to clients.
+		notificationManager.onNewDataComplete(source);
 	}
 
 }

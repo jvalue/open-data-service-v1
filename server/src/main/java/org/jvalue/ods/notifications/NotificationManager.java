@@ -17,51 +17,69 @@
  */
 package org.jvalue.ods.notifications;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 
+import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.data.AbstractDataSourcePropertyManager;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.NotificationClientRepository;
-import org.jvalue.ods.utils.Cache;
-import org.jvalue.ods.api.notifications.Client;
+import org.jvalue.ods.notifications.sender.Sender;
+import org.jvalue.ods.notifications.sender.SenderCache;
 import org.jvalue.ods.notifications.sender.SenderResult;
-import org.jvalue.ods.notifications.sender.SenderVisitor;
-import org.jvalue.ods.utils.Assert;
+import org.jvalue.ods.utils.Cache;
 import org.jvalue.ods.utils.Log;
 
 
-public final class NotificationManager extends AbstractDataSourcePropertyManager<Client, NotificationClientRepository> {
+public final class NotificationManager
+		extends AbstractDataSourcePropertyManager<Client, NotificationClientRepository>
+		implements DataSink {
 
-	private final SenderVisitor senderVisitor;
 
+	private final SenderCache senderCache;
 
 	@Inject
 	NotificationManager(
 			Cache<NotificationClientRepository> repositoryCache,
 			DbFactory dbFactory,
-			SenderVisitor senderVisitor) {
+			SenderCache senderCache) {
 
 		super(repositoryCache, dbFactory);
-		this.senderVisitor = senderVisitor;
+		this.senderCache = senderCache;
 	}
 
 
-	public void notifySourceChanged(DataSource source, ArrayNode data) {
-		Assert.assertNotNull(source);
-
-		SenderVisitor.DataEntry dataEntry = new SenderVisitor.DataEntry(source, data);
+	@Override
+	public void onNewDataStart(DataSource source) {
 		for (Client client : getAll(source)) {
-			SenderResult result = client.accept(senderVisitor, dataEntry);
+			senderCache.get(client).onNewDataStart(source);
+		}
+	}
+
+
+	@Override
+	public void onNewDataItem(DataSource source, ObjectNode data) {
+		for (Client client : getAll(source)) {
+			senderCache.get(client).onNewDataItem(source, data);
+		}
+	}
+
+
+	@Override
+	public void onNewDataComplete(DataSource source) {
+		for (Client client : getAll(source)) {
+			Sender<?> sender = senderCache.get(client);
+			sender.onNewDataComplete(source);
+			SenderResult result = sender.getSenderResult();
 			switch(result.getStatus()) {
 				case SUCCESS:
 					continue;
 
 				case ERROR:
 					String errorMsg = "Failed to send notification to client " + client.getId();
-					if (result.getErrorCause() != null) 
+					if (result.getErrorCause() != null)
 						errorMsg = errorMsg + " (" + result.getErrorCause().getMessage();
 					if (result.getErrorMsg() != null)
 						errorMsg = errorMsg + " (" + result.getErrorMsg();
@@ -72,7 +90,7 @@ public final class NotificationManager extends AbstractDataSourcePropertyManager
 					Log.info("Unregistering client " + result.getOldClient().getId());
 					remove(source, null, result.getOldClient());
 					break;
-					
+
 				case UPDATE_CLIENT:
 					Log.info("Updating client id to " + result.getNewClient().getId());
 					remove(source, null, result.getOldClient());

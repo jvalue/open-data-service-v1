@@ -22,7 +22,7 @@ public interface FilterFactory {
 
 	@CreationMethod(name = NAME_NOTIFICATION_FILTER, filterType =  ProcessorType.FILTER)
 	@Named(NAME_NOTIFICATION_FILTER)
-	public Filter<ArrayNode, ArrayNode> createNotificationFilter(DataSource source);
+	public Filter<ObjectNode, ObjectNode> createNotificationFilter(DataSource source);
 
 
 	@CreationMethod(name = NAME_DB_INSERTION_FILTER, filterType = ProcessorType.FILTER)

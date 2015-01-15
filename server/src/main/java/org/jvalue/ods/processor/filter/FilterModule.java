@@ -14,7 +14,7 @@ public final class FilterModule extends AbstractModule {
 	protected void configure() {
 		install(new FactoryModuleBuilder()
 				.implement(
-						new TypeLiteral<Filter<ArrayNode, ArrayNode>>() {
+						new TypeLiteral<Filter<ObjectNode, ObjectNode>>() {
 						},
 						Names.named(FilterFactory.NAME_NOTIFICATION_FILTER),
 						NotificationFilter.class)
