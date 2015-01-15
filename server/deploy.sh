@@ -1,1 +1,1 @@
-gradlew cargoRedeployRemote --stacktrace
+./gradlew cargoRedeployRemote --stacktrace
