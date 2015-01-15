@@ -11,6 +11,7 @@ public final class ListValueMapTest {
 
 		Assert.assertTrue(map.isEmpty());
 		Assert.assertTrue(map.getAll().isEmpty());
+		Assert.assertEquals(0, map.size());
 		Assert.assertNull(map.get("key"));
 		Assert.assertFalse(map.contains("key"));
 		Assert.assertFalse(map.contains("key", "value"));
@@ -21,6 +22,7 @@ public final class ListValueMapTest {
 		map.add("key", "value2");
 
 		Assert.assertFalse(map.isEmpty());
+		Assert.assertEquals(2, map.size());
 		Assert.assertEquals(1, map.getAll().size());
 		Assert.assertEquals(2, map.get("key").size());
 		Assert.assertTrue(map.contains("key"));
@@ -32,6 +34,7 @@ public final class ListValueMapTest {
 		map.add("key1", "value");
 		map.add("key2", "value");
 
+		Assert.assertEquals(2, map.size());
 		Assert.assertFalse(map.isEmpty());
 		Assert.assertEquals(2, map.getAll().size());
 		Assert.assertEquals(1, map.get("key1").size());

@@ -51,6 +51,13 @@ public final class ListValueMap<K, V> {
 	}
 
 
+	public int size() {
+		int size = 0;
+		for (Map.Entry<K, List<V>> entry : data.entrySet()) size += entry.getValue().size();
+		return size;
+	}
+
+
 	public boolean remove(K key, V value) {
 		List<V> values = data.get(key);
 		if (values == null) return false;

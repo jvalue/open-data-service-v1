@@ -2,6 +2,9 @@ package org.jvalue.ods.processor;
 
 
 import com.codahale.metrics.MetricRegistry;
+import com.fasterxml.jackson.core.JsonPointer;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.ektorp.DocumentNotFoundException;
 import org.junit.Assert;
@@ -12,6 +15,7 @@ import org.jvalue.ods.api.processors.ExecutionInterval;
 import org.jvalue.ods.api.processors.ProcessorReference;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
+import org.jvalue.ods.api.sources.DataSourceMetaData;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.ProcessorChainReferenceRepository;
@@ -33,6 +37,11 @@ public final class ProcessorChainManagerTest {
 
 	private static final String FILTER_CHAIN_ID = "someFilterChainId";
 
+	private final DataSource source = new DataSource(
+			"someId",
+			JsonPointer.compile("/id"),
+			new ObjectNode(JsonNodeFactory.instance),
+			new DataSourceMetaData("", "", "", "", "", "", ""));
 	@Mocked private ProcessorChainFactory chainFactory;
 	@Mocked private Cache<ProcessorChainReferenceRepository> repositoryCache;
 	@Mocked private DbFactory dbFactory;
@@ -52,12 +61,11 @@ public final class ProcessorChainManagerTest {
 
 	@Test
 	public void testAddAndRemove(
-			@Mocked final DataSource source,
 			@Mocked final DataRepository dataRepository,
 			@Mocked final ProcessorChainReferenceRepository referenceRepository,
 			@Mocked final ProcessorChain chain) throws Exception {
 
-		setupStartingFilterChain(source, dataRepository, referenceRepository, chain);
+		setupStartingFilterChain(dataRepository, referenceRepository, chain);
 
 		// add chain
 		manager.add(source, dataRepository, reference);
@@ -85,7 +93,6 @@ public final class ProcessorChainManagerTest {
 
 	@Test
 	public void testEmptyGet(
-			@Mocked DataSource source,
 			@Mocked final ProcessorChainReferenceRepository referenceRepository) {
 
 		new Expectations() {{
@@ -105,8 +112,7 @@ public final class ProcessorChainManagerTest {
 
 
 	@Test
-	public void testEmptyGetAll(
-			@Mocked DataSource source) {
+	public void testEmptyGetAll() {
 
 		List<ProcessorReferenceChain> references = manager.getAll(source);
 		Assert.assertNotNull(references);
@@ -116,7 +122,6 @@ public final class ProcessorChainManagerTest {
 
 	@Test
 	public void testEmptyChainExists(
-			@Mocked DataSource source,
 			@Mocked final ProcessorChainReferenceRepository referenceRepository) {
 
 		new Expectations() {{
@@ -134,12 +139,11 @@ public final class ProcessorChainManagerTest {
 
 	@Test
 	public void testStartAndStopAll(
-			@Mocked final DataSource source,
 			@Mocked final DataRepository dataRepository,
 			@Mocked final ProcessorChainReferenceRepository referenceRepository,
 			@Mocked final ProcessorChain chain) throws Exception {
 
-		setupStartingFilterChain(source, dataRepository, referenceRepository, chain);
+		setupStartingFilterChain(dataRepository, referenceRepository, chain);
 		new Expectations() {{
 			referenceRepository.getAll();
 			List<ProcessorReferenceChain> list = new LinkedList<>();
@@ -166,7 +170,6 @@ public final class ProcessorChainManagerTest {
 
 
 	private void setupStartingFilterChain(
-			final DataSource source,
 			final DataRepository dataRepository,
 			final ProcessorChainReferenceRepository referenceRepository,
 			final ProcessorChain chain) {

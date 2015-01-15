@@ -29,8 +29,9 @@ import org.jvalue.ods.data.AbstractDataSourcePropertyManager;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DbFactory;
 import org.jvalue.ods.db.ProcessorChainReferenceRepository;
-import org.jvalue.ods.utils.Cache;
 import org.jvalue.ods.utils.Assert;
+import org.jvalue.ods.utils.Cache;
+import org.jvalue.ods.utils.ListValueMap;
 import org.jvalue.ods.utils.Log;
 
 import java.util.HashMap;
@@ -43,7 +44,8 @@ import java.util.concurrent.ScheduledFuture;
 public final class ProcessorChainManager extends AbstractDataSourcePropertyManager<ProcessorReferenceChain, ProcessorChainReferenceRepository> {
 
 	private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-	private final Map<ProcessorKey, ScheduledFuture<?>> runningTasks = new HashMap<>();
+	private final Map<ProcessorKey, ScheduledFuture<?>> scheduledTasks = new HashMap<>();				// reoccurring tasks to stop if necessary
+	private final ListValueMap<DataSource, ProcessorReferenceChain> runningTasks = new ListValueMap<>();	// all running tasks
 	private final Timer processorTimer;
 
 	private final ProcessorChainFactory processorChainFactory;
@@ -70,6 +72,7 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 
 
 	public void executeOnce(DataSource source, DataRepository dataRepository, ProcessorReferenceChain reference) {
+		Assert.assertTrue(reference.getExecutionInterval() == null, "reference must not contain an execute interval");
 		startProcessorChain(source, dataRepository, reference);
 	}
 
@@ -99,7 +102,6 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 	}
 
 
-
 	/**
 	 * Called once during lifecycle initialization.
 	 * @param sources All sources including their data repositories to create the actual
@@ -123,17 +125,23 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 	}
 
 
+	public ListValueMap<DataSource, ProcessorReferenceChain> getAllRunningTasks() {
+		return runningTasks;
+	}
+
+
 	private void startProcessorChain(DataSource source, DataRepository dataRepository, ProcessorReferenceChain reference) {
 		ProcessorKey key = new ProcessorKey(source.getId(), reference.getId());
 
 		Runnable runnable = new ProcessorRunnable(reference, source, dataRepository);
 		if (reference.getExecutionInterval() != null) {
+			System.out.println("inserting key (" + key.hashCode() + ")");
 			ScheduledFuture<?> task = executorService.scheduleAtFixedRate(
 					runnable,
 					0,
 					reference.getExecutionInterval().getPeriod(),
 					reference.getExecutionInterval().getUnit());
-			runningTasks.put(key, task);
+			scheduledTasks.put(key, task);
 		} else {
 			executorService.execute(runnable);
 		}
@@ -141,8 +149,11 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 
 
 	private void stopProcessorChain(DataSource source, ProcessorReferenceChain reference) {
-		ScheduledFuture<?> task = runningTasks.remove(new ProcessorKey(source.getId(), reference.getId()));
+		ProcessorKey key = new ProcessorKey(source.getId(), reference.getId());
+		System.out.println("removing key (" + key.hashCode() + ")");
+		ScheduledFuture<?> task = scheduledTasks.remove(key);
 		task.cancel(false);
+		runningTasks.remove(source, reference);
 	}
 
 
@@ -164,8 +175,9 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 			Timer.Context timerContext = processorTimer.time();
 			try {
 				Log.info("starting processor chain \"" + reference.getId() + "\" for source \"" + source.getId() + "\"");
-				ProcessorChain chain = processorChainFactory.createProcessorChain(reference, source, dataRepository);
-				chain.startProcessing();
+				runningTasks.add(source, reference);
+				processorChainFactory.createProcessorChain(reference, source, dataRepository).startProcessing();
+				runningTasks.remove(source, reference);
 				Log.info("stopping processor chain \"" + reference.getId() + "\" for source \"" + source.getId() + "\"");
 			} catch (Throwable throwable) {
 				Log.error("error while running processor chain", throwable);
@@ -202,4 +214,5 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 		}
 
 	}
+
 }
