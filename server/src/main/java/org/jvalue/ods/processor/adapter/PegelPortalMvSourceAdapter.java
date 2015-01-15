@@ -28,7 +28,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.configuration.PegelPortalMvConfigurationFactory;
 import org.jvalue.ods.utils.HttpUtils;
 
 import java.io.IOException;
@@ -89,6 +88,7 @@ final class PegelPortalMvSourceAdapter extends AbstractSourceAdapter {
 	private static final class PegelPortalMvIterator extends SourceIterator {
 
 		private final Iterator<Element> rowIterator;
+		private int currentRowIdx = 0;
 
 		public PegelPortalMvIterator(DataSource source, URL sourceUrl, MetricRegistry registry) {
 			super(source, sourceUrl, registry);
@@ -126,8 +126,9 @@ final class PegelPortalMvSourceAdapter extends AbstractSourceAdapter {
 				else throw new SourceAdapterException("Unknown type " + type.getName());
 			}
 
-			objectNode.put(PegelPortalMvConfigurationFactory.KEY_LEVEL_UNIT, "cm ü PNP");
-			objectNode.put(PegelPortalMvConfigurationFactory.KEY_EFFLUENT_UNIT, "m³/s");
+			objectNode.put(KEY_LEVEL_UNIT, "cm ü PNP");
+			objectNode.put(KEY_EFFLUENT_UNIT, "m³/s");
+			objectNode.put("id", String.valueOf(currentRowIdx++)); // website does not contain any one row with unique values --> combined keys required
 			return objectNode;
 		}
 
@@ -145,59 +146,5 @@ final class PegelPortalMvSourceAdapter extends AbstractSourceAdapter {
 		}
 
 	}
-
-		/*
-	protected ArrayNode doProcess(Void nothing) {
-		try {
-			String httpContent = HttpUtils.readUrl(source.getUrl(), "UTF-8");
-			Document doc = Jsoup.parse(httpContent);
-
-			Elements header = doc.select("#pegeltab thead tr");
-			Elements body = doc.select("#pegeltab tbody tr");
-
-			if (header.isEmpty() || body.isEmpty())
-				throw new IllegalStateException("unknown format");
-			if (header.size() > 1)
-				throw new IllegalStateException("unknown format");
-
-			Map<String, GenericValueType> mapValueTypes = ((MapObjectType) ((ListObjectType) 
-						source.getSchema())
-					.getReferencedObjects().get(0)).getAttributes();
-
-			ArrayNode arrayNode = new ArrayNode(JsonNodeFactory.instance);
-			for (Element row : body) {
-				ObjectNode objectNode = new ObjectNode(JsonNodeFactory.instance);
-				for (Map.Entry<String, Integer> e : tableMapping.entrySet()) {
-
-					String key = e.getKey();
-					int colIdx = e.getValue();
-					SimpleValueType type = (SimpleValueType) mapValueTypes
-							.get(key);
-					String value = extractText(row.child(colIdx));
-					if (value.equals(""))
-						continue;
-
-					if (type.getName().equals("java.lang.String")) {
-						objectNode.put(key, StringEscapeUtils.unescapeHtml4(value));
-					} else if (type.getName().equals("java.lang.Number")) {
-						objectNode.put(key, new Double(value));
-					} else {
-						throw new IllegalArgumentException("Unknown type " + type.getName());
-					}
-				}
-
-				objectNode.put(PegelPortalMvConfigurationFactory.KEY_LEVEL_UNIT, "cm ü PNP");
-				objectNode.put(PegelPortalMvConfigurationFactory.KEY_EFFLUENT_UNIT, "m³/s");
-
-				arrayNode.add(objectNode);
-			}
-
-			return arrayNode;
-		} catch (Exception e) {
-			throw new IllegalStateException(e);
-		}
-		return null;
-	}
-		*/
 
 }
