@@ -71,6 +71,8 @@ public final class NotificationManager
 	public void onNewDataComplete(DataSource source) {
 		for (Client client : getAll(source)) {
 			Sender<?> sender = senderCache.get(source, client);
+			senderCache.release(source, client);
+
 			sender.onNewDataComplete();
 			SenderResult result = sender.getSenderResult();
 			switch(result.getStatus()) {

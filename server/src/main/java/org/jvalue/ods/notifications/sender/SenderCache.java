@@ -32,7 +32,7 @@ public final class SenderCache {
 	@SuppressWarnings("unchecked")
 	public <T extends Client> Sender<T> get(DataSource source, T client) {
 		SenderKey key = new SenderKey(source, client);
-		if (!senderMap.containsKey(key)) senderMap.put(key, client.accept(senderCreatorVisitor, null));
+		if (!senderMap.containsKey(key)) senderMap.put(key, client.accept(senderCreatorVisitor, source));
 		return (Sender<T>) senderMap.get(key);
 	}
 
