@@ -67,7 +67,7 @@ final class DbInsertionFilter extends AbstractFilter<ObjectNode, ObjectNode> {
 
 
 	@Override
-	protected ObjectNode doProcess(ObjectNode node) throws FilterException {
+	protected ObjectNode doFilter(ObjectNode node) throws FilterException {
 		String domainKey = node.at(source.getDomainIdKey()).asText();
 		bulkDomainIds.add(domainKey);
 		bulkObjects.add(node);

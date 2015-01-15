@@ -29,7 +29,7 @@ public final class IntToStringKeyFilterTest {
 		ObjectNode parentNode = baseNode.putObject("parent");
 		parentNode.put("id", 10);
 
-		ObjectNode resultNode = new IntToStringKeyFilter(source, registry).doProcess(baseNode);
+		ObjectNode resultNode = new IntToStringKeyFilter(source, registry).doFilter(baseNode);
 
 		Assert.assertTrue(resultNode.path("parent").path("id").isTextual());
 	}
@@ -42,7 +42,7 @@ public final class IntToStringKeyFilterTest {
 		ArrayNode parentNode = baseNode.putArray("parent");
 		parentNode.add(10);
 
-		ObjectNode resultNode = new IntToStringKeyFilter(source, registry).doProcess(baseNode);
+		ObjectNode resultNode = new IntToStringKeyFilter(source, registry).doFilter(baseNode);
 
 		Assert.assertTrue(resultNode.path("parent").get(0).isTextual());
 	}

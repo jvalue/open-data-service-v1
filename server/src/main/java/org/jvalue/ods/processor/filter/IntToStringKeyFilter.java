@@ -48,7 +48,7 @@ final class IntToStringKeyFilter extends AbstractFilter<ObjectNode, ObjectNode> 
 
 
 	@Override
-	protected ObjectNode doProcess(ObjectNode node) throws FilterException {
+	protected ObjectNode doFilter(ObjectNode node) throws FilterException {
 		JsonNode keyNode = node.at(source.getDomainIdKey());
 		if (keyNode.isTextual()) return node;
 		TextNode textKeyNode = new TextNode(keyNode.asText());

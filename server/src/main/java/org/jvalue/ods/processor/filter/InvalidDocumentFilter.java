@@ -42,7 +42,7 @@ final class InvalidDocumentFilter extends AbstractFilter<ArrayNode, ArrayNode> {
 
 
 	@Override
-	protected ArrayNode doProcess(ArrayNode data) {
+	protected ArrayNode doFilter(ArrayNode data) {
 		Iterator<JsonNode> iterator = data.elements();
 		while (iterator.hasNext()) {
 			if (!iterator.next().isObject()) iterator.remove();

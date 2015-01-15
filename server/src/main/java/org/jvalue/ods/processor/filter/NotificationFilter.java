@@ -42,7 +42,7 @@ final class NotificationFilter extends AbstractFilter<ArrayNode, ArrayNode> {
 
 
 	@Override
-	protected ArrayNode doProcess(ArrayNode data) {
+	protected ArrayNode doFilter(ArrayNode data) {
 		// TODO this should open a connection to clients and stream the data to them if necessary.
 		notificationManager.notifySourceChanged(source, data);
 		return data;

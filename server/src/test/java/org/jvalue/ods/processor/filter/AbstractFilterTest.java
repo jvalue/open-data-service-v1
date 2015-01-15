@@ -52,7 +52,7 @@ public final class AbstractFilterTest {
 		}
 
 		@Override
-		protected String doProcess(String param) {
+		protected String doFilter(String param) {
 			assertEquals(value, param);
 			filterCount++;
 			return param;

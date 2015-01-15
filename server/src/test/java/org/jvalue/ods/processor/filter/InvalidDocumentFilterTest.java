@@ -30,7 +30,7 @@ public final class InvalidDocumentFilterTest {
 		jsonArray.add(jsonObject);
 
 		InvalidDocumentFilter filter = new InvalidDocumentFilter(source, registry);
-		ArrayNode jsonResult = filter.doProcess(jsonArray);
+		ArrayNode jsonResult = filter.doFilter(jsonArray);
 
 		Assert.assertEquals(1, jsonResult.size());
 		Assert.assertEquals(jsonResult.get(0), jsonObject);

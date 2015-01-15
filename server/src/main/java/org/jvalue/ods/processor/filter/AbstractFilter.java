@@ -49,7 +49,7 @@ abstract class AbstractFilter<P, R> implements Filter<P, R> {
 	@Override
 	public void filter(P data) throws FilterException {
 		timerContext.resume();
-		R result = doProcess(data);
+		R result = doFilter(data);
 		timerContext.pause();
 		if (nextFilter != null) nextFilter.filter(result);
 	}
@@ -64,7 +64,7 @@ abstract class AbstractFilter<P, R> implements Filter<P, R> {
 	}
 
 
-	protected abstract R doProcess(P data) throws FilterException;
+	protected abstract R doFilter(P data) throws FilterException;
 	protected abstract void doOnComplete() throws FilterException;
 
 }
