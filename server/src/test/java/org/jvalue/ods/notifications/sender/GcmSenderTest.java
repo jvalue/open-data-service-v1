@@ -40,7 +40,7 @@ public final class GcmSenderTest {
 
 	@Before
 	public void setupSender() {
-		sender = new GcmSender(client, gcmService);
+		sender = new GcmSender(source, client, gcmService);
 	}
 
 
@@ -53,9 +53,9 @@ public final class GcmSenderTest {
 			gcmResult.getMessageId(); result = "someMessageId";
 		}};
 
-		sender.onNewDataStart(source);
-		sender.onNewDataItem(source, new ObjectNode(JsonNodeFactory.instance));
-		sender.onNewDataComplete(source);
+		sender.onNewDataStart();
+		sender.onNewDataItem(new ObjectNode(JsonNodeFactory.instance));
+		sender.onNewDataComplete();
 
 		Assert.assertEquals(SenderResult.Status.SUCCESS, sender.getSenderResult().getStatus());
 		new Verifications() {{
@@ -81,7 +81,7 @@ public final class GcmSenderTest {
 			result = ioe;
 		}};
 
-		sender.onNewDataComplete(source);
+		sender.onNewDataComplete();
 
 		Assert.assertEquals(SenderResult.Status.ERROR, sender.getSenderResult().getStatus());
 		Assert.assertEquals(ioe, sender.getSenderResult().getErrorCause());
@@ -99,7 +99,7 @@ public final class GcmSenderTest {
 			gcmResult.getCanonicalRegistrationId(); result = newDeviceId;
 		}};
 
-		sender.onNewDataComplete(source);
+		sender.onNewDataComplete();
 
 		Assert.assertEquals(SenderResult.Status.UPDATE_CLIENT, sender.getSenderResult().getStatus());
 		Assert.assertEquals(newDeviceId, ((GcmClient) sender.getSenderResult().getNewClient()).getGcmClientId());
@@ -115,7 +115,7 @@ public final class GcmSenderTest {
 			gcmResult.getErrorCodeName(); result = Constants.ERROR_NOT_REGISTERED;
 		}};
 
-		sender.onNewDataComplete(source);
+		sender.onNewDataComplete();
 
 		Assert.assertEquals(SenderResult.Status.REMOVE_CLIENT, sender.getSenderResult().getStatus());
 	}

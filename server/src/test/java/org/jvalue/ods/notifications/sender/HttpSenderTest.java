@@ -43,9 +43,9 @@ public final class HttpSenderTest {
 
 		setupSender(new HttpClient(SOURCE_ID, callbackUrl, true));
 
-		sender.onNewDataStart(source);
-		for (JsonNode item : data) sender.onNewDataItem(source, (ObjectNode) item);
-		sender.onNewDataComplete(source);
+		sender.onNewDataStart();
+		for (JsonNode item : data) sender.onNewDataItem((ObjectNode) item);
+		sender.onNewDataComplete();
 
 		assertEquals(SenderResult.Status.SUCCESS, sender.getSenderResult().getStatus());
 
@@ -63,10 +63,9 @@ public final class HttpSenderTest {
 	public final void testNoServerResponse() {
 		setupSender(new HttpClient("dummy", "dummy", false));
 
-
-		sender.onNewDataStart(source);
-		sender.onNewDataItem(source, new ObjectNode(JsonNodeFactory.instance));
-		sender.onNewDataComplete(source);
+		sender.onNewDataStart();
+		sender.onNewDataItem(new ObjectNode(JsonNodeFactory.instance));
+		sender.onNewDataComplete();
 
 		SenderResult result = sender.getSenderResult();
 		assertEquals(result.getStatus(), SenderResult.Status.ERROR);
@@ -75,7 +74,7 @@ public final class HttpSenderTest {
 
 
 	private void setupSender(HttpClient client) {
-		sender = new HttpSender(client);
+		sender = new HttpSender(source, client);
 	}
 
 }

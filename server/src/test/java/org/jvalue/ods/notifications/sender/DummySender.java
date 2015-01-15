@@ -8,22 +8,22 @@ import org.jvalue.ods.notifications.DummyClient;
 
 final class DummySender extends Sender<DummyClient> {
 
-	protected DummySender(DummyClient client) {
-		super(client);
+	protected DummySender(DataSource source, DummyClient client) {
+		super(source, client);
 	}
 
 	@Override
-	public void onNewDataStart(DataSource source) {
+	public void onNewDataStart() {
 		throw new UnsupportedOperationException("dummy");
 	}
 
 	@Override
-	public void onNewDataItem(DataSource source, ObjectNode data) {
+	public void onNewDataItem(ObjectNode data) {
 		throw new UnsupportedOperationException("dummy");
 	}
 
 	@Override
-	public void onNewDataComplete(DataSource source) {
+	public void onNewDataComplete() {
 		throw new UnsupportedOperationException("dummy");
 	}
 

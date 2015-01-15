@@ -26,25 +26,25 @@ public final class HttpSender extends Sender<HttpClient> {
 	private final ArrayNode buffer = new ArrayNode(JsonNodeFactory.instance);
 
 	@Inject
-	public HttpSender(@Assisted HttpClient client) {
-		super(client);
+	public HttpSender(@Assisted DataSource source, @Assisted HttpClient client) {
+		super(source, client);
 	}
 
 
 	@Override
-	public void onNewDataStart(DataSource source) {
+	public void onNewDataStart() {
 		// nothing to do
 	}
 
 
 	@Override
-	public void onNewDataItem(DataSource source, ObjectNode data) {
+	public void onNewDataItem(ObjectNode data) {
 		if (client.getSendData()) buffer.add(data);
 	}
 
 
 	@Override
-	public void onNewDataComplete(DataSource source) {
+	public void onNewDataComplete() {
 		RestAdapter adapter = new RestAdapter.Builder()
 				.setConverter(new JacksonConverter())
 				.setEndpoint(client.getCallbackUrl())

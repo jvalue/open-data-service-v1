@@ -30,29 +30,29 @@ public final class GcmSender extends Sender<GcmClient> {
 
 	@Inject
 	GcmSender(
+			@Assisted DataSource source,
 			@Assisted GcmClient client,
 			com.google.android.gcm.server.Sender gcmSender) {
 
-		super(client);
+		super(source, client);
 		this.gcmSender = gcmSender;
 	}
 
 
 	@Override
-	public void onNewDataStart(DataSource source) {
+	public void onNewDataStart() {
 		// nothing to do here
 	}
 
 
 	@Override
-	public void onNewDataItem(DataSource source, ObjectNode data) {
+	public void onNewDataItem(ObjectNode data) {
 		// nothing to do here
 	}
 
 
 	@Override
-	public void onNewDataComplete(DataSource source) {
-
+	public void onNewDataComplete() {
 		// gather data
 		Map<String,String> payload = new HashMap<>();
 		payload.put(DATA_KEY_SOURCE, source.getId());

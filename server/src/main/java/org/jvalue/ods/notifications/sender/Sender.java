@@ -1,17 +1,27 @@
 package org.jvalue.ods.notifications.sender;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import org.jvalue.ods.api.notifications.Client;
-import org.jvalue.ods.notifications.DataSink;
+import org.jvalue.ods.api.sources.DataSource;
 
 
-public abstract class Sender<T extends Client> implements DataSink {
+public abstract class Sender<T extends Client> {
 
+	protected final DataSource source;
 	protected final T client;
+
 	private SenderResult senderResult;
 
-	protected Sender(T client) {
+	protected Sender(DataSource source, T client) {
+		this.source = source;
 		this.client = client;
 	}
+
+
+	public abstract void onNewDataStart();
+	public abstract void onNewDataItem(ObjectNode data);
+	public abstract void onNewDataComplete();
 
 
 	public final SenderResult getSenderResult() {

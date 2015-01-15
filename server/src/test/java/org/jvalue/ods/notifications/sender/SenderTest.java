@@ -2,6 +2,7 @@ package org.jvalue.ods.notifications.sender;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.notifications.DummyClient;
 
 import static org.junit.Assert.assertEquals;
@@ -11,11 +12,12 @@ import static org.junit.Assert.assertNull;
 
 public final class SenderTest {
 
+	private final DataSource source = new DataSource("someId", null, null, null);
 	private DummySender sender;
 
 	@Before
 	public void setupSender() {
-		sender = new DummySender(new DummyClient("someId", "someSource"));
+		sender = new DummySender(source, new DummyClient("someId", "someSource"));
 	}
 
 

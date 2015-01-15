@@ -54,7 +54,7 @@ public final class NotificationManager
 	@Override
 	public void onNewDataStart(DataSource source) {
 		for (Client client : getAll(source)) {
-			senderCache.get(client).onNewDataStart(source);
+			senderCache.get(source, client).onNewDataStart();
 		}
 	}
 
@@ -62,7 +62,7 @@ public final class NotificationManager
 	@Override
 	public void onNewDataItem(DataSource source, ObjectNode data) {
 		for (Client client : getAll(source)) {
-			senderCache.get(client).onNewDataItem(source, data);
+			senderCache.get(source, client).onNewDataItem(data);
 		}
 	}
 
@@ -70,8 +70,8 @@ public final class NotificationManager
 	@Override
 	public void onNewDataComplete(DataSource source) {
 		for (Client client : getAll(source)) {
-			Sender<?> sender = senderCache.get(client);
-			sender.onNewDataComplete(source);
+			Sender<?> sender = senderCache.get(source, client);
+			sender.onNewDataComplete();
 			SenderResult result = sender.getSenderResult();
 			switch(result.getStatus()) {
 				case SUCCESS:
