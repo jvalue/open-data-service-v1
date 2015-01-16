@@ -12,9 +12,18 @@ buildscript {
     }
 }
 
+
 task wrapper(type: Wrapper) {
     gradleVersion = '1.10'
 }
+
+
+task fatJar(type: Jar) {
+    baseName =  project.name + '-SNAPSHOT'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
 
 dependencies {
     compile 'com.squareup.retrofit:retrofit:1.8.+'
