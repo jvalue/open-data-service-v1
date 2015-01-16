@@ -77,14 +77,14 @@ public final class NotificationManager
 			SenderResult result = sender.getSenderResult();
 			switch(result.getStatus()) {
 				case SUCCESS:
-					continue;
+					break;
 
 				case ERROR:
 					String errorMsg = "Failed to send notification to client " + client.getId();
 					if (result.getErrorCause() != null)
-						errorMsg = errorMsg + " (" + result.getErrorCause().getMessage();
+						errorMsg = errorMsg + " (" + result.getErrorCause().getMessage() + ")";
 					if (result.getErrorMsg() != null)
-						errorMsg = errorMsg + " (" + result.getErrorMsg();
+						errorMsg = errorMsg + " (" + result.getErrorMsg() + ")";
 					Log.error(errorMsg);
 					break;
 

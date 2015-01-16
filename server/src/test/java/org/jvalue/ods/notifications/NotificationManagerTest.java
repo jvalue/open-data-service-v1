@@ -1,212 +1,168 @@
 package org.jvalue.ods.notifications;
 
-import org.jvalue.ods.api.sources.DataSource;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.jvalue.ods.api.notifications.Client;
+import org.jvalue.ods.api.notifications.GcmClient;
+import org.jvalue.ods.api.notifications.HttpClient;
+import org.jvalue.ods.api.sources.DataSource;
+import org.jvalue.ods.db.DataRepository;
+import org.jvalue.ods.db.DbFactory;
+import org.jvalue.ods.db.NotificationClientRepository;
+import org.jvalue.ods.notifications.sender.Sender;
+import org.jvalue.ods.notifications.sender.SenderCache;
+import org.jvalue.ods.notifications.sender.SenderResult;
+import org.jvalue.ods.utils.Cache;
+
+import java.util.Arrays;
+
+import mockit.Expectations;
+import mockit.Mocked;
+import mockit.NonStrictExpectations;
+import mockit.Verifications;
+import mockit.integration.junit4.JMockit;
 
 
+@RunWith(JMockit.class)
 public final class NotificationManagerTest {
 
-	private NotificationManager manager;
-	private Client client;
-	private DataSource source;
-	private Object data;
+	@Mocked private SenderCache senderCache;
+	@Mocked private Cache<NotificationClientRepository> clientRepositoryCache;
+	@Mocked private DbFactory dbFactory;
+	@Mocked private NotificationClientRepository clientRepository;
+	@Mocked private Sender<HttpClient> httpSender;
+	@Mocked private Sender<GcmClient> gcmSender;
 
-	private int notifyCalledCount;
+	private final DataSource source = new DataSource("someId", null, null, null);
+	private final HttpClient httpClient = new HttpClient("someId", "someCallbackUrl", false);
+	private final GcmClient gcmClient = new GcmClient("someId", "someDeviceId");
 
+	private NotificationManager notificationManager;
 
-	/*
 	@Before
-	public final void setup() {
+	public void setupNotificationManager() {
+		notificationManager = new NotificationManager(clientRepositoryCache, dbFactory, senderCache);
+	}
 
-		manager = new NotificationManager(new DummyClientDatastore());
-		client = new DummyClient("dummy", "dummy");
-		source = DummyDataSource.newInstance("dummy", "dummy");
-		data = "dummy";
 
+	@Before
+	public void setupSenderCache() {
+		new NonStrictExpectations() {{
+			senderCache.get(source, httpClient); result = httpSender;
+			senderCache.get(source, gcmClient); result = gcmSender;
+		}};
 	}
 
 
 	@Test
-	public final void testSourceChanged() {
+	public void testOnNewDataStart() {
+		new Expectations(notificationManager) {{
+			notificationManager.getAll(source); result = Arrays.asList(httpClient, gcmClient);
+		}};
 
-		assertNotNull(manager.getNotificationDefinitions());
-		assertEquals(manager.getNotificationDefinitions().size(), 0);
+		notificationManager.onNewDataStart(source);
 
-		manager.addDefinition(DummyClient.class, new DummyNotificationDefinition(
-					new NotificationSender<DummyClient>() {
-
-						@Override
-						public SenderResult notifySourceChanged(
-								DummyClient client,
-								DataSource source,
-								Object data) {
-
-							assertNotNull(client);
-							assertNotNull(source);
-							assertNotNull(data);
-
-							notifyCalledCount++;
-
-							return getSuccessResult();
-						}
-					}));
-
-		assertNotNull(manager.getNotificationDefinitions());
-		assertEquals(manager.getNotificationDefinitions().size(), 1);
-
-		manager.notifySourceChanged(source, data);
-		assertEquals(notifyCalledCount, 0);
-
-		assertNotNull(manager.getAllClients());
-		assertEquals(manager.getAllClients().size(), 0);
-		manager.registerClient(client);
-		assertEquals(manager.getAllClients().size(), 1);
-		assertTrue(manager.getAllClients().contains(client));
-		manager.unregisterClient(client.getClientId());
-		assertEquals(manager.getAllClients().size(), 0);
-
-		manager.registerClient(client);
-		manager.notifySourceChanged(source, data);
-		assertEquals(notifyCalledCount, 1);
-		manager.notifySourceChanged(source, data);
-		assertEquals(notifyCalledCount, 2);
-
+		new Verifications() {{
+			httpSender.onNewDataStart();
+			gcmSender.onNewDataStart();
+		}};
 	}
 
 
 	@Test
-	public final void testSuccessSenderResult() { 
+	public void testOnNewDataItem() {
+		new Expectations(notificationManager) {{
+			notificationManager.getAll(source); result = Arrays.asList(httpClient, gcmClient);
+		}};
 
-		setupSenderResultTest(
-				new NotificationSender<DummyClient>() {
+		final ObjectNode data = new ObjectNode(JsonNodeFactory.instance);
+		data.put("hello", "world");
 
-					@Override
-					public SenderResult notifySourceChanged(
-							DummyClient client,
-							DataSource source,
-							Object data) {
+		notificationManager.onNewDataItem(source, data);
 
-						return getSuccessResult();
-					}
-				});
-
-		assertEquals(manager.getAllClients().size(), 1);
-		assertTrue(manager.getAllClients().contains(client));
+		new Verifications() {{
+			httpSender.onNewDataItem(data);
+			gcmSender.onNewDataItem(data);
+		}};
 	}
 
 
 	@Test
-	public final void testErrorSenderResult() { 
-
-		setupSenderResultTest(
-				new NotificationSender<DummyClient>() {
-
-					@Override
-					public SenderResult notifySourceChanged(
-							DummyClient client,
-							DataSource source,
-							Object data) {
-
-						return getErrorResult("error");
-					}
-				});
-
-		assertEquals(manager.getAllClients().size(), 1);
-		assertTrue(manager.getAllClients().contains(client));
-
+	public void testOnNewDataCompleteSuccess() {
+		testOnNewDataCompleteHelper(SenderResult.Status.SUCCESS);
 	}
 
 
 	@Test
-	public final void testRemoveClientSenderResult() { 
-
-		setupSenderResultTest(
-				new NotificationSender<DummyClient>() {
-
-					@Override
-					public SenderResult notifySourceChanged(
-							DummyClient client,
-							DataSource source,
-							Object data) {
-
-						return getRemoveClientResult(client);
-					}
-				});
-
-		assertEquals(manager.getAllClients().size(), 0);
-
+	public void testOnNewDataCompleteError() {
+		testOnNewDataCompleteHelper(SenderResult.Status.ERROR);
 	}
 
 
 	@Test
-	public final void testUpdateClientSenderResult() { 
+	public void testOnNewDataCompleteRemove() {
+		new Expectations(notificationManager) {{
+			notificationManager.getAll(source); result = Arrays.asList(gcmClient);
+			gcmSender.getSenderResult().getStatus(); result = SenderResult.Status.REMOVE_CLIENT;
+			gcmSender.getSenderResult().getOldClient(); result = gcmClient;
 
-		final Client newClient = new DummyClient("newDummy", "newDummy");
+			clientRepositoryCache.contains(anyString); result = true;
+			clientRepositoryCache.get(anyString); result = clientRepository;
+		}};
 
-		setupSenderResultTest(
-				new NotificationSender<DummyClient>() {
+		notificationManager.onNewDataComplete(source);
 
-					@Override
-					public SenderResult notifySourceChanged(
-							DummyClient client,
-							DataSource source,
-							Object data) {
-
-						return getUpdateClientResult(client, newClient);
-					}
-				});
-
-		assertEquals(manager.getAllClients().size(), 1);
-		assertTrue(manager.getAllClients().contains(newClient));
-		assertNotEquals(client, newClient);
+		new Verifications() {{
+			gcmSender.onNewDataComplete();
+			senderCache.release(source, gcmClient);
+			clientRepository.remove(gcmClient);
+		}};
 	}
 
 
-	private void setupSenderResultTest(NotificationSender<DummyClient> sender) {
+	@Test
+	public void testOnNewDataCompleteUpdate() {
+		final GcmClient newGcmClient = new GcmClient("someOtherId", "someOtherDeviceId");
+		new Expectations(notificationManager) {{
+			notificationManager.getAll(source); result = Arrays.asList(gcmClient);
+			gcmSender.getSenderResult().getStatus(); result = SenderResult.Status.UPDATE_CLIENT;
+			gcmSender.getSenderResult().getOldClient(); result = gcmClient;
+			gcmSender.getSenderResult().getNewClient(); result = newGcmClient;
 
-		manager.addDefinition(DummyClient.class, new DummyNotificationDefinition(sender));
-		manager.registerClient(client);
-		manager.notifySourceChanged(source, data);
+			clientRepositoryCache.contains(anyString); result = true;
+			clientRepositoryCache.get(anyString); result = clientRepository;
+		}};
 
+		notificationManager.onNewDataComplete(source);
+
+		new Verifications() {{
+			gcmSender.onNewDataComplete();
+			senderCache.release(source, gcmClient);
+			clientRepository.remove(gcmClient);
+			clientRepository.add(newGcmClient);
+		}};
 	}
 
 
-	static final class DummyNotificationDefinition implements NotificationDefinition<DummyClient> {
+	private void testOnNewDataCompleteHelper(final SenderResult.Status status) {
+		new NonStrictExpectations(notificationManager) {{
+			notificationManager.getAll(source); result = Arrays.asList(gcmClient);
+			gcmSender.getSenderResult().getStatus(); result = status;
 
-		private final NotificationSender<DummyClient> sender;
+			notificationManager.remove((DataSource) any, (DataRepository) any, (Client) any);
+			result = new IllegalStateException("this method should not have been called");
+		}};
 
-		public DummyNotificationDefinition(NotificationSender<DummyClient> sender) {
-			this.sender = sender;
-		}
+		notificationManager.onNewDataComplete(source);
 
-		@Override
-		public String getRestName() {
-			return "/rest";
-		}
-
-		@Override
-		public RestAdapter<DummyClient> getRestAdapter() {
-			return new RestAdapter<DummyClient>() {
-
-				@Override
-				protected DummyClient toClient(Request request, String source) {
-					return null;
-				}
-
-				@Override
-				protected void getParameters(Set<String> params) { }
-
-			};
-
-		}
-
-
-		@Override
-		public NotificationSender<DummyClient> getNotificationSender() {
-			return sender;
-		}
-
+		new Verifications() {{
+			gcmSender.onNewDataComplete();
+			senderCache.release(source, gcmClient);
+		}};
 	}
-	*/
 
 }
