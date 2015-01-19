@@ -39,7 +39,7 @@ abstract class AbstractFilter<P, R> implements Filter<P, R> {
 
 
 	@Override
-	public <T> Filter<R, T> setNextFilter(Filter<R, T> nextFilter) {
+	public final <T> Filter<R, T> setNextFilter(Filter<R, T> nextFilter) {
 		Assert.assertNotNull(nextFilter);
 		this.nextFilter = nextFilter;
 		return nextFilter;
@@ -47,7 +47,7 @@ abstract class AbstractFilter<P, R> implements Filter<P, R> {
 
 
 	@Override
-	public void filter(P data) throws FilterException {
+	public final void filter(P data) throws FilterException {
 		timerContext.resume();
 		R result = doFilter(data);
 		timerContext.pause();
