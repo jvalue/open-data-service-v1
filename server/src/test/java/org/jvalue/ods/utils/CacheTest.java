@@ -3,11 +3,7 @@ package org.jvalue.ods.utils;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-import mockit.integration.junit4.JMockit;
-
-@RunWith(JMockit.class)
 public final class CacheTest {
 
 	@Test
