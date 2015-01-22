@@ -3,6 +3,8 @@ package org.jvalue.ods.main;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import org.jvalue.ods.db.CouchDbConfig;
+
 import javax.validation.constraints.NotNull;
 
 import io.dropwizard.Configuration;
@@ -11,15 +13,15 @@ import io.dropwizard.Configuration;
 public final class OdsConfig extends Configuration {
 
 	@NotNull private final String gcmApiKey;
-	@NotNull private final String couchdbUrl;
+	@NotNull private final CouchDbConfig couchDb;
 
 	@JsonCreator
 	public OdsConfig(
 			@JsonProperty("gcmApiKey") String gcmApiKey,
-			@JsonProperty("couchDbUrl") String couchdbUrl) {
+			@JsonProperty("couchDb") CouchDbConfig couchDb) {
 
 		this.gcmApiKey = gcmApiKey;
-		this.couchdbUrl = couchdbUrl;
+		this.couchDb = couchDb;
 	}
 
 
@@ -28,8 +30,8 @@ public final class OdsConfig extends Configuration {
 	}
 
 
-	public String getCouchdbUrl() {
-		return couchdbUrl;
+	public CouchDbConfig getCouchDb() {
+		return couchDb;
 	}
 
 }

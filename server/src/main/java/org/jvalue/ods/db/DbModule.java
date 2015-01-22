@@ -17,17 +17,21 @@ import java.net.MalformedURLException;
 
 public class DbModule extends AbstractModule {
 
-	private final String couchDbUrl;
+	private final CouchDbConfig couchDbConfig;
 
-	public DbModule(String couchDbUrl) {
-		this.couchDbUrl = couchDbUrl;
+	public DbModule(CouchDbConfig couchDbConfig) {
+		this.couchDbConfig = couchDbConfig;
 	}
 
 
 	@Override
 	protected void configure() {
 		try {
-			CouchDbInstance couchDbInstance = new StdCouchDbInstance(new StdHttpClient.Builder().url(couchDbUrl).build());
+			CouchDbInstance couchDbInstance = new StdCouchDbInstance(new StdHttpClient.Builder()
+					.url(couchDbConfig.getUrl())
+					.username(couchDbConfig.getUsername())
+					.password(couchDbConfig.getPassword())
+					.build());
 			CouchDbConnector dataSourceConnector = couchDbInstance.createConnector(DataSourceRepository.DATABASE_NAME, true);
 
 			bind(CouchDbInstance.class).toInstance(couchDbInstance);
