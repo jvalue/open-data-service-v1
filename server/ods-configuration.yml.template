@@ -1,4 +1,5 @@
 gcmApiKey: YOUR KEY HERE
+couchDbUrl: http://localhost:5984/
 
 server:
   applicationContextPath: /ods/api/v1

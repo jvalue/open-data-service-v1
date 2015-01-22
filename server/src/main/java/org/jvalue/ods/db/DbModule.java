@@ -13,23 +13,36 @@ import org.ektorp.http.StdHttpClient;
 import org.ektorp.impl.StdCouchDbInstance;
 import org.jvalue.ods.utils.Cache;
 
+import java.net.MalformedURLException;
+
 public class DbModule extends AbstractModule {
+
+	private final String couchDbUrl;
+
+	public DbModule(String couchDbUrl) {
+		this.couchDbUrl = couchDbUrl;
+	}
+
 
 	@Override
 	protected void configure() {
-		CouchDbInstance couchDbInstance = new StdCouchDbInstance(new StdHttpClient.Builder().build());
-		CouchDbConnector dataSourceConnector = couchDbInstance.createConnector(DataSourceRepository.DATABASE_NAME, true);
+		try {
+			CouchDbInstance couchDbInstance = new StdCouchDbInstance(new StdHttpClient.Builder().url(couchDbUrl).build());
+			CouchDbConnector dataSourceConnector = couchDbInstance.createConnector(DataSourceRepository.DATABASE_NAME, true);
 
-		bind(CouchDbInstance.class).toInstance(couchDbInstance);
-		bind(CouchDbConnector.class).annotatedWith(Names.named(DataSourceRepository.DATABASE_NAME)).toInstance(dataSourceConnector);
-		install(new FactoryModuleBuilder().build(DbFactory.class));
+			bind(CouchDbInstance.class).toInstance(couchDbInstance);
+			bind(CouchDbConnector.class).annotatedWith(Names.named(DataSourceRepository.DATABASE_NAME)).toInstance(dataSourceConnector);
+			install(new FactoryModuleBuilder().build(DbFactory.class));
 
-		bind(DataSourceRepository.class).in(Singleton.class);
-		bind(new TypeLiteral<Cache<DataViewRepository>>() { }).in(Singleton.class);
-		bind(new TypeLiteral<Cache<ProcessorChainReferenceRepository>>() { }).in(Singleton.class);
-		bind(new TypeLiteral<Cache<NotificationClientRepository>>() { }).in(Singleton.class);
-		bind(new TypeLiteral<Cache<PluginMetaDataRepository>>() { }).in(Singleton.class);
-		bind(new TypeLiteral<Cache<DataRepository>>() { }).in(Singleton.class);
+			bind(DataSourceRepository.class).in(Singleton.class);
+			bind(new TypeLiteral<Cache<DataViewRepository>>() { }).in(Singleton.class);
+			bind(new TypeLiteral<Cache<ProcessorChainReferenceRepository>>() { }).in(Singleton.class);
+			bind(new TypeLiteral<Cache<NotificationClientRepository>>() { }).in(Singleton.class);
+			bind(new TypeLiteral<Cache<PluginMetaDataRepository>>() { }).in(Singleton.class);
+			bind(new TypeLiteral<Cache<DataRepository>>() { }).in(Singleton.class);
+		} catch (MalformedURLException mue) {
+			throw new RuntimeException(mue);
+		}
 	}
 
 }

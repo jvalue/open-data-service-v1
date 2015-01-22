@@ -75,7 +75,7 @@ public final class OdsApplication extends Application<OdsConfig> {
 				new ConfigModule(configuration),
 				new ProcessorModule(),
 				new RestModule(),
-				new DbModule(),
+				new DbModule(configuration.getCouchdbUrl()),
 				new NotificationsModule(),
 				new DataModule());
 
