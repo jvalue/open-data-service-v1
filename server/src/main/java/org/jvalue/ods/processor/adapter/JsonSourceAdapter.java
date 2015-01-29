@@ -61,7 +61,7 @@ final class JsonSourceAdapter extends AbstractSourceAdapter {
 		protected boolean doHasNext() {
 			try {
 				initJsonParser();
-				return jsonParser.hasCurrentToken();
+				return jsonParser.hasCurrentToken() && jsonParser.getCurrentToken() != JsonToken.END_ARRAY;
 			} catch (IOException e) {
 				throw new SourceAdapterException(e);
 			}
@@ -73,7 +73,9 @@ final class JsonSourceAdapter extends AbstractSourceAdapter {
 			try {
 				initJsonParser();
 				jsonParser.nextToken();
-				return mapper.readTree(jsonParser);
+				ObjectNode object = mapper.readTree(jsonParser);
+				jsonParser.nextToken();
+				return object;
 			} catch (IOException e) {
 				throw new SourceAdapterException(e);
 			}
@@ -84,7 +86,7 @@ final class JsonSourceAdapter extends AbstractSourceAdapter {
 			if (jsonParser == null) {
 				jsonParser = new JsonFactory().createParser(sourceUrl);
 				if (jsonParser.nextToken() != JsonToken.START_ARRAY)
-					throw new IllegalStateException("json should start with array");
+					throw new IllegalArgumentException("json should start with array");
 				jsonParser.nextToken();
 			}
 		}

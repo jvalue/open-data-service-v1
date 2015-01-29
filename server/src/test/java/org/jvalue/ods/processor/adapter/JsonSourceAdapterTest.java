@@ -26,11 +26,14 @@ public final class JsonSourceAdapterTest extends AbstractSourceAdapterTest {
 	private static final ArrayNode JSON_ARRAY;
 	static {
 		JSON_ARRAY = new ArrayNode(JsonNodeFactory.instance);
-		ObjectNode jsonObject = new ObjectNode(JsonNodeFactory.instance);
+		ObjectNode jsonObject = JSON_ARRAY.addObject();
 		jsonObject.put("key1", "value1");
 		jsonObject.put("key2", "value2");
-		JSON_ARRAY.add(jsonObject);
+		jsonObject = JSON_ARRAY.addObject();
+		jsonObject.put("key3", "value1");
+		jsonObject.put("key4", "value2");
 	}
+
 
 
 	@Test
@@ -39,6 +42,7 @@ public final class JsonSourceAdapterTest extends AbstractSourceAdapterTest {
 		for (int i = 0; i < jsonResult.size(); ++i) {
 			Assert.assertEquals(JSON_ARRAY.get(i), jsonResult.get(i));
 		}
+		Assert.assertEquals(JSON_ARRAY.size(), jsonResult.size());
 	}
 
 
