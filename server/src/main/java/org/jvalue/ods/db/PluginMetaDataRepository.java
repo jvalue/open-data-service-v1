@@ -13,6 +13,9 @@ import org.ektorp.CouchDbInstance;
 import org.ektorp.DocumentNotFoundException;
 import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.View;
+import org.jvalue.common.db.DbDocument;
+import org.jvalue.common.db.DbDocumentAdaptable;
+import org.jvalue.common.db.RepositoryAdapter;
 import org.jvalue.ods.api.processors.PluginMetaData;
 
 import java.io.InputStream;
@@ -46,7 +49,7 @@ public final class PluginMetaDataRepository extends RepositoryAdapter<
 	@View( name = "all", map = "function(doc) { if (" + DOCUMENT_ID + ") emit( null, doc)}")
 	static final class PluginMetaDataCouchDbRepository
 			extends CouchDbRepositorySupport<PluginMetaDataRepository.PluginMetaDataDocument>
-			implements DbDocumentAdaptable<PluginMetaDataRepository.PluginMetaDataDocument, PluginMetaData> {
+			implements DbDocumentAdaptable<PluginMetaDataDocument, PluginMetaData> {
 
 		private final CouchDbConnector connector;
 

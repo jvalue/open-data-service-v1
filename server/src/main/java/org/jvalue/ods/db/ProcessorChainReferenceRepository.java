@@ -10,6 +10,9 @@ import org.ektorp.CouchDbInstance;
 import org.ektorp.DocumentNotFoundException;
 import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.View;
+import org.jvalue.common.db.DbDocument;
+import org.jvalue.common.db.DbDocumentAdaptable;
+import org.jvalue.common.db.RepositoryAdapter;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 
 import java.util.List;
@@ -31,7 +34,7 @@ public final class ProcessorChainReferenceRepository extends RepositoryAdapter<
 	@View( name = "all", map = "function(doc) { if (" + DOCUMENT_ID + ") emit(null, doc) }")
 	static final class ProcessorChainReferenceCouchDbRepository
 			extends CouchDbRepositorySupport<ProcessorChainReferenceRepository.ProcessorReferenceChainDocument>
-			implements DbDocumentAdaptable<ProcessorChainReferenceRepository.ProcessorReferenceChainDocument, ProcessorReferenceChain> {
+			implements DbDocumentAdaptable<ProcessorReferenceChainDocument, ProcessorReferenceChain> {
 
 		ProcessorChainReferenceCouchDbRepository(CouchDbInstance couchDbInstance, String databaseName) {
 			super(ProcessorReferenceChainDocument.class, couchDbInstance.createConnector(databaseName, true));

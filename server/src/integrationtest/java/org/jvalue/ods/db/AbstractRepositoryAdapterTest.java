@@ -5,6 +5,7 @@ import org.ektorp.CouchDbInstance;
 import org.ektorp.DocumentNotFoundException;
 import org.junit.Assert;
 import org.junit.Test;
+import org.jvalue.common.db.RepositoryAdapter;
 
 import java.util.List;
 

@@ -62,6 +62,7 @@ dependencies {
 	compile 'com.google.android.gcm:gcm-server:1.0.2'
     compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.4.4'
     compile project(':models')
+    compile project(':common')
 	compile files('./lib/jvalue_test.jar')
 
     testCompile 'org.jmockit:jmockit:1.13'

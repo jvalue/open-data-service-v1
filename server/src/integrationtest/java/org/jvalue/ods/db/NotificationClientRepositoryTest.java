@@ -2,6 +2,7 @@ package org.jvalue.ods.db;
 
 
 import org.ektorp.CouchDbInstance;
+import org.jvalue.common.db.RepositoryAdapter;
 import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.api.notifications.GcmClient;
 

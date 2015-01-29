@@ -10,6 +10,9 @@ import org.ektorp.CouchDbConnector;
 import org.ektorp.DocumentNotFoundException;
 import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.View;
+import org.jvalue.common.db.DbDocument;
+import org.jvalue.common.db.DbDocumentAdaptable;
+import org.jvalue.common.db.RepositoryAdapter;
 import org.jvalue.ods.api.sources.DataSource;
 
 import java.util.List;
@@ -31,7 +34,7 @@ public final class DataSourceRepository extends RepositoryAdapter<
 	@View( name = "all", map = "function(doc) { if (" + DOCUMENT_ID + ") emit(null, doc)}")
 	static final class DataSourceCouchDbRepository
 			extends CouchDbRepositorySupport<DataSourceRepository.DataSourceDocument>
-			implements DbDocumentAdaptable<DataSourceRepository.DataSourceDocument, DataSource> {
+			implements DbDocumentAdaptable<DataSourceDocument, DataSource> {
 
 
 		public DataSourceCouchDbRepository(CouchDbConnector connector) {

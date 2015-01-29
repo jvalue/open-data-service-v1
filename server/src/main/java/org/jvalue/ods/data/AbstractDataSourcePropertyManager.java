@@ -18,12 +18,12 @@
 package org.jvalue.ods.data;
 
 import org.ektorp.DocumentNotFoundException;
+import org.jvalue.common.db.RepositoryAdapter;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DbFactory;
-import org.jvalue.ods.db.RepositoryAdapter;
-import org.jvalue.ods.utils.Cache;
 import org.jvalue.ods.utils.Assert;
+import org.jvalue.ods.utils.Cache;
 
 import java.util.List;
 

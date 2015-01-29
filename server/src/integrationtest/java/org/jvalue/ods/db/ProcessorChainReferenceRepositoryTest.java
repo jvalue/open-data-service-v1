@@ -2,6 +2,7 @@ package org.jvalue.ods.db;
 
 
 import org.ektorp.CouchDbInstance;
+import org.jvalue.common.db.RepositoryAdapter;
 import org.jvalue.ods.api.processors.ExecutionInterval;
 import org.jvalue.ods.api.processors.ProcessorReference;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;

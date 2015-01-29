@@ -1,4 +1,4 @@
-package org.jvalue.ods.db;
+package org.jvalue.common.db;
 
 
 import org.ektorp.support.CouchDbDocument;
@@ -11,7 +11,7 @@ import org.ektorp.support.CouchDbDocument;
  *
  * @param <V> type of the object contained within this wrapper.
  */
-class DbDocument<V> extends CouchDbDocument {
+public class DbDocument<V> extends CouchDbDocument {
 
 	private V value;
 
