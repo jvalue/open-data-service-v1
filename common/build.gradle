@@ -8,6 +8,8 @@ repositories {
 
 dependencies {
     compile 'org.ektorp:org.ektorp:1.4.+'
+    compile 'javax.validation:validation-api:1.1.0.Final'
+
 
     testCompile 'org.jmockit:jmockit:1.13'
     testCompile 'junit:junit:4.11'

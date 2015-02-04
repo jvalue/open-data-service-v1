@@ -11,6 +11,7 @@ import org.ektorp.CouchDbConnector;
 import org.ektorp.CouchDbInstance;
 import org.ektorp.http.StdHttpClient;
 import org.ektorp.impl.StdCouchDbInstance;
+import org.jvalue.common.db.CouchDbConfig;
 import org.jvalue.ods.utils.Cache;
 
 import java.net.MalformedURLException;

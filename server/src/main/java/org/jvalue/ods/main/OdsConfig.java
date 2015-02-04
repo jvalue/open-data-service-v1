@@ -3,7 +3,7 @@ package org.jvalue.ods.main;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import org.jvalue.ods.db.CouchDbConfig;
+import org.jvalue.common.db.CouchDbConfig;
 
 import javax.validation.constraints.NotNull;
 

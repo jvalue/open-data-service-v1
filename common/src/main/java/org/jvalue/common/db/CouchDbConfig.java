@@ -1,4 +1,4 @@
-package org.jvalue.ods.db;
+package org.jvalue.common.db;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
