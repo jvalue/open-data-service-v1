@@ -9,5 +9,6 @@ repositories {
 dependencies {
     compile 'org.ektorp:org.ektorp:1.4.+'
 
-    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile 'org.jmockit:jmockit:1.13'
+    testCompile 'junit:junit:4.11'
 }
