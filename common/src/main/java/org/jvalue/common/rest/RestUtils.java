@@ -1,4 +1,4 @@
-package org.jvalue.ods.rest;
+package org.jvalue.common.rest;
 
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;

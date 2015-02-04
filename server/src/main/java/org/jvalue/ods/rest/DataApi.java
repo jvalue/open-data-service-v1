@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 
+import org.jvalue.common.rest.RestUtils;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.db.DataRepository;
 

@@ -3,6 +3,7 @@ package org.jvalue.ods.rest;
 
 import com.google.inject.Inject;
 
+import org.jvalue.common.rest.RestUtils;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
 import org.jvalue.ods.api.sources.DataSource;

@@ -3,6 +3,7 @@ package org.jvalue.ods.rest;
 
 import com.google.inject.Inject;
 
+import org.jvalue.common.rest.RestUtils;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.views.DataView;
 import org.jvalue.ods.api.views.DataViewDescription;

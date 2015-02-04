@@ -23,7 +23,7 @@ import org.jvalue.ods.processor.reference.ValidChainReference;
 import org.jvalue.ods.rest.DataApi;
 import org.jvalue.ods.rest.DataSourceApi;
 import org.jvalue.ods.rest.DataViewApi;
-import org.jvalue.ods.rest.DbExceptionMapper;
+import org.jvalue.common.rest.DbExceptionMapper;
 import org.jvalue.ods.rest.FilterChainApi;
 import org.jvalue.ods.rest.FilterDescriptionApi;
 import org.jvalue.ods.rest.JsonExceptionMapper;

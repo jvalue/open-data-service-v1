@@ -4,6 +4,7 @@ package org.jvalue.ods.rest;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 
+import org.jvalue.common.rest.RestUtils;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceDescription;
 import org.jvalue.ods.data.DataSourceManager;

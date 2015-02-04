@@ -3,6 +3,8 @@ package org.jvalue.ods.rest;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+import org.jvalue.common.rest.RestUtils;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 
