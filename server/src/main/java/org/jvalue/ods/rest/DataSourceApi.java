@@ -1,6 +1,7 @@
 package org.jvalue.ods.rest;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 
 import org.jvalue.ods.api.sources.DataSource;
@@ -42,6 +43,13 @@ public final class DataSourceApi extends AbstractApi {
 	@Path("/{sourceId}")
 	public DataSource getSingleSource(@PathParam("sourceId") String sourceId) {
 		return sourceManager.findBySourceId(sourceId);
+	}
+
+
+	@GET
+	@Path("/{sourceId}/schema")
+	public JsonNode getSchema(@PathParam("sourceId") String sourceId) {
+		return sourceManager.findBySourceId(sourceId).getSchema();
 	}
 
 

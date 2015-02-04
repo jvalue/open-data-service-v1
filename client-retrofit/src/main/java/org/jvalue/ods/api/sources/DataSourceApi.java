@@ -1,6 +1,8 @@
 package org.jvalue.ods.api.sources;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import java.util.List;
 
 import retrofit.client.Response;
@@ -16,6 +18,10 @@ public interface DataSourceApi {
 
 	@GET(URL_DATASOURCES + "/{sourceId}")
 	public DataSource get(@Path("sourceId") String sourceId);
+
+
+	@GET(URL_DATASOURCES + "/{sourceId}/schema")
+	public JsonNode getSchema(@Path("sourceId") String sourceId);
 
 
 	@GET(URL_DATASOURCES)

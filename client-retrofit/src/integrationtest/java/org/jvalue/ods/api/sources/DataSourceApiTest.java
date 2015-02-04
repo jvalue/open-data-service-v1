@@ -20,6 +20,9 @@ public final class DataSourceApiTest extends AbstractApiTest {
 		Assert.assertEquals(schema, dataSource.getSchema());
 		Assert.assertEquals(metaData, dataSource.getMetaData());
 
+		// test get schema
+		Assert.assertEquals(schema, dataSourceApi.getSchema(sourceId));
+
 		// test get all
 		List<DataSource> sources = dataSourceApi.getAll();
 		Assert.assertTrue(sources.size() > 0);
