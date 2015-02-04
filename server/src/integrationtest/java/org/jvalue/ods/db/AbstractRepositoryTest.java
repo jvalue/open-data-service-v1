@@ -2,8 +2,6 @@ package org.jvalue.ods.db;
 
 
 import org.ektorp.CouchDbInstance;
-import org.ektorp.http.StdHttpClient;
-import org.ektorp.impl.StdCouchDbInstance;
 import org.junit.After;
 import org.junit.Before;
 
@@ -14,7 +12,7 @@ public abstract class AbstractRepositoryTest {
 
 	public AbstractRepositoryTest(String databaseName) {
 		this.databaseName = databaseName;
-		this.couchdbInstance = new StdCouchDbInstance(new StdHttpClient.Builder().build());
+		this.couchdbInstance = DbFactory2.createCouchDbInstance();
 	}
 
 
