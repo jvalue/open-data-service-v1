@@ -6,10 +6,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
-import org.ektorp.CouchDbInstance;
+import org.ektorp.CouchDbConnector;
 import org.ektorp.DocumentNotFoundException;
 import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.View;
+import org.jvalue.common.db.DbConnectorFactory;
 import org.jvalue.common.db.DbDocument;
 import org.jvalue.common.db.DbDocumentAdaptable;
 import org.jvalue.common.db.RepositoryAdapter;
@@ -25,8 +26,8 @@ public final class NotificationClientRepository extends RepositoryAdapter<
 	private static final String DOCUMENT_ID = "doc.value.id != null && doc.value.type != null";
 
 	@Inject
-	NotificationClientRepository(CouchDbInstance couchDbInstance, @Assisted String databaseName) {
-		super(new NotificationClientCouchDbRepository(couchDbInstance, databaseName));
+	NotificationClientRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName) {
+		super(new NotificationClientCouchDbRepository(dbConnectorFactory.createConnector(databaseName, true)));
 	}
 
 
@@ -35,8 +36,8 @@ public final class NotificationClientRepository extends RepositoryAdapter<
 			extends CouchDbRepositorySupport<NotificationClientRepository.ClientDocument>
 			implements DbDocumentAdaptable<ClientDocument, Client> {
 
-		public NotificationClientCouchDbRepository(CouchDbInstance couchDbInstance, String databaseName) {
-			super(ClientDocument.class, couchDbInstance.createConnector(databaseName, true));
+		public NotificationClientCouchDbRepository(CouchDbConnector connector) {
+			super(ClientDocument.class, connector);
 			initStandardDesignDocument();
 		}
 

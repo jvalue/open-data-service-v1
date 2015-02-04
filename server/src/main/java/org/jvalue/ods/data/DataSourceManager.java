@@ -3,12 +3,12 @@ package org.jvalue.ods.data;
 
 import com.google.inject.Inject;
 
-import org.ektorp.CouchDbInstance;
 import org.ektorp.DocumentNotFoundException;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DataSourceRepository;
-import org.jvalue.ods.db.DbFactory;
+import org.jvalue.common.db.DbConnectorFactory;
+import org.jvalue.ods.db.RepositoryFactory;
 import org.jvalue.ods.notifications.NotificationManager;
 import org.jvalue.ods.processor.ProcessorChainManager;
 import org.jvalue.ods.utils.Assert;
@@ -24,8 +24,8 @@ public final class DataSourceManager implements Managed {
 
 	private final DataSourceRepository dataSourceRepository;
 	private final Cache<DataRepository> dataRepositoryCache;
-	private final CouchDbInstance dbInstance;
-	private final DbFactory dbFactory;
+	private final DbConnectorFactory dbConnectorFactory;
+	private final RepositoryFactory repositoryFactory;
 	private final ProcessorChainManager processorChainManager;
 	private final DataViewManager dataViewManager;
 	private final NotificationManager notificationManager;
@@ -34,16 +34,16 @@ public final class DataSourceManager implements Managed {
 	public DataSourceManager(
 			DataSourceRepository dataSourceRepository,
 			Cache<DataRepository> dataRepositoryCache,
-			CouchDbInstance dbInstance,
-			DbFactory dbFactory,
+			DbConnectorFactory dbConnectorFactory,
+			RepositoryFactory repositoryFactory,
 			ProcessorChainManager processorChainManager,
 			DataViewManager dataViewManager,
 			NotificationManager notificationManager) {
 
 		this.dataSourceRepository = dataSourceRepository;
 		this.dataRepositoryCache = dataRepositoryCache;
-		this.dbInstance = dbInstance;
-		this.dbFactory = dbFactory;
+		this.dbConnectorFactory = dbConnectorFactory;
+		this.repositoryFactory = repositoryFactory;
 		this.processorChainManager = processorChainManager;
 		this.dataViewManager = dataViewManager;
 		this.notificationManager = notificationManager;
@@ -72,7 +72,7 @@ public final class DataSourceManager implements Managed {
 		processorChainManager.removeAll(source);
 		dataViewManager.removeAll(source);
 		notificationManager.removeAll(source);
-		dbInstance.deleteDatabase(source.getId());
+		dbConnectorFactory.deleteDatabase(source.getId());
 	}
 
 
@@ -122,7 +122,7 @@ public final class DataSourceManager implements Managed {
 
 
 	private DataRepository createDataRepository(DataSource source) {
-		DataRepository dataRepository = dbFactory.createSourceDataRepository(source.getId(), source.getDomainIdKey());
+		DataRepository dataRepository = repositoryFactory.createSourceDataRepository(source.getId(), source.getDomainIdKey());
 		dataRepositoryCache.put(source.getId(), dataRepository);
 		return dataRepository;
 	}

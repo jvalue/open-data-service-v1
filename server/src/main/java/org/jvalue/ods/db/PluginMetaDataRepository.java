@@ -13,6 +13,7 @@ import org.ektorp.CouchDbInstance;
 import org.ektorp.DocumentNotFoundException;
 import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.View;
+import org.jvalue.common.db.DbConnectorFactory;
 import org.jvalue.common.db.DbDocument;
 import org.jvalue.common.db.DbDocumentAdaptable;
 import org.jvalue.common.db.RepositoryAdapter;
@@ -31,8 +32,8 @@ public final class PluginMetaDataRepository extends RepositoryAdapter<
 	private static final String DOCUMENT_ID = "doc.value.id != null && doc.value.author != null";
 
 	@Inject
-	PluginMetaDataRepository(CouchDbInstance couchDbInstance, @Assisted String databaseName) {
-		super(new PluginMetaDataCouchDbRepository(couchDbInstance, databaseName));
+	PluginMetaDataRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName) {
+		super(new PluginMetaDataCouchDbRepository(dbConnectorFactory.createConnector(databaseName, true)));
 	}
 
 
@@ -53,10 +54,9 @@ public final class PluginMetaDataRepository extends RepositoryAdapter<
 
 		private final CouchDbConnector connector;
 
-		@Inject
-		PluginMetaDataCouchDbRepository(CouchDbInstance couchDbInstance, @Assisted String databaseName) {
-			super(PluginMetaDataDocument.class, couchDbInstance.createConnector(databaseName, true));
-			this.connector = couchDbInstance.createConnector(databaseName, true);
+		PluginMetaDataCouchDbRepository(CouchDbConnector connector) {
+			super(PluginMetaDataDocument.class, connector);
+			this.connector = connector;
 			initStandardDesignDocument();
 		}
 

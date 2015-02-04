@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import org.ektorp.CouchDbInstance;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +13,8 @@ import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceMetaData;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DataSourceRepository;
-import org.jvalue.ods.db.DbFactory;
+import org.jvalue.common.db.DbConnectorFactory;
+import org.jvalue.ods.db.RepositoryFactory;
 import org.jvalue.ods.notifications.NotificationManager;
 import org.jvalue.ods.processor.ProcessorChainManager;
 import org.jvalue.ods.utils.Cache;
@@ -34,8 +34,8 @@ public final class DataSourceManagerTest {
 
 	@Mocked private DataSourceRepository sourceRepository;
 	@Mocked private Cache<DataRepository> dataRepositoryCache;
-	@Mocked private CouchDbInstance couchDbInstance;
-	@Mocked private DbFactory dbFactory;
+	@Mocked private DbConnectorFactory dbConnectorFactory;
+	@Mocked private RepositoryFactory repositoryFactory;
 	@Mocked private ProcessorChainManager processorChainManager;
 	@Mocked private DataViewManager dataViewManager;
 	@Mocked private NotificationManager notificationManager;
@@ -54,8 +54,8 @@ public final class DataSourceManagerTest {
 		this.sourceManager = new DataSourceManager(
 				sourceRepository,
 				dataRepositoryCache,
-				couchDbInstance,
-				dbFactory,
+				dbConnectorFactory,
+				repositoryFactory,
 				processorChainManager,
 				dataViewManager,
 				notificationManager);
@@ -68,7 +68,7 @@ public final class DataSourceManagerTest {
 			sourceRepository.getAll();
 			result = Arrays.asList(dataSource);
 
-			dbFactory.createSourceDataRepository(SOURCE_ID, (JsonPointer) any);
+			repositoryFactory.createSourceDataRepository(SOURCE_ID, (JsonPointer) any);
 			result = dataRepository;
 		}};
 
@@ -97,7 +97,7 @@ public final class DataSourceManagerTest {
 		sourceManager.add(dataSource);
 
 		new Verifications() {{
-			dbFactory.createSourceDataRepository(SOURCE_ID, (JsonPointer) any);
+			repositoryFactory.createSourceDataRepository(SOURCE_ID, (JsonPointer) any);
 			sourceRepository.add(dataSource);
 		}};
 	}
@@ -112,7 +112,7 @@ public final class DataSourceManagerTest {
 			processorChainManager.removeAll(dataSource);
 			dataViewManager.removeAll(dataSource);
 			notificationManager.removeAll(dataSource);
-			couchDbInstance.deleteDatabase(SOURCE_ID);
+			dbConnectorFactory.deleteDatabase(SOURCE_ID);
 		}};
 	}
 

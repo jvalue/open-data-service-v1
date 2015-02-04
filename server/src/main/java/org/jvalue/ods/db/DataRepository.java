@@ -8,7 +8,6 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import org.ektorp.CouchDbConnector;
-import org.ektorp.CouchDbInstance;
 import org.ektorp.DocumentNotFoundException;
 import org.ektorp.DocumentOperationResult;
 import org.ektorp.ViewQuery;
@@ -17,6 +16,7 @@ import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.DesignDocument;
 import org.ektorp.support.DesignDocumentFactory;
 import org.ektorp.support.StdDesignDocumentFactory;
+import org.jvalue.common.db.DbConnectorFactory;
 import org.jvalue.ods.api.views.DataView;
 import org.jvalue.ods.utils.Assert;
 
@@ -38,9 +38,9 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 
 
 	@Inject
-	DataRepository(CouchDbInstance couchDbInstance, @Assisted String databaseName, @Assisted JsonPointer domainIdKey) {
-		super(JsonNode.class, couchDbInstance.createConnector(databaseName, true), DESIGN_DOCUMENT_NAME);
-		this.connector = couchDbInstance.createConnector(databaseName, true);
+	DataRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName, @Assisted JsonPointer domainIdKey) {
+		super(JsonNode.class, dbConnectorFactory.createConnector(databaseName, true), DESIGN_DOCUMENT_NAME);
+		this.connector = dbConnectorFactory.createConnector(databaseName, true);
 		initStandardDesignDocument();
 
 		domainIdView = createObjectByDomainIdView(domainIdKey);

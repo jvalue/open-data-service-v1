@@ -6,10 +6,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import org.ektorp.CouchDbInstance;
 import org.ektorp.DocumentNotFoundException;
 import org.junit.Assert;
 import org.junit.Test;
+import org.jvalue.common.db.DbConnectorFactory;
 import org.jvalue.ods.api.views.DataView;
 
 import java.util.Arrays;
@@ -24,14 +24,10 @@ public final class DataRepositoryTest extends AbstractRepositoryTest {
 
 	private DataRepository repository;
 
-	public DataRepositoryTest() {
-		super(DataRepositoryTest.class.getSimpleName());
-	}
-
 
 	@Override
-	protected void doCreateDatabase(CouchDbInstance couchDbInstance, String databaseName) {
-		this.repository = new DataRepository(couchDbInstance, databaseName, JsonPointer.compile("/" + DOMAIN_ID));
+	protected void doCreateDatabase(DbConnectorFactory connectorFactory) {
+		this.repository = new DataRepository(connectorFactory, getClass().getSimpleName(), JsonPointer.compile("/" + DOMAIN_ID));
 	}
 
 

@@ -5,28 +5,30 @@ import com.codahale.metrics.health.HealthCheck;
 import com.google.inject.Inject;
 
 import org.ektorp.CouchDbInstance;
+import org.jvalue.ods.db.DataRepository;
+import org.jvalue.ods.db.DataSourceRepository;
 
 import java.util.List;
 
+import javax.xml.crypto.Data;
+
+/**
+ * Checks that CouchDb is still reachable.
+ */
 public final class DbHealthCheck extends HealthCheck {
 
-	private final CouchDbInstance dbInstance;
+	private final DataSourceRepository sourceRepository;
 
 	@Inject
-	public DbHealthCheck(CouchDbInstance dbInstance) {
-		this.dbInstance = dbInstance;
+	public DbHealthCheck(DataSourceRepository sourceRepository) {
+		this.sourceRepository = sourceRepository;
 	}
 
 
 	@Override
 	public Result check() throws Exception {
-		List<String> dbs = dbInstance.getAllDatabases();
-		StringBuilder builder = new StringBuilder("Found connected databases: ");
-		for (String db : dbs) {
-			builder.append(db);
-			builder.append(" ");
-		}
-		return Result.healthy(builder.toString());
+		sourceRepository.getAll();
+		return Result.healthy(DataSourceRepository.class.getSimpleName() + " is reachable");
 	}
 
 }

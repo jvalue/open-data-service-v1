@@ -24,7 +24,7 @@ import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.data.AbstractDataSourcePropertyManager;
 import org.jvalue.ods.db.DataRepository;
-import org.jvalue.ods.db.DbFactory;
+import org.jvalue.ods.db.RepositoryFactory;
 import org.jvalue.ods.db.NotificationClientRepository;
 import org.jvalue.ods.notifications.sender.Sender;
 import org.jvalue.ods.notifications.sender.SenderCache;
@@ -43,10 +43,10 @@ public final class NotificationManager
 	@Inject
 	NotificationManager(
 			Cache<NotificationClientRepository> repositoryCache,
-			DbFactory dbFactory,
+			RepositoryFactory repositoryFactory,
 			SenderCache senderCache) {
 
-		super(repositoryCache, dbFactory);
+		super(repositoryCache, repositoryFactory);
 		this.senderCache = senderCache;
 	}
 
@@ -116,8 +116,8 @@ public final class NotificationManager
 
 
 	@Override
-	protected NotificationClientRepository createNewRepository(String sourceId, DbFactory dbFactory) {
-		return dbFactory.createNotificationClientRepository(sourceId);
+	protected NotificationClientRepository createNewRepository(String sourceId, RepositoryFactory repositoryFactory) {
+		return repositoryFactory.createNotificationClientRepository(sourceId);
 	}
 
 }

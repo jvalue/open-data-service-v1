@@ -21,7 +21,7 @@ import org.ektorp.DocumentNotFoundException;
 import org.jvalue.common.db.RepositoryAdapter;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.db.DataRepository;
-import org.jvalue.ods.db.DbFactory;
+import org.jvalue.ods.db.RepositoryFactory;
 import org.jvalue.ods.utils.Assert;
 import org.jvalue.ods.utils.Cache;
 
@@ -31,16 +31,16 @@ import java.util.List;
 public abstract class AbstractDataSourcePropertyManager<T, R extends RepositoryAdapter<?, ?, T>> {
 
 	private final Cache<R> repositoryCache;
-	private final DbFactory dbFactory;
+	private final RepositoryFactory repositoryFactory;
 
 
 	protected AbstractDataSourcePropertyManager(
 			Cache<R> repositoryCache,
-			DbFactory dbFactory) {
+			RepositoryFactory repositoryFactory) {
 
-		Assert.assertNotNull(repositoryCache, dbFactory);
+		Assert.assertNotNull(repositoryCache, repositoryFactory);
 		this.repositoryCache = repositoryCache;
-		this.dbFactory = dbFactory;
+		this.repositoryFactory = repositoryFactory;
 	}
 
 
@@ -107,12 +107,12 @@ public abstract class AbstractDataSourcePropertyManager<T, R extends RepositoryA
 	private R assertRepository(DataSource source) {
 		String key = source.getId();
 		if (repositoryCache.contains(key)) return repositoryCache.get(key);
-		R repository = createNewRepository(key, dbFactory);
+		R repository = createNewRepository(key, repositoryFactory);
 		repositoryCache.put(key, repository);
 		return repository;
 	}
 
 
-	protected abstract R createNewRepository(String sourceId, DbFactory dbFactory);
+	protected abstract R createNewRepository(String sourceId, RepositoryFactory repositoryFactory);
 
 }

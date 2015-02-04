@@ -11,7 +11,7 @@ import org.jvalue.ods.api.notifications.GcmClient;
 import org.jvalue.ods.api.notifications.HttpClient;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.db.DataRepository;
-import org.jvalue.ods.db.DbFactory;
+import org.jvalue.ods.db.RepositoryFactory;
 import org.jvalue.ods.db.NotificationClientRepository;
 import org.jvalue.ods.notifications.sender.Sender;
 import org.jvalue.ods.notifications.sender.SenderCache;
@@ -32,7 +32,7 @@ public final class NotificationManagerTest {
 
 	@Mocked private SenderCache senderCache;
 	@Mocked private Cache<NotificationClientRepository> clientRepositoryCache;
-	@Mocked private DbFactory dbFactory;
+	@Mocked private RepositoryFactory repositoryFactory;
 	@Mocked private NotificationClientRepository clientRepository;
 	@Mocked private Sender<HttpClient> httpSender;
 	@Mocked private Sender<GcmClient> gcmSender;
@@ -45,7 +45,7 @@ public final class NotificationManagerTest {
 
 	@Before
 	public void setupNotificationManager() {
-		notificationManager = new NotificationManager(clientRepositoryCache, dbFactory, senderCache);
+		notificationManager = new NotificationManager(clientRepositoryCache, repositoryFactory, senderCache);
 	}
 
 

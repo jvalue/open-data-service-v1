@@ -23,7 +23,7 @@ import org.jvalue.ods.api.processors.PluginMetaData;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.data.AbstractDataSourcePropertyManager;
 import org.jvalue.ods.db.DataRepository;
-import org.jvalue.ods.db.DbFactory;
+import org.jvalue.ods.db.RepositoryFactory;
 import org.jvalue.ods.db.PluginMetaDataRepository;
 import org.jvalue.ods.utils.Cache;
 import org.jvalue.ods.utils.Assert;
@@ -37,9 +37,9 @@ public final class PluginMetaDataManager extends AbstractDataSourcePropertyManag
 	@Inject
 	PluginMetaDataManager(
 			Cache<PluginMetaDataRepository> repositoryCache,
-			DbFactory dbFactory) {
+			RepositoryFactory repositoryFactory) {
 
-		super(repositoryCache, dbFactory);
+		super(repositoryCache, repositoryFactory);
 	}
 
 
@@ -69,8 +69,8 @@ public final class PluginMetaDataManager extends AbstractDataSourcePropertyManag
 
 
 	@Override
-	protected PluginMetaDataRepository createNewRepository(String sourceId, DbFactory dbFactory) {
-		return dbFactory.createPluginMetaDataRepository(sourceId);
+	protected PluginMetaDataRepository createNewRepository(String sourceId, RepositoryFactory repositoryFactory) {
+		return repositoryFactory.createPluginMetaDataRepository(sourceId);
 	}
 
 }

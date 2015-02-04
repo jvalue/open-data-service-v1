@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.jvalue.common.db.CouchDbConfig;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import io.dropwizard.Configuration;
@@ -13,7 +14,7 @@ import io.dropwizard.Configuration;
 public final class OdsConfig extends Configuration {
 
 	@NotNull private final String gcmApiKey;
-	@NotNull private final CouchDbConfig couchDb;
+	@NotNull @Valid private final CouchDbConfig couchDb;
 
 	@JsonCreator
 	public OdsConfig(

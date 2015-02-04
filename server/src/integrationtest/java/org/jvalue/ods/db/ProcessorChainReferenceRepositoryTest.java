@@ -1,7 +1,7 @@
 package org.jvalue.ods.db;
 
 
-import org.ektorp.CouchDbInstance;
+import org.jvalue.common.db.DbConnectorFactory;
 import org.jvalue.common.db.RepositoryAdapter;
 import org.jvalue.ods.api.processors.ExecutionInterval;
 import org.jvalue.ods.api.processors.ProcessorReference;
@@ -12,14 +12,9 @@ import java.util.concurrent.TimeUnit;
 
 public class ProcessorChainReferenceRepositoryTest extends AbstractRepositoryAdapterTest<ProcessorReferenceChain> {
 
-	public ProcessorChainReferenceRepositoryTest() {
-		super(ProcessorChainReferenceRepositoryTest.class.getSimpleName());
-	}
-
-
 	@Override
-	protected RepositoryAdapter<?, ?, ProcessorReferenceChain> doCreateAdapter(CouchDbInstance couchDbInstance, String databaseName) {
-		return new ProcessorChainReferenceRepository(couchDbInstance, databaseName);
+	protected RepositoryAdapter<?, ?, ProcessorReferenceChain> doCreateAdapter(DbConnectorFactory dbConnectorFactory) {
+		return new ProcessorChainReferenceRepository(dbConnectorFactory, getClass().getSimpleName());
 	}
 
 

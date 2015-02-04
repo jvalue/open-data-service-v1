@@ -17,7 +17,7 @@ import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceMetaData;
 import org.jvalue.ods.db.DataRepository;
-import org.jvalue.ods.db.DbFactory;
+import org.jvalue.ods.db.RepositoryFactory;
 import org.jvalue.ods.db.ProcessorChainReferenceRepository;
 import org.jvalue.ods.utils.Cache;
 
@@ -44,7 +44,7 @@ public final class ProcessorChainManagerTest {
 			new DataSourceMetaData("", "", "", "", "", "", ""));
 	@Mocked private ProcessorChainFactory chainFactory;
 	@Mocked private Cache<ProcessorChainReferenceRepository> repositoryCache;
-	@Mocked private DbFactory dbFactory;
+	@Mocked private RepositoryFactory repositoryFactory;
 	@Mocked private MetricRegistry registry;
 	private ProcessorChainManager manager;
 
@@ -55,7 +55,7 @@ public final class ProcessorChainManagerTest {
 
 	@Before
 	public void createFilterChainManager() {
-		manager = new ProcessorChainManager(chainFactory, repositoryCache, dbFactory, registry);
+		manager = new ProcessorChainManager(chainFactory, repositoryCache, repositoryFactory, registry);
 	}
 
 
@@ -77,7 +77,7 @@ public final class ProcessorChainManagerTest {
 
 		new Verifications() {{
 			// add chain
-			dbFactory.createFilterChainReferenceRepository(anyString);
+			repositoryFactory.createFilterChainReferenceRepository(anyString);
 			referenceRepository.add(reference);
 			repositoryCache.put(anyString, referenceRepository);
 
@@ -175,7 +175,7 @@ public final class ProcessorChainManagerTest {
 			final ProcessorChain chain) {
 
 		new Expectations() {{
-			dbFactory.createFilterChainReferenceRepository(anyString);
+			repositoryFactory.createFilterChainReferenceRepository(anyString);
 			result = referenceRepository;
 
 			chainFactory.createProcessorChain(reference, source, dataRepository);

@@ -5,6 +5,7 @@ couchDb:
   url: http://localhost:5984/
   username: ADMIN_USERNAME
   password: ADMIN_PASSWORD
+  dbPrefix: ods
 
 server:
   applicationContextPath: /ods/api/v1

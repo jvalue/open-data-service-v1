@@ -27,7 +27,7 @@ import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.data.AbstractDataSourcePropertyManager;
 import org.jvalue.ods.db.DataRepository;
-import org.jvalue.ods.db.DbFactory;
+import org.jvalue.ods.db.RepositoryFactory;
 import org.jvalue.ods.db.ProcessorChainReferenceRepository;
 import org.jvalue.ods.utils.Assert;
 import org.jvalue.ods.utils.Cache;
@@ -55,10 +55,10 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 	ProcessorChainManager(
 			ProcessorChainFactory processorChainFactory,
 			Cache<ProcessorChainReferenceRepository> referenceRepositoryCache,
-			DbFactory dbFactory,
+			RepositoryFactory repositoryFactory,
 			MetricRegistry registry) {
 
-		super(referenceRepositoryCache, dbFactory);
+		super(referenceRepositoryCache, repositoryFactory);
 		this.processorChainFactory = processorChainFactory;
 		this.processorTimer = registry.timer(MetricRegistry.name(ProcessorChainManager.class, "processing-total"));
 		registry.register(MetricRegistry.name(ProcessorChainManager.class, "running-tasks"), new Gauge<Integer>() {
@@ -97,8 +97,8 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 
 
 	@Override
-	protected ProcessorChainReferenceRepository createNewRepository(String sourceId, DbFactory dbFactory) {
-		return dbFactory.createFilterChainReferenceRepository(sourceId);
+	protected ProcessorChainReferenceRepository createNewRepository(String sourceId, RepositoryFactory repositoryFactory) {
+		return repositoryFactory.createFilterChainReferenceRepository(sourceId);
 	}
 
 

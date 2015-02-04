@@ -11,16 +11,19 @@ public final class CouchDbConfig {
 	@NotNull private final String url;
 	@NotNull private final String username;
 	@NotNull private final String password;
+	@NotNull private final String dbPrefix;
 
 	@JsonCreator
 	public CouchDbConfig(
 			@JsonProperty("url") String url,
 			@JsonProperty("username") String username,
-			@JsonProperty("password") String password) {
+			@JsonProperty("password") String password,
+			@JsonProperty("dbPrefix") String dbPrefix) {
 
 		this.url = url;
 		this.username = username;
 		this.password = password;
+		this.dbPrefix = dbPrefix;
 	}
 
 
@@ -36,6 +39,11 @@ public final class CouchDbConfig {
 
 	public String getPassword() {
 		return password;
+	}
+
+
+	public String getDbPrefix() {
+		return dbPrefix;
 	}
 
 }

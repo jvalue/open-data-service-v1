@@ -12,6 +12,7 @@ import org.ektorp.CouchDbInstance;
 import org.ektorp.http.StdHttpClient;
 import org.ektorp.impl.StdCouchDbInstance;
 import org.jvalue.common.db.CouchDbConfig;
+import org.jvalue.common.db.DbConnectorFactory;
 import org.jvalue.ods.utils.Cache;
 
 import java.net.MalformedURLException;
@@ -33,11 +34,13 @@ public class DbModule extends AbstractModule {
 					.username(couchDbConfig.getUsername())
 					.password(couchDbConfig.getPassword())
 					.build());
-			CouchDbConnector dataSourceConnector = couchDbInstance.createConnector(DataSourceRepository.DATABASE_NAME, true);
+			DbConnectorFactory connectorFactory = new DbConnectorFactory(couchDbInstance, couchDbConfig.getDbPrefix());
 
-			bind(CouchDbInstance.class).toInstance(couchDbInstance);
+			CouchDbConnector dataSourceConnector = connectorFactory.createConnector(DataSourceRepository.DATABASE_NAME, true);
 			bind(CouchDbConnector.class).annotatedWith(Names.named(DataSourceRepository.DATABASE_NAME)).toInstance(dataSourceConnector);
-			install(new FactoryModuleBuilder().build(DbFactory.class));
+
+			bind(DbConnectorFactory.class).toInstance(connectorFactory);
+			install(new FactoryModuleBuilder().build(RepositoryFactory.class));
 
 			bind(DataSourceRepository.class).in(Singleton.class);
 			bind(new TypeLiteral<Cache<DataViewRepository>>() { }).in(Singleton.class);

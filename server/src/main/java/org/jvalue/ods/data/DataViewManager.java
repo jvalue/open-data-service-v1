@@ -24,7 +24,7 @@ import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.views.DataView;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DataViewRepository;
-import org.jvalue.ods.db.DbFactory;
+import org.jvalue.ods.db.RepositoryFactory;
 import org.jvalue.ods.utils.Cache;
 import org.jvalue.ods.utils.Assert;
 
@@ -37,9 +37,9 @@ public final class DataViewManager extends AbstractDataSourcePropertyManager<Dat
 	@Inject
 	DataViewManager(
 			Cache<DataViewRepository> viewRepositoryCache,
-			DbFactory dbFactory) {
+			RepositoryFactory repositoryFactory) {
 
-		super(viewRepositoryCache, dbFactory);
+		super(viewRepositoryCache, repositoryFactory);
 	}
 
 
@@ -66,8 +66,8 @@ public final class DataViewManager extends AbstractDataSourcePropertyManager<Dat
 
 
 	@Override
-	protected DataViewRepository createNewRepository(String sourceId, DbFactory dbFactory) {
-		return dbFactory.createDataViewRepository(sourceId);
+	protected DataViewRepository createNewRepository(String sourceId, RepositoryFactory repositoryFactory) {
+		return repositoryFactory.createDataViewRepository(sourceId);
 	}
 
 }

@@ -11,9 +11,9 @@ import org.ektorp.impl.StdCouchDbInstance;
  * CouchDB instance with "admin" "admin" credentials. This class provides easier access to
  * creating connector instances.
  */
-public final class DbFactory2 {
+public final class DbFactory {
 
-	private DbFactory2() { }
+	private DbFactory() { }
 
 	public static HttpClient createHttpClient() {
 		return new StdHttpClient.Builder()

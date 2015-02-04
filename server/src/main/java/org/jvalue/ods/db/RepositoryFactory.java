@@ -3,7 +3,7 @@ package org.jvalue.ods.db;
 
 import com.fasterxml.jackson.core.JsonPointer;
 
-public interface DbFactory {
+public interface RepositoryFactory {
 
 	public DataViewRepository createDataViewRepository(String databaseName);
 

@@ -4,30 +4,34 @@ package org.jvalue.ods.db;
 import org.ektorp.CouchDbInstance;
 import org.junit.After;
 import org.junit.Before;
+import org.jvalue.common.db.DbConnectorFactory;
+
+import java.util.List;
 
 public abstract class AbstractRepositoryTest {
 
-	private final String databaseName;
-	private final CouchDbInstance couchdbInstance;
+	private static final String DB_PREFIX = "test";
 
-	public AbstractRepositoryTest(String databaseName) {
-		this.databaseName = databaseName;
-		this.couchdbInstance = DbFactory2.createCouchDbInstance();
-	}
+	private CouchDbInstance couchDbInstance;
 
 
 	@Before
 	public final void createDatabase() {
-		doCreateDatabase(couchdbInstance, databaseName);
+		this.couchDbInstance = DbFactory.createCouchDbInstance();
+		DbConnectorFactory dbConnectorFactory = new DbConnectorFactory(couchDbInstance, DB_PREFIX);
+		doCreateDatabase(dbConnectorFactory);
 	}
 
 
-	protected abstract void doCreateDatabase(CouchDbInstance couchdbInstance, String databaseName);
+	protected abstract void doCreateDatabase(DbConnectorFactory dbConnectorFactory);
 
 
 	@After
 	public final void deleteDatabase() {
-		couchdbInstance.deleteDatabase(databaseName);
+		List<String> databaseNames = couchDbInstance.getAllDatabases();
+		for (String name : databaseNames) {
+			if (name.startsWith(DB_PREFIX)) couchDbInstance.deleteDatabase(name);
+		}
 	}
 
 
