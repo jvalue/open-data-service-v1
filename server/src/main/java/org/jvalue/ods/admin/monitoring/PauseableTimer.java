@@ -1,4 +1,4 @@
-package org.jvalue.ods.monitoring;
+package org.jvalue.ods.admin.monitoring;
 
 
 import com.codahale.metrics.Clock;

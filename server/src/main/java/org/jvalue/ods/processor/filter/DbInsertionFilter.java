@@ -24,9 +24,9 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import org.ektorp.DocumentOperationResult;
+import org.jvalue.ods.admin.monitoring.PauseableTimer;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.db.DataRepository;
-import org.jvalue.ods.monitoring.PauseableTimer;
 
 import java.util.Collection;
 import java.util.LinkedList;
