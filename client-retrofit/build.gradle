@@ -1,35 +1,13 @@
 apply plugin: 'java'
-apply plugin: 'idea'
 
 repositories {
 	mavenCentral()
 }
 
 
-buildscript {
-    repositories {
-    	jcenter()
-    }
-}
-
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '1.10'
-}
-
-
-task fatJar(type: Jar) {
-    baseName =  project.name + '-SNAPSHOT'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
-}
-
-
 dependencies {
     compile 'com.squareup.retrofit:retrofit:1.8.+'
     compile 'com.squareup.retrofit:converter-jackson:1.8.+'
-    compile 'com.google.inject:guice:4.0-beta5'
-    compile 'com.google.inject.extensions:guice-assistedinject:4.0-beta5'
     compile project(':models')
 
     testCompile 'org.jmockit:jmockit:1.13'
