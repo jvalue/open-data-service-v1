@@ -10,6 +10,7 @@ import org.hibernate.validator.HibernateValidator;
 import org.hibernate.validator.HibernateValidatorConfiguration;
 import org.hibernate.validator.cfg.ConstraintMapping;
 import org.hibernate.validator.cfg.GenericConstraintDef;
+import org.jvalue.common.rest.DbExceptionMapper;
 import org.jvalue.ods.admin.monitoring.DbHealthCheck;
 import org.jvalue.ods.admin.monitoring.MonitoringModule;
 import org.jvalue.ods.admin.rest.AdminFilterChainApi;
@@ -23,14 +24,12 @@ import org.jvalue.ods.processor.reference.ValidChainReference;
 import org.jvalue.ods.rest.DataApi;
 import org.jvalue.ods.rest.DataSourceApi;
 import org.jvalue.ods.rest.DataViewApi;
-import org.jvalue.common.rest.DbExceptionMapper;
-import org.jvalue.ods.rest.ProcessorChainApi;
-import org.jvalue.ods.rest.ProcessorSpecificationApi;
 import org.jvalue.ods.rest.JsonExceptionMapper;
 import org.jvalue.ods.rest.JsonMixins;
 import org.jvalue.ods.rest.NotificationApi;
 import org.jvalue.ods.rest.PluginApi;
-import org.jvalue.ods.rest.RestModule;
+import org.jvalue.ods.rest.ProcessorChainApi;
+import org.jvalue.ods.rest.ProcessorSpecificationApi;
 import org.jvalue.ods.utils.GuiceConstraintValidatorFactory;
 
 import java.util.Map;
@@ -74,7 +73,6 @@ public final class OdsApplication extends Application<OdsConfig> {
 				new MonitoringModule(environment.metrics()),
 				new ConfigModule(configuration),
 				new ProcessorModule(),
-				new RestModule(),
 				new DbModule(configuration.getCouchDb()),
 				new NotificationsModule(),
 				new DataModule());
