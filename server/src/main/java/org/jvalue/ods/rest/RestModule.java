@@ -8,7 +8,7 @@ public final class RestModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		bind(DataApi.class);
-		bind(NotificationClientRegistrationApi.class);
+		bind(NotificationApi.class);
 		bind(FilterChainApi.class);
 		bind(DataViewApi.class);
 	}

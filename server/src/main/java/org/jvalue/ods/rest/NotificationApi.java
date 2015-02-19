@@ -30,14 +30,14 @@ import javax.ws.rs.core.MediaType;
 @Path(AbstractApi.BASE_URL + "/{sourceId}/notifications")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public final class NotificationClientRegistrationApi extends AbstractApi {
+public final class NotificationApi extends AbstractApi {
 
 	private final DataSourceManager sourceManager;
 	private final NotificationManager notificationManager;
 	private final ClientAdapter clientAdapter = new ClientAdapter();
 
 	@Inject
-	NotificationClientRegistrationApi(
+	NotificationApi(
 			DataSourceManager sourceManager,
 			NotificationManager notificationManager) {
 

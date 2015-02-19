@@ -28,7 +28,7 @@ import org.jvalue.ods.rest.FilterChainApi;
 import org.jvalue.ods.rest.FilterDescriptionApi;
 import org.jvalue.ods.rest.JsonExceptionMapper;
 import org.jvalue.ods.rest.JsonMixins;
-import org.jvalue.ods.rest.NotificationClientRegistrationApi;
+import org.jvalue.ods.rest.NotificationApi;
 import org.jvalue.ods.rest.PluginApi;
 import org.jvalue.ods.rest.RestModule;
 import org.jvalue.ods.utils.GuiceConstraintValidatorFactory;
@@ -86,7 +86,7 @@ public final class OdsApplication extends Application<OdsConfig> {
 		environment.jersey().register(injector.getInstance(DataApi.class));
 		environment.jersey().register(injector.getInstance(FilterChainApi.class));
 		environment.jersey().register(injector.getInstance(DataViewApi.class));
-		environment.jersey().register(injector.getInstance(NotificationClientRegistrationApi.class));
+		environment.jersey().register(injector.getInstance(NotificationApi.class));
 		environment.jersey().register(injector.getInstance(PluginApi.class));
 		environment.jersey().register(injector.getInstance(FilterDescriptionApi.class));
 		environment.jersey().register(new DbExceptionMapper());
