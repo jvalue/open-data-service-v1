@@ -6,3 +6,26 @@ dependencies {
     testCompile 'org.jmockit:jmockit:1.13'
     testCompile 'junit:junit:4.11'
 }
+
+
+// integration test
+def testSrcDir = 'src/integrationtest/java'
+def testResourceDir = 'src/integrationtest/resources'
+sourceSets {
+    integrationTest {
+        java.srcDir file(testSrcDir)
+        resources.srcDir file(testResourceDir)
+        compileClasspath = sourceSets.main.output + configurations.testCompile + sourceSets.test.output
+        runtimeClasspath = output + compileClasspath
+    }
+}
+task integrationTest(type: Test) {
+    testClassesDir = sourceSets.integrationTest.output.classesDir
+    classpath = sourceSets.integrationTest.runtimeClasspath
+}
+check.dependsOn integrationTest
+idea {
+    module {
+        testSrcDir += new File(testSrcDir)
+    }
+}

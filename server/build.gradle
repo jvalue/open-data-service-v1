@@ -67,20 +67,25 @@ dependencies {
     testCompile project(':client-retrofit')
 }
 
+
 // integration test
+def testSrcDir = 'src/integrationtest/java'
+def testResourceDir = 'src/integrationtest/resources'
 sourceSets {
-  integrationTest {
-    java.srcDir file('src/integrationtest/java')
-    resources.srcDir file('src/integrationtest/resouces')
-    // compileClasspath = sourceSets.main.output + configurations.testruntime
-    // runtimeClasspath = output + compileClasspath
-  }
- }
-  
-
-task integrationTest(type: Test) {
-  testClassesDir = sourceSets.integrationTest.output.classesDir
-  classpath = sourceSets.integrationTest.runtimeClasspath
+    integrationTest {
+        java.srcDir file(testSrcDir)
+        resources.srcDir file(testResourceDir)
+        compileClasspath = sourceSets.main.output + configurations.testCompile + sourceSets.test.output
+        runtimeClasspath = output + compileClasspath
+    }
 }
-
-build.dependsOn integrationTest
+task integrationTest(type: Test) {
+    testClassesDir = sourceSets.integrationTest.output.classesDir
+    classpath = sourceSets.integrationTest.runtimeClasspath
+}
+check.dependsOn integrationTest
+idea {
+    module {
+        testSrcDir += new File(testSrcDir)
+    }
+}
