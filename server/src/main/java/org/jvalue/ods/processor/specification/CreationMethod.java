@@ -1,6 +1,8 @@
 package org.jvalue.ods.processor.specification;
 
 
+import org.jvalue.ods.api.processors.ProcessorType;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;

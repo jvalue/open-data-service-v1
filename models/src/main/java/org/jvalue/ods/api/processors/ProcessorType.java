@@ -1,4 +1,4 @@
-package org.jvalue.ods.processor.specification;
+package org.jvalue.ods.api.processors;
 
 
 import java.util.EnumSet;

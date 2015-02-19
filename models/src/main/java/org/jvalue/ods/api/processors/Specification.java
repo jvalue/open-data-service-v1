@@ -1,27 +1,26 @@
-package org.jvalue.ods.processor.specification;
+package org.jvalue.ods.api.processors;
 
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 
-import org.jvalue.ods.utils.Assert;
-
 import java.util.Map;
+
+import javax.validation.constraints.NotNull;
 
 public final class Specification {
 
-	private final String name;
-	private final ProcessorType type;
-	private final Map<String, Class<?>> argumentTypes;
+	@NotNull private final String name;
+	@NotNull private final ProcessorType type;
+	@NotNull private final Map<String, Class<?>> argumentTypes;
 
 	@JsonCreator
-	Specification(
+	public Specification(
 			@JsonProperty("name") String name,
 			@JsonProperty("type") ProcessorType type,
 			@JsonProperty("argumentTypes") Map<String, Class<?>> argumentTypes) {
 
-		Assert.assertNotNull(name, type, argumentTypes);
 		this.name = name;
 		this.type = type;
 		this.argumentTypes = argumentTypes;

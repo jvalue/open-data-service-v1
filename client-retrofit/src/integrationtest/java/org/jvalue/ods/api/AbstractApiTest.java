@@ -8,9 +8,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.junit.After;
 import org.junit.Before;
-import org.jvalue.ods.api.notifications.NotificationApi;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.api.sources.DataSourceApi;
 import org.jvalue.ods.api.sources.DataSourceDescription;
 import org.jvalue.ods.api.sources.DataSourceMetaData;
 
@@ -44,13 +42,13 @@ public abstract class AbstractApiTest {
 
 	@Before
 	public void addSource() {
-		this.dataSource = dataSourceApi.add(sourceId, dataSourceDescription);
+		this.dataSource = dataSourceApi.addSource(sourceId, dataSourceDescription);
 	}
 
 
 	@After
 	public void removeSource() {
-		dataSourceApi.remove(sourceId);
+		dataSourceApi.deleteSource(sourceId);
 	}
 
 }

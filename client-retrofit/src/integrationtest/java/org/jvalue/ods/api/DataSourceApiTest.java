@@ -1,9 +1,10 @@
-package org.jvalue.ods.api.sources;
+package org.jvalue.ods.api;
 
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.jvalue.ods.api.AbstractApiTest;
+import org.jvalue.ods.api.sources.DataSource;
 
 import java.util.List;
 
@@ -14,26 +15,26 @@ public final class DataSourceApiTest extends AbstractApiTest {
 	@Test
 	public void testCrud() {
 		// test add and get
-		Assert.assertEquals(dataSource, dataSourceApi.get(sourceId));
+		Assert.assertEquals(dataSource, dataSourceApi.getSource(sourceId));
 		Assert.assertEquals(sourceId, dataSource.getId());
 		Assert.assertEquals(domainIdKey, dataSource.getDomainIdKey());
 		Assert.assertEquals(schema, dataSource.getSchema());
 		Assert.assertEquals(metaData, dataSource.getMetaData());
 
 		// test get schema
-		Assert.assertEquals(schema, dataSourceApi.getSchema(sourceId));
+		Assert.assertEquals(schema, dataSourceApi.getSourceSchema(sourceId));
 
 		// test get all
-		List<DataSource> sources = dataSourceApi.getAll();
+		List<DataSource> sources = dataSourceApi.getAllSources();
 		Assert.assertTrue(sources.size() > 0);
 		Assert.assertTrue(sources.contains(dataSource));
 
 		// test remove
-		dataSourceApi.remove(sourceId);
+		dataSourceApi.deleteSource(sourceId);
 		try {
-			dataSourceApi.get(sourceId);
+			dataSourceApi.getSource(sourceId);
 		} catch(RetrofitError re) {
-			dataSourceApi.add(sourceId, dataSourceDescription);
+			dataSourceApi.addSource(sourceId, dataSourceDescription);
 			return;
 		}
 		Assert.fail();

@@ -7,7 +7,7 @@ import com.google.inject.name.Named;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.processor.specification.Argument;
 import org.jvalue.ods.processor.specification.CreationMethod;
-import org.jvalue.ods.processor.specification.ProcessorType;
+import org.jvalue.ods.api.processors.ProcessorType;
 
 public interface SourceAdapterFactory {
 

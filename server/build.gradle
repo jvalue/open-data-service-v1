@@ -39,7 +39,6 @@ dependencies {
     testCompile project(':client-retrofit')
 }
 
-
 // integration test
 def testSrcDir = 'src/integrationtest/java'
 def testResourceDir = 'src/integrationtest/resources'

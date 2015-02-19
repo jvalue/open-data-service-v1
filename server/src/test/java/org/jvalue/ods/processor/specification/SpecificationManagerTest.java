@@ -3,6 +3,7 @@ package org.jvalue.ods.processor.specification;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.jvalue.ods.api.processors.Specification;
 import org.jvalue.ods.processor.adapter.SourceAdapterFactory;
 import org.jvalue.ods.processor.filter.FilterFactory;
 

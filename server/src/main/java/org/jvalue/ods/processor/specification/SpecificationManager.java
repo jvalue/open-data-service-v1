@@ -1,6 +1,7 @@
 package org.jvalue.ods.processor.specification;
 
 
+import org.jvalue.ods.api.processors.Specification;
 import org.jvalue.ods.processor.adapter.SourceAdapter;
 import org.jvalue.ods.processor.adapter.SourceAdapterFactory;
 import org.jvalue.ods.processor.filter.Filter;

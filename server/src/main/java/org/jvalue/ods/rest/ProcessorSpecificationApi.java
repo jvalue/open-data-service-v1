@@ -3,7 +3,7 @@ package org.jvalue.ods.rest;
 
 import com.google.inject.Inject;
 
-import org.jvalue.ods.processor.specification.Specification;
+import org.jvalue.ods.api.processors.Specification;
 import org.jvalue.ods.processor.specification.SpecificationManager;
 
 import java.util.LinkedList;

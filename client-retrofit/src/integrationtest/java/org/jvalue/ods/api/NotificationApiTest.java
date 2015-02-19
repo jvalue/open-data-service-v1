@@ -1,9 +1,14 @@
-package org.jvalue.ods.api.notifications;
+package org.jvalue.ods.api;
 
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.jvalue.ods.api.AbstractApiTest;
+import org.jvalue.ods.api.notifications.Client;
+import org.jvalue.ods.api.notifications.ClientDescription;
+import org.jvalue.ods.api.notifications.GcmClient;
+import org.jvalue.ods.api.notifications.GcmClientDescription;
+import org.jvalue.ods.api.notifications.HttpClient;
+import org.jvalue.ods.api.notifications.HttpClientDescription;
 
 import java.util.List;
 
@@ -23,9 +28,9 @@ public final class NotificationApiTest extends AbstractApiTest {
 		testClient(httpClient, httpClientDescription);
 		testClient(gcmClient, gcmClientDescription);
 
-		notificationApi.register(sourceId, httpClient.getId(), httpClientDescription);
-		notificationApi.register(sourceId, gcmClient.getId(), gcmClientDescription);
-		List<Client> clients = notificationApi.getAll(sourceId);
+		notificationApi.registerClient(sourceId, httpClient.getId(), httpClientDescription);
+		notificationApi.registerClient(sourceId, gcmClient.getId(), gcmClientDescription);
+		List<Client> clients = notificationApi.getAllClients(sourceId);
 
 		Assert.assertEquals(2, clients.size());
 		Assert.assertTrue(clients.contains(httpClient));
@@ -34,11 +39,11 @@ public final class NotificationApiTest extends AbstractApiTest {
 
 
 	private void testClient(Client client, ClientDescription clientDescription) {
-		notificationApi.register(sourceId, client.getId(), clientDescription);
-		Assert.assertEquals(client, notificationApi.get(sourceId, client.getId()));
-		notificationApi.unregister(sourceId, client.getId());
+		notificationApi.registerClient(sourceId, client.getId(), clientDescription);
+		Assert.assertEquals(client, notificationApi.getClient(sourceId, client.getId()));
+		notificationApi.unregisterClient(sourceId, client.getId());
 		try {
-			notificationApi.get(sourceId, client.getId());
+			notificationApi.getClient(sourceId, client.getId());
 		} catch (RetrofitError re) {
 			return;
 		}

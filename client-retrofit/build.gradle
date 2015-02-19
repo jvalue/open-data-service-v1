@@ -1,3 +1,12 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'de.bitdroid.jaxrs2retrofit:jaxrs2retrofit:0.1.0'
+    }
+}
+
 dependencies {
     compile 'com.squareup.retrofit:retrofit:1.8.+'
     compile 'com.squareup.retrofit:converter-jackson:1.8.+'
@@ -6,7 +15,6 @@ dependencies {
     testCompile 'org.jmockit:jmockit:1.13'
     testCompile 'junit:junit:4.11'
 }
-
 
 // integration test
 def testSrcDir = 'src/integrationtest/java'
@@ -24,8 +32,19 @@ task integrationTest(type: Test) {
     classpath = sourceSets.integrationTest.runtimeClasspath
 }
 check.dependsOn integrationTest
+
+task jaxrs2retrofit(type: de.bitdroid.jaxrs2retrofit.JaxRs2RetrofitTask) {
+    inputDir = new File(project(':server').projectDir.toString() + "/src/main/java/")
+    outputDir = new File(project.projectDir.toString() + "/target/generated-sources/jaxrs2retrofit/")
+    retrofitPackageName = "org.jvalue.ods.api"
+    excludedClassNamesRegex = "PluginApi|FilterDescriptionApi|Admin.*"
+}
+project.compileJava.dependsOn jaxrs2retrofit
+project.compileJava.source += jaxrs2retrofit.outputs.files
+
 idea {
     module {
         testSrcDir += new File(testSrcDir)
+        sourceDirs += new File(project.projectDir.toString() + "/target/generated-sources/jaxrs2retrofit/")
     }
 }
