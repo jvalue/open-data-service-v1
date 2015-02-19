@@ -22,4 +22,11 @@ allprojects {
     tasks.withType(JavaCompile) {
         options.compilerArgs << "-Xlint:unchecked"
     }
+
+    // one jar with all sources & dependencies
+    task uberjar(type: Jar) {
+        from files(sourceSets.main.output.classesDir)
+        from files(sourceSets.main.output.resourcesDir)
+        from {configurations.compile.collect {zipTree(it)}}
+    }
 }

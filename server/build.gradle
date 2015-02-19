@@ -4,14 +4,6 @@ repositories {
 	maven { url 'https://raw.github.com/slorber/gcm-server-repository/master/releases/' }
 }
 
-
-//task to create a jar
-task uberjar(type: Jar) {
-	from files(sourceSets.main.output.classesDir)
-	from files(sourceSets.main.output.resourcesDir)
-	from {configurations.compile.collect {zipTree(it)}}
-}
-
 mainClassName = "org.jvalue.ods.main.OdsApplication"
 
 run() {
