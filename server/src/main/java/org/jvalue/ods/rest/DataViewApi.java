@@ -49,7 +49,7 @@ public final class DataViewApi extends AbstractApi {
 
 	@GET
 	@Path("/{viewId}")
-	public Object getSingleView(
+	public Object getView(
 			@PathParam("sourceId") String sourceId,
 			@PathParam("viewId") String viewId,
 			@QueryParam("execute") boolean execute,
@@ -82,7 +82,7 @@ public final class DataViewApi extends AbstractApi {
 
 	@DELETE
 	@Path("/{viewId}")
-	public void removeView(
+	public void deleteView(
 			@PathParam("sourceId") String sourceId,
 			@PathParam("viewId") String viewId) {
 

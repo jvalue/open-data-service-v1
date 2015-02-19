@@ -75,7 +75,7 @@ public final class NotificationApi extends AbstractApi {
 
 	@GET
 	@Path("/{clientId}")
-	public Client getSingleClient(
+	public Client getClient(
 			@PathParam("sourceId") String sourceId,
 			@PathParam("clientId") String clientId) {
 

@@ -24,8 +24,8 @@ import org.jvalue.ods.rest.DataApi;
 import org.jvalue.ods.rest.DataSourceApi;
 import org.jvalue.ods.rest.DataViewApi;
 import org.jvalue.common.rest.DbExceptionMapper;
-import org.jvalue.ods.rest.FilterChainApi;
-import org.jvalue.ods.rest.FilterDescriptionApi;
+import org.jvalue.ods.rest.ProcessorChainApi;
+import org.jvalue.ods.rest.ProcessorSpecificationApi;
 import org.jvalue.ods.rest.JsonExceptionMapper;
 import org.jvalue.ods.rest.JsonMixins;
 import org.jvalue.ods.rest.NotificationApi;
@@ -84,11 +84,11 @@ public final class OdsApplication extends Application<OdsConfig> {
 		environment.jersey().getResourceConfig().register(MultiPartFeature.class);
 		environment.jersey().register(injector.getInstance(DataSourceApi.class));
 		environment.jersey().register(injector.getInstance(DataApi.class));
-		environment.jersey().register(injector.getInstance(FilterChainApi.class));
+		environment.jersey().register(injector.getInstance(ProcessorChainApi.class));
 		environment.jersey().register(injector.getInstance(DataViewApi.class));
 		environment.jersey().register(injector.getInstance(NotificationApi.class));
 		environment.jersey().register(injector.getInstance(PluginApi.class));
-		environment.jersey().register(injector.getInstance(FilterDescriptionApi.class));
+		environment.jersey().register(injector.getInstance(ProcessorSpecificationApi.class));
 		environment.jersey().register(new DbExceptionMapper());
 		environment.jersey().register(new JsonExceptionMapper());
 

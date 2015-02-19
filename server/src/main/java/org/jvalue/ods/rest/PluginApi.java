@@ -52,7 +52,7 @@ public final class PluginApi extends AbstractApi {
 	@PUT
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Path("/{pluginId}")
-	public PluginMetaData add(
+	public PluginMetaData addPlugin(
 			@PathParam("sourceId") String sourceId,
 			@PathParam("pluginId") String pluginId,
 			@FormDataParam("file") InputStream fileInputStream,
@@ -74,8 +74,8 @@ public final class PluginApi extends AbstractApi {
 
 
 	@GET
-	public List<PluginMetaData> getAll(
-		@PathParam("sourceId") String sourceId) {
+	public List<PluginMetaData> getAllPlugins(
+			@PathParam("sourceId") String sourceId) {
 
 		return pluginManager.getAll(sourceManager.findBySourceId(sourceId));
 	}
@@ -84,7 +84,7 @@ public final class PluginApi extends AbstractApi {
 	@GET
 	@Produces({MediaType.APPLICATION_JSON, MediaType.MULTIPART_FORM_DATA})
 	@Path("/{pluginId}")
-	public Response get(
+	public Response getPlugin(
 			@PathParam("sourceId") String sourceId,
 			@PathParam("pluginId") String pluginId,
 			@QueryParam("download") boolean download) {
@@ -101,7 +101,7 @@ public final class PluginApi extends AbstractApi {
 
 	@DELETE
 	@Path("/{pluginId}")
-	public void delete(
+	public void deletePlugin(
 			@PathParam("sourceId") String sourceId,
 			@PathParam("pluginId") String pluginId) {
 

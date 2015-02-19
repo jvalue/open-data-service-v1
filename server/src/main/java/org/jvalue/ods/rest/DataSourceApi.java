@@ -42,14 +42,14 @@ public final class DataSourceApi extends AbstractApi {
 
 	@GET
 	@Path("/{sourceId}")
-	public DataSource getSingleSource(@PathParam("sourceId") String sourceId) {
+	public DataSource getSource(@PathParam("sourceId") String sourceId) {
 		return sourceManager.findBySourceId(sourceId);
 	}
 
 
 	@GET
 	@Path("/{sourceId}/schema")
-	public JsonNode getSchema(@PathParam("sourceId") String sourceId) {
+	public JsonNode getSourceSchema(@PathParam("sourceId") String sourceId) {
 		return sourceManager.findBySourceId(sourceId).getSchema();
 	}
 

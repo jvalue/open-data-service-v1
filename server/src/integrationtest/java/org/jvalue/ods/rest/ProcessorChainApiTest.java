@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 import retrofit.RetrofitError;
 
-public final class FilterChainApiTest {
+public final class ProcessorChainApiTest {
 
 	private final ApiFactory apiFactory = new ApiFactory();
 	private final DataSourceApi sourceApi = apiFactory.createDataSourceApi();

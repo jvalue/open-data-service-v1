@@ -16,18 +16,18 @@ import javax.ws.rs.core.MediaType;
 
 @Path("/filterTypes")
 @Produces(MediaType.APPLICATION_JSON)
-public final class FilterDescriptionApi extends AbstractApi {
+public final class ProcessorSpecificationApi extends AbstractApi {
 
 	private final SpecificationManager descriptionManager;
 
 	@Inject
-	public FilterDescriptionApi(SpecificationManager descriptionManager) {
+	public ProcessorSpecificationApi(SpecificationManager descriptionManager) {
 		this.descriptionManager = descriptionManager;
 	}
 
 
 	@GET
-	public List<Specification> getAll() {
+	public List<Specification> getAllSpecifications() {
 		return new LinkedList<>(descriptionManager.getAll());
 	}
 }

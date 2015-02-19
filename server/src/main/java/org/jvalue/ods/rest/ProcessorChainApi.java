@@ -25,7 +25,7 @@ import javax.ws.rs.core.MediaType;
 
 @Path(AbstractApi.BASE_URL + "/{sourceId}/filterChains")
 @Produces(MediaType.APPLICATION_JSON)
-public final class FilterChainApi extends AbstractApi {
+public final class ProcessorChainApi extends AbstractApi {
 
 	// avoid executing filter chains faster than every second
 	private static final EnumSet<TimeUnit> validExecutionIntervalUnits
@@ -35,7 +35,7 @@ public final class FilterChainApi extends AbstractApi {
 	private final ProcessorChainManager chainManager;
 
 	@Inject
-	public FilterChainApi(
+	public ProcessorChainApi(
 			DataSourceManager sourceManager,
 			ProcessorChainManager chainManager) {
 
@@ -45,7 +45,7 @@ public final class FilterChainApi extends AbstractApi {
 
 
 	@GET
-	public List<ProcessorReferenceChain> getAllFilterChains(@PathParam("sourceId") String sourceId) {
+	public List<ProcessorReferenceChain> getAllProcessorChains(@PathParam("sourceId") String sourceId) {
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		return chainManager.getAll(source);
 	}
@@ -53,7 +53,7 @@ public final class FilterChainApi extends AbstractApi {
 
 	@GET
 	@Path("/{filterChainId}")
-	public ProcessorReferenceChain getSingleFilterChain(
+	public ProcessorReferenceChain getProcessorChain(
 			@PathParam("sourceId") String sourceId,
 			@PathParam("filterChainId") String filterChainId) {
 
@@ -64,7 +64,7 @@ public final class FilterChainApi extends AbstractApi {
 
 	@PUT
 	@Path("/{filterChainId}")
-	public ProcessorReferenceChain addFilterChain(
+	public ProcessorReferenceChain addProcessorChain(
 			@PathParam("sourceId") String sourceId,
 			@PathParam("filterChainId") String filterChainId,
 			@Valid ProcessorReferenceChainDescription processorChain) {
@@ -90,7 +90,7 @@ public final class FilterChainApi extends AbstractApi {
 
 	@DELETE
 	@Path("/{filterChainId}")
-	public void removeFilterChain(
+	public void deleteProcessorChain(
 			@PathParam("sourceId") String sourceId,
 			@PathParam("filterChainId") String filterChainId) {
 

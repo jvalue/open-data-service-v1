@@ -33,14 +33,14 @@ public final class DataApi extends AbstractApi {
 
 
 	@GET
-	public List<Object> getAll(@PathParam("sourceId") String sourceId) throws Exception {
+	public List<Object> getAllObjects(@PathParam("sourceId") String sourceId) throws Exception {
 		DataRepository repository = assertIsValidSource(sourceId);
 		return new LinkedList<Object>(jsonFilter.filter(repository.getAll()));
 	}
 
 
 	@DELETE
-	public void deleteAll(@PathParam("sourceId") String sourceId) {
+	public void deleteAllObjects(@PathParam("sourceId") String sourceId) {
 		DataRepository repository = assertIsValidSource(sourceId);
 		repository.removeAll();
 	}
