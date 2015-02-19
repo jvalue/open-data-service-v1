@@ -28,6 +28,6 @@ allprojects {
         from files(sourceSets.main.output.classesDir)
         from files(sourceSets.main.output.resourcesDir)
         from {configurations.compile.collect {zipTree(it)}}
-        baseName = project.name + '-SNAPSHOT'
+        baseName = 'ods-' + project.name + '-SNAPSHOT'
     }
 }
