@@ -5,11 +5,21 @@ buildscript {
 }
 
 allprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+
+    // default maven repo
     repositories {
         jcenter()
     }
-}
 
-tasks.withType(JavaCompile) {
-    options.compilerArgs << "-Xlint:unchecked"
+    // gradle wrapper
+    task wrapper(type: Wrapper) {
+        gradleVersion = '2.1'
+    }
+
+    // show java compiler warnings
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:unchecked"
+    }
 }
