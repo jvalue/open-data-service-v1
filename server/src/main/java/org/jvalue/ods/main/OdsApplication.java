@@ -25,14 +25,11 @@ import org.jvalue.ods.rest.DataApi;
 import org.jvalue.ods.rest.DataSourceApi;
 import org.jvalue.ods.rest.DataViewApi;
 import org.jvalue.ods.rest.JsonExceptionMapper;
-import org.jvalue.ods.rest.JsonMixins;
 import org.jvalue.ods.rest.NotificationApi;
 import org.jvalue.ods.rest.PluginApi;
 import org.jvalue.ods.rest.ProcessorChainApi;
 import org.jvalue.ods.rest.ProcessorSpecificationApi;
 import org.jvalue.ods.utils.GuiceConstraintValidatorFactory;
-
-import java.util.Map;
 
 import javax.validation.Validation;
 import javax.ws.rs.core.Context;
@@ -40,7 +37,6 @@ import javax.ws.rs.core.Context;
 import io.dropwizard.Application;
 import io.dropwizard.jersey.DropwizardResourceConfig;
 import io.dropwizard.jersey.setup.JerseyContainerHolder;
-import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
 public final class OdsApplication extends Application<OdsConfig> {
@@ -54,15 +50,6 @@ public final class OdsApplication extends Application<OdsConfig> {
 	@Override
 	public String getName() {
 		return "Open Data Service";
-	}
-
-
-	@Override
-	public void initialize(Bootstrap<OdsConfig>configuration) {
-		JsonMixins mixins = new JsonMixins();
-		for (Map.Entry<Class<?>, Class<?>> mixinPair : mixins.getMixins().entrySet()) {
-			configuration.getObjectMapper().addMixInAnnotations(mixinPair.getKey(), mixinPair.getValue());
-		}
 	}
 
 
