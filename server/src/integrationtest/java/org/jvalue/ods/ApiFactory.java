@@ -1,10 +1,10 @@
 package org.jvalue.ods;
 
 
-import org.jvalue.ods.api.data.DataApi;
-import org.jvalue.ods.api.processors.ProcessorApi;
-import org.jvalue.ods.api.sources.*;
-import org.jvalue.ods.api.views.DataViewApi;
+import org.jvalue.ods.api.DataApi;
+import org.jvalue.ods.api.DataSourceApi;
+import org.jvalue.ods.api.DataViewApi;
+import org.jvalue.ods.api.ProcessorChainApi;
 
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
@@ -37,8 +37,8 @@ public final class ApiFactory {
 	}
 
 
-	public ProcessorApi createProcessorApi() {
-		return restAdapter.create(ProcessorApi.class);
+	public ProcessorChainApi createProcessorChainApi() {
+		return restAdapter.create(ProcessorChainApi.class);
 	}
 
 
