@@ -24,7 +24,7 @@ import org.jvalue.ods.processor.reference.ValidChainReference;
 import org.jvalue.ods.rest.DataApi;
 import org.jvalue.ods.rest.DataSourceApi;
 import org.jvalue.ods.rest.DataViewApi;
-import org.jvalue.ods.rest.JsonExceptionMapper;
+import org.jvalue.common.rest.JsonExceptionMapper;
 import org.jvalue.ods.rest.NotificationApi;
 import org.jvalue.ods.rest.PluginApi;
 import org.jvalue.ods.rest.ProcessorChainApi;
