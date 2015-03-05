@@ -8,6 +8,7 @@ import java.util.List;
 
 final class JsonDbPropertyFilter {
 
+
 	public List<JsonNode> filter(List<JsonNode> nodes) {
 		for (JsonNode node : nodes) filter(node);
 		return nodes;

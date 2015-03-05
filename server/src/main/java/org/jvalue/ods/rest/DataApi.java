@@ -6,17 +6,16 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 
 import org.jvalue.common.rest.RestUtils;
+import org.jvalue.ods.api.data.Data;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.db.DataRepository;
-
-import java.util.LinkedList;
-import java.util.List;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 @Path(AbstractApi.BASE_URL + "/{sourceId}/data")
@@ -33,9 +32,17 @@ public final class DataApi extends AbstractApi {
 
 
 	@GET
-	public List<Object> getAllObjects(@PathParam("sourceId") String sourceId) throws Exception {
+	public Data getObjects(
+			@PathParam("sourceId") String sourceId,
+			@QueryParam("startId") String startId,
+			@QueryParam("count") int count) {
+
+		if (count < 1 || count > 100) throw RestUtils.createJsonFormattedException("count must be > 0 and < 100", 400);
+
 		DataRepository repository = assertIsValidSource(sourceId);
-		return new LinkedList<Object>(jsonFilter.filter(repository.getAll()));
+		Data data = repository.executePaginatedGet(startId, count);
+		jsonFilter.filter(data.getResult());
+		return data;
 	}
 
 
