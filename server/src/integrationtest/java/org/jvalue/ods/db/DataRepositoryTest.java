@@ -10,6 +10,7 @@ import org.ektorp.DocumentNotFoundException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.jvalue.common.db.DbConnectorFactory;
+import org.jvalue.ods.api.data.Data;
 import org.jvalue.ods.api.views.DataView;
 
 import java.util.Arrays;
@@ -124,6 +125,29 @@ public final class DataRepositoryTest extends AbstractRepositoryTest {
 		for (JsonNode node : createdNodes) {
 			Assert.assertEquals("foobar", node.get("somethingElse").asText());
 		}
+	}
+
+
+	@Test
+	public void testExecutePaginatedGet() {
+		List<JsonNode> nodes = new LinkedList<>();
+		int nodeCount = 10;
+		for (int i = 0; i < nodeCount; ++i) {
+			JsonNode node = createObjectNode("id" + i, "data" + i);
+			repository.add(node);
+			nodes.add(node);
+		}
+
+		List<JsonNode> fetchedNodes = new LinkedList<>();
+		Data data;
+		String currentId = null;
+		do {
+			data = repository.executePaginatedGet(currentId, 3);
+			fetchedNodes.addAll(data.getResult());
+			currentId = data.getCursor().getNext();
+		} while(data.getCursor().getHasNext());
+
+		Assert.assertEquals(nodes, fetchedNodes);
 	}
 
 

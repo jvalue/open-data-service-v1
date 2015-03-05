@@ -17,6 +17,8 @@ import org.ektorp.support.DesignDocument;
 import org.ektorp.support.DesignDocumentFactory;
 import org.ektorp.support.StdDesignDocumentFactory;
 import org.jvalue.common.db.DbConnectorFactory;
+import org.jvalue.ods.api.data.Cursor;
+import org.jvalue.ods.api.data.Data;
 import org.jvalue.ods.api.views.DataView;
 import org.jvalue.ods.utils.Assert;
 
@@ -34,7 +36,7 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 
 	private final CouchDbConnector connector;
 	private final DataView domainIdView;
-	private final DataView revAndIdBydomainIdView;
+	private final DataView revAndIdByDomainIdView;
 
 
 	@Inject
@@ -46,8 +48,8 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 		domainIdView = createObjectByDomainIdView(domainIdKey);
 		if (!containsView(domainIdView)) addView(domainIdView);
 
-		revAndIdBydomainIdView = createIdAndRevByDomainIdView(domainIdKey);
-		if (!containsView(revAndIdBydomainIdView)) addView(revAndIdBydomainIdView);
+		revAndIdByDomainIdView = createIdAndRevByDomainIdView(domainIdKey);
+		if (!containsView(revAndIdByDomainIdView)) addView(revAndIdByDomainIdView);
 
 		DataView allView = createAllView(domainIdKey);
 		if (!containsView(allView)) addView(allView);
@@ -131,10 +133,47 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 	}
 
 
+	/**
+	 * Cursor based pagination of the data in this repository based on ascending sorted domain ids.
+	 *
+	 * @param startDomainId the start id of the requested page or null if the result should start
+	 *                      at the first entry.
+	 * @param count how many entries should be in the page. Must be > 0.
+	 */
+	public Data executePaginatedGet(String startDomainId, int count) {
+		ViewQuery query = new ViewQuery()
+				.designDocId(DESIGN_DOCUMENT_ID)
+				.viewName(domainIdView.getId())
+				.includeDocs(true)
+				.descending(false)
+				.limit(count + 1);
+		if (startDomainId != null) query = query.startKey(startDomainId);
+
+		List<JsonNode> result = new LinkedList<>();
+		int resultCount = 0;
+		String nextStartDomainId = null;
+		boolean hasNext = false;
+
+		for (ViewResult.Row row : connector.queryView(query).getRows()) {
+			if (resultCount == count) {
+				hasNext = true;
+				nextStartDomainId = row.getKey();
+				break;
+			}
+
+			result.add(row.getDocAsNode());
+			++resultCount;
+		}
+
+		Cursor cursor = new Cursor(nextStartDomainId, hasNext, resultCount);
+		return new Data(result, cursor);
+	}
+
+
 	public void removeAll() {
 		ViewQuery query = new ViewQuery()
 				.designDocId(DESIGN_DOCUMENT_ID)
-				.viewName(revAndIdBydomainIdView.getId());
+				.viewName(revAndIdByDomainIdView.getId());
 
 		Collection<JsonNode> deletedObjects = new LinkedList<>();
 		for (ViewResult.Row row : connector.queryView(query).getRows()) {
