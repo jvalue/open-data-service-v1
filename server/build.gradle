@@ -4,10 +4,25 @@ repositories {
 	maven { url 'https://raw.github.com/slorber/gcm-server-repository/master/releases/' }
 }
 
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'de.bitdroid.githash:plugin:0.1.0'
+    }
+}
+
 mainClassName = "org.jvalue.ods.main.OdsApplication"
 
 run() {
     args 'server', 'ods-configuration.yml'
+}
+
+apply plugin: 'de.bitdroid.githash'
+
+gitHashSettings {
+    packageName = "org.jvalue.ods"
 }
 
 dependencies {
@@ -55,8 +70,10 @@ task integrationTest(type: Test) {
     classpath = sourceSets.integrationTest.runtimeClasspath
 }
 check.dependsOn integrationTest
+
 idea {
     module {
         testSrcDir += new File(testSrcDir)
+        sourceDirs += new File(project.projectDir.toString() + "/target/generated-sources/githash/")
     }
 }

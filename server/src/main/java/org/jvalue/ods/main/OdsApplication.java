@@ -29,6 +29,7 @@ import org.jvalue.ods.rest.NotificationApi;
 import org.jvalue.ods.rest.PluginApi;
 import org.jvalue.ods.rest.ProcessorChainApi;
 import org.jvalue.ods.rest.ProcessorSpecificationApi;
+import org.jvalue.ods.rest.VersionApi;
 import org.jvalue.ods.utils.GuiceConstraintValidatorFactory;
 
 import javax.validation.Validation;
@@ -74,6 +75,7 @@ public final class OdsApplication extends Application<OdsConfig> {
 		environment.jersey().register(injector.getInstance(NotificationApi.class));
 		environment.jersey().register(injector.getInstance(PluginApi.class));
 		environment.jersey().register(injector.getInstance(ProcessorSpecificationApi.class));
+		environment.jersey().register(injector.getInstance(VersionApi.class));
 		environment.jersey().register(new DbExceptionMapper());
 		environment.jersey().register(new JsonExceptionMapper());
 
