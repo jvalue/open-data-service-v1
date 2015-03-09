@@ -36,7 +36,8 @@ public final class DataApi extends AbstractApi {
 	public Data getObjects(
 			@PathParam("sourceId") String sourceId,
 			@QueryParam("startId") String startId,
-			@QueryParam("count") int count) {
+			@QueryParam("count") int count,
+			@QueryParam("property") String propertyFilter) {
 
 		if (count < 1 || count > 100) throw RestUtils.createJsonFormattedException("count must be > 0 and < 100", 400);
 

@@ -1,15 +1,17 @@
 package org.jvalue.ods.sources;
 
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.jvalue.ods.ApiFactory;
 import org.jvalue.ods.api.DataApi;
 import org.jvalue.ods.api.DataSourceApi;
 import org.jvalue.ods.api.ProcessorChainApi;
+import org.jvalue.ods.api.data.Data;
 import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
 import org.jvalue.ods.api.sources.DataSourceDescription;
-
-import java.util.List;
 
 public abstract class AbstractDataSourceTest {
 
@@ -18,32 +20,46 @@ public abstract class AbstractDataSourceTest {
 	private final ProcessorChainApi processorApi = apiFactory.createProcessorChainApi();
 	private final DataApi dataApi = apiFactory.createDataApi();
 
+	private String sourceId = getClass().getSimpleName();
 
-	protected final void runTest(
-			final DataSourceDescription source,
-			final ProcessorReferenceChainDescription processorChain,
-			final long sleepDuration) throws Exception {
 
-		final String sourceId = getClass().getSimpleName();
-		final String filterId = "testFilter";
-
+	@Before
+	public void setupSourceAndFilter() {
 		// add source
-		sourceApi.addSource(sourceId, source);
+		sourceApi.addSource(sourceId, getSourceDescription());
 
 		// assert empty
-		List<Object> data = dataApi.getAllObjects(sourceId);
-		Assert.assertEquals(0, data.size());
+		Data data = dataApi.getObjects(sourceId, getStartId(), 3, null);
+		Assert.assertEquals(0, data.getCursor().getCount());
+		Assert.assertEquals(0, data.getResult().size());
 
 		// add filter chain
-		processorApi.addProcessorChain(sourceId, filterId, processorChain);
+		processorApi.addProcessorChain(sourceId, "testFilter", getProcessorChainDescription());
+	}
 
-		// check filter execution
-		Thread.sleep(sleepDuration);
-		data = dataApi.getAllObjects(sourceId);
-		Assert.assertTrue(data.size() > 0);
 
-		// cleanup
+	@After
+	public void removeSource() {
 		sourceApi.deleteSource(sourceId);
 	}
+
+
+	@Test
+	public final void runTest() throws Exception {
+		// check filter execution
+		Thread.sleep(getSleepDuration());
+		Data data = dataApi.getObjects(sourceId, getStartId(), 3, null);
+		Assert.assertTrue(data.getCursor().getCount() > 0);
+		Assert.assertTrue(data.getResult().size() > 0);
+	}
+
+
+	public abstract DataSourceDescription getSourceDescription();
+
+	public abstract String getStartId();
+
+	public abstract ProcessorReferenceChainDescription getProcessorChainDescription();
+
+	public abstract long getSleepDuration();
 
 }

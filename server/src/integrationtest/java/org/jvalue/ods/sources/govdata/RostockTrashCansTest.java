@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import org.junit.Test;
 import org.jvalue.ods.api.processors.ExecutionInterval;
 import org.jvalue.ods.api.processors.ProcessorReference;
 import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
@@ -17,14 +16,24 @@ import java.util.concurrent.TimeUnit;
 
 public final class RostockTrashCansTest extends AbstractDataSourceTest {
 
-	@Test
-	public void testTrashCanSource() throws Exception {
-		final DataSourceDescription sourceDescription = new DataSourceDescription(
+	@Override
+	public DataSourceDescription getSourceDescription() {
+		return new DataSourceDescription(
 				JsonPointer.compile("/id"),
 				new ObjectNode(JsonNodeFactory.instance),
 				new DataSourceMetaData("", "", "", "", "", "", ""));
+	}
 
-		final ProcessorReferenceChainDescription processorChainDescription = new ProcessorReferenceChainDescription.Builder(
+
+	@Override
+	public String getStartId() {
+		return "1";
+	}
+
+
+	@Override
+	public ProcessorReferenceChainDescription getProcessorChainDescription() {
+		return new ProcessorReferenceChainDescription.Builder(
 				new ExecutionInterval(100, TimeUnit.SECONDS))
 				.processor(new ProcessorReference.Builder("CsvSourceAdapter")
 						.argument("sourceUrl", "https://geo.sv.rostock.de/download/opendata/abfallbehaelter/abfallbehaelter.csv")
@@ -34,8 +43,12 @@ public final class RostockTrashCansTest extends AbstractDataSourceTest {
 						.argument("updateData", true)
 						.build())
 				.build();
+	}
 
-		runTest(sourceDescription, processorChainDescription, 3000);
+
+	@Override
+	public long getSleepDuration() {
+		return 3000;
 	}
 
 }
