@@ -4,6 +4,7 @@ package org.jvalue.ods.rest;
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
+import com.hubspot.jackson.jaxrs.PropertyFiltering;
 
 import org.jvalue.common.rest.RestUtils;
 import org.jvalue.ods.api.data.Data;
@@ -23,7 +24,6 @@ import javax.ws.rs.core.MediaType;
 public final class DataApi extends AbstractApi {
 
 	private final DataSourceManager sourceManager;
-	private final JsonDbPropertyFilter jsonFilter = new JsonDbPropertyFilter();
 
 	@Inject
 	public DataApi(DataSourceManager sourceManager) {
@@ -32,6 +32,7 @@ public final class DataApi extends AbstractApi {
 
 
 	@GET
+	@PropertyFiltering(always = {"!result._id", "!result._rev"})
 	public Data getObjects(
 			@PathParam("sourceId") String sourceId,
 			@QueryParam("startId") String startId,
@@ -40,9 +41,7 @@ public final class DataApi extends AbstractApi {
 		if (count < 1 || count > 100) throw RestUtils.createJsonFormattedException("count must be > 0 and < 100", 400);
 
 		DataRepository repository = assertIsValidSource(sourceId);
-		Data data = repository.executePaginatedGet(startId, count);
-		jsonFilter.filter(data.getResult());
-		return data;
+		return repository.executePaginatedGet(startId, count);
 	}
 
 
@@ -61,7 +60,7 @@ public final class DataApi extends AbstractApi {
 			@PathParam("pointer") String pointer) {
 
 		JsonNode node = assertIsValidSource(sourceId).findByDomainId(domainId);
-		if (pointer.isEmpty() || pointer.equals("/")) return jsonFilter.filter(node);
+		if (pointer.isEmpty() || pointer.equals("/")) return node;
 
 		try {
 			JsonPointer jsonPointer = JsonPointer.compile(pointer);
@@ -73,7 +72,6 @@ public final class DataApi extends AbstractApi {
 			throw RestUtils.createNotFoundException();
 		}
 	}
-
 
 
 	private DataRepository assertIsValidSource(String sourceId) {

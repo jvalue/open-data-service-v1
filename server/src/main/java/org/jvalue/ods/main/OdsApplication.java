@@ -3,6 +3,7 @@ package org.jvalue.ods.main;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.hubspot.jackson.jaxrs.PropertyFilteringMessageBodyWriter;
 
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.servlet.ServletContainer;
@@ -11,6 +12,7 @@ import org.hibernate.validator.HibernateValidatorConfiguration;
 import org.hibernate.validator.cfg.ConstraintMapping;
 import org.hibernate.validator.cfg.GenericConstraintDef;
 import org.jvalue.common.rest.DbExceptionMapper;
+import org.jvalue.common.rest.JsonExceptionMapper;
 import org.jvalue.ods.admin.monitoring.DbHealthCheck;
 import org.jvalue.ods.admin.monitoring.MonitoringModule;
 import org.jvalue.ods.admin.rest.AdminFilterChainApi;
@@ -24,7 +26,6 @@ import org.jvalue.ods.processor.reference.ValidChainReference;
 import org.jvalue.ods.rest.DataApi;
 import org.jvalue.ods.rest.DataSourceApi;
 import org.jvalue.ods.rest.DataViewApi;
-import org.jvalue.common.rest.JsonExceptionMapper;
 import org.jvalue.ods.rest.NotificationApi;
 import org.jvalue.ods.rest.PluginApi;
 import org.jvalue.ods.rest.ProcessorChainApi;
@@ -76,6 +77,7 @@ public final class OdsApplication extends Application<OdsConfig> {
 		environment.jersey().register(injector.getInstance(PluginApi.class));
 		environment.jersey().register(injector.getInstance(ProcessorSpecificationApi.class));
 		environment.jersey().register(injector.getInstance(VersionApi.class));
+		environment.jersey().register(PropertyFilteringMessageBodyWriter.class);
 		environment.jersey().register(new DbExceptionMapper());
 		environment.jersey().register(new JsonExceptionMapper());
 
