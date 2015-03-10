@@ -120,7 +120,7 @@ final class OsmSourceAdapter extends AbstractSourceAdapter {
 
 		public JsonSink(BlockingQueue<Optional<ObjectNode>> jsonQueue) {
 			this.jsonQueue = jsonQueue;
-			this.mapper.addMixInAnnotations(Entity.class, EntityMixin.class);
+			this.mapper.addMixIn(Entity.class, EntityMixin.class);
 		}
 
 

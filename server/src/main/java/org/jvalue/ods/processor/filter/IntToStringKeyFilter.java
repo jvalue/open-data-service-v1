@@ -22,7 +22,6 @@ import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
@@ -51,18 +50,18 @@ final class IntToStringKeyFilter extends AbstractFilter<ObjectNode, ObjectNode> 
 	protected ObjectNode doFilter(ObjectNode node) throws FilterException {
 		JsonNode keyNode = node.at(source.getDomainIdKey());
 		if (keyNode.isTextual()) return node;
-		TextNode textKeyNode = new TextNode(keyNode.asText());
 		JsonNode parentNode = node.at(parentPointer);
 
 		if (parentNode.isObject()) {
 			// add to parent object
-			((ObjectNode) parentNode).put(keyName, textKeyNode);
+			((ObjectNode) parentNode).put(keyName, keyNode.asText());
 		} else if (parentNode.isArray()) {
 			// add to parent array
-			((ArrayNode) parentNode).insert(Integer.valueOf(keyName), textKeyNode);
+			((ArrayNode) parentNode).insert(Integer.valueOf(keyName), keyNode.asText());
 		} else {
 			throw new IllegalArgumentException("failed to find parent node for domainIdKey");
 		}
+
 		return node;
 	}
 

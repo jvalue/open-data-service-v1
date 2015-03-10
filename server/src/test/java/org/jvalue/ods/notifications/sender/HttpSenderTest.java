@@ -37,7 +37,11 @@ public final class HttpSenderTest {
 
 		String path = "/foo/bar/data/";
 		String callbackUrl = server.getUrl(path).toString();
-		ArrayNode data = new ArrayNode(JsonNodeFactory.instance);
+
+		ObjectNode sentData = new ObjectNode(JsonNodeFactory.instance);
+		sentData.put("sourceId", SOURCE_ID);
+		ArrayNode data = sentData.putArray("data");
+
 		data.addObject().put("hello", "world");
 		data.addObject().put("and", "again");
 
@@ -49,9 +53,6 @@ public final class HttpSenderTest {
 
 		assertEquals(SenderResult.Status.SUCCESS, sender.getSenderResult().getStatus());
 
-		ObjectNode sentData = new ObjectNode(JsonNodeFactory.instance);
-		sentData.put("sourceId", SOURCE_ID);
-		sentData.put("data", data);
 		RecordedRequest request = server.takeRequest();
 		assertEquals(path, request.getPath());
 		assertEquals(sentData.toString(), request.getUtf8Body());
