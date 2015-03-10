@@ -1,9 +1,5 @@
 apply plugin: 'application'
 
-repositories {
-	maven { url 'https://raw.github.com/slorber/gcm-server-repository/master/releases/' }
-}
-
 buildscript {
     repositories {
         jcenter()
@@ -39,12 +35,11 @@ dependencies {
 	compile 'org.jsoup:jsoup:1.7.+'
 	compile 'org.apache.commons:commons-lang3:3.3.+'
     compile 'org.apache.commons:commons-csv:1.1'
-	compile 'com.google.android.gcm:gcm-server:1.0.2'
     compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.4.4'
     compile 'com.hubspot.jackson:jackson-jaxrs-propertyfiltering:0.6.1'
     compile project(':models')
     compile project(':common')
-	compile files('./lib/jvalue_test.jar')
+    compile fileTree(dir: 'libs', include: '*.jar')
 
     testCompile 'org.jmockit:jmockit:1.13'
     testCompile 'junit:junit:4.11'
