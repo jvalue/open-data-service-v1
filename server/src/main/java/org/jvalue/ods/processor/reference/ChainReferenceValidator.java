@@ -35,7 +35,7 @@ public class ChainReferenceValidator implements ConstraintValidator<ValidChainRe
 		if (chainReference == null) return true;
 
 		List<ProcessorReference> references = chainReference.getProcessors();
-		if (references.isEmpty())
+		if (references == null || references.isEmpty())
 			return setAndReturnErrorMessage(context, "processor chain cannot be empty");
 		if (!specificationManager.getByName(references.get(0).getName()).getType().equals(ProcessorType.SOURCE_ADAPTER))
 			return setAndReturnErrorMessage(context, "processor chain must start with " + ProcessorType.SOURCE_ADAPTER);
@@ -57,6 +57,7 @@ public class ChainReferenceValidator implements ConstraintValidator<ValidChainRe
 	private boolean isValid(ProcessorReference reference, ConstraintValidatorContext context) {
 		Specification description = specificationManager.getByName(reference.getName());
 		if (description == null) return setAndReturnErrorMessage(context, "no processor found for id \"" + reference.getName() + "\"");
+		if (reference.getArguments() == null) return setAndReturnErrorMessage(context, "arguments for processor \"" + reference.getName() + "\" should not be null");
 		if (reference.getArguments().size() != description.getArgumentTypes().size()) return setAndReturnErrorMessage(context, "expected " + description.getArgumentTypes().size() + " arguments but got " + reference.getArguments().size());
 
 		for (Map.Entry<String, Class<?>> entry : description.getArgumentTypes().entrySet()) {
@@ -69,7 +70,6 @@ public class ChainReferenceValidator implements ConstraintValidator<ValidChainRe
 
 
 	private boolean setAndReturnErrorMessage(ConstraintValidatorContext context, String message) {
-		System.out.println(message);
 		context.disableDefaultConstraintViolation();
 		context.buildConstraintViolationWithTemplate(message).addConstraintViolation();
 		return false;
