@@ -1,6 +1,8 @@
 package org.jvalue.ods.auth;
 
 
+import com.google.common.base.Optional;
+
 /**
  * Tries to match {@link org.jvalue.ods.auth.User} objects to credentials.
  *
@@ -9,8 +11,8 @@ package org.jvalue.ods.auth;
 public interface Authenticator<T> {
 
 	/**
-	 * @return null if unable to validate the credentials..
+	 * @return the authenticated user if any.
 	 */
-	public User authenticate(T credentials);
+	public Optional<User> authenticate(T credentials, Role requiredRole);
 
 }

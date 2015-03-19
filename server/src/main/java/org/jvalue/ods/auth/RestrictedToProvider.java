@@ -1,6 +1,7 @@
 package org.jvalue.ods.auth;
 
 
+import com.google.common.base.Optional;
 import com.google.common.io.BaseEncoding;
 
 import org.glassfish.hk2.api.Factory;
@@ -76,9 +77,9 @@ public final class RestrictedToProvider extends AbstractValueFactoryProvider {
 				BasicCredentials credentials = new BasicCredentials(username, password);
 
 				// authenticate
-				User user = new BasicAuthenticator().authenticate(credentials);
-				if (user == null) onUnauthorized();
-				return user;
+				Optional<User> user = new BasicAuthenticator().authenticate(credentials, parameter.getAnnotation(RestrictedTo.class).value());
+				if (!user.isPresent()) onUnauthorized();
+				return user.get();
 			}
 		};
 	}
