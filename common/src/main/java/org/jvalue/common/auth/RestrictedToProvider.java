@@ -10,15 +10,12 @@ import org.glassfish.jersey.server.internal.inject.AbstractContainerRequestValue
 import org.glassfish.jersey.server.internal.inject.AbstractValueFactoryProvider;
 import org.glassfish.jersey.server.internal.inject.MultivaluedParameterExtractorProvider;
 import org.glassfish.jersey.server.model.Parameter;
-import org.jvalue.common.utils.Log;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Response;
 
 
 /**
@@ -43,16 +40,13 @@ public final class RestrictedToProvider extends AbstractValueFactoryProvider {
 
 	@Override
 	protected Factory<User> createValueFactory(final Parameter parameter) {
+		Class<?> classType = parameter.getRawType();
+		if (classType == null || (!classType.equals(User.class))) return null;
+
 		// factory for getting user instances based on an http request
 		return new AbstractContainerRequestValueFactory<User>() {
 			@Override
 			public User provide() {
-				// only user objects can be annotated with restrictedTo
-				if (!parameter.getRawType().equals(User.class)) {
-					Log.error(RestrictedTo.class.getSimpleName() + " can only inject to " + User.class.getSimpleName());
-					throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
-				}
-
 				// find auth header
 				List<String> headers = getContainerRequest().getRequestHeader(HttpHeaders.AUTHORIZATION);
 				if (headers == null || headers.isEmpty()) onUnauthorized();
