@@ -3,20 +3,26 @@ package org.jvalue.common.auth;
 
 import com.google.common.base.Optional;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Returns {@link org.jvalue.common.auth.User} objects based on {@link org.jvalue.common.auth.BasicCredentials}.
  */
 public final class BasicAuthenticator implements Authenticator<BasicCredentials> {
 
+	private final Map<BasicCredentials, User> userMap = new HashMap<>();
+
+	public BasicAuthenticator(Map<BasicCredentials, User> userMap) {
+		this.userMap.putAll(userMap);
+	}
+
+
 	@Override
 	public Optional<User> authenticate(BasicCredentials credentials, Role requiredRole) {
-		if (credentials.getUsername().equalsIgnoreCase("admin")
-				&& credentials.getPassword().equalsIgnoreCase("admin")) {
-			Optional<User> user = Optional.of(new User("admin", Role.ADMIN));
-			if (user.get().getRole().equals(requiredRole)) return user;
-		}
-
-		return Optional.absent();
+		User user = userMap.get(credentials);
+		if (user == null || !user.getRole().equals(requiredRole)) return Optional.absent();
+		return Optional.of(user);
 	}
 
 }

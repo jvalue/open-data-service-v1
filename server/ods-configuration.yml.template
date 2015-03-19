@@ -9,3 +9,8 @@ couchDb:
 
 server:
   applicationContextPath: /ods/api/v1
+
+auth:
+  admins:
+    - username: admin
+      password: admin

@@ -4,6 +4,9 @@ package org.jvalue.ods.rest;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 
+import org.jvalue.common.auth.RestrictedTo;
+import org.jvalue.common.auth.Role;
+import org.jvalue.common.auth.User;
 import org.jvalue.common.rest.RestUtils;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceDescription;
@@ -35,7 +38,7 @@ public final class DataSourceApi extends AbstractApi {
 
 
 	@GET
-	public List<DataSource> getAllSources() {
+	public List<DataSource> getAllSources(@RestrictedTo(Role.ADMIN) User user) {
 		return sourceManager.getAll();
 	}
 

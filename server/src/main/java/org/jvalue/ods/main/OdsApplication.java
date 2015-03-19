@@ -19,7 +19,8 @@ import org.jvalue.ods.admin.monitoring.DbHealthCheck;
 import org.jvalue.ods.admin.monitoring.MonitoringModule;
 import org.jvalue.ods.admin.rest.AdminFilterChainApi;
 import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
-import org.jvalue.common.auth.RestrictedToBinder;
+import org.jvalue.common.auth.AuthBinder;
+import org.jvalue.ods.auth.AuthModule;
 import org.jvalue.ods.data.DataModule;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.db.DbModule;
@@ -67,12 +68,13 @@ public final class OdsApplication extends Application<OdsConfig> {
 				new ProcessorModule(),
 				new DbModule(configuration.getCouchDb()),
 				new NotificationsModule(),
-				new DataModule());
+				new DataModule(),
+				new AuthModule(configuration.getAuth()));
 
 		// start data grabbing
 		environment.lifecycle().manage(injector.getInstance(DataSourceManager.class));
 		environment.jersey().getResourceConfig().register(MultiPartFeature.class);
-		environment.jersey().getResourceConfig().register(new RestrictedToBinder());
+		environment.jersey().getResourceConfig().register(injector.getInstance(AuthBinder.class));
 		environment.jersey().register(injector.getInstance(DataSourceApi.class));
 		environment.jersey().register(injector.getInstance(DataApi.class));
 		environment.jersey().register(injector.getInstance(ProcessorChainApi.class));

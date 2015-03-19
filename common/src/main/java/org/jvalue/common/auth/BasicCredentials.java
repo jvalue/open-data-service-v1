@@ -1,6 +1,8 @@
 package org.jvalue.common.auth;
 
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 
 import javax.validation.constraints.NotNull;
@@ -11,11 +13,15 @@ import javax.validation.constraints.NotNull;
  */
 public final class BasicCredentials {
 
-	private final @NotNull String username;
-	private final @NotNull String password;
+	@NotNull private final String username;
+	@NotNull private final String password;
 
 
-	public BasicCredentials(String username, String password) {
+	@JsonCreator
+	public BasicCredentials(
+			@JsonProperty("username") String username,
+			@JsonProperty("password") String password) {
+
 		this.username = username;
 		this.password = password;
 	}

@@ -24,12 +24,16 @@ import javax.ws.rs.core.HttpHeaders;
  */
 public final class RestrictedToProvider extends AbstractValueFactoryProvider {
 
+	private final BasicAuthenticator basicAuthenticator;
+
 	@Inject
 	protected RestrictedToProvider(
 			MultivaluedParameterExtractorProvider mpep,
-			ServiceLocator locator) {
+			ServiceLocator locator,
+			BasicAuthenticator basicAuthenticator) {
 
 		super(mpep, locator, Parameter.Source.UNKNOWN);
+		this.basicAuthenticator = basicAuthenticator;
 	}
 
 
@@ -70,7 +74,7 @@ public final class RestrictedToProvider extends AbstractValueFactoryProvider {
 				BasicCredentials credentials = new BasicCredentials(username, password);
 
 				// authenticate
-				Optional<User> user = new BasicAuthenticator().authenticate(credentials, parameter.getAnnotation(RestrictedTo.class).value());
+				Optional<User> user = basicAuthenticator.authenticate(credentials, parameter.getAnnotation(RestrictedTo.class).value());
 				if (!user.isPresent()) onUnauthorized();
 				return user.get();
 			}
