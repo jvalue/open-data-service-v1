@@ -10,7 +10,7 @@ public final class BasicAuthenticator implements Authenticator<BasicCredentials>
 	public User authenticate(BasicCredentials credentials) {
 		if (credentials.getUsername().equalsIgnoreCase("admin")
 			&& credentials.getPassword().equalsIgnoreCase("admin"))
-			return new User();
+			return new User("admin", Role.ADMIN);
 
 		return null;
 	}
