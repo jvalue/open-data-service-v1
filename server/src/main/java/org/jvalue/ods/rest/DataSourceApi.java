@@ -38,7 +38,7 @@ public final class DataSourceApi extends AbstractApi {
 
 
 	@GET
-	public List<DataSource> getAllSources(@RestrictedTo(Role.ADMIN) User user) {
+	public List<DataSource> getAllSources() {
 		return sourceManager.getAll();
 	}
 
