@@ -1,12 +1,11 @@
 package org.jvalue.common.rest;
 
 
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import io.dropwizard.jersey.errors.ErrorMessage;
 
 public class RestUtils {
 
@@ -17,14 +16,11 @@ public class RestUtils {
 		return createJsonFormattedException("not found", 404);
 	}
 
-	public static WebApplicationException createJsonFormattedException(String message, int status) {
-		ObjectNode node = new ObjectNode(JsonNodeFactory.instance);
-		node.put("message", message);
-		node.put("status", status);
+	public static WebApplicationException createJsonFormattedException(String message, int code) {
 		return new WebApplicationException(
 				Response
-						.status(status)
-						.entity(node.toString())
+						.status(code)
+						.entity(new ErrorMessage(code, message))
 						.type(MediaType.APPLICATION_JSON)
 						.build());
 

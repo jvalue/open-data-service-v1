@@ -1,6 +1,6 @@
 dependencies {
     compile 'org.ektorp:org.ektorp:1.4.+'
-    compile 'io.dropwizard:dropwizard-core:0.8.0-rc1'
+    compile 'io.dropwizard:dropwizard-core:0.8.0'
 
     testCompile 'org.jmockit:jmockit:1.13'
     testCompile 'junit:junit:4.11'

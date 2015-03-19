@@ -13,6 +13,7 @@ import org.hibernate.validator.cfg.ConstraintMapping;
 import org.hibernate.validator.cfg.GenericConstraintDef;
 import org.jvalue.common.rest.DbExceptionMapper;
 import org.jvalue.common.rest.JsonExceptionMapper;
+import org.jvalue.common.rest.UnauthorizedExceptionMapper;
 import org.jvalue.ods.admin.monitoring.DbHealthCheck;
 import org.jvalue.ods.admin.monitoring.MonitoringModule;
 import org.jvalue.ods.admin.rest.AdminFilterChainApi;
@@ -82,6 +83,7 @@ public final class OdsApplication extends Application<OdsConfig> {
 		environment.jersey().register(PropertyFilteringMessageBodyWriter.class);
 		environment.jersey().register(new DbExceptionMapper());
 		environment.jersey().register(new JsonExceptionMapper());
+		environment.jersey().register(new UnauthorizedExceptionMapper());
 
 		// configure administration
 		environment.healthChecks().register(DbHealthCheck.class.getSimpleName(), injector.getInstance(DbHealthCheck.class));
