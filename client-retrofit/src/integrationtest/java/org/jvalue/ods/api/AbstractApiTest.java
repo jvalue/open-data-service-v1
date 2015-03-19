@@ -12,6 +12,7 @@ import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceDescription;
 import org.jvalue.ods.api.sources.DataSourceMetaData;
 
+import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.converter.JacksonConverter;
 
@@ -33,6 +34,14 @@ public abstract class AbstractApiTest {
 		RestAdapter restAdapter = new RestAdapter.Builder()
 				.setConverter(new JacksonConverter())
 				.setEndpoint("http://localhost:8080/ods/api/v1")
+				.setRequestInterceptor(new RequestInterceptor() {
+					@Override
+					public void intercept(RequestFacade request) {
+						request.addHeader("Accept", "application/json");
+						request.addHeader("Content-Type", "application/json");
+						request.addHeader("Authorization", "Basic YWRtaW46YWRtaW4="); // admin:admin
+					}
+				})
 				.build();
 
 		this.dataSourceApi = restAdapter.create(DataSourceApi.class);

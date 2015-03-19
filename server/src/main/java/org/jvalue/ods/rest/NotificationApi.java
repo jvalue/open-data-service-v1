@@ -4,16 +4,19 @@ package org.jvalue.ods.rest;
 import com.google.inject.Inject;
 
 import org.jvalue.common.rest.RestUtils;
+import org.jvalue.ods.api.auth.RestrictedTo;
+import org.jvalue.ods.api.auth.Role;
+import org.jvalue.ods.api.auth.User;
+import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.api.notifications.ClientDescription;
 import org.jvalue.ods.api.notifications.ClientDescriptionVisitor;
+import org.jvalue.ods.api.notifications.GcmClient;
 import org.jvalue.ods.api.notifications.GcmClientDescription;
+import org.jvalue.ods.api.notifications.HttpClient;
 import org.jvalue.ods.api.notifications.HttpClientDescription;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.notifications.NotificationManager;
-import org.jvalue.ods.api.notifications.Client;
-import org.jvalue.ods.api.notifications.GcmClient;
-import org.jvalue.ods.api.notifications.HttpClient;
 
 import java.util.List;
 
@@ -49,6 +52,7 @@ public final class NotificationApi extends AbstractApi {
 	@PUT
 	@Path("/{clientId}")
 	public Client registerClient(
+			@RestrictedTo(Role.ADMIN) User user,
 			@PathParam("sourceId") String sourceId,
 			@PathParam("clientId") String clientId,
 			@Valid ClientDescription clientDescription) {
@@ -64,6 +68,7 @@ public final class NotificationApi extends AbstractApi {
 	@DELETE
 	@Path("/{clientId}")
 	public void unregisterClient(
+			@RestrictedTo(Role.ADMIN) User user,
 			@PathParam("sourceId") String sourceId,
 			@PathParam("clientId") String clientId) {
 

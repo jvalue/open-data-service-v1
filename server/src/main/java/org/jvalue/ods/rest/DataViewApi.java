@@ -4,6 +4,9 @@ package org.jvalue.ods.rest;
 import com.google.inject.Inject;
 
 import org.jvalue.common.rest.RestUtils;
+import org.jvalue.ods.api.auth.RestrictedTo;
+import org.jvalue.ods.api.auth.Role;
+import org.jvalue.ods.api.auth.User;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.views.DataView;
 import org.jvalue.ods.api.views.DataViewDescription;
@@ -65,6 +68,7 @@ public final class DataViewApi extends AbstractApi {
 	@PUT
 	@Path("/{viewId}")
 	public DataView addView(
+			@RestrictedTo(Role.ADMIN) User user,
 			@PathParam("sourceId") String sourceId,
 			@PathParam("viewId") String viewId,
 			@Valid DataViewDescription viewDescription) {
@@ -82,6 +86,7 @@ public final class DataViewApi extends AbstractApi {
 	@DELETE
 	@Path("/{viewId}")
 	public void deleteView(
+			@RestrictedTo(Role.ADMIN) User user,
 			@PathParam("sourceId") String sourceId,
 			@PathParam("viewId") String viewId) {
 

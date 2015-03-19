@@ -4,6 +4,9 @@ package org.jvalue.ods.rest;
 import com.google.inject.Inject;
 
 import org.jvalue.common.rest.RestUtils;
+import org.jvalue.ods.api.auth.RestrictedTo;
+import org.jvalue.ods.api.auth.Role;
+import org.jvalue.ods.api.auth.User;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
 import org.jvalue.ods.api.sources.DataSource;
@@ -45,7 +48,8 @@ public final class ProcessorChainApi extends AbstractApi {
 
 
 	@GET
-	public List<ProcessorReferenceChain> getAllProcessorChains(@PathParam("sourceId") String sourceId) {
+	public List<ProcessorReferenceChain> getAllProcessorChains(
+			@PathParam("sourceId") String sourceId) {
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		return chainManager.getAll(source);
 	}
@@ -65,6 +69,7 @@ public final class ProcessorChainApi extends AbstractApi {
 	@PUT
 	@Path("/{filterChainId}")
 	public ProcessorReferenceChain addProcessorChain(
+			@RestrictedTo(Role.ADMIN) User user,
 			@PathParam("sourceId") String sourceId,
 			@PathParam("filterChainId") String filterChainId,
 			@Valid ProcessorReferenceChainDescription processorChain) {
@@ -91,6 +96,7 @@ public final class ProcessorChainApi extends AbstractApi {
 	@DELETE
 	@Path("/{filterChainId}")
 	public void deleteProcessorChain(
+			@RestrictedTo(Role.ADMIN) User user,
 			@PathParam("sourceId") String sourceId,
 			@PathParam("filterChainId") String filterChainId) {
 

@@ -7,9 +7,12 @@ import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.jvalue.common.rest.RestUtils;
+import org.jvalue.ods.api.auth.RestrictedTo;
+import org.jvalue.ods.api.auth.Role;
+import org.jvalue.ods.api.auth.User;
+import org.jvalue.ods.api.processors.PluginMetaData;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
-import org.jvalue.ods.api.processors.PluginMetaData;
 import org.jvalue.ods.processor.plugin.PluginMetaDataManager;
 
 import java.io.InputStream;
@@ -53,6 +56,7 @@ public final class PluginApi extends AbstractApi {
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Path("/{pluginId}")
 	public PluginMetaData addPlugin(
+			@RestrictedTo(Role.ADMIN) User user,
 			@PathParam("sourceId") String sourceId,
 			@PathParam("pluginId") String pluginId,
 			@FormDataParam("file") InputStream fileInputStream,
@@ -102,6 +106,7 @@ public final class PluginApi extends AbstractApi {
 	@DELETE
 	@Path("/{pluginId}")
 	public void deletePlugin(
+			@RestrictedTo(Role.ADMIN) User user,
 			@PathParam("sourceId") String sourceId,
 			@PathParam("pluginId") String pluginId) {
 

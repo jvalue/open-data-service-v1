@@ -1,9 +1,16 @@
+import de.bitdroid.jaxrs2retrofit.JaxRs2RetrofitTask
+import de.bitdroid.jaxrs2retrofit.converter.AnnotatedParam
+import de.bitdroid.jaxrs2retrofit.converter.ParamConverter
+import org.jvalue.ods.api.auth.RestrictedTo
+import com.squareup.javapoet.ClassName
+
 buildscript {
     repositories {
         jcenter()
     }
     dependencies {
-        classpath 'de.bitdroid.jaxrs2retrofit:jaxrs2retrofit:0.1.1'
+        classpath 'de.bitdroid.jaxrs2retrofit:plugin:0.1.3'
+        classpath project(':models')
     }
 }
 
@@ -33,11 +40,18 @@ task integrationTest(type: Test) {
 }
 check.dependsOn integrationTest
 
-task jaxrs2retrofit(type: de.bitdroid.jaxrs2retrofit.JaxRs2RetrofitTask) {
+task jaxrs2retrofit(type: JaxRs2RetrofitTask) {
     inputDir = new File(project(':server').projectDir.toString() + "/src/main/java/")
     outputDir = new File(project.projectDir.toString() + "/target/generated-sources/jaxrs2retrofit/")
     retrofitPackageName = "org.jvalue.ods.api"
     excludedClassNamesRegex = "PluginApi|FilterDescriptionApi|Admin.*"
+    paramConverterManager.registerConverter(ClassName.get(RestrictedTo.class), new ParamConverter() {
+        @Override
+        AnnotatedParam convert(AnnotatedParam param) {
+            return null;
+        }
+    });
+
 }
 project.compileJava.dependsOn jaxrs2retrofit
 project.compileJava.source += jaxrs2retrofit.outputs.files

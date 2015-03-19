@@ -59,7 +59,11 @@ public final class DataSourceApi extends AbstractApi {
 
 	@PUT
 	@Path("/{sourceId}")
-	public DataSource addSource(@PathParam("sourceId") String sourceId, @Valid DataSourceDescription sourceDescription) {
+	public DataSource addSource(
+			@RestrictedTo(Role.ADMIN) User user,
+			@PathParam("sourceId") String sourceId,
+			@Valid DataSourceDescription sourceDescription) {
+
 		if (sourceManager.isValidSourceId(sourceId))
 			throw RestUtils.createJsonFormattedException("source with id " + sourceId + " already exists", 409);
 
@@ -75,7 +79,10 @@ public final class DataSourceApi extends AbstractApi {
 
 	@DELETE
 	@Path("/{sourceId}")
-	public void deleteSource(@PathParam("sourceId") String sourceId) {
+	public void deleteSource(
+			@RestrictedTo(Role.ADMIN) User user,
+			@PathParam("sourceId") String sourceId) {
+
 		sourceManager.remove(sourceManager.findBySourceId(sourceId));
 	}
 

@@ -7,6 +7,9 @@ import com.google.inject.Inject;
 import com.hubspot.jackson.jaxrs.PropertyFiltering;
 
 import org.jvalue.common.rest.RestUtils;
+import org.jvalue.ods.api.auth.RestrictedTo;
+import org.jvalue.ods.api.auth.Role;
+import org.jvalue.ods.api.auth.User;
 import org.jvalue.ods.api.data.Data;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.db.DataRepository;
@@ -47,7 +50,10 @@ public final class DataApi extends AbstractApi {
 
 
 	@DELETE
-	public void deleteAllObjects(@PathParam("sourceId") String sourceId) {
+	public void deleteAllObjects(
+			@RestrictedTo(Role.ADMIN) User user,
+			@PathParam("sourceId") String sourceId) {
+
 		DataRepository repository = assertIsValidSource(sourceId);
 		repository.removeAll();
 	}
