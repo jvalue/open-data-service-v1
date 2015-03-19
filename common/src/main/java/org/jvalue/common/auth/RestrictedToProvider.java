@@ -37,11 +37,6 @@ public final class RestrictedToProvider extends AbstractValueFactoryProvider {
 	}
 
 
-	private void onUnauthorized() {
-		throw new UnauthorizedException();
-	}
-
-
 	@Override
 	protected Factory<User> createValueFactory(final Parameter parameter) {
 		Class<?> classType = parameter.getRawType();
@@ -77,6 +72,10 @@ public final class RestrictedToProvider extends AbstractValueFactoryProvider {
 				Optional<User> user = basicAuthenticator.authenticate(credentials, parameter.getAnnotation(RestrictedTo.class).value());
 				if (!user.isPresent()) onUnauthorized();
 				return user.get();
+			}
+
+			private void onUnauthorized() {
+				throw new UnauthorizedException();
 			}
 		};
 	}
