@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.utils;
+package org.jvalue.common.utils;
 
 import java.util.List;
 

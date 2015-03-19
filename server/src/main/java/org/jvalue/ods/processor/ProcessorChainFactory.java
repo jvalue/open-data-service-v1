@@ -14,7 +14,7 @@ import org.jvalue.ods.processor.filter.Filter;
 import org.jvalue.ods.processor.filter.FilterFactory;
 import org.jvalue.ods.processor.specification.Argument;
 import org.jvalue.ods.processor.specification.CreationMethod;
-import org.jvalue.ods.utils.Assert;
+import org.jvalue.common.utils.Assert;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;

@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.jvalue.ods.admin.monitoring.PauseableTimer;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.utils.Assert;
+import org.jvalue.common.utils.Assert;
 
 import java.io.IOException;
 import java.net.URL;

@@ -26,7 +26,7 @@ import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.RepositoryFactory;
 import org.jvalue.ods.db.PluginMetaDataRepository;
 import org.jvalue.ods.utils.Cache;
-import org.jvalue.ods.utils.Assert;
+import org.jvalue.common.utils.Assert;
 
 import java.io.InputStream;
 

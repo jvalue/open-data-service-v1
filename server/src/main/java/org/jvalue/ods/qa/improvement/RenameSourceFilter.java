@@ -22,7 +22,7 @@ import org.jvalue.ods.data.valuetypes.ListComplexValueType;
 import org.jvalue.ods.data.valuetypes.MapComplexValueType;
 import org.jvalue.ods.data.valuetypes.SimpleValueType;
 import org.jvalue.ods.processor.filter.Filter;
-import org.jvalue.ods.utils.Log;
+import org.jvalue.common.utils.Log;
 
 import java.util.HashMap;
 import java.util.LinkedList;

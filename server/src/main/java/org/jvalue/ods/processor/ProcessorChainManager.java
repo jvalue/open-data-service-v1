@@ -29,10 +29,10 @@ import org.jvalue.ods.data.AbstractDataSourcePropertyManager;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.RepositoryFactory;
 import org.jvalue.ods.db.ProcessorChainReferenceRepository;
-import org.jvalue.ods.utils.Assert;
+import org.jvalue.common.utils.Assert;
 import org.jvalue.ods.utils.Cache;
 import org.jvalue.ods.utils.ListValueMap;
-import org.jvalue.ods.utils.Log;
+import org.jvalue.common.utils.Log;
 
 import java.util.HashMap;
 import java.util.Map;

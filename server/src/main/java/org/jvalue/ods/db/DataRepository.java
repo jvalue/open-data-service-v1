@@ -20,7 +20,7 @@ import org.jvalue.common.db.DbConnectorFactory;
 import org.jvalue.ods.api.data.Cursor;
 import org.jvalue.ods.api.data.Data;
 import org.jvalue.ods.api.views.DataView;
-import org.jvalue.ods.utils.Assert;
+import org.jvalue.common.utils.Assert;
 
 import java.util.Collection;
 import java.util.HashMap;

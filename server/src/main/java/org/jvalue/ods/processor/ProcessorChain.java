@@ -7,7 +7,7 @@ import org.jvalue.ods.processor.adapter.SourceAdapter;
 import org.jvalue.ods.processor.adapter.SourceAdapterException;
 import org.jvalue.ods.processor.filter.Filter;
 import org.jvalue.ods.processor.filter.FilterException;
-import org.jvalue.ods.utils.Assert;
+import org.jvalue.common.utils.Assert;
 
 public final class ProcessorChain {
 

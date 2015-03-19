@@ -19,7 +19,7 @@ package org.jvalue.ods.qa;
 
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.processor.filter.Filter;
-import org.jvalue.ods.utils.Log;
+import org.jvalue.common.utils.Log;
 
 import java.util.List;
 

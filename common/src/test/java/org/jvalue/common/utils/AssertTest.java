@@ -1,9 +1,10 @@
-package org.jvalue.ods.utils;
+package org.jvalue.common.utils;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.Test;
+import org.jvalue.common.utils.Assert;
 
 
 public final class AssertTest {

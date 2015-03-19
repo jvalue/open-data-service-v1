@@ -10,7 +10,7 @@ import org.glassfish.jersey.server.internal.inject.AbstractContainerRequestValue
 import org.glassfish.jersey.server.internal.inject.AbstractValueFactoryProvider;
 import org.glassfish.jersey.server.internal.inject.MultivaluedParameterExtractorProvider;
 import org.glassfish.jersey.server.model.Parameter;
-import org.jvalue.ods.utils.Log;
+import org.jvalue.common.utils.Log;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -73,7 +73,6 @@ public final class RestrictedToProvider extends AbstractValueFactoryProvider {
 				if (colon < 0) onUnauthorized();
 				String username = token.substring(0, colon);
 				String password = token.substring(colon + 1);
-				Log.info(username  + " " + password);
 				BasicCredentials credentials = new BasicCredentials(username, password);
 
 				// authenticate

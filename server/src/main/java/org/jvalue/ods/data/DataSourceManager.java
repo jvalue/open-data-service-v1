@@ -11,7 +11,7 @@ import org.jvalue.common.db.DbConnectorFactory;
 import org.jvalue.ods.db.RepositoryFactory;
 import org.jvalue.ods.notifications.NotificationManager;
 import org.jvalue.ods.processor.ProcessorChainManager;
-import org.jvalue.ods.utils.Assert;
+import org.jvalue.common.utils.Assert;
 import org.jvalue.ods.utils.Cache;
 
 import java.util.HashMap;

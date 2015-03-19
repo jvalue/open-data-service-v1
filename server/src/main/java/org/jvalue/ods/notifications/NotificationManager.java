@@ -30,7 +30,7 @@ import org.jvalue.ods.notifications.sender.Sender;
 import org.jvalue.ods.notifications.sender.SenderCache;
 import org.jvalue.ods.notifications.sender.SenderResult;
 import org.jvalue.ods.utils.Cache;
-import org.jvalue.ods.utils.Log;
+import org.jvalue.common.utils.Log;
 
 
 public final class NotificationManager

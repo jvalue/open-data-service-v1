@@ -18,7 +18,7 @@
 package org.jvalue.ods.notifications.sender;
 
 import org.jvalue.ods.api.notifications.Client;
-import org.jvalue.ods.utils.Assert;
+import org.jvalue.common.utils.Assert;
 
 
 

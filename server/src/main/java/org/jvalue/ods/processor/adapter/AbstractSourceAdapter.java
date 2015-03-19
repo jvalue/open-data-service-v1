@@ -21,7 +21,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.utils.Assert;
+import org.jvalue.common.utils.Assert;
 
 import java.net.MalformedURLException;
 import java.net.URL;

@@ -10,7 +10,7 @@ import com.google.inject.assistedinject.Assisted;
 
 import org.jvalue.ods.api.notifications.GcmClient;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.utils.Log;
+import org.jvalue.common.utils.Log;
 
 import java.io.IOException;
 import java.util.ArrayList;

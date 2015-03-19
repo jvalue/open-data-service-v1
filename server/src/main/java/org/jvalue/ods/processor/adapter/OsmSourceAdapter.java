@@ -26,7 +26,7 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.utils.Log;
+import org.jvalue.common.utils.Log;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;

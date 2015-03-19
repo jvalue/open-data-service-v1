@@ -23,7 +23,7 @@ import org.jvalue.numbers.Range;
 import org.jvalue.numbers.RangeBound;
 import org.jvalue.ods.processor.filter.Filter;
 import org.jvalue.ods.qa.valueTypes.Coordinate;
-import org.jvalue.ods.utils.Log;
+import org.jvalue.common.utils.Log;
 import org.jvalue.si.QuantityUnit;
 import org.jvalue.si.QuantityUnitType;
 import org.jvalue.si.SiUnit;
