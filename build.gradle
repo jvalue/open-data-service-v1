@@ -2,11 +2,26 @@ buildscript {
     repositories {
         jcenter()
     }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.1'
+    }
 }
 
+
 allprojects {
+    group = 'org.jvalue.ods'
+    version = '0.1.0'
+}
+
+
+subprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
+    apply plugin: 'maven'
+    apply plugin: 'com.jfrog.bintray'
+    apply plugin: 'maven-publish'
+
+    sourceCompatibility = 1.7
 
     // default maven repo
     repositories {
@@ -29,5 +44,61 @@ allprojects {
         from files(sourceSets.main.output.resourcesDir)
         from {configurations.compile.collect {zipTree(it)}}
         baseName = 'ods-' + project.name + '-SNAPSHOT'
+    }
+
+    // publishing to jcenter
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+                artifact sourcesJar
+                artifact javadocJar
+            }
+        }
+    }
+
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+
+    artifacts {
+        archives sourcesJar, javadocJar
+    }
+
+    bintray {
+        user = project.hasProperty("bintray_user") ? bintray_user : "dummy user"
+        key = project.hasProperty("bintray_key") ? bintray_key : "dummy key"
+        publications = ['mavenJava']
+        dryRun = false
+        publish = true
+        pkg {
+            repo = 'maven'
+            name = 'ods'
+            desc = 'Open Data Service'
+            websiteUrl = 'https://github.com/jvalue/open-data-service'
+            issueTrackerUrl = 'https://github.com/jvalue/open-data-service/issues'
+            vcsUrl = 'https://github.com/jvalue/open-data-service.git'
+            licenses = ['AGPL-3.0']
+            publicDownloadNumbers = true
+            version {
+                name = project.version
+                gpg {
+                    sign = true
+                    passphrase = project.hasProperty("bintray_gpg_passphrase") ? bintray_gpg_passphrase : "dummy passphrase"
+                }
+                mavenCentralSync {
+                    sync = false //Optional (true by default). Determines whether to sync the version to Maven Central.
+                    user = 'userToken' //OSS user token
+                    password = 'password' //OSS user password
+                    close = '1' //Optional property. By default the staging repository is closed and artifacts are released to Maven Central. You can optionally turn this behaviour off (by puting 0 as value) and release the version manually.
+                }
+            }
+        }
     }
 }
