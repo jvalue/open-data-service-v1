@@ -18,8 +18,8 @@ import retrofit.converter.JacksonConverter;
 
 public abstract class AbstractApiTest {
 
-	protected final DataSourceApi dataSourceApi;
-	protected final NotificationApi notificationApi;
+	protected DataSourceApi dataSourceApi;
+	protected NotificationApi notificationApi;
 
 	protected final JsonPointer domainIdKey = JsonPointer.compile("/someId");
 	protected final JsonNode schema = new ObjectNode(JsonNodeFactory.instance);
@@ -31,6 +31,11 @@ public abstract class AbstractApiTest {
 
 
 	protected AbstractApiTest() {
+	}
+
+
+	@Before
+	public void setup() {
 		RestAdapter restAdapter = new RestAdapter.Builder()
 				.setConverter(new JacksonConverter())
 				.setEndpoint("http://localhost:8080/ods/api/v1")
@@ -44,8 +49,8 @@ public abstract class AbstractApiTest {
 				})
 				.build();
 
-		this.dataSourceApi = restAdapter.create(DataSourceApi.class);
-		this.notificationApi = restAdapter.create(NotificationApi.class);
+		dataSourceApi = restAdapter.create(DataSourceApi.class);
+		notificationApi = restAdapter.create(NotificationApi.class);
 	}
 
 
