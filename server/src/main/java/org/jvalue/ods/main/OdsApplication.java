@@ -17,7 +17,7 @@ import org.jvalue.ods.admin.monitoring.DbHealthCheck;
 import org.jvalue.ods.admin.monitoring.MonitoringModule;
 import org.jvalue.ods.admin.rest.AdminFilterChainApi;
 import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
-import org.jvalue.ods.auth.RestrictedToBinder;
+import org.jvalue.common.auth.RestrictedToBinder;
 import org.jvalue.ods.data.DataModule;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.db.DbModule;

@@ -1,10 +1,10 @@
-package org.jvalue.ods.auth;
+package org.jvalue.common.auth;
 
 
 import com.google.common.base.Optional;
 
 /**
- * Tries to match {@link org.jvalue.ods.auth.User} objects to credentials.
+ * Tries to match {@link org.jvalue.common.auth.User} objects to credentials.
  *
  * @param <T> the credentials
  */

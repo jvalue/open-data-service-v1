@@ -1,4 +1,4 @@
-package org.jvalue.ods.auth;
+package org.jvalue.common.auth;
 
 
 import java.lang.annotation.ElementType;

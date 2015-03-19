@@ -1,4 +1,4 @@
-package org.jvalue.ods.auth;
+package org.jvalue.common.auth;
 
 
 import com.google.common.base.Optional;
@@ -23,7 +23,7 @@ import javax.ws.rs.core.Response;
 
 /**
  * Responsible for extracting credentials from an http request and forwarding
- * those to an {@link org.jvalue.ods.auth.Authenticator}.
+ * those to an {@link org.jvalue.common.auth.Authenticator}.
  */
 public final class RestrictedToProvider extends AbstractValueFactoryProvider {
 
@@ -37,7 +37,7 @@ public final class RestrictedToProvider extends AbstractValueFactoryProvider {
 
 
 	private void onUnauthorized() {
-		throw new WebApplicationException(Response.Status.UNAUTHORIZED);
+		throw new UnauthorizedException();
 	}
 
 

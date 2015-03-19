@@ -1,4 +1,4 @@
-package org.jvalue.ods.auth;
+package org.jvalue.common.auth;
 
 
 import org.glassfish.hk2.api.InjectionResolver;

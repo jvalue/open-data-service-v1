@@ -1,10 +1,10 @@
-package org.jvalue.ods.auth;
+package org.jvalue.common.auth;
 
 
 import com.google.common.base.Optional;
 
 /**
- * Returns {@link org.jvalue.ods.auth.User} objects based on {@link org.jvalue.ods.auth.BasicCredentials}.
+ * Returns {@link org.jvalue.common.auth.User} objects based on {@link org.jvalue.common.auth.BasicCredentials}.
  */
 public final class BasicAuthenticator implements Authenticator<BasicCredentials> {
 
