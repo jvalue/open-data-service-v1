@@ -38,8 +38,6 @@ public final class CamperParkingBremenTest extends AbstractDataSourceTest {
 				.processor(new ProcessorReference.Builder("XmlSourceAdapter")
 						.argument("sourceUrl", "http://www.bremen.de/sixcms/detail.php?template=export_vk_d&kat=Wohnmobilstellpl%C3%A4tze")
 						.build())
-				.processor(new ProcessorReference.Builder("InvalidDocumentFilter")
-						.build())
 				.processor(new ProcessorReference.Builder("DbInsertionFilter")
 						.argument("updateData", true)
 						.build())

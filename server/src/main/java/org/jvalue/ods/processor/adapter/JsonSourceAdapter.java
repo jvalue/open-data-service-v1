@@ -21,8 +21,8 @@ import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
@@ -69,13 +69,13 @@ final class JsonSourceAdapter extends AbstractSourceAdapter {
 
 
 		@Override
-		protected ObjectNode doNext() {
+		protected JsonNode doNext() {
 			try {
 				initJsonParser();
 				jsonParser.nextToken();
-				ObjectNode object = mapper.readTree(jsonParser);
+				JsonNode node = mapper.readTree(jsonParser);
 				jsonParser.nextToken();
-				return object;
+				return node;
 			} catch (IOException e) {
 				throw new SourceAdapterException(e);
 			}

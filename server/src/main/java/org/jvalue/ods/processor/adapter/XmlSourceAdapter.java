@@ -3,8 +3,8 @@ package org.jvalue.ods.processor.adapter;
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.xml.XmlFactory;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -43,7 +43,7 @@ final class XmlSourceAdapter extends AbstractSourceAdapter {
 		protected boolean doHasNext() {
 			try {
 				if (jsonParser == null) initJsonParser();
-				return jsonParser.hasCurrentToken() && jsonParser.getCurrentToken() == JsonToken.START_OBJECT;
+				return jsonParser.hasCurrentToken();
 			} catch (IOException e) {
 				throw new SourceAdapterException(e);
 			}
@@ -51,13 +51,13 @@ final class XmlSourceAdapter extends AbstractSourceAdapter {
 
 
 		@Override
-		protected ObjectNode doNext() {
+		protected JsonNode doNext() {
 			try {
 				if (jsonParser == null) initJsonParser();
-				ObjectNode node = mapper.readTree(jsonParser);
+				JsonNode data = mapper.readTree(jsonParser);
 				jsonParser.nextToken();
 				jsonParser.nextToken();
-				return node;
+				return data;
 			} catch (IOException e) {
 				throw new SourceAdapterException(e);
 			}

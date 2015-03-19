@@ -18,11 +18,13 @@
 package org.jvalue.ods.processor.adapter;
 
 import com.codahale.metrics.MetricRegistry;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import org.jvalue.common.utils.Assert;
 import org.jvalue.ods.admin.monitoring.PauseableTimer;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.common.utils.Assert;
 
 import java.io.IOException;
 import java.net.URL;
@@ -64,7 +66,16 @@ abstract class SourceIterator implements Iterator<ObjectNode> {
 		if (!hasNext()) throw new NoSuchElementException();
 		context.resume();
 		try {
-			ObjectNode nextObject = doNext();
+			JsonNode nextJsonNode = doNext();
+
+			// wrap none objects
+			ObjectNode nextObject;
+			if (nextJsonNode.isObject()) {
+				nextObject = (ObjectNode) nextJsonNode;
+			} else {
+				nextObject = new ObjectNode(JsonNodeFactory.instance);
+				nextObject.set("value", nextJsonNode);
+			}
 			context.pause();
 			return nextObject;
 		} catch (IOException e) {
@@ -80,7 +91,7 @@ abstract class SourceIterator implements Iterator<ObjectNode> {
 	}
 
 
-	protected abstract ObjectNode doNext() throws IOException;
+	protected abstract JsonNode doNext() throws IOException;
 	protected abstract boolean doHasNext() throws IOException;
 
 }
