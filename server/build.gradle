@@ -51,12 +51,12 @@ dependencies {
 }
 
 // integration test
-def testSrcDir = 'src/integrationtest/java'
-def testResourceDir = 'src/integrationtest/resources'
+def testSrcDir = file(project.projectDir.toString() + '/src/integrationtest/java')
+def testResourceDir = file(project.projectDir.toString() + '/src/integrationtest/resources')
 sourceSets {
     integrationTest {
-        java.srcDir file(testSrcDir)
-        resources.srcDir file(testResourceDir)
+        java.srcDir testSrcDir
+        resources.srcDir testResourceDir
         compileClasspath = sourceSets.main.output + configurations.testCompile + sourceSets.test.output
         runtimeClasspath = output + compileClasspath
     }
@@ -69,7 +69,7 @@ check.dependsOn integrationTest
 
 idea {
     module {
-        testSrcDir += new File(testSrcDir)
-        sourceDirs += new File(project.projectDir.toString() + "/target/generated-sources/githash/")
+        testSourceDirs += testSrcDir
+        sourceDirs += file(project.projectDir.toString() + "/target/generated-sources/githash/")
     }
 }
