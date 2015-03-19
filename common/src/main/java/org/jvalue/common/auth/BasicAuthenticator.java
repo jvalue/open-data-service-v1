@@ -3,11 +3,15 @@ package org.jvalue.common.auth;
 
 import com.google.common.base.Optional;
 
+import org.jvalue.ods.api.auth.BasicCredentials;
+import org.jvalue.ods.api.auth.Role;
+import org.jvalue.ods.api.auth.User;
+
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Returns {@link org.jvalue.common.auth.User} objects based on {@link org.jvalue.common.auth.BasicCredentials}.
+ * Returns {@link User} objects based on {@link BasicCredentials}.
  */
 public final class BasicAuthenticator implements Authenticator<BasicCredentials> {
 

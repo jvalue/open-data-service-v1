@@ -5,6 +5,7 @@ import org.glassfish.hk2.api.InjectionResolver;
 import org.glassfish.hk2.api.TypeLiteral;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.spi.internal.ValueFactoryProvider;
+import org.jvalue.ods.api.auth.RestrictedTo;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

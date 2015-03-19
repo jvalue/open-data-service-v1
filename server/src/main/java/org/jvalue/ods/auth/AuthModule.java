@@ -5,9 +5,9 @@ import com.google.inject.AbstractModule;
 
 import org.jvalue.common.auth.AuthConfig;
 import org.jvalue.common.auth.BasicAuthenticator;
-import org.jvalue.common.auth.BasicCredentials;
-import org.jvalue.common.auth.Role;
-import org.jvalue.common.auth.User;
+import org.jvalue.ods.api.auth.BasicCredentials;
+import org.jvalue.ods.api.auth.Role;
+import org.jvalue.ods.api.auth.User;
 
 import java.util.HashMap;
 import java.util.Map;

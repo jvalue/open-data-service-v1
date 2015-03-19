@@ -3,6 +3,8 @@ package org.jvalue.common.auth;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import org.jvalue.ods.api.auth.BasicCredentials;
+
 import java.util.List;
 
 import javax.validation.constraints.NotNull;

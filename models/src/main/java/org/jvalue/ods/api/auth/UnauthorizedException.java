@@ -1,4 +1,4 @@
-package org.jvalue.common.auth;
+package org.jvalue.ods.api.auth;
 
 
 /**
