@@ -1,4 +1,5 @@
 apply plugin: 'application'
+apply plugin: 'de.bitdroid.githash'
 
 buildscript {
     repositories {
@@ -13,12 +14,6 @@ mainClassName = "org.jvalue.ods.main.OdsApplication"
 
 run() {
     args 'server', 'ods-configuration.yml'
-}
-
-apply plugin: 'de.bitdroid.githash'
-
-gitHashSettings {
-    packageName = "org.jvalue.ods"
 }
 
 dependencies {
@@ -50,26 +45,14 @@ dependencies {
     testCompile project(':client-retrofit')
 }
 
-// integration test
-def testSrcDir = file(project.projectDir.toString() + '/src/integrationtest/java')
-def testResourceDir = file(project.projectDir.toString() + '/src/integrationtest/resources')
-sourceSets {
-    integrationTest {
-        java.srcDir testSrcDir
-        resources.srcDir testResourceDir
-        compileClasspath = sourceSets.main.output + configurations.testCompile + sourceSets.test.output
-        runtimeClasspath = output + compileClasspath
-    }
+
+// create java code which contains git hash
+gitHashSettings {
+    packageName = "org.jvalue.ods"
 }
-task integrationTest(type: Test) {
-    testClassesDir = sourceSets.integrationTest.output.classesDir
-    classpath = sourceSets.integrationTest.runtimeClasspath
-}
-check.dependsOn integrationTest
 
 idea {
     module {
-        testSourceDirs += testSrcDir
         sourceDirs += file(project.projectDir.toString() + "/target/generated-sources/githash/")
     }
 }

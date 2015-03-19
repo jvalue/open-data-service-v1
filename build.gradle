@@ -46,6 +46,28 @@ subprojects {
         baseName = 'ods-' + project.name + '-SNAPSHOT'
     }
 
+    // integration test
+    def testSrcDir = file(project.projectDir.toString() + '/src/integrationtest/java')
+    def testResourceDir = file(project.projectDir.toString() + '/src/integrationtest/resources')
+    sourceSets {
+        integrationTest {
+            java.srcDir testSrcDir
+            resources.srcDir testResourceDir
+            compileClasspath = sourceSets.main.output + configurations.testCompile + sourceSets.test.output
+            runtimeClasspath = output + compileClasspath
+        }
+    }
+    task integrationTest(type: Test) {
+        testClassesDir = sourceSets.integrationTest.output.classesDir
+        classpath = sourceSets.integrationTest.runtimeClasspath
+    }
+    check.dependsOn integrationTest
+    idea {
+        module {
+            testSourceDirs += testSrcDir
+        }
+    }
+
     // publishing to jcenter
     publishing {
         publications {

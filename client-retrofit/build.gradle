@@ -24,22 +24,6 @@ dependencies {
     testCompile 'junit:junit:4.11'
 }
 
-// integration test
-def testSrcDir = file(project.projectDir.toString() + '/src/integrationtest/java')
-def testResourceDir = file(project.projectDir.toString() + '/src/integrationtest/resources')
-sourceSets {
-    integrationTest {
-        java.srcDir testSrcDir
-        resources.srcDir testResourceDir
-        compileClasspath = sourceSets.main.output + configurations.testCompile + sourceSets.test.output
-        runtimeClasspath = output + compileClasspath
-    }
-}
-task integrationTest(type: Test) {
-    testClassesDir = sourceSets.integrationTest.output.classesDir
-    classpath = sourceSets.integrationTest.runtimeClasspath
-}
-check.dependsOn integrationTest
 
 // JaxRs2Retrofit
 task jaxrs2retrofit(type: JaxRs2RetrofitTask) {
@@ -58,10 +42,8 @@ task jaxrs2retrofit(type: JaxRs2RetrofitTask) {
 project.compileJava.dependsOn jaxrs2retrofit
 project.compileJava.source += jaxrs2retrofit.outputs.files
 
-// intellij dir setup
 idea {
     module {
-        testSourceDirs += testSrcDir
         sourceDirs += file(project.projectDir.toString() + "/target/generated-sources/jaxrs2retrofit/")
     }
 }
