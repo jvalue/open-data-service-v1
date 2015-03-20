@@ -26,9 +26,8 @@ dependencies {
 
 
 // JaxRs2Retrofit
-def generatedSourcesDir = 'target/generated-sources/jaxrs2retrofit/'
 task jaxrs2retrofit(type: JaxRs2RetrofitTask) {
-    inputDir = file(project(':server').projectDir.toString() + '/src/main/java/')
+    inputDir = file(project(':server').projectDir.toString() + '/' + mainSourcesDir)
     outputDir = file(generatedSourcesDir)
     retrofitPackageName = 'org.jvalue.ods.api'
     excludedClassNamesRegex = 'PluginApi|FilterDescriptionApi|Admin.*'
@@ -45,15 +44,14 @@ project.compileJava.dependsOn jaxrs2retrofit
 sourceSets {
     main {
         java {
-            srcDir 'src/main/java'
+            srcDir mainSourcesDir
             srcDir generatedSourcesDir
         }
     }
 }
 
-
 idea {
     module {
-        sourceDirs +=jaxrs2retrofit.outputDir
+        sourceDirs += jaxrs2retrofit.outputDir
     }
 }

@@ -48,11 +48,21 @@ dependencies {
 
 // create java code which contains git hash
 gitHashSettings {
-    packageName = "org.jvalue.ods"
+    packageName = 'org.jvalue.ods'
+}
+gitHash.outputDir = file(generatedSourcesDir)
+
+sourceSets {
+    main {
+        java {
+            srcDir mainSourcesDir
+            srcDir generatedSourcesDir
+        }
+    }
 }
 
 idea {
     module {
-        sourceDirs += file(project.projectDir.toString() + "/target/generated-sources/githash/")
+        sourceDirs += file(generatedSourcesDir)
     }
 }
