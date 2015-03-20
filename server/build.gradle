@@ -51,18 +51,3 @@ gitHashSettings {
     packageName = 'org.jvalue.ods'
 }
 gitHash.outputDir = file(generatedSourcesDir)
-
-sourceSets {
-    main {
-        java {
-            srcDir mainSourcesDir
-            srcDir generatedSourcesDir
-        }
-    }
-}
-
-idea {
-    module {
-        sourceDirs += file(generatedSourcesDir)
-    }
-}

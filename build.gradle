@@ -23,10 +23,18 @@ subprojects {
 
     sourceCompatibility = 1.7
 
-    // common variables
+    // setup generated sources (if any)
     ext {
         mainSourcesDir = 'src/main/java'
         generatedSourcesDir = 'target/generated-sources/java'
+    }
+    sourceSets {
+        main {
+            java {
+                srcDir mainSourcesDir
+                srcDir generatedSourcesDir
+            }
+        }
     }
 
     // default maven repo
@@ -68,9 +76,12 @@ subprojects {
         classpath = sourceSets.integrationTest.runtimeClasspath
     }
     check.dependsOn integrationTest
+
+    // let intellij know about 'special' folders
     idea {
         module {
             testSourceDirs += testSrcDir
+            sourceDirs += file(generatedSourcesDir)
         }
     }
 

@@ -40,18 +40,3 @@ task jaxrs2retrofit(type: JaxRs2RetrofitTask) {
 
 }
 project.compileJava.dependsOn jaxrs2retrofit
-
-sourceSets {
-    main {
-        java {
-            srcDir mainSourcesDir
-            srcDir generatedSourcesDir
-        }
-    }
-}
-
-idea {
-    module {
-        sourceDirs += jaxrs2retrofit.outputDir
-    }
-}
