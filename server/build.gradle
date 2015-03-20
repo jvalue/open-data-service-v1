@@ -6,7 +6,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'de.bitdroid.githash:plugin:0.1.0'
+        classpath 'de.bitdroid.githash:plugin:0.1.1'
     }
 }
 
@@ -47,7 +47,7 @@ dependencies {
 
 
 // create java code which contains git hash
-gitHashSettings {
+gitHash {
     packageName = 'org.jvalue.ods'
+    outputDir = file(generatedSourcesDir)
 }
-gitHash.outputDir = file(generatedSourcesDir)

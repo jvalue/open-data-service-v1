@@ -61,8 +61,8 @@ subprojects {
     }
 
     // integration test
-    def testSrcDir = file(project.projectDir.toString() + '/src/integrationtest/java')
-    def testResourceDir = file(project.projectDir.toString() + '/src/integrationtest/resources')
+    def testSrcDir = file('src/integrationtest/java')
+    def testResourceDir = file('src/integrationtest/resources')
     sourceSets {
         integrationTest {
             java.srcDir testSrcDir
