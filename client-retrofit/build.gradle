@@ -26,11 +26,12 @@ dependencies {
 
 
 // JaxRs2Retrofit
+def generatedSourcesDir = 'target/generated-sources/jaxrs2retrofit/'
 task jaxrs2retrofit(type: JaxRs2RetrofitTask) {
-    inputDir = new File(project(':server').projectDir.toString() + "/src/main/java/")
-    outputDir = new File(project.projectDir.toString() + "/target/generated-sources/jaxrs2retrofit/")
-    retrofitPackageName = "org.jvalue.ods.api"
-    excludedClassNamesRegex = "PluginApi|FilterDescriptionApi|Admin.*"
+    inputDir = file(project(':server').projectDir.toString() + '/src/main/java/')
+    outputDir = file(generatedSourcesDir)
+    retrofitPackageName = 'org.jvalue.ods.api'
+    excludedClassNamesRegex = 'PluginApi|FilterDescriptionApi|Admin.*'
     paramConverterManager.registerConverter ClassName.get(RestrictedTo.class), new ParamConverter() {
         @Override
         AnnotatedParam convert(AnnotatedParam param) {
@@ -40,10 +41,19 @@ task jaxrs2retrofit(type: JaxRs2RetrofitTask) {
 
 }
 project.compileJava.dependsOn jaxrs2retrofit
-project.compileJava.source += jaxrs2retrofit.outputs.files
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+            srcDir generatedSourcesDir
+        }
+    }
+}
+
 
 idea {
     module {
-        sourceDirs += file(project.projectDir.toString() + "/target/generated-sources/jaxrs2retrofit/")
+        sourceDirs +=jaxrs2retrofit.outputDir
     }
 }
