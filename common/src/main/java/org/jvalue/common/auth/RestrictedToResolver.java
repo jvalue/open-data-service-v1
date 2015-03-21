@@ -2,7 +2,6 @@ package org.jvalue.common.auth;
 
 
 import org.glassfish.jersey.server.internal.inject.ParamInjectionResolver;
-import org.jvalue.ods.api.auth.RestrictedTo;
 
 
 /**

@@ -4,9 +4,9 @@ package org.jvalue.ods.rest;
 import com.google.inject.Inject;
 
 import org.jvalue.common.rest.RestUtils;
-import org.jvalue.ods.api.auth.RestrictedTo;
-import org.jvalue.ods.api.auth.Role;
-import org.jvalue.ods.api.auth.User;
+import org.jvalue.common.auth.RestrictedTo;
+import org.jvalue.common.auth.Role;
+import org.jvalue.common.auth.User;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.views.DataView;
 import org.jvalue.ods.api.views.DataViewDescription;

@@ -1,4 +1,4 @@
-package org.jvalue.ods.api.auth;
+package org.jvalue.common.auth;
 
 
 import com.fasterxml.jackson.annotation.JsonCreator;

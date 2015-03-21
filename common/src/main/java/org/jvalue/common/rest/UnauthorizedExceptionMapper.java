@@ -1,7 +1,7 @@
 package org.jvalue.common.rest;
 
 
-import org.jvalue.ods.api.auth.UnauthorizedException;
+import org.jvalue.common.auth.UnauthorizedException;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;

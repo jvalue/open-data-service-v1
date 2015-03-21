@@ -6,9 +6,6 @@ import com.google.common.base.Optional;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.jvalue.ods.api.auth.BasicCredentials;
-import org.jvalue.ods.api.auth.Role;
-import org.jvalue.ods.api.auth.User;
 
 import java.util.HashMap;
 import java.util.Map;

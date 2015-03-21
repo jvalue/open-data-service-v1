@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.jvalue.common.db.CouchDbConfig;
-import org.jvalue.ods.api.auth.BasicCredentials;
+import org.jvalue.common.auth.BasicCredentials;
 
 import java.util.List;
 

@@ -10,10 +10,6 @@ import org.glassfish.jersey.server.internal.inject.AbstractContainerRequestValue
 import org.glassfish.jersey.server.internal.inject.AbstractValueFactoryProvider;
 import org.glassfish.jersey.server.internal.inject.MultivaluedParameterExtractorProvider;
 import org.glassfish.jersey.server.model.Parameter;
-import org.jvalue.ods.api.auth.BasicCredentials;
-import org.jvalue.ods.api.auth.RestrictedTo;
-import org.jvalue.ods.api.auth.UnauthorizedException;
-import org.jvalue.ods.api.auth.User;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;

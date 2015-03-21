@@ -12,11 +12,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.jvalue.ods.api.auth.BasicCredentials;
-import org.jvalue.ods.api.auth.RestrictedTo;
-import org.jvalue.ods.api.auth.Role;
-import org.jvalue.ods.api.auth.UnauthorizedException;
-import org.jvalue.ods.api.auth.User;
 
 import java.lang.annotation.Annotation;
 

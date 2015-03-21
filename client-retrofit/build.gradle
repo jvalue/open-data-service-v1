@@ -1,5 +1,5 @@
 import de.bitdroid.jaxrs2retrofit.converter.IgnoreConverter
-import org.jvalue.ods.api.auth.RestrictedTo
+import org.jvalue.common.auth.RestrictedTo
 import com.squareup.javapoet.ClassName
 
 apply plugin: 'de.bitdroid.jaxrs2retrofit'
@@ -18,7 +18,7 @@ buildscript {
 dependencies {
     compile 'com.squareup.retrofit:retrofit:1.8.+'
     compile 'com.squareup.retrofit:converter-jackson:1.8.+'
-    compile project(':models')
+    compile project(':common')
 
     testCompile 'org.jmockit:jmockit:1.13'
     testCompile 'junit:junit:4.11'
