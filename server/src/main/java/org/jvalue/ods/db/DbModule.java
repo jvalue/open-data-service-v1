@@ -31,8 +31,8 @@ public class DbModule extends AbstractModule {
 		try {
 			CouchDbInstance couchDbInstance = new StdCouchDbInstance(new StdHttpClient.Builder()
 					.url(couchDbConfig.getUrl())
-					.username(couchDbConfig.getUsername())
-					.password(couchDbConfig.getPassword())
+					.username(couchDbConfig.getAdmin().getUsername())
+					.password(couchDbConfig.getAdmin().getPassword())
 					.build());
 			DbConnectorFactory connectorFactory = new DbConnectorFactory(couchDbInstance, couchDbConfig.getDbPrefix());
 

@@ -3,27 +3,27 @@ package org.jvalue.common.db;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import org.jvalue.ods.api.auth.BasicCredentials;
+
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 
 public final class CouchDbConfig {
 
 	@NotNull private final String url;
-	@NotNull private final String username;
-	@NotNull private final String password;
 	@NotNull private final String dbPrefix;
+	@NotNull @Valid BasicCredentials admin;
 
 	@JsonCreator
 	public CouchDbConfig(
 			@JsonProperty("url") String url,
-			@JsonProperty("username") String username,
-			@JsonProperty("password") String password,
-			@JsonProperty("dbPrefix") String dbPrefix) {
+			@JsonProperty("dbPrefix") String dbPrefix,
+			@JsonProperty("admin") BasicCredentials admin) {
 
 		this.url = url;
-		this.username = username;
-		this.password = password;
 		this.dbPrefix = dbPrefix;
+		this.admin = admin;
 	}
 
 
@@ -32,18 +32,13 @@ public final class CouchDbConfig {
 	}
 
 
-	public String getUsername() {
-		return username;
-	}
-
-
-	public String getPassword() {
-		return password;
-	}
-
-
 	public String getDbPrefix() {
 		return dbPrefix;
+	}
+
+
+	public BasicCredentials getAdmin() {
+		return admin;
 	}
 
 }

@@ -3,8 +3,10 @@ package org.jvalue.ods.main;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import org.jvalue.common.auth.AuthConfig;
 import org.jvalue.common.db.CouchDbConfig;
+import org.jvalue.ods.api.auth.BasicCredentials;
+
+import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -16,17 +18,17 @@ public final class OdsConfig extends Configuration {
 
 	@NotNull private final String gcmApiKey;
 	@NotNull @Valid private final CouchDbConfig couchDb;
-	@NotNull @Valid private final AuthConfig auth;
+	@NotNull @Valid private final List<BasicCredentials> admins;
 
 	@JsonCreator
 	public OdsConfig(
 			@JsonProperty("gcmApiKey") String gcmApiKey,
 			@JsonProperty("couchDb") CouchDbConfig couchDb,
-			@JsonProperty("auth") AuthConfig auth) {
+			@JsonProperty("admins") List<BasicCredentials> admins) {
 
 		this.gcmApiKey = gcmApiKey;
 		this.couchDb = couchDb;
-		this.auth = auth;
+		this.admins = admins;
 	}
 
 
@@ -40,8 +42,8 @@ public final class OdsConfig extends Configuration {
 	}
 
 
-	public AuthConfig getAuth() {
-		return auth;
+	public List<BasicCredentials> getAdmins() {
+		return admins;
 	}
 
 }

@@ -3,28 +3,28 @@ package org.jvalue.ods.auth;
 
 import com.google.inject.AbstractModule;
 
-import org.jvalue.common.auth.AuthConfig;
 import org.jvalue.common.auth.BasicAuthenticator;
 import org.jvalue.ods.api.auth.BasicCredentials;
 import org.jvalue.ods.api.auth.Role;
 import org.jvalue.ods.api.auth.User;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AuthModule extends AbstractModule {
 
-	private final AuthConfig authConfig;
+	private final List<BasicCredentials> admins;
 
-	public AuthModule(AuthConfig authConfig) {
-		this.authConfig = authConfig;
+	public AuthModule(List<BasicCredentials> admins) {
+		this.admins = admins;
 	}
 
 
 	@Override
 	protected void configure() {
 		Map<BasicCredentials, User> userMap = new HashMap<>();
-		for (BasicCredentials credentials : authConfig.getAdmins()) {
+		for (BasicCredentials credentials : admins) {
 			userMap.put(credentials, new User(credentials.getUsername(), Role.ADMIN));
 		}
 		bind(BasicAuthenticator.class).toInstance(new BasicAuthenticator(userMap));
