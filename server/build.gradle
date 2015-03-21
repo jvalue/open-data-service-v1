@@ -6,7 +6,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'de.bitdroid.githash:plugin:0.1.1'
+        classpath 'de.bitdroid.githash:plugin:0.1.2'
     }
 }
 
