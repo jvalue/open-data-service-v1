@@ -11,7 +11,7 @@ buildscript {
     }
     dependencies {
         classpath 'de.bitdroid.jaxrs2retrofit:plugin:0.1.4'
-        classpath 'org.jvalue.ods:models:0.1.0'
+        classpath 'org.jvalue.ods:common:0.1.1'
     }
 }
 
