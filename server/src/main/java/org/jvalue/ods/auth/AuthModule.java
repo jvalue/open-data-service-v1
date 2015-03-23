@@ -3,10 +3,10 @@ package org.jvalue.ods.auth;
 
 import com.google.inject.AbstractModule;
 
-import org.jvalue.common.auth.BasicAuthenticator;
-import org.jvalue.common.auth.BasicCredentials;
-import org.jvalue.common.auth.Role;
-import org.jvalue.common.auth.User;
+import org.jvalue.commons.auth.BasicAuthenticator;
+import org.jvalue.commons.auth.BasicCredentials;
+import org.jvalue.commons.auth.Role;
+import org.jvalue.commons.auth.User;
 
 import java.util.HashMap;
 import java.util.List;

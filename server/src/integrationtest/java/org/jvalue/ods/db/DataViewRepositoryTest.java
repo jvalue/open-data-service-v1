@@ -1,8 +1,8 @@
 package org.jvalue.ods.db;
 
 
-import org.jvalue.common.db.DbConnectorFactory;
-import org.jvalue.common.db.RepositoryAdapter;
+import org.jvalue.commons.couchdb.DbConnectorFactory;
+import org.jvalue.commons.couchdb.RepositoryAdapter;
 import org.jvalue.ods.api.views.DataView;
 
 public class DataViewRepositoryTest extends AbstractRepositoryAdapterTest<DataView> {

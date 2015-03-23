@@ -33,7 +33,9 @@ dependencies {
     compile 'org.apache.commons:commons-csv:1.1'
     compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.4.4'
     compile 'com.hubspot.jackson:jackson-jaxrs-propertyfiltering:0.6.1'
-    compile project(':common')
+    compile 'org.jvalue.commons:rest:0.1.0'
+    compile 'org.jvalue.commons:utils:0.1.0'
+    compile project(':models')
     compile fileTree(dir: 'libs', include: '*.jar')
 
     testCompile 'org.jmockit:jmockit:1.13'

@@ -4,6 +4,7 @@ package org.jvalue.ods.processor;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 
+import org.jvalue.commons.utils.Assert;
 import org.jvalue.ods.api.processors.ProcessorReference;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
@@ -14,7 +15,6 @@ import org.jvalue.ods.processor.filter.Filter;
 import org.jvalue.ods.processor.filter.FilterFactory;
 import org.jvalue.ods.processor.specification.Argument;
 import org.jvalue.ods.processor.specification.CreationMethod;
-import org.jvalue.common.utils.Assert;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;

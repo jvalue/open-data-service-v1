@@ -39,6 +39,7 @@ subprojects {
 
     // default maven repo
     repositories {
+        mavenLocal()
         jcenter()
     }
 

@@ -8,9 +8,9 @@ import com.google.android.gcm.server.Result;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
+import org.jvalue.commons.utils.Log;
 import org.jvalue.ods.api.notifications.GcmClient;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.common.utils.Log;
 
 import java.io.IOException;
 import java.util.ArrayList;

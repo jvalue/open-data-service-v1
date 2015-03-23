@@ -10,9 +10,9 @@ import org.ektorp.CouchDbConnector;
 import org.ektorp.DocumentNotFoundException;
 import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.View;
-import org.jvalue.common.db.DbDocument;
-import org.jvalue.common.db.DbDocumentAdaptable;
-import org.jvalue.common.db.RepositoryAdapter;
+import org.jvalue.commons.couchdb.DbDocument;
+import org.jvalue.commons.couchdb.DbDocumentAdaptable;
+import org.jvalue.commons.couchdb.RepositoryAdapter;
 import org.jvalue.ods.api.sources.DataSource;
 
 import java.util.List;

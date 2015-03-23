@@ -3,10 +3,10 @@ package org.jvalue.ods.rest;
 
 import com.google.inject.Inject;
 
-import org.jvalue.common.rest.RestUtils;
-import org.jvalue.common.auth.RestrictedTo;
-import org.jvalue.common.auth.Role;
-import org.jvalue.common.auth.User;
+import org.jvalue.commons.auth.RestrictedTo;
+import org.jvalue.commons.auth.Role;
+import org.jvalue.commons.auth.User;
+import org.jvalue.commons.rest.RestUtils;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
 import org.jvalue.ods.api.sources.DataSource;

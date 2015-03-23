@@ -3,8 +3,8 @@ package org.jvalue.ods.main;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import org.jvalue.common.db.CouchDbConfig;
-import org.jvalue.common.auth.BasicCredentials;
+import org.jvalue.commons.auth.BasicCredentials;
+import org.jvalue.commons.couchdb.CouchDbConfig;
 
 import java.util.List;
 

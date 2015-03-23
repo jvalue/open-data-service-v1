@@ -1,8 +1,8 @@
 package org.jvalue.ods.rest;
 
 
+import org.jvalue.commons.rest.VersionInfo;
 import org.jvalue.ods.GitConstants;
-import org.jvalue.common.utils.VersionInfo;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

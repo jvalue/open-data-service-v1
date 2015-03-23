@@ -4,8 +4,8 @@ package org.jvalue.ods.db;
 import org.ektorp.DocumentNotFoundException;
 import org.junit.Assert;
 import org.junit.Test;
-import org.jvalue.common.db.DbConnectorFactory;
-import org.jvalue.common.db.RepositoryAdapter;
+import org.jvalue.commons.couchdb.DbConnectorFactory;
+import org.jvalue.commons.couchdb.RepositoryAdapter;
 
 import java.util.List;
 

@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.ektorp.DocumentNotFoundException;
 import org.junit.Assert;
 import org.junit.Test;
-import org.jvalue.common.db.DbConnectorFactory;
+import org.jvalue.commons.couchdb.DbConnectorFactory;
 import org.jvalue.ods.api.data.Data;
 import org.jvalue.ods.api.views.DataView;
 

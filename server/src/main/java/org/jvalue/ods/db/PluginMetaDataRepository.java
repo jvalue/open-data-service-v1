@@ -9,14 +9,13 @@ import com.google.inject.assistedinject.Assisted;
 import org.ektorp.Attachment;
 import org.ektorp.AttachmentInputStream;
 import org.ektorp.CouchDbConnector;
-import org.ektorp.CouchDbInstance;
 import org.ektorp.DocumentNotFoundException;
 import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.View;
-import org.jvalue.common.db.DbConnectorFactory;
-import org.jvalue.common.db.DbDocument;
-import org.jvalue.common.db.DbDocumentAdaptable;
-import org.jvalue.common.db.RepositoryAdapter;
+import org.jvalue.commons.couchdb.DbConnectorFactory;
+import org.jvalue.commons.couchdb.DbDocument;
+import org.jvalue.commons.couchdb.DbDocumentAdaptable;
+import org.jvalue.commons.couchdb.RepositoryAdapter;
 import org.jvalue.ods.api.processors.PluginMetaData;
 
 import java.io.InputStream;

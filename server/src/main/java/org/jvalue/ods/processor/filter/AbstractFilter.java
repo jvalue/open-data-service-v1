@@ -19,9 +19,9 @@ package org.jvalue.ods.processor.filter;
 
 import com.codahale.metrics.MetricRegistry;
 
+import org.jvalue.commons.utils.Assert;
 import org.jvalue.ods.admin.monitoring.PauseableTimer;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.common.utils.Assert;
 
 abstract class AbstractFilter<P, R> implements Filter<P, R> {
 

@@ -4,7 +4,7 @@ package org.jvalue.ods.db;
 import org.ektorp.CouchDbInstance;
 import org.junit.After;
 import org.junit.Before;
-import org.jvalue.common.db.DbConnectorFactory;
+import org.jvalue.commons.couchdb.DbConnectorFactory;
 
 import java.util.List;
 

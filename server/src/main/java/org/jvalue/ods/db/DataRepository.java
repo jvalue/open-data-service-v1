@@ -16,11 +16,11 @@ import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.DesignDocument;
 import org.ektorp.support.DesignDocumentFactory;
 import org.ektorp.support.StdDesignDocumentFactory;
-import org.jvalue.common.db.DbConnectorFactory;
+import org.jvalue.commons.couchdb.DbConnectorFactory;
+import org.jvalue.commons.utils.Assert;
 import org.jvalue.ods.api.data.Cursor;
 import org.jvalue.ods.api.data.Data;
 import org.jvalue.ods.api.views.DataView;
-import org.jvalue.common.utils.Assert;
 
 import java.util.Collection;
 import java.util.HashMap;

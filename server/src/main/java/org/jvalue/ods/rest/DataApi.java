@@ -6,10 +6,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 import com.hubspot.jackson.jaxrs.PropertyFiltering;
 
-import org.jvalue.common.rest.RestUtils;
-import org.jvalue.common.auth.RestrictedTo;
-import org.jvalue.common.auth.Role;
-import org.jvalue.common.auth.User;
+import org.jvalue.commons.auth.RestrictedTo;
+import org.jvalue.commons.auth.Role;
+import org.jvalue.commons.auth.User;
+import org.jvalue.commons.rest.RestUtils;
 import org.jvalue.ods.api.data.Data;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.db.DataRepository;

@@ -3,11 +3,11 @@ package org.jvalue.ods.processor;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import org.jvalue.commons.utils.Assert;
 import org.jvalue.ods.processor.adapter.SourceAdapter;
 import org.jvalue.ods.processor.adapter.SourceAdapterException;
 import org.jvalue.ods.processor.filter.Filter;
 import org.jvalue.ods.processor.filter.FilterException;
-import org.jvalue.common.utils.Assert;
 
 public final class ProcessorChain {
 
