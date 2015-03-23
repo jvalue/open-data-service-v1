@@ -20,13 +20,13 @@ package org.jvalue.ods.processor.plugin;
 import com.google.inject.Inject;
 
 import org.jvalue.commons.utils.Assert;
+import org.jvalue.commons.utils.Cache;
 import org.jvalue.ods.api.processors.PluginMetaData;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.data.AbstractDataSourcePropertyManager;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.PluginMetaDataRepository;
 import org.jvalue.ods.db.RepositoryFactory;
-import org.jvalue.ods.utils.Cache;
 
 import java.io.InputStream;
 

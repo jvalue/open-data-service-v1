@@ -3,6 +3,7 @@ package org.jvalue.ods.notifications;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 
+import org.jvalue.commons.utils.Cache;
 import org.jvalue.commons.utils.Log;
 import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.api.sources.DataSource;
@@ -13,7 +14,6 @@ import org.jvalue.ods.db.RepositoryFactory;
 import org.jvalue.ods.notifications.sender.Sender;
 import org.jvalue.ods.notifications.sender.SenderCache;
 import org.jvalue.ods.notifications.sender.SenderResult;
-import org.jvalue.ods.utils.Cache;
 
 
 public final class NotificationManager

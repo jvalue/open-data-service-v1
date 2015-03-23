@@ -3,10 +3,10 @@ package org.jvalue.ods.admin.rest;
 
 import com.google.inject.Inject;
 
+import org.jvalue.commons.utils.ListValueMap;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.processor.ProcessorChainManager;
-import org.jvalue.ods.utils.ListValueMap;
 
 import java.util.HashMap;
 import java.util.List;

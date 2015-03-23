@@ -6,13 +6,13 @@ import com.google.inject.Inject;
 import org.ektorp.DocumentNotFoundException;
 import org.jvalue.commons.couchdb.DbConnectorFactory;
 import org.jvalue.commons.utils.Assert;
+import org.jvalue.commons.utils.Cache;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DataSourceRepository;
 import org.jvalue.ods.db.RepositoryFactory;
 import org.jvalue.ods.notifications.NotificationManager;
 import org.jvalue.ods.processor.ProcessorChainManager;
-import org.jvalue.ods.utils.Cache;
 
 import java.util.HashMap;
 import java.util.List;

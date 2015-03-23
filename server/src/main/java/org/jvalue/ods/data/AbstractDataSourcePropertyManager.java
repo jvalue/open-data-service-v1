@@ -1,12 +1,13 @@
 package org.jvalue.ods.data;
 
+
 import org.ektorp.DocumentNotFoundException;
 import org.jvalue.commons.couchdb.RepositoryAdapter;
 import org.jvalue.commons.utils.Assert;
+import org.jvalue.commons.utils.Cache;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.RepositoryFactory;
-import org.jvalue.ods.utils.Cache;
 
 import java.util.List;
 
