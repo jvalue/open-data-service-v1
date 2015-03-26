@@ -6,19 +6,21 @@ apply plugin: 'de.bitdroid.jaxrs2retrofit'
 
 buildscript {
     repositories {
-        mavenLocal()
         jcenter()
+        maven {
+            url 'http://oss.jfrog.org/artifactory/plugins-snapshot'
+        }
     }
     dependencies {
         classpath 'de.bitdroid.jaxrs2retrofit:plugin:0.1.4'
-        classpath 'org.jvalue.commons:models:0.1.0'
+        classpath 'org.jvalue.commons:models:0.1.1-SNAPSHOT'
     }
 }
 
 dependencies {
     compile 'com.squareup.retrofit:retrofit:1.8.+'
     compile 'com.squareup.retrofit:converter-jackson:1.8.+'
-    compile 'org.jvalue.commons:models:0.1.0'
+    compile 'org.jvalue.commons:models:0.1.1-SNAPSHOT'
     compile project(':models')
 
     testCompile 'org.jmockit:jmockit:1.13'

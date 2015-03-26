@@ -4,13 +4,14 @@ buildscript {
     }
     dependencies {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.1'
+        classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:3.0.3'
     }
 }
 
 
 allprojects {
     group = 'org.jvalue.ods'
-    version = '0.1.2'
+    version = '0.1.3-SNAPSHOT'
 }
 
 
@@ -18,8 +19,9 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
     apply plugin: 'maven'
-    apply plugin: 'com.jfrog.bintray'
     apply plugin: 'maven-publish'
+    apply plugin: 'com.jfrog.bintray'
+    apply plugin: 'com.jfrog.artifactory'
 
     sourceCompatibility = 1.7
 
@@ -133,11 +135,33 @@ subprojects {
                     passphrase = project.hasProperty("bintray_gpg_passphrase") ? bintray_gpg_passphrase : "dummy passphrase"
                 }
                 mavenCentralSync {
-                    sync = false //Optional (true by default). Determines whether to sync the version to Maven Central.
-                    user = 'userToken' //OSS user token
-                    password = 'password' //OSS user password
-                    close = '1' //Optional property. By default the staging repository is closed and artifacts are released to Maven Central. You can optionally turn this behaviour off (by puting 0 as value) and release the version manually.
+                    sync = false
+                    user = 'userToken'
+                    password = 'password'
+                    close = '1'
                 }
+            }
+        }
+    }
+
+	// snapshots
+    artifactory {
+        contextUrl = 'http://oss.jfrog.org/artifactory'
+        publish {
+            repository {
+                repoKey = 'oss-snapshot-local'
+                username = "${artifactory_user}"
+                password = "${artifactory_password}"
+                maven = true
+            }
+            defaults {
+                publications ('mavenJava')
+            }
+        }
+        resolve {
+            repository {
+                repoKey = 'libs-snapshot'
+                maven = true
             }
         }
     }

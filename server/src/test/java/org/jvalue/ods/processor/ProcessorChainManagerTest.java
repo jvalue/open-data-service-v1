@@ -11,15 +11,15 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.jvalue.commons.utils.Cache;
 import org.jvalue.ods.api.processors.ExecutionInterval;
 import org.jvalue.ods.api.processors.ProcessorReference;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceMetaData;
 import org.jvalue.ods.db.DataRepository;
-import org.jvalue.ods.db.RepositoryFactory;
 import org.jvalue.ods.db.ProcessorChainReferenceRepository;
-import org.jvalue.ods.utils.Cache;
+import org.jvalue.ods.db.RepositoryFactory;
 
 import java.util.HashMap;
 import java.util.LinkedList;
