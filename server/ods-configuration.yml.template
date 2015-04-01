@@ -3,6 +3,7 @@ gcmApiKey: GCM_API_KEY
 couchDb:
   url: http://localhost:5984/
   dbPrefix: ods
+  maxConnections: 100
   admin:
     username: ADMIN_USERNAME
     password: ADMIN_PASSWORD

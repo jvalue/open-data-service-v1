@@ -33,6 +33,7 @@ public class DbModule extends AbstractModule {
 					.url(couchDbConfig.getUrl())
 					.username(couchDbConfig.getAdmin().getUsername())
 					.password(couchDbConfig.getAdmin().getPassword())
+					.maxConnections(couchDbConfig.getMaxConnections())
 					.build());
 			DbConnectorFactory connectorFactory = new DbConnectorFactory(couchDbInstance, couchDbConfig.getDbPrefix());
 
