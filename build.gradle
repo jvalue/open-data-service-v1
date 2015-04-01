@@ -150,8 +150,8 @@ subprojects {
         publish {
             repository {
                 repoKey = 'oss-snapshot-local'
-                username = "${artifactory_user}"
-                password = "${artifactory_password}"
+                username = project.hasProperty("artifactory_user") ? artifactory_user : "dummy user"
+                password = project.hasProperty("artifactory_password") ? artifactory_password : "dummy key"
                 maven = true
             }
             defaults {
