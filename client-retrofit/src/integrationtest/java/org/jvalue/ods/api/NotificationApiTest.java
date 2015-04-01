@@ -28,9 +28,9 @@ public final class NotificationApiTest extends AbstractApiTest {
 		testClient(httpClient, httpClientDescription);
 		testClient(gcmClient, gcmClientDescription);
 
-		notificationApi.registerClient(sourceId, httpClient.getId(), httpClientDescription);
-		notificationApi.registerClient(sourceId, gcmClient.getId(), gcmClientDescription);
-		List<Client> clients = notificationApi.getAllClients(sourceId);
+		notificationApi.registerClientSynchronously(sourceId, httpClient.getId(), httpClientDescription);
+		notificationApi.registerClientSynchronously(sourceId, gcmClient.getId(), gcmClientDescription);
+		List<Client> clients = notificationApi.getAllClientsSynchronously(sourceId);
 
 		Assert.assertEquals(2, clients.size());
 		Assert.assertTrue(clients.contains(httpClient));
@@ -39,11 +39,11 @@ public final class NotificationApiTest extends AbstractApiTest {
 
 
 	private void testClient(Client client, ClientDescription clientDescription) {
-		notificationApi.registerClient(sourceId, client.getId(), clientDescription);
-		Assert.assertEquals(client, notificationApi.getClient(sourceId, client.getId()));
-		notificationApi.unregisterClient(sourceId, client.getId());
+		notificationApi.registerClientSynchronously(sourceId, client.getId(), clientDescription);
+		Assert.assertEquals(client, notificationApi.getClientSynchronously(sourceId, client.getId()));
+		notificationApi.unregisterClientSynchronously(sourceId, client.getId());
 		try {
-			notificationApi.getClient(sourceId, client.getId());
+			notificationApi.getClientSynchronously(sourceId, client.getId());
 		} catch (RetrofitError re) {
 			return;
 		}

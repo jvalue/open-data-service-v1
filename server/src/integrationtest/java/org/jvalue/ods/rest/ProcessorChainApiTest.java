@@ -40,13 +40,13 @@ public final class ProcessorChainApiTest {
 				new ObjectNode(JsonNodeFactory.instance),
 				new DataSourceMetaData("", "", "", "", "", "", ""));
 
-		sourceApi.addSource(sourceId, description);
+		sourceApi.addSourceSynchronously(sourceId, description);
 	}
 
 
 	@After
 	public void teardownSource() {
-		sourceApi.deleteSource(sourceId);
+		sourceApi.deleteSourceSynchronously(sourceId);
 	}
 
 
@@ -60,7 +60,7 @@ public final class ProcessorChainApiTest {
 				new ExecutionInterval(100, TimeUnit.SECONDS));
 
 		try {
-			processorApi.addProcessorChain(sourceId, "someFilterId", description);
+			processorApi.addProcessorChainSynchronously(sourceId, "someFilterId", description);
 			Assert.fail("ODS accepted invalid processor chain");
 		} catch (RetrofitError re) {
 			// all good

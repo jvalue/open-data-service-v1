@@ -56,13 +56,13 @@ public abstract class AbstractApiTest {
 
 	@Before
 	public void addSource() {
-		this.dataSource = dataSourceApi.addSource(sourceId, dataSourceDescription);
+		this.dataSource = dataSourceApi.addSourceSynchronously(sourceId, dataSourceDescription);
 	}
 
 
 	@After
 	public void removeSource() {
-		dataSourceApi.deleteSource(sourceId);
+		dataSourceApi.deleteSourceSynchronously(sourceId);
 	}
 
 }

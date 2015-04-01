@@ -26,21 +26,21 @@ public abstract class AbstractDataSourceTest {
 	@Before
 	public void setupSourceAndFilter() {
 		// add source
-		sourceApi.addSource(sourceId, getSourceDescription());
+		sourceApi.addSourceSynchronously(sourceId, getSourceDescription());
 
 		// assert empty
-		Data data = dataApi.getObjects(sourceId, getStartId(), 3, null);
+		Data data = dataApi.getObjectsSynchronously(sourceId, getStartId(), 3, null);
 		Assert.assertEquals(0, data.getCursor().getCount());
 		Assert.assertEquals(0, data.getResult().size());
 
 		// add filter chain
-		processorApi.addProcessorChain(sourceId, "testFilter", getProcessorChainDescription());
+		processorApi.addProcessorChainSynchronously(sourceId, "testFilter", getProcessorChainDescription());
 	}
 
 
 	@After
 	public void removeSource() {
-		sourceApi.deleteSource(sourceId);
+		sourceApi.deleteSourceSynchronously(sourceId);
 	}
 
 
@@ -48,7 +48,7 @@ public abstract class AbstractDataSourceTest {
 	public final void runTest() throws Exception {
 		// check filter execution
 		Thread.sleep(getSleepDuration());
-		Data data = dataApi.getObjects(sourceId, getStartId(), 3, null);
+		Data data = dataApi.getObjectsSynchronously(sourceId, getStartId(), 3, null);
 		Assert.assertTrue(data.getCursor().getCount() > 0);
 		Assert.assertTrue(data.getResult().size() > 0);
 	}
