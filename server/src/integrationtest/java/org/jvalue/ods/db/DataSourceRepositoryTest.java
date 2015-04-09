@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.jvalue.commons.couchdb.DbConnectorFactory;
 import org.jvalue.commons.couchdb.RepositoryAdapter;
+import org.jvalue.commons.couchdb.test.AbstractRepositoryAdapterTest;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceMetaData;
 
