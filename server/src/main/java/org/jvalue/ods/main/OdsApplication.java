@@ -12,15 +12,17 @@ import org.hibernate.validator.HibernateValidatorConfiguration;
 import org.hibernate.validator.cfg.ConstraintMapping;
 import org.hibernate.validator.cfg.GenericConstraintDef;
 import org.jvalue.commons.auth.AuthBinder;
-import org.jvalue.commons.rest.DbExceptionMapper;
+import org.jvalue.commons.auth.UserDescription;
+import org.jvalue.commons.auth.UserManager;
+import org.jvalue.commons.auth.rest.UnauthorizedExceptionMapper;
+import org.jvalue.commons.auth.rest.UserApi;
+import org.jvalue.commons.couchdb.rest.DbExceptionMapper;
 import org.jvalue.commons.rest.JsonExceptionMapper;
 import org.jvalue.commons.rest.NotFoundExceptionMapper;
-import org.jvalue.commons.rest.UnauthorizedExceptionMapper;
 import org.jvalue.ods.admin.monitoring.DbHealthCheck;
 import org.jvalue.ods.admin.monitoring.MonitoringModule;
 import org.jvalue.ods.admin.rest.AdminFilterChainApi;
 import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
-import org.jvalue.ods.auth.AuthModule;
 import org.jvalue.ods.data.DataModule;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.db.DbModule;
@@ -36,6 +38,8 @@ import org.jvalue.ods.rest.ProcessorChainApi;
 import org.jvalue.ods.rest.ProcessorSpecificationApi;
 import org.jvalue.ods.rest.VersionApi;
 import org.jvalue.ods.utils.GuiceConstraintValidatorFactory;
+
+import java.util.List;
 
 import javax.validation.Validation;
 import javax.ws.rs.core.Context;
@@ -68,8 +72,7 @@ public final class OdsApplication extends Application<OdsConfig> {
 				new ProcessorModule(),
 				new DbModule(configuration.getCouchDb()),
 				new NotificationsModule(),
-				new DataModule(),
-				new AuthModule(configuration.getAdmins()));
+				new DataModule());
 
 		// start data grabbing
 		environment.lifecycle().manage(injector.getInstance(DataSourceManager.class));
@@ -83,11 +86,15 @@ public final class OdsApplication extends Application<OdsConfig> {
 		environment.jersey().register(injector.getInstance(PluginApi.class));
 		environment.jersey().register(injector.getInstance(ProcessorSpecificationApi.class));
 		environment.jersey().register(injector.getInstance(VersionApi.class));
+		environment.jersey().register(injector.getInstance(UserApi.class));
 		environment.jersey().register(PropertyFilteringMessageBodyWriter.class);
 		environment.jersey().register(new DbExceptionMapper());
 		environment.jersey().register(new JsonExceptionMapper());
 		environment.jersey().register(new UnauthorizedExceptionMapper());
 		environment.jersey().register(new NotFoundExceptionMapper());
+
+		// setup users
+		setupDefaultUsers(injector.getInstance(UserManager.class), configuration.getAdmins());
 
 		// configure administration
 		environment.healthChecks().register(DbHealthCheck.class.getSimpleName(), injector.getInstance(DbHealthCheck.class));
@@ -106,6 +113,13 @@ public final class OdsApplication extends Application<OdsConfig> {
 				.constraintValidatorFactory(new GuiceConstraintValidatorFactory(injector))
 				.buildValidatorFactory()
 				.getValidator());
+	}
+
+
+	private void setupDefaultUsers(UserManager userManager, List<UserDescription> userList) {
+		for (UserDescription user : userList) {
+			if (!userManager.contains(user.getEmail())) userManager.add(user);
+		}
 	}
 
 }

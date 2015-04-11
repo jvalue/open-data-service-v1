@@ -12,5 +12,7 @@ server:
   applicationContextPath: /ods/api/v1
 
 admins:
-  - username: admin
-    password: admin
+  - name: Admin
+    email: admin@adminland.com
+    role: ADMIN
+    password: admin123

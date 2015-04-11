@@ -11,6 +11,7 @@ import org.ektorp.CouchDbConnector;
 import org.ektorp.CouchDbInstance;
 import org.ektorp.http.StdHttpClient;
 import org.ektorp.impl.StdCouchDbInstance;
+import org.jvalue.commons.auth.UserRepository;
 import org.jvalue.commons.couchdb.CouchDbConfig;
 import org.jvalue.commons.couchdb.DbConnectorFactory;
 import org.jvalue.commons.utils.Cache;
@@ -39,6 +40,9 @@ public class DbModule extends AbstractModule {
 
 			CouchDbConnector dataSourceConnector = connectorFactory.createConnector(DataSourceRepository.DATABASE_NAME, true);
 			bind(CouchDbConnector.class).annotatedWith(Names.named(DataSourceRepository.DATABASE_NAME)).toInstance(dataSourceConnector);
+
+			CouchDbConnector userConnector = connectorFactory.createConnector(UserRepository.DATABASE_NAME, true);
+			bind(CouchDbConnector.class).annotatedWith(Names.named(UserRepository.DATABASE_NAME)).toInstance(userConnector);
 
 			bind(DbConnectorFactory.class).toInstance(connectorFactory);
 			install(new FactoryModuleBuilder().build(RepositoryFactory.class));
