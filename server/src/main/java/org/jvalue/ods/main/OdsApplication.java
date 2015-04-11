@@ -15,7 +15,6 @@ import org.jvalue.commons.auth.AuthBinder;
 import org.jvalue.commons.auth.UserDescription;
 import org.jvalue.commons.auth.UserManager;
 import org.jvalue.commons.auth.rest.UnauthorizedExceptionMapper;
-import org.jvalue.commons.auth.rest.UserApi;
 import org.jvalue.commons.couchdb.rest.DbExceptionMapper;
 import org.jvalue.commons.rest.JsonExceptionMapper;
 import org.jvalue.commons.rest.NotFoundExceptionMapper;
@@ -36,6 +35,7 @@ import org.jvalue.ods.rest.NotificationApi;
 import org.jvalue.ods.rest.PluginApi;
 import org.jvalue.ods.rest.ProcessorChainApi;
 import org.jvalue.ods.rest.ProcessorSpecificationApi;
+import org.jvalue.ods.rest.UserApi;
 import org.jvalue.ods.rest.VersionApi;
 import org.jvalue.ods.utils.GuiceConstraintValidatorFactory;
 
