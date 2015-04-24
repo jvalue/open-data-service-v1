@@ -44,7 +44,7 @@ public abstract class AbstractApiTest {
 					public void intercept(RequestFacade request) {
 						request.addHeader("Accept", "application/json");
 						request.addHeader("Content-Type", "application/json");
-						request.addHeader("Authorization", "Basic YWRtaW46YWRtaW4="); // admin:admin
+						request.addHeader("Authorization", "Basic YWRtaW5AYWRtaW5sYW5kLmNvbTphZG1pbjEyMw=="); // admin@adminland.org : admin123
 					}
 				})
 				.build();
