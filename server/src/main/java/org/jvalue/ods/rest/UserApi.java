@@ -58,6 +58,14 @@ public final class UserApi extends org.jvalue.commons.auth.rest.UserApi {
 
 
 	@Override
+	@GET
+	@Path("/me")
+	public User getUser(@RestrictedTo(Role.PUBLIC) User user) {
+		return super.getUser(user);
+	}
+
+
+	@Override
 	@DELETE
 	@Path("/{userId}")
 	public void removeUser(@RestrictedTo(Role.PUBLIC) User user, @PathParam("userId") String userId) {
