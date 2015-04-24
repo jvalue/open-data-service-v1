@@ -11,8 +11,13 @@ couchDb:
 server:
   applicationContextPath: /ods/api/v1
 
-admins:
-  - name: Admin
-    email: admin@adminland.com
-    role: ADMIN
-    password: admin123
+auth:
+  users:
+    - name: Admin
+      email: admin@adminland.com
+      role: ADMIN
+      password: admin123
+      type: basic
+  googleOAuthWebClientId: GOOGLE_OAUTH_WEB_CLIENT_ID
+  googleOAuthClientIds:
+    - GOOGLE_OAUTH_CLIENT_IDS

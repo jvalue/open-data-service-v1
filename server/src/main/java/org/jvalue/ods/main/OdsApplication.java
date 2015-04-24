@@ -12,7 +12,7 @@ import org.hibernate.validator.HibernateValidatorConfiguration;
 import org.hibernate.validator.cfg.ConstraintMapping;
 import org.hibernate.validator.cfg.GenericConstraintDef;
 import org.jvalue.commons.auth.AuthBinder;
-import org.jvalue.commons.auth.UserDescription;
+import org.jvalue.commons.auth.BasicAuthUserDescription;
 import org.jvalue.commons.auth.UserManager;
 import org.jvalue.commons.auth.rest.UnauthorizedExceptionMapper;
 import org.jvalue.commons.couchdb.rest.DbExceptionMapper;
@@ -22,6 +22,7 @@ import org.jvalue.ods.admin.monitoring.DbHealthCheck;
 import org.jvalue.ods.admin.monitoring.MonitoringModule;
 import org.jvalue.ods.admin.rest.AdminFilterChainApi;
 import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
+import org.jvalue.ods.auth.AuthModule;
 import org.jvalue.ods.data.DataModule;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.db.DbModule;
@@ -72,7 +73,8 @@ public final class OdsApplication extends Application<OdsConfig> {
 				new ProcessorModule(),
 				new DbModule(configuration.getCouchDb()),
 				new NotificationsModule(),
-				new DataModule());
+				new DataModule(),
+				new AuthModule(configuration.getAuth()));
 
 		// start data grabbing
 		environment.lifecycle().manage(injector.getInstance(DataSourceManager.class));
@@ -94,7 +96,7 @@ public final class OdsApplication extends Application<OdsConfig> {
 		environment.jersey().register(new NotFoundExceptionMapper());
 
 		// setup users
-		setupDefaultUsers(injector.getInstance(UserManager.class), configuration.getAdmins());
+		setupDefaultUsers(injector.getInstance(UserManager.class), configuration.getAuth().getUsers());
 
 		// configure administration
 		environment.healthChecks().register(DbHealthCheck.class.getSimpleName(), injector.getInstance(DbHealthCheck.class));
@@ -116,8 +118,8 @@ public final class OdsApplication extends Application<OdsConfig> {
 	}
 
 
-	private void setupDefaultUsers(UserManager userManager, List<UserDescription> userList) {
-		for (UserDescription user : userList) {
+	private void setupDefaultUsers(UserManager userManager, List<BasicAuthUserDescription> userList) {
+		for (BasicAuthUserDescription user : userList) {
 			if (!userManager.contains(user.getEmail())) userManager.add(user);
 		}
 	}

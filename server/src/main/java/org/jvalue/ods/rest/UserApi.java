@@ -1,10 +1,11 @@
 package org.jvalue.ods.rest;
 
-import org.jvalue.commons.auth.BasicAuthenticationUtils;
+import org.jvalue.commons.auth.AbstractUserDescription;
+import org.jvalue.commons.auth.BasicAuthUtils;
+import org.jvalue.commons.auth.OAuthUtils;
 import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
-import org.jvalue.commons.auth.UserDescription;
 import org.jvalue.commons.auth.UserManager;
 
 import java.util.List;
@@ -29,8 +30,8 @@ import javax.ws.rs.core.MediaType;
 public final class UserApi extends org.jvalue.commons.auth.rest.UserApi {
 
 	@Inject
-	UserApi(UserManager userManager, BasicAuthenticationUtils authenticationUtils) {
-		super(userManager, authenticationUtils);
+	UserApi(UserManager userManager, BasicAuthUtils basicAuthUtils, OAuthUtils oAuthUtils) {
+		super(userManager, basicAuthUtils, oAuthUtils);
 	}
 
 
@@ -43,7 +44,7 @@ public final class UserApi extends org.jvalue.commons.auth.rest.UserApi {
 
 	@Override
 	@POST
-	public User addUser(@RestrictedTo(value = Role.ADMIN, isOptional = true) User user, UserDescription userDescription) {
+	public User addUser(@RestrictedTo(value = Role.ADMIN, isOptional = true) User user, AbstractUserDescription userDescription) {
 		return super.addUser(user, userDescription);
 	}
 
