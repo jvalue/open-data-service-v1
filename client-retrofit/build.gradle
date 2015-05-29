@@ -13,7 +13,7 @@ buildscript {
     }
     dependencies {
         classpath 'de.bitdroid.jaxrs2retrofit:plugin:0.2.0'
-        classpath 'org.jvalue.commons:auth:0.1.1-SNAPSHOT'
+        classpath 'org.jvalue.commons:auth:0.1.2'
     }
 }
 
@@ -21,7 +21,7 @@ dependencies {
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.squareup.retrofit:converter-jackson:1.9.0'
     compile 'io.reactivex:rxjava:1.0.8'
-    compile 'org.jvalue.commons:models:0.1.1-SNAPSHOT'
+    compile 'org.jvalue.commons:models:0.1.2'
     compile project(':models')
 
     testCompile 'org.jmockit:jmockit:1.13'

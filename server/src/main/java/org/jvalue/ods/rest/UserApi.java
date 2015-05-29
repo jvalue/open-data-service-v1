@@ -2,6 +2,7 @@ package org.jvalue.ods.rest;
 
 import org.jvalue.commons.auth.AbstractUserDescription;
 import org.jvalue.commons.auth.BasicAuthUtils;
+import org.jvalue.commons.auth.BasicAuthenticator;
 import org.jvalue.commons.auth.OAuthUtils;
 import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
@@ -30,8 +31,8 @@ import javax.ws.rs.core.MediaType;
 public final class UserApi extends org.jvalue.commons.auth.rest.UserApi {
 
 	@Inject
-	UserApi(UserManager userManager, BasicAuthUtils basicAuthUtils, OAuthUtils oAuthUtils) {
-		super(userManager, basicAuthUtils, oAuthUtils);
+	UserApi(UserManager userManager, BasicAuthenticator basicAuthenticator, BasicAuthUtils basicAuthUtils, OAuthUtils oAuthUtils) {
+		super(userManager, basicAuthenticator, basicAuthUtils, oAuthUtils);
 	}
 
 

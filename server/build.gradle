@@ -37,8 +37,8 @@ dependencies {
     compile 'org.apache.commons:commons-csv:1.1'
     compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.4.4'
     compile 'com.hubspot.jackson:jackson-jaxrs-propertyfiltering:0.6.1'
-    compile 'org.jvalue.commons:couchdb:0.1.1-SNAPSHOT'
-    compile 'org.jvalue.commons:auth:0.1.1-SNAPSHOT'
+    compile 'org.jvalue.commons:couchdb:0.1.2'
+    compile 'org.jvalue.commons:auth:0.1.2'
     compile project(':models')
     compile fileTree(dir: 'libs', include: '*.jar')
 
@@ -48,7 +48,7 @@ dependencies {
     testCompile 'com.squareup.okhttp:okhttp:2.1.+'
     testCompile 'com.squareup.okhttp:okhttp-urlconnection:2.1.+'
     testCompile 'com.squareup.okhttp:mockwebserver:2.1.+'
-    testCompile 'org.jvalue.commons:couchdb-test:0.1.1-SNAPSHOT'
+    testCompile 'org.jvalue.commons:couchdb-test:0.1.2'
     testCompile project(':client-retrofit')
 }
 
