@@ -11,7 +11,7 @@ buildscript {
 
 allprojects {
     group = 'org.jvalue.ods'
-    version = '0.1.3-SNAPSHOT'
+    version = '0.1.3'
 }
 
 
