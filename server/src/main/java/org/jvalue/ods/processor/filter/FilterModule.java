@@ -8,6 +8,8 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 
+import org.jvalue.ods.processor.filter.domain.PegelOnlineMerger;
+
 public final class FilterModule extends AbstractModule {
 
 	@Override
@@ -33,6 +35,11 @@ public final class FilterModule extends AbstractModule {
 						},
 						Names.named(FilterFactory.NAME_INVALID_DOCUMENT_FILTER),
 						InvalidDocumentFilter.class)
+				.implement(
+						new TypeLiteral<Filter<ObjectNode, ObjectNode>>() {
+						},
+						Names.named(FilterFactory.NAME_PEGEL_ONLINE_MERGER),
+						PegelOnlineMerger.class)
 				.build(FilterFactory.class));
 	}
 

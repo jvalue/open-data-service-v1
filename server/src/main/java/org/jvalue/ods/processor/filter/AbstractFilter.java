@@ -23,7 +23,7 @@ import org.jvalue.commons.utils.Assert;
 import org.jvalue.ods.admin.monitoring.PauseableTimer;
 import org.jvalue.ods.api.sources.DataSource;
 
-abstract class AbstractFilter<P, R> implements Filter<P, R> {
+public abstract class AbstractFilter<P, R> implements Filter<P, R> {
 
 	protected final DataSource source;
 	protected Filter<R, ?> nextFilter;
