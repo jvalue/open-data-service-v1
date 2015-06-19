@@ -69,8 +69,8 @@ public class BrandenburgPegelAdapter extends AbstractSourceAdapter {
 
 				// parse coordinates
 				String coordinates = ((Element) data.getElementsByTagName("Point").item(0)).getElementsByTagName("coordinates").item(0).getTextContent();
-				newNode.put("latitude", Double.valueOf(coordinates.split(",")[0]));
-				newNode.put("longitude", Double.valueOf(coordinates.split(",")[1]));
+				newNode.put("longitude", Double.valueOf(coordinates.split(",")[0]));
+				newNode.put("latitude", Double.valueOf(coordinates.split(",")[1]));
 
 				return newNode;
 
