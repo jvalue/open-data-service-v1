@@ -46,7 +46,9 @@ public class PegelBrandenburgMerger extends AbstractDataModifierFilter {
 		String waterLevel = data.path("waterLevel").asText();
 		data.remove("waterLevel");
 		if (!waterLevel.equals("-")) {
-			newMeasurements.put("value", waterLevel.split(" ")[0]);
+			String value = waterLevel.split(" ")[0];
+			value = value.replaceAll(",", ".");
+			newMeasurements.put("value", Double.valueOf(value));
 			newMeasurements.put("unit", waterLevel.split(" ")[1]);
 		}
 
