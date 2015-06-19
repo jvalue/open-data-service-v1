@@ -8,6 +8,7 @@ import com.google.inject.assistedinject.Assisted;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.processor.filter.AbstractDataModifierFilter;
 import org.jvalue.ods.processor.filter.FilterException;
+import org.jvalue.ods.utils.StringUtils;
 
 import javax.inject.Inject;
 
@@ -47,6 +48,16 @@ public class PegelOnlineMerger extends AbstractDataModifierFilter {
 			newMeasurements.put("characteristicValues", oldMeasurements.path("characteristicValues"));
 		}
 		data.remove("timeseries");
+
+		// rename longname to name
+		String stationName = StringUtils.toProperCase(data.get("longname").asText());
+		data.put("name", stationName);
+		data.remove("shortname");
+		data.remove("longname");
+
+		// move water name "up"
+		String waterName = StringUtils.toProperCase(data.path("water").path("longname").asText());
+		data.put("water", waterName);
 
 		return data;
 	}
