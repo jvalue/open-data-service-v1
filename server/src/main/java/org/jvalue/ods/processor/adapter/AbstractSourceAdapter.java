@@ -28,7 +28,7 @@ import java.net.URL;
 import java.util.Iterator;
 
 
-abstract class AbstractSourceAdapter implements SourceAdapter {
+public abstract class AbstractSourceAdapter implements SourceAdapter {
 
 	private final DataSource dataSource;
 	private final URL sourceUrl;

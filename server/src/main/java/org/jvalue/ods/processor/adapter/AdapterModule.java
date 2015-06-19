@@ -5,6 +5,9 @@ import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 
+import org.jvalue.ods.processor.adapter.domain.BrandenburgPegelAdapter;
+import org.jvalue.ods.processor.adapter.domain.PegelPortalMvSourceAdapter;
+
 public final class AdapterModule extends AbstractModule {
 
 	@Override

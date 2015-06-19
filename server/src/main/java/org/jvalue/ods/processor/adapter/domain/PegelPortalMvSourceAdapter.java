@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
  */
-package org.jvalue.ods.processor.adapter;
+package org.jvalue.ods.processor.adapter.domain;
 
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -28,6 +28,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jvalue.ods.api.sources.DataSource;
+import org.jvalue.ods.processor.adapter.AbstractSourceAdapter;
+import org.jvalue.ods.processor.adapter.SourceAdapterException;
+import org.jvalue.ods.processor.adapter.SourceIterator;
 import org.jvalue.ods.utils.HttpUtils;
 
 import java.io.IOException;
@@ -39,7 +42,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 
-final class PegelPortalMvSourceAdapter extends AbstractSourceAdapter {
+public final class PegelPortalMvSourceAdapter extends AbstractSourceAdapter {
 
 	private static final String KEY_STATION = "station", KEY_WATER = "water",
 			KEY_TIMESTAMP = "timestamp", KEY_LEVEL = "level",

@@ -32,7 +32,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 
-abstract class SourceIterator implements Iterator<ObjectNode> {
+public abstract class SourceIterator implements Iterator<ObjectNode> {
 
 	protected final DataSource source;
 	protected final URL sourceUrl;

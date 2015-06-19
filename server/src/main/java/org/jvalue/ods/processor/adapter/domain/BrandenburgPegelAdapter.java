@@ -1,4 +1,4 @@
-package org.jvalue.ods.processor.adapter;
+package org.jvalue.ods.processor.adapter.domain;
 
 
 import com.codahale.metrics.MetricRegistry;
@@ -7,8 +7,10 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.assistedinject.Assisted;
 
-import org.jvalue.commons.utils.Log;
 import org.jvalue.ods.api.sources.DataSource;
+import org.jvalue.ods.processor.adapter.AbstractSourceAdapter;
+import org.jvalue.ods.processor.adapter.SourceAdapterException;
+import org.jvalue.ods.processor.adapter.SourceIterator;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
