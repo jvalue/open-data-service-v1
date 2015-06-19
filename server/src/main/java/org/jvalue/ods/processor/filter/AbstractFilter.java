@@ -51,7 +51,7 @@ public abstract class AbstractFilter<P, R> implements Filter<P, R> {
 		timerContext.resume();
 		R result = doFilter(data);
 		timerContext.pause();
-		if (nextFilter != null) nextFilter.filter(result);
+		if (nextFilter != null && result != null) nextFilter.filter(result);
 	}
 
 

@@ -2,6 +2,7 @@ package org.jvalue.ods.processor.filter.domain;
 
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.Sets;
 import com.google.inject.assistedinject.Assisted;
 
 import org.jvalue.commons.utils.Assert;
@@ -13,6 +14,7 @@ import org.jvalue.ods.processor.filter.FilterException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -22,6 +24,9 @@ import javax.inject.Inject;
  * to be merge with other water level * data sources.
  */
 public class PegelBrandenburgMerger extends AbstractDataModifierFilter {
+
+	// removes stations which are also present in PegelOnline as PegelOnline bas better quality in general
+	private static final Set<String> BLACKLISTED_STATIONS = Sets.newHashSet("9690093", "9690088", "580412");
 
 	private static final DateFormat
 			sourceDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm"),
@@ -35,6 +40,12 @@ public class PegelBrandenburgMerger extends AbstractDataModifierFilter {
 
 	@Override
 	protected ObjectNode doFilter(ObjectNode data) throws FilterException {
+		// remove duplicate stations
+		if (BLACKLISTED_STATIONS.contains(data.path("gaugeId").asText())) {
+			Log.info("Dropped station with id " + data.path("gaugeId").asText());
+			return null;
+		}
+
 		// remove uuid (not needed)
 		data.remove("uuid");
 
@@ -82,7 +93,6 @@ public class PegelBrandenburgMerger extends AbstractDataModifierFilter {
 
 		// rename rivershed to water
 		rename(data, "rivershed", "water");
-
 
 		return data;
 	}
