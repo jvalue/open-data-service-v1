@@ -18,7 +18,8 @@ public interface FilterFactory {
 			NAME_NOTIFICATION_FILTER = "NotificationFilter",
 			NAME_INT_TO_STRING_KEY_FILTER = "IntToStringKeyFilter",
 			NAME_INVALID_DOCUMENT_FILTER = "InvalidDocumentFilter",
-			NAME_PEGEL_ONLINE_MERGER = "PegelOnlineMerger";
+			NAME_PEGEL_ONLINE_MERGER = "PegelOnlineMerger",
+			NAME_PEGEL_BRANDENBURG_MERGER = "PegelBrandenburgMerger";
 
 
 	@CreationMethod(name = NAME_NOTIFICATION_FILTER, filterType =  ProcessorType.FILTER)
@@ -44,5 +45,10 @@ public interface FilterFactory {
 	@CreationMethod(name = NAME_PEGEL_ONLINE_MERGER, filterType = ProcessorType.FILTER)
 	@Named(NAME_PEGEL_ONLINE_MERGER)
 	public Filter<ObjectNode, ObjectNode> createPegelOnlineMerger(DataSource source);
+
+
+	@CreationMethod(name = NAME_PEGEL_BRANDENBURG_MERGER, filterType = ProcessorType.FILTER)
+	@Named(NAME_PEGEL_BRANDENBURG_MERGER)
+	public Filter<ObjectNode, ObjectNode> createPegelBrandenburgMerger(DataSource source);
 
 }
