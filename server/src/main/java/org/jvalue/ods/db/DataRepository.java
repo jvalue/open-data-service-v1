@@ -186,6 +186,14 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 	}
 
 
+	/**
+	 * Compacts the underlying CouchDb database by removing old revisions of documents.
+	 */
+	public void compact() {
+		connector.compact();
+	}
+
+
 	private DataView createObjectByDomainIdView(JsonPointer domainIdKey) {
 		String viewName = "findObjectByDomainId";
 		String domainIdProperty = createDomainIdJavascriptProperty(domainIdKey);

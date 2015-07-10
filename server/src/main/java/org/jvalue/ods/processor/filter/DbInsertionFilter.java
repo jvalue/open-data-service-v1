@@ -79,6 +79,7 @@ final class DbInsertionFilter extends AbstractFilter<ObjectNode, ObjectNode> {
 	@Override
 	protected void doOnComplete() throws FilterException {
 		writeBulkData();
+		dataRepository.compact();
 		if (updateDataIfExists) timerContextBulkRead.stop();
 		timerContextBulkWrite.stop();
 	}
