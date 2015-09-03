@@ -20,8 +20,6 @@ import org.jvalue.commons.rest.JsonExceptionMapper;
 import org.jvalue.commons.rest.NotFoundExceptionMapper;
 import org.jvalue.ods.admin.monitoring.DbHealthCheck;
 import org.jvalue.ods.admin.monitoring.MonitoringModule;
-import org.jvalue.ods.pegelalarm.PegelAlarmDataSourceHealthCheck;
-import org.jvalue.ods.pegelalarm.PegelOnlineHealthCheck;
 import org.jvalue.ods.admin.rest.AdminFilterChainApi;
 import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
 import org.jvalue.ods.auth.AuthModule;
@@ -29,6 +27,9 @@ import org.jvalue.ods.data.DataModule;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.db.DbModule;
 import org.jvalue.ods.notifications.NotificationsModule;
+import org.jvalue.ods.pegelalarm.DataSourceHealthCheck;
+import org.jvalue.ods.pegelalarm.FilterChainHealthCheck;
+import org.jvalue.ods.pegelalarm.PegelOnlineHealthCheck;
 import org.jvalue.ods.processor.ProcessorModule;
 import org.jvalue.ods.processor.reference.ValidChainReference;
 import org.jvalue.ods.rest.DataApi;
@@ -103,7 +104,8 @@ public final class OdsApplication extends Application<OdsConfig> {
 		// setup health checks
 		environment.healthChecks().register(DbHealthCheck.class.getSimpleName(), injector.getInstance(DbHealthCheck.class));
 		environment.healthChecks().register(PegelOnlineHealthCheck.class.getSimpleName(), injector.getInstance(PegelOnlineHealthCheck.class));
-		environment.healthChecks().register(PegelAlarmDataSourceHealthCheck.class.getSimpleName(), injector.getInstance(PegelAlarmDataSourceHealthCheck.class));
+		environment.healthChecks().register(DataSourceHealthCheck.class.getSimpleName(), injector.getInstance(DataSourceHealthCheck.class));
+		environment.healthChecks().register(FilterChainHealthCheck.class.getSimpleName(), injector.getInstance(FilterChainHealthCheck.class));
 
 		// configure administration
 		DropwizardResourceConfig jerseyConfig = new DropwizardResourceConfig(environment.metrics());

@@ -9,12 +9,12 @@ import javax.inject.Inject;
 /**
  * Asserts that a {@link org.jvalue.ods.api.sources.DataSource} with the id 'pegelalarm' exists.
  */
-public class PegelAlarmDataSourceHealthCheck extends HealthCheck implements Constants {
+public class DataSourceHealthCheck extends HealthCheck implements Constants {
 
 	private final DataSourceManager dataSourceManager;
 
 	@Inject
-	PegelAlarmDataSourceHealthCheck(DataSourceManager dataSourceManager) {
+	DataSourceHealthCheck(DataSourceManager dataSourceManager) {
 		this.dataSourceManager = dataSourceManager;
 	}
 
