@@ -7,7 +7,7 @@ import com.google.inject.Inject;
 import org.jvalue.ods.db.DataSourceRepository;
 
 /**
- * Checks that CouchDb is still reachable.
+ * Checks that CouchDb is reachable.
  */
 public final class DbHealthCheck extends HealthCheck {
 
@@ -22,7 +22,7 @@ public final class DbHealthCheck extends HealthCheck {
 	@Override
 	public Result check() throws Exception {
 		sourceRepository.getAll();
-		return Result.healthy(DataSourceRepository.class.getSimpleName() + " is reachable");
+		return Result.healthy();
 	}
 
 }
