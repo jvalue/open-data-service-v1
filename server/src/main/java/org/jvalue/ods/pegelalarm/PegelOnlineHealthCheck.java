@@ -1,4 +1,4 @@
-package org.jvalue.ods.admin.monitoring.pegelalarm;
+package org.jvalue.ods.pegelalarm;
 
 import com.codahale.metrics.health.HealthCheck;
 import com.fasterxml.jackson.databind.JsonNode;

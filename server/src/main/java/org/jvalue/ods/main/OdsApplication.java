@@ -20,7 +20,8 @@ import org.jvalue.commons.rest.JsonExceptionMapper;
 import org.jvalue.commons.rest.NotFoundExceptionMapper;
 import org.jvalue.ods.admin.monitoring.DbHealthCheck;
 import org.jvalue.ods.admin.monitoring.MonitoringModule;
-import org.jvalue.ods.admin.monitoring.pegelalarm.PegelOnlineHealthCheck;
+import org.jvalue.ods.pegelalarm.PegelAlarmDataSourceHealthCheck;
+import org.jvalue.ods.pegelalarm.PegelOnlineHealthCheck;
 import org.jvalue.ods.admin.rest.AdminFilterChainApi;
 import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
 import org.jvalue.ods.auth.AuthModule;
@@ -102,6 +103,7 @@ public final class OdsApplication extends Application<OdsConfig> {
 		// setup health checks
 		environment.healthChecks().register(DbHealthCheck.class.getSimpleName(), injector.getInstance(DbHealthCheck.class));
 		environment.healthChecks().register(PegelOnlineHealthCheck.class.getSimpleName(), injector.getInstance(PegelOnlineHealthCheck.class));
+		environment.healthChecks().register(PegelAlarmDataSourceHealthCheck.class.getSimpleName(), injector.getInstance(PegelAlarmDataSourceHealthCheck.class));
 
 		// configure administration
 		DropwizardResourceConfig jerseyConfig = new DropwizardResourceConfig(environment.metrics());
