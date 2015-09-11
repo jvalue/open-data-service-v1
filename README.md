@@ -72,6 +72,10 @@ For an example usage please refer to the [test cases](https://github.com/jvalue/
 The are two types of tests in this repo: unit tests and integration tests. The unit tests are available under `{module}/src/test` and can be run via `./gradlew test` and the integration tests can be found at `{module}/src/integrationtest` and can be run via `./gradlew integrationTest`. Please note that the integration tests assume that CouchDB and the ODS are running locally with default settings.
 
 
+## Health checks
+
+The ODS has a number of [health checks](https://dropwizard.github.io/dropwizard/getting-started.html#creating-a-health-check) which ensure that a running instance of the ODS conforms to the requirements of the Pegel Alarm application. To see the output of those health checks simply go to `/{adminContextPath}/healthcheck`. The default config for localhost is [http://localhost:8081/healthcheck](http://localhost:8081/healthcheck).
+
 ## License
 Copyright 2014, 2015 Friedrich-Alexander Universität Erlangen-Nürnberg
 
