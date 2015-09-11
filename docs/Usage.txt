@@ -1,4 +1,0 @@
-current REST-API:
-
-    GET http://127.0.0.1:8182/api -> prints the API
-
