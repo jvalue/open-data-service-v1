@@ -49,6 +49,41 @@ To get a feeling for how this API works and which parameters are supported, you 
 - have a look at this [Postman collection](https://www.getpostman.com/collections/25d694d4ba21348c5530)
 - or start working with the Java client implementation (see below)
 
+In order for the Postman collection to work, Postman needs to know a couple of things (e.g. passwords, urls, etc.), which can be set by importing a so called _environment_ file that looks like this:
+
+```json
+{
+	"id": "b9d8ff70-9540-e7c6-e423-d8cd74d9c6e3",
+	"name": "localhost",
+	"values": [
+		{
+			"key": "ods_base_url",
+			"value": "http://localhost:8080/ods/api/v1",
+			"type": "text",
+			"name": "ods_base_url",
+			"enabled": true
+		},
+		{
+			"key": "ods_admin_username",
+			"value": "admin@adminland.com",
+			"type": "text",
+			"name": "ods_admin_username",
+			"enabled": true
+		},
+		{
+			"key": "ods_admin_password",
+			"value": "admin123",
+			"type": "text",
+			"name": "ods_admin_password",
+			"enabled": true
+		}
+	],
+	"timestamp": 1429550360212,
+	"synced": false,
+	"syncedFilename": ""
+}
+```
+To import those variables, save the above JSON in a file and click the _environment_ button at the top of Postman.
 
 ## Client implementation
 
