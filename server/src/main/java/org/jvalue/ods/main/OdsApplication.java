@@ -27,6 +27,7 @@ import org.jvalue.ods.data.DataModule;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.db.DbModule;
 import org.jvalue.ods.notifications.NotificationsModule;
+import org.jvalue.ods.pegelalarm.DataHealthCheck;
 import org.jvalue.ods.pegelalarm.DataSourceHealthCheck;
 import org.jvalue.ods.pegelalarm.FilterChainHealthCheck;
 import org.jvalue.ods.pegelalarm.PegelOnlineHealthCheck;
@@ -106,6 +107,7 @@ public final class OdsApplication extends Application<OdsConfig> {
 		environment.healthChecks().register(PegelOnlineHealthCheck.class.getSimpleName(), injector.getInstance(PegelOnlineHealthCheck.class));
 		environment.healthChecks().register(DataSourceHealthCheck.class.getSimpleName(), injector.getInstance(DataSourceHealthCheck.class));
 		environment.healthChecks().register(FilterChainHealthCheck.class.getSimpleName(), injector.getInstance(FilterChainHealthCheck.class));
+		environment.healthChecks().register(DataHealthCheck.class.getSimpleName(), injector.getInstance(DataHealthCheck.class));
 
 		// configure administration
 		DropwizardResourceConfig jerseyConfig = new DropwizardResourceConfig(environment.metrics());
