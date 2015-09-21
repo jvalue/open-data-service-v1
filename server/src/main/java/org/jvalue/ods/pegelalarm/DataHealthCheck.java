@@ -40,8 +40,6 @@ public class DataHealthCheck extends HealthCheck implements Constants {
 		for (final String stationId : stationIds) {
 			final JsonNode data = dataRepository.findByDomainId(stationId);
 			if (data == null) return Result.unhealthy("on station with id " + stationId);
-
-			System.out.println(stationId + ", date: \'" + data.get("currentMeasurement").get("timestamp").asText() + "\'");
 			averageTimestamp += dateFormat.parse(data.get("currentMeasurement").get("timestamp").asText()).getTime();
 		}
 
