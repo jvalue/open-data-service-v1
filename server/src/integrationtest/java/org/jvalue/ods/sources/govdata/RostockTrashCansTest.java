@@ -19,7 +19,7 @@ public final class RostockTrashCansTest extends AbstractDataSourceTest {
 	@Override
 	public DataSourceDescription getSourceDescription() {
 		return new DataSourceDescription(
-				JsonPointer.compile("/id"),
+				JsonPointer.compile("/uuid"),
 				new ObjectNode(JsonNodeFactory.instance),
 				new DataSourceMetaData("", "", "", "", "", "", ""));
 	}
@@ -27,7 +27,7 @@ public final class RostockTrashCansTest extends AbstractDataSourceTest {
 
 	@Override
 	public String getStartId() {
-		return "1";
+		return "20cbcdf6-103a-11e5-916a-0050569b7e95";
 	}
 
 
