@@ -10,7 +10,7 @@ buildscript {
     }
 }
 
-mainClassName = "org.jvalue.ods.main.OdsApplication"
+mainClassName = 'org.jvalue.ods.main.OdsApplication'
 
 run() {
     args 'server', 'ods-configuration.yml'
@@ -39,6 +39,7 @@ dependencies {
     compile 'com.hubspot.jackson:jackson-jaxrs-propertyfiltering:0.6.1'
     compile 'org.jvalue.commons:couchdb:0.1.2'
     compile 'org.jvalue.commons:auth:0.1.2'
+    compile 'com.sun.net.httpserver:http:20070405'
     compile project(':models')
     compile fileTree(dir: 'libs', include: '*.jar')
 

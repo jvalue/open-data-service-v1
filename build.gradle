@@ -78,7 +78,7 @@ subprojects {
         testClassesDir = sourceSets.integrationTest.output.classesDir
         classpath = sourceSets.integrationTest.runtimeClasspath
     }
-    check.dependsOn integrationTest
+    // check.dependsOn integrationTest
 
     // let intellij know about 'special' folders
     idea {
