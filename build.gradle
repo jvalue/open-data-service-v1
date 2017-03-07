@@ -8,12 +8,18 @@ buildscript {
     }
 }
 
-
 allprojects {
     group = 'org.jvalue.ods'
     version = '0.1.3'
 }
 
+if (JavaVersion.current().isJava8Compatible()) {
+    allprojects {
+        tasks.withType(Javadoc) {
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
+    }
+}
 
 subprojects {
     apply plugin: 'java'
@@ -23,7 +29,8 @@ subprojects {
     apply plugin: 'com.jfrog.bintray'
     apply plugin: 'com.jfrog.artifactory'
 
-    sourceCompatibility = 1.7
+    sourceCompatibility = 1.8
+    
 
     // setup generated sources (if any)
     ext {
