@@ -138,7 +138,7 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 	 *
 	 * @param startDomainId the start id of the requested page or null if the result should start
 	 *                      at the first entry.
-	 * @param count how many entries should be in the page. Must be > 0.
+	 * @param count how many entries should be in the page. Must be greater than 0.
 	 */
 	public Data executePaginatedGet(String startDomainId, int count) {
 		ViewQuery query = new ViewQuery()
