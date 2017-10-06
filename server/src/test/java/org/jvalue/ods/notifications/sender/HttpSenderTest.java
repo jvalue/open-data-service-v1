@@ -33,7 +33,7 @@ public final class HttpSenderTest {
 	public final void testSuccess() throws Throwable {
 		MockWebServer server = new MockWebServer();
 		server.enqueue(new MockResponse().setResponseCode(200));
-		server.play();
+		server.start();
 
 		String path = "/foo/bar/data/";
 		String callbackUrl = server.getUrl(path).toString();

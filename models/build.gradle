@@ -1,8 +1,8 @@
 dependencies {
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.5.1'
-    compile 'com.fasterxml.jackson.core:jackson-annotations:2.5.1'
-    compile 'com.google.guava:guava:18.0'
-    compile 'javax.validation:validation-api:1.1.0.Final'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.8.10'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.10'
+    compile 'com.google.guava:guava:23.0'
+    compile 'javax.validation:validation-api:2.0.0.Final'
 
-    testCompile 'junit:junit:4.11'
+    testCompile 'junit:junit:4.12'
 }
