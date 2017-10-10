@@ -3,8 +3,6 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
-        classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.5.2'
     }
 }
 
@@ -18,8 +16,6 @@ subprojects {
     apply plugin: 'idea'
     apply plugin: 'maven'
     apply plugin: 'maven-publish'
-    apply plugin: 'com.jfrog.bintray'
-    apply plugin: 'com.jfrog.artifactory'
 
     sourceCompatibility = 1.8
 
@@ -113,59 +109,6 @@ subprojects {
 
     artifacts {
         archives sourcesJar, javadocJar
-    }
-
-    bintray {
-        user = project.hasProperty("bintray_user") ? bintray_user : "dummy user"
-        key = project.hasProperty("bintray_key") ? bintray_key : "dummy key"
-        publications = ['mavenJava']
-        dryRun = false
-        publish = true
-        pkg {
-            repo = 'maven'
-            name = 'ods'
-            desc = 'Open Data Service'
-            websiteUrl = 'https://github.com/jvalue/open-data-service'
-            issueTrackerUrl = 'https://github.com/jvalue/open-data-service/issues'
-            vcsUrl = 'https://github.com/jvalue/open-data-service.git'
-            licenses = ['AGPL-3.0']
-            publicDownloadNumbers = true
-            version {
-                name = project.version
-                gpg {
-                    sign = true
-                    passphrase = project.hasProperty("bintray_gpg_passphrase") ? bintray_gpg_passphrase : "dummy passphrase"
-                }
-                mavenCentralSync {
-                    sync = false
-                    user = 'userToken'
-                    password = 'password'
-                    close = '1'
-                }
-            }
-        }
-    }
-
-	// snapshots
-    artifactory {
-        contextUrl = 'http://oss.jfrog.org/artifactory'
-        publish {
-            repository {
-                repoKey = 'oss-snapshot-local'
-                username = project.hasProperty("artifactory_user") ? artifactory_user : "dummy user"
-                password = project.hasProperty("artifactory_password") ? artifactory_password : "dummy key"
-                maven = true
-            }
-            defaults {
-                publications ('mavenJava')
-            }
-        }
-        resolve {
-            repository {
-                repoKey = 'libs-snapshot'
-                maven = true
-            }
-        }
     }
 
 }
