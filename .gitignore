@@ -1,4 +1,4 @@
-# Ignore #
+# Ignore
 *.class
 *.war
 *.ear
@@ -14,9 +14,6 @@ build
 .classpath
 .project
 .idea
-
-# Allow #
-logging.log
-gradle.properties
+*/out/
 
 ods-configuration.yml
