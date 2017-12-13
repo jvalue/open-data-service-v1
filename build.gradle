@@ -86,14 +86,24 @@ subprojects {
         }
     }
 
-    // publishing to jcenter
+    // publishing to nexus
     publishing {
         publications {
-            mavenJava(MavenPublication) {
+            nexusJava(MavenPublication) {
                 from components.java
                 artifact sourcesJar
                 artifact javadocJar
             }
+        }
+        repositories {
+            maven {
+                url 'https://mojo-maven.cs.fau.de/repository/public-releases/'
+                credentials {
+                    username nexusUsername
+                    password nexusPassword
+                }
+            }
+
         }
     }
 
