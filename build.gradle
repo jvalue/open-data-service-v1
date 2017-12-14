@@ -87,6 +87,12 @@ subprojects {
     }
 
     // publishing to nexus
+    if (!hasProperty('nexusUsername')) {
+    	ext.nexusUsername = ''
+    }
+    if (!hasProperty('nexusPassword')) {
+    	ext.nexusPassword = ''
+    }
     publishing {
         publications {
             nexusJava(MavenPublication) {
