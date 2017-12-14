@@ -32,6 +32,20 @@ pipeline {
         stage('Acceptance Stage: Start CouchDB Docker Container') {
             steps {
                 sh "docker/couchdb/couchdb-start.sh"
+                timeout(time: 2, unit: "MINUTES") {
+                    echo "Waiting until couchdb is ready."
+                    waitUntil {
+                        script {
+                            try {
+                                sleep 1
+                                sh 'wget -q http://localhost:5984/ -O /dev/null'
+                                return true
+                            } catch (exception) {
+                                return false
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -42,7 +56,21 @@ pipeline {
                             sh "./gradlew run &"
                         },
                         'run integration tests': {
-                            sleep 45
+                            timeout(time: 2, unit: "MINUTES") {
+                                echo "Waiting until ODS service is ready."
+                                waitUntil {
+                                    script {
+                                        try {
+                                            sleep 3
+                                            sh 'wget -q http://localhost:8080/ods/api/v1/version -O /dev/null'
+                                            return true
+                                        } catch (exception) {
+                                            return false
+                                        }
+                                    }
+                                }
+                            }
+
                             sh "./gradlew integrationTest"
                         }
                 )
@@ -63,3 +91,4 @@ pipeline {
         }
     }
 }
+
