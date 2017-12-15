@@ -24,6 +24,7 @@ public final class JsonSourceAdapterTest extends AbstractSourceAdapterTest {
 	@Mocked private DataSource source;
 
 	private static final ArrayNode JSON_ARRAY;
+	private static final ObjectNode JSON_OBJECT;
 	static {
 		JSON_ARRAY = new ArrayNode(JsonNodeFactory.instance);
 		ObjectNode jsonObject = JSON_ARRAY.addObject();
@@ -34,6 +35,23 @@ public final class JsonSourceAdapterTest extends AbstractSourceAdapterTest {
 		jsonObject.put("key4", "value2");
 	}
 
+	static {
+		JSON_OBJECT = new ObjectNode(JsonNodeFactory.instance);
+		JSON_OBJECT.put("key5","value11");
+		JSON_OBJECT.put("key6","value42");
+		ObjectNode jsonObject = JSON_OBJECT.putObject("person");
+		jsonObject.put("name","myName");
+
+	}
+
+
+	@Test
+	public void testBasicAdapterObject(@Mocked DataSource source) throws Exception {
+		List<ObjectNode> jsonResult = testAdapterWithAllProtocols(JSON_OBJECT.toString());
+
+		Assert.assertEquals(1, jsonResult.size());
+		Assert.assertEquals(JSON_OBJECT, jsonResult.get(0));
+	}
 
 
 	@Test
