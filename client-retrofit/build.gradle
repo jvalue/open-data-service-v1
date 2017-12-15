@@ -8,12 +8,12 @@ buildscript {
     repositories {
         jcenter()
         maven {
-            url 'http://oss.jfrog.org/artifactory/plugins-snapshot'
+            url project.ext.nexusPublicReleasesUrl
         }
     }
     dependencies {
         classpath 'de.bitdroid.jaxrs2retrofit:plugin:0.2.0'
-        classpath 'org.jvalue.commons:auth:0.1.2'
+        classpath 'org.jvalue.commons:auth:0.2.0'
     }
 }
 
@@ -21,13 +21,12 @@ dependencies {
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.squareup.retrofit:converter-jackson:1.9.0'
     compile 'io.reactivex:rxjava:1.0.8'
-    compile 'org.jvalue.commons:models:0.1.2'
+    compile 'org.jvalue.commons:models:0.2.0'
     compile project(':models')
 
     testCompile 'org.jmockit:jmockit:1.13'
     testCompile 'junit:junit:4.11'
 }
-
 
 jaxRs2Retrofit {
     inputDir = file(project(':server').projectDir.toString() + '/' + mainSourcesDir)

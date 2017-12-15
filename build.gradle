@@ -19,6 +19,10 @@ subprojects {
 
     sourceCompatibility = 1.8
 
+    ext {
+        nexusPublicReleasesUrl = 'https://mojo-maven.cs.fau.de/repository/public-releases/'
+    }
+
     javadoc {
         options.addStringOption('encoding', 'UTF-8')
     }
@@ -41,6 +45,9 @@ subprojects {
     repositories {
         mavenLocal()
         jcenter()
+        maven {
+            url project.ext.nexusPublicReleasesUrl
+        }
     }
 
     // gradle wrapper
@@ -103,7 +110,7 @@ subprojects {
         }
         repositories {
             maven {
-                url 'https://mojo-maven.cs.fau.de/repository/public-releases/'
+                url project.ext.nexusPublicReleasesUrl
                 credentials {
                     username nexusUsername
                     password nexusPassword
