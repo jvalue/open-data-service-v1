@@ -25,7 +25,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-
 import org.jvalue.ods.api.sources.DataSource;
 
 import java.io.IOException;
@@ -60,8 +59,8 @@ final class JsonSourceAdapter extends AbstractSourceAdapter {
 		@Override
 		protected boolean doHasNext() {
 			try {
-				initJsonParser();
-				return jsonParser.hasCurrentToken() && jsonParser.getCurrentToken() != JsonToken.END_ARRAY;
+				initParserIfNotExist();
+				return hasToken(jsonParser);
 			} catch (IOException e) {
 				throw new SourceAdapterException(e);
 			}
@@ -71,26 +70,48 @@ final class JsonSourceAdapter extends AbstractSourceAdapter {
 		@Override
 		protected JsonNode doNext() {
 			try {
-				initJsonParser();
-				jsonParser.nextToken();
-				JsonNode node = mapper.readTree(jsonParser);
-				jsonParser.nextToken();
-				return node;
+				initParserIfNotExist();
+				return getNode();
 			} catch (IOException e) {
 				throw new SourceAdapterException(e);
 			}
 		}
 
 
-		private void initJsonParser() throws IOException {
+		private void initParserIfNotExist() throws IOException{
 			if (jsonParser == null) {
 				jsonParser = new JsonFactory().createParser(sourceUrl);
-				if (jsonParser.nextToken() != JsonToken.START_ARRAY)
-					throw new IllegalArgumentException("json should start with array");
 				jsonParser.nextToken();
 			}
 		}
-	}
 
+
+		private JsonNode getNode() throws IOException {
+			assertIsValidJsonToken(jsonParser.getCurrentToken());
+
+			if (jsonParser.getCurrentToken() == JsonToken.START_ARRAY) {
+				jsonParser.nextToken();
+			}
+			JsonNode node = mapper.readTree(jsonParser);
+			jsonParser.nextToken();
+
+			return node;
+		}
+
+
+		private boolean hasToken(JsonParser parser) {
+			return parser.hasCurrentToken()
+					&& parser.getCurrentToken() != JsonToken.END_ARRAY
+					&& parser.getCurrentToken() != JsonToken.END_OBJECT;
+		}
+
+
+		private void assertIsValidJsonToken(JsonToken token) {
+			if (token != JsonToken.START_ARRAY && token != JsonToken.START_OBJECT) {
+				throw new IllegalArgumentException("Json should start with array or object identifier");
+			}
+		}
+
+	}
 
 }
