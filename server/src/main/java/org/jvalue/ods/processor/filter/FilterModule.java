@@ -46,6 +46,11 @@ public final class FilterModule extends AbstractModule {
 						},
 						Names.named(FilterFactory.NAME_PEGEL_BRANDENBURG_MERGER),
 						PegelBrandenburgMerger.class)
+				.implement(
+						new TypeLiteral<Filter<ObjectNode, ObjectNode>>() {
+						},
+						Names.named(FilterFactory.NAME_ADD_TIMESTAMP_FILTER),
+						AddTimestampFilter.class)
 				.build(FilterFactory.class));
 	}
 
