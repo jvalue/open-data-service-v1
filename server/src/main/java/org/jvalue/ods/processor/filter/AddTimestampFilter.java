@@ -8,6 +8,7 @@ import org.jvalue.ods.api.sources.DataSource;
 
 import javax.inject.Inject;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 public class AddTimestampFilter extends AbstractFilter<ObjectNode, ObjectNode> {
 
@@ -26,7 +27,7 @@ public class AddTimestampFilter extends AbstractFilter<ObjectNode, ObjectNode> {
         JsonNode keyNode = node.at(source.getDomainIdKey());
 
 
-        node.put(DEFAULT_KEY_NAME, LocalDateTime.now().toString());
+        node.put(DEFAULT_KEY_NAME, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).toString());
         return node;
     }
 

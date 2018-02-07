@@ -45,7 +45,7 @@ public final class AddTimestampFilterTest {
 
     @Test
     public void testAddTimestamp_OverrideValue() throws Exception {
-        String firstTimestamp = "2000-02-02T12:00:00.000";
+        String firstTimestamp = "2000-02-02T12:00:00";
         baseNode.put(AddTimestampFilter.DEFAULT_KEY_NAME, firstTimestamp);
 
         ObjectNode resultNode = applyFilter();
