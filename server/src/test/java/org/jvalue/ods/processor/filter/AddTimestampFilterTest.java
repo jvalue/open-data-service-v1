@@ -38,7 +38,7 @@ public final class AddTimestampFilterTest {
         String resultString = resultNode.get(AddTimestampFilter.DEFAULT_KEY_NAME).textValue();
         LocalDateTime resultDateTime = LocalDateTime.parse(resultString);
 
-        Assert.assertNotEquals("", resultString);
+        Assert.assertFalse(resultString.isEmpty());
         Assert.assertEquals(resultString, resultDateTime.toString());
     }
 
@@ -51,7 +51,7 @@ public final class AddTimestampFilterTest {
         ObjectNode resultNode = applyFilter();
         String resultTimestamp = resultNode.get(AddTimestampFilter.DEFAULT_KEY_NAME).textValue();
 
-        Assert.assertNotEquals("", resultTimestamp);
+        Assert.assertFalse(resultTimestamp.isEmpty());
         Assert.assertNotEquals(firstTimestamp, resultTimestamp);
     }
 
