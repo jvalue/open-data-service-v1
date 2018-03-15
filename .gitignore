@@ -16,4 +16,5 @@ build
 .idea
 */out/
 
+docker/ods/assets/*.jar
 ods-configuration.yml
