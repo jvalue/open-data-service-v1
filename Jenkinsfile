@@ -31,7 +31,7 @@ pipeline {
 
         stage('Acceptance Stage: Start CouchDB Docker Container') {
             steps {
-                sh "docker/couchdb/couchdb-start.sh"
+                sh "docker-compose -f docker/docker-compose.yml up couchdb"
                 timeout(time: 2, unit: "MINUTES") {
                     echo "Waiting until couchdb is ready."
                     waitUntil {
@@ -86,7 +86,7 @@ pipeline {
 
     post {
         always {
-            sh "docker/couchdb/couchdb-stop.sh"
+            sh "docker-compose -f docker/docker-compose.yml stop couchdb"
             deleteDir()
         }
     }
