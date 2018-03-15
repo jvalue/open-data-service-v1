@@ -12,6 +12,17 @@ allprojects {
     version = '0.2.0'
 }
 
+task buildDockerImage {
+    dependsOn ':server:copyDockerAssets'
+    doLast {
+        exec {
+            workingDir 'docker/ods/'
+            commandLine 'docker', 'build', '-t', 'osrg_ods/ods-snapshot:latest', '.'
+
+        }
+    }
+}
+
 subprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
@@ -133,6 +144,14 @@ subprojects {
 
     artifacts {
         archives sourcesJar, javadocJar
+    }
+
+    task copyDockerAssets(type: Copy) {
+        dependsOn shadowJar
+        from(libsDir) {
+            include 'server*-all.jar'
+        }
+        into rootProject.file('docker/ods/assets/')
     }
 
 }
