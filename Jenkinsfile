@@ -13,6 +13,10 @@ pipeline {
         label "ods-dev"
     }
 
+    environment {
+		ODS_DOCKER = credentials('ods-docker')
+	}
+
     stages {
         stage('Commit Stage') {
             steps {
