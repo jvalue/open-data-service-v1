@@ -10,12 +10,12 @@ services:
       - ODS_ADMIN_CONTEXT_PATH=/
       - ODS_CONTEXT_PATH=/ods
       - ODS_ADMIN_PASSWORD=admin123
-      - COUCHDB_HOST=couchdb
       - COUCHDB_URL=http://couchdb:5984/
       - COUCHDB_USER=admin
       - COUCHDB_PASSWORD=admin
-    depends_on:
-      - couchdb
+      # Wait for other containers
+      # See https://github.com/ufoscout/docker-compose-wait
+      - WAIT_HOSTS=couchdb:5984
   couchdb:
     image: couchdb
     ports:
