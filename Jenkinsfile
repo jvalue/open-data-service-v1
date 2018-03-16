@@ -14,12 +14,14 @@ pipeline {
     }
 
     environment {
+        // Creates ODS_DOCKER_USR, ODS_DOCKER_PSW implicitly
 		ODS_DOCKER = credentials('ods-docker')
 	}
 
     stages {
         stage('Commit Stage') {
             steps {
+                sh "docker login -u $ODS_DOCKER_USR -p $ODS_DOCKER_PSW https://mojo-docker.cs.fau.de"
                 sh "./gradlew clean build"
             }
         }
