@@ -35,33 +35,25 @@ pipeline {
             }
         }
 
-        stage('Acceptance Stage: Start CouchDB Docker Container') {
+        stage('Acceptance Stage: Unit Tests') {
             steps {
-                sh "docker-compose -f docker/docker-compose.yml up -d couchdb"
-                timeout(time: 2, unit: "MINUTES") {
-                    echo "Waiting until couchdb is ready."
-                    waitUntil {
-                        script {
-                            try {
-                                sleep 1
-                                sh 'wget -q http://localhost:5984/ -O /dev/null'
-                                return true
-                            } catch (exception) {
-                                return false
-                            }
-                        }
-                    }
-                }
+                sh "./gradlew test"
+            }
+        }
+
+        stage('Acceptance Stage: Build Docker Image') {
+            steps {
+                sh "./gradlew dockerBuild"
             }
         }
 
         stage('Acceptance Stage') {
             steps {
                 parallel(
-                        'run ods': {
-                            sh "./gradlew run &"
+                        'Run ODS Container': {
+                            sh "docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml up -d"
                         },
-                        'run integration tests': {
+                        'Run Integration Tests': {
                             timeout(time: 2, unit: "MINUTES") {
                                 echo "Waiting until ODS service is ready."
                                 waitUntil {
@@ -81,21 +73,9 @@ pipeline {
                         }
                 )
             }
-            post {
-                always {
-                    sh "kill `pgrep -a java | grep \"GradleWrapperMain\" | awk '{print \$1}'`"
-                }
-            }
-
         }
 
-        stage('Release Stage: Build Docker Image') {
-            steps {
-                sh "./gradlew dockerBuild"
-            }
-        }
-
-        stage('Release Stage: Push Docker Image to Portus Registry') {
+        stage('Release Stage: Push Docker Image') {
             steps {
                 sh "./gradlew dockerPush"
             }
@@ -105,7 +85,7 @@ pipeline {
 
     post {
         always {
-            sh "docker-compose -f docker/docker-compose.yml stop couchdb"
+            sh "docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml stop"
             deleteDir()
         }
     }
