@@ -82,6 +82,19 @@ pipeline {
             }
 
         }
+
+        stage('Release Stage: Build Docker Image') {
+            steps {
+                sh "./gradlew dockerBuild"
+            }
+        }
+
+        stage('Release Stage: Push Docker Image to Portus Registry') {
+            steps {
+                sh "./gradlew dockerPush"
+            }
+        }
+
     }
 
     post {
