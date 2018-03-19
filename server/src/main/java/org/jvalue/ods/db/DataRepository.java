@@ -65,8 +65,11 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 
 
 	public List<JsonNode> executeQuery(DataView view, String param) {
-		if (param == null) return queryView(view.getId());
-		else return queryView(view.getId(), param);
+		ViewQuery query = createQuery(view.getId());
+
+		if (param != null) query = query.key(param);
+
+		return connector.queryView(query, JsonNode.class);
 	}
 
 
