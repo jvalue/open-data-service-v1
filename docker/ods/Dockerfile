@@ -1,4 +1,4 @@
-#REPO: mojo-docker.cs.fau.de/osrg_ods/ods-SNAPSHOT
+#REPO: mojo-docker.cs.fau.de/osrg_ods_public/ods
 
 # Base Alpine Linux based image with OpenJDK JRE only
 FROM openjdk:8-jre-alpine
