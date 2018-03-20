@@ -151,7 +151,7 @@ subprojects {
 def dockerCDTag = new Date().format('yyyyMMdd-HHmm') + '.' + versionDetails().gitHash
 def dockerRegistry = 'mojo-docker.cs.fau.de/'
 def dockerDir = 'docker/ods/'
-def dockerImageName = 'osrg_ods/ods-cd'
+def dockerImageName = 'osrg_ods_public/ods-cd'
 def dockerNameLocal = dockerImageName+':latest'
 def dockerNameCD = dockerRegistry +dockerImageName+':' + dockerCDTag
 def dockerNameLatest = dockerRegistry + dockerNameLocal

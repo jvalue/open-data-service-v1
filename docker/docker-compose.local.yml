@@ -1,4 +1,4 @@
 version: '2'
 services:
   ods:
-    image: osrg_ods/ods-cd:latest
+    image: osrg_ods_public/ods-cd:latest
