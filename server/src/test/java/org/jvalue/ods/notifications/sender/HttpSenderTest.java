@@ -55,7 +55,7 @@ public final class HttpSenderTest {
 
 		RecordedRequest request = server.takeRequest();
 		assertEquals(path, request.getPath());
-		assertEquals(sentData.toString(), request.getUtf8Body());
+		assertEquals(sentData.toString(), request.getBody().readUtf8());
 		server.shutdown();
 	}
 
