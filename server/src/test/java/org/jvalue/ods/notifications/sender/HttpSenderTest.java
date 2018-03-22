@@ -36,7 +36,7 @@ public final class HttpSenderTest {
 		server.start();
 
 		String path = "/foo/bar/data/";
-		String callbackUrl = server.getUrl(path).toString();
+		String callbackUrl = server.url(path).toString();
 
 		ObjectNode sentData = new ObjectNode(JsonNodeFactory.instance);
 		sentData.put("sourceId", SOURCE_ID);
