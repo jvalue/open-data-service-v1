@@ -54,7 +54,7 @@ pipeline {
                             sh "docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml up -d"
                         },
                         'Run Integration Tests': {
-                            timeout(time: 2, unit: "MINUTES") {
+                            timeout(time: 5, unit: "MINUTES") {
                                 echo "Waiting until ODS service is ready."
                                 waitUntil {
                                     script {
