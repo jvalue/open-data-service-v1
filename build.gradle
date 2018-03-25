@@ -23,7 +23,8 @@ subprojects {
     apply plugin: 'maven-publish'
     apply plugin: "com.github.johnrengelman.shadow"
 
-    sourceCompatibility = 1.8
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 
     ext {
         nexusPublicReleasesUrl = 'https://mojo-maven.cs.fau.de/repository/public-releases/'
