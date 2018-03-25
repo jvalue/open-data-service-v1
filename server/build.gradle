@@ -40,10 +40,14 @@ dependencies {
     compile 'org.jvalue.commons:couchdb:0.2.0'
     compile 'org.jvalue.commons:auth:0.2.0'
     compile 'com.sun.net.httpserver:http:20070405'
+    compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
+    compile group: 'com.sun.xml.bind', name: 'jaxb-core', version: '2.3.0'
+    compile group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.3.0'
+    compile group: 'javax.activation', name: 'com.springsource.javax.activation', version: '1.1.0'
     compile project(':models')
     compile fileTree(dir: 'libs', include: '*.jar')
 
-    testCompile 'org.jmockit:jmockit:1.13'
+    testCompile 'org.jmockit:jmockit:1.35'
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockftpserver:MockFtpServer:2.7.1'
     testCompile 'com.squareup.okhttp:okhttp:2.7.5'
@@ -53,6 +57,10 @@ dependencies {
     testCompile project(':client-retrofit')
 }
 
+test {
+    // required by jmockit
+    jvmArgs += '-Djdk.attach.allowAttachSelf'
+}
 
 // create java code which contains git hash
 gitHash {
