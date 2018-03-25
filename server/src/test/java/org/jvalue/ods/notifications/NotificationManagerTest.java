@@ -2,16 +2,17 @@ package org.jvalue.ods.notifications;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
+import mockit.Expectations;
+import mockit.Mocked;
+import mockit.Verifications;
+import mockit.integration.junit4.JMockit;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.jvalue.commons.utils.Cache;
-import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.api.notifications.GcmClient;
 import org.jvalue.ods.api.notifications.HttpClient;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.NotificationClientRepository;
 import org.jvalue.ods.db.RepositoryFactory;
 import org.jvalue.ods.notifications.sender.Sender;
@@ -19,12 +20,6 @@ import org.jvalue.ods.notifications.sender.SenderCache;
 import org.jvalue.ods.notifications.sender.SenderResult;
 
 import java.util.Arrays;
-
-import mockit.Expectations;
-import mockit.Mocked;
-import mockit.NonStrictExpectations;
-import mockit.Verifications;
-import mockit.integration.junit4.JMockit;
 
 
 @RunWith(JMockit.class)
@@ -51,8 +46,7 @@ public final class NotificationManagerTest {
 
 	@Before
 	public void setupSenderCache() {
-		new NonStrictExpectations() {{
-			senderCache.get(source, httpClient); result = httpSender;
+		new Expectations() {{
 			senderCache.get(source, gcmClient); result = gcmSender;
 		}};
 	}
@@ -61,6 +55,7 @@ public final class NotificationManagerTest {
 	@Test
 	public void testOnNewDataStart() {
 		new Expectations(notificationManager) {{
+			senderCache.get(source, httpClient); result = httpSender;
 			notificationManager.getAll(source); result = Arrays.asList(httpClient, gcmClient);
 		}};
 
@@ -76,6 +71,7 @@ public final class NotificationManagerTest {
 	@Test
 	public void testOnNewDataItem() {
 		new Expectations(notificationManager) {{
+			senderCache.get(source, httpClient); result = httpSender;
 			notificationManager.getAll(source); result = Arrays.asList(httpClient, gcmClient);
 		}};
 
@@ -149,11 +145,10 @@ public final class NotificationManagerTest {
 
 
 	private void testOnNewDataCompleteHelper(final SenderResult.Status status) {
-		new NonStrictExpectations(notificationManager) {{
+		new Expectations(notificationManager) {{
 			notificationManager.getAll(source); result = Arrays.asList(gcmClient);
 			gcmSender.getSenderResult().getStatus(); result = status;
 
-			notificationManager.remove((DataSource) any, (DataRepository) any, (Client) any);
 			result = new IllegalStateException("this method should not have been called");
 		}};
 
@@ -161,6 +156,7 @@ public final class NotificationManagerTest {
 
 		new Verifications() {{
 			gcmSender.onNewDataComplete();
+			senderCache.get(source, gcmClient);
 			senderCache.release(source, gcmClient);
 		}};
 	}
