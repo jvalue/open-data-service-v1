@@ -24,8 +24,13 @@ dependencies {
     compile 'org.jvalue.commons:models:0.2.0'
     compile project(':models')
 
-    testCompile 'org.jmockit:jmockit:1.13'
+    testCompile 'org.jmockit:jmockit:1.35'
     testCompile 'junit:junit:4.11'
+}
+
+test {
+    // required by jmockit
+    jvmArgs += '-Djdk.attach.allowAttachSelf'
 }
 
 jaxRs2Retrofit {
