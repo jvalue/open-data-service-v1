@@ -22,7 +22,7 @@ pipeline {
         stage('Commit Stage') {
             steps {
                 sh "docker login -u $ODS_DOCKER_USR -p $ODS_DOCKER_PSW https://mojo-docker.cs.fau.de"
-                sh "./gradlew clean build"
+                sh "./gradlew clean build -x test"
             }
         }
 
