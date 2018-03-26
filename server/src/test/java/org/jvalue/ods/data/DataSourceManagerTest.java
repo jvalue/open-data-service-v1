@@ -41,16 +41,18 @@ public final class DataSourceManagerTest {
 	@Mocked private NotificationManager notificationManager;
 	@Mocked private DataRepository dataRepository;
 
-	private DataSource dataSource = new DataSource(
-			SOURCE_ID,
-			JsonPointer.compile("/id"),
-			new ObjectNode(JsonNodeFactory.instance),
-			new DataSourceMetaData("", "", "", "", "", "", ""));
+	private DataSource dataSource;
 
 	private DataSourceManager sourceManager;
 
 	@Before
 	public void setupSourceManager() {
+        this.dataSource = new DataSource(
+                SOURCE_ID,
+                JsonPointer.compile("/id"),
+                new ObjectNode(JsonNodeFactory.instance),
+                new DataSourceMetaData("", "", "", "", "", "", ""));
+
 		this.sourceManager = new DataSourceManager(
 				sourceRepository,
 				dataRepositoryCache,
