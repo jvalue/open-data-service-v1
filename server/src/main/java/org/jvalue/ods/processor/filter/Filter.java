@@ -17,10 +17,19 @@
  */
 package org.jvalue.ods.processor.filter;
 
+/**
+ * Filter interface
+ *
+ * @param <P> data type of filter
+ * @param <R> return type of filter
+ */
 public interface Filter<P, R> {
 
 	/**
 	 * Called to process a new element of the current data stream.
+	 *
+	 * @param data object of data stream.
+	 * @throws FilterException if filter can't be applied.
 	 */
 	public void filter(P data) throws FilterException;
 
@@ -28,12 +37,16 @@ public interface Filter<P, R> {
 	/**
 	 * Called when all elements of the current data stream have been processed. This method
 	 * can be used to clean up resources, release resources etc.
+	 *
+	 * @throws FilterException if filter can't be applied.
 	 */
 	public void onComplete() throws FilterException;
 
 
 	/**
 	 * Sets the next filter in a filter chain.
+	 * @param filter filter which should be the next in the chain.
+	 * @param <T> return type of filter
 	 * @return the passed in filter to allow method chaining.
 	 */
 	public <T> Filter<R, T> setNextFilter(Filter<R, T> filter);
