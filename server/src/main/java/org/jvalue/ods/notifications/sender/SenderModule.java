@@ -7,6 +7,7 @@ import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
+import org.jvalue.ods.api.notifications.AmqpClient;
 import org.jvalue.ods.api.notifications.GcmClient;
 import org.jvalue.ods.api.notifications.HttpClient;
 import org.jvalue.ods.main.GcmApiKey;
@@ -18,6 +19,7 @@ public class SenderModule extends AbstractModule {
 		install(new FactoryModuleBuilder()
 				.implement(new TypeLiteral<Sender<GcmClient>>() { }, GcmSender.class)
 				.implement(new TypeLiteral<Sender<HttpClient>>() { }, HttpSender.class)
+				.implement(new TypeLiteral<Sender<AmqpClient>>() { }, AmqpSender.class)
 				.build(SenderFactory.class));
 		bind(SenderCache.class).in(Singleton.class);
 	}

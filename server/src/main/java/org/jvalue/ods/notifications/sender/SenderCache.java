@@ -3,6 +3,7 @@ package org.jvalue.ods.notifications.sender;
 
 import com.google.common.base.Objects;
 
+import org.jvalue.ods.api.notifications.AmqpClient;
 import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.api.notifications.ClientVisitor;
 import org.jvalue.ods.api.notifications.GcmClient;
@@ -59,6 +60,11 @@ public final class SenderCache {
 		@Override
 		public Sender<HttpClient> visit(HttpClient client, DataSource source) {
 			return senderFactory.createHttpSender(source, client);
+		}
+
+		@Override
+		public Sender<AmqpClient> visit(AmqpClient client, DataSource source) {
+			return senderFactory.createAmqpSender(source, client);
 		}
 	}
 
