@@ -12,10 +12,10 @@ import java.util.concurrent.TimeoutException;
 
 public class Publisher {
 
-    Connection connection;
-    Channel channel;
-    @NotNull String exchange;
-    @NotNull String host;
+    private Connection connection;
+    private Channel channel;
+    @NotNull private String exchange;
+    @NotNull private String host;
 
     public Publisher() {
     }
