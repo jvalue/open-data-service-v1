@@ -37,6 +37,9 @@ public final class ClientVisitorTest {
 			return param;
 		}
 
+		@Override
+		public String visit(AmqpClient client, String param) { return param; }
+
 	}
 
 }
