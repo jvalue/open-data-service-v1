@@ -1,4 +1,6 @@
 # Open Data Service
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fjvalue%2Fopen-data-service.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fjvalue%2Fopen-data-service?ref=badge_shield)
+
 
 The Open Data Service (ODS) is Java server application which can collect data from multiple sources simulataneously, process that data and then offer an improved (or "cleaned") version to its clients.
 
@@ -126,3 +128,6 @@ GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fjvalue%2Fopen-data-service.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fjvalue%2Fopen-data-service?ref=badge_large)
