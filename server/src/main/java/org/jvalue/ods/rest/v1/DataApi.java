@@ -1,4 +1,4 @@
-package org.jvalue.ods.rest;
+package org.jvalue.ods.rest.v1;
 
 
 import com.fasterxml.jackson.core.JsonPointer;

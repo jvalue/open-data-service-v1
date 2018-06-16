@@ -1,9 +1,9 @@
-package org.jvalue.ods.rest;
+package org.jvalue.ods.rest.v1;
 
 
 abstract class AbstractApi {
 
 	protected static final String BASE_URL = "/datasources";
 
-	// nothing to do here for now
+	protected static final String VERSION = "/v1";
 }
