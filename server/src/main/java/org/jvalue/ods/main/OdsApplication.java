@@ -100,6 +100,9 @@ public final class OdsApplication extends Application<OdsConfig> {
 		environment.jersey().register(new UnauthorizedExceptionMapper());
 		environment.jersey().register(new NotFoundExceptionMapper());
 
+		// v2
+        environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.DataSourceApi.class));
+
 		// setup users
 		setupDefaultUsers(injector.getInstance(UserManager.class), configuration.getAuth().getUsers());
 
