@@ -50,7 +50,7 @@ public class JsonApiIndividual<T> extends JsonApiObject<T> {
         private final String type;
         private final String id;
 
-        @JsonIgnoreProperties(value = "id")
+        @JsonIgnoreProperties(value = {"id", "metaData"})
         private final T attributes;
 
         public String getType() {
