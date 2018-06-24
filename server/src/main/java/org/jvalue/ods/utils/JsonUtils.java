@@ -4,11 +4,25 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jvalue.commons.utils.Assert;
 
+import java.util.UUID;
+
 public class JsonUtils {
     private static ObjectMapper objectMapper = new ObjectMapper();
 
     public static JsonNode createJsonNode(Object object) {
         return objectMapper.valueToTree(object);
+    }
+
+    public static String getIdFromObject(Object from) {
+        String id;
+        try {
+            id = getPropertyValueString(from, "id");
+        } catch(IllegalArgumentException e) {
+            //log warning
+            // id has to be persisted
+            id = UUID.randomUUID().toString();
+        }
+        return id;
     }
 
     public static String getPropertyValueString(Object from, String propertyName) {
@@ -18,7 +32,7 @@ public class JsonUtils {
         if (!val.isTextual()) {
             throw new IllegalArgumentException("Property " + propertyName + " is expected to be a String but is " + val.getNodeType().name());
         }
-        return doGetPropertyValue(from, propertyName).textValue();
+        return val.textValue();
     }
 
     /**
@@ -41,7 +55,7 @@ public class JsonUtils {
     private static JsonNode doGetPropertyValue(Object from, String propertyName) {
         JsonNode objNode = objectMapper.valueToTree(from);
         if(!objNode.has(propertyName)) {
-            throw new IllegalArgumentException("Attribute does not exist");
+            throw new IllegalArgumentException("Attribute " + propertyName + " does not exist");
         }
         return objNode.get(propertyName);
     }

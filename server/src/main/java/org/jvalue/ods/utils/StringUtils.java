@@ -27,7 +27,7 @@ public final class StringUtils {
 
 	public static String getUriRootElement(final String uri) {
 	    String[] addrParts = uri.split("/");
-	    if(addrParts.length == 1) { //uri is already pointing at root level
+	    if(addrParts.length == 1) { //path is already pointing at root level
 	        return "";
 	    }
 	    else {

@@ -10,7 +10,10 @@ import org.jvalue.commons.auth.User;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceDescription;
 import org.jvalue.ods.data.DataSourceManager;
+import org.jvalue.ods.rest.v2.JsonApi.JsonApiResponse;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -19,8 +22,10 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 @Path(AbstractApi.BASE_URL)
 @Produces(MediaType.APPLICATION_JSON)
@@ -34,28 +39,44 @@ public final class DataSourceApi extends AbstractApi {
 		this.sourceManager = sourceManager;
 	}
 
+    @Context UriInfo uriInfo;
+    @Context
+    HttpServletRequest servletRequest;
+    @Context
+    ServletContext servletContext;
 
-	@GET
-	public JsonApiCollection<DataSource> getAllSources() {
-	    return new JsonApiCollection<>(sourceManager.getAll(), BASE_URL);
-	}
+    @GET
+    public Response getAllSources() {
+        return new JsonApiResponse<DataSource>()
+                .ok()
+                .path(uriInfo.getAbsolutePath())
+                .entity(sourceManager.getAll())
+                .build();
+    }
 
+    //todo: integrate links to next and last dataSource. are these datasources ordered?
+    @GET
+    @Path("/{sourceId}")
+    public Response getSource(@PathParam("sourceId") String sourceId) {
+        DataSource source = sourceManager.findBySourceId(sourceId);
+        return new JsonApiResponse<DataSource>()
+                .ok()
+                .path(uriInfo.getAbsolutePath())
+                .entity(source)
+                .build();
+    }
 
-	//todo: integrate links to next and last dataSource. are these datasources ordered?
-	@GET
-	@Path("/{sourceId}")
-	public JsonApiIndividual<DataSource> getSource(@PathParam("sourceId") String sourceId) {
-	    DataSource source = sourceManager.findBySourceId(sourceId);
-        return new JsonApiIndividual<>(source, BASE_URL+"/"+sourceId);
-	}
-
-
-	@GET
-	@Path("/{sourceId}/schema")
-	public JsonApiIndividual<JsonNode> getSourceSchema(@PathParam("sourceId") String sourceId) {
-	    String id = sourceId+"schema";
-		return new JsonApiIndividual<>(sourceManager.findBySourceId(sourceId).getSchema(), BASE_URL+"/"+sourceId+"/schema", "schema", id);
-	}
+    @GET
+    @Path("/{sourceId}/schema")
+    public Response getSourceSchema(@PathParam("sourceId") String sourceId) {
+        String id = sourceId+"_schema";
+        JsonNode schema = sourceManager.findBySourceId(sourceId).getSchema();
+        return new JsonApiResponse<JsonNode>()
+                .ok()
+                .path(uriInfo.getAbsolutePath())
+                .entity(schema, id)
+                .build();
+    }
 
     @PUT
     @Path("/{sourceId}")
@@ -64,15 +85,14 @@ public final class DataSourceApi extends AbstractApi {
             @PathParam("sourceId") String sourceId,
             @Valid DataSourceDescription sourceDescription) {
 
-
         // http1.1 spec sagt:
         // If the Request-URI refers to an already existing resource,
         // the enclosed entity SHOULD be considered as a modified version of the one residing on the origin server.
         // statuscode 200 oder 204 wenn already exists
-        int statusCode = 201;
+        Response.StatusType status = Response.Status.CREATED;
         if(sourceManager.isValidSourceId(sourceId)) {
             sourceManager.remove(sourceManager.findBySourceId(sourceId));
-            statusCode = 200;
+            status = Response.Status.OK;
         }
 
         DataSource source = new DataSource(
@@ -81,8 +101,13 @@ public final class DataSourceApi extends AbstractApi {
                 sourceDescription.getSchema(),
                 sourceDescription.getMetaData());
         sourceManager.add(source);
-        return Response.status(Response.Status.fromStatusCode(statusCode)).entity(new JsonApiIndividual<>(source, BASE_URL+"/"+sourceId)).build();
-    }
+
+        return new JsonApiResponse<DataSource>()
+                .status(status)
+                .path(uriInfo.getAbsolutePath())
+                .entity(source)
+                .build();
+	}
 
 	@DELETE
 	@Path("/{sourceId}")
