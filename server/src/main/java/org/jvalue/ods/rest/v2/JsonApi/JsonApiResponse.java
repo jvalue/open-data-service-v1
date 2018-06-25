@@ -9,7 +9,6 @@ import java.util.Collection;
 import java.util.Optional;
 
 public class JsonApiResponse<T>  {
-    public static final String JSONAPITYPE = "application/vnd.api+json";
 
     public JsonApiResponse() {
     }
@@ -59,7 +58,7 @@ public class JsonApiResponse<T>  {
         }
 
         public Response build() {
-            Response.ResponseBuilder builder = Response.status(status).type(JSONAPITYPE);
+            Response.ResponseBuilder builder = Response.status(status).type(MediaType.JSONAPI_TYPE);
             if(entity.isPresent()) {
                 builder.entity(entity.get());
             }

@@ -11,6 +11,7 @@ import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceDescription;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.rest.v2.JsonApi.JsonApiResponse;
+import org.jvalue.ods.rest.v2.JsonApi.MediaType;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -23,13 +24,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 @Path(AbstractApi.BASE_URL)
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.JSONAPI)
+@Consumes({MediaType.APPLICATION_JSON, MediaType.JSONAPI}) //remove APPLICATION_JSON or keep it to retain downward compatibility?
 public final class DataSourceApi extends AbstractApi {
 
 	private final DataSourceManager sourceManager;
