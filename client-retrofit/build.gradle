@@ -5,6 +5,8 @@ import com.squareup.javapoet.ClassName
 apply plugin: 'de.bitdroid.jaxrs2retrofit'
 
 buildscript {
+    apply from: '../dependencies.gradle'
+
     repositories {
         jcenter()
         maven {
@@ -12,20 +14,20 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'de.bitdroid.jaxrs2retrofit:plugin:0.2.0'
-        classpath 'org.jvalue.commons:auth:0.2.0'
+        classpath "de.bitdroid.jaxrs2retrofit:plugin:$jaxrs2retrofitVersion"
+        classpath "org.jvalue.commons:auth:$jvalueCommonsVersion"
     }
 }
 
 dependencies {
-    compile 'com.squareup.retrofit:retrofit:1.9.0'
-    compile 'com.squareup.retrofit:converter-jackson:1.9.0'
-    compile 'io.reactivex:rxjava:1.0.8'
-    compile 'org.jvalue.commons:models:0.2.0'
+    compile "com.squareup.retrofit:retrofit:$retrofitVersion"
+    compile "com.squareup.retrofit:converter-jackson:$retrofitVersion"
+    compile "io.reactivex:rxjava:$rxjavaVersion"
+    compile "org.jvalue.commons:models:$jvalueCommonsVersion"
     compile project(':models')
 
-    testCompile 'org.jmockit:jmockit:1.35'
-    testCompile 'junit:junit:4.11'
+    testCompile "org.jmockit:jmockit:$jmockitVersion"
+    testCompile "junit:junit:$junitVersion"
 }
 
 test {
