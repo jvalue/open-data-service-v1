@@ -3,5 +3,5 @@ transformationWrapper(injectedJsonStr);
 function transformationWrapper(jsonStr){
     var json = JSON.parse(jsonStr);
     var result = transform(json);
-    return JSON.stringify(json);
+    return JSON.stringify(result);
 };

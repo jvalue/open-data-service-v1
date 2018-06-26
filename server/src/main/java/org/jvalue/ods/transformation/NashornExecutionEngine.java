@@ -33,7 +33,7 @@ public class NashornExecutionEngine implements ExecutionEngine
 	{
 		//configure the nashorn sandbox
 		nashornSandbox = NashornSandboxes.create();
-		nashornSandbox.setMaxCPUTime(100);
+		nashornSandbox.setMaxCPUTime(5000);
 		nashornSandbox.allowNoBraces(true);
 
 		URL resource = this.getClass().getClassLoader().getResource("js/JsonUtil.js");

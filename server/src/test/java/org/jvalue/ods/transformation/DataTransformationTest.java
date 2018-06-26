@@ -4,64 +4,109 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import delight.nashornsandbox.exceptions.ScriptCPUAbuseException;
 import mockit.integration.junit4.JMockit;
-import org.junit.*;
-import org.junit.rules.ExpectedException;
+import org.apache.commons.io.FileUtils;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.script.ScriptException;
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 @RunWith(JMockit.class)
 public final class DataTransformationTest
 {
 
-	@Rule
-	public ExpectedException thrown= ExpectedException.none();
-
-
 	private static JsonNode data;
-	private static JsonNode dataExpected;
-
-	private static TransformationFunction transformationFunction;
-
 	private static ExecutionEngine executionEngine;
 	private static DataTransformationManager dataTransformationManager;
+	private static TransformationFunction transformationFunction;
 
-	private static final String simpleData = "{\"id\": \"20934\", \"main\": { \"temp\": \"22.0\"}}";
-	private static final String simpleDataExpected = "{\"id\":\"20934\", \"main\": { \"temp\": \"22.0\", \"lat\":20.2332,\"lon\":10.4244}}";
+	private static String sampleData;
 
 	@BeforeClass
-	public static void initialize() throws IOException
+	public static void initialize() throws IOException, URISyntaxException
 	{
 		ObjectMapper mapper = new ObjectMapper();
-		data = mapper.readTree(simpleData);
-		dataExpected = mapper.readTree(simpleDataExpected);
+		URL resource = DataTransformationTest.class.getClassLoader().getResource("js/SampleWeatherData");
+
+		File sampleWeatherData = new File(resource.toURI());
+		sampleData = FileUtils.readFileToString(sampleWeatherData);
+
 		executionEngine = new NashornExecutionEngine();
 		dataTransformationManager = new DataTransformationManager(executionEngine);
+		data = mapper.readTree(sampleData);
 	}
 
 	private static final String simpleExtension =
 			"function transform(doc){"
-			+ "    if(doc.id != null && doc.main != null){"
-			+ "        doc.main.lat = 20.2332;"
-			+ "        doc.main.lon = 10.4244;"
+			+ "    if(doc.main != null){"
+			+ "        doc.main.extension = \"This is an extension\";"
 			+ "    }"
+			+ "    return doc;"
 			+ "};";
 
 	@Test
-	public void testValidTransformationExecution() throws ScriptException, IOException
+	public void testExtensionTransformationExecution() throws ScriptException, IOException
 	{
 		transformationFunction = new TransformationFunction("1", simpleExtension);
 		JsonNode result = dataTransformationManager.transform(data, transformationFunction);
-		Assert.assertEquals(dataExpected, result);
+
+		Assert.assertEquals("This is an extension", result.get("main").get("extension").asText());
 	}
 
+	private static final String simpleReduction =
+"		function transform(doc){"
+		+ "if(doc != null){"
+		+"		return Object.keys(doc).reduce("
+		+ "			function(previous, key) {"
+		+ "				previous.keycount ++;"
+		+ "				return previous;"
+		+ "			}, {keycount: 0})"
+		+"		}"
+		+"}";
+
 	@Test
+	public void testReduceTransformationExecution() throws ScriptException, IOException
+	{
+		transformationFunction = new TransformationFunction("1", simpleReduction);
+		JsonNode result = dataTransformationManager.transform(data, transformationFunction);
+
+		Assert.assertEquals(12, result.get("keycount").intValue());
+	}
+
+
+	private static final String simpleMap =
+			"		function transform(doc){"
+					+ "if(doc != null){"
+					+"		Object.keys(doc).map("
+					+ "			function(key, index) {"
+					+ "				if(key === 'coord' || key === 'main'){ "
+					+ "					doc[key].newEntry = \"New Entry\";"
+					+ "				}"
+					+ "			});"
+					+"	}"
+					+ " return doc;"
+					+"}";
+
+
+	@Test
+	public void testMapTransformationExecution() throws ScriptException, IOException
+	{
+		transformationFunction = new TransformationFunction("1", simpleMap);
+		JsonNode result = dataTransformationManager.transform(data, transformationFunction);
+
+		Assert.assertEquals("New Entry", result.get("coord").get("newEntry").asText());
+		Assert.assertEquals("New Entry", result.get("main").get("newEntry").asText());
+	}
+
+	@Test(expected = ScriptException.class)
 	public void testInvalidTransformationExecution()
 	throws ScriptException, IOException
 	{
-		thrown.expect(ScriptException.class);
-
 		transformationFunction = new TransformationFunction("2", "invalid Javascript Code");
 		dataTransformationManager.transform(data, transformationFunction);
 	}
@@ -71,13 +116,13 @@ public final class DataTransformationTest
 			+"    while(true) { ; }"
 			+"};";
 
-	@Test
+	@Test(expected = ScriptCPUAbuseException.class)
 	public void testInfiniteLoopTransformationExecution()
 	throws ScriptException, IOException
 	{
-		thrown.expect(ScriptCPUAbuseException.class);
-
 		transformationFunction = new TransformationFunction("3", infiniteLoop);
 		dataTransformationManager.transform(data, transformationFunction);
 	}
+
+
 }
