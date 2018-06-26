@@ -18,7 +18,7 @@ public class JsonUtils {
         try {
             id = getPropertyValueString(from, "id");
         } catch(IllegalArgumentException e) {
-            //log warning
+            //todo: log warning
             // id has to be persisted
             id = UUID.randomUUID().toString();
         }

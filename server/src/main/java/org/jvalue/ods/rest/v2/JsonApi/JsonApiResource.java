@@ -22,7 +22,6 @@ public class JsonApiResource<T> {
         this.entity = entity;
         this.selfReference = uri;
         this.type = getUriRootElement(uri);
-        System.out.println(entity.getClass().getCanonicalName());
         this.id = id;
         this.meta = Optional.ofNullable(getPropertyValueNode(entity, "metaData"));
     }
