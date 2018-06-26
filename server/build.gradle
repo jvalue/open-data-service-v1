@@ -45,6 +45,7 @@ dependencies {
     compile group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.3.0'
     compile group: 'javax.activation', name: 'com.springsource.javax.activation', version: '1.1.0'
     compile group: 'com.rabbitmq', name: 'amqp-client', version: '5.2.0'
+    compile group: 'org.javadelight', name: 'delight-nashorn-sandbox', version: '0.1.15'
     compile project(':models')
     compile fileTree(dir: 'libs', include: '*.jar')
 

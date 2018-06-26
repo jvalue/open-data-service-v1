@@ -17,8 +17,8 @@ public class TransformationFunction
 
 	/**
 	 * Create a new map reduce view on the data.
-	 * @param id the id of the view
-	 * @param transformFunction the transform function written in JavaScript
+	 * @param id the id of the transformation function
+	 * @param transformFunction the transformation function written in JavaScript
 	 */
 	@JsonCreator
 	public TransformationFunction(

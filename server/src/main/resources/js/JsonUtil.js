@@ -1,4 +1,6 @@
-var transformationWrapper = function(jsonStr){
+transformationWrapper(injectedJsonStr);
+
+function transformationWrapper(jsonStr){
     var json = JSON.parse(jsonStr);
     var result = transform(json);
     return JSON.stringify(json);
