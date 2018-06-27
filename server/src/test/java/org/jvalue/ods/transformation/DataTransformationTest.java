@@ -99,7 +99,6 @@ public final class DataTransformationTest
 		+ " return JSON.stringify(GENERIC_DATA_STRING);"
 		+"}";
 
-
 	@Test
 	public void testMapTransformationExecution() throws ScriptException, IOException
 	{
@@ -116,6 +115,13 @@ public final class DataTransformationTest
 	throws ScriptException, IOException
 	{
 		transformationFunction = new TransformationFunction("2", "invalid Javascript Code");
+		dataTransformationManager.transform(jsonData, transformationFunction);
+	}
+
+	@Test(expected = ScriptException.class)
+	public void testWrongFunctionSignatureTransformationExecution() throws ScriptException, IOException
+	{
+		transformationFunction = new TransformationFunction("10", "function test(hello){ return 1};");
 		dataTransformationManager.transform(jsonData, transformationFunction);
 	}
 
