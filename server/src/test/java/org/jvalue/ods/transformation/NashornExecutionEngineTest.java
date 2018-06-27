@@ -17,15 +17,13 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 @RunWith(JMockit.class)
-public final class DataTransformationTest
+public final class NashornExecutionEngineTest
 {
 
 	private static JsonNode jsonData;
 	private static ExecutionEngine executionEngine;
-	private static DataTransformationManager dataTransformationManager;
 	private static TransformationFunction transformationFunction;
 	private static ObjectMapper mapper;
-
 	private static String sampleData;
 
 
@@ -33,13 +31,12 @@ public final class DataTransformationTest
 	public static void initialize() throws IOException, URISyntaxException
 	{
 		mapper = new ObjectMapper();
-		URL resource = DataTransformationTest.class.getClassLoader().getResource("js/SampleWeatherData");
+		URL resource = NashornExecutionEngineTest.class.getClassLoader().getResource("js/SampleWeatherData");
 
 		File sampleWeatherData = new File(resource.toURI());
 		sampleData = FileUtils.readFileToString(sampleWeatherData);
 
 		executionEngine = new NashornExecutionEngine();
-		dataTransformationManager = new DataTransformationManager(executionEngine);
 		jsonData = mapper.readTree(sampleData);
 	}
 
@@ -56,7 +53,7 @@ public final class DataTransformationTest
 	public void testExtensionTransformationExecution() throws ScriptException, IOException
 	{
 		transformationFunction = new TransformationFunction("1", simpleExtension);
-		String result = dataTransformationManager.transform(jsonData, transformationFunction);
+		String result = executionEngine.execute(jsonData, transformationFunction);
 
 		JsonNode jsonNode = mapper.readTree(result);
 		Assert.assertEquals("This is an extension", jsonNode.get("main").get("extension").asText());
@@ -79,7 +76,7 @@ public final class DataTransformationTest
 	public void testReduceTransformationExecution() throws ScriptException, IOException
 	{
 		transformationFunction = new TransformationFunction("1", simpleReduction);
-		String result = dataTransformationManager.transform(jsonData, transformationFunction);
+		String result = executionEngine.execute(jsonData, transformationFunction);
 		JsonNode jsonNode = mapper.readTree(result);
 		Assert.assertEquals(12, jsonNode.get("keycount").intValue());
 	}
@@ -103,7 +100,7 @@ public final class DataTransformationTest
 	public void testMapTransformationExecution() throws ScriptException, IOException
 	{
 		transformationFunction = new TransformationFunction("1", simpleMap);
-		String result = dataTransformationManager.transform(jsonData, transformationFunction);
+		String result = executionEngine.execute(jsonData, transformationFunction);
 		JsonNode jsonNode = mapper.readTree(result);
 
 		Assert.assertEquals("New Entry", jsonNode.get("coord").get("newEntry").asText());
@@ -115,14 +112,14 @@ public final class DataTransformationTest
 	throws ScriptException, IOException
 	{
 		transformationFunction = new TransformationFunction("2", "invalid Javascript Code");
-		dataTransformationManager.transform(jsonData, transformationFunction);
+		executionEngine.execute(jsonData, transformationFunction);
 	}
 
 	@Test(expected = ScriptException.class)
 	public void testWrongFunctionSignatureTransformationExecution() throws ScriptException, IOException
 	{
 		transformationFunction = new TransformationFunction("10", "function test(hello){ return 1};");
-		dataTransformationManager.transform(jsonData, transformationFunction);
+		executionEngine.execute(jsonData, transformationFunction);
 	}
 
 	private static final String infiniteLoop =
@@ -135,7 +132,7 @@ public final class DataTransformationTest
 	throws ScriptException, IOException
 	{
 		transformationFunction = new TransformationFunction("3", infiniteLoop);
-		dataTransformationManager.transform(jsonData, transformationFunction);
+		executionEngine.execute(jsonData, transformationFunction);
 	}
 
 
