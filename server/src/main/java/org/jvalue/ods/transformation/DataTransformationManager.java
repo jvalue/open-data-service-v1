@@ -1,8 +1,6 @@
 package org.jvalue.ods.transformation;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
-
 import javax.script.ScriptException;
 import java.io.IOException;
 
@@ -16,7 +14,7 @@ public class DataTransformationManager
 		this.executionEngine = executionEngine;
 	}
 
-	public JsonNode transform(JsonNode data, TransformationFunction transformationFunction)
+	public String transform(Object data, TransformationFunction transformationFunction)
 	throws ScriptException, IOException
 	{
 		return executionEngine.execute(data, transformationFunction);

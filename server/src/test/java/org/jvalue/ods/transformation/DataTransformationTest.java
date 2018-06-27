@@ -20,17 +20,19 @@ import java.net.URL;
 public final class DataTransformationTest
 {
 
-	private static JsonNode data;
+	private static JsonNode jsonData;
 	private static ExecutionEngine executionEngine;
 	private static DataTransformationManager dataTransformationManager;
 	private static TransformationFunction transformationFunction;
+	private static ObjectMapper mapper;
 
 	private static String sampleData;
+
 
 	@BeforeClass
 	public static void initialize() throws IOException, URISyntaxException
 	{
-		ObjectMapper mapper = new ObjectMapper();
+		mapper = new ObjectMapper();
 		URL resource = DataTransformationTest.class.getClassLoader().getResource("js/SampleWeatherData");
 
 		File sampleWeatherData = new File(resource.toURI());
@@ -38,34 +40,38 @@ public final class DataTransformationTest
 
 		executionEngine = new NashornExecutionEngine();
 		dataTransformationManager = new DataTransformationManager(executionEngine);
-		data = mapper.readTree(sampleData);
+		jsonData = mapper.readTree(sampleData);
 	}
 
 	private static final String simpleExtension =
-			"function transform(doc){"
-			+ "    if(doc.main != null){"
-			+ "        doc.main.extension = \"This is an extension\";"
+			"function transform(dataString){"
+			+ "	   var GENERIC_DATA_STRING = JSON.parse(dataString);"
+			+ "    if(GENERIC_DATA_STRING.main != null){"
+			+ "        GENERIC_DATA_STRING.main.extension = \"This is an extension\";"
 			+ "    }"
-			+ "    return doc;"
+			+ "    return JSON.stringify(GENERIC_DATA_STRING);"
 			+ "};";
 
 	@Test
 	public void testExtensionTransformationExecution() throws ScriptException, IOException
 	{
 		transformationFunction = new TransformationFunction("1", simpleExtension);
-		JsonNode result = dataTransformationManager.transform(data, transformationFunction);
+		String result = dataTransformationManager.transform(jsonData, transformationFunction);
 
-		Assert.assertEquals("This is an extension", result.get("main").get("extension").asText());
+		JsonNode jsonNode = mapper.readTree(result);
+		Assert.assertEquals("This is an extension", jsonNode.get("main").get("extension").asText());
 	}
 
 	private static final String simpleReduction =
-"		function transform(doc){"
-		+ "if(doc != null){"
-		+"		return Object.keys(doc).reduce("
+"		function transform(dataString){"
+		+ "var GENERIC_DATA_STRING = JSON.parse(dataString);"
+		+ "if(GENERIC_DATA_STRING != null){"
+		+"		var result = Object.keys(GENERIC_DATA_STRING).reduce("
 		+ "			function(previous, key) {"
 		+ "				previous.keycount ++;"
 		+ "				return previous;"
-		+ "			}, {keycount: 0})"
+		+ "			}, {keycount: 0});"
+		+ "			return JSON.stringify(result);"
 		+"		}"
 		+"}";
 
@@ -73,34 +79,36 @@ public final class DataTransformationTest
 	public void testReduceTransformationExecution() throws ScriptException, IOException
 	{
 		transformationFunction = new TransformationFunction("1", simpleReduction);
-		JsonNode result = dataTransformationManager.transform(data, transformationFunction);
-
-		Assert.assertEquals(12, result.get("keycount").intValue());
+		String result = dataTransformationManager.transform(jsonData, transformationFunction);
+		JsonNode jsonNode = mapper.readTree(result);
+		Assert.assertEquals(12, jsonNode.get("keycount").intValue());
 	}
 
 
 	private static final String simpleMap =
-			"		function transform(doc){"
-					+ "if(doc != null){"
-					+"		Object.keys(doc).map("
-					+ "			function(key, index) {"
-					+ "				if(key === 'coord' || key === 'main'){ "
-					+ "					doc[key].newEntry = \"New Entry\";"
-					+ "				}"
-					+ "			});"
-					+"	}"
-					+ " return doc;"
-					+"}";
+"		function transform(dataString){"
+		+" var GENERIC_DATA_STRING = JSON.parse(dataString);"
+		+ "if(GENERIC_DATA_STRING != null){"
+		+"		Object.keys(GENERIC_DATA_STRING).map("
+		+ "			function(key, index) {"
+		+ "				if(key === 'coord' || key === 'main'){ "
+		+ "					GENERIC_DATA_STRING[key].newEntry = \"New Entry\";"
+		+ "				}"
+		+ "			});"
+		+"	}"
+		+ " return JSON.stringify(GENERIC_DATA_STRING);"
+		+"}";
 
 
 	@Test
 	public void testMapTransformationExecution() throws ScriptException, IOException
 	{
 		transformationFunction = new TransformationFunction("1", simpleMap);
-		JsonNode result = dataTransformationManager.transform(data, transformationFunction);
+		String result = dataTransformationManager.transform(jsonData, transformationFunction);
+		JsonNode jsonNode = mapper.readTree(result);
 
-		Assert.assertEquals("New Entry", result.get("coord").get("newEntry").asText());
-		Assert.assertEquals("New Entry", result.get("main").get("newEntry").asText());
+		Assert.assertEquals("New Entry", jsonNode.get("coord").get("newEntry").asText());
+		Assert.assertEquals("New Entry", jsonNode.get("main").get("newEntry").asText());
 	}
 
 	@Test(expected = ScriptException.class)
@@ -108,11 +116,11 @@ public final class DataTransformationTest
 	throws ScriptException, IOException
 	{
 		transformationFunction = new TransformationFunction("2", "invalid Javascript Code");
-		dataTransformationManager.transform(data, transformationFunction);
+		dataTransformationManager.transform(jsonData, transformationFunction);
 	}
 
 	private static final String infiniteLoop =
-			"function transform(doc){"
+			"function transform(GENERIC_DATA_STRING){"
 			+"    while(true) { ; }"
 			+"};";
 
@@ -121,7 +129,7 @@ public final class DataTransformationTest
 	throws ScriptException, IOException
 	{
 		transformationFunction = new TransformationFunction("3", infiniteLoop);
-		dataTransformationManager.transform(data, transformationFunction);
+		dataTransformationManager.transform(jsonData, transformationFunction);
 	}
 
 

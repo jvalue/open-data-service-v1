@@ -7,6 +7,6 @@ import java.io.IOException;
 
 public interface ExecutionEngine
 {
-	JsonNode execute(JsonNode data, TransformationFunction transformationFunction) throws  IOException,
+	String execute(Object data, TransformationFunction transformationFunction) throws  IOException,
 			ScriptException;
 }
