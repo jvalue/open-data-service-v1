@@ -14,7 +14,7 @@ public class NashornExecutionEngine extends AbstractExecutionEngine
 
 	//script language specific function call at the beginning of the script
 	private static final String CALL_TRANSFORMATION_FUNCTION = "transform("+ GENERIC_DATA_STRING +");";
-	
+
 	private void initNashornSandbox(){
 		//configure the nashorn sandbox
 		nashornSandbox = NashornSandboxes.create();

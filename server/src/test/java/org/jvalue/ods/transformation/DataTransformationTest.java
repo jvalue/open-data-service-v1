@@ -45,11 +45,11 @@ public final class DataTransformationTest
 
 	private static final String simpleExtension =
 			"function transform(dataString){"
-			+ "	   var GENERIC_DATA_STRING = JSON.parse(dataString);"
-			+ "    if(GENERIC_DATA_STRING.main != null){"
-			+ "        GENERIC_DATA_STRING.main.extension = \"This is an extension\";"
+			+ "	   var doc = JSON.parse(dataString);"
+			+ "    if(doc.main != null){"
+			+ "        doc.main.extension = \"This is an extension\";"
 			+ "    }"
-			+ "    return JSON.stringify(GENERIC_DATA_STRING);"
+			+ "    return JSON.stringify(doc);"
 			+ "};";
 
 	@Test
@@ -64,9 +64,9 @@ public final class DataTransformationTest
 
 	private static final String simpleReduction =
 "		function transform(dataString){"
-		+ "var GENERIC_DATA_STRING = JSON.parse(dataString);"
-		+ "if(GENERIC_DATA_STRING != null){"
-		+"		var result = Object.keys(GENERIC_DATA_STRING).reduce("
+		+ "var doc = JSON.parse(dataString);"
+		+ "if(doc != null){"
+		+"		var result = Object.keys(doc).reduce("
 		+ "			function(previous, key) {"
 		+ "				previous.keycount ++;"
 		+ "				return previous;"
@@ -87,16 +87,16 @@ public final class DataTransformationTest
 
 	private static final String simpleMap =
 "		function transform(dataString){"
-		+" var GENERIC_DATA_STRING = JSON.parse(dataString);"
-		+ "if(GENERIC_DATA_STRING != null){"
-		+"		Object.keys(GENERIC_DATA_STRING).map("
+		+" var doc = JSON.parse(dataString);"
+		+ "if(doc != null){"
+		+"		Object.keys(doc).map("
 		+ "			function(key, index) {"
 		+ "				if(key === 'coord' || key === 'main'){ "
-		+ "					GENERIC_DATA_STRING[key].newEntry = \"New Entry\";"
+		+ "					doc[key].newEntry = \"New Entry\";"
 		+ "				}"
 		+ "			});"
 		+"	}"
-		+ " return JSON.stringify(GENERIC_DATA_STRING);"
+		+ " return JSON.stringify(doc);"
 		+"}";
 
 	@Test
@@ -126,7 +126,7 @@ public final class DataTransformationTest
 	}
 
 	private static final String infiniteLoop =
-			"function transform(GENERIC_DATA_STRING){"
+			"function transform(dataString){"
 			+"    while(true) { ; }"
 			+"};";
 
