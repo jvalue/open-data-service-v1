@@ -47,7 +47,7 @@ public final class NashornExecutionEngineTest
 			+ "    }"
 			+ "    return doc;"
 			+ "};";
- add se	
+
 
 	@Test
 	public void testExtensionTransformationExecution() throws ScriptException, IOException
