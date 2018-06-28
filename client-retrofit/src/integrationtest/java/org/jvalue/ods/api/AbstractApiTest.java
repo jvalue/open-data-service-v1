@@ -38,7 +38,7 @@ public abstract class AbstractApiTest {
 	public void setup() {
 		RestAdapter restAdapter = new RestAdapter.Builder()
 				.setConverter(new JacksonConverter())
-				.setEndpoint("http://localhost:8080/ods/api/v1")
+				.setEndpoint("http://localhost:8080/ods/api")
 				.setRequestInterceptor(new RequestInterceptor() {
 					@Override
 					public void intercept(RequestFacade request) {
