@@ -1,4 +1,4 @@
-package org.jvalue.ods.rest;
+package org.jvalue.ods.rest.v1;
 
 import org.jvalue.commons.auth.AbstractUserDescription;
 import org.jvalue.commons.auth.BasicAuthUtils;
@@ -25,7 +25,7 @@ import javax.ws.rs.core.MediaType;
  * Empty class which calls super for every single method. Its solve purpose is to allow JaxRs2Retrofit to
  * create client code (yes, it's unfortunately a hack ...).
  */
-@Path("/users")
+@Path(AbstractApi.VERSION + "/users")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public final class UserApi extends org.jvalue.commons.auth.rest.UserApi {

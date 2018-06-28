@@ -12,7 +12,7 @@ import retrofit.converter.JacksonConverter;
 
 public final class ApiFactory {
 
-	private static final String SERVER_URL = "http://localhost:8080/ods/api/v1";
+	private static final String SERVER_URL = "http://localhost:8080/ods/api";
 
 	private final RestAdapter restAdapter;
 
