@@ -67,6 +67,9 @@ public class JsonApiDocument<T> {
 
     private void initLinks() {
         links.put("self", uri);
+        if(dataArray.isPresent()){
+            dataArray.get().forEach(resource -> resource.setSelfLink());
+        }
     }
 
 //    private void assertValidState() {
