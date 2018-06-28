@@ -18,7 +18,7 @@ public class JsonApiResource<T> {
     private final String type;
     private final T entity;
     private final Optional<JsonNode> meta;
-    private Optional<HashMap<String, String>> links;
+    private Optional<HashMap<String, String>> links = Optional.empty();
 
     public JsonApiResource(T entity, String uri, String id) {
         this.entity = entity;
@@ -43,6 +43,16 @@ public class JsonApiResource<T> {
         this(entity, uri, getIdFromObject(entity));
     }
 
+    @JsonInclude(JsonInclude.Include.NON_ABSENT)
+    public Optional<JsonNode> getMeta() {
+        return meta;
+    }
+
+    @JsonInclude(JsonInclude.Include.NON_ABSENT)
+    public Optional<HashMap<String, String>> getLinks() {
+        return links;
+    }
+
     public String getId() {
         return id;
     }
@@ -55,15 +65,5 @@ public class JsonApiResource<T> {
     @JsonIgnoreProperties(value = {"id", "metaData"})
     public T getEntity() {
         return entity;
-    }
-
-    @JsonInclude(JsonInclude.Include.NON_ABSENT)
-    public Optional<JsonNode> getMeta() {
-        return meta;
-    }
-
-    @JsonInclude(JsonInclude.Include.NON_ABSENT)
-    public Optional<HashMap<String, String>> getLinks() {
-        return links;
     }
 }

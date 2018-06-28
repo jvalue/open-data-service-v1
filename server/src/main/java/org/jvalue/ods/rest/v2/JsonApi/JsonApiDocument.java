@@ -58,7 +58,7 @@ public class JsonApiDocument<T> {
 
     private void addAsJsonApiResource(T el, Collection<JsonApiResource<T>> coll) {
         try {
-            coll.add(new JsonApiResource<>(el, uri +"/"+getPropertyValueString(el, "id")));
+            coll.add(new JsonApiResource<>(el, uri + getPropertyValueString(el, "id")));
         }
         catch (IllegalArgumentException e) {
             throw new SerializationException("JsonApiSerialization of " + el.getClass().getCanonicalName() + " failed", e);
