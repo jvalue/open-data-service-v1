@@ -39,6 +39,7 @@ public final class NashornExecutionEngineTest
 		jsonData = mapper.readTree(sampleData);
 	}
 
+
 	private static final String simpleExtension =
 			"function transform(dataString){"
 			+ "	   var doc = JSON.parse(dataString);"
@@ -47,6 +48,7 @@ public final class NashornExecutionEngineTest
 			+ "    }"
 			+ "    return JSON.stringify(doc);"
 			+ "};";
+
 
 	@Test
 	public void testExtensionTransformationExecution() throws ScriptException, IOException
@@ -57,6 +59,7 @@ public final class NashornExecutionEngineTest
 		JsonNode jsonNode = mapper.readTree(result);
 		Assert.assertEquals("This is an extension", jsonNode.get("main").get("extension").asText());
 	}
+
 
 	private static final String simpleReduction =
 "		function transform(dataString){"
@@ -70,6 +73,7 @@ public final class NashornExecutionEngineTest
 		+ "			return JSON.stringify(result);"
 		+"		}"
 		+"}";
+
 
 	@Test
 	public void testReduceTransformationExecution() throws ScriptException, IOException
@@ -95,6 +99,7 @@ public final class NashornExecutionEngineTest
 		+ " return JSON.stringify(doc);"
 		+"}";
 
+
 	@Test
 	public void testMapTransformationExecution() throws ScriptException, IOException
 	{
@@ -106,6 +111,7 @@ public final class NashornExecutionEngineTest
 		Assert.assertEquals("New Entry", jsonNode.get("main").get("newEntry").asText());
 	}
 
+
 	@Test(expected = ScriptException.class)
 	public void testInvalidTransformationExecution()
 	throws ScriptException, IOException
@@ -114,6 +120,7 @@ public final class NashornExecutionEngineTest
 		executionEngine.execute(jsonData, transformationFunction);
 	}
 
+
 	@Test(expected = ScriptException.class)
 	public void testWrongFunctionSignatureTransformationExecution() throws ScriptException, IOException
 	{
@@ -121,10 +128,12 @@ public final class NashornExecutionEngineTest
 		executionEngine.execute(jsonData, transformationFunction);
 	}
 
+
 	private static final String infiniteLoop =
 			"function transform(dataString){"
 			+"    while(true) { ; }"
 			+"};";
+
 
 	@Test(expected = ScriptCPUAbuseException.class)
 	public void testInfiniteLoopTransformationExecution()
@@ -134,12 +143,14 @@ public final class NashornExecutionEngineTest
 		executionEngine.execute(jsonData, transformationFunction);
 	}
 
+
 	private static final String javaClassAccess =
 			"function transform(dataString){"
 					+"    while(true) { "
 					+ "		var ArrayList = Java.type('java.util.ArrayList');"
 					+ " }"
 					+"};";
+
 
 	@Test(expected = RuntimeException.class)
 	public void testAccessToJavaClassesTransformationExecution()
@@ -148,5 +159,4 @@ public final class NashornExecutionEngineTest
 		transformationFunction = new TransformationFunction("3", javaClassAccess);
 		executionEngine.execute(jsonData, transformationFunction);
 	}
-
 }

@@ -23,6 +23,7 @@ public class NashornExecutionEngine extends AbstractExecutionEngine
 		nashornSandbox.setExecutor(Executors.newSingleThreadExecutor());
 	}
 
+
 	@Override
 	public String execute(Object data, TransformationFunction transformationFunction)
 	throws ScriptException, IOException
@@ -30,7 +31,6 @@ public class NashornExecutionEngine extends AbstractExecutionEngine
 		initNashornSandbox();
 		try
 		{
-
 			//append custom transformation function to wrapper script
 			String script = CALL_TRANSFORMATION_FUNCTION + transformationFunction.getTransformFunction();
 
