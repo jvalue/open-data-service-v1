@@ -5,6 +5,6 @@ abstract class AbstractApi {
 
 	protected static final String VERSION = "/v1";
 
-	protected static final String BASE_URL = VERSION + "/datasources";
+	protected static final String BASE_URL = "/v1/datasources";
 
 }
