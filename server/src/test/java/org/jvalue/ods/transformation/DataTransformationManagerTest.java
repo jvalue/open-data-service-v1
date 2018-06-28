@@ -30,11 +30,11 @@ public final class DataTransformationManagerTest
 		TransformationFunction function = new TransformationFunction("1", "function");
 
 		new Expectations() {{
-			executionEngine.execute("data", function);
+			executionEngine.execute(null, function);
 			result = "modifiedData";
 		}};
 
-		String res = transformationManager.transform("data", function);
+		String res = transformationManager.transform(null, function);
 		Assert.assertEquals("modifiedData", res);
 	}
 }

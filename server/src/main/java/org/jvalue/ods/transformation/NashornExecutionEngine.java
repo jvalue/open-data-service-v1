@@ -1,10 +1,15 @@
 package org.jvalue.ods.transformation;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import delight.nashornsandbox.NashornSandbox;
 import delight.nashornsandbox.NashornSandboxes;
+import org.apache.commons.io.FileUtils;
 
 import javax.script.ScriptException;
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -13,7 +18,25 @@ public class NashornExecutionEngine extends AbstractExecutionEngine
 	private NashornSandbox nashornSandbox;
 
 	//script language specific function call at the beginning of the script
-	private static final String CALL_TRANSFORMATION_FUNCTION = "transform("+ GENERIC_DATA_STRING +");";
+	private static String wrapperScript = "";
+
+	public NashornExecutionEngine(){
+		URL resource = NashornExecutionEngine.class.getClassLoader().getResource("js/JsonUtil.js");
+		File wrapperScriptJs = null;
+		try
+		{
+			wrapperScriptJs = new File(resource.toURI());
+			wrapperScript = FileUtils.readFileToString(wrapperScriptJs);
+		}
+		catch (URISyntaxException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
 
 	private void initNashornSandbox(){
 		//configure the nashorn sandbox
@@ -25,17 +48,17 @@ public class NashornExecutionEngine extends AbstractExecutionEngine
 
 
 	@Override
-	public String execute(Object data, TransformationFunction transformationFunction)
+	public String execute(JsonNode data, TransformationFunction transformationFunction)
 	throws ScriptException, IOException
 	{
 		initNashornSandbox();
 		try
 		{
 			//append custom transformation function to wrapper script
-			String script = CALL_TRANSFORMATION_FUNCTION + transformationFunction.getTransformFunction();
+			String script = wrapperScript + transformationFunction.getTransformFunction();
 
 			//execute script
-			nashornSandbox.inject(GENERIC_DATA_STRING, data.toString());
+			nashornSandbox.inject(JSON_STRING_VAR, data.toString());
 			String result = (String) nashornSandbox.eval(script);
 			return result;
 		}

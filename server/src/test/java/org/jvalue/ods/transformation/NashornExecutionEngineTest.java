@@ -41,14 +41,13 @@ public final class NashornExecutionEngineTest
 
 
 	private static final String simpleExtension =
-			"function transform(dataString){"
-			+ "	   var doc = JSON.parse(dataString);"
+			"function transform(doc){"
 			+ "    if(doc.main != null){"
 			+ "        doc.main.extension = \"This is an extension\";"
 			+ "    }"
-			+ "    return JSON.stringify(doc);"
+			+ "    return doc;"
 			+ "};";
-
+ add se	
 
 	@Test
 	public void testExtensionTransformationExecution() throws ScriptException, IOException
@@ -62,15 +61,14 @@ public final class NashornExecutionEngineTest
 
 
 	private static final String simpleReduction =
-"		function transform(dataString){"
-		+ "var doc = JSON.parse(dataString);"
+"		function transform(doc){"
 		+ "if(doc != null){"
 		+"		var result = Object.keys(doc).reduce("
 		+ "			function(previous, key) {"
 		+ "				previous.keycount ++;"
 		+ "				return previous;"
 		+ "			}, {keycount: 0});"
-		+ "			return JSON.stringify(result);"
+		+ "			return result;"
 		+"		}"
 		+"}";
 
@@ -86,8 +84,7 @@ public final class NashornExecutionEngineTest
 
 
 	private static final String simpleMap =
-"		function transform(dataString){"
-		+" var doc = JSON.parse(dataString);"
+"		function transform(doc){"
 		+ "if(doc != null){"
 		+"		Object.keys(doc).map("
 		+ "			function(key, index) {"
@@ -96,7 +93,7 @@ public final class NashornExecutionEngineTest
 		+ "				}"
 		+ "			});"
 		+"	}"
-		+ " return JSON.stringify(doc);"
+		+ " return doc;"
 		+"}";
 
 
