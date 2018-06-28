@@ -29,7 +29,7 @@ import javax.ws.rs.core.UriInfo;
 
 @Path(AbstractApi.BASE_URL)
 @Produces(MediaType.JSONAPI)
-@Consumes({MediaType.APPLICATION_JSON, MediaType.JSONAPI}) //todo: remove APPLICATION_JSON or keep it to retain downward compatibility?
+@Consumes(MediaType.JSONAPI)
 public final class DataSourceApi extends AbstractApi {
 
 	private final DataSourceManager sourceManager;
@@ -84,9 +84,6 @@ public final class DataSourceApi extends AbstractApi {
             @RestrictedTo(Role.ADMIN) User user,
             @PathParam("sourceId") String sourceId,
             @Valid DataSourceDescription sourceDescription) {
-
-        //todo: was tun, wenn request im jsonApi Format kommt??
-
 
         // http1.1 spec sagt:
         // If the Request-URI refers to an already existing resource,
