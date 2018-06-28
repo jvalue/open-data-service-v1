@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-@RunWith(JMockit.class)
 public final class NashornExecutionEngineTest
 {
 
@@ -135,5 +134,19 @@ public final class NashornExecutionEngineTest
 		executionEngine.execute(jsonData, transformationFunction);
 	}
 
+	private static final String javaClassAccess =
+			"function transform(dataString){"
+					+"    while(true) { "
+					+ "		var ArrayList = Java.type('java.util.ArrayList');"
+					+ " }"
+					+"};";
+
+	@Test(expected = RuntimeException.class)
+	public void testAccessToJavaClassesTransformationExecution()
+	throws ScriptException, IOException
+	{
+		transformationFunction = new TransformationFunction("3", javaClassAccess);
+		executionEngine.execute(jsonData, transformationFunction);
+	}
 
 }
