@@ -39,7 +39,8 @@ import javax.validation.constraints.NotNull;
 })
 public abstract class Client {
 
-	@NotNull private final String id, type;
+	@NotNull private final String id;
+	@NotNull private final String type;
 
 	protected Client(String id, String type) {
 		this.id = id;
@@ -59,7 +60,7 @@ public abstract class Client {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other == null || !(other instanceof Client)) return false;
+		if (!(other instanceof Client)) return false;
 		if (other == this) return true;
 		Client client = (Client) other;
 		return Objects.equal(id, client.id)

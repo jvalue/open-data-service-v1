@@ -26,7 +26,7 @@ import javax.validation.constraints.NotNull;
 
 public final class HttpClientDescription extends ClientDescription {
 
-	static final String CLIENT_TYPE = "HTTP";
+	public static final String CLIENT_TYPE = "HTTP";
 
 	@NotNull private final String callbackUrl;
 	private final boolean sendData;
