@@ -12,8 +12,6 @@ import org.jvalue.ods.api.sources.DataSourceDescription;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.rest.v2.JsonApi.JsonApiResponse;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -28,13 +26,13 @@ import javax.ws.rs.core.UriInfo;
 public final class DataSourceApi extends AbstractApi {
 
 	private final DataSourceManager sourceManager;
+    @Context UriInfo uriInfo;
 
-	@Inject
+    @Inject
 	public DataSourceApi(DataSourceManager sourceManager) {
 		this.sourceManager = sourceManager;
 	}
 
-    @Context UriInfo uriInfo;
 
     @GET
     public Response getAllSources() {
@@ -45,11 +43,14 @@ public final class DataSourceApi extends AbstractApi {
                 .build();
     }
 
+
     //todo: integrate links to next and last dataSource. are these datasources ordered?
     @GET
     @Path("/{sourceId}")
     public Response getSource(@PathParam("sourceId") String sourceId) {
+
         DataSource source = sourceManager.findBySourceId(sourceId);
+
         return new JsonApiResponse<DataSource>()
                 .ok()
                 .path(uriInfo.getAbsolutePath())
@@ -57,17 +58,21 @@ public final class DataSourceApi extends AbstractApi {
                 .build();
     }
 
+
     @GET
     @Path("/{sourceId}/schema")
     public Response getSourceSchema(@PathParam("sourceId") String sourceId) {
+
         String id = sourceId+"_schema";
         JsonNode schema = sourceManager.findBySourceId(sourceId).getSchema();
+
         return new JsonApiResponse<JsonNode>()
                 .ok()
                 .path(uriInfo.getAbsolutePath())
                 .entity(schema, id)
                 .build();
     }
+
 
     @PUT
     @Path("/{sourceId}")
@@ -81,6 +86,7 @@ public final class DataSourceApi extends AbstractApi {
         // the enclosed entity SHOULD be considered as a modified version of the one residing on the origin server.
         // statuscode 200 oder 204 wenn already exists
         Response.StatusType status = Response.Status.CREATED;
+
         if(sourceManager.isValidSourceId(sourceId)) {
             sourceManager.remove(sourceManager.findBySourceId(sourceId));
             status = Response.Status.OK;
@@ -92,13 +98,13 @@ public final class DataSourceApi extends AbstractApi {
                 sourceDescription.getSchema(),
                 sourceDescription.getMetaData());
         sourceManager.add(source);
-
         return new JsonApiResponse<DataSource>()
                 .status(status)
                 .path(uriInfo.getAbsolutePath())
                 .entity(source)
                 .build();
 	}
+
 
 	@DELETE
 	@Path("/{sourceId}")
