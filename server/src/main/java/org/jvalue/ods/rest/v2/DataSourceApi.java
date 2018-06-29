@@ -35,10 +35,6 @@ public final class DataSourceApi extends AbstractApi {
 	}
 
     @Context UriInfo uriInfo;
-    @Context
-    HttpServletRequest servletRequest;
-    @Context
-    ServletContext servletContext;
 
     @GET
     public Response getAllSources() {
