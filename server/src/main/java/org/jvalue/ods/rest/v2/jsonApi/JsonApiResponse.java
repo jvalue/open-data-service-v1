@@ -1,4 +1,4 @@
-package org.jvalue.ods.rest.v2.JsonApi;
+package org.jvalue.ods.rest.v2.jsonApi;
 
 
 import javax.ws.rs.core.Response;

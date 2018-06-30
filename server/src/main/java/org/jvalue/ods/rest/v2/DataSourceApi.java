@@ -10,7 +10,7 @@ import org.jvalue.commons.auth.User;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceDescription;
 import org.jvalue.ods.data.DataSourceManager;
-import org.jvalue.ods.rest.v2.JsonApi.JsonApiResponse;
+import org.jvalue.ods.rest.v2.jsonApi.JsonApiResponse;
 
 import javax.validation.Valid;
 import javax.ws.rs.DELETE;

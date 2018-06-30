@@ -1,4 +1,4 @@
-package org.jvalue.ods.rest.v2.JsonApi;
+package org.jvalue.ods.rest.v2.jsonApi;
 
 
 public class MediaType extends javax.ws.rs.core.MediaType{
