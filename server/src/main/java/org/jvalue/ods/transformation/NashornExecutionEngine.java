@@ -1,6 +1,8 @@
 package org.jvalue.ods.transformation;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import delight.nashornsandbox.NashornSandbox;
 import delight.nashornsandbox.NashornSandboxes;
 import org.apache.commons.io.FileUtils;
@@ -19,9 +21,10 @@ public class NashornExecutionEngine extends AbstractExecutionEngine {
 	private NashornSandbox nashornSandbox;
 
 	private static String wrapperScript = "";
-
+	private ObjectMapper objectMapper;
 
 	public NashornExecutionEngine() {
+		objectMapper = new ObjectMapper();
 		URL resource = NashornExecutionEngine.class.getClassLoader().getResource("js/JsonUtil.js");
 		File wrapperScriptJs;
 		try {
@@ -47,7 +50,7 @@ public class NashornExecutionEngine extends AbstractExecutionEngine {
 
 
 	@Override
-	public String execute(JsonNode data, TransformationFunction transformationFunction)
+	public ObjectNode execute(ObjectNode data, TransformationFunction transformationFunction)
 			throws ScriptException, IOException {
 		initNashornSandbox();
 		try {
@@ -57,7 +60,7 @@ public class NashornExecutionEngine extends AbstractExecutionEngine {
 			//execute script
 			nashornSandbox.inject(JSON_STRING_VAR, data.toString());
 			String result = (String) nashornSandbox.eval(script);
-			return result;
+			return (ObjectNode) objectMapper.readTree(result);
 		} finally {
 			ExecutorService executor = nashornSandbox.getExecutor();
 			executor.shutdown();

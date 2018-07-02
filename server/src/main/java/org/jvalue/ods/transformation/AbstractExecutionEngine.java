@@ -1,6 +1,6 @@
 package org.jvalue.ods.transformation;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import javax.script.ScriptException;
 import java.io.IOException;
@@ -11,6 +11,6 @@ public abstract class AbstractExecutionEngine implements ExecutionEngine {
 
 
 	@Override
-	public abstract String execute(JsonNode data, TransformationFunction transformationFunction)
+	public abstract ObjectNode execute(ObjectNode data, TransformationFunction transformationFunction)
 			throws IOException, ScriptException;
 }

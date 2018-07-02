@@ -1,11 +1,11 @@
 package org.jvalue.ods.transformation;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import javax.script.ScriptException;
 import java.io.IOException;
 
 public interface ExecutionEngine {
-	String execute(JsonNode data, TransformationFunction transformationFunction) throws IOException,
+	ObjectNode execute(ObjectNode data, TransformationFunction transformationFunction) throws IOException,
 			ScriptException;
 }

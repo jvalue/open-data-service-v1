@@ -20,17 +20,24 @@ public interface FilterFactory {
 			NAME_INVALID_DOCUMENT_FILTER = "InvalidDocumentFilter",
 			NAME_PEGEL_ONLINE_MERGER = "PegelOnlineMerger",
 			NAME_PEGEL_BRANDENBURG_MERGER = "PegelBrandenburgMerger",
-			NAME_ADD_TIMESTAMP_FILTER = "AddTimestampFilter";
+			NAME_ADD_TIMESTAMP_FILTER = "AddTimestampFilter",
+			NAME_TRANSFORMATION_FILTER = "TransformationFilter";
 
+	static final String
+			ARGUMENT_UPDATE_DATA = "updateData",
+			ARGUMENT_TRANFORMATION_FUNCTION = "transformationFunction";
 
-	@CreationMethod(name = NAME_NOTIFICATION_FILTER, filterType =  ProcessorType.FILTER)
+	@CreationMethod(name = NAME_NOTIFICATION_FILTER, filterType = ProcessorType.FILTER)
 	@Named(NAME_NOTIFICATION_FILTER)
 	public Filter<ObjectNode, ObjectNode> createNotificationFilter(DataSource source);
 
 
 	@CreationMethod(name = NAME_DB_INSERTION_FILTER, filterType = ProcessorType.FILTER)
 	@Named(NAME_DB_INSERTION_FILTER)
-	public Filter<ObjectNode, ObjectNode> createDbInsertionFilter(DataSource source, DataRepository dataRepository, @Argument("updateData") boolean updateDataIfExists);
+	public Filter<ObjectNode, ObjectNode> createDbInsertionFilter(
+			DataSource source,
+			DataRepository dataRepository,
+			@Argument(ARGUMENT_UPDATE_DATA) boolean updateDataIfExists);
 
 
 	@CreationMethod(name = NAME_INT_TO_STRING_KEY_FILTER, filterType = ProcessorType.FILTER)
@@ -57,4 +64,9 @@ public interface FilterFactory {
 	@Named(NAME_ADD_TIMESTAMP_FILTER)
 	public Filter<ObjectNode, ObjectNode> createAddTimestampFilter(DataSource source);
 
+	@CreationMethod(name = NAME_TRANSFORMATION_FILTER, filterType = ProcessorType.FILTER)
+	@Named(NAME_TRANSFORMATION_FILTER)
+	public Filter<ObjectNode, ObjectNode> createTransformationFilter(
+			DataSource source,
+		 	@Argument(ARGUMENT_TRANFORMATION_FUNCTION) String transformationFunction);
 }

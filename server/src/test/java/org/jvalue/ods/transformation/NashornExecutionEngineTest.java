@@ -2,13 +2,12 @@ package org.jvalue.ods.transformation;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import delight.nashornsandbox.exceptions.ScriptCPUAbuseException;
-import mockit.integration.junit4.JMockit;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import javax.script.ScriptException;
 import java.io.File;
@@ -18,7 +17,7 @@ import java.net.URL;
 
 public final class NashornExecutionEngineTest {
 
-	private static JsonNode jsonData;
+	private static ObjectNode jsonData;
 	private static ExecutionEngine executionEngine;
 	private static TransformationFunction transformationFunction;
 	private static ObjectMapper mapper;
@@ -34,7 +33,7 @@ public final class NashornExecutionEngineTest {
 		sampleData = FileUtils.readFileToString(sampleWeatherData);
 
 		executionEngine = new NashornExecutionEngine();
-		jsonData = mapper.readTree(sampleData);
+		jsonData = (ObjectNode) mapper.readTree(sampleData);
 	}
 
 
@@ -50,10 +49,9 @@ public final class NashornExecutionEngineTest {
 	@Test
 	public void testExtensionTransformationExecution() throws ScriptException, IOException {
 		transformationFunction = new TransformationFunction("1", simpleExtension);
-		String result = executionEngine.execute(jsonData, transformationFunction);
+		JsonNode result = executionEngine.execute(jsonData, transformationFunction);
 
-		JsonNode jsonNode = mapper.readTree(result);
-		Assert.assertEquals("This is an extension", jsonNode.get("main").get("extension").asText());
+		Assert.assertEquals("This is an extension", result.get("main").get("extension").asText());
 	}
 
 
@@ -73,9 +71,8 @@ public final class NashornExecutionEngineTest {
 	@Test
 	public void testReduceTransformationExecution() throws ScriptException, IOException {
 		transformationFunction = new TransformationFunction("1", simpleReduction);
-		String result = executionEngine.execute(jsonData, transformationFunction);
-		JsonNode jsonNode = mapper.readTree(result);
-		Assert.assertEquals(12, jsonNode.get("keycount").intValue());
+		JsonNode result = executionEngine.execute(jsonData, transformationFunction);
+		Assert.assertEquals(12, result.get("keycount").intValue());
 	}
 
 
@@ -96,11 +93,10 @@ public final class NashornExecutionEngineTest {
 	@Test
 	public void testMapTransformationExecution() throws ScriptException, IOException {
 		transformationFunction = new TransformationFunction("1", simpleMap);
-		String result = executionEngine.execute(jsonData, transformationFunction);
-		JsonNode jsonNode = mapper.readTree(result);
+		JsonNode result = executionEngine.execute(jsonData, transformationFunction);
 
-		Assert.assertEquals("New Entry", jsonNode.get("coord").get("newEntry").asText());
-		Assert.assertEquals("New Entry", jsonNode.get("main").get("newEntry").asText());
+		Assert.assertEquals("New Entry", result.get("coord").get("newEntry").asText());
+		Assert.assertEquals("New Entry", result.get("main").get("newEntry").asText());
 	}
 
 

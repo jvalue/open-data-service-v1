@@ -1,5 +1,7 @@
 package org.jvalue.ods.transformation;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.integration.junit4.JMockit;
@@ -20,7 +22,7 @@ public final class DataTransformationManagerTest {
 
 
 	@Before
-	public void setupSourceManager() {
+	public void setupTransformationManager() {
 		this.transformationManager = new DataTransformationManager(executionEngine);
 	}
 
@@ -31,10 +33,10 @@ public final class DataTransformationManagerTest {
 
 		new Expectations() {{
 			executionEngine.execute(null, function);
-			result = "modifiedData";
+			result = new ObjectMapper().createObjectNode();
 		}};
 
-		String res = transformationManager.transform(null, function);
-		Assert.assertEquals("modifiedData", res);
+		ObjectNode res = transformationManager.transform(null, function);
+		Assert.assertEquals(new ObjectMapper().createObjectNode(), res);
 	}
 }
