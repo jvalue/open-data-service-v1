@@ -29,6 +29,7 @@ public class JsonUtils {
         return id;
     }
 
+
     public static String getPropertyValueString(Object from,
                                                 String propertyName) {
 
@@ -40,6 +41,7 @@ public class JsonUtils {
         }
         return val.textValue();
     }
+
 
     /**
      *
@@ -60,6 +62,7 @@ public class JsonUtils {
         }
     }
 
+    
     private static JsonNode doGetPropertyValue(Object from,
                                                String propertyName) {
 
