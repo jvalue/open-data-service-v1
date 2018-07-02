@@ -16,8 +16,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-public final class NashornExecutionEngineTest
-{
+public final class NashornExecutionEngineTest {
 
 	private static JsonNode jsonData;
 	private static ExecutionEngine executionEngine;
@@ -27,8 +26,7 @@ public final class NashornExecutionEngineTest
 
 
 	@BeforeClass
-	public static void initialize() throws IOException, URISyntaxException
-	{
+	public static void initialize() throws IOException, URISyntaxException {
 		mapper = new ObjectMapper();
 		URL resource = NashornExecutionEngineTest.class.getClassLoader().getResource("js/SampleWeatherData");
 
@@ -42,16 +40,15 @@ public final class NashornExecutionEngineTest
 
 	private static final String simpleExtension =
 			"function transform(doc){"
-			+ "    if(doc.main != null){"
-			+ "        doc.main.extension = \"This is an extension\";"
-			+ "    }"
-			+ "    return doc;"
-			+ "};";
+					+ "    if(doc.main != null){"
+					+ "        doc.main.extension = \"This is an extension\";"
+					+ "    }"
+					+ "    return doc;"
+					+ "};";
 
 
 	@Test
-	public void testExtensionTransformationExecution() throws ScriptException, IOException
-	{
+	public void testExtensionTransformationExecution() throws ScriptException, IOException {
 		transformationFunction = new TransformationFunction("1", simpleExtension);
 		String result = executionEngine.execute(jsonData, transformationFunction);
 
@@ -61,21 +58,20 @@ public final class NashornExecutionEngineTest
 
 
 	private static final String simpleReduction =
-"		function transform(doc){"
-		+ "if(doc != null){"
-		+"		var result = Object.keys(doc).reduce("
-		+ "			function(previous, key) {"
-		+ "				previous.keycount ++;"
-		+ "				return previous;"
-		+ "			}, {keycount: 0});"
-		+ "			return result;"
-		+"		}"
-		+"}";
+			"		function transform(doc){"
+					+ "if(doc != null){"
+					+ "		var result = Object.keys(doc).reduce("
+					+ "			function(previous, key) {"
+					+ "				previous.keycount ++;"
+					+ "				return previous;"
+					+ "			}, {keycount: 0});"
+					+ "			return result;"
+					+ "		}"
+					+ "}";
 
 
 	@Test
-	public void testReduceTransformationExecution() throws ScriptException, IOException
-	{
+	public void testReduceTransformationExecution() throws ScriptException, IOException {
 		transformationFunction = new TransformationFunction("1", simpleReduction);
 		String result = executionEngine.execute(jsonData, transformationFunction);
 		JsonNode jsonNode = mapper.readTree(result);
@@ -84,22 +80,21 @@ public final class NashornExecutionEngineTest
 
 
 	private static final String simpleMap =
-"		function transform(doc){"
-		+ "if(doc != null){"
-		+"		Object.keys(doc).map("
-		+ "			function(key, index) {"
-		+ "				if(key === 'coord' || key === 'main'){ "
-		+ "					doc[key].newEntry = \"New Entry\";"
-		+ "				}"
-		+ "			});"
-		+"	}"
-		+ " return doc;"
-		+"}";
+			"		function transform(doc){"
+					+ "if(doc != null){"
+					+ "		Object.keys(doc).map("
+					+ "			function(key, index) {"
+					+ "				if(key === 'coord' || key === 'main'){ "
+					+ "					doc[key].newEntry = \"New Entry\";"
+					+ "				}"
+					+ "			});"
+					+ "	}"
+					+ " return doc;"
+					+ "}";
 
 
 	@Test
-	public void testMapTransformationExecution() throws ScriptException, IOException
-	{
+	public void testMapTransformationExecution() throws ScriptException, IOException {
 		transformationFunction = new TransformationFunction("1", simpleMap);
 		String result = executionEngine.execute(jsonData, transformationFunction);
 		JsonNode jsonNode = mapper.readTree(result);
@@ -111,16 +106,14 @@ public final class NashornExecutionEngineTest
 
 	@Test(expected = ScriptException.class)
 	public void testInvalidTransformationExecution()
-	throws ScriptException, IOException
-	{
+			throws ScriptException, IOException {
 		transformationFunction = new TransformationFunction("2", "invalid Javascript Code");
 		executionEngine.execute(jsonData, transformationFunction);
 	}
 
 
 	@Test(expected = ScriptException.class)
-	public void testWrongFunctionSignatureTransformationExecution() throws ScriptException, IOException
-	{
+	public void testWrongFunctionSignatureTransformationExecution() throws ScriptException, IOException {
 		transformationFunction = new TransformationFunction("10", "function test(hello){ return 1};");
 		executionEngine.execute(jsonData, transformationFunction);
 	}
@@ -128,14 +121,13 @@ public final class NashornExecutionEngineTest
 
 	private static final String infiniteLoop =
 			"function transform(dataString){"
-			+"    while(true) { ; }"
-			+"};";
+					+ "    while(true) { ; }"
+					+ "};";
 
 
 	@Test(expected = ScriptCPUAbuseException.class)
 	public void testInfiniteLoopTransformationExecution()
-	throws ScriptException, IOException
-	{
+			throws ScriptException, IOException {
 		transformationFunction = new TransformationFunction("3", infiniteLoop);
 		executionEngine.execute(jsonData, transformationFunction);
 	}
@@ -143,16 +135,15 @@ public final class NashornExecutionEngineTest
 
 	private static final String javaClassAccess =
 			"function transform(dataString){"
-					+"    while(true) { "
+					+ "    while(true) { "
 					+ "		var ArrayList = Java.type('java.util.ArrayList');"
 					+ " }"
-					+"};";
+					+ "};";
 
 
 	@Test(expected = RuntimeException.class)
 	public void testAccessToJavaClassesTransformationExecution()
-	throws ScriptException, IOException
-	{
+			throws ScriptException, IOException {
 		transformationFunction = new TransformationFunction("3", javaClassAccess);
 		executionEngine.execute(jsonData, transformationFunction);
 	}

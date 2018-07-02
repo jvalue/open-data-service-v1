@@ -12,21 +12,21 @@ import javax.script.ScriptException;
 import java.io.IOException;
 
 @RunWith(JMockit.class)
-public final class DataTransformationManagerTest
-{
+public final class DataTransformationManagerTest {
 	private DataTransformationManager transformationManager;
 
 	@Mocked
 	private NashornExecutionEngine executionEngine;
+
 
 	@Before
 	public void setupSourceManager() {
 		this.transformationManager = new DataTransformationManager(executionEngine);
 	}
 
+
 	@Test
-	public void testTransform() throws ScriptException, IOException
-	{
+	public void testTransform() throws ScriptException, IOException {
 		TransformationFunction function = new TransformationFunction("1", "function");
 
 		new Expectations() {{
