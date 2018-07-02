@@ -7,35 +7,36 @@ import org.jvalue.ods.api.views.DataView;
 
 import javax.validation.constraints.NotNull;
 
-public class TransformationFunction
-{
+public class TransformationFunction {
 	@NotNull
 	private final String id;
 
 	@NotNull
 	private final String transformFunction;
 
+
 	/**
 	 * Create a new map reduce view on the data.
-	 * @param id the id of the transformation function
+	 *
+	 * @param id                the id of the transformation function
 	 * @param transformFunction the transformation function written in JavaScript
 	 */
 	@JsonCreator
 	public TransformationFunction(
 			@JsonProperty("id") String id,
-			@JsonProperty("transformFunction") String transformFunction){
+			@JsonProperty("transformFunction") String transformFunction) {
 
 		this.id = id;
 		this.transformFunction = transformFunction;
 	}
+
 
 	public String getId() {
 		return id;
 	}
 
 
-	public String getTransformFunction()
-	{
+	public String getTransformFunction() {
 		return transformFunction;
 	}
 
