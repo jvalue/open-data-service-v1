@@ -24,7 +24,7 @@ public class TransformationFilter extends AbstractFilter<ObjectNode, ObjectNode>
 			@Assisted DataSource source,
 			MetricRegistry registry,
 			DataTransformationManager dataTransformationManager,
-			String transformationFunction) {
+			@Assisted String transformationFunction) {
 		super(source, registry);
 		this.transformationFunction = transformationFunction;
 		this.dataTransformationManager = dataTransformationManager;

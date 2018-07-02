@@ -43,6 +43,7 @@ import org.jvalue.ods.rest.ProcessorChainApi;
 import org.jvalue.ods.rest.ProcessorSpecificationApi;
 import org.jvalue.ods.rest.UserApi;
 import org.jvalue.ods.rest.VersionApi;
+import org.jvalue.ods.transformation.DataTransformationModule;
 import org.jvalue.ods.utils.GuiceConstraintValidatorFactory;
 
 import java.util.List;
@@ -79,7 +80,8 @@ public final class OdsApplication extends Application<OdsConfig> {
 				new DbModule(configuration.getCouchDb()),
 				new NotificationsModule(),
 				new DataModule(),
-				new AuthModule(configuration.getAuth()));
+				new AuthModule(configuration.getAuth()),
+				new DataTransformationModule());
 
 		// start data grabbing
 		environment.lifecycle().manage(injector.getInstance(DataSourceManager.class));

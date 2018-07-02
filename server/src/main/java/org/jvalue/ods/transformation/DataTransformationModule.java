@@ -6,7 +6,8 @@ import com.google.inject.Singleton;
 public final class DataTransformationModule extends AbstractModule {
 	@Override
 	protected void configure() {
-		bind(ExecutionEngine.class).in(Singleton.class);
+		ExecutionEngine executionEngine = new NashornExecutionEngine();
+		bind(ExecutionEngine.class).toInstance(executionEngine);
 		bind(DataTransformationManager.class).in(Singleton.class);
 	}
 }
