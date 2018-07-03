@@ -69,9 +69,7 @@ public class JsonApiResponse<T>  {
         public Response build() {
 
             Response.ResponseBuilder builder = Response.status(status);
-            if(entity.isPresent()) {
-                builder.entity(entity.get());
-            }
+            entity.ifPresent(e -> builder.entity(e));
             return builder.build();
         }
 

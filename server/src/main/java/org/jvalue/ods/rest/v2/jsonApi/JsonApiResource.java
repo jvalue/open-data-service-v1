@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.jvalue.ods.utils.JsonUtils.getIdFromObject;
@@ -19,7 +20,7 @@ public class JsonApiResource<T> {
     private final String type;
     private final T entity;
     private final Optional<JsonNode> meta;
-    private Optional<HashMap<String, String>> links = Optional.empty();
+    private Map<String, String> links;
 
     public JsonApiResource(T entity,
                            String uri,
@@ -46,10 +47,10 @@ public class JsonApiResource<T> {
 
     public void setLink(String name,
                         String ref) {
-        if(!links.isPresent()) {
-            links = Optional.of(new HashMap<String, String>());
+        if(links == null) {
+            links = new HashMap<String, String>();
         }
-        links.get().put(name, ref);
+        links.put(name, ref);
     }
 
 
@@ -60,7 +61,7 @@ public class JsonApiResource<T> {
 
 
     @JsonInclude(JsonInclude.Include.NON_ABSENT)
-    public Optional<HashMap<String, String>> getLinks() {
+    public Map<String, String> getLinks() {
         return links;
     }
 
