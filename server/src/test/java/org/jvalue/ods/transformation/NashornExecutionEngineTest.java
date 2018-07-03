@@ -37,7 +37,7 @@ public final class NashornExecutionEngineTest {
 	}
 
 
-	private static final String simpleExtension =
+	private static final String extension =
 			"function transform(doc){"
 					+ "    if(doc.main != null){"
 					+ "        doc.main.extension = \"This is an extension\";"
@@ -48,14 +48,14 @@ public final class NashornExecutionEngineTest {
 
 	@Test
 	public void testExtensionTransformationExecution() throws ScriptException, IOException {
-		transformationFunction = new TransformationFunction("1", simpleExtension);
+		transformationFunction = new TransformationFunction("1", extension);
 		JsonNode result = executionEngine.execute(jsonData, transformationFunction);
 
 		Assert.assertEquals("This is an extension", result.get("main").get("extension").asText());
 	}
 
 
-	private static final String simpleReduction =
+	private static final String reduction =
 			"		function transform(doc){"
 					+ "if(doc != null){"
 					+ "		var result = Object.keys(doc).reduce("
@@ -70,13 +70,13 @@ public final class NashornExecutionEngineTest {
 
 	@Test
 	public void testReduceTransformationExecution() throws ScriptException, IOException {
-		transformationFunction = new TransformationFunction("1", simpleReduction);
+		transformationFunction = new TransformationFunction("1", reduction);
 		JsonNode result = executionEngine.execute(jsonData, transformationFunction);
 		Assert.assertEquals(12, result.get("keycount").intValue());
 	}
 
 
-	private static final String simpleMap =
+	private static final String map =
 			"		function transform(doc){"
 					+ "if(doc != null){"
 					+ "		Object.keys(doc).map("
@@ -92,7 +92,7 @@ public final class NashornExecutionEngineTest {
 
 	@Test
 	public void testMapTransformationExecution() throws ScriptException, IOException {
-		transformationFunction = new TransformationFunction("1", simpleMap);
+		transformationFunction = new TransformationFunction("1", map);
 		JsonNode result = executionEngine.execute(jsonData, transformationFunction);
 
 		Assert.assertEquals("New Entry", result.get("coord").get("newEntry").asText());
@@ -131,9 +131,7 @@ public final class NashornExecutionEngineTest {
 
 	private static final String javaClassAccess =
 			"function transform(dataString){"
-					+ "    while(true) { "
 					+ "		var ArrayList = Java.type('java.util.ArrayList');"
-					+ " }"
 					+ "};";
 
 
