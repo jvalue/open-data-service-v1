@@ -25,15 +25,6 @@ public final class TransformationFilterTest {
 	private DataSource source;
 	private ObjectNode baseNode;
 
-
-	private static final String simpleExtension =
-			"function transform(doc){"
-					+ "    if(doc != null){"
-					+ "        doc.extension = \"This is an extension\";"
-					+ "    }"
-					+ "    return doc;"
-					+ "};";
-
 	private ExecutionEngine executionEngine;
 	private DataTransformationManager transformationManager;
 
@@ -52,6 +43,7 @@ public final class TransformationFilterTest {
 		this.transformationManager = new DataTransformationManager(executionEngine);
 	}
 
+
 	private DataSource createDataSource(String jsonPointer) {
 		return new DataSource(
 				"someId",
@@ -60,11 +52,32 @@ public final class TransformationFilterTest {
 				new DataSourceMetaData("", "", "", "", "", "", ""));
 	}
 
+
+	private static final String extension =
+			"function transform(doc){"
+			+ "    if(doc != null){"
+			+ "        doc.extension = \"This is an extension\";"
+			+ "    }"
+			+ "    return doc;"
+			+ "};";
+
+
 	@Test
 	public void testTransformation() throws Exception {
-		ObjectNode resultNode = applyFilter(simpleExtension);
+		ObjectNode resultNode = applyFilter(extension);
 		Assert.assertTrue(resultNode.has("extension"));
 	}
+
+
+	private static final String fail =
+			"function test(doc){};";
+
+
+	@Test(expected = FilterException.class)
+	public void testFailTransformation() throws Exception {
+		applyFilter(fail);
+	}
+
 
 	private ObjectNode applyFilter(String transformationFunction) throws Exception {
 		return new TransformationFilter(source, registry, transformationManager, transformationFunction).doFilter(baseNode);

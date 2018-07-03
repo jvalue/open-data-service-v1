@@ -36,7 +36,8 @@ public class TransformationFilter extends AbstractFilter<ObjectNode, ObjectNode>
 		ObjectNode result;
 		try {
 			 result = dataTransformationManager.transform(node, new TransformationFunction(source.getId(), transformationFunction));
-		} catch (ScriptException | IOException e) {
+		} catch (Exception e) {
+			// nothing to do if exception occurs -> throw it.
 			throw new FilterException(e.getMessage(), e);
 		}
 
