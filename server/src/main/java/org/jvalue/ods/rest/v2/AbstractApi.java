@@ -1,13 +1,13 @@
 package org.jvalue.ods.rest.v2;
 
 
-import org.jvalue.ods.rest.v2.jsonApi.MediaType;
+import org.jvalue.ods.rest.v2.jsonApi.JsonApiMediaType;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 
-@Produces(MediaType.JSONAPI)
-@Consumes(MediaType.JSONAPI)
+@Produces(JsonApiMediaType.JSONAPI)
+@Consumes(JsonApiMediaType.JSONAPI)
 abstract class AbstractApi {
 
 
