@@ -48,7 +48,7 @@ public class JsonApiResource<T> {
     public void setLink(String name,
                         String ref) {
         if(links == null) {
-            links = new HashMap<String, String>();
+            links = new HashMap<>();
         }
         links.put(name, ref);
     }
