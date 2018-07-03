@@ -1,4 +1,4 @@
-transformationWrapper(jsonString);
+transformationWrapper(mvrzesmadgnxpxqhwllv);
 
 function transformationWrapper(jsonStr){
     var json = JSON.parse(jsonStr);

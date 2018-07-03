@@ -7,7 +7,9 @@ import java.io.IOException;
 
 public abstract class AbstractExecutionEngine implements ExecutionEngine {
 
-	protected static final String JSON_STRING_VAR = "jsonString";
+	// used as a variable to be injected into the script code
+	// as random as possible variable so the user does not use the variable by accident
+	protected static final String JSON_STRING_VAR = "mvrzesmadgnxpxqhwllv";
 
 
 	@Override
