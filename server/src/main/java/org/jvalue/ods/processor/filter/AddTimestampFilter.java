@@ -12,30 +12,29 @@ import java.time.temporal.ChronoUnit;
 
 public class AddTimestampFilter extends AbstractFilter<ObjectNode, ObjectNode> {
 
-    public static final String DEFAULT_KEY_NAME = "created_at";
+	public static final String DEFAULT_KEY_NAME = "created_at";
 
-    @Inject
-    AddTimestampFilter(
-            @Assisted DataSource source,
-            MetricRegistry registry) {
-        super(source, registry);
-    }
-
-
-    @Override
-    protected ObjectNode doFilter(ObjectNode node) throws FilterException {
-        JsonNode keyNode = node.at(source.getDomainIdKey());
+	@Inject
+	AddTimestampFilter(
+			@Assisted DataSource source,
+			MetricRegistry registry) {
+		super(source, registry);
+	}
 
 
-        node.put(DEFAULT_KEY_NAME, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).toString());
-        return node;
-    }
+	@Override
+	protected ObjectNode doFilter(ObjectNode node) throws FilterException {
+		try {
+			node.put(DEFAULT_KEY_NAME, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).toString());
+		} catch (Exception ex) {
+			throw new FilterException("Unable to add timestamp to object node", ex);
+		}
+		return node;
+	}
 
 
-    @Override
-    protected void doOnComplete() throws FilterException {
-
-    }
-
+	@Override
+	protected void doOnComplete() {
+	}
 
 }
