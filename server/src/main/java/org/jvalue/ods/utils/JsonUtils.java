@@ -17,16 +17,7 @@ public class JsonUtils {
 
     public static String getIdFromObject(Object from) {
 
-        String id;
-
-        try {
-            id = getPropertyValueString(from, "id");
-        } catch(IllegalArgumentException e) {
-            //todo: log warning
-            // id has to be persisted
-            id = UUID.randomUUID().toString();
-        }
-        return id;
+        return getPropertyValueString(from, "id");
     }
 
 

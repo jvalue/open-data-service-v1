@@ -36,10 +36,9 @@ public final class DataSourceApi extends AbstractApi {
 
     @GET
     public Response getAllSources() {
-        return new JsonApiResponse<DataSource>()
+        return new JsonApiResponse<DataSource>(uriInfo)
                 .ok()
-                .path(uriInfo)
-                .entity(sourceManager.getAll())
+                .data(sourceManager.getAll())
                 .build();
     }
 
@@ -51,10 +50,9 @@ public final class DataSourceApi extends AbstractApi {
 
         DataSource source = sourceManager.findBySourceId(sourceId);
 
-        return new JsonApiResponse<DataSource>()
+        return new JsonApiResponse<DataSource>(uriInfo)
                 .ok()
-                .path(uriInfo)
-                .entity(source)
+                .data(source)
                 .build();
     }
 
@@ -66,10 +64,9 @@ public final class DataSourceApi extends AbstractApi {
         String id = sourceId+"_schema";
         JsonNode schema = sourceManager.findBySourceId(sourceId).getSchema();
 
-        return new JsonApiResponse<JsonNode>()
+        return new JsonApiResponse<JsonNode>(uriInfo)
                 .ok()
-                .path(uriInfo)
-                .entity(schema, id)
+                .data(schema)
                 .build();
     }
 
@@ -98,10 +95,9 @@ public final class DataSourceApi extends AbstractApi {
                 sourceDescription.getSchema(),
                 sourceDescription.getMetaData());
         sourceManager.add(source);
-        return new JsonApiResponse<DataSource>()
-                .status(status)
-                .path(uriInfo)
-                .entity(source)
+        return new JsonApiResponse<DataSource>(uriInfo)
+                .ok()
+                .data(source)
                 .build();
 	}
 

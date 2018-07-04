@@ -5,45 +5,41 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 
-import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import static org.jvalue.ods.utils.JsonUtils.getIdFromObject;
 import static org.jvalue.ods.utils.JsonUtils.getPropertyValueNode;
 import static org.jvalue.ods.utils.StringUtils.getUriRootElement;
 
-public class JsonApiResource<T> {
+public class JsonApiResource<T> extends JsonApiData {
 
-    private final UriInfo uriInfo;
-    private final String id;
+    private String id;
     private final String type;
     private final T entity;
-    private final Optional<JsonNode> meta;
+    private final JsonNode meta;
     private Map<String, URI> links;
 
-    public JsonApiResource(T entity,
-                           UriInfo uriInfo,
-                           String id) {
 
+    public JsonApiResource(T entity,
+                           URI uri) {
+        super(uri);
         this.entity = entity;
-        this.uriInfo = uriInfo;
-        this.type = uriInfo.getBaseUri().getQuery();
+        String id;
+        try {
+            id = getIdFromObject(entity);
+        } catch (IllegalArgumentException e) {
+            id = "NO_ID"; //todo: entity has no id property. what to do now?
+        }
         this.id = id;
-        this.meta = Optional.ofNullable(getPropertyValueNode(entity, "metaData"));
-    }
-
-
-    public JsonApiResource(T entity,
-                           UriInfo uriInfo) {
-        this(entity, uriInfo, getIdFromObject(entity));
+        this.type = getUriRootElement(uri.toString()); //todo: use uriInfo or uri methods
+        this.meta = getPropertyValueNode(entity, "metaData");
     }
 
 
     public void setSelfLink(){
-        setLink("self", uriInfo.getAbsolutePath());
+        setLink("self", uri);
     }
 
 
@@ -56,13 +52,13 @@ public class JsonApiResource<T> {
     }
 
 
-    @JsonInclude(JsonInclude.Include.NON_ABSENT)
-    public Optional<JsonNode> getMeta() {
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public JsonNode getMeta() {
         return meta;
     }
 
 
-    @JsonInclude(JsonInclude.Include.NON_ABSENT)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public Map<String, URI> getLinks() {
         return links;
     }

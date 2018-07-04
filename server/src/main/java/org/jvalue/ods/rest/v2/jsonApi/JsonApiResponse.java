@@ -3,75 +3,78 @@ package org.jvalue.ods.rest.v2.jsonApi;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
 import java.util.Collection;
 import java.util.Optional;
 
 public class JsonApiResponse<T>  {
 
-    public StatusContainer<T> status(Response.StatusType status) {
-        return new StatusContainer<>(status);
+    private final UriInfo uriInfo;
+
+    public JsonApiResponse(UriInfo uriInfo) {
+        this.uriInfo = uriInfo;
     }
 
 
-    public StatusContainer<T> ok() {
-        return new StatusContainer<>(Response.Status.OK);
+    public JsonApiResponseWithDataBuilder<T> ok() {
+        return new JsonApiResponseWithDataBuilder<T>(Response.Status.OK, uriInfo);
     }
 
 
-    public class StatusContainer<T> {
-
-        private final Response.StatusType status;
-
-        private StatusContainer(Response.StatusType status) {
-            this.status = status;
-        }
-
-
-        public JsonApiResponseBuilder<T> path(UriInfo uriInfo) {
-            return new JsonApiResponseBuilder<>(status, uriInfo);
-        }
+    public JsonApiResponseWithDataBuilder<T> created() {
+        return new JsonApiResponseWithDataBuilder<>(Response.Status.CREATED, uriInfo);
     }
 
-    public class JsonApiResponseBuilder<T>{
+    //do we need JsonApiResponses without content?
+    public JsonApiResponseBuilder<T> no_content() {
+        return new JsonApiResponseBuilder<T>(Response.Status.NO_CONTENT, uriInfo);
+    }
 
-        private final Response.StatusType status;
-        private final UriInfo uriInfo;
-        private Optional<JsonApiDocument> entity = Optional.empty();
 
+    public class JsonApiResponseWithDataBuilder<T> {
 
-        public JsonApiResponseBuilder(Response.StatusType status, UriInfo uriInfo) {
+        protected final Response.StatusType status;
+        protected final UriInfo uriInfo;
+        protected Optional<JsonApiDocument<T>> data;
+
+        private JsonApiResponseWithDataBuilder(Response.StatusType status, UriInfo uriInfo) {
             this.status = status;
             this.uriInfo = uriInfo;
         }
 
 
-        public JsonApiResponseBuilder<T> entity(T entity) {
-            //todo: use existing JsonApiDocument for consequent calls instead of recreating it each time?
-            this.entity = Optional.of(new JsonApiDocument<>(entity, uriInfo));
-            return this;
+        public JsonApiResponseBuilder<T> data(T entity) {
+            this.data = Optional.of(new JsonApiDocument<>(entity, uriInfo));
+            return new JsonApiResponseBuilder(status, uriInfo, data);
+        }
+
+        public JsonApiResponseBuilder<T> data(Collection<T> entityCollection) {
+            this.data = Optional.of(new JsonApiDocument<>(entityCollection, uriInfo));
+            return new JsonApiResponseBuilder(status, uriInfo, data);
+        }
+
+    }
+
+    public class JsonApiResponseBuilder<T> extends JsonApiResponseWithDataBuilder<T>{
+
+        private JsonApiResponseBuilder(Response.StatusType status, UriInfo uriInfo) {
+            super(status, uriInfo);
+            this.data = Optional.empty();
         }
 
 
-        public JsonApiResponseBuilder<T> entity(Collection<T> entity) {
-            this.entity = Optional.of(new JsonApiDocument<>(entity, uriInfo));
-            return this;
-        }
-
-
-        //todo: use UUID generator instead?
-        public JsonApiResponseBuilder<T> entity(T entity,
-                                                String id) {
-            this.entity = Optional.of(new JsonApiDocument<>(entity, uriInfo, id));
-            return this;
+        private JsonApiResponseBuilder(Response.StatusType status, UriInfo uriInfo, Optional<JsonApiDocument<T>> data) {
+            super(status, uriInfo);
+            this.data = data;
         }
 
 
         public Response build() {
 
             Response.ResponseBuilder builder = Response.status(status);
-            entity.ifPresent(e -> builder.entity(e));
+            data.ifPresent(d -> builder.entity(d));
+            //set content type later?
             return builder.build();
+
         }
 
     }
