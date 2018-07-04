@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.jsoup.SerializationException;
 
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.*;
 
@@ -11,39 +13,39 @@ import static org.jvalue.ods.utils.JsonUtils.getPropertyValueString;
 
 public class JsonApiDocument<T> {
 
-    private Map<String, String> links = new HashMap<>();
+    private Map<String, URI> links = new HashMap<>();
     private Optional<JsonNode> meta = Optional.empty();
     private Optional<JsonApiResource<T>> dataObject;
     private Optional<List<JsonApiResource<T>>> dataArray;
     private Optional<JsonNode> errors = Optional.empty();
     private Optional included = Optional.empty();
-    private final String uri;
+    private final UriInfo uriInfo;
 
     public JsonApiDocument(T entity,
-                           URI uri) {
+                           UriInfo uriInfo) {
 
-        this.uri = uri.toString();
-        this.dataObject = Optional.of(new JsonApiResource<>(entity, uri.toString()));
+        this.uriInfo = uriInfo;
+        this.dataObject = Optional.of(new JsonApiResource<>(entity, uriInfo));
         this.dataArray = Optional.empty();
         initLinks();
     }
 
 
     public JsonApiDocument(T entity,
-                           URI uri,
+                           UriInfo uriInfo,
                            String id) {
 
-        this.uri = uri.toString();
-        this.dataObject = Optional.of(new JsonApiResource<>(entity, uri.toString(), id));
+        this.uriInfo = uriInfo;
+        this.dataObject = Optional.of(new JsonApiResource<>(entity, uriInfo, id));
         this.dataArray = Optional.empty();
         initLinks();
     }
 
 
     public JsonApiDocument(Collection<T> entityCollection,
-                           URI uri) {
+                           UriInfo uriInfo) {
 
-        this.uri = uri.toString();
+        this.uriInfo = uriInfo;
         ArrayList<JsonApiResource<T>> dataList = new ArrayList<>();
         entityCollection.forEach(el -> addAsJsonApiResource(el, dataList));
         this.dataArray = Optional.of(dataList);
@@ -52,7 +54,7 @@ public class JsonApiDocument<T> {
     }
 
 
-    public Map<String, String> getLinks() {
+    public Map<String, URI> getLinks() {
         return links;
     }
 
@@ -78,7 +80,12 @@ public class JsonApiDocument<T> {
      */
     private void addAsJsonApiResource(T el, Collection<JsonApiResource<T>> coll) {
         try {
-            coll.add(new JsonApiResource<>(el, uri + getPropertyValueString(el, "id")));
+            UriBuilder uriBuilder = UriBuilder.fromUri(uriInfo.getAbsolutePath());
+            URI elUri = uriInfo.getAbsolutePath()
+                    .resolve("/"
+                            + getPropertyValueString(el, "id"));
+            coll.add(new JsonApiResource<>(el, uriInfo));   // This is not going to work since uriInfo here points to the containing collection.
+                                                            // Since it will be refactored anyways i leave it like this for now
         }
         catch (IllegalArgumentException e) {
             throw new SerializationException("JsonApiSerialization of " + el.getClass().getCanonicalName() + " failed", e);
@@ -92,7 +99,7 @@ public class JsonApiDocument<T> {
      * contained resource object.
      */
     private void initLinks() {
-        links.put("self", uri);
+        links.put("self", uriInfo.getAbsolutePath());
         dataArray.ifPresent(array
                 -> array.forEach(resource
                     -> resource.setSelfLink()));

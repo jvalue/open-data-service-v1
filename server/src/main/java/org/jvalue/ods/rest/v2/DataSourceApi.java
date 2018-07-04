@@ -38,7 +38,7 @@ public final class DataSourceApi extends AbstractApi {
     public Response getAllSources() {
         return new JsonApiResponse<DataSource>()
                 .ok()
-                .path(uriInfo.getAbsolutePath())
+                .path(uriInfo)
                 .entity(sourceManager.getAll())
                 .build();
     }
@@ -53,7 +53,7 @@ public final class DataSourceApi extends AbstractApi {
 
         return new JsonApiResponse<DataSource>()
                 .ok()
-                .path(uriInfo.getAbsolutePath())
+                .path(uriInfo)
                 .entity(source)
                 .build();
     }
@@ -68,7 +68,7 @@ public final class DataSourceApi extends AbstractApi {
 
         return new JsonApiResponse<JsonNode>()
                 .ok()
-                .path(uriInfo.getAbsolutePath())
+                .path(uriInfo)
                 .entity(schema, id)
                 .build();
     }
@@ -100,7 +100,7 @@ public final class DataSourceApi extends AbstractApi {
         sourceManager.add(source);
         return new JsonApiResponse<DataSource>()
                 .status(status)
-                .path(uriInfo.getAbsolutePath())
+                .path(uriInfo)
                 .entity(source)
                 .build();
 	}

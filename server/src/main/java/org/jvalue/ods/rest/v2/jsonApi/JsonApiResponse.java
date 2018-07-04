@@ -2,6 +2,7 @@ package org.jvalue.ods.rest.v2.jsonApi;
 
 
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Optional;
@@ -27,33 +28,33 @@ public class JsonApiResponse<T>  {
         }
 
 
-        public JsonApiResponseBuilder<T> path(URI path) {
-            return new JsonApiResponseBuilder<>(status, path);
+        public JsonApiResponseBuilder<T> path(UriInfo uriInfo) {
+            return new JsonApiResponseBuilder<>(status, uriInfo);
         }
     }
 
     public class JsonApiResponseBuilder<T>{
 
         private final Response.StatusType status;
-        private final URI path;
+        private final UriInfo uriInfo;
         private Optional<JsonApiDocument> entity = Optional.empty();
 
 
-        public JsonApiResponseBuilder(Response.StatusType status, URI path) {
+        public JsonApiResponseBuilder(Response.StatusType status, UriInfo uriInfo) {
             this.status = status;
-            this.path = path;
+            this.uriInfo = uriInfo;
         }
 
 
         public JsonApiResponseBuilder<T> entity(T entity) {
             //todo: use existing JsonApiDocument for consequent calls instead of recreating it each time?
-            this.entity = Optional.of(new JsonApiDocument<>(entity, path));
+            this.entity = Optional.of(new JsonApiDocument<>(entity, uriInfo));
             return this;
         }
 
 
         public JsonApiResponseBuilder<T> entity(Collection<T> entity) {
-            this.entity = Optional.of(new JsonApiDocument<>(entity, path));
+            this.entity = Optional.of(new JsonApiDocument<>(entity, uriInfo));
             return this;
         }
 
@@ -61,7 +62,7 @@ public class JsonApiResponse<T>  {
         //todo: use UUID generator instead?
         public JsonApiResponseBuilder<T> entity(T entity,
                                                 String id) {
-            this.entity = Optional.of(new JsonApiDocument<>(entity, path, id));
+            this.entity = Optional.of(new JsonApiDocument<>(entity, uriInfo, id));
             return this;
         }
 

@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -15,38 +17,38 @@ import static org.jvalue.ods.utils.StringUtils.getUriRootElement;
 
 public class JsonApiResource<T> {
 
-    private final String selfReference;
+    private final UriInfo uriInfo;
     private final String id;
     private final String type;
     private final T entity;
     private final Optional<JsonNode> meta;
-    private Map<String, String> links;
+    private Map<String, URI> links;
 
     public JsonApiResource(T entity,
-                           String uri,
+                           UriInfo uriInfo,
                            String id) {
 
         this.entity = entity;
-        this.selfReference = uri;
-        this.type = getUriRootElement(uri);
+        this.uriInfo = uriInfo;
+        this.type = uriInfo.getBaseUri().getQuery();
         this.id = id;
         this.meta = Optional.ofNullable(getPropertyValueNode(entity, "metaData"));
     }
 
 
     public JsonApiResource(T entity,
-                           String uri) {
-        this(entity, uri, getIdFromObject(entity));
+                           UriInfo uriInfo) {
+        this(entity, uriInfo, getIdFromObject(entity));
     }
 
 
     public void setSelfLink(){
-        setLink("self", selfReference);
+        setLink("self", uriInfo.getAbsolutePath());
     }
 
 
     public void setLink(String name,
-                        String ref) {
+                        URI ref) {
         if(links == null) {
             links = new HashMap<>();
         }
@@ -61,7 +63,7 @@ public class JsonApiResource<T> {
 
 
     @JsonInclude(JsonInclude.Include.NON_ABSENT)
-    public Map<String, String> getLinks() {
+    public Map<String, URI> getLinks() {
         return links;
     }
 
