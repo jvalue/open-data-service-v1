@@ -23,8 +23,8 @@ public class TransformationFunction {
 	 */
 	@JsonCreator
 	public TransformationFunction(
-			@JsonProperty("id") String id,
-			@JsonProperty("transformFunction") String transformFunction) {
+		@JsonProperty("id") String id,
+		@JsonProperty("transformFunction") String transformFunction) {
 
 		this.id = id;
 		this.transformFunction = transformFunction;

@@ -17,7 +17,7 @@ public class DataTransformationManager {
 
 
 	public ObjectNode transform(ObjectNode data, TransformationFunction transformationFunction)
-			throws ScriptException, IOException {
+		throws ScriptException, IOException {
 		return executionEngine.execute(data, transformationFunction);
 	}
 }

@@ -14,5 +14,5 @@ public abstract class AbstractExecutionEngine implements ExecutionEngine {
 
 	@Override
 	public abstract ObjectNode execute(ObjectNode data, TransformationFunction transformationFunction)
-			throws IOException, ScriptException;
+		throws IOException, ScriptException;
 }

@@ -26,6 +26,7 @@ public class NashornExecutionEngine extends AbstractExecutionEngine {
 	private static String wrapperScript = "";
 	private ObjectMapper objectMapper;
 
+
 	public NashornExecutionEngine() {
 		objectMapper = new ObjectMapper();
 		InputStream resource = NashornExecutionEngine.class.getClassLoader().getResourceAsStream("js/JsonUtil.js");
@@ -49,7 +50,7 @@ public class NashornExecutionEngine extends AbstractExecutionEngine {
 
 	@Override
 	public ObjectNode execute(ObjectNode data, TransformationFunction transformationFunction)
-			throws ScriptException, IOException {
+		throws ScriptException, IOException {
 		initNashornSandbox();
 		try {
 			//append custom transformation function to wrapper script
