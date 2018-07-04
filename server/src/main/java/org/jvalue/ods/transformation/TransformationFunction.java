@@ -16,7 +16,7 @@ public class TransformationFunction {
 
 
 	/**
-	 * Create a new map reduce view on the data.
+	 * Create a new transformationFunction on the data.
 	 *
 	 * @param id                the id of the transformation function
 	 * @param transformFunction the transformation function written in JavaScript
