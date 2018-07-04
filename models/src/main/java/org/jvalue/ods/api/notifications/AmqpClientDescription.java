@@ -8,7 +8,7 @@ import java.util.Objects;
 
 public class AmqpClientDescription extends ClientDescription {
 
-    static final String CLIENT_TYPE = "AMQP";
+    public static final String CLIENT_TYPE = "AMQP";
 
     @NotNull private final String exchange;
     @NotNull private final String host;

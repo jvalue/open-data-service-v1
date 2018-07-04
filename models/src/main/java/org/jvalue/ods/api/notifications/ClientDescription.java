@@ -53,7 +53,7 @@ public abstract class ClientDescription {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other == null || !(other instanceof ClientDescription)) return false;
+		if (!(other instanceof ClientDescription)) return false;
 		if (other == this) return true;
 		ClientDescription client = (ClientDescription) other;
 		return Objects.equal(type, client.type);

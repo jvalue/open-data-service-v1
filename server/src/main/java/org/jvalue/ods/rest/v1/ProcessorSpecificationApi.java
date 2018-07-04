@@ -1,4 +1,4 @@
-package org.jvalue.ods.rest;
+package org.jvalue.ods.rest.v1;
 
 
 import com.google.inject.Inject;
@@ -14,7 +14,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-@Path("/filterTypes")
+@Path(AbstractApi.VERSION + "/filterTypes")
 @Produces(MediaType.APPLICATION_JSON)
 public final class ProcessorSpecificationApi extends AbstractApi {
 

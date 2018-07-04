@@ -61,11 +61,6 @@ dependencies {
     testCompile project(':client-retrofit')
 }
 
-test {
-    // required by jmockit
-    jvmArgs += '-Djdk.attach.allowAttachSelf'
-}
-
 // create java code which contains git hash
 gitHash {
     packageName = 'org.jvalue.ods'

@@ -26,7 +26,7 @@ import javax.validation.constraints.NotNull;
 
 public final class GcmClient extends Client {
 
-	static final String CLIENT_TYPE = "GCM";
+	public static final String CLIENT_TYPE = "GCM";
 
 	@NotNull private final String gcmClientId;
 

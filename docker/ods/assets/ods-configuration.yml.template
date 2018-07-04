@@ -10,7 +10,7 @@ couchDb:
 
 server:
   adminContextPath: ODS_ADMIN_CONTEXT_PATH
-  applicationContextPath: ODS_CONTEXT_PATH/api/v1
+  applicationContextPath: ODS_CONTEXT_PATH/api
   
 auth:
     users:

@@ -30,11 +30,6 @@ dependencies {
     testCompile "junit:junit:$junitVersion"
 }
 
-test {
-    // required by jmockit
-    jvmArgs += '-Djdk.attach.allowAttachSelf'
-}
-
 jaxRs2Retrofit {
     inputDir = file(project(':server').projectDir.toString() + '/' + mainSourcesDir)
     outputDir = file(generatedSourcesDir)

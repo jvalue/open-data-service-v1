@@ -9,7 +9,7 @@ couchDb:
     password: ADMIN_PASSWORD
 
 server:
-  applicationContextPath: /ods/api/v1
+  applicationContextPath: /ods/api
 
 auth:
   users:
