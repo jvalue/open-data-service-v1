@@ -44,7 +44,7 @@ public class TransformationFunction {
 	@Override
 	public boolean equals(Object other) {
 		if (!super.equals(other)) return false;
-		if (!(other instanceof DataView)) return false;
+		if (!(other instanceof TransformationFunction)) return false;
 		TransformationFunction transformationFunction = (TransformationFunction) other;
 		return Objects.equal(id, transformationFunction.id);
 	}
