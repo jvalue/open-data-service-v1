@@ -26,7 +26,7 @@ import javax.ws.rs.core.UriInfo;
 public final class DataSourceApi extends AbstractApi {
 
 	private final DataSourceManager sourceManager;
-    @Context UriInfo uriInfo;
+    @Context private UriInfo uriInfo;
 
     @Inject
 	public DataSourceApi(DataSourceManager sourceManager) {
