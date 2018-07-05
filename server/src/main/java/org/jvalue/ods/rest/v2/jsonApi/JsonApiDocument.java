@@ -15,6 +15,8 @@ public class JsonApiDocument<T> {
 //    private Optional<JsonNode> errors = Optional.empty();
     private final UriInfo uriInfo;
 
+
+    @SuppressWarnings("unchecked")
     public JsonApiDocument(T entity,
                            UriInfo uriInfo) {
 
@@ -24,6 +26,7 @@ public class JsonApiDocument<T> {
     }
 
 
+    @SuppressWarnings("unchecked")
     public JsonApiDocument(Collection<T> entityCollection,
                            UriInfo uriInfo) {
 

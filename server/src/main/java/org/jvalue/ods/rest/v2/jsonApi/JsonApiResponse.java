@@ -30,7 +30,7 @@ public class JsonApiResponse<T>  {
     }
 
 
-    public class JsonApiResponseWithDataBuilder<T> {
+    public class JsonApiResponseWithDataBuilder<R> {
 
         protected final Response.StatusType status;
         protected final UriInfo uriInfo;
@@ -44,17 +44,17 @@ public class JsonApiResponse<T>  {
 
         public JsonApiResponseBuilder<T> data(T entity) {
             this.data = Optional.of(new JsonApiDocument<>(entity, uriInfo));
-            return new JsonApiResponseBuilder(status, uriInfo, data);
+            return new JsonApiResponseBuilder<T>(status, uriInfo, data);
         }
 
         public JsonApiResponseBuilder<T> data(Collection<T> entityCollection) {
             this.data = Optional.of(new JsonApiDocument<>(entityCollection, uriInfo));
-            return new JsonApiResponseBuilder(status, uriInfo, data);
+            return new JsonApiResponseBuilder<T>(status, uriInfo, data);
         }
 
     }
 
-    public class JsonApiResponseBuilder<T> extends JsonApiResponseWithDataBuilder<T>{
+    public class JsonApiResponseBuilder<S> extends JsonApiResponseWithDataBuilder<S>{
 
         private JsonApiResponseBuilder(Response.StatusType status, UriInfo uriInfo) {
             super(status, uriInfo);
