@@ -7,6 +7,7 @@ import delight.nashornsandbox.NashornSandboxes;
 import org.apache.commons.io.IOUtils;
 import org.jvalue.commons.utils.Log;
 
+import javax.script.Invocable;
 import javax.script.ScriptException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,7 +24,7 @@ public class NashornExecutionEngine extends AbstractExecutionEngine {
 
 	public NashornExecutionEngine() {
 		objectMapper = new ObjectMapper();
-		InputStream resource = NashornExecutionEngine.class.getClassLoader().getResourceAsStream("js/JsonUtil.js");
+		InputStream resource = NashornExecutionEngine.class.getClassLoader().getResourceAsStream("js/NashornWrapper.js");
 		try {
 			wrapperScript = IOUtils.toString(resource);
 		} catch (IOException e) {
@@ -34,7 +35,6 @@ public class NashornExecutionEngine extends AbstractExecutionEngine {
 
 
 	private void initNashornSandbox() {
-		//configure the nashorn sandbox
 		nashornSandbox = NashornSandboxes.create();
 		nashornSandbox.setMaxCPUTime(5000);
 		nashornSandbox.allowNoBraces(true);
@@ -44,15 +44,16 @@ public class NashornExecutionEngine extends AbstractExecutionEngine {
 
 	@Override
 	public ObjectNode execute(ObjectNode data, TransformationFunction transformationFunction)
-		throws ScriptException, IOException {
+		throws ScriptException, IOException, NoSuchMethodException {
 		initNashornSandbox();
 		try {
 			//append custom transformation function to wrapper script
 			String script = wrapperScript + transformationFunction.getTransformFunction();
 
 			//execute script
-			nashornSandbox.inject(JSON_STRING_VAR, data.toString());
-			String result = (String) nashornSandbox.eval(script);
+			nashornSandbox.eval(script);
+			Invocable sandboxedInvocable = nashornSandbox.getSandboxedInvocable();
+			String result = (String) sandboxedInvocable.invokeFunction(WRAPPER_FUNCTION, data.toString());
 			return (ObjectNode) objectMapper.readTree(result);
 		} finally {
 			ExecutorService executor = nashornSandbox.getExecutor();

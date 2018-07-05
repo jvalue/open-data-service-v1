@@ -20,23 +20,26 @@ public final class DataTransformationManagerTest {
 	@Mocked
 	private NashornExecutionEngine executionEngine;
 
-
+	ObjectNode objectNode;
 	@Before
 	public void setupTransformationManager() {
 		this.transformationManager = new DataTransformationManager(executionEngine);
+		objectNode = new ObjectMapper().createObjectNode();
+		objectNode.put("key1", "test1");
+		objectNode.put("key2", "test2");
 	}
 
 
 	@Test
-	public void testTransform() throws ScriptException, IOException {
+	public void testTransform() throws ScriptException, IOException, NoSuchMethodException {
 		TransformationFunction function = new TransformationFunction("1", "function");
 
 		new Expectations() {{
 			executionEngine.execute(null, function);
-			result = new ObjectMapper().createObjectNode();
+			result = objectNode;
 		}};
 
 		ObjectNode res = transformationManager.transform(null, function);
-		Assert.assertEquals(new ObjectMapper().createObjectNode(), res);
+		Assert.assertEquals(objectNode, res);
 	}
 }

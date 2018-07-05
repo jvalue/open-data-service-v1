@@ -5,9 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import delight.nashornsandbox.exceptions.ScriptCPUAbuseException;
 import org.apache.commons.io.FileUtils;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.core.IsInstanceOf;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import javax.script.ScriptException;
 import java.io.File;
@@ -60,6 +64,9 @@ public final class NashornExecutionEngineTest {
 			+ "		var ArrayList = Java.type('java.util.ArrayList');"
 			+ "};";
 
+	@Rule
+	public ExpectedException thrown = ExpectedException.none();
+
 	private static ObjectNode jsonData;
 	private static ExecutionEngine executionEngine;
 	private static TransformationFunction transformationFunction;
@@ -81,7 +88,7 @@ public final class NashornExecutionEngineTest {
 
 
 	@Test
-	public void testExtensionTransformationExecution() throws ScriptException, IOException {
+	public void testExtensionTransformationExecution() throws ScriptException, IOException, NoSuchMethodException {
 		transformationFunction = new TransformationFunction("1", extension);
 		JsonNode result = executionEngine.execute(jsonData, transformationFunction);
 
@@ -90,7 +97,7 @@ public final class NashornExecutionEngineTest {
 
 
 	@Test
-	public void testReduceTransformationExecution() throws ScriptException, IOException {
+	public void testReduceTransformationExecution() throws ScriptException, IOException, NoSuchMethodException {
 		transformationFunction = new TransformationFunction("1", reduction);
 		JsonNode result = executionEngine.execute(jsonData, transformationFunction);
 		Assert.assertEquals(12, result.get("keycount").intValue());
@@ -98,7 +105,7 @@ public final class NashornExecutionEngineTest {
 
 
 	@Test
-	public void testMapTransformationExecution() throws ScriptException, IOException {
+	public void testMapTransformationExecution() throws ScriptException, IOException, NoSuchMethodException {
 		transformationFunction = new TransformationFunction("1", map);
 		JsonNode result = executionEngine.execute(jsonData, transformationFunction);
 
@@ -109,30 +116,39 @@ public final class NashornExecutionEngineTest {
 
 	@Test(expected = ScriptException.class)
 	public void testInvalidTransformationExecution()
-		throws ScriptException, IOException {
+		throws ScriptException, IOException, NoSuchMethodException {
 		transformationFunction = new TransformationFunction("2", "invalid Javascript Code");
 		executionEngine.execute(jsonData, transformationFunction);
 	}
 
 
 	@Test(expected = ScriptException.class)
-	public void testWrongFunctionSignatureTransformationExecution() throws ScriptException, IOException {
+	public void testWrongFunctionSignatureTransformationExecution()
+		throws ScriptException, IOException, NoSuchMethodException {
 		transformationFunction = new TransformationFunction("10", "function test(hello){ return 1};");
 		executionEngine.execute(jsonData, transformationFunction);
 	}
 
 
-	@Test(expected = ScriptCPUAbuseException.class)
+	@Test
 	public void testInfiniteLoopTransformationExecution()
-		throws ScriptException, IOException {
+		throws ScriptException, IOException, NoSuchMethodException {
+
+		thrown.expect(ScriptException.class);
+		thrown.expectCause(CoreMatchers.isA(ScriptCPUAbuseException.class));
+
 		transformationFunction = new TransformationFunction("3", infiniteLoop);
 		executionEngine.execute(jsonData, transformationFunction);
 	}
 
 
-	@Test(expected = RuntimeException.class)
+	@Test
 	public void testAccessToJavaClassesTransformationExecution()
-		throws ScriptException, IOException {
+		throws ScriptException, IOException, NoSuchMethodException {
+
+		thrown.expect(ScriptException.class);
+		thrown.expectCause(CoreMatchers.isA(RuntimeException.class));
+
 		transformationFunction = new TransformationFunction("3", javaClassAccess);
 		executionEngine.execute(jsonData, transformationFunction);
 	}
