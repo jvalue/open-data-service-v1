@@ -11,7 +11,7 @@ import static org.jvalue.ods.utils.JsonUtils.getIdFromObject;
 @JsonFormat(shape = JsonFormat.Shape.ARRAY)
 public class JsonApiResourceArray<T> extends JsonApiData {
 
-    private final Collection<JsonApiResource<T>> jsonApiResources;
+    private final Collection<JsonApiData<T>> jsonApiResources;
 
 
     public JsonApiResourceArray(Collection<T> resources, URI uri) {
@@ -19,15 +19,12 @@ public class JsonApiResourceArray<T> extends JsonApiData {
         this.jsonApiResources = new ArrayList<>();
         resources.forEach(r -> jsonApiResources
                 .add(
-                        new JsonApiResource<T>(r, uri.resolve(getIdFromObject(r)))));
+                        new JsonApiResourceIdentifier<T>(r, uri.resolve(getIdFromObject(r)))));
     }
 
-    public Collection<JsonApiResource<T>> getResources() {
+    public Collection<JsonApiData<T>> getResources() {
         return jsonApiResources;
     }
 
-    private void addAsJsonApiResource(T resource, Collection<T> collection) {
-
-    }
     //nothing more to do here for now. Later on pagination methods may be implemented here.
 }

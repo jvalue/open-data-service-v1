@@ -2,15 +2,10 @@ package org.jvalue.ods.rest.v2.jsonApi;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.JsonNode;
-import org.jsoup.SerializationException;
 
-import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.*;
-
-import static org.jvalue.ods.utils.JsonUtils.getPropertyValueString;
 
 public class JsonApiDocument<T> {
 
@@ -60,11 +55,11 @@ public class JsonApiDocument<T> {
 
         links.put("self", uriInfo.getAbsolutePath());
 
-        if(data instanceof JsonApiResourceArray) {
-           ((JsonApiResourceArray<T>) data).getResources()
-                   .forEach(r -> r.setSelfLink());
-
-        }
+//        if(data instanceof JsonApiResourceArray) {
+//           ((JsonApiResourceArray<T>) data).getResources()
+//                   .forEach(r -> r.setSelfLink());
+//
+//        }
     }
 
 }
