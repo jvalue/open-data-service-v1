@@ -3,7 +3,6 @@ package org.jvalue.ods.transformation;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
-import org.jvalue.ods.api.views.DataView;
 
 import javax.validation.constraints.NotNull;
 

@@ -17,6 +17,49 @@ import java.net.URL;
 
 public final class NashornExecutionEngineTest {
 
+	private static final String extension =
+		"function transform(doc){"
+			+ "    if(doc.main != null){"
+			+ "        doc.main.extension = \"This is an extension\";"
+			+ "    }"
+			+ "    return doc;"
+			+ "};";
+
+	private static final String reduction =
+		"function transform(doc){"
+			+ "if(doc != null){"
+			+ "		var result = Object.keys(doc).reduce("
+			+ "			function(previous, key) {"
+			+ "				previous.keycount ++;"
+			+ "				return previous;"
+			+ "			}, {keycount: 0});"
+			+ "			return result;"
+			+ "		}"
+			+ "}";
+
+	private static final String map =
+		"function transform(doc){"
+			+ "if(doc != null){"
+			+ "		Object.keys(doc).map("
+			+ "			function(key, index) {"
+			+ "				if(key === 'coord' || key === 'main'){ "
+			+ "					doc[key].newEntry = \"New Entry\";"
+			+ "				}"
+			+ "			});"
+			+ "	}"
+			+ " return doc;"
+			+ "}";
+
+	private static final String infiniteLoop =
+		"function transform(dataString){"
+			+ "    while(true) { ; }"
+			+ "};";
+
+	private static final String javaClassAccess =
+		"function transform(dataString){"
+			+ "		var ArrayList = Java.type('java.util.ArrayList');"
+			+ "};";
+
 	private static ObjectNode jsonData;
 	private static ExecutionEngine executionEngine;
 	private static TransformationFunction transformationFunction;
@@ -37,15 +80,6 @@ public final class NashornExecutionEngineTest {
 	}
 
 
-	private static final String extension =
-		"function transform(doc){"
-			+ "    if(doc.main != null){"
-			+ "        doc.main.extension = \"This is an extension\";"
-			+ "    }"
-			+ "    return doc;"
-			+ "};";
-
-
 	@Test
 	public void testExtensionTransformationExecution() throws ScriptException, IOException {
 		transformationFunction = new TransformationFunction("1", extension);
@@ -55,39 +89,12 @@ public final class NashornExecutionEngineTest {
 	}
 
 
-	private static final String reduction =
-		"function transform(doc){"
-			+ "if(doc != null){"
-			+ "		var result = Object.keys(doc).reduce("
-			+ "			function(previous, key) {"
-			+ "				previous.keycount ++;"
-			+ "				return previous;"
-			+ "			}, {keycount: 0});"
-			+ "			return result;"
-			+ "		}"
-			+ "}";
-
-
 	@Test
 	public void testReduceTransformationExecution() throws ScriptException, IOException {
 		transformationFunction = new TransformationFunction("1", reduction);
 		JsonNode result = executionEngine.execute(jsonData, transformationFunction);
 		Assert.assertEquals(12, result.get("keycount").intValue());
 	}
-
-
-	private static final String map =
-		"function transform(doc){"
-			+ "if(doc != null){"
-			+ "		Object.keys(doc).map("
-			+ "			function(key, index) {"
-			+ "				if(key === 'coord' || key === 'main'){ "
-			+ "					doc[key].newEntry = \"New Entry\";"
-			+ "				}"
-			+ "			});"
-			+ "	}"
-			+ " return doc;"
-			+ "}";
 
 
 	@Test
@@ -115,24 +122,12 @@ public final class NashornExecutionEngineTest {
 	}
 
 
-	private static final String infiniteLoop =
-		"function transform(dataString){"
-			+ "    while(true) { ; }"
-			+ "};";
-
-
 	@Test(expected = ScriptCPUAbuseException.class)
 	public void testInfiniteLoopTransformationExecution()
 		throws ScriptException, IOException {
 		transformationFunction = new TransformationFunction("3", infiniteLoop);
 		executionEngine.execute(jsonData, transformationFunction);
 	}
-
-
-	private static final String javaClassAccess =
-		"function transform(dataString){"
-			+ "		var ArrayList = Java.type('java.util.ArrayList');"
-			+ "};";
 
 
 	@Test(expected = RuntimeException.class)

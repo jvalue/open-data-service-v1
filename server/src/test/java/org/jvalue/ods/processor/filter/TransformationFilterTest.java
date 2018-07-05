@@ -19,18 +19,28 @@ import org.jvalue.ods.transformation.NashornExecutionEngine;
 @RunWith(JMockit.class)
 public final class TransformationFilterTest {
 
+	private static final String extension =
+		"function transform(doc){"
+			+ "    if(doc != null){"
+			+ "        doc.extension = \"This is an extension\";"
+			+ "    }"
+			+ "    return doc;"
+			+ "};";
+
+	private static final String fail =
+		"function test(doc){};";
+
 	@Mocked
 	private MetricRegistry registry;
 
 	private DataSource source;
 	private ObjectNode baseNode;
 
-	private ExecutionEngine executionEngine;
 	private DataTransformationManager transformationManager;
 
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		this.source = createDataSource("/parent/id");
 		this.baseNode = new ObjectNode(JsonNodeFactory.instance);
 
@@ -39,27 +49,18 @@ public final class TransformationFilterTest {
 		baseNode.set("main", innerNode);
 		baseNode.put("key2", "value1");
 
-		this.executionEngine = new NashornExecutionEngine();
+		ExecutionEngine executionEngine = new NashornExecutionEngine();
 		this.transformationManager = new DataTransformationManager(executionEngine);
 	}
 
 
 	private DataSource createDataSource(String jsonPointer) {
 		return new DataSource(
-				"someId",
-				JsonPointer.compile(jsonPointer),
-				new ObjectNode(JsonNodeFactory.instance),
-				new DataSourceMetaData("", "", "", "", "", "", ""));
+			"someId",
+			JsonPointer.compile(jsonPointer),
+			new ObjectNode(JsonNodeFactory.instance),
+			new DataSourceMetaData("", "", "", "", "", "", ""));
 	}
-
-
-	private static final String extension =
-			"function transform(doc){"
-			+ "    if(doc != null){"
-			+ "        doc.extension = \"This is an extension\";"
-			+ "    }"
-			+ "    return doc;"
-			+ "};";
 
 
 	@Test
@@ -67,10 +68,6 @@ public final class TransformationFilterTest {
 		ObjectNode resultNode = applyFilter(extension);
 		Assert.assertTrue(resultNode.has("extension"));
 	}
-
-
-	private static final String fail =
-			"function test(doc){};";
 
 
 	@Test(expected = FilterException.class)

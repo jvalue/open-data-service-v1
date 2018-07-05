@@ -42,6 +42,5 @@ public class TransformationFilter extends AbstractFilter<ObjectNode, ObjectNode>
 
 	@Override
 	protected void doOnComplete() throws FilterException {
-
 	}
 }
