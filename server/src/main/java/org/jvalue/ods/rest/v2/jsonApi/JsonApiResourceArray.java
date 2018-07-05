@@ -19,13 +19,15 @@ public class JsonApiResourceArray<T> extends JsonApiData {
         this.jsonApiResources = new ArrayList<>();
         resources.forEach(r -> jsonApiResources
                 .add(
-                        new JsonApiResource<T>(r, uri.resolve(
-                                URI.create(getIdFromObject(r))))));
+                        new JsonApiResource<T>(r, uri.resolve(getIdFromObject(r)))));
     }
 
     public Collection<JsonApiResource<T>> getResources() {
         return jsonApiResources;
     }
 
+    private void addAsJsonApiResource(T resource, Collection<T> collection) {
+
+    }
     //nothing more to do here for now. Later on pagination methods may be implemented here.
 }
