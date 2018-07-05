@@ -43,7 +43,6 @@ public final class DataSourceApi extends AbstractApi {
     }
 
 
-    //todo: integrate links to next and last dataSource. are these datasources ordered?
     @GET
     @Path("/{sourceId}")
     public Response getSource(@PathParam("sourceId") String sourceId) {
@@ -78,27 +77,29 @@ public final class DataSourceApi extends AbstractApi {
             @PathParam("sourceId") String sourceId,
             @Valid DataSourceDescription sourceDescription) {
 
-        // http1.1 spec sagt:
-        // If the Request-URI refers to an already existing resource,
-        // the enclosed entity SHOULD be considered as a modified version of the one residing on the origin server.
-        // statuscode 200 oder 204 wenn already exists
-        Response.StatusType status = Response.Status.CREATED;
-
-        if(sourceManager.isValidSourceId(sourceId)) {
-            sourceManager.remove(sourceManager.findBySourceId(sourceId));
-            status = Response.Status.OK;
-        }
-
         DataSource source = new DataSource(
                 sourceId,
                 sourceDescription.getDomainIdKey(),
                 sourceDescription.getSchema(),
                 sourceDescription.getMetaData());
+        Response response;
+
+        if(sourceManager.isValidSourceId(sourceId)) {
+            sourceManager.remove(sourceManager.findBySourceId(sourceId));
+            response = new JsonApiResponse<DataSource>(uriInfo)
+                    .ok()
+                    .data(source)
+                    .build();
+        }
+        else {
+            response = new JsonApiResponse<DataSource>(uriInfo)
+                    .created()
+                    .data(source)
+                    .build();
+        }
         sourceManager.add(source);
-        return new JsonApiResponse<DataSource>(uriInfo)
-                .ok()
-                .data(source)
-                .build();
+
+        return response;
 	}
 
 
