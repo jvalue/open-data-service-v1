@@ -4,7 +4,6 @@ package org.jvalue.ods.rest.v2.jsonApi;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.Collection;
-import java.util.Optional;
 
 public class JsonApiResponse<T>  {
 
@@ -34,7 +33,7 @@ public class JsonApiResponse<T>  {
 
         protected final Response.StatusType status;
         protected final UriInfo uriInfo;
-        protected Optional<JsonApiDocument<T>> data;
+        protected JsonApiDocument<T> data;
 
         private JsonApiResponseWithDataBuilder(Response.StatusType status, UriInfo uriInfo) {
             this.status = status;
@@ -43,12 +42,12 @@ public class JsonApiResponse<T>  {
 
 
         public JsonApiResponseBuilder<T> data(T entity) {
-            this.data = Optional.of(new JsonApiDocument<>(entity, uriInfo));
+            this.data = new JsonApiDocument<>(entity, uriInfo);
             return new JsonApiResponseBuilder<T>(status, uriInfo, data);
         }
 
         public JsonApiResponseBuilder<T> data(Collection<T> entityCollection) {
-            this.data = Optional.of(new JsonApiDocument<>(entityCollection, uriInfo));
+            this.data = new JsonApiDocument<>(entityCollection, uriInfo);
             return new JsonApiResponseBuilder<T>(status, uriInfo, data);
         }
 
@@ -58,11 +57,10 @@ public class JsonApiResponse<T>  {
 
         private JsonApiResponseBuilder(Response.StatusType status, UriInfo uriInfo) {
             super(status, uriInfo);
-            this.data = Optional.empty();
         }
 
 
-        private JsonApiResponseBuilder(Response.StatusType status, UriInfo uriInfo, Optional<JsonApiDocument<T>> data) {
+        private JsonApiResponseBuilder(Response.StatusType status, UriInfo uriInfo, JsonApiDocument<T> data) {
             super(status, uriInfo);
             this.data = data;
         }
@@ -71,10 +69,10 @@ public class JsonApiResponse<T>  {
         public Response build() {
 
             Response.ResponseBuilder builder = Response.status(status);
-            data.ifPresent(
-                    d -> builder
-                            .entity(d)
-                            .type(JsonApiMediaType.JSONAPI));
+            if(data != null) {
+                builder.entity(data)
+                        .type(JsonApiMediaType.JSONAPI);
+            }
             return builder.build();
 
         }
