@@ -19,17 +19,6 @@ import org.jvalue.ods.transformation.NashornExecutionEngine;
 @RunWith(JMockit.class)
 public final class TransformationFilterTest {
 
-	private static final String extension =
-		"function transform(doc){"
-			+ "    if(doc != null){"
-			+ "        doc.extension = \"This is an extension\";"
-			+ "    }"
-			+ "    return doc;"
-			+ "};";
-
-	private static final String fail =
-		"function test(doc){};";
-
 	@Mocked
 	private MetricRegistry registry;
 
@@ -54,15 +43,6 @@ public final class TransformationFilterTest {
 	}
 
 
-	private DataSource createDataSource(String jsonPointer) {
-		return new DataSource(
-			"someId",
-			JsonPointer.compile(jsonPointer),
-			new ObjectNode(JsonNodeFactory.instance),
-			new DataSourceMetaData("", "", "", "", "", "", ""));
-	}
-
-
 	@Test
 	public void testTransformation() throws Exception {
 		ObjectNode resultNode = applyFilter(extension);
@@ -73,6 +53,27 @@ public final class TransformationFilterTest {
 	@Test(expected = FilterException.class)
 	public void testFailTransformation() throws Exception {
 		applyFilter(fail);
+	}
+
+
+	private static final String extension =
+		"function transform(doc){"
+			+ "    if(doc != null){"
+			+ "        doc.extension = \"This is an extension\";"
+			+ "    }"
+			+ "    return doc;"
+			+ "};";
+
+	private static final String fail =
+		"function test(doc){};";
+
+
+	private DataSource createDataSource(String jsonPointer) {
+		return new DataSource(
+			"someId",
+			JsonPointer.compile(jsonPointer),
+			new ObjectNode(JsonNodeFactory.instance),
+			new DataSourceMetaData("", "", "", "", "", "", ""));
 	}
 
 
