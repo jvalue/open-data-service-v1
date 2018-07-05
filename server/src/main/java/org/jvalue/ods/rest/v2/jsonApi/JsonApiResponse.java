@@ -71,8 +71,10 @@ public class JsonApiResponse<T>  {
         public Response build() {
 
             Response.ResponseBuilder builder = Response.status(status);
-            data.ifPresent(d -> builder.entity(d));
-            //set content type later?
+            data.ifPresent(
+                    d -> builder
+                            .entity(d)
+                            .type(JsonApiMediaType.JSONAPI));
             return builder.build();
 
         }
