@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import delight.nashornsandbox.exceptions.ScriptCPUAbuseException;
 import org.apache.commons.io.FileUtils;
 import org.hamcrest.CoreMatchers;
-import org.hamcrest.core.IsInstanceOf;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -77,7 +76,7 @@ public final class NashornExecutionEngineTest {
 	@BeforeClass
 	public static void initialize() throws IOException, URISyntaxException {
 		mapper = new ObjectMapper();
-		URL resource = NashornExecutionEngineTest.class.getClassLoader().getResource("js/SampleWeatherData");
+		URL resource = NashornExecutionEngineTest.class.getClassLoader().getResource("js/SampleWeatherData.json");
 
 		File sampleWeatherData = new File(resource.toURI());
 		sampleData = FileUtils.readFileToString(sampleWeatherData);
