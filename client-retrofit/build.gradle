@@ -28,6 +28,7 @@ dependencies {
 
     testCompile "org.jmockit:jmockit:$jmockitVersion"
     testCompile "junit:junit:$junitVersion"
+	testCompile "org.jvalue.commons:utils:$jvalueCommonsVersion"
 }
 
 jaxRs2Retrofit {
