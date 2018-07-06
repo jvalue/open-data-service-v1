@@ -1,6 +1,7 @@
 package org.jvalue.ods;
 
 
+import org.jvalue.commons.utils.HttpServiceCheck;
 import org.jvalue.ods.api.DataApi;
 import org.jvalue.ods.api.DataSourceApi;
 import org.jvalue.ods.api.DataViewApi;
@@ -18,6 +19,8 @@ public final class ApiFactory {
 
 
 	public ApiFactory() {
+		HttpServiceCheck.check(SERVER_URL + "/v1/version");
+
 		restAdapter = new RestAdapter.Builder()
 				.setEndpoint(SERVER_URL)
 				.setConverter(new JacksonConverter())
