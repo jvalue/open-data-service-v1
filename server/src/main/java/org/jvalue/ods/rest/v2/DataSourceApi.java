@@ -21,6 +21,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.util.List;
 
 @Path(AbstractApi.BASE_URL)
 public final class DataSourceApi extends AbstractApi {
@@ -36,9 +37,10 @@ public final class DataSourceApi extends AbstractApi {
 
     @GET
     public Response getAllSources() {
-        return new JsonApiResponse<DataSource>(uriInfo)
+        return new JsonApiResponse<DataSource>()
+                .uriInfo(uriInfo)
                 .ok()
-                .data(sourceManager.getAll())
+                .entity(sourceManager.getAll())
                 .build();
     }
 
@@ -49,9 +51,10 @@ public final class DataSourceApi extends AbstractApi {
 
         DataSource source = sourceManager.findBySourceId(sourceId);
 
-        return new JsonApiResponse<DataSource>(uriInfo)
+        return new JsonApiResponse<DataSource>()
+                .uriInfo(uriInfo)
                 .ok()
-                .data(source)
+                .entity(source)
                 .build();
     }
 
@@ -63,9 +66,10 @@ public final class DataSourceApi extends AbstractApi {
         String id = sourceId+"_schema";
         JsonNode schema = sourceManager.findBySourceId(sourceId).getSchema();
 
-        return new JsonApiResponse<JsonNode>(uriInfo)
+        return new JsonApiResponse<JsonNode>()
+                .uriInfo(uriInfo)
                 .ok()
-                .data(schema)
+                .entity(schema)
                 .build();
     }
 
@@ -86,15 +90,17 @@ public final class DataSourceApi extends AbstractApi {
 
         if(sourceManager.isValidSourceId(sourceId)) {
             sourceManager.remove(sourceManager.findBySourceId(sourceId));
-            response = new JsonApiResponse<DataSource>(uriInfo)
+            response = new JsonApiResponse<DataSource>()
+                    .uriInfo(uriInfo)
                     .ok()
-                    .data(source)
+                    .entity(source)
                     .build();
         }
         else {
-            response = new JsonApiResponse<DataSource>(uriInfo)
+            response = new JsonApiResponse<DataSource>()
+                    .uriInfo(uriInfo)
                     .created()
-                    .data(source)
+                    .entity(source)
                     .build();
         }
         sourceManager.add(source);

@@ -1,82 +1,88 @@
 package org.jvalue.ods.rest.v2.jsonApi;
 
-
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.Collection;
 
-public class JsonApiResponse<T>  {
+public class JsonApiResponse<T> {
 
-    private final UriInfo uriInfo;
+    private UriInfo uriInfo;
+    private Response.StatusType status;
+    private JsonApiDocument<T> jsonApiEntity;
 
-    public JsonApiResponse(UriInfo uriInfo) {
+    public JsonApiResponse() {
+    }
+
+    public RequiredStatus<T> uriInfo(UriInfo uriInfo) {
         this.uriInfo = uriInfo;
+        return new Builder<>(this);
     }
 
 
-    public JsonApiResponseWithDataBuilder<T> ok() {
-        return new JsonApiResponseWithDataBuilder<T>(Response.Status.OK, uriInfo);
-    }
+    public class Builder<S> implements RequiredStatus<S>, RequiredEntity<S>, Buildable {
 
+        private final JsonApiResponse<S> instance;
 
-    public JsonApiResponseWithDataBuilder<T> created() {
-        return new JsonApiResponseWithDataBuilder<>(Response.Status.CREATED, uriInfo);
-    }
-
-    //do we need JsonApiResponses without content?
-    public JsonApiResponseBuilder<T> no_content() {
-        return new JsonApiResponseBuilder<T>(Response.Status.NO_CONTENT, uriInfo);
-    }
-
-
-    public class JsonApiResponseWithDataBuilder<R> {
-
-        protected final Response.StatusType status;
-        protected final UriInfo uriInfo;
-        protected JsonApiDocument<T> data;
-
-        private JsonApiResponseWithDataBuilder(Response.StatusType status, UriInfo uriInfo) {
-            this.status = status;
-            this.uriInfo = uriInfo;
+        public Builder(JsonApiResponse<S> instance) {
+            this.instance = instance;
         }
 
-
-        public JsonApiResponseBuilder<T> data(T entity) {
-            this.data = new JsonApiDocument<>(entity, uriInfo);
-            return new JsonApiResponseBuilder<T>(status, uriInfo, data);
+        @Override
+        public RequiredEntity<S> ok() {
+            instance.status = Response.Status.OK;
+            return this;
         }
 
-        public JsonApiResponseBuilder<T> data(Collection<T> entityCollection) {
-            this.data = new JsonApiDocument<>(entityCollection, uriInfo);
-            return new JsonApiResponseBuilder<T>(status, uriInfo, data);
+        @Override
+        public RequiredEntity<S> created() {
+            instance.status = Response.Status.CREATED;
+            return this;
         }
 
-    }
-
-    public class JsonApiResponseBuilder<S> extends JsonApiResponseWithDataBuilder<S>{
-
-        private JsonApiResponseBuilder(Response.StatusType status, UriInfo uriInfo) {
-            super(status, uriInfo);
+        @Override
+        public Buildable no_content() {
+            instance.status = Response.Status.NO_CONTENT;
+            return this;
         }
 
-
-        private JsonApiResponseBuilder(Response.StatusType status, UriInfo uriInfo, JsonApiDocument<T> data) {
-            super(status, uriInfo);
-            this.data = data;
+        @Override
+        public Buildable entity(S entity) {
+            instance.jsonApiEntity = new JsonApiDocument<>(entity, uriInfo);
+            return this;
         }
 
+        @Override
+        public Buildable entity(Collection<S> entityCollection) {
+            instance.jsonApiEntity = new JsonApiDocument<>(entityCollection, uriInfo);
+            return this;
+        }
 
+        @Override
         public Response build() {
-
-            Response.ResponseBuilder builder = Response.status(status);
-            if(data != null) {
-                builder.entity(data)
-                        .type(JsonApiMediaType.JSONAPI);
+            Response.ResponseBuilder jerseyBuilder = Response.status(status);
+            if(instance.jsonApiEntity != null) {
+                jerseyBuilder
+                        .type(JsonApiMediaType.JSONAPI)
+                        .entity(instance.jsonApiEntity);
             }
-            return builder.build();
-
-        }
-
+            return jerseyBuilder.build();        }
     }
+
+    public interface RequiredStatus<T> {
+        RequiredEntity<T> ok();
+        RequiredEntity<T> created();
+        Buildable no_content();
+    }
+
+    public interface RequiredEntity<T> {
+        Buildable entity(T entity);
+        Buildable entity(Collection<T> entity);
+    }
+
+    public interface Buildable {
+        Response build();
+    }
+
 
 }
+
