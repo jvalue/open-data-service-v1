@@ -100,7 +100,7 @@ public final class DataSourceApi extends AbstractApi {
             response = new JsonApiResponse<DataSource>()
                     .uriInfo(uriInfo)
                     .created()
-                    .entity(source)
+                    .entityIdentifier(source)
                     .build();
         }
         sourceManager.add(source);

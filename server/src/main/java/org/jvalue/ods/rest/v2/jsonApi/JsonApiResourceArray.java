@@ -19,7 +19,9 @@ public class JsonApiResourceArray<T> extends JsonApiData {
         this.jsonApiResources = new ArrayList<>();
         resources.forEach(r -> jsonApiResources
                 .add(
-                        new JsonApiResourceIdentifier<T>(r, uri.resolve(getIdFromObject(r)))));
+                        new JsonApiResourceIdentifier<T>(r,
+                                uri.resolve(getIdFromObject(r)))
+                                .initLinks()));
     }
 
     public Collection<JsonApiData<T>> getResources() {

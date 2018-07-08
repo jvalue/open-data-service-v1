@@ -19,7 +19,7 @@ public class JsonApiResponse<T> {
     }
 
 
-    public class Builder<S> implements RequiredStatus<S>, RequiredEntity<S>, Buildable {
+    public class Builder<S> implements RequiredStatus<S>, RequiredEntity<S>, RequiredEntityId<S>, Buildable {
 
         private final JsonApiResponse<S> instance;
 
@@ -34,7 +34,7 @@ public class JsonApiResponse<T> {
         }
 
         @Override
-        public RequiredEntity<S> created() {
+        public RequiredEntityId<S> created() {
             instance.status = Response.Status.CREATED;
             return this;
         }
@@ -66,17 +66,27 @@ public class JsonApiResponse<T> {
                         .entity(instance.jsonApiEntity);
             }
             return jerseyBuilder.build();        }
+
+        @Override
+        public Buildable entityIdentifier(S entity) {
+            instance.jsonApiEntity = new JsonApiDocument<>(entity, uriInfo, true);
+            return this;
+        }
     }
 
     public interface RequiredStatus<T> {
         RequiredEntity<T> ok();
-        RequiredEntity<T> created();
+        RequiredEntityId<T> created();
         Buildable no_content();
     }
 
     public interface RequiredEntity<T> {
         Buildable entity(T entity);
         Buildable entity(Collection<T> entity);
+    }
+
+    public interface RequiredEntityId<T> {
+        Buildable entityIdentifier(T entity);
     }
 
     public interface Buildable {

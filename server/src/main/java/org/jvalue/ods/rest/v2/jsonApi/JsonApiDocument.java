@@ -15,14 +15,22 @@ public class JsonApiDocument<T> {
 //    private Optional<JsonNode> errors = Optional.empty();
     private final UriInfo uriInfo;
 
+    @SuppressWarnings("unchecked")
+    public JsonApiDocument(T entity, UriInfo uriInfo, boolean isIdentifier) {
+        this.uriInfo = uriInfo;
+        if(isIdentifier) {
+            this.data = new JsonApiResourceIdentifier<>(entity, uriInfo.getAbsolutePath());
+        } else {
+            this.data = new JsonApiResource<>(entity, uriInfo.getAbsolutePath());
+        }
+        initLinks();
+    }
 
     @SuppressWarnings("unchecked")
     public JsonApiDocument(T entity,
                            UriInfo uriInfo) {
 
-        this.uriInfo = uriInfo;
-        this.data = new JsonApiResource<T>(entity, uriInfo.getAbsolutePath());
-        initLinks();
+        this(entity, uriInfo, false);
     }
 
 
