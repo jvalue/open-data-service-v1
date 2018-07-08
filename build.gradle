@@ -18,6 +18,10 @@ allprojects {
     version = '0.2.2'
 }
 
+wrapper {
+	gradleVersion = '4.7'
+}
+
 subprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
@@ -57,11 +61,6 @@ subprojects {
         maven {
             url project.ext.nexusPublicReleasesUrl
         }
-    }
-
-    // gradle wrapper
-    task wrapper(type: Wrapper) {
-        gradleVersion = '4.6'
     }
 
     // show java compiler warnings
