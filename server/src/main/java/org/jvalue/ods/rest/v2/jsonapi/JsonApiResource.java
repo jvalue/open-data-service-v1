@@ -11,7 +11,6 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.jvalue.ods.utils.StringUtils.getUriRootElement;
 
 public class JsonApiResource extends JsonApiData {
 
@@ -25,7 +24,7 @@ public class JsonApiResource extends JsonApiData {
         super(uri);
         this.entity = entity;
         this.id = entity.getId();
-        this.type = getUriRootElement(uri.toString()); //todo: use uriInfo or uri methods
+        this.type = entity.getClass().getSimpleName();
         this.meta = meta;
     }
 
