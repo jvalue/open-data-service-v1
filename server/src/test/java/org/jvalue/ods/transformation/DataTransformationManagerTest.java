@@ -20,7 +20,8 @@ public final class DataTransformationManagerTest {
 	@Mocked
 	private NashornExecutionEngine executionEngine;
 
-	ObjectNode objectNode;
+	private ObjectNode objectNode;
+	
 	@Before
 	public void setupTransformationManager() {
 		this.transformationManager = new DataTransformationManager(executionEngine);

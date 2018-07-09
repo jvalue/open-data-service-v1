@@ -28,6 +28,18 @@ public final class TransformationFilterTest {
 	private DataTransformationManager transformationManager;
 
 
+	private static final String extension =
+		"function transform(doc){"
+			+ "    if(doc != null){"
+			+ "        doc.extension = \"This is an extension\";"
+			+ "    }"
+			+ "    return doc;"
+			+ "};";
+
+	private static final String fail =
+		"function test(doc){};";
+
+
 	@Before
 	public void setUp() {
 		this.source = createDataSource("/parent/id");
@@ -54,18 +66,6 @@ public final class TransformationFilterTest {
 	public void testFailTransformation() throws Exception {
 		applyFilter(fail);
 	}
-
-
-	private static final String extension =
-		"function transform(doc){"
-			+ "    if(doc != null){"
-			+ "        doc.extension = \"This is an extension\";"
-			+ "    }"
-			+ "    return doc;"
-			+ "};";
-
-	private static final String fail =
-		"function test(doc){};";
 
 
 	private DataSource createDataSource(String jsonPointer) {
