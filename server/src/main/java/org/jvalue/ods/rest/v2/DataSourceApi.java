@@ -71,7 +71,7 @@ public final class DataSourceApi extends AbstractApi {
 //                .entity(schema)
 //                .build();
 
-        return JsonApiResponse.uriInfo(uriInfo).no_content().build();
+        return JsonApiResponse.no_content().build();
     }
 
 

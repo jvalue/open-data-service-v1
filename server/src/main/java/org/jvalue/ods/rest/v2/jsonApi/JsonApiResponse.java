@@ -8,9 +8,13 @@ import java.util.Collection;
 
 public class JsonApiResponse {
 
-    private final UriInfo uriInfo;
+    private UriInfo uriInfo;
     private Response.StatusType status;
     private JsonApiDocument jsonApiEntity;
+
+    public JsonApiResponse(Response.StatusType status) {
+        this.status = status;
+    }
 
     private JsonApiResponse(UriInfo uriInfo) {
         this.uriInfo = uriInfo;
@@ -19,6 +23,11 @@ public class JsonApiResponse {
     public static RequiredStatus uriInfo(UriInfo uriInfo) {
         return new Builder(
                 new JsonApiResponse(uriInfo));
+    }
+
+    public static Buildable no_content() {
+        return new Builder(
+                new JsonApiResponse(Response.Status.NO_CONTENT));
     }
 
 
