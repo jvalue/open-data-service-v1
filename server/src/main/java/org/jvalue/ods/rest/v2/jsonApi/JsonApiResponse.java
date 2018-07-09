@@ -8,20 +8,21 @@ import java.util.Collection;
 
 public class JsonApiResponse {
 
-    private UriInfo uriInfo;
+    private final UriInfo uriInfo;
     private Response.StatusType status;
     private JsonApiDocument jsonApiEntity;
 
-    public JsonApiResponse() {
-    }
-
-    public RequiredStatus uriInfo(UriInfo uriInfo) {
+    private JsonApiResponse(UriInfo uriInfo) {
         this.uriInfo = uriInfo;
-        return new Builder(this);
+    }
+
+    public static RequiredStatus uriInfo(UriInfo uriInfo) {
+        return new Builder(
+                new JsonApiResponse(uriInfo));
     }
 
 
-    public class Builder implements RequiredStatus, RequiredEntity, RequiredEntityId, Buildable {
+    public static class Builder implements RequiredStatus, RequiredEntity, RequiredEntityId, Buildable {
 
         private final JsonApiResponse instance;
 
@@ -49,19 +50,19 @@ public class JsonApiResponse {
 
         @Override
         public Buildable entity(JsonApiIdentifiable entity) {
-            instance.jsonApiEntity = new JsonApiDocument(entity, uriInfo);
+            instance.jsonApiEntity = new JsonApiDocument(entity, instance.uriInfo);
             return this;
         }
 
         @Override
         public Buildable entity(Collection<? extends JsonApiIdentifiable> entityCollection) {
-            instance.jsonApiEntity = new JsonApiDocument(entityCollection, uriInfo);
+            instance.jsonApiEntity = new JsonApiDocument(entityCollection, instance.uriInfo);
             return this;
         }
 
         @Override
         public Response build() {
-            Response.ResponseBuilder jerseyBuilder = Response.status(status);
+            Response.ResponseBuilder jerseyBuilder = Response.status(instance.status);
             if(instance.jsonApiEntity != null) {
                 jerseyBuilder
                         .type(JsonApiMediaType.JSONAPI)
@@ -71,7 +72,7 @@ public class JsonApiResponse {
 
         @Override
         public Buildable entityIdentifier(JsonApiIdentifiable entity) {
-            instance.jsonApiEntity = new JsonApiDocument(entity, uriInfo, true);
+            instance.jsonApiEntity = new JsonApiDocument(entity, instance.uriInfo, true);
             return this;
         }
     }

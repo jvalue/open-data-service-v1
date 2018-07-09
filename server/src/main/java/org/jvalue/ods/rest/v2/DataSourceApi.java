@@ -7,7 +7,6 @@ import com.google.inject.Inject;
 import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
-import org.jvalue.ods.api.jsonApi.JsonApiIdentifiable;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceDescription;
 import org.jvalue.ods.data.DataSourceManager;
@@ -22,7 +21,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.util.List;
 
 @Path(AbstractApi.BASE_URL)
 public final class DataSourceApi extends AbstractApi {
@@ -38,7 +36,7 @@ public final class DataSourceApi extends AbstractApi {
 
     @GET
     public Response getAllSources() {
-        return new JsonApiResponse()
+        return JsonApiResponse
                 .uriInfo(uriInfo)
                 .ok()
                 .entity(sourceManager.getAll())
@@ -52,7 +50,7 @@ public final class DataSourceApi extends AbstractApi {
 
         DataSource source = sourceManager.findBySourceId(sourceId);
 
-        return new JsonApiResponse()
+        return JsonApiResponse
                 .uriInfo(uriInfo)
                 .ok()
                 .entity(source)
@@ -73,7 +71,7 @@ public final class DataSourceApi extends AbstractApi {
 //                .entity(schema)
 //                .build();
 
-        return new JsonApiResponse().uriInfo(uriInfo).no_content().build();
+        return JsonApiResponse.uriInfo(uriInfo).no_content().build();
     }
 
 
@@ -93,14 +91,14 @@ public final class DataSourceApi extends AbstractApi {
 
         if(sourceManager.isValidSourceId(sourceId)) {
             sourceManager.remove(sourceManager.findBySourceId(sourceId));
-            response = new JsonApiResponse()
+            response = JsonApiResponse
                     .uriInfo(uriInfo)
                     .ok()
                     .entity(source)
                     .build();
         }
         else {
-            response = new JsonApiResponse()
+            response = JsonApiResponse
                     .uriInfo(uriInfo)
                     .created()
                     .entityIdentifier(source)
