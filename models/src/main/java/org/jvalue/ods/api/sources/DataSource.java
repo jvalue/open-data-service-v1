@@ -4,8 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Objects;
-import org.jvalue.ods.api.jsonApi.JsonApiIdentifiable;
-import org.jvalue.ods.api.jsonApi.JsonApiIdentifiableWithMetaData;
+import org.jvalue.ods.api.jsonapi.JsonApiIdentifiableWithMetaData;
 
 import javax.validation.constraints.NotNull;
 

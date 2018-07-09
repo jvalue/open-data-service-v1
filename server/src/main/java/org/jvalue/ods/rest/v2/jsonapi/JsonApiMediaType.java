@@ -1,4 +1,4 @@
-package org.jvalue.ods.rest.v2.jsonApi;
+package org.jvalue.ods.rest.v2.jsonapi;
 
 
 import javax.ws.rs.core.MediaType;

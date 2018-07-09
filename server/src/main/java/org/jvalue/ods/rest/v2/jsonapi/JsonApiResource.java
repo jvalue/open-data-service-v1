@@ -1,11 +1,11 @@
-package org.jvalue.ods.rest.v2.jsonApi;
+package org.jvalue.ods.rest.v2.jsonapi;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.jvalue.ods.api.jsonApi.JsonApiIdentifiable;
-import org.jvalue.ods.api.jsonApi.JsonApiIdentifiableWithMetaData;
-import org.jvalue.ods.api.jsonApi.MetaData;
+import org.jvalue.ods.api.jsonapi.JsonApiIdentifiable;
+import org.jvalue.ods.api.jsonapi.JsonApiIdentifiableWithMetaData;
+import org.jvalue.ods.api.jsonapi.MetaData;
 
 import java.net.URI;
 import java.util.HashMap;

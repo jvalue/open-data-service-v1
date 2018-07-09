@@ -1,4 +1,4 @@
-package org.jvalue.ods.rest.v2.jsonApi;
+package org.jvalue.ods.rest.v2.jsonapi;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,7 +16,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.jvalue.ods.rest.v2.jsonApi.TestEntityProvider.*;
+import static org.jvalue.ods.rest.v2.jsonapi.TestEntityProvider.*;
 
 @RunWith(JMockit.class)
 public class JsonApiResponseTest{

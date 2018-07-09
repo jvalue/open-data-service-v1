@@ -1,8 +1,8 @@
-package org.jvalue.ods.rest.v2.jsonApi;
+package org.jvalue.ods.rest.v2.jsonapi;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.jvalue.ods.api.jsonApi.JsonApiIdentifiable;
+import org.jvalue.ods.api.jsonapi.JsonApiIdentifiable;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;

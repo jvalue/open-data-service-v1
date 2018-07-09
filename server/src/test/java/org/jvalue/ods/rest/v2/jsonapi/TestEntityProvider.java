@@ -1,6 +1,6 @@
-package org.jvalue.ods.rest.v2.jsonApi;
+package org.jvalue.ods.rest.v2.jsonapi;
 
-import org.jvalue.ods.api.jsonApi.JsonApiIdentifiable;
+import org.jvalue.ods.api.jsonapi.JsonApiIdentifiable;
 
 import java.util.HashMap;
 import java.util.Map;

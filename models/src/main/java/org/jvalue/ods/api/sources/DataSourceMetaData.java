@@ -4,7 +4,7 @@ package org.jvalue.ods.api.sources;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
-import org.jvalue.ods.api.jsonApi.MetaData;
+import org.jvalue.ods.api.jsonapi.MetaData;
 
 import javax.validation.constraints.NotNull;
 
