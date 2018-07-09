@@ -1,5 +1,7 @@
 package org.jvalue.ods.rest.v2.jsonApi;
 
+import org.jvalue.ods.api.jsonApi.JsonApiIdentifiable;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,6 +73,8 @@ public class TestEntityProvider {
 
     }
 
-    public interface TestEntity {    };
+    public interface TestEntity extends JsonApiIdentifiable {
+
+    }
 }
 

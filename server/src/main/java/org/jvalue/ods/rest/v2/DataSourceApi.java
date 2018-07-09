@@ -7,6 +7,7 @@ import com.google.inject.Inject;
 import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
+import org.jvalue.ods.api.jsonApi.JsonApiIdentifiable;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceDescription;
 import org.jvalue.ods.data.DataSourceManager;
@@ -37,7 +38,7 @@ public final class DataSourceApi extends AbstractApi {
 
     @GET
     public Response getAllSources() {
-        return new JsonApiResponse<DataSource>()
+        return new JsonApiResponse()
                 .uriInfo(uriInfo)
                 .ok()
                 .entity(sourceManager.getAll())
@@ -51,7 +52,7 @@ public final class DataSourceApi extends AbstractApi {
 
         DataSource source = sourceManager.findBySourceId(sourceId);
 
-        return new JsonApiResponse<DataSource>()
+        return new JsonApiResponse()
                 .uriInfo(uriInfo)
                 .ok()
                 .entity(source)
@@ -66,11 +67,13 @@ public final class DataSourceApi extends AbstractApi {
         String id = sourceId+"_schema";
         JsonNode schema = sourceManager.findBySourceId(sourceId).getSchema();
 
-        return new JsonApiResponse<JsonNode>()
-                .uriInfo(uriInfo)
-                .ok()
-                .entity(schema)
-                .build();
+//        return new JsonApiResponse()
+//                .uriInfo(uriInfo)
+//                .ok()
+//                .entity(schema)
+//                .build();
+
+        return new JsonApiResponse().uriInfo(uriInfo).no_content().build();
     }
 
 
@@ -90,14 +93,14 @@ public final class DataSourceApi extends AbstractApi {
 
         if(sourceManager.isValidSourceId(sourceId)) {
             sourceManager.remove(sourceManager.findBySourceId(sourceId));
-            response = new JsonApiResponse<DataSource>()
+            response = new JsonApiResponse()
                     .uriInfo(uriInfo)
                     .ok()
                     .entity(source)
                     .build();
         }
         else {
-            response = new JsonApiResponse<DataSource>()
+            response = new JsonApiResponse()
                     .uriInfo(uriInfo)
                     .created()
                     .entityIdentifier(source)

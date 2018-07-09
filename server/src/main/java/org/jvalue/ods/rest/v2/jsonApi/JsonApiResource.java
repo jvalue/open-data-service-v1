@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.jvalue.ods.api.jsonApi.JsonApiIdentifiable;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -13,16 +14,16 @@ import static org.jvalue.ods.utils.JsonUtils.getIdFromObject;
 import static org.jvalue.ods.utils.JsonUtils.getPropertyValueNode;
 import static org.jvalue.ods.utils.StringUtils.getUriRootElement;
 
-public class JsonApiResource<T> extends JsonApiData {
+public class JsonApiResource extends JsonApiData {
 
     private String id;
     private final String type;
-    private final T entity;
+    private final JsonApiIdentifiable entity;
     private final JsonNode meta;
     private Map<String, URI> links;
 
 
-    public JsonApiResource(T entity,
+    public JsonApiResource(JsonApiIdentifiable entity,
                            URI uri) {
         super(uri);
         this.entity = entity;
@@ -76,7 +77,7 @@ public class JsonApiResource<T> extends JsonApiData {
 
     @JsonProperty("attributes")
     @JsonIgnoreProperties(value = {"id", "metaData"})
-    public T getEntity() {
+    public JsonApiIdentifiable getEntity() {
         return entity;
     }
 }

@@ -4,10 +4,11 @@ package org.jvalue.ods.api.sources;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
+import org.jvalue.ods.api.jsonApi.MetaData;
 
 import javax.validation.constraints.NotNull;
 
-public final class DataSourceMetaData {
+public final class DataSourceMetaData implements MetaData{
 
 	@NotNull private final String name, title, author, authorEmail, notes, url, termsOfUse;
 

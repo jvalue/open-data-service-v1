@@ -1,6 +1,7 @@
 package org.jvalue.ods.rest.v2.jsonApi;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.jvalue.ods.api.jsonApi.JsonApiIdentifiable;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -9,22 +10,22 @@ import java.util.Collection;
 import static org.jvalue.ods.utils.JsonUtils.getIdFromObject;
 
 @JsonFormat(shape = JsonFormat.Shape.ARRAY)
-public class JsonApiResourceArray<T> extends JsonApiData {
+public class JsonApiResourceArray extends JsonApiData {
 
-    private final Collection<JsonApiData<T>> jsonApiResources;
+    private final Collection<JsonApiData> jsonApiResources;
 
 
-    public JsonApiResourceArray(Collection<T> resources, URI uri) {
+    public JsonApiResourceArray(Collection<? extends JsonApiIdentifiable> resources, URI uri) {
         super(uri);
         this.jsonApiResources = new ArrayList<>();
         resources.forEach(r -> jsonApiResources
                 .add(
-                        new JsonApiResourceIdentifier<T>(r,
+                        new JsonApiResourceIdentifier(r,
                                 uri.resolve(getIdFromObject(r)))
                                 .initLinks()));
     }
 
-    public Collection<JsonApiData<T>> getResources() {
+    public Collection<JsonApiData> getResources() {
         return jsonApiResources;
     }
 

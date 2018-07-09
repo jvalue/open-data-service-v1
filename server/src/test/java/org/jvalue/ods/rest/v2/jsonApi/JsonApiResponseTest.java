@@ -35,7 +35,7 @@ public class JsonApiResponseTest{
 
 
         //Replay
-        Response ok = new JsonApiResponse<TestEntity>()
+        Response ok = new JsonApiResponse()
                 .uriInfo(uriInfo)
                 .ok()
                 .entity(minimalEntity)
@@ -67,7 +67,7 @@ public class JsonApiResponseTest{
         }
 
         //Replay
-        Response collectionOk = new JsonApiResponse<TestEntity>()
+        Response collectionOk = new JsonApiResponse()
                 .uriInfo(uriInfo)
                 .ok()
                 .entity(entityList)
@@ -90,7 +90,7 @@ public class JsonApiResponseTest{
         TestEntity testEntity = new TestEntityProvider.EntityWithAttributes();
 
         //Replay
-        Response create = new JsonApiResponse<TestEntity>()
+        Response create = new JsonApiResponse()
                 .uriInfo(uriInfo)
                 .created()
                 .entityIdentifier(testEntity)

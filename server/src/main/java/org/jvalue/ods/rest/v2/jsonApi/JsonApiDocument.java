@@ -2,45 +2,43 @@ package org.jvalue.ods.rest.v2.jsonApi;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.jvalue.ods.api.jsonApi.JsonApiIdentifiable;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.*;
 
-public class JsonApiDocument<T> {
+public class JsonApiDocument {
 
     private Map<String, URI> links = new HashMap<>();
 //    private Optional<JsonNode> meta = Optional.empty();
-    private JsonApiData<T> data;
+    private JsonApiData data;
 //    private Optional<JsonNode> errors = Optional.empty();
     private final UriInfo uriInfo;
 
-    @SuppressWarnings("unchecked")
-    public JsonApiDocument(T entity, UriInfo uriInfo, boolean isIdentifier) {
+    public JsonApiDocument(JsonApiIdentifiable entity, UriInfo uriInfo, boolean isIdentifier) {
         this.uriInfo = uriInfo;
         if(isIdentifier) {
-            this.data = new JsonApiResourceIdentifier<>(entity, uriInfo.getAbsolutePath());
+            this.data = new JsonApiResourceIdentifier(entity, uriInfo.getAbsolutePath());
         } else {
-            this.data = new JsonApiResource<>(entity, uriInfo.getAbsolutePath());
+            this.data = new JsonApiResource(entity, uriInfo.getAbsolutePath());
         }
         initLinks();
     }
 
-    @SuppressWarnings("unchecked")
-    public JsonApiDocument(T entity,
+    public JsonApiDocument(JsonApiIdentifiable entity,
                            UriInfo uriInfo) {
 
         this(entity, uriInfo, false);
     }
 
 
-    @SuppressWarnings("unchecked")
-    public JsonApiDocument(Collection<T> entityCollection,
+    public JsonApiDocument(Collection<? extends JsonApiIdentifiable> entityCollection,
                            UriInfo uriInfo) {
 
         this.uriInfo = uriInfo;
 
-        this.data = new JsonApiResourceArray<T>(entityCollection, uriInfo.getAbsolutePath());
+        this.data = new JsonApiResourceArray(entityCollection, uriInfo.getAbsolutePath());
         initLinks();
     }
 

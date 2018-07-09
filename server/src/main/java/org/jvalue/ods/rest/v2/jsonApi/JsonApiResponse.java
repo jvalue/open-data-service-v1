@@ -1,40 +1,42 @@
 package org.jvalue.ods.rest.v2.jsonApi;
 
+import org.jvalue.ods.api.jsonApi.JsonApiIdentifiable;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.Collection;
 
-public class JsonApiResponse<T> {
+public class JsonApiResponse {
 
     private UriInfo uriInfo;
     private Response.StatusType status;
-    private JsonApiDocument<T> jsonApiEntity;
+    private JsonApiDocument jsonApiEntity;
 
     public JsonApiResponse() {
     }
 
-    public RequiredStatus<T> uriInfo(UriInfo uriInfo) {
+    public RequiredStatus uriInfo(UriInfo uriInfo) {
         this.uriInfo = uriInfo;
-        return new Builder<>(this);
+        return new Builder(this);
     }
 
 
-    public class Builder<S> implements RequiredStatus<S>, RequiredEntity<S>, RequiredEntityId<S>, Buildable {
+    public class Builder implements RequiredStatus, RequiredEntity, RequiredEntityId, Buildable {
 
-        private final JsonApiResponse<S> instance;
+        private final JsonApiResponse instance;
 
-        public Builder(JsonApiResponse<S> instance) {
+        public Builder(JsonApiResponse instance) {
             this.instance = instance;
         }
 
         @Override
-        public RequiredEntity<S> ok() {
+        public RequiredEntity ok() {
             instance.status = Response.Status.OK;
             return this;
         }
 
         @Override
-        public RequiredEntityId<S> created() {
+        public RequiredEntityId created() {
             instance.status = Response.Status.CREATED;
             return this;
         }
@@ -46,14 +48,14 @@ public class JsonApiResponse<T> {
         }
 
         @Override
-        public Buildable entity(S entity) {
-            instance.jsonApiEntity = new JsonApiDocument<>(entity, uriInfo);
+        public Buildable entity(JsonApiIdentifiable entity) {
+            instance.jsonApiEntity = new JsonApiDocument(entity, uriInfo);
             return this;
         }
 
         @Override
-        public Buildable entity(Collection<S> entityCollection) {
-            instance.jsonApiEntity = new JsonApiDocument<>(entityCollection, uriInfo);
+        public Buildable entity(Collection<? extends JsonApiIdentifiable> entityCollection) {
+            instance.jsonApiEntity = new JsonApiDocument(entityCollection, uriInfo);
             return this;
         }
 
@@ -68,25 +70,25 @@ public class JsonApiResponse<T> {
             return jerseyBuilder.build();        }
 
         @Override
-        public Buildable entityIdentifier(S entity) {
-            instance.jsonApiEntity = new JsonApiDocument<>(entity, uriInfo, true);
+        public Buildable entityIdentifier(JsonApiIdentifiable entity) {
+            instance.jsonApiEntity = new JsonApiDocument(entity, uriInfo, true);
             return this;
         }
     }
 
-    public interface RequiredStatus<T> {
-        RequiredEntity<T> ok();
-        RequiredEntityId<T> created();
+    public interface RequiredStatus {
+        RequiredEntity ok();
+        RequiredEntityId created();
         Buildable no_content();
     }
 
-    public interface RequiredEntity<T> {
-        Buildable entity(T entity);
-        Buildable entity(Collection<T> entity);
+    public interface RequiredEntity {
+        Buildable entity(JsonApiIdentifiable entity);
+        Buildable entity(Collection<? extends JsonApiIdentifiable> entity);
     }
 
-    public interface RequiredEntityId<T> {
-        Buildable entityIdentifier(T entity);
+    public interface RequiredEntityId {
+        Buildable entityIdentifier(JsonApiIdentifiable entity);
     }
 
     public interface Buildable {
