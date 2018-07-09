@@ -7,7 +7,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import static org.jvalue.ods.utils.JsonUtils.getIdFromObject;
 
 @JsonFormat(shape = JsonFormat.Shape.ARRAY)
 public class JsonApiResourceArray extends JsonApiData {
@@ -21,7 +20,7 @@ public class JsonApiResourceArray extends JsonApiData {
         resources.forEach(r -> jsonApiResources
                 .add(
                         new JsonApiResourceIdentifier(r,
-                                uri.resolve(getIdFromObject(r)))
+                                uri.resolve(r.getId()))
                                 .initLinks()));
     }
 

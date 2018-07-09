@@ -7,7 +7,6 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.jvalue.ods.utils.JsonUtils.getIdFromObject;
 import static org.jvalue.ods.utils.StringUtils.getUriRootElement;
 
 public class JsonApiResourceIdentifier extends JsonApiData{
@@ -18,7 +17,7 @@ public class JsonApiResourceIdentifier extends JsonApiData{
 
     public JsonApiResourceIdentifier(JsonApiIdentifiable entity, URI uri) {
         super(uri);
-        this.id = getIdFromObject(entity);
+        this.id = entity.getId();
         this.type = getUriRootElement(uri.toString());
     }
 
