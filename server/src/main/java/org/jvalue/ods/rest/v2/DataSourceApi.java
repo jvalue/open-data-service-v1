@@ -22,72 +22,72 @@ import javax.ws.rs.core.UriInfo;
 public final class DataSourceApi extends AbstractApi {
 
 	private final DataSourceManager sourceManager;
-    @Context private UriInfo uriInfo;
+	@Context private UriInfo uriInfo;
 
-    @Inject
+	@Inject
 	public DataSourceApi(DataSourceManager sourceManager) {
 		this.sourceManager = sourceManager;
 	}
 
 
-    @GET
-    public Response getAllSources() {
-        return JsonApiResponse
-                .createGetResponse(uriInfo)
-                .data(sourceManager.getAll())
-                .build();
-    }
+	@GET
+	public Response getAllSources() {
+		return JsonApiResponse
+				.createGetResponse(uriInfo)
+				.data(sourceManager.getAll())
+				.build();
+	}
 
 
-    @GET
-    @Path("/{sourceId}")
-    public Response getSource(@PathParam("sourceId") String sourceId) {
+	@GET
+	@Path("/{sourceId}")
+	public Response getSource(@PathParam("sourceId") String sourceId) {
 
-        DataSource source = sourceManager.findBySourceId(sourceId);
+		DataSource source = sourceManager.findBySourceId(sourceId);
 
-        return JsonApiResponse
-                .createGetResponse(uriInfo)
-                .data(source)
-                .build();
-    }
-
-
-    @GET
-    @Path("/{sourceId}/schema")
-    public Response getSourceSchema(@PathParam("sourceId") String sourceId) {
-
-        String id = sourceId+"_schema";
-        DataSource source = sourceManager.findBySourceId(sourceId);
-        JsonNode schema = source.getSchema();
-
-        //TODO: return datasource as JsonAPI object with schema as only attribute.
-        return JsonApiResponse
-                .createGetResponse(uriInfo)
-                .data(source)
-                .build();
-    }
+		return JsonApiResponse
+				.createGetResponse(uriInfo)
+				.data(source)
+				.build();
+	}
 
 
-    @POST
-    @Path("/{sourceId}")
-    public Response addSource(
-            @RestrictedTo(Role.ADMIN) User user,
-            @PathParam("sourceId") String sourceId,
-            @Valid DataSourceDescription sourceDescription) {
+	@GET
+	@Path("/{sourceId}/schema")
+	public Response getSourceSchema(@PathParam("sourceId") String sourceId) {
 
-        assertDataSourceNotExist(sourceId);
+		String id = sourceId+"_schema";
+		DataSource source = sourceManager.findBySourceId(sourceId);
+		JsonNode schema = source.getSchema();
 
-        DataSource source = new DataSource(
-                sourceId,
-                sourceDescription.getDomainIdKey(),
-                sourceDescription.getSchema(),
-                sourceDescription.getMetaData());
+		//TODO: return datasource as JsonAPI object with schema as only attribute.
+		return JsonApiResponse
+				.createGetResponse(uriInfo)
+				.data(source)
+				.build();
+	}
 
-        sourceManager.add(source);
 
-        return JsonApiResponse.createPostResponse(uriInfo)
-                .data(source)
-                .build();
+	@POST
+	@Path("/{sourceId}")
+	public Response addSource(
+			@RestrictedTo(Role.ADMIN) User user,
+			@PathParam("sourceId") String sourceId,
+			@Valid DataSourceDescription sourceDescription) {
+
+		assertDataSourceNotExist(sourceId);
+
+		DataSource source = new DataSource(
+				sourceId,
+				sourceDescription.getDomainIdKey(),
+				sourceDescription.getSchema(),
+				sourceDescription.getMetaData());
+
+		sourceManager.add(source);
+
+		return JsonApiResponse.createPostResponse(uriInfo)
+				.data(source)
+				.build();
 	}
 
 
@@ -101,10 +101,10 @@ public final class DataSourceApi extends AbstractApi {
 	}
 
 	private void assertDataSourceNotExist(String sourceId) {
-        if (sourceManager.isValidSourceId(sourceId)) {
-            int statusCode = Response.Status.CONFLICT.getStatusCode();
-            throw RestUtils.createJsonFormattedException("source with id " + sourceId + " already exists", statusCode);
-        }
-    }
+		if (sourceManager.isValidSourceId(sourceId)) {
+			int statusCode = Response.Status.CONFLICT.getStatusCode();
+			throw RestUtils.createJsonFormattedException("source with id " + sourceId + " already exists", statusCode);
+		}
+	}
 
 }

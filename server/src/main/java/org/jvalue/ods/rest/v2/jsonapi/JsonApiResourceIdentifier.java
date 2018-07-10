@@ -10,36 +10,35 @@ import java.util.Map;
 
 public class JsonApiResourceIdentifier extends JsonApiData{
 
-    private final String id;
-    private final String type;
-    private Map<String, URI> links;
+	private final String id;
+	private final String type;
+	private Map<String, URI> links;
 
-    public JsonApiResourceIdentifier(JsonApiIdentifiable entity, URI uri) {
-        super(uri);
-        this.id = entity.getId();
-//        this.type = getUriRootElement(uri.toString());
-        this.type = entity.getClass().getSimpleName();
-    }
-
-
-    public JsonApiResourceIdentifier initLinks() {
-        this.links = new HashMap<>();
-        links.put("self",uri);
-        return this;
-    }
+	public JsonApiResourceIdentifier(JsonApiIdentifiable entity, URI uri) {
+		super(uri);
+		this.id = entity.getId();
+		this.type = entity.getClass().getSimpleName();
+	}
 
 
-    public String getId() {
-        return id;
-    }
+	public JsonApiResourceIdentifier initLinks() {
+		this.links = new HashMap<>();
+		links.put("self",uri);
+		return this;
+	}
 
 
-    public String getType() {
-        return type;
-    }
+	public String getId() {
+		return id;
+	}
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public Map<String, URI> getLinks() {
-        return links;
-    }
+
+	public String getType() {
+		return type;
+	}
+
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	public Map<String, URI> getLinks() {
+		return links;
+	}
 }

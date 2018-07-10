@@ -14,69 +14,69 @@ import java.util.Map;
 
 public class JsonApiResource extends JsonApiData {
 
-    private String id;
-    private final String type;
-    private final JsonApiIdentifiable entity;
-    private final MetaData meta;
-    private Map<String, URI> links;
+	private String id;
+	private final String type;
+	private final JsonApiIdentifiable entity;
+	private final MetaData meta;
+	private Map<String, URI> links;
 
-    private JsonApiResource(JsonApiIdentifiable entity, URI uri, MetaData meta) {
-        super(uri);
-        this.entity = entity;
-        this.id = entity.getId();
-        this.type = entity.getClass().getSimpleName();
-        this.meta = meta;
-    }
+	private JsonApiResource(JsonApiIdentifiable entity, URI uri, MetaData meta) {
+		super(uri);
+		this.entity = entity;
+		this.id = entity.getId();
+		this.type = entity.getClass().getSimpleName();
+		this.meta = meta;
+	}
 
-    public JsonApiResource(JsonApiIdentifiable entity,
-                           URI uri) {
-        this(entity, uri, null);
-    }
+	public JsonApiResource(JsonApiIdentifiable entity,
+						   URI uri) {
+		this(entity, uri, null);
+	}
 
-    public JsonApiResource(JsonApiIdentifiableWithMetaData entity, URI uri) {
-        this(entity, uri, entity.getMetaData());
-    }
-
-
-    public void setSelfLink(){
-        setLink("self", uri);
-    }
+	public JsonApiResource(JsonApiIdentifiableWithMetaData entity, URI uri) {
+		this(entity, uri, entity.getMetaData());
+	}
 
 
-    public void setLink(String name,
-                        URI ref) {
-        if(links == null) {
-            links = new HashMap<>();
-        }
-        links.put(name, ref);
-    }
+	public void setSelfLink(){
+		setLink("self", uri);
+	}
 
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public MetaData getMeta() {
-        return meta;
-    }
+	public void setLink(String name,
+						URI ref) {
+		if(links == null) {
+			links = new HashMap<>();
+		}
+		links.put(name, ref);
+	}
 
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public Map<String, URI> getLinks() {
-        return links;
-    }
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	public MetaData getMeta() {
+		return meta;
+	}
 
 
-    public String getId() {
-        return id;
-    }
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	public Map<String, URI> getLinks() {
+		return links;
+	}
 
 
-    public String getType() {
-        return type;
-    }
+	public String getId() {
+		return id;
+	}
 
 
-    @JsonProperty("attributes")
-    @JsonIgnoreProperties(value = {"id", "metaData"})
-    public JsonApiIdentifiable getEntity() {
-        return entity;
-    }
+	public String getType() {
+		return type;
+	}
+
+
+	@JsonProperty("attributes")
+	@JsonIgnoreProperties(value = {"id", "metaData"})
+	public JsonApiIdentifiable getEntity() {
+		return entity;
+	}
 }
