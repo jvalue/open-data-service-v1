@@ -57,7 +57,6 @@ dependencies {
     testCompile "com.squareup.okhttp:okhttp-urlconnection:$okhttpVersion"
     testCompile "com.squareup.okhttp:mockwebserver:$okhttpVersion"
     testCompile "org.jvalue.commons:couchdb-test:$jvalueCommonsVersion"
-    testCompile "org.glassfish.jersey.test-framework:jersey-test-framework-core:$jerseyVersion"
     testCompile project(':client-retrofit')
 }
 
