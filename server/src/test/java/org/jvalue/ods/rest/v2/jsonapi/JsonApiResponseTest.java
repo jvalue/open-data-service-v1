@@ -92,7 +92,6 @@ public class JsonApiResponseTest{
         Response create = JsonApiResponse
                 .createPostResponse(uriInfo)
                 .data(testEntity)
-                .asIdentifier()
                 .build();
 
         //Verify
@@ -112,7 +111,7 @@ public class JsonApiResponseTest{
         Response ok = JsonApiResponse
                 .createGetResponse(uriInfo)
                 .data(testEntity)
-                .asIdentifier()
+                .toIdentifier()
                 .build();
 
         //Verify

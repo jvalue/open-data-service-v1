@@ -11,13 +11,11 @@ import java.util.*;
 public abstract class JsonApiDocument {
 
     protected Map<String, URI> links = new HashMap<>();
-    protected boolean isIdentifier;
     protected final UriInfo uriInfo;
 
     public JsonApiDocument(UriInfo uriInfo) {
         this.uriInfo = uriInfo;
-        this.isIdentifier = false;
-        initLinks();
+        links.put("self", uriInfo.getAbsolutePath());
     }
 
     public Map<String, URI> getLinks() {
@@ -29,27 +27,8 @@ public abstract class JsonApiDocument {
     public abstract Object getData();
 
     /**
-     * if true, data is serialized using only type, id and selflink (JsonApiIdentifierObject)
-     * @param isIdentifier
+     * if called, data is serialized using only type, id and selflink (JsonApiIdentifierObject)
      */
-    public void setIdentifier(boolean isIdentifier){
-        this.isIdentifier = isIdentifier;
-    }
-
-    /**
-     * Initializes this documents links, i.e. adds a link to this documents endpoint.
-     * If the document contains an array of resource objects, the method will add a selflink to each
-     * contained resource object.
-     */
-    private void initLinks() {
-
-        links.put("self", uriInfo.getAbsolutePath());
-
-//        if(data instanceof JsonApiResourceArray) {
-//           ((JsonApiResourceArray<T>) data).getResources()
-//                   .forEach(r -> r.setSelfLink());
-//
-//        }
-    }
+    public abstract void toIdentifier();
 
 }

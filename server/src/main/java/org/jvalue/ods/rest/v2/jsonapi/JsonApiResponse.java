@@ -79,8 +79,8 @@ public class JsonApiResponse {
 		}
 
         @Override
-        public Buildable asIdentifier() {
-            instance.jsonApiEntity.setIdentifier(true);
+        public Buildable toIdentifier() {
+            instance.jsonApiEntity.toIdentifier();
             return this;
         }
 
@@ -95,7 +95,7 @@ public class JsonApiResponse {
 
 	public interface Buildable {
 		Response build();
-		Buildable asIdentifier();
+		Buildable toIdentifier();
 		Buildable addLink(String name, String url);
 		Buildable addRelationship(JsonApiIdentifiable entity);
 	}

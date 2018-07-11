@@ -34,17 +34,17 @@ public class ObjCollectionDocument extends JsonApiDocument {
         return uriInfo.getAbsolutePath().resolve(obj.getId());
     }
 
+
     @Override
-    public void setIdentifier(boolean isIdentifier) {
-        super.setIdentifier(isIdentifier);
+    public void toIdentifier() {
 
-        List<JsonApiData> newData = new ArrayList<>();
-        if(isIdentifier) {
-            data.forEach(e -> newData.add(e.toIdentifier()) /*convert to identifier*/);
-        }
+        List<JsonApiData> identifierData = new ArrayList<>();
 
-        data = newData;
+        data.forEach(e -> identifierData.add(e.toIdentifier()) /*convert to identifier*/);
+
+        data = identifierData;
     }
+
 
     @Override
     public Object getData() {
