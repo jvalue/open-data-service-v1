@@ -36,9 +36,8 @@ public class JsonApiResponseTest{
 
         //Replay
         Response ok = JsonApiResponse
-                .uriInfo(uriInfo)
-                .ok()
-                .entity(minimalEntity)
+                .createGetResponse(uriInfo)
+                .data(minimalEntity)
                 .build();
 
 
@@ -68,9 +67,8 @@ public class JsonApiResponseTest{
 
         //Replay
         Response collectionOk = JsonApiResponse
-                .uriInfo(uriInfo)
-                .ok()
-                .entity(entityList)
+                .createGetResponse(uriInfo)
+                .data(entityList)
                 .build();
 
         //Verify
@@ -91,9 +89,9 @@ public class JsonApiResponseTest{
 
         //Replay
         Response create = JsonApiResponse
-                .uriInfo(uriInfo)
-                .created()
-                .entityIdentifier(testEntity)
+                .createPostResponse(uriInfo)
+                .data(testEntity)
+                .asIdentifier()
                 .build();
 
         //Verify

@@ -14,6 +14,7 @@ public class JsonApiResponse {
 
 	private JsonApiResponse(UriInfo uriInfo, Response.StatusType statusCode) {
 		this.uriInfo = uriInfo;
+		this.statusCode = statusCode;
 	}
 
 	public static RequiredEntity createGetResponse(UriInfo uriInfo) {
@@ -25,17 +26,13 @@ public class JsonApiResponse {
 		return new Builder(new JsonApiResponse(uriInfo, Response.Status.CREATED));
 	}
 
+
 	public static RequiredEntity createPutResponse(UriInfo uriInfo) {
 		return new Builder(new JsonApiResponse(uriInfo, Response.Status.OK));
 	}
 
 
-	public static RequiredEntity createDeleteResponse(UriInfo uriInfo) {
-		return new Builder(new JsonApiResponse(uriInfo, Response.Status.OK));
-	}
-
-
-	public static class Builder implements RequiredEntity, RequiredEntityId, Buildable {
+	public static class Builder implements RequiredEntity, Buildable {
 
 		private final JsonApiResponse instance;
 
@@ -46,25 +43,25 @@ public class JsonApiResponse {
 
 		@Override
 		public Buildable data(JsonApiIdentifiable entity) {
-			instance.jsonApiEntity = new JsonApiDocument(entity, instance.uriInfo);
+			instance.jsonApiEntity = new SingleObjectDocument(entity, instance.uriInfo);
 			return this;
 		}
 
 
 		@Override
 		public Buildable data(Collection<? extends JsonApiIdentifiable> entityCollection) {
-			instance.jsonApiEntity = new JsonApiDocument(entityCollection, instance.uriInfo);
+			instance.jsonApiEntity = new ObjCollectionDocument(entityCollection, instance.uriInfo);
 			return this;
 		}
 
 
-		public Buildable addLLink(String name, String url) {
+        public Buildable addLink(String name, String url) {
 			//TODO: impl.
 			return this;
 		}
 
 
-		public Buildable addLRelationship(JsonApiIdentifiable entity) {
+		public Buildable addRelationship(JsonApiIdentifiable entity) {
 			//TODO: impl.
 			return this;
 		}
@@ -81,30 +78,26 @@ public class JsonApiResponse {
 			return responseBuilder.build();
 		}
 
+        @Override
+        public Buildable asIdentifier() {
+            instance.jsonApiEntity.setIdentifier(true);
+            return this;
+        }
 
-		@Override
-		public Buildable entityIdentifier(JsonApiIdentifiable entity) {
-			instance.jsonApiEntity = new JsonApiDocument(entity, instance.uriInfo, true);
-			return this;
-		}
-	}
+    }
 
 
 	public interface RequiredEntity {
 		Buildable data(JsonApiIdentifiable entity);
-		Buildable data(Collection<? extends JsonApiIdentifiable> entity);
-	}
-
-
-	public interface RequiredEntityId {
-		Buildable entityIdentifier(JsonApiIdentifiable entity);
+        Buildable data(Collection<? extends JsonApiIdentifiable> entityCollection);
 	}
 
 
 	public interface Buildable {
 		Response build();
-		Buildable addLLink(String name, String url);
-		Buildable addLRelationship(JsonApiIdentifiable entity);
+		Buildable asIdentifier();
+		Buildable addLink(String name, String url);
+		Buildable addRelationship(JsonApiIdentifiable entity);
 	}
 
 }

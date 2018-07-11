@@ -7,24 +7,20 @@ import org.jvalue.ods.api.jsonapi.JsonApiIdentifiable;
 import org.jvalue.ods.api.jsonapi.JsonApiIdentifiableWithMetaData;
 import org.jvalue.ods.api.jsonapi.MetaData;
 
+import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
 
-public class JsonApiResource extends JsonApiData {
+public class JsonApiResource extends JsonApiData{
 
-	private String id;
-	private final String type;
 	private final JsonApiIdentifiable entity;
 	private final MetaData meta;
-	private Map<String, URI> links;
 
 	private JsonApiResource(JsonApiIdentifiable entity, URI uri, MetaData meta) {
-		super(uri);
+		super(uri, entity);
 		this.entity = entity;
-		this.id = entity.getId();
-		this.type = entity.getClass().getSimpleName();
 		this.meta = meta;
 	}
 
@@ -37,9 +33,14 @@ public class JsonApiResource extends JsonApiData {
 		this(entity, uri, entity.getMetaData());
 	}
 
+	public JsonApiResourceIdentifier toIdentifier() {
+	    return new JsonApiResourceIdentifier(entity, uri);
+    }
 
-	public void setSelfLink(){
+
+	public JsonApiData setSelfLink(){
 		setLink("self", uri);
+		return this;
 	}
 
 

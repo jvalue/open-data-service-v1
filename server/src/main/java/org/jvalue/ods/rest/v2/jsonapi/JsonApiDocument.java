@@ -8,52 +8,33 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.*;
 
-public class JsonApiDocument {
+public abstract class JsonApiDocument {
 
-    private Map<String, URI> links = new HashMap<>();
-//    private Optional<JsonNode> meta = Optional.empty();
-    private JsonApiData data;
-//    private Optional<JsonNode> errors = Optional.empty();
-    private final UriInfo uriInfo;
+    protected Map<String, URI> links = new HashMap<>();
+    protected boolean isIdentifier;
+    protected final UriInfo uriInfo;
 
-    public JsonApiDocument(JsonApiIdentifiable entity, UriInfo uriInfo, boolean isIdentifier) {
+    public JsonApiDocument(UriInfo uriInfo) {
         this.uriInfo = uriInfo;
-        if(isIdentifier) {
-            this.data = new JsonApiResourceIdentifier(entity, uriInfo.getAbsolutePath());
-        } else {
-            this.data = new JsonApiResource(entity, uriInfo.getAbsolutePath());
-        }
+        this.isIdentifier = false;
         initLinks();
     }
-
-    public JsonApiDocument(JsonApiIdentifiable entity,
-                           UriInfo uriInfo) {
-
-        this(entity, uriInfo, false);
-    }
-
-
-    public JsonApiDocument(Collection<? extends JsonApiIdentifiable> entityCollection,
-                           UriInfo uriInfo) {
-
-        this.uriInfo = uriInfo;
-
-        this.data = new JsonApiResourceArray(entityCollection, uriInfo.getAbsolutePath());
-        initLinks();
-    }
-
 
     public Map<String, URI> getLinks() {
         return links;
     }
 
-
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty("data")
-    public Object getData() {
-        return data;
-    }
+    public abstract Object getData();
 
+    /**
+     * if true, data is serialized using only type, id and selflink (JsonApiIdentifierObject)
+     * @param isIdentifier
+     */
+    public void setIdentifier(boolean isIdentifier){
+        this.isIdentifier = isIdentifier;
+    }
 
     /**
      * Initializes this documents links, i.e. adds a link to this documents endpoint.
