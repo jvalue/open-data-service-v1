@@ -4,6 +4,7 @@ import org.jvalue.ods.api.jsonapi.JsonApiIdentifiable;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 import java.util.Collection;
 
 public class JsonApiResponse {
@@ -55,8 +56,8 @@ public class JsonApiResponse {
 		}
 
 
-		public Buildable addLink(String name, String url) {
-			//TODO: impl.
+		public Buildable addLink(String name, URI ref) {
+			instance.jsonApiEntity.addLink(name, ref);
 			return this;
 		}
 
@@ -84,6 +85,7 @@ public class JsonApiResponse {
 			return this;
 		}
 
+
 	}
 
 
@@ -99,7 +101,7 @@ public class JsonApiResponse {
 
 		Buildable toIdentifier();
 
-		Buildable addLink(String name, String url);
+		Buildable addLink(String name, URI ref);
 
 		Buildable addRelationship(JsonApiIdentifiable entity);
 	}

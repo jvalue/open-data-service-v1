@@ -17,6 +17,11 @@ public class ObjCollectionDocument extends JsonApiDocument {
 		this.data = createJsonApiCollection(entityCollection);
 	}
 
+	public ObjCollectionDocument(List<JsonApiData> data, UriInfo uriInfo) {
+		super(uriInfo);
+		this.data = data;
+	}
+
 	private List<JsonApiData> createJsonApiCollection(Collection<? extends JsonApiIdentifiable> entityCollection) {
 
 		List<JsonApiData> jResourceList = new ArrayList<>(entityCollection.size());
@@ -36,13 +41,13 @@ public class ObjCollectionDocument extends JsonApiDocument {
 
 
 	@Override
-	public void toIdentifier() {
+	public ObjCollectionDocument toIdentifier() {
 
 		List<JsonApiData> identifierData = new ArrayList<>();
 
-		data.forEach(e -> identifierData.add(e.toIdentifier()) /*convert to identifier*/);
+		data.forEach(e -> identifierData.add(e.toIdentifier()));
 
-		data = identifierData;
+		return new ObjCollectionDocument(identifierData, uriInfo);
 	}
 
 

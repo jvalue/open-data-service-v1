@@ -7,7 +7,7 @@ import javax.ws.rs.core.UriInfo;
 public class SingleObjectDocument extends JsonApiDocument {
 
 
-	private JsonApiData data;
+	private final JsonApiData data;
 
 
 	public SingleObjectDocument(JsonApiIdentifiable data, UriInfo uriInfo) {
@@ -15,10 +15,14 @@ public class SingleObjectDocument extends JsonApiDocument {
 		this.data = new JsonApiResource(data, uriInfo.getAbsolutePath());
 	}
 
+	public SingleObjectDocument(JsonApiData data, UriInfo uriInfo) {
+		super(uriInfo);
+		this.data = data;
+	}
 
 	@Override
-	public void toIdentifier() {
-		data = data.toIdentifier();
+	public JsonApiDocument toIdentifier() {
+		return new SingleObjectDocument(data.toIdentifier(), uriInfo);
 	}
 
 

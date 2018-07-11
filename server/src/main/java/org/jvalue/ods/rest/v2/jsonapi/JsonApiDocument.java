@@ -26,9 +26,16 @@ public abstract class JsonApiDocument {
 	@JsonProperty("data")
 	public abstract Object getData();
 
+
 	/**
 	 * if called, data is serialized using only type, id and selflink (JsonApiIdentifierObject)
 	 */
-	public abstract void toIdentifier();
+	public abstract JsonApiDocument toIdentifier();
+
+
+	public void addLink(String name, URI ref) {
+		links.put(name, ref);
+	}
+
 
 }
