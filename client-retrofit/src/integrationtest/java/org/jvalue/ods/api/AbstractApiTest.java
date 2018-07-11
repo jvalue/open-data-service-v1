@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.junit.After;
 import org.junit.Before;
+import org.jvalue.commons.utils.HttpServiceCheck;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceDescription;
 import org.jvalue.ods.api.sources.DataSourceMetaData;
@@ -27,6 +28,8 @@ public abstract class AbstractApiTest {
 	protected final String sourceId = getClass().getSimpleName();
 	protected final DataSourceDescription dataSourceDescription = new DataSourceDescription(domainIdKey, schema, metaData);
 
+	private static final String ODS_API_URL = "http://localhost:8080/ods/api";
+
 	protected DataSource dataSource;
 
 
@@ -36,9 +39,11 @@ public abstract class AbstractApiTest {
 
 	@Before
 	public void setup() {
+		HttpServiceCheck.check(ODS_API_URL + "/v1/version");
+
 		RestAdapter restAdapter = new RestAdapter.Builder()
 				.setConverter(new JacksonConverter())
-				.setEndpoint("http://localhost:8080/ods/api")
+				.setEndpoint(ODS_API_URL)
 				.setRequestInterceptor(new RequestInterceptor() {
 					@Override
 					public void intercept(RequestFacade request) {

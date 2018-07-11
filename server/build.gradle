@@ -35,7 +35,7 @@ dependencies {
     compile "org.openstreetmap.osmosis:osmosis-xml:$osmosisVersion"
     compile "org.openstreetmap.osmosis:osmosis-pbf:$osmosisVersion"
     compile "org.jsoup:jsoup:$jsoupVersion"
-    compile "org.apache.commons:commons-lang3:$apacheCommonsLangVersion"
+    compile "org.apache.commons:commons-text:$apacheCommonsTextVersion"
     compile "org.apache.commons:commons-csv:$apacheCommonsCsvVersion"
     compile "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jacksonCoreVersion"
     compile "com.hubspot.jackson:jackson-jaxrs-propertyfiltering:$jacksonJaxrsVersion"
