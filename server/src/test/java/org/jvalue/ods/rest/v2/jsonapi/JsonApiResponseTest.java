@@ -27,7 +27,7 @@ public class JsonApiResponseTest{
 
 
     @Test
-    public void testResponseOkSingleObject() {
+    public void testGetResponse() {
         //Record
         new Expectations() {{
             uriInfo.getAbsolutePath(); result = URI.create(ENTITY_PATH);
@@ -53,7 +53,7 @@ public class JsonApiResponseTest{
 
 
     @Test
-    public void testResponseOkCollection() {
+    public void testGetResponseCollection() {
 
         final int NR_ENTITIES = 10;
 
@@ -77,11 +77,10 @@ public class JsonApiResponseTest{
         JsonNode jArray = extractJsonEntity(collectionOk);
         Assert.assertTrue(jArray.get("data").isArray());
 
-        //todo: add more verification (at least id & type for each collection element)
     }
 
 
-    public void testResponseCreated() {
+    public void testPostResponse() {
         //Record
         new Expectations() {{
             uriInfo.getAbsolutePath(); result = URI.create(ENTITY_PATH);
@@ -100,7 +99,7 @@ public class JsonApiResponseTest{
     }
 
     @Test
-    public void testAsIdentifier() {
+    public void testToIdentifier() {
         //Record
         new Expectations() {{
             uriInfo.getAbsolutePath(); result = URI.create(ENTITY_PATH);
@@ -121,14 +120,19 @@ public class JsonApiResponseTest{
         assertHasValidData(identifierNode);
     }
 
+
+    /*
+    TEST UTILS
+     */
     private static JsonNode extractJsonEntity(Response from) {
         return objectMapper.valueToTree(from.getEntity());
     }
 
 
-    private int countFields(JsonNode node) {
+    private static int countFields(JsonNode node) {
         return Iterators.size(node.fieldNames());
     }
+
 
     private static void assertIsValidJsonApiDataResponse(Response response) {
         Assert.assertTrue(response.getEntity() instanceof JsonApiDocument);
@@ -141,7 +145,5 @@ public class JsonApiResponseTest{
         Assert.assertTrue(jsonApiDocument.get("data").has("id"));
         Assert.assertTrue(jsonApiDocument.get("data").has("type"));
     }
-
-    //todo: add assertions for single data and collection data to ensure existence of id and type attributes
 
 }
