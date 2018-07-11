@@ -13,7 +13,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-    
+
  */
 package org.jvalue.ods.processor.adapter.domain;
 
@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.assistedinject.Assisted;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
@@ -70,7 +70,6 @@ public final class PegelPortalMvSourceAdapter extends AbstractSourceAdapter {
 		schema.put(KEY_EFFLUENT_UNIT, String.class);
 		schema.put(KEY_AGENCY, String.class);
 	}
-
 	
 
 	@Inject

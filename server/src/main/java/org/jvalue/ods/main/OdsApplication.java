@@ -18,6 +18,7 @@ import org.jvalue.commons.auth.rest.UnauthorizedExceptionMapper;
 import org.jvalue.commons.couchdb.rest.DbExceptionMapper;
 import org.jvalue.commons.rest.JsonExceptionMapper;
 import org.jvalue.commons.rest.NotFoundExceptionMapper;
+import org.jvalue.commons.utils.HttpServiceCheck;
 import org.jvalue.ods.admin.monitoring.DbHealthCheck;
 import org.jvalue.ods.admin.monitoring.MonitoringModule;
 import org.jvalue.ods.admin.rest.AdminFilterChainApi;
@@ -73,6 +74,8 @@ public final class OdsApplication extends Application<OdsConfig> {
 	@Override
 	@Context
 	public void run(OdsConfig configuration, Environment environment) {
+		assertCouchDbIsReady(configuration.getCouchDb().getUrl());
+
 		Injector injector = Guice.createInjector(
 				new MonitoringModule(environment.metrics()),
 				new ConfigModule(configuration),
@@ -136,6 +139,14 @@ public final class OdsApplication extends Application<OdsConfig> {
 		for (BasicAuthUserDescription user : userList) {
 			if (!userManager.contains(user.getEmail())) userManager.add(user);
 		}
+	}
+
+
+	private void assertCouchDbIsReady(String couchDbUrl) {
+		if (!HttpServiceCheck.check(couchDbUrl)) {
+			throw new RuntimeException("CouchDB service is not ready [" + couchDbUrl+ "]");
+		}
+
 	}
 
 }
