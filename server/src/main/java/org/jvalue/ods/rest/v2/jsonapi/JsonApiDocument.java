@@ -10,25 +10,25 @@ import java.util.*;
 
 public abstract class JsonApiDocument {
 
-    protected Map<String, URI> links = new HashMap<>();
-    protected final UriInfo uriInfo;
+	protected Map<String, URI> links = new HashMap<>();
+	protected final UriInfo uriInfo;
 
-    public JsonApiDocument(UriInfo uriInfo) {
-        this.uriInfo = uriInfo;
-        links.put("self", uriInfo.getAbsolutePath());
-    }
+	public JsonApiDocument(UriInfo uriInfo) {
+		this.uriInfo = uriInfo;
+		links.put("self", uriInfo.getAbsolutePath());
+	}
 
-    public Map<String, URI> getLinks() {
-        return links;
-    }
+	public Map<String, URI> getLinks() {
+		return links;
+	}
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonProperty("data")
-    public abstract Object getData();
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	@JsonProperty("data")
+	public abstract Object getData();
 
-    /**
-     * if called, data is serialized using only type, id and selflink (JsonApiIdentifierObject)
-     */
-    public abstract void toIdentifier();
+	/**
+	 * if called, data is serialized using only type, id and selflink (JsonApiIdentifierObject)
+	 */
+	public abstract void toIdentifier();
 
 }

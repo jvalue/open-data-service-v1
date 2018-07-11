@@ -22,7 +22,8 @@ import javax.ws.rs.core.UriInfo;
 public final class DataSourceApi extends AbstractApi {
 
 	private final DataSourceManager sourceManager;
-	@Context private UriInfo uriInfo;
+	@Context
+	private UriInfo uriInfo;
 
 	@Inject
 	public DataSourceApi(DataSourceManager sourceManager) {
@@ -56,7 +57,7 @@ public final class DataSourceApi extends AbstractApi {
 	@Path("/{sourceId}/schema")
 	public Response getSourceSchema(@PathParam("sourceId") String sourceId) {
 
-		String id = sourceId+"_schema";
+		String id = sourceId + "_schema";
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		JsonNode schema = source.getSchema();
 

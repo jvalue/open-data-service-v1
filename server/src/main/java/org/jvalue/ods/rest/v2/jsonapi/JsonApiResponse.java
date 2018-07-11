@@ -55,7 +55,7 @@ public class JsonApiResponse {
 		}
 
 
-        public Buildable addLink(String name, String url) {
+		public Buildable addLink(String name, String url) {
 			//TODO: impl.
 			return this;
 		}
@@ -70,7 +70,7 @@ public class JsonApiResponse {
 		@Override
 		public Response build() {
 			Response.ResponseBuilder responseBuilder = Response.status(instance.statusCode);
-			if(instance.jsonApiEntity != null) {
+			if (instance.jsonApiEntity != null) {
 				responseBuilder
 						.type(JsonApiMediaType.JSONAPI)
 						.entity(instance.jsonApiEntity);
@@ -78,25 +78,29 @@ public class JsonApiResponse {
 			return responseBuilder.build();
 		}
 
-        @Override
-        public Buildable toIdentifier() {
-            instance.jsonApiEntity.toIdentifier();
-            return this;
-        }
+		@Override
+		public Buildable toIdentifier() {
+			instance.jsonApiEntity.toIdentifier();
+			return this;
+		}
 
-    }
+	}
 
 
 	public interface RequiredEntity {
 		Buildable data(JsonApiIdentifiable entity);
-        Buildable data(Collection<? extends JsonApiIdentifiable> entityCollection);
+
+		Buildable data(Collection<? extends JsonApiIdentifiable> entityCollection);
 	}
 
 
 	public interface Buildable {
 		Response build();
+
 		Buildable toIdentifier();
+
 		Buildable addLink(String name, String url);
+
 		Buildable addRelationship(JsonApiIdentifiable entity);
 	}
 

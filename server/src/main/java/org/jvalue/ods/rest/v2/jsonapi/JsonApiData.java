@@ -8,16 +8,16 @@ import java.util.Map;
 
 public abstract class JsonApiData {
 
-    protected final URI uri;
-    protected final String id;
-    protected final String type;
-    protected Map<String, URI> links;
+	protected final URI uri;
+	protected final String id;
+	protected final String type;
+	protected Map<String, URI> links;
 
-    public JsonApiData(URI uri, JsonApiIdentifiable entity) {
-        this.uri = uri;
-        this.id = entity.getId();
-        this.type = entity.getClass().getSimpleName();
-    }
+	public JsonApiData(URI uri, JsonApiIdentifiable entity) {
+		this.uri = uri;
+		this.id = entity.getId();
+		this.type = entity.getClass().getSimpleName();
+	}
 
-    protected abstract JsonApiResourceIdentifier toIdentifier();
+	protected abstract JsonApiResourceIdentifier toIdentifier();
 }

@@ -29,8 +29,8 @@ public class JsonApiResourceIdentifier extends JsonApiData {
 		return links;
 	}
 
-    @Override
-    protected JsonApiResourceIdentifier toIdentifier() {
-        return this;
-    }
+	@Override
+	protected JsonApiResourceIdentifier toIdentifier() {
+		return this;
+	}
 }

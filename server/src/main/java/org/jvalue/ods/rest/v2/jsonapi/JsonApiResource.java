@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class JsonApiResource extends JsonApiData{
+public class JsonApiResource extends JsonApiData {
 
 	private final JsonApiIdentifiable entity;
 	private final MetaData meta;
@@ -34,11 +34,11 @@ public class JsonApiResource extends JsonApiData{
 	}
 
 	public JsonApiResourceIdentifier toIdentifier() {
-	    return new JsonApiResourceIdentifier(entity, uri);
-    }
+		return new JsonApiResourceIdentifier(entity, uri);
+	}
 
 
-	public JsonApiData setSelfLink(){
+	public JsonApiData setSelfLink() {
 		setLink("self", uri);
 		return this;
 	}
@@ -46,7 +46,7 @@ public class JsonApiResource extends JsonApiData{
 
 	public void setLink(String name,
 						URI ref) {
-		if(links == null) {
+		if (links == null) {
 			links = new HashMap<>();
 		}
 		links.put(name, ref);
