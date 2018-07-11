@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static org.jvalue.ods.rest.v2.jsonapi.TestEntityProvider.*;
@@ -43,9 +44,9 @@ public class JsonApiResponseTest{
 
         //Verify
         assertIsValidJsonApiDataResponse(ok);
-        JsonNode jEntity = createJson(ok.getEntity());
+        JsonNode jEntity = extractJsonEntity(ok);
         Assert.assertEquals(TEST_ID, jEntity.get("data").get("id").textValue());
-        Assert.assertEquals(TEST_COLLECTION, jEntity.get("data").get("type").textValue());
+        Assert.assertEquals("MinimalEntity", jEntity.get("data").get("type").textValue());
         Assert.assertEquals(ENTITY_PATH, jEntity.get("links").get("self").textValue());
         Assert.assertTrue(jEntity.get("data").has("attributes"));
     }
@@ -73,19 +74,19 @@ public class JsonApiResponseTest{
 
         //Verify
         assertIsValidJsonApiDataResponse(collectionOk);
-        JsonNode jArray = createJson(collectionOk.getEntity());
+        JsonNode jArray = extractJsonEntity(collectionOk);
         Assert.assertTrue(jArray.get("data").isArray());
+
         //todo: add more verification (at least id & type for each collection element)
     }
 
 
-    @Test(timeout = 5000)
     public void testResponseCreated() {
         //Record
         new Expectations() {{
             uriInfo.getAbsolutePath(); result = URI.create(ENTITY_PATH);
         }};
-        TestEntity testEntity = new TestEntityProvider.EntityWithAttributes();
+        TestEntity testEntity = new EntityWithAttributes();
 
         //Replay
         Response create = JsonApiResponse
@@ -95,14 +96,34 @@ public class JsonApiResponseTest{
                 .build();
 
         //Verify
-        assertIsValidJsonApiDataResponse(create);
-        JsonNode jEntity = createJson(create.getEntity());
-        Assert.assertEquals(2, countFields(jEntity.get("data")));
+        assertIsValidJsonApiDataResponse(create);;
+        assertHasValidData(extractJsonEntity(create));
     }
 
+    @Test
+    public void testAsIdentifier() {
+        //Record
+        new Expectations() {{
+            uriInfo.getAbsolutePath(); result = URI.create(ENTITY_PATH);
+        }};
+        TestEntity testEntity = new EntityWithAttributes();
 
-    private static JsonNode createJson(Object from) {
-        return objectMapper.valueToTree(from);
+        //Replay
+        Response ok = JsonApiResponse
+                .createGetResponse(uriInfo)
+                .data(testEntity)
+                .asIdentifier()
+                .build();
+
+        //Verify
+        assertIsValidJsonApiDataResponse(ok);
+        JsonNode identifierNode = extractJsonEntity(ok);
+        Assert.assertEquals(2, countFields(identifierNode));
+        assertHasValidData(identifierNode);
+    }
+
+    private static JsonNode extractJsonEntity(Response from) {
+        return objectMapper.valueToTree(from.getEntity());
     }
 
 
@@ -113,7 +134,13 @@ public class JsonApiResponseTest{
     private static void assertIsValidJsonApiDataResponse(Response response) {
         Assert.assertTrue(response.getEntity() instanceof JsonApiDocument);
         JsonApiDocument jDoc = (JsonApiDocument) response.getEntity();
-        Assert.assertTrue(jDoc.getData() instanceof JsonApiData);
+        Assert.assertTrue(jDoc.getData() instanceof JsonApiData || jDoc.getData() instanceof Collection);
+    }
+
+    private static void assertHasValidData(JsonNode jsonApiDocument) {
+        Assert.assertTrue(jsonApiDocument.has("data"));
+        Assert.assertTrue(jsonApiDocument.get("data").has("id"));
+        Assert.assertTrue(jsonApiDocument.get("data").has("type"));
     }
 
     //todo: add assertions for single data and collection data to ensure existence of id and type attributes
