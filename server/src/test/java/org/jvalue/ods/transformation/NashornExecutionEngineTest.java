@@ -2,28 +2,34 @@ package org.jvalue.ods.transformation;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import delight.nashornsandbox.exceptions.ScriptCPUAbuseException;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.jvalue.commons.utils.Log;
 
 import javax.script.ScriptException;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Paths;
 
 public final class NashornExecutionEngineTest {
 
 	private static final String extension =
 		"function transform(doc){"
-			+ "    if(doc.main != null){"
-			+ "        doc.main.extension = \"This is an extension\";"
+			+ "    if(doc != null){"
+			+ "        doc.extension = \"This is an extension\";"
 			+ "    }"
 			+ "    return doc;"
 			+ "};";
@@ -31,26 +37,67 @@ public final class NashornExecutionEngineTest {
 	private static final String reduction =
 		"function transform(doc){"
 			+ "if(doc != null){"
-			+ "		var result = Object.keys(doc).reduce("
+			+ "		return doc.timeseries[0].characteristicValues.reduce("
 			+ "			function(previous, key) {"
 			+ "				previous.keycount ++;"
 			+ "				return previous;"
 			+ "			}, {keycount: 0});"
-			+ "			return result;"
 			+ "		}"
 			+ "}";
 
 	private static final String map =
 		"function transform(doc){"
 			+ "if(doc != null){"
-			+ "		Object.keys(doc).map("
+			+ "		Object.keys(doc.water).map("
 			+ "			function(key, index) {"
-			+ "				if(key === 'coord' || key === 'main'){ "
-			+ "					doc[key].newEntry = \"New Entry\";"
-			+ "				}"
+			+ 				"doc.water[key] = \"RHEIN\""
 			+ "			});"
-			+ "	}"
-			+ " return doc;"
+			+ "		}"
+			+ "     return doc;"
+			+ "}";
+
+	private static final String filter =
+		"function transform(doc){"
+			+ "var new_doc = {};"
+			+ "if(doc != null){"
+			+ "		new_doc.stringValues = Object.keys(doc).filter("
+			+ "			function(key) {"
+			+ 				"return typeof doc[key] === 'string'"
+			+ "			});"
+			+ "		}"
+			+ "     return new_doc;"
+			+ "}";
+
+	private static final String concatStrings =
+		"function transform(doc){"
+			+ "if(doc != null){"
+			+ "		doc.combinedCoords = doc.longitude + ', ' + doc.latitude"
+			+ "	}" +
+			"   return doc;"
+			+ "}";
+
+	private static final String arithmeticOperations =
+		"function sum(valueArray){"
+			+"	return valueArray.reduce("
+			+"		function(previous,element){"
+			+"   		return previous + element;"
+			+"		}, 0);"
+			+"}"
+			+
+		"function avarage(doubleValueArray){"
+			+"	return sum(doubleValueArray) / doubleValueArray.length;"
+			+"}"
+			+
+		"function transform(doc){"
+			+ "var values;"
+			+ "if(doc != null){"
+			+ "		values = doc.timeseries[0].characteristicValues.reduce("
+			+ "			function(previous, element) {"
+			+ "				previous.push(element.value);"
+			+ "				return previous;"
+			+ "			}, []);"
+			+ "		}"
+			+ "		return {'result' : avarage(values)}"
 			+ "}";
 
 	private static final String infiniteLoop =
@@ -62,6 +109,7 @@ public final class NashornExecutionEngineTest {
 		"function transform(dataString){"
 			+ "		var ArrayList = Java.type('java.util.ArrayList');"
 			+ "};";
+
 
 	@Rule
 	public ExpectedException thrown = ExpectedException.none();
@@ -76,10 +124,13 @@ public final class NashornExecutionEngineTest {
 	@BeforeClass
 	public static void initialize() throws IOException, URISyntaxException {
 		mapper = new ObjectMapper();
-		URL resource = NashornExecutionEngineTest.class.getClassLoader().getResource("js/SampleWeatherData.json");
 
-		File sampleWeatherData = new File(resource.toURI());
-		sampleData = FileUtils.readFileToString(sampleWeatherData);
+		InputStream resource = NashornExecutionEngine.class.getClassLoader().getResourceAsStream("json/SampleWeatherData.json");
+		try {
+			sampleData = IOUtils.toString(resource);
+		}catch (IOException e){
+			Log.error(e.getMessage());
+		}
 
 		executionEngine = new NashornExecutionEngine();
 		jsonData = (ObjectNode) mapper.readTree(sampleData);
@@ -91,7 +142,7 @@ public final class NashornExecutionEngineTest {
 		transformationFunction = new TransformationFunction("1", extension);
 		JsonNode result = executionEngine.execute(jsonData, transformationFunction);
 
-		Assert.assertEquals("This is an extension", result.get("main").get("extension").asText());
+		Assert.assertEquals("This is an extension", result.get("extension").asText());
 	}
 
 
@@ -99,7 +150,7 @@ public final class NashornExecutionEngineTest {
 	public void testReduceTransformationExecution() throws ScriptException, IOException, NoSuchMethodException {
 		transformationFunction = new TransformationFunction("1", reduction);
 		JsonNode result = executionEngine.execute(jsonData, transformationFunction);
-		Assert.assertEquals(12, result.get("keycount").intValue());
+		Assert.assertEquals(4, result.get("keycount").intValue());
 	}
 
 
@@ -108,10 +159,42 @@ public final class NashornExecutionEngineTest {
 		transformationFunction = new TransformationFunction("1", map);
 		JsonNode result = executionEngine.execute(jsonData, transformationFunction);
 
-		Assert.assertEquals("New Entry", result.get("coord").get("newEntry").asText());
-		Assert.assertEquals("New Entry", result.get("main").get("newEntry").asText());
+		Assert.assertEquals("RHEIN", result.get("water").get("shortname").asText());
+		Assert.assertEquals("RHEIN", result.get("water").get("longname").asText());
 	}
 
+	@Test
+	public void testConcatTransformationExecution() throws ScriptException, IOException, NoSuchMethodException {
+		transformationFunction = new TransformationFunction("1", concatStrings);
+		JsonNode result = executionEngine.execute(jsonData, transformationFunction);
+
+		Assert.assertEquals("13.929755188361455, 50.96458457915114", result.get("combinedCoords").asText());
+	}
+
+	@Test
+	public void testFilterTransformationExecution() throws ScriptException, IOException, NoSuchMethodException {
+		transformationFunction = new TransformationFunction("1", filter);
+		JsonNode result = executionEngine.execute(jsonData, transformationFunction);
+
+		Assert.assertTrue(result.get("stringValues").isArray());
+
+		ArrayNode arrayNode = new ArrayNode(JsonNodeFactory.instance);
+		arrayNode.add("uuid");
+		arrayNode.add("number");
+		arrayNode.add("shortname");
+		arrayNode.add("longname");
+		arrayNode.add("agency");
+
+		Assert.assertEquals(arrayNode, result.get("stringValues"));
+	}
+
+	@Test
+	public void testArithmeticOperationsTransformationExecution() throws ScriptException, IOException, NoSuchMethodException {
+		transformationFunction = new TransformationFunction("1", arithmeticOperations);
+		JsonNode result = executionEngine.execute(jsonData, transformationFunction);
+
+		Assert.assertEquals(489.75, result.get("result").asDouble(), 0);
+	}
 
 	@Test(expected = ScriptException.class)
 	public void testInvalidTransformationExecution()
