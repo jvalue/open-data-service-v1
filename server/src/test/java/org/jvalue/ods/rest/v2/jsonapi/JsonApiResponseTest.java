@@ -9,6 +9,9 @@ import mockit.integration.junit4.JMockit;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.jvalue.ods.rest.v2.jsonapi.document.JsonApiDocument;
+import org.jvalue.ods.rest.v2.jsonapi.resource.JsonApiData;
+import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;

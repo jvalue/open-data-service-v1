@@ -1,6 +1,9 @@
-package org.jvalue.ods.rest.v2.jsonapi;
+package org.jvalue.ods.rest.v2.jsonapi.response;
 
 import org.jvalue.ods.api.jsonapi.JsonApiIdentifiable;
+import org.jvalue.ods.rest.v2.jsonapi.document.JsonApiDocument;
+import org.jvalue.ods.rest.v2.jsonapi.document.ObjCollectionDocument;
+import org.jvalue.ods.rest.v2.jsonapi.document.SingleObjectDocument;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;

@@ -10,7 +10,7 @@ import org.jvalue.commons.rest.RestUtils;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceDescription;
 import org.jvalue.ods.data.DataSourceManager;
-import org.jvalue.ods.rest.v2.jsonapi.JsonApiResponse;
+import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;

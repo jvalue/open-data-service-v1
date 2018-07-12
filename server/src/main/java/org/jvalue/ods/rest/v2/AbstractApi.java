@@ -1,7 +1,7 @@
 package org.jvalue.ods.rest.v2;
 
 
-import org.jvalue.ods.rest.v2.jsonapi.JsonApiMediaType;
+import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiMediaType;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
