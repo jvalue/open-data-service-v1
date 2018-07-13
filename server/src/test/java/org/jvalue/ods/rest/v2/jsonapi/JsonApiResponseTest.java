@@ -3,6 +3,7 @@ package org.jvalue.ods.rest.v2.jsonapi;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Iterators;
+import jdk.net.SocketFlow;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.integration.junit4.JMockit;
@@ -41,15 +42,16 @@ public class JsonApiResponseTest {
 
 
 		//Replay
-		Response ok = JsonApiResponse
+		Response result = JsonApiResponse
 				.createGetResponse(uriInfo)
 				.data(minimalEntity)
 				.build();
 
 
 		//Verify
-		assertIsValidJsonApiDataResponse(ok);
-		JsonNode jEntity = extractJsonEntity(ok);
+		Assert.assertEquals(200, result.getStatus());
+		assertIsValidJsonApiDataResponse(result);
+		JsonNode jEntity = extractJsonEntity(result);
 		Assert.assertEquals(TEST_ID, jEntity.get("data").get("id").textValue());
 		Assert.assertEquals("MinimalEntity", jEntity.get("data").get("type").textValue());
 		Assert.assertEquals(ENTITY_PATH, jEntity.get("links").get("self").textValue());
@@ -73,19 +75,20 @@ public class JsonApiResponseTest {
 		}
 
 		//Replay
-		Response collectionOk = JsonApiResponse
+		Response result = JsonApiResponse
 				.createGetResponse(uriInfo)
 				.data(entityList)
 				.build();
 
 		//Verify
-		assertIsValidJsonApiDataResponse(collectionOk);
-		JsonNode jArray = extractJsonEntity(collectionOk);
+		Assert.assertEquals(200, result.getStatus());
+		assertIsValidJsonApiDataResponse(result);
+		JsonNode jArray = extractJsonEntity(result);
 		Assert.assertTrue(jArray.get("data").isArray());
 
 	}
 
-
+	@Test
 	public void testPostResponse() {
 		//Record
 		new Expectations() {{
@@ -95,15 +98,36 @@ public class JsonApiResponseTest {
 		TestEntity testEntity = new EntityWithAttributes();
 
 		//Replay
-		Response create = JsonApiResponse
+		Response result = JsonApiResponse
 				.createPostResponse(uriInfo)
 				.data(testEntity)
 				.build();
 
 		//Verify
-		assertIsValidJsonApiDataResponse(create);
-		;
-		assertHasValidData(extractJsonEntity(create));
+		Assert.assertEquals(201, result.getStatus());
+		assertIsValidJsonApiDataResponse(result);
+		assertHasValidData(extractJsonEntity(result));
+	}
+
+	@Test
+	public void testPutResponse() {
+		//Record
+		new Expectations() {{
+			uriInfo.getAbsolutePath();
+			result = URI.create(ENTITY_PATH);
+		}};
+		TestEntity testEntity = new EntityWithAttributes();
+
+		//Replay
+		Response result = JsonApiResponse
+				.createPutResponse(uriInfo)
+				.data(testEntity)
+				.build();
+
+		//Verify
+		Assert.assertEquals(200, result.getStatus());
+		assertIsValidJsonApiDataResponse(result);
+		assertHasValidData(extractJsonEntity(result));
 	}
 
 	@Test
@@ -116,17 +140,39 @@ public class JsonApiResponseTest {
 		TestEntity testEntity = new EntityWithAttributes();
 
 		//Replay
-		Response ok = JsonApiResponse
+		Response result = JsonApiResponse
 				.createGetResponse(uriInfo)
 				.data(testEntity)
 				.toIdentifier()
 				.build();
 
 		//Verify
-		assertIsValidJsonApiDataResponse(ok);
-		JsonNode identifierNode = extractJsonEntity(ok);
+		assertIsValidJsonApiDataResponse(result);
+		JsonNode identifierNode = extractJsonEntity(result);
 		Assert.assertEquals(2, countFields(identifierNode));
 		assertHasValidData(identifierNode);
+	}
+
+	@Test
+	public void testAddLinks() {
+		//Record
+		new Expectations() {{
+			uriInfo.getAbsolutePath();
+			result = URI.create(ENTITY_PATH);
+		}};
+		TestEntity minimalEntity = new TestEntityProvider.MinimalEntity();
+		String linkUrl = "http://test.de";
+
+		//Replay
+		Response result = JsonApiResponse
+				.createGetResponse(uriInfo)
+				.data(minimalEntity)
+				.addLink("TestLink", URI.create(linkUrl))
+				.build();
+
+		JsonNode resultAsJson = extractJsonEntity(result);
+		Assert.assertTrue(resultAsJson.get("links").has("TestLink"));
+		Assert.assertEquals(linkUrl, resultAsJson.get("links").get("TestLink").asText());
 	}
 
 
@@ -149,10 +195,19 @@ public class JsonApiResponseTest {
 		Assert.assertTrue(jDoc.getData() instanceof JsonApiData || jDoc.getData() instanceof Collection);
 	}
 
+
 	private static void assertHasValidData(JsonNode jsonApiDocument) {
 		Assert.assertTrue(jsonApiDocument.has("data"));
 		Assert.assertTrue(jsonApiDocument.get("data").has("id"));
 		Assert.assertTrue(jsonApiDocument.get("data").has("type"));
+
+		assertSelfLinkExist(jsonApiDocument);
+	}
+
+
+	private static void assertSelfLinkExist(JsonNode document) {
+		String expectedUrl = "scheme://authority/path/to/testCollection/entity";
+		Assert.assertEquals(expectedUrl, document.get("links").get("self").textValue());
 	}
 
 }
