@@ -65,12 +65,6 @@ public class JsonApiResponse {
 		}
 
 
-		public Buildable addRelationship(JsonApiIdentifiable entity) {
-			//TODO: impl.
-			return this;
-		}
-
-
 		@Override
 		public Response build() {
 			Response.ResponseBuilder responseBuilder = Response.status(instance.statusCode);
@@ -82,13 +76,12 @@ public class JsonApiResponse {
 			return responseBuilder.build();
 		}
 
+
 		@Override
 		public Buildable toIdentifier() {
 			instance.jsonApiEntity.toIdentifier();
 			return this;
 		}
-
-
 	}
 
 
@@ -105,8 +98,6 @@ public class JsonApiResponse {
 		Buildable toIdentifier();
 
 		Buildable addLink(String name, URI ref);
-
-		Buildable addRelationship(JsonApiIdentifiable entity);
 	}
 
 }
