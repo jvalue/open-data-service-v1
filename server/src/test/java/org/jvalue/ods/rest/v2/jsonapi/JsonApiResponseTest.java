@@ -9,6 +9,7 @@ import mockit.integration.junit4.JMockit;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.jvalue.ods.api.jsonapi.JsonApiIdentifiable;
 import org.jvalue.ods.rest.v2.jsonapi.document.JsonApiDocument;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
 
@@ -35,7 +36,7 @@ public class JsonApiResponseTest {
 			uriInfo.getAbsolutePath();
 			result = URI.create(ENTITY_PATH);
 		}};
-		TestEntity minimalEntity = new TestEntityProvider.MinimalEntity();
+		JsonApiIdentifiable minimalEntity = createMinimalEntity();
 
 
 		//Replay
@@ -50,7 +51,6 @@ public class JsonApiResponseTest {
 		assertIsValidJsonApiDataResponse(result);
 		JsonNode jEntity = extractJsonEntity(result);
 		Assert.assertEquals(TEST_ID, jEntity.get("data").get("id").textValue());
-		Assert.assertEquals("MinimalEntity", jEntity.get("data").get("type").textValue());
 		Assert.assertEquals(ENTITY_PATH, jEntity.get("links").get("self").textValue());
 		Assert.assertTrue(jEntity.get("data").has("attributes"));
 	}
@@ -66,9 +66,9 @@ public class JsonApiResponseTest {
 			uriInfo.getAbsolutePath();
 			result = URI.create(COLLECTION_PATH);
 		}};
-		List<TestEntity> entityList = new ArrayList<>();
+		List<JsonApiIdentifiable> entityList = new ArrayList<>();
 		for (int i = 0; i < NR_ENTITIES; i++) {
-			entityList.add(new CollectableEntity(String.valueOf(i)));
+			entityList.add(createCollectableEntity(i));
 		}
 
 		//Replay
@@ -92,7 +92,7 @@ public class JsonApiResponseTest {
 			uriInfo.getAbsolutePath();
 			result = URI.create(ENTITY_PATH);
 		}};
-		TestEntity testEntity = new EntityWithAttributes();
+		JsonApiIdentifiable testEntity = createEntityWithAttributes();
 
 		//Replay
 		Response result = JsonApiResponse
@@ -113,7 +113,7 @@ public class JsonApiResponseTest {
 			uriInfo.getAbsolutePath();
 			result = URI.create(ENTITY_PATH);
 		}};
-		TestEntity testEntity = new EntityWithAttributes();
+		JsonApiIdentifiable testEntity = createEntityWithAttributes();
 
 		//Replay
 		Response result = JsonApiResponse
@@ -134,7 +134,7 @@ public class JsonApiResponseTest {
 			uriInfo.getAbsolutePath();
 			result = URI.create(ENTITY_PATH);
 		}};
-		TestEntity testEntity = new EntityWithAttributes();
+		JsonApiIdentifiable testEntity = createEntityWithAttributes();
 
 		//Replay
 		Response result = JsonApiResponse
@@ -157,7 +157,7 @@ public class JsonApiResponseTest {
 			uriInfo.getAbsolutePath();
 			result = URI.create(ENTITY_PATH);
 		}};
-		TestEntity minimalEntity = new TestEntityProvider.MinimalEntity();
+		JsonApiIdentifiable minimalEntity = createMinimalEntity();
 		String linkUrl = "http://test.de";
 
 		//Replay
@@ -189,7 +189,7 @@ public class JsonApiResponseTest {
 	private static void assertIsValidJsonApiDataResponse(Response response) {
 		Assert.assertTrue(response.getEntity() instanceof JsonApiDocument);
 		JsonApiDocument jDoc = (JsonApiDocument) response.getEntity();
-		Assert.assertTrue(jDoc.getData() instanceof List);
+		Assert.assertTrue(jDoc.getData() != null);
 	}
 
 
