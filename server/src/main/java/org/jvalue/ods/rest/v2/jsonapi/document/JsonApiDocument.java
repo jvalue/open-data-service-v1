@@ -1,40 +1,56 @@
 package org.jvalue.ods.rest.v2.jsonapi.document;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.jvalue.ods.api.jsonapi.JsonApiIdentifiable;
 
 import javax.ws.rs.core.UriInfo;
+import java.io.Serializable;
 import java.net.URI;
 import java.util.*;
+import java.util.stream.Collectors;
 
-public abstract class JsonApiDocument {
+public class JsonApiDocument implements Serializable {
 
-	protected Map<String, URI> links = new HashMap<>();
-	protected final UriInfo uriInfo;
+	private final Map<String, URI> links = new HashMap<>();
+	private final UriInfo uriInfo;
+	@JsonFormat(with = {JsonFormat.Feature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED, JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY})
+	protected List<JsonApiResourceIdentifier> data = new LinkedList<>();
 
-	public JsonApiDocument(UriInfo uriInfo) {
+	public JsonApiDocument(JsonApiIdentifiable entity, UriInfo uriInfo) {
 		this.uriInfo = uriInfo;
+		data.add(new JsonApiResource(entity, uriInfo.getAbsolutePath()));
 		links.put("self", uriInfo.getAbsolutePath());
+	}
+
+	public JsonApiDocument(Collection<? extends JsonApiIdentifiable> entityCollection, UriInfo uriInfo) {
+		this.uriInfo = uriInfo;
+		URI uri = uriInfo.getAbsolutePath();
+		entityCollection.forEach(
+				entity ->
+						data.add(new JsonApiResource(entity, uri.resolve(entity.getId())))
+		);
+	}
+
+	public void toIdentifier() {
+
+		List<JsonApiResourceIdentifier> identifierList = data
+				.stream()
+				.map(resource -> resource.toIdentifier())
+				.collect(Collectors.toList());
+
+		data = identifierList;
+	}
+
+	public void addLink(String name, URI ref) {
+		links.put(name, ref);
 	}
 
 	public Map<String, URI> getLinks() {
 		return links;
 	}
 
-	@JsonInclude(JsonInclude.Include.NON_NULL)
-	@JsonProperty("data")
-	public abstract Object getData();
-
-
-	/**
-	 * if called, data is serialized using only type, id and selflink (JsonApiIdentifierObject)
-	 */
-	public abstract JsonApiDocument toIdentifier();
-
-
-	public void addLink(String name, URI ref) {
-		links.put(name, ref);
+	public List<JsonApiResourceIdentifier> getData() {
+		return data;
 	}
-
 
 }

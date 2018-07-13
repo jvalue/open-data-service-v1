@@ -3,7 +3,6 @@ package org.jvalue.ods.rest.v2.jsonapi;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Iterators;
-import jdk.net.SocketFlow;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.integration.junit4.JMockit;
@@ -11,14 +10,12 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.jvalue.ods.rest.v2.jsonapi.document.JsonApiDocument;
-import org.jvalue.ods.rest.v2.jsonapi.resource.JsonApiData;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import static org.jvalue.ods.rest.v2.jsonapi.TestEntityProvider.*;
@@ -192,7 +189,7 @@ public class JsonApiResponseTest {
 	private static void assertIsValidJsonApiDataResponse(Response response) {
 		Assert.assertTrue(response.getEntity() instanceof JsonApiDocument);
 		JsonApiDocument jDoc = (JsonApiDocument) response.getEntity();
-		Assert.assertTrue(jDoc.getData() instanceof JsonApiData || jDoc.getData() instanceof Collection);
+		Assert.assertTrue(jDoc.getData() instanceof List);
 	}
 
 

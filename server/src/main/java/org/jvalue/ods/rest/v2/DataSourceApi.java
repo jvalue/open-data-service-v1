@@ -1,7 +1,10 @@
 package org.jvalue.ods.rest.v2;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.inject.Inject;
 import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
@@ -30,7 +33,7 @@ public final class DataSourceApi extends AbstractApi {
 		this.sourceManager = sourceManager;
 	}
 
-
+	@JsonFormat(with = {JsonFormat.Feature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED, JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY})
 	@GET
 	public Response getAllSources() {
 		return JsonApiResponse
