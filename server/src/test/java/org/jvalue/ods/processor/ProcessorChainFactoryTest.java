@@ -24,15 +24,28 @@ import mockit.integration.junit4.JMockit;
 @RunWith(JMockit.class)
 public final class ProcessorChainFactoryTest {
 
+	private static final String simpleExtension =
+			"function transform(doc){"
+					+ "    if(doc != null){"
+					+ "        doc.extension = \"This is an extension\";"
+					+ "    }"
+					+ "    return doc;"
+					+ "};";
+
+
 	private final ProcessorReferenceChain chainReference;
 	{
 		Map<String, Object> dbFilterArgs = new HashMap<>();
 		dbFilterArgs.put("updateData", true);
 
+		Map<String, Object> transformationFilterArgs = new HashMap<>();
+		transformationFilterArgs.put("transformationFunction",simpleExtension);
+
 		List<ProcessorReference> references = new LinkedList<>();
 		references.add(new ProcessorReference(SourceAdapterFactory.NAME_JSON_SOURCE_ADAPTER, new HashMap<String, Object>()));
 		references.add(new ProcessorReference(FilterFactory.NAME_DB_INSERTION_FILTER, dbFilterArgs));
 		references.add(new ProcessorReference(FilterFactory.NAME_NOTIFICATION_FILTER, new HashMap<String, Object>()));
+		references.add(new ProcessorReference(FilterFactory.NAME_TRANSFORMATION_FILTER, transformationFilterArgs));
 
 		chainReference = new ProcessorReferenceChain("someId", references, new ExecutionInterval(12, TimeUnit.MILLISECONDS));
 	}
@@ -52,6 +65,7 @@ public final class ProcessorChainFactoryTest {
 			adapterFactory.createJsonSourceAdapter((DataSource) any, anyString); times = 1;
 			filterFactory.createDbInsertionFilter((DataSource) any, (DataRepository) any, anyBoolean); times = 1;
 			filterFactory.createNotificationFilter((DataSource) any); times = 1;
+			filterFactory.createTransformationFilter((DataSource) any, simpleExtension); times = 1;
 		}};
 	}
 

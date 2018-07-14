@@ -35,6 +35,7 @@ import org.jvalue.ods.pegelalarm.FilterChainHealthCheck;
 import org.jvalue.ods.pegelalarm.PegelOnlineHealthCheck;
 import org.jvalue.ods.processor.ProcessorModule;
 import org.jvalue.ods.processor.reference.ValidChainReference;
+import org.jvalue.ods.transformation.DataTransformationModule;
 import org.jvalue.ods.rest.v1.DataApi;
 import org.jvalue.ods.rest.v1.DataSourceApi;
 import org.jvalue.ods.rest.v1.DataViewApi;
@@ -82,7 +83,8 @@ public final class OdsApplication extends Application<OdsConfig> {
 				new DbModule(configuration.getCouchDb()),
 				new NotificationsModule(),
 				new DataModule(),
-				new AuthModule(configuration.getAuth()));
+				new AuthModule(configuration.getAuth()),
+				new DataTransformationModule());
 
 		// start data grabbing
 		environment.lifecycle().manage(injector.getInstance(DataSourceManager.class));
