@@ -2,13 +2,8 @@ package org.jvalue.ods.rest.v2.jsonapi;
 
 import org.jvalue.ods.api.jsonapi.JsonApiIdentifiable;
 
-import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static org.jvalue.ods.rest.v2.jsonapi.TestEntityProvider.TEST_ID;
 
 public class TestEntityProvider {
 
