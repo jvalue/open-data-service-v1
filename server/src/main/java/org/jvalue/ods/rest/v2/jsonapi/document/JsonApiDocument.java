@@ -19,8 +19,9 @@ public class JsonApiDocument implements Serializable {
 	public JsonApiDocument(JsonApiIdentifiable entity, UriInfo uriInfo) {
 		this.uriInfo = uriInfo;
 		data.add(new JsonApiResource(entity, uriInfo.getAbsolutePath()));
-		addLink("self", uriInfo.getAbsolutePath());
+		addSelfLink();
 	}
+
 
 	public JsonApiDocument(Collection<? extends JsonApiIdentifiable> entityCollection, UriInfo uriInfo) {
 		this.uriInfo = uriInfo;
@@ -29,8 +30,9 @@ public class JsonApiDocument implements Serializable {
 				entity ->
 						data.add(new JsonApiResource(entity, uri.resolve(entity.getId())))
 		);
-		addLink("self", uriInfo.getAbsolutePath());
+		addSelfLink();
 	}
+
 
 	public void toIdentifier() {
 		data = data
@@ -39,16 +41,24 @@ public class JsonApiDocument implements Serializable {
 				.collect(Collectors.toList());
 	}
 
+
 	public void addLink(String name, URI ref) {
 		links.put(name, ref);
 	}
+
 
 	public Map<String, URI> getLinks() {
 		return links;
 	}
 
+
 	public List<JsonApiResourceIdentifier> getData() {
 		return data;
+	}
+
+
+	private void addSelfLink() {
+		addLink("self", uriInfo.getAbsolutePath());
 	}
 
 }
