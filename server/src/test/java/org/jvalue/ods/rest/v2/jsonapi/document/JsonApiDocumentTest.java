@@ -39,7 +39,7 @@ public class JsonApiDocumentTest {
 
     	JsonApiResource resource = (JsonApiResource) result.getData().get(0);
     	Assert.assertEquals(dummyObj01, resource.getEntity());
-		assertSelfLinksExists(result);
+		assertSelfLinkExists(result);
     }
 
 
@@ -58,7 +58,7 @@ public class JsonApiDocumentTest {
 						.stream()
 						.map(r -> ((JsonApiResource) r).getEntity())
 						.collect(Collectors.toList()));
-		assertSelfLinksExists(result);
+		assertSelfLinkExists(result);
 	}
 
 
@@ -79,8 +79,8 @@ public class JsonApiDocumentTest {
 		Assert.assertEquals(dummyObj01.getId(), unmodifiedData.getId());
 		Assert.assertEquals("Dummy", identifierData.getType());
 		Assert.assertEquals("Dummy", unmodifiedData.getType());
-		assertSelfLinksExists(resultToIdentifier);
-		assertSelfLinksExists(unmodifiedResult);
+		assertSelfLinkExists(resultToIdentifier);
+		assertSelfLinkExists(unmodifiedResult);
 	}
 
 
@@ -92,7 +92,7 @@ public class JsonApiDocumentTest {
 
 		Assert.assertEquals(2, result.getLinks().size());
 		Assert.assertEquals(uri, result.getLinks().get("self"));
-		assertSelfLinksExists(result);
+		assertSelfLinkExists(result);
 	}
 
 
@@ -107,7 +107,7 @@ public class JsonApiDocumentTest {
 	}
 
 
-    private void assertSelfLinksExists(JsonApiDocument doc) {
+    private void assertSelfLinkExists(JsonApiDocument doc) {
 		Assert.assertEquals(uri, doc.getLinks().get("self"));
 	}
 
