@@ -98,8 +98,13 @@ public class JsonApiDocumentTest {
 
     @Test
     public void testEquals() {
-        Assert.fail("Test not implemented!");
-    }
+		JsonApiDocument result1 = new JsonApiDocument(dummyObj01, uriInfoMock);
+		JsonApiDocument result2 = new JsonApiDocument(dummyObj01, uriInfoMock);
+		JsonApiDocument resultOther = new JsonApiDocument(dummyObj42, uriInfoMock);
+
+		Assert.assertEquals(result1, result2);
+		Assert.assertNotEquals(resultOther, result1);
+	}
 
 
     private void assertSelfLinksExists(JsonApiDocument doc) {

@@ -41,7 +41,6 @@ public class JsonApiDocument implements Serializable {
 				.collect(Collectors.toList());
 	}
 
-
 	public void addLink(String name, URI ref) {
 		links.put(name, ref);
 	}
@@ -61,4 +60,21 @@ public class JsonApiDocument implements Serializable {
 		addLink("self", uriInfo.getAbsolutePath());
 	}
 
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		JsonApiDocument that = (JsonApiDocument) o;
+		return Objects.equals(links, that.links) &&
+				Objects.equals(uriInfo, that.uriInfo) &&
+				Objects.equals(data, that.data);
+	}
+
+
+	@Override
+	public int hashCode() {
+
+		return Objects.hash(links, uriInfo, data);
+	}
 }
