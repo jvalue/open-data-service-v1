@@ -3,7 +3,7 @@ package org.jvalue.ods.rest.v2.jsonapi.document;
 import org.jvalue.ods.api.jsonapi.JsonApiIdentifiable;
 import java.util.Objects;
 
-public class JsonApiResourceIdentifier {
+public class JsonApiResourceIdentifier implements JsonApiIdentifiable {
 
     private final String id;
     private final String type;
@@ -26,6 +26,7 @@ public class JsonApiResourceIdentifier {
     }
 
 
+    @Override
     public String getId() {
         return id;
     }
