@@ -11,10 +11,17 @@ import java.util.stream.Collectors;
 
 public class JsonApiDocument implements Serializable {
 
+	private static final String SELF = "self";
+
 	private final Map<String, URI> links = new HashMap<>();
+
 	private final UriInfo uriInfo;
-	@JsonFormat(with = {JsonFormat.Feature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED, JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY})
+
+	@JsonFormat(with = {
+			JsonFormat.Feature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED,
+			JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY})
 	protected List<JsonApiResourceIdentifier> data = new LinkedList<>();
+
 
 	public JsonApiDocument(JsonApiIdentifiable entity, UriInfo uriInfo) {
 		this.uriInfo = uriInfo;
@@ -41,6 +48,7 @@ public class JsonApiDocument implements Serializable {
 				.collect(Collectors.toList());
 	}
 
+
 	public void addLink(String name, URI ref) {
 		links.put(name, ref);
 	}
@@ -51,13 +59,18 @@ public class JsonApiDocument implements Serializable {
 	}
 
 
+	public URI getSelfLink() {
+		return links.get(SELF);
+	}
+
+
 	public List<JsonApiResourceIdentifier> getData() {
 		return data;
 	}
 
 
 	private void addSelfLink() {
-		addLink("self", uriInfo.getAbsolutePath());
+		addLink(SELF, uriInfo.getAbsolutePath());
 	}
 
 

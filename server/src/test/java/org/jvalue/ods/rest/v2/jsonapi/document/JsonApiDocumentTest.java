@@ -38,6 +38,8 @@ public class JsonApiDocumentTest {
     	JsonApiDocument result = new JsonApiDocument(dummyObj01, uriInfoMock);
 
     	JsonApiResource resource = (JsonApiResource) result.getData().get(0);
+
+    	Assert.assertEquals(1, result.getData().size());
     	Assert.assertEquals(dummyObj01, resource.getEntity());
 		assertSelfLinkExists(result);
     }
@@ -64,23 +66,14 @@ public class JsonApiDocumentTest {
 
     @Test
     public void testToIdentifier() {
-		JsonApiDocument resultToIdentifier = new JsonApiDocument(dummyObj01, uriInfoMock);
-		JsonApiDocument unmodifiedResult = new JsonApiDocument(dummyObj01, uriInfoMock);
+		JsonApiDocument document = new JsonApiDocument(dummyObj01, uriInfoMock);
 
-		resultToIdentifier.toIdentifier();
+		Class originalClass = document.getData().get(0).getClass();
+		document.toIdentifier();
+		Class resultClass = document.getData().get(0).getClass();
 
-
-		JsonApiResourceIdentifier identifierData = resultToIdentifier.getData().get(0);
-		JsonApiResourceIdentifier unmodifiedData = unmodifiedResult.getData().get(0);
-
-		Assert.assertFalse(identifierData instanceof JsonApiResource);
-		Assert.assertTrue(unmodifiedData instanceof JsonApiResource);
-		Assert.assertEquals(dummyObj01.getId(), identifierData.getId());
-		Assert.assertEquals(dummyObj01.getId(), unmodifiedData.getId());
-		Assert.assertEquals("Dummy", identifierData.getType());
-		Assert.assertEquals("Dummy", unmodifiedData.getType());
-		assertSelfLinkExists(resultToIdentifier);
-		assertSelfLinkExists(unmodifiedResult);
+		Assert.assertEquals(JsonApiResource.class, originalClass);
+		Assert.assertEquals(JsonApiResourceIdentifier.class, resultClass);
 	}
 
 
@@ -91,7 +84,7 @@ public class JsonApiDocumentTest {
 		result.addLink(linkName, uri);
 
 		Assert.assertEquals(2, result.getLinks().size());
-		Assert.assertEquals(uri, result.getLinks().get("self"));
+		Assert.assertEquals(uri , result.getLinks().get(linkName));
 		assertSelfLinkExists(result);
 	}
 
@@ -108,7 +101,7 @@ public class JsonApiDocumentTest {
 
 
     private void assertSelfLinkExists(JsonApiDocument doc) {
-		Assert.assertEquals(uri, doc.getLinks().get("self"));
+		Assert.assertEquals(uri, doc.getSelfLink());
 	}
 
 
