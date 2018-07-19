@@ -1,6 +1,8 @@
 package org.jvalue.ods.rest.v2.jsonapi.document;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.jvalue.ods.api.jsonapi.JsonApiIdentifiable;
 
 import javax.ws.rs.core.UriInfo;
@@ -59,6 +61,7 @@ public class JsonApiDocument implements Serializable {
 	}
 
 
+	@JsonIgnore
 	public URI getSelfLink() {
 		return links.get(SELF);
 	}
