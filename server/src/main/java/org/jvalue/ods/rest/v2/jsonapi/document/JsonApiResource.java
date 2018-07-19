@@ -1,6 +1,7 @@
 package org.jvalue.ods.rest.v2.jsonapi.document;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.jvalue.ods.api.jsonapi.JsonApiIdentifiable;
 import org.jvalue.ods.utils.JsonUtils;
@@ -15,6 +16,7 @@ public class JsonApiResource extends JsonApiResourceIdentifier implements JsonLi
     private final URI uri;
     private final JsonApiIdentifiable entity;
     private final Map<String, URI> links = new HashMap<>();
+    private JsonApiRelationships relationships;
 
     public JsonApiResource(JsonApiIdentifiable entity, URI uri) {
         super(entity);
@@ -30,7 +32,13 @@ public class JsonApiResource extends JsonApiResourceIdentifier implements JsonLi
     }
 
 
-    @Override
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+	public JsonApiRelationships getRelationships() {
+		return relationships;
+	}
+
+
+	@Override
     public Map<String, URI> getLinks() {
         return links;
     }
@@ -40,6 +48,15 @@ public class JsonApiResource extends JsonApiResourceIdentifier implements JsonLi
     public void addLink(String name, URI ref) {
         links.put(name, ref);
     }
+
+
+    public JsonApiResource addRelationship(String name, JsonApiIdentifiable entity, URI location) {
+		if(relationships == null) {
+			relationships = new JsonApiRelationships();
+		}
+		relationships.addRelationship(name, entity, location);
+		return this;
+	}
 
 
     public JsonApiResource restrictTo(String attribute) {

@@ -18,6 +18,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 
 @Path(AbstractApi.BASE_URL)
 public final class DataSourceApi extends AbstractApi {
@@ -46,10 +47,12 @@ public final class DataSourceApi extends AbstractApi {
 	public Response getSource(@PathParam("sourceId") String sourceId) {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
+		DataSource other = sourceManager.getAll().get(0);
 
 		return JsonApiResponse
 				.createGetResponse(uriInfo)
 				.data(source)
+				.addRelationship("test", other, uriInfo.getAbsolutePath().resolve(URI.create("brandenburg")))
 				.build();
 	}
 
@@ -100,6 +103,7 @@ public final class DataSourceApi extends AbstractApi {
 		sourceManager.remove(sourceManager.findBySourceId(sourceId));
 	}
 
+	
 	private void assertDataSourceNotExist(String sourceId) {
 		if (sourceManager.isValidSourceId(sourceId)) {
 			int statusCode = Response.Status.CONFLICT.getStatusCode();

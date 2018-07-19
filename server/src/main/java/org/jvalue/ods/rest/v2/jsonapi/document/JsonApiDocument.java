@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class JsonApiDocument implements Serializable, JsonLinks {
 
-	private final UriInfo uriInfo;
+	private UriInfo uriInfo;
 
 	private final Map<String, URI> links = new HashMap<>();
 
@@ -21,10 +21,15 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 	protected List<JsonApiResource> data = new LinkedList<>();
 
 
+	public JsonApiDocument(JsonApiIdentifiable entity, URI uri) {
+		data.add(new JsonApiResource(entity, uri));
+
+	}
+
+
 	public JsonApiDocument(JsonApiIdentifiable entity, UriInfo uriInfo) {
 		this.uriInfo = uriInfo;
 		data.add(new JsonApiResource(entity, uriInfo.getAbsolutePath()));
-		addSelfLink(uriInfo);
 	}
 
 
@@ -37,7 +42,6 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 			resource.addSelfLink(entityUri);
 			data.add(resource);
 		}
-		addSelfLink(uriInfo);
 	}
 
 
@@ -50,6 +54,14 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 		data = data
 			.stream()
 			.map(r -> r.restrictTo(attribute))
+			.collect(Collectors.toList());
+	}
+
+
+	public void addRelationship(String name, JsonApiIdentifiable entity, URI location) {
+		data = data
+			.stream()
+			.map(r -> r.addRelationship(name, entity, location))
 			.collect(Collectors.toList());
 	}
 

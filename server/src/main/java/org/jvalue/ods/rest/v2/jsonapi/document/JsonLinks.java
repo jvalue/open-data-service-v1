@@ -1,6 +1,7 @@
 package org.jvalue.ods.rest.v2.jsonapi.document;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
@@ -9,7 +10,10 @@ import java.util.Map;
 public interface JsonLinks {
 
     String SELF = "self";
+	String RELATED = "related";
 
+
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
     Map<String, URI> getLinks();
 
 

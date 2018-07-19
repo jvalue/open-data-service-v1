@@ -19,6 +19,7 @@ public class JsonApiResponse {
 		this.statusCode = statusCode;
 	}
 
+
 	public static RequiredEntity createGetResponse(UriInfo uriInfo) {
 		return new Builder(new JsonApiResponse(uriInfo, Response.Status.OK));
 	}
@@ -34,7 +35,7 @@ public class JsonApiResponse {
 	}
 
 
-	public static class Builder implements RequiredEntity, Buildable {
+	public static class Builder implements RequiredEntity, WithRelationship, Buildable {
 
 		private final JsonApiResponse instance;
 
@@ -46,6 +47,7 @@ public class JsonApiResponse {
 		@Override
 		public Buildable data(JsonApiIdentifiable entity) {
 			instance.jsonApiEntity = new JsonApiDocument(entity, instance.uriInfo);
+			instance.jsonApiEntity.addSelfLink(instance.uriInfo);
 			return this;
 		}
 
@@ -53,12 +55,19 @@ public class JsonApiResponse {
 		@Override
 		public Buildable data(Collection<? extends JsonApiIdentifiable> entityCollection) {
 			instance.jsonApiEntity = new JsonApiDocument(entityCollection, instance.uriInfo);
+			instance.jsonApiEntity.addSelfLink(instance.uriInfo);
 			return this;
 		}
 
 
 		public Buildable addLink(String name, URI ref) {
 			instance.jsonApiEntity.addLink(name, ref);
+			return this;
+		}
+
+		@Override
+		public WithRelationship addRelationship(String name, JsonApiIdentifiable entity, URI location) {
+			instance.jsonApiEntity.addRelationship(name, entity, location);
 			return this;
 		}
 
@@ -93,9 +102,16 @@ public class JsonApiResponse {
 	public interface Buildable {
 		Response build();
 
+		Buildable restrictTo(String attribute);
+
 		Buildable addLink(String name, URI ref);
 
-		Buildable restrictTo(String attribute);
+		WithRelationship addRelationship(String name, JsonApiIdentifiable entity, URI location);
+	}
+
+
+	public interface WithRelationship extends Buildable{
+
 	}
 
 }
