@@ -1,8 +1,6 @@
 package org.jvalue.ods.rest.v2.jsonapi.document;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.jvalue.ods.api.jsonapi.JsonApiIdentifiable;
 
 import javax.ws.rs.core.UriInfo;
@@ -11,13 +9,11 @@ import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class JsonApiDocument implements Serializable {
-
-	private static final String SELF = "self";
-
-	private final Map<String, URI> links = new HashMap<>();
+public class JsonApiDocument implements Serializable, JsonLinks {
 
 	private final UriInfo uriInfo;
+
+	private final Map<String, URI> links = new HashMap<>();
 
 	@JsonFormat(with = {
 			JsonFormat.Feature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED,
@@ -28,18 +24,20 @@ public class JsonApiDocument implements Serializable {
 	public JsonApiDocument(JsonApiIdentifiable entity, UriInfo uriInfo) {
 		this.uriInfo = uriInfo;
 		data.add(new JsonApiResource(entity, uriInfo.getAbsolutePath()));
-		addSelfLink();
+		addSelfLink(uriInfo);
 	}
 
 
 	public JsonApiDocument(Collection<? extends JsonApiIdentifiable> entityCollection, UriInfo uriInfo) {
 		this.uriInfo = uriInfo;
-		URI uri = uriInfo.getAbsolutePath();
-		entityCollection.forEach(
-				entity ->
-						data.add(new JsonApiResource(entity, uri.resolve(entity.getId())))
-		);
-		addSelfLink();
+
+		for (JsonApiIdentifiable entity : entityCollection) {
+			URI entityUri = uriInfo.getAbsolutePath().resolve(entity.getId());
+			JsonApiResource resource = new JsonApiResource(entity, entityUri);
+			resource.addSelfLink(entityUri);
+			data.add(resource);
+		}
+		addSelfLink(uriInfo);
 	}
 
 
@@ -50,30 +48,20 @@ public class JsonApiDocument implements Serializable {
 				.collect(Collectors.toList());
 	}
 
-
-	public void addLink(String name, URI ref) {
-		links.put(name, ref);
-	}
-
-
-	public Map<String, URI> getLinks() {
-		return links;
-	}
-
-
-	@JsonIgnore
-	public URI getSelfLink() {
-		return links.get(SELF);
-	}
-
-
 	public List<JsonApiResourceIdentifier> getData() {
 		return data;
 	}
 
 
-	private void addSelfLink() {
-		addLink(SELF, uriInfo.getAbsolutePath());
+	@Override
+	public Map<String, URI> getLinks() {
+		return links;
+	}
+
+
+	@Override
+	public void addLink(String name, URI ref) {
+		links.put(name, ref);
 	}
 
 

@@ -5,13 +5,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.jvalue.ods.api.jsonapi.JsonApiIdentifiable;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
-public class JsonApiResource extends JsonApiResourceIdentifier {
+public class JsonApiResource extends JsonApiResourceIdentifier implements JsonLinks {
 
     private final URI uri;
     private final JsonApiIdentifiable entity;
-
+    private final Map<String, URI> links = new HashMap<>();
 
     public JsonApiResource(JsonApiIdentifiable entity, URI uri) {
         super(entity);
@@ -24,6 +26,18 @@ public class JsonApiResource extends JsonApiResourceIdentifier {
     @JsonProperty("attributes")
     public JsonApiIdentifiable getEntity() {
         return entity;
+    }
+
+
+    @Override
+    public Map<String, URI> getLinks() {
+        return links;
+    }
+
+
+    @Override
+    public void addLink(String name, URI ref) {
+        links.put(name, ref);
     }
 
 
