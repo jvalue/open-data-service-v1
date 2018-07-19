@@ -13,6 +13,7 @@ import org.jvalue.commons.rest.RestUtils;
 import org.jvalue.ods.api.data.Data;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.db.DataRepository;
+import org.jvalue.ods.decoupleDatabase.IDataRepository;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -44,7 +45,7 @@ public final class DataApi extends AbstractApi {
 
 		if (count < 1 || count > 100) throw RestUtils.createJsonFormattedException("count must be > 0 and < 100", 400);
 
-		DataRepository repository = assertIsValidSource(sourceId);
+		IDataRepository<JsonNode> repository = assertIsValidSource(sourceId);
 		return repository.executePaginatedGet(startId, count);
 	}
 
@@ -54,7 +55,7 @@ public final class DataApi extends AbstractApi {
 			@RestrictedTo(Role.ADMIN) User user,
 			@PathParam("sourceId") String sourceId) {
 
-		DataRepository repository = assertIsValidSource(sourceId);
+		IDataRepository<JsonNode> repository = assertIsValidSource(sourceId);
 		repository.removeAll();
 	}
 
@@ -81,7 +82,7 @@ public final class DataApi extends AbstractApi {
 	}
 
 
-	private DataRepository assertIsValidSource(String sourceId) {
+	private IDataRepository<JsonNode> assertIsValidSource(String sourceId) {
 		return sourceManager.getDataRepository(sourceManager.findBySourceId(sourceId));
 	}
 

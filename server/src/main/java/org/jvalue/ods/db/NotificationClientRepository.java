@@ -25,8 +25,7 @@ public final class NotificationClientRepository extends RepositoryAdapter<
 
 	private static final String DOCUMENT_ID = "doc.value.id != null && doc.value.type != null";
 
-	@Inject
-	NotificationClientRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName) {
+	public NotificationClientRepository(DbConnectorFactory dbConnectorFactory, String databaseName) {
 		super(new NotificationClientCouchDbRepository(dbConnectorFactory.createConnector(databaseName, true)));
 	}
 

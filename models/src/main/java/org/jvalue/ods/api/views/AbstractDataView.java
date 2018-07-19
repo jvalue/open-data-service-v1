@@ -6,7 +6,7 @@ import com.google.common.base.Objects;
 import javax.validation.constraints.NotNull;
 
 
-abstract class AbstractDataView {
+public abstract class AbstractDataView {
 
 	@NotNull private final String mapFunction;
 	private final String reduceFunction;

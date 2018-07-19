@@ -1,6 +1,7 @@
 package org.jvalue.ods.processor;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 
@@ -9,6 +10,7 @@ import org.jvalue.ods.api.processors.ProcessorReference;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.db.DataRepository;
+import org.jvalue.ods.decoupleDatabase.IDataRepository;
 import org.jvalue.ods.processor.adapter.SourceAdapter;
 import org.jvalue.ods.processor.adapter.SourceAdapterFactory;
 import org.jvalue.ods.processor.filter.Filter;
@@ -40,9 +42,9 @@ public final class ProcessorChainFactory {
 
 	@SuppressWarnings("unchecked")
 	public ProcessorChain createProcessorChain(
-			ProcessorReferenceChain chainReference,
-			DataSource source,
-			DataRepository dataRepository) {
+		ProcessorReferenceChain chainReference,
+		DataSource source,
+		IDataRepository<JsonNode> dataRepository) {
 
 		Assert.assertNotNull(chainReference, source, dataRepository);
 
@@ -68,11 +70,11 @@ public final class ProcessorChainFactory {
 
 
 	private Object createProcessorFromAnnotation(
-			Object factory,
-			Class<?> factoryClass, // hack as jmockit removed annotations from methods
-			ProcessorReference reference,
-			DataSource dataSource,
-			DataRepository dataRepository) {
+		Object factory,
+		Class<?> factoryClass, // hack as jmockit removed annotations from methods
+		ProcessorReference reference,
+		DataSource dataSource,
+		IDataRepository<JsonNode> dataRepository) {
 
 		for (Method method : factoryClass.getDeclaredMethods()) {
 			CreationMethod creationAnnotation = method.getAnnotation(CreationMethod.class);

@@ -2,6 +2,7 @@ package org.jvalue.ods.data;
 
 
 import com.fasterxml.jackson.core.JsonPointer;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -16,6 +17,7 @@ import org.jvalue.ods.api.sources.DataSourceMetaData;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.DataSourceRepository;
 import org.jvalue.ods.db.RepositoryFactory;
+import org.jvalue.ods.decoupleDatabase.IDataRepository;
 import org.jvalue.ods.notifications.NotificationManager;
 import org.jvalue.ods.processor.ProcessorChainManager;
 
@@ -33,7 +35,7 @@ public final class DataSourceManagerTest {
 	private static final String SOURCE_ID = "someSourceId";
 
 	@Mocked private DataSourceRepository sourceRepository;
-	@Mocked private Cache<DataRepository> dataRepositoryCache;
+	@Mocked private Cache<IDataRepository<JsonNode>> dataRepositoryCache;
 	@Mocked private DbConnectorFactory dbConnectorFactory;
 	@Mocked private RepositoryFactory repositoryFactory;
 	@Mocked private ProcessorChainManager processorChainManager;

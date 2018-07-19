@@ -1,18 +1,20 @@
 package org.jvalue.ods.data;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.ektorp.DocumentNotFoundException;
-import org.jvalue.commons.couchdb.RepositoryAdapter;
 import org.jvalue.commons.utils.Assert;
 import org.jvalue.commons.utils.Cache;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.db.DataRepository;
+import org.jvalue.ods.api.views.DataView;
 import org.jvalue.ods.db.RepositoryFactory;
+import org.jvalue.ods.decoupleDatabase.IDataRepository;
+import org.jvalue.ods.decoupleDatabase.IRepository;
 
 import java.util.List;
 
 
-public abstract class AbstractDataSourcePropertyManager<T, R extends RepositoryAdapter<?, ?, T>> {
+public abstract class AbstractDataSourcePropertyManager<T, R extends IRepository<T>> {
 
 	private final Cache<R> repositoryCache;
 	private final RepositoryFactory repositoryFactory;
@@ -28,24 +30,24 @@ public abstract class AbstractDataSourcePropertyManager<T, R extends RepositoryA
 	}
 
 
-	public final void add(DataSource source, DataRepository dataRepository, T data) {
+	public final void add(DataSource source, IDataRepository<JsonNode> dataRepository, T data) {
 		Assert.assertNotNull(source, data);
 		assertRepository(source).add(data);
 		doAdd(source, dataRepository, data);
 	}
 
 
-	protected abstract void doAdd(DataSource source, DataRepository dataRepository, T data);
+	protected abstract void doAdd(DataSource source, IDataRepository<JsonNode> dataRepository, T data);
 
 
-	public final void remove(DataSource source, DataRepository dataRepository, T data) {
+	public final void remove(DataSource source, IDataRepository<JsonNode> dataRepository, T data) {
 		Assert.assertNotNull(source, data);
 		assertRepository(source).remove(data);
 		doRemove(source, dataRepository, data);
 	}
 
 
-	protected abstract void doRemove(DataSource source, DataRepository dataRepository, T data);
+	protected abstract void doRemove(DataSource source, IDataRepository<JsonNode> dataRepository, T data);
 
 
 	public final void removeAll(DataSource source) {

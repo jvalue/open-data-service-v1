@@ -4,14 +4,7 @@ package org.jvalue.ods.db;
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-
-import org.ektorp.CouchDbConnector;
-import org.ektorp.DocumentNotFoundException;
-import org.ektorp.DocumentOperationResult;
-import org.ektorp.ViewQuery;
-import org.ektorp.ViewResult;
+import org.ektorp.*;
 import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.DesignDocument;
 import org.ektorp.support.DesignDocumentFactory;
@@ -22,11 +15,7 @@ import org.jvalue.ods.api.data.Cursor;
 import org.jvalue.ods.api.data.Data;
 import org.jvalue.ods.api.views.DataView;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 
@@ -39,8 +28,7 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 	private final DataView revAndIdByDomainIdView;
 
 
-	@Inject
-	DataRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName, @Assisted JsonPointer domainIdKey) {
+	public DataRepository(DbConnectorFactory dbConnectorFactory, String databaseName, JsonPointer domainIdKey) {
 		super(JsonNode.class, dbConnectorFactory.createConnector(databaseName, true), DESIGN_DOCUMENT_NAME);
 		this.connector = dbConnectorFactory.createConnector(databaseName, true);
 		initStandardDesignDocument();

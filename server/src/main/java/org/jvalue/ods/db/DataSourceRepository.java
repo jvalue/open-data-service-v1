@@ -25,8 +25,7 @@ public final class DataSourceRepository extends RepositoryAdapter<
 	static final String DATABASE_NAME = "dataSources";
 	private static final String DOCUMENT_ID = "doc.value.id != null && doc.value.domainIdKey != null";
 
-	@Inject
-	DataSourceRepository(@Named(DATABASE_NAME) CouchDbConnector connector) {
+	public DataSourceRepository(CouchDbConnector connector) {
 		super(new DataSourceCouchDbRepository(connector));
 	}
 

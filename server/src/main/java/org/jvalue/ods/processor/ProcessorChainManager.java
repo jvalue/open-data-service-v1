@@ -3,6 +3,7 @@ package org.jvalue.ods.processor;
 import com.codahale.metrics.Gauge;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Objects;
 import com.google.inject.Inject;
 
@@ -12,10 +13,12 @@ import org.jvalue.commons.utils.ListValueMap;
 import org.jvalue.commons.utils.Log;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
+import org.jvalue.ods.api.views.DataView;
 import org.jvalue.ods.data.AbstractDataSourcePropertyManager;
-import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.ProcessorChainReferenceRepository;
 import org.jvalue.ods.db.RepositoryFactory;
+import org.jvalue.ods.decoupleDatabase.IDataRepository;
+import org.jvalue.ods.decoupleDatabase.IRepository;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +27,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 
 
-public final class ProcessorChainManager extends AbstractDataSourcePropertyManager<ProcessorReferenceChain, ProcessorChainReferenceRepository> {
+public final class ProcessorChainManager extends AbstractDataSourcePropertyManager<ProcessorReferenceChain, IRepository<ProcessorReferenceChain>> {
 
 	private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 	private final Map<ProcessorKey, ScheduledFuture<?>> scheduledTasks = new HashMap<>();				// reoccurring tasks to stop if necessary
@@ -37,7 +40,7 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 	@Inject
 	ProcessorChainManager(
 			ProcessorChainFactory processorChainFactory,
-			Cache<ProcessorChainReferenceRepository> referenceRepositoryCache,
+			Cache<IRepository<ProcessorReferenceChain>> referenceRepositoryCache,
 			RepositoryFactory repositoryFactory,
 			MetricRegistry registry) {
 
@@ -54,21 +57,21 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 	}
 
 
-	public void executeOnce(DataSource source, DataRepository dataRepository, ProcessorReferenceChain reference) {
+	public void executeOnce(DataSource source, IDataRepository<JsonNode> dataRepository, ProcessorReferenceChain reference) {
 		Assert.assertTrue(reference.getExecutionInterval() == null, "reference must not contain an execute interval");
 		startProcessorChain(source, dataRepository, reference);
 	}
 
 
 	@Override
-	protected void doAdd(DataSource source, DataRepository dataRepository, ProcessorReferenceChain reference) {
+	protected void doAdd(DataSource source, IDataRepository<JsonNode> dataRepository, ProcessorReferenceChain reference) {
 		Assert.assertNotNull(reference.getExecutionInterval());
 		startProcessorChain(source, dataRepository, reference);
 	}
 
 
 	@Override
-	protected void doRemove(DataSource source, DataRepository dataRepository, ProcessorReferenceChain reference) {
+	protected void doRemove(DataSource source, IDataRepository<JsonNode> dataRepository, ProcessorReferenceChain reference) {
 		stopProcessorChain(source, reference);
 	}
 
@@ -80,7 +83,7 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 
 
 	@Override
-	protected ProcessorChainReferenceRepository createNewRepository(String sourceId, RepositoryFactory repositoryFactory) {
+	protected IRepository<ProcessorReferenceChain> createNewRepository(String sourceId, RepositoryFactory repositoryFactory) {
 		return repositoryFactory.createFilterChainReferenceRepository(sourceId);
 	}
 
@@ -90,8 +93,8 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 	 * @param sources All sources including their data repositories to create the actual
 	 *                filter chain and start them.
 	 */
-	public void startAllProcessorChains(Map<DataSource, DataRepository> sources) {
-		for (Map.Entry<DataSource, DataRepository> sourceEntry : sources.entrySet()) {
+	public void startAllProcessorChains(Map<DataSource, IDataRepository<JsonNode>> sources) {
+		for (Map.Entry<DataSource, IDataRepository<JsonNode>> sourceEntry : sources.entrySet()) {
 			// start chain
 			for (ProcessorReferenceChain reference : getAll(sourceEntry.getKey())) {
 				startProcessorChain(sourceEntry.getKey(), sourceEntry.getValue(), reference);
@@ -113,7 +116,7 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 	}
 
 
-	private void startProcessorChain(DataSource source, DataRepository dataRepository, ProcessorReferenceChain reference) {
+	private void startProcessorChain(DataSource source, IDataRepository<JsonNode> dataRepository, ProcessorReferenceChain reference) {
 		ProcessorKey key = new ProcessorKey(source.getId(), reference.getId());
 
 		Runnable runnable = new ProcessorRunnable(reference, source, dataRepository);
@@ -144,9 +147,9 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 
 		private final ProcessorReferenceChain reference;
 		private final DataSource source;
-		private final DataRepository dataRepository;
+		private final IDataRepository<JsonNode> dataRepository;
 
-		public ProcessorRunnable(ProcessorReferenceChain reference, DataSource source, DataRepository dataRepository) {
+		public ProcessorRunnable(ProcessorReferenceChain reference, DataSource source, IDataRepository<JsonNode> dataRepository) {
 			this.reference = reference;
 			this.source = source;
 			this.dataRepository = dataRepository;

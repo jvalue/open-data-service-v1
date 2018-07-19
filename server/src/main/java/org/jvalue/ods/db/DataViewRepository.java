@@ -26,8 +26,7 @@ public final class DataViewRepository extends RepositoryAdapter<
 
 	private static final String DOCUMENT_ID = "doc.value.id != null && doc.value.mapFunction != null";
 
-	@Inject
-	DataViewRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName) {
+	public DataViewRepository(DbConnectorFactory dbConnectorFactory, String databaseName) {
 		super(new DataViewCouchDbRepository(dbConnectorFactory.createConnector(databaseName, true)));
 	}
 

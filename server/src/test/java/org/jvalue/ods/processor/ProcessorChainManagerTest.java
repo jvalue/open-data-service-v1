@@ -3,6 +3,7 @@ package org.jvalue.ods.processor;
 
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.core.JsonPointer;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -31,6 +32,7 @@ import mockit.Expectations;
 import mockit.Mocked;
 import mockit.Verifications;
 import mockit.integration.junit4.JMockit;
+import org.jvalue.ods.decoupleDatabase.IDataRepository;
 
 @RunWith(JMockit.class)
 public final class ProcessorChainManagerTest {
@@ -61,7 +63,7 @@ public final class ProcessorChainManagerTest {
 
 	@Test
 	public void testAddAndRemove(
-			@Mocked final DataRepository dataRepository,
+			@Mocked final IDataRepository<JsonNode> dataRepository,
 			@Mocked final ProcessorChainReferenceRepository referenceRepository,
 			@Mocked final ProcessorChain chain) throws Exception {
 
@@ -139,7 +141,7 @@ public final class ProcessorChainManagerTest {
 
 	@Test
 	public void testStartAndStopAll(
-			@Mocked final DataRepository dataRepository,
+			@Mocked final IDataRepository<JsonNode> dataRepository,
 			@Mocked final ProcessorChainReferenceRepository referenceRepository,
 			@Mocked final ProcessorChain chain) throws Exception {
 
@@ -151,7 +153,7 @@ public final class ProcessorChainManagerTest {
 			result = list;
 		}};
 
-		Map<DataSource, DataRepository> sources = new HashMap<>();
+		Map<DataSource, IDataRepository<JsonNode>> sources = new HashMap<>();
 		sources.put(source, dataRepository);
 
 		// start all
@@ -170,7 +172,7 @@ public final class ProcessorChainManagerTest {
 
 
 	private void setupStartingFilterChain(
-			final DataRepository dataRepository,
+			final IDataRepository<JsonNode> dataRepository,
 			final ProcessorChainReferenceRepository referenceRepository,
 			final ProcessorChain chain) {
 

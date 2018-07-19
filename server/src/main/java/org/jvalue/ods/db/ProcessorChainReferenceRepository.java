@@ -26,8 +26,7 @@ public final class ProcessorChainReferenceRepository extends RepositoryAdapter<
 
 	private static final String DOCUMENT_ID = "doc.value.id != null && doc.value.processors != null";
 
-	@Inject
-	ProcessorChainReferenceRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName) {
+	public ProcessorChainReferenceRepository(DbConnectorFactory dbConnectorFactory, String databaseName) {
 		super(new ProcessorChainReferenceCouchDbRepository(dbConnectorFactory.createConnector(databaseName, true)));
 	}
 

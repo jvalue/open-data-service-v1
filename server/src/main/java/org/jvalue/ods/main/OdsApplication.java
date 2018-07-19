@@ -1,8 +1,13 @@
 package org.jvalue.ods.main;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.TypeLiteral;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.google.inject.name.Names;
 import com.hubspot.jackson.jaxrs.PropertyFilteringMessageBodyWriter;
 
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
@@ -22,11 +27,20 @@ import org.jvalue.commons.utils.HttpServiceCheck;
 import org.jvalue.ods.admin.monitoring.DbHealthCheck;
 import org.jvalue.ods.admin.monitoring.MonitoringModule;
 import org.jvalue.ods.admin.rest.AdminFilterChainApi;
+import org.jvalue.ods.api.notifications.Client;
+import org.jvalue.ods.api.processors.PluginMetaData;
+import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
+import org.jvalue.ods.api.sources.DataSource;
+import org.jvalue.ods.api.views.DataView;
 import org.jvalue.ods.auth.AuthModule;
 import org.jvalue.ods.data.DataModule;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.db.DbModule;
+import org.jvalue.ods.db.RepositoryFactory;
+import org.jvalue.ods.decoupleDatabase.IDataRepository;
+import org.jvalue.ods.decoupleDatabase.IRepository;
+import org.jvalue.ods.decoupleDatabase.couchdb.wrapper.*;
 import org.jvalue.ods.notifications.NotificationsModule;
 import org.jvalue.ods.pegelalarm.CepsClientHealthCheck;
 import org.jvalue.ods.pegelalarm.DataHealthCheck;

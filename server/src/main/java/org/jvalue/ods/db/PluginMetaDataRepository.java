@@ -30,8 +30,7 @@ public final class PluginMetaDataRepository extends RepositoryAdapter<
 
 	private static final String DOCUMENT_ID = "doc.value.id != null && doc.value.author != null";
 
-	@Inject
-	PluginMetaDataRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName) {
+	public PluginMetaDataRepository(DbConnectorFactory dbConnectorFactory, String databaseName) {
 		super(new PluginMetaDataCouchDbRepository(dbConnectorFactory.createConnector(databaseName, true)));
 	}
 
