@@ -64,6 +64,13 @@ public class JsonApiResponse {
 
 
 		@Override
+		public Buildable restrictTo(String attribute) {
+			instance.jsonApiEntity.restrictTo(attribute);
+			return this;
+		}
+
+
+		@Override
 		public Response build() {
 			Response.ResponseBuilder responseBuilder = Response.status(instance.statusCode);
 			if (instance.jsonApiEntity != null) {
@@ -87,6 +94,8 @@ public class JsonApiResponse {
 		Response build();
 
 		Buildable addLink(String name, URI ref);
+
+		Buildable restrictTo(String attribute);
 	}
 
 }

@@ -7,6 +7,7 @@ import javax.ws.rs.core.UriInfo;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class JsonApiDocument implements Serializable, JsonLinks {
 
@@ -42,6 +43,14 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 
 	public List<JsonApiResource> getData() {
 		return data;
+	}
+
+
+	public void restrictTo(String attribute) {
+		data = data
+			.stream()
+			.map(r -> r.restrictTo(attribute))
+			.collect(Collectors.toList());
 	}
 
 

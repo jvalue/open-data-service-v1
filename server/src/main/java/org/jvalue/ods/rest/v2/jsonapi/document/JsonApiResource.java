@@ -3,6 +3,7 @@ package org.jvalue.ods.rest.v2.jsonapi.document;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.jvalue.ods.api.jsonapi.JsonApiIdentifiable;
+import org.jvalue.ods.utils.JsonUtils;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -24,7 +25,7 @@ public class JsonApiResource extends JsonApiResourceIdentifier implements JsonLi
 
     @JsonIgnoreProperties(value = {"id"})
     @JsonProperty("attributes")
-    public JsonApiIdentifiable getEntity() {
+    public Object getEntity() {
         return entity;
     }
 
@@ -39,6 +40,16 @@ public class JsonApiResource extends JsonApiResourceIdentifier implements JsonLi
     public void addLink(String name, URI ref) {
         links.put(name, ref);
     }
+
+
+    public JsonApiResource restrictTo(String attribute) {
+    	return new JsonApiResource(entity, uri) {
+			@Override
+			public Object getEntity() {
+				return JsonUtils.createRestrictedEntity(entity, attribute);
+			}
+		};
+	}
 
 
     @Override

@@ -58,14 +58,12 @@ public final class DataSourceApi extends AbstractApi {
 	@Path("/{sourceId}/schema")
 	public Response getSourceSchema(@PathParam("sourceId") String sourceId) {
 
-		String id = sourceId + "_schema";
 		DataSource source = sourceManager.findBySourceId(sourceId);
-		JsonNode schema = source.getSchema();
 
-		//TODO: return datasource as JsonAPI object with schema as only attribute.
 		return JsonApiResponse
 				.createGetResponse(uriInfo)
 				.data(source)
+				.restrictTo("schema")
 				.build();
 	}
 
