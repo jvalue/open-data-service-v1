@@ -1,4 +1,4 @@
-package org.jvalue.ods.rest.v2.jsonapi;
+package org.jvalue.ods.rest.v2.jsonapi.response;
 
 import org.jvalue.ods.api.jsonapi.JsonApiIdentifiable;
 
