@@ -21,11 +21,6 @@ public class JsonApiResourceIdentifier implements JsonApiIdentifiable {
     }
 
 
-    public JsonApiResourceIdentifier toIdentifier() {
-        return new JsonApiResourceIdentifier(this);
-    }
-
-
     @Override
     public String getId() {
         return id;

@@ -22,16 +22,6 @@ public class JsonApiResourceIdentifierTest {
 
 
     @Test
-    public void testToIdentifier() {
-        JsonApiResourceIdentifier id = new JsonApiResourceIdentifier(dummyObj);
-
-        JsonApiResourceIdentifier result = id.toIdentifier();
-
-        Assert.assertEquals(id, result);
-    }
-
-
-    @Test
     public void testEquals() {
         JsonApiResourceIdentifier result1 = new JsonApiResourceIdentifier(dummyObj);
         JsonApiResourceIdentifier result2 = new JsonApiResourceIdentifier(dummyObj);

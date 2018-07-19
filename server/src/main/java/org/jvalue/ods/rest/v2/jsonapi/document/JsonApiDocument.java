@@ -7,7 +7,6 @@ import javax.ws.rs.core.UriInfo;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class JsonApiDocument implements Serializable, JsonLinks {
 
@@ -18,7 +17,7 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 	@JsonFormat(with = {
 			JsonFormat.Feature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED,
 			JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY})
-	protected List<JsonApiResourceIdentifier> data = new LinkedList<>();
+	protected List<JsonApiResource> data = new LinkedList<>();
 
 
 	public JsonApiDocument(JsonApiIdentifiable entity, UriInfo uriInfo) {
@@ -41,14 +40,7 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 	}
 
 
-	public void toIdentifier() {
-		data = data
-				.stream()
-				.map(JsonApiResourceIdentifier::toIdentifier)
-				.collect(Collectors.toList());
-	}
-
-	public List<JsonApiResourceIdentifier> getData() {
+	public List<JsonApiResource> getData() {
 		return data;
 	}
 

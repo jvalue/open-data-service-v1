@@ -64,20 +64,7 @@ public class JsonApiDocumentTest {
 	}
 
 
-    @Test
-    public void testToIdentifier() {
-		JsonApiDocument document = new JsonApiDocument(dummyObj01, uriInfoMock);
-
-		Class originalClass = document.getData().get(0).getClass();
-		document.toIdentifier();
-		Class resultClass = document.getData().get(0).getClass();
-
-		Assert.assertEquals(JsonApiResource.class, originalClass);
-		Assert.assertEquals(JsonApiResourceIdentifier.class, resultClass);
-	}
-
-
-    @Test
+	@Test
     public void testLinks() {
 		JsonApiDocument result = new JsonApiDocument(dummyObj01, uriInfoMock);
 

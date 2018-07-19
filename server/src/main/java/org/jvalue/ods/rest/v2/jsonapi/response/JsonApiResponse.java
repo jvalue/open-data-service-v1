@@ -73,13 +73,6 @@ public class JsonApiResponse {
 			}
 			return responseBuilder.build();
 		}
-
-
-		@Override
-		public Buildable toIdentifier() {
-			instance.jsonApiEntity.toIdentifier();
-			return this;
-		}
 	}
 
 
@@ -92,8 +85,6 @@ public class JsonApiResponse {
 
 	public interface Buildable {
 		Response build();
-
-		Buildable toIdentifier();
 
 		Buildable addLink(String name, URI ref);
 	}

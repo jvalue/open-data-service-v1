@@ -84,6 +84,7 @@ public class JsonApiResponseTest {
 
 	}
 
+
 	@Test
 	public void testPostResponse() {
 		//Record
@@ -104,6 +105,7 @@ public class JsonApiResponseTest {
 		assertIsValidJsonApiDataResponse(result);
 		assertHasValidData(extractJsonEntity(result));
 	}
+
 
 	@Test
 	public void testPutResponse() {
@@ -126,28 +128,6 @@ public class JsonApiResponseTest {
 		assertHasValidData(extractJsonEntity(result));
 	}
 
-	@Test
-	public void testToIdentifier() {
-		//Record
-		new Expectations() {{
-			uriInfo.getAbsolutePath();
-			result = URI.create(ENTITY_PATH);
-		}};
-		JsonApiIdentifiable testEntity = createEntityWithAttributes();
-
-		//Replay
-		Response result = JsonApiResponse
-				.createGetResponse(uriInfo)
-				.data(testEntity)
-				.toIdentifier()
-				.build();
-
-		//Verify
-		assertIsValidJsonApiDataResponse(result);
-		JsonNode identifierNode = extractJsonEntity(result);
-		Assert.assertEquals(2, countFields(identifierNode));
-		assertHasValidData(identifierNode);
-	}
 
 	@Test
 	public void testAddLinks() {
