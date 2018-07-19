@@ -4,6 +4,8 @@ package org.jvalue.ods.db;
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 import org.ektorp.*;
 import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.DesignDocument;
@@ -14,10 +16,11 @@ import org.jvalue.commons.utils.Assert;
 import org.jvalue.ods.api.data.Cursor;
 import org.jvalue.ods.api.data.Data;
 import org.jvalue.ods.api.views.DataView;
+import org.jvalue.ods.decoupleDatabase.IDataRepository;
 
 import java.util.*;
 
-public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
+public final class DataRepository extends CouchDbRepositorySupport<JsonNode> implements IDataRepository<JsonNode>{
 
 	private static final String DESIGN_DOCUMENT_NAME = "Data";
 	private static final String DESIGN_DOCUMENT_ID = "_design/" + DESIGN_DOCUMENT_NAME;
@@ -27,8 +30,8 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 	private final DataView domainIdView;
 	private final DataView revAndIdByDomainIdView;
 
-
-	public DataRepository(DbConnectorFactory dbConnectorFactory, String databaseName, JsonPointer domainIdKey) {
+	@Inject
+	public DataRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName, @Assisted JsonPointer domainIdKey) {
 		super(JsonNode.class, dbConnectorFactory.createConnector(databaseName, true), DESIGN_DOCUMENT_NAME);
 		this.connector = dbConnectorFactory.createConnector(databaseName, true);
 		initStandardDesignDocument();
@@ -43,6 +46,10 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 		if (!containsView(allView)) addView(allView);
 	}
 
+	@Override
+	public JsonNode findById(String Id) {
+		return findByDomainId(Id);
+	}
 
 	public JsonNode findByDomainId(String domainId) {
 		List<JsonNode> resultList = executeQuery(domainIdView, domainId);
@@ -243,5 +250,4 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 		}
 		return keyBuilder.toString();
 	}
-
 }

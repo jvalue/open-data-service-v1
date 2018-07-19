@@ -15,17 +15,19 @@ import org.jvalue.commons.couchdb.DbDocument;
 import org.jvalue.commons.couchdb.DbDocumentAdaptable;
 import org.jvalue.commons.couchdb.RepositoryAdapter;
 import org.jvalue.ods.api.notifications.Client;
+import org.jvalue.ods.decoupleDatabase.IRepository;
 
 import java.util.List;
 
 public final class NotificationClientRepository extends RepositoryAdapter<
 		NotificationClientRepository.NotificationClientCouchDbRepository,
 		NotificationClientRepository.ClientDocument,
-		Client> {
+		Client> implements IRepository<Client>{
 
 	private static final String DOCUMENT_ID = "doc.value.id != null && doc.value.type != null";
 
-	public NotificationClientRepository(DbConnectorFactory dbConnectorFactory, String databaseName) {
+	@Inject
+	public NotificationClientRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName) {
 		super(new NotificationClientCouchDbRepository(dbConnectorFactory.createConnector(databaseName, true)));
 	}
 

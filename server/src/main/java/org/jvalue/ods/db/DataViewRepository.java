@@ -15,6 +15,7 @@ import org.jvalue.commons.couchdb.DbDocument;
 import org.jvalue.commons.couchdb.DbDocumentAdaptable;
 import org.jvalue.commons.couchdb.RepositoryAdapter;
 import org.jvalue.ods.api.views.DataView;
+import org.jvalue.ods.decoupleDatabase.IRepository;
 
 import java.util.List;
 
@@ -22,11 +23,12 @@ import java.util.List;
 public final class DataViewRepository extends RepositoryAdapter<
 		DataViewRepository.DataViewCouchDbRepository,
 		DataViewRepository.DataViewDocument,
-		DataView> {
+		DataView> implements IRepository<DataView>{
 
 	private static final String DOCUMENT_ID = "doc.value.id != null && doc.value.mapFunction != null";
 
-	public DataViewRepository(DbConnectorFactory dbConnectorFactory, String databaseName) {
+	@Inject
+	public DataViewRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName) {
 		super(new DataViewCouchDbRepository(dbConnectorFactory.createConnector(databaseName, true)));
 	}
 

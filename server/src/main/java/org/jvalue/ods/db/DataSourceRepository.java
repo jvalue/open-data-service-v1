@@ -14,18 +14,20 @@ import org.jvalue.commons.couchdb.DbDocument;
 import org.jvalue.commons.couchdb.DbDocumentAdaptable;
 import org.jvalue.commons.couchdb.RepositoryAdapter;
 import org.jvalue.ods.api.sources.DataSource;
+import org.jvalue.ods.decoupleDatabase.IRepository;
 
 import java.util.List;
 
 public final class DataSourceRepository extends RepositoryAdapter<
 		DataSourceRepository.DataSourceCouchDbRepository,
 		DataSourceRepository.DataSourceDocument,
-		DataSource> {
+		DataSource> implements IRepository<DataSource>{
 
 	static final String DATABASE_NAME = "dataSources";
 	private static final String DOCUMENT_ID = "doc.value.id != null && doc.value.domainIdKey != null";
 
-	public DataSourceRepository(CouchDbConnector connector) {
+		@Inject
+	public DataSourceRepository(@Named(DATABASE_NAME) CouchDbConnector connector) {
 		super(new DataSourceCouchDbRepository(connector));
 	}
 

@@ -17,6 +17,7 @@ import org.jvalue.commons.couchdb.DbDocument;
 import org.jvalue.commons.couchdb.DbDocumentAdaptable;
 import org.jvalue.commons.couchdb.RepositoryAdapter;
 import org.jvalue.ods.api.processors.PluginMetaData;
+import org.jvalue.ods.decoupleDatabase.IRepository;
 
 import java.io.InputStream;
 import java.util.List;
@@ -26,11 +27,12 @@ import java.util.Map;
 public final class PluginMetaDataRepository extends RepositoryAdapter<
 		PluginMetaDataRepository.PluginMetaDataCouchDbRepository,
 		PluginMetaDataRepository.PluginMetaDataDocument,
-		PluginMetaData> {
+		PluginMetaData> implements IRepository<PluginMetaData>{
 
 	private static final String DOCUMENT_ID = "doc.value.id != null && doc.value.author != null";
 
-	public PluginMetaDataRepository(DbConnectorFactory dbConnectorFactory, String databaseName) {
+	@Inject
+	public PluginMetaDataRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName) {
 		super(new PluginMetaDataCouchDbRepository(dbConnectorFactory.createConnector(databaseName, true)));
 	}
 

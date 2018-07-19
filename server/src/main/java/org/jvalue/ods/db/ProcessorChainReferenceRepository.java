@@ -15,6 +15,7 @@ import org.jvalue.commons.couchdb.DbDocument;
 import org.jvalue.commons.couchdb.DbDocumentAdaptable;
 import org.jvalue.commons.couchdb.RepositoryAdapter;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
+import org.jvalue.ods.decoupleDatabase.IRepository;
 
 import java.util.List;
 
@@ -22,11 +23,12 @@ import java.util.List;
 public final class ProcessorChainReferenceRepository extends RepositoryAdapter<
 		ProcessorChainReferenceRepository.ProcessorChainReferenceCouchDbRepository,
 		ProcessorChainReferenceRepository.ProcessorReferenceChainDocument,
-		ProcessorReferenceChain> {
+		ProcessorReferenceChain> implements IRepository<ProcessorReferenceChain>{
 
 	private static final String DOCUMENT_ID = "doc.value.id != null && doc.value.processors != null";
 
-	public ProcessorChainReferenceRepository(DbConnectorFactory dbConnectorFactory, String databaseName) {
+	@Inject
+	public ProcessorChainReferenceRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName) {
 		super(new ProcessorChainReferenceCouchDbRepository(dbConnectorFactory.createConnector(databaseName, true)));
 	}
 

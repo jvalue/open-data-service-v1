@@ -62,7 +62,7 @@ public class DbModule extends AbstractModule {
 			bind(new TypeLiteral<Cache<IRepository<JsonNode>>>() { }).in(Singleton.class);
 
 //			bind(new TypeLiteral<IRepository<DataView>>() {}).to(CouchDbDataViewRepositoryWrapper.class);
-			bind(new TypeLiteral<IRepository<DataSource>>() {}).to(CouchDbDataSourceRepositoryWrapper.class);
+			bind(new TypeLiteral<IRepository<DataSource>>() {}).to(DataSourceRepository.class);
 //			bind(new TypeLiteral<IDataRepository<JsonNode>>() {}).to(CouchDbDataRepositoryWrapper.class);
 //			bind(new TypeLiteral<IRepository<ProcessorReferenceChain>>() {}).to(CouchDbProcessorChainReferenceRepositoryWrapper.class);
 //			bind(new TypeLiteral<IRepository<Client>>() {}).to(CouchDbNotificationClientRepositoryWrapper.class);
@@ -73,37 +73,37 @@ public class DbModule extends AbstractModule {
 					new TypeLiteral<IRepository<DataView>>() {
 					},
 					Names.named(RepositoryFactory.NAME_DATA_VIEW_REPOSITORY),
-					CouchDbDataViewRepositoryWrapper.class)
+					DataViewRepository.class)
 
 				.implement(
 					new TypeLiteral<IRepository<DataSource>>() {
 					},
 					Names.named(RepositoryFactory.NAME_DATA_SOURCE_REPOSITORY),
-					CouchDbDataSourceRepositoryWrapper.class)
+					DataSourceRepository.class)
 
 				.implement(
 					new TypeLiteral<IDataRepository<JsonNode>>() {
 					},
 					Names.named(RepositoryFactory.NAME_DATA_REPOSITORY),
-					CouchDbDataRepositoryWrapper.class)
+					DataRepository.class)
 
 				.implement(
 					new TypeLiteral<IRepository<ProcessorReferenceChain>>() {
 					},
 					Names.named(RepositoryFactory.NAME_FILTER_CHAIN_REF_REPOSITORY),
-					CouchDbProcessorChainReferenceRepositoryWrapper.class)
+					ProcessorChainReferenceRepository.class)
 
 				.implement(
 					new TypeLiteral<IRepository<Client>>() {
 					},
 					Names.named(RepositoryFactory.NAME_NOTIFICATION_CLIENT_REPOSITORY),
-					CouchDbNotificationClientRepositoryWrapper.class)
+					NotificationClientRepository.class)
 
 				.implement(
 					new TypeLiteral<IRepository<PluginMetaData>>() {
 					},
 					Names.named(RepositoryFactory.NAME_PLUGIN_META_DATA_REPOSITORY),
-					CouchDbPluginMetaDataRepositoryWrapper.class)
+					PluginMetaDataRepository.class)
 
 				.build(RepositoryFactory.class));
 		} catch (MalformedURLException mue) {
