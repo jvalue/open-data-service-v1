@@ -4,11 +4,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Objects;
+import org.jvalue.ods.api.jsonapi.JsonApiIdentifiableWithMetaData;
 
 import javax.validation.constraints.NotNull;
 
 
-public final class DataSource extends AbstractDataSource {
+public final class DataSource extends AbstractDataSource implements JsonApiIdentifiableWithMetaData{
 
 	@NotNull private final String id;
 
