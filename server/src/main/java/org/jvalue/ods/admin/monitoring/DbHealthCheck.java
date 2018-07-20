@@ -3,11 +3,8 @@ package org.jvalue.ods.admin.monitoring;
 
 import com.codahale.metrics.health.HealthCheck;
 import com.google.inject.Inject;
-
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.db.DataSourceRepository;
-import org.jvalue.ods.decoupleDatabase.IRepository;
-import org.jvalue.ods.decoupleDatabase.couchdb.wrapper.CouchDbDataSourceRepositoryWrapper;
+import org.jvalue.commons.db.IRepository;
 
 /**
  * Checks that CouchDb is reachable.

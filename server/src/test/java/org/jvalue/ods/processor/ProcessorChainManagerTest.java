@@ -18,8 +18,8 @@ import org.jvalue.ods.api.processors.ProcessorReference;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceMetaData;
-import org.jvalue.ods.db.DataRepository;
-import org.jvalue.ods.db.ProcessorChainReferenceRepository;
+import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
+import org.jvalue.ods.db.couchdb.ProcessorChainReferenceRepository;
 import org.jvalue.ods.db.RepositoryFactory;
 
 import java.util.HashMap;
@@ -33,6 +33,7 @@ import mockit.Mocked;
 import mockit.Verifications;
 import mockit.integration.junit4.JMockit;
 import org.jvalue.ods.decoupleDatabase.IDataRepository;
+import org.jvalue.commons.db.IRepository;
 
 @RunWith(JMockit.class)
 public final class ProcessorChainManagerTest {
@@ -45,7 +46,7 @@ public final class ProcessorChainManagerTest {
 			new ObjectNode(JsonNodeFactory.instance),
 			new DataSourceMetaData("", "", "", "", "", "", ""));
 	@Mocked private ProcessorChainFactory chainFactory;
-	@Mocked private Cache<ProcessorChainReferenceRepository> repositoryCache;
+	@Mocked private Cache<IRepository<ProcessorReferenceChain>> repositoryCache;
 	@Mocked private RepositoryFactory repositoryFactory;
 	@Mocked private MetricRegistry registry;
 	private ProcessorChainManager manager;
@@ -63,9 +64,9 @@ public final class ProcessorChainManagerTest {
 
 	@Test
 	public void testAddAndRemove(
-			@Mocked final IDataRepository<JsonNode> dataRepository,
-			@Mocked final ProcessorChainReferenceRepository referenceRepository,
-			@Mocked final ProcessorChain chain) throws Exception {
+		@Mocked final IDataRepository<CouchDbDataView, JsonNode> dataRepository,
+		@Mocked final ProcessorChainReferenceRepository referenceRepository,
+		@Mocked final ProcessorChain chain) throws Exception {
 
 		setupStartingFilterChain(dataRepository, referenceRepository, chain);
 
@@ -141,7 +142,7 @@ public final class ProcessorChainManagerTest {
 
 	@Test
 	public void testStartAndStopAll(
-			@Mocked final IDataRepository<JsonNode> dataRepository,
+			@Mocked final IDataRepository<CouchDbDataView, JsonNode> dataRepository,
 			@Mocked final ProcessorChainReferenceRepository referenceRepository,
 			@Mocked final ProcessorChain chain) throws Exception {
 
@@ -153,7 +154,7 @@ public final class ProcessorChainManagerTest {
 			result = list;
 		}};
 
-		Map<DataSource, IDataRepository<JsonNode>> sources = new HashMap<>();
+		Map<DataSource, IDataRepository<CouchDbDataView, JsonNode>> sources = new HashMap<>();
 		sources.put(source, dataRepository);
 
 		// start all
@@ -172,7 +173,7 @@ public final class ProcessorChainManagerTest {
 
 
 	private void setupStartingFilterChain(
-			final IDataRepository<JsonNode> dataRepository,
+			final IDataRepository<CouchDbDataView, JsonNode> dataRepository,
 			final ProcessorChainReferenceRepository referenceRepository,
 			final ProcessorChain chain) {
 

@@ -9,9 +9,9 @@ import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.api.processors.PluginMetaData;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.api.views.DataView;
+import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
 import org.jvalue.ods.decoupleDatabase.IDataRepository;
-import org.jvalue.ods.decoupleDatabase.IRepository;
+import org.jvalue.commons.db.IRepository;
 
 public interface RepositoryFactory {
 	static final String
@@ -23,13 +23,13 @@ public interface RepositoryFactory {
 		NAME_PLUGIN_META_DATA_REPOSITORY = "PluginMetaDataRepository";
 
 	@Named(NAME_DATA_VIEW_REPOSITORY)
-	public IRepository<DataView> createDataViewRepository(String databaseName);
+	public IRepository<CouchDbDataView> createDataViewRepository(String databaseName);
 
 	@Named(NAME_DATA_SOURCE_REPOSITORY)
 	public IRepository<DataSource> createDataSourceRepository(CouchDbConnector connector);
 
 	@Named(NAME_DATA_REPOSITORY)
-	public IDataRepository<JsonNode> createSourceDataRepository(String databaseName, JsonPointer domainIdKey);
+	public IDataRepository<CouchDbDataView, JsonNode> createSourceDataRepository(String databaseName, JsonPointer domainIdKey);
 
 	@Named(NAME_FILTER_CHAIN_REF_REPOSITORY)
 	public IRepository<ProcessorReferenceChain> createFilterChainReferenceRepository(String databaseName);

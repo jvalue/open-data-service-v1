@@ -1,4 +1,4 @@
-package org.jvalue.ods.api.views;
+package org.jvalue.ods.api.views.couchdb;
 
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -7,10 +7,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public final class DataViewDescription extends AbstractDataView {
+public final class CouchDbDataViewDescription extends AbstractCouchDbDataView {
 
 	@JsonCreator
-	public DataViewDescription(
+	public CouchDbDataViewDescription(
 			@JsonProperty("mapFunction") String mapFunction,
 			@JsonProperty("reduceFunction") String reduceFunction) {
 
@@ -18,7 +18,7 @@ public final class DataViewDescription extends AbstractDataView {
 	}
 
 
-	public DataViewDescription(String mapFunction) {
+	public CouchDbDataViewDescription(String mapFunction) {
 		this(mapFunction, null);
 	}
 

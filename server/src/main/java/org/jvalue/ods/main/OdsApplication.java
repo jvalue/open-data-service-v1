@@ -1,15 +1,13 @@
 package org.jvalue.ods.main;
 
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.TypeLiteral;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
-import com.google.inject.name.Names;
 import com.hubspot.jackson.jaxrs.PropertyFilteringMessageBodyWriter;
-
+import io.dropwizard.Application;
+import io.dropwizard.jersey.DropwizardResourceConfig;
+import io.dropwizard.jersey.setup.JerseyContainerHolder;
+import io.dropwizard.setup.Environment;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.hibernate.validator.HibernateValidator;
@@ -27,49 +25,22 @@ import org.jvalue.commons.utils.HttpServiceCheck;
 import org.jvalue.ods.admin.monitoring.DbHealthCheck;
 import org.jvalue.ods.admin.monitoring.MonitoringModule;
 import org.jvalue.ods.admin.rest.AdminFilterChainApi;
-import org.jvalue.ods.api.notifications.Client;
-import org.jvalue.ods.api.processors.PluginMetaData;
-import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
-import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.api.views.DataView;
 import org.jvalue.ods.auth.AuthModule;
 import org.jvalue.ods.data.DataModule;
 import org.jvalue.ods.data.DataSourceManager;
-import org.jvalue.ods.db.DbModule;
-import org.jvalue.ods.db.RepositoryFactory;
-import org.jvalue.ods.decoupleDatabase.IDataRepository;
-import org.jvalue.ods.decoupleDatabase.IRepository;
-import org.jvalue.ods.decoupleDatabase.couchdb.wrapper.*;
+import org.jvalue.ods.db.couchdb.CouchDbModule;
 import org.jvalue.ods.notifications.NotificationsModule;
-import org.jvalue.ods.pegelalarm.CepsClientHealthCheck;
-import org.jvalue.ods.pegelalarm.DataHealthCheck;
-import org.jvalue.ods.pegelalarm.DataSourceHealthCheck;
-import org.jvalue.ods.pegelalarm.FilterChainHealthCheck;
-import org.jvalue.ods.pegelalarm.PegelOnlineHealthCheck;
+import org.jvalue.ods.pegelalarm.*;
 import org.jvalue.ods.processor.ProcessorModule;
 import org.jvalue.ods.processor.reference.ValidChainReference;
+import org.jvalue.ods.rest.v1.*;
 import org.jvalue.ods.transformation.DataTransformationModule;
-import org.jvalue.ods.rest.v1.DataApi;
-import org.jvalue.ods.rest.v1.DataSourceApi;
-import org.jvalue.ods.rest.v1.DataViewApi;
-import org.jvalue.ods.rest.v1.NotificationApi;
-import org.jvalue.ods.rest.v1.PluginApi;
-import org.jvalue.ods.rest.v1.ProcessorChainApi;
-import org.jvalue.ods.rest.v1.ProcessorSpecificationApi;
-import org.jvalue.ods.rest.v1.UserApi;
-import org.jvalue.ods.rest.v1.VersionApi;
 import org.jvalue.ods.utils.GuiceConstraintValidatorFactory;
-
-import java.util.List;
 
 import javax.validation.Validation;
 import javax.ws.rs.core.Context;
-
-import io.dropwizard.Application;
-import io.dropwizard.jersey.DropwizardResourceConfig;
-import io.dropwizard.jersey.setup.JerseyContainerHolder;
-import io.dropwizard.setup.Environment;
+import java.util.List;
 
 public final class OdsApplication extends Application<OdsConfig> {
 
@@ -94,7 +65,7 @@ public final class OdsApplication extends Application<OdsConfig> {
 				new MonitoringModule(environment.metrics()),
 				new ConfigModule(configuration),
 				new ProcessorModule(),
-				new DbModule(configuration.getCouchDb()),
+				new CouchDbModule(configuration.getCouchDb()),
 				new NotificationsModule(),
 				new DataModule(),
 				new AuthModule(configuration.getAuth()),

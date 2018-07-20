@@ -1,4 +1,4 @@
-package org.jvalue.ods.db;
+package org.jvalue.ods.db.couchdb;
 
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -10,12 +10,12 @@ import org.ektorp.CouchDbConnector;
 import org.ektorp.DocumentNotFoundException;
 import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.View;
-import org.jvalue.commons.couchdb.DbConnectorFactory;
 import org.jvalue.commons.couchdb.DbDocument;
 import org.jvalue.commons.couchdb.DbDocumentAdaptable;
 import org.jvalue.commons.couchdb.RepositoryAdapter;
-import org.jvalue.ods.api.views.DataView;
-import org.jvalue.ods.decoupleDatabase.IRepository;
+import org.jvalue.commons.db.DbConnectorFactory;
+import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
+import org.jvalue.commons.db.IRepository;
 
 import java.util.List;
 
@@ -23,20 +23,20 @@ import java.util.List;
 public final class DataViewRepository extends RepositoryAdapter<
 		DataViewRepository.DataViewCouchDbRepository,
 		DataViewRepository.DataViewDocument,
-		DataView> implements IRepository<DataView>{
+	CouchDbDataView> implements IRepository<CouchDbDataView>{
 
 	private static final String DOCUMENT_ID = "doc.value.id != null && doc.value.mapFunction != null";
 
 	@Inject
 	public DataViewRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName) {
-		super(new DataViewCouchDbRepository(dbConnectorFactory.createConnector(databaseName, true)));
+		super(new DataViewCouchDbRepository((CouchDbConnector) dbConnectorFactory.createConnector(databaseName, true)));
 	}
 
 
 	@View( name = "all", map = "function(doc) { if (" + DOCUMENT_ID + ") emit(null, doc) }")
 	static final class DataViewCouchDbRepository
 			extends CouchDbRepositorySupport<DataViewRepository.DataViewDocument>
-			implements DbDocumentAdaptable<DataViewDocument, DataView> {
+			implements DbDocumentAdaptable<DataViewDocument, CouchDbDataView> {
 
 
 		public DataViewCouchDbRepository(CouchDbConnector connector) {
@@ -57,24 +57,24 @@ public final class DataViewRepository extends RepositoryAdapter<
 
 
 		@Override
-		public DataViewDocument createDbDocument(DataView view) {
+		public DataViewDocument createDbDocument(CouchDbDataView view) {
 			return new DataViewDocument(view);
 		}
 
 
 		@Override
-		public String getIdForValue(DataView view) {
+		public String getIdForValue(CouchDbDataView view) {
 			return view.getId();
 		}
 
 	}
 
 
-	static final class DataViewDocument extends DbDocument<DataView> {
+	static final class DataViewDocument extends DbDocument<CouchDbDataView> {
 
 		@JsonCreator
 		public DataViewDocument(
-				@JsonProperty("value") DataView dataView) {
+				@JsonProperty("value") CouchDbDataView dataView) {
 			super(dataView);
 		}
 

@@ -10,6 +10,7 @@ import org.jvalue.commons.couchdb.RepositoryAdapter;
 import org.jvalue.commons.couchdb.test.AbstractRepositoryAdapterTest;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceMetaData;
+import org.jvalue.ods.db.couchdb.DataSourceRepository;
 
 public class DataSourceRepositoryTest extends AbstractRepositoryAdapterTest<DataSource> {
 

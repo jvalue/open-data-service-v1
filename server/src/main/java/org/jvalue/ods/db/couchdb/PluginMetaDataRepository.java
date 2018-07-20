@@ -1,4 +1,4 @@
-package org.jvalue.ods.db;
+package org.jvalue.ods.db.couchdb;
 
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -12,12 +12,12 @@ import org.ektorp.CouchDbConnector;
 import org.ektorp.DocumentNotFoundException;
 import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.View;
-import org.jvalue.commons.couchdb.DbConnectorFactory;
 import org.jvalue.commons.couchdb.DbDocument;
 import org.jvalue.commons.couchdb.DbDocumentAdaptable;
 import org.jvalue.commons.couchdb.RepositoryAdapter;
+import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.ods.api.processors.PluginMetaData;
-import org.jvalue.ods.decoupleDatabase.IRepository;
+import org.jvalue.commons.db.IRepository;
 
 import java.io.InputStream;
 import java.util.List;
@@ -33,7 +33,7 @@ public final class PluginMetaDataRepository extends RepositoryAdapter<
 
 	@Inject
 	public PluginMetaDataRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName) {
-		super(new PluginMetaDataCouchDbRepository(dbConnectorFactory.createConnector(databaseName, true)));
+		super(new PluginMetaDataCouchDbRepository((CouchDbConnector) dbConnectorFactory.createConnector(databaseName, true)));
 	}
 
 

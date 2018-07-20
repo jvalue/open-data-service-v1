@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceMetaData;
-import org.jvalue.ods.db.DataRepository;
+import org.jvalue.ods.db.couchdb.DataRepository;
 
 import java.util.Collection;
 import java.util.HashMap;

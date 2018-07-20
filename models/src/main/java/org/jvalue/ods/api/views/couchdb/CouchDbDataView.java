@@ -1,4 +1,4 @@
-package org.jvalue.ods.api.views;
+package org.jvalue.ods.api.views.couchdb;
 
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public final class DataView extends AbstractDataView {
+public final class CouchDbDataView extends AbstractCouchDbDataView {
 
 	@NotNull private final String id;
 
@@ -21,7 +21,7 @@ public final class DataView extends AbstractDataView {
 	 * @param reduceFunction the optional reduce function written in JavaScript
 	 */
 	@JsonCreator
-	public DataView(
+	public CouchDbDataView(
 			@JsonProperty("id") String id,
 			@JsonProperty("mapFunction") String mapFunction,
 			@JsonProperty("reduceFunction") String reduceFunction) {
@@ -31,7 +31,7 @@ public final class DataView extends AbstractDataView {
 	}
 
 
-	public DataView(String id, String mapFunction) {
+	public CouchDbDataView(String id, String mapFunction) {
 		this(id, mapFunction, null);
 	}
 
@@ -44,8 +44,8 @@ public final class DataView extends AbstractDataView {
 	@Override
 	public boolean equals(Object other) {
 		if (!super.equals(other)) return false;
-		if (!(other instanceof DataView)) return false;
-		DataView view = (DataView) other;
+		if (!(other instanceof CouchDbDataView)) return false;
+		CouchDbDataView view = (CouchDbDataView) other;
 		return Objects.equal(id, view.id);
 	}
 

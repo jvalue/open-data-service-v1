@@ -8,8 +8,8 @@ import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
 import org.jvalue.commons.rest.RestUtils;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.api.views.DataView;
-import org.jvalue.ods.api.views.DataViewDescription;
+import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
+import org.jvalue.ods.api.views.couchdb.CouchDbDataViewDescription;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.data.DataViewManager;
 
@@ -43,7 +43,7 @@ public final class DataViewApi extends AbstractApi {
 
 
 	@GET
-	public List<DataView> getAllViews(@PathParam("sourceId") String sourceId) {
+	public List<CouchDbDataView> getAllViews(@PathParam("sourceId") String sourceId) {
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		return viewManager.getAll(source);
 	}
@@ -58,7 +58,7 @@ public final class DataViewApi extends AbstractApi {
 			@QueryParam("argument") String argument) {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
-		DataView view = viewManager.get(source, viewId);
+		CouchDbDataView view = viewManager.get(source, viewId);
 
 		if (!execute) return view;
 		return viewManager.executeView(sourceManager.getDataRepository(source), view, argument);
@@ -67,17 +67,17 @@ public final class DataViewApi extends AbstractApi {
 
 	@PUT
 	@Path("/{viewId}")
-	public DataView addView(
+	public CouchDbDataView addView(
 			@RestrictedTo(Role.ADMIN) User user,
 			@PathParam("sourceId") String sourceId,
 			@PathParam("viewId") String viewId,
-			@Valid DataViewDescription viewDescription) {
+			@Valid CouchDbDataViewDescription viewDescription) {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		if (viewManager.contains(source, viewId))
 			throw RestUtils.createJsonFormattedException("data view with id " + viewId + " already exists", 409);
 
-		DataView view = new DataView(viewId, viewDescription.getMapFunction(), viewDescription.getReduceFunction());
+		CouchDbDataView view = new CouchDbDataView(viewId, viewDescription.getMapFunction(), viewDescription.getReduceFunction());
 		viewManager.add(source, sourceManager.getDataRepository(source), view);
 		return view;
 	}
@@ -91,7 +91,7 @@ public final class DataViewApi extends AbstractApi {
 			@PathParam("viewId") String viewId) {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
-		DataView view = viewManager.get(source, viewId);
+		CouchDbDataView view = viewManager.get(source, viewId);
 		viewManager.remove(source, sourceManager.getDataRepository(source), view);
 	}
 

@@ -1,4 +1,4 @@
-package org.jvalue.ods.db;
+package org.jvalue.ods.db.couchdb;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -11,29 +11,29 @@ import org.ektorp.CouchDbConnector;
 import org.ektorp.CouchDbInstance;
 import org.ektorp.http.StdHttpClient;
 import org.ektorp.impl.StdCouchDbInstance;
+
 import org.jvalue.commons.auth.UserRepository;
 import org.jvalue.commons.couchdb.CouchDbConfig;
-import org.jvalue.commons.couchdb.DbConnectorFactory;
+import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.commons.utils.Cache;
 import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.api.processors.PluginMetaData;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.api.views.DataView;
+import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
+import org.jvalue.ods.db.RepositoryFactory;
 import org.jvalue.ods.decoupleDatabase.IDataRepository;
-import org.jvalue.ods.decoupleDatabase.IRepository;
-import org.jvalue.ods.decoupleDatabase.couchdb.wrapper.*;
+import org.jvalue.commons.db.IRepository;
 
 import java.net.MalformedURLException;
 
-public class DbModule extends AbstractModule {
+public class CouchDbModule extends AbstractModule {
 
 	private final CouchDbConfig couchDbConfig;
 
-	public DbModule(CouchDbConfig couchDbConfig) {
+	public CouchDbModule(CouchDbConfig couchDbConfig) {
 		this.couchDbConfig = couchDbConfig;
 	}
-
 
 	@Override
 	protected void configure() {
@@ -44,33 +44,27 @@ public class DbModule extends AbstractModule {
 					.password(couchDbConfig.getAdmin().getPassword())
 					.maxConnections(couchDbConfig.getMaxConnections())
 					.build());
-			DbConnectorFactory connectorFactory = new DbConnectorFactory(couchDbInstance, couchDbConfig.getDbPrefix());
+			DbConnectorFactory connectorFactory = new CouchDbConnectorFactory(couchDbInstance, couchDbConfig.getDbPrefix());
 
-			CouchDbConnector dataSourceConnector = connectorFactory.createConnector(DataSourceRepository.DATABASE_NAME, true);
+			CouchDbConnector dataSourceConnector = (CouchDbConnector) connectorFactory.createConnector(DataSourceRepository.DATABASE_NAME, true);
 			bind(CouchDbConnector.class).annotatedWith(Names.named(DataSourceRepository.DATABASE_NAME)).toInstance(dataSourceConnector);
 
-			CouchDbConnector userConnector = connectorFactory.createConnector(UserRepository.DATABASE_NAME, true);
+			CouchDbConnector userConnector = (CouchDbConnector) connectorFactory.createConnector(UserRepository.DATABASE_NAME, true);
 			bind(CouchDbConnector.class).annotatedWith(Names.named(UserRepository.DATABASE_NAME)).toInstance(userConnector);
 
 			bind(DbConnectorFactory.class).toInstance(connectorFactory);
-//			install(new FactoryModuleBuilder().build(RepositoryFactory.class));
 
-			bind(new TypeLiteral<Cache<IRepository<DataView>>>() { }).in(Singleton.class);
+			bind(new TypeLiteral<Cache<IRepository<CouchDbDataView>>>() { }).in(Singleton.class);
 			bind(new TypeLiteral<Cache<IRepository<ProcessorReferenceChain>>>() { }).in(Singleton.class);
 			bind(new TypeLiteral<Cache<IRepository<Client>>>() { }).in(Singleton.class);
 			bind(new TypeLiteral<Cache<IRepository<PluginMetaData>>>() { }).in(Singleton.class);
 			bind(new TypeLiteral<Cache<IRepository<JsonNode>>>() { }).in(Singleton.class);
 
-//			bind(new TypeLiteral<IRepository<DataView>>() {}).to(CouchDbDataViewRepositoryWrapper.class);
-			bind(new TypeLiteral<IRepository<DataSource>>() {}).to(DataSourceRepository.class);
-//			bind(new TypeLiteral<IDataRepository<JsonNode>>() {}).to(CouchDbDataRepositoryWrapper.class);
-//			bind(new TypeLiteral<IRepository<ProcessorReferenceChain>>() {}).to(CouchDbProcessorChainReferenceRepositoryWrapper.class);
-//			bind(new TypeLiteral<IRepository<Client>>() {}).to(CouchDbNotificationClientRepositoryWrapper.class);
-//			bind(new TypeLiteral<IRepository<PluginMetaData>>() {}).to(CouchDbPluginMetaDataRepositoryWrapper.class);
 
+			bind(new TypeLiteral<IRepository<DataSource>>() {}).to(DataSourceRepository.class);
 			install(new FactoryModuleBuilder()
 				.implement(
-					new TypeLiteral<IRepository<DataView>>() {
+					new TypeLiteral<IRepository<CouchDbDataView>>() {
 					},
 					Names.named(RepositoryFactory.NAME_DATA_VIEW_REPOSITORY),
 					DataViewRepository.class)
@@ -82,7 +76,7 @@ public class DbModule extends AbstractModule {
 					DataSourceRepository.class)
 
 				.implement(
-					new TypeLiteral<IDataRepository<JsonNode>>() {
+					new TypeLiteral<IDataRepository<CouchDbDataView, JsonNode>>() {
 					},
 					Names.named(RepositoryFactory.NAME_DATA_REPOSITORY),
 					DataRepository.class)

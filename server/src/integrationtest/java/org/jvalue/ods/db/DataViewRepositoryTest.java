@@ -4,19 +4,20 @@ package org.jvalue.ods.db;
 import org.jvalue.commons.couchdb.DbConnectorFactory;
 import org.jvalue.commons.couchdb.RepositoryAdapter;
 import org.jvalue.commons.couchdb.test.AbstractRepositoryAdapterTest;
-import org.jvalue.ods.api.views.DataView;
+import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
+import org.jvalue.ods.db.couchdb.DataViewRepository;
 
-public class DataViewRepositoryTest extends AbstractRepositoryAdapterTest<DataView> {
+public class DataViewRepositoryTest extends AbstractRepositoryAdapterTest<CouchDbDataView> {
 
 	@Override
-	protected RepositoryAdapter<?, ?, DataView> doCreateAdapter(DbConnectorFactory connectorFactory) {
+	protected RepositoryAdapter<?, ?, CouchDbDataView> doCreateAdapter(DbConnectorFactory connectorFactory) {
 		return new DataViewRepository(connectorFactory, getClass().getSimpleName());
 	}
 
 
 	@Override
-	protected DataView doCreateValue(String id, String data) {
-		return new DataView(id, data);
+	protected CouchDbDataView doCreateValue(String id, String data) {
+		return new CouchDbDataView(id, data);
 	}
 
 }

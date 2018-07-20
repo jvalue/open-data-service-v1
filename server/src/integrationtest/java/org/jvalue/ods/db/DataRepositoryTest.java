@@ -12,7 +12,8 @@ import org.junit.Test;
 import org.jvalue.commons.couchdb.DbConnectorFactory;
 import org.jvalue.commons.couchdb.test.AbstractRepositoryTest;
 import org.jvalue.ods.api.data.Data;
-import org.jvalue.ods.api.views.DataView;
+import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
+import org.jvalue.ods.db.couchdb.DataRepository;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -64,7 +65,7 @@ public final class DataRepositoryTest extends AbstractRepositoryTest {
 
 	@Test
 	public void testCreateView() {
-		DataView view = createDbView();
+		CouchDbDataView view = createDbView();
 		Assert.assertFalse(repository.containsView(view));
 		repository.addView(view);
 		Assert.assertTrue(repository.containsView(view));
@@ -73,7 +74,7 @@ public final class DataRepositoryTest extends AbstractRepositoryTest {
 
 	@Test
 	public void testExecuteView() {
-		DataView view = createDbView();
+		CouchDbDataView view = createDbView();
 		repository.addView(view);
 		repository.add(createObjectNode("id1", "hello"));
 		repository.add(createObjectNode("id2", "world"));
@@ -171,8 +172,8 @@ public final class DataRepositoryTest extends AbstractRepositoryTest {
 	}
 
 
-	private DataView createDbView() {
-		return new DataView("testView", "function(doc) { if(doc.somethingElse) emit(doc.somethingElse, doc) }");
+	private CouchDbDataView createDbView() {
+		return new CouchDbDataView("testView", "function(doc) { if(doc.somethingElse) emit(doc.somethingElse, doc) }");
 	}
 
 

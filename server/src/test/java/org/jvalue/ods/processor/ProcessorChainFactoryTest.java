@@ -8,7 +8,7 @@ import org.jvalue.ods.api.processors.ExecutionInterval;
 import org.jvalue.ods.api.processors.ProcessorReference;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.db.DataRepository;
+import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
 import org.jvalue.ods.decoupleDatabase.IDataRepository;
 import org.jvalue.ods.processor.adapter.SourceAdapterFactory;
 import org.jvalue.ods.processor.filter.FilterFactory;
@@ -57,7 +57,7 @@ public final class ProcessorChainFactoryTest {
 	public void testCreation(
 			@Mocked final FilterFactory filterFactory,
 			@Mocked final SourceAdapterFactory adapterFactory,
-			@Mocked final IDataRepository<JsonNode> dataRepository)
+			@Mocked final IDataRepository<CouchDbDataView, JsonNode> dataRepository)
 			throws Exception {
 
 		final ProcessorChainFactory chainFactory = new ProcessorChainFactory(adapterFactory, filterFactory);
@@ -65,7 +65,7 @@ public final class ProcessorChainFactoryTest {
 
 		new Verifications() {{
 			adapterFactory.createJsonSourceAdapter((DataSource) any, anyString); times = 1;
-			filterFactory.createDbInsertionFilter((DataSource) any, (DataRepository) any, anyBoolean); times = 1;
+			filterFactory.createDbInsertionFilter((DataSource) any, (IDataRepository<CouchDbDataView, JsonNode>) any, anyBoolean); times = 1;
 			filterFactory.createNotificationFilter((DataSource) any); times = 1;
 			filterFactory.createTransformationFilter((DataSource) any, simpleExtension); times = 1;
 		}};

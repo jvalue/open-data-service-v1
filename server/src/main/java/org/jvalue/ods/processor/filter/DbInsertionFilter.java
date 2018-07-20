@@ -13,7 +13,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-    
+
  */
 package org.jvalue.ods.processor.filter;
 
@@ -26,7 +26,8 @@ import com.google.inject.assistedinject.Assisted;
 import org.ektorp.DocumentOperationResult;
 import org.jvalue.ods.admin.monitoring.PauseableTimer;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.db.DataRepository;
+import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
+import org.jvalue.ods.decoupleDatabase.IDataRepository;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -36,7 +37,7 @@ import java.util.Map;
 
 final class DbInsertionFilter extends AbstractFilter<ObjectNode, ObjectNode> {
 
-	private final DataRepository dataRepository;
+	private final IDataRepository<CouchDbDataView, JsonNode> dataRepository;
 	private final boolean updateDataIfExists;
 
 	// for bulk operations
@@ -50,7 +51,7 @@ final class DbInsertionFilter extends AbstractFilter<ObjectNode, ObjectNode> {
 
 	@Inject
 	DbInsertionFilter(
-			@Assisted DataRepository dataRepository,
+			@Assisted IDataRepository<CouchDbDataView, JsonNode> dataRepository,
 			@Assisted DataSource source,
 			@Assisted boolean updateDataIfExists,
 			MetricRegistry registry) {

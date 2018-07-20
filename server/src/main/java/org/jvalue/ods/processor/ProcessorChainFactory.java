@@ -9,7 +9,8 @@ import org.jvalue.commons.utils.Assert;
 import org.jvalue.ods.api.processors.ProcessorReference;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.db.DataRepository;
+
+import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
 import org.jvalue.ods.decoupleDatabase.IDataRepository;
 import org.jvalue.ods.processor.adapter.SourceAdapter;
 import org.jvalue.ods.processor.adapter.SourceAdapterFactory;
@@ -44,7 +45,7 @@ public final class ProcessorChainFactory {
 	public ProcessorChain createProcessorChain(
 		ProcessorReferenceChain chainReference,
 		DataSource source,
-		IDataRepository<JsonNode> dataRepository) {
+		IDataRepository<CouchDbDataView, JsonNode> dataRepository) {
 
 		Assert.assertNotNull(chainReference, source, dataRepository);
 
@@ -74,7 +75,7 @@ public final class ProcessorChainFactory {
 		Class<?> factoryClass, // hack as jmockit removed annotations from methods
 		ProcessorReference reference,
 		DataSource dataSource,
-		IDataRepository<JsonNode> dataRepository) {
+		IDataRepository<CouchDbDataView, JsonNode> dataRepository) {
 
 		for (Method method : factoryClass.getDeclaredMethods()) {
 			CreationMethod creationAnnotation = method.getAnnotation(CreationMethod.class);
@@ -86,7 +87,7 @@ public final class ProcessorChainFactory {
 			// add source and repository arguments
 			for (Class<?> parameterType : method.getParameterTypes()) {
 				if (parameterType.equals(DataSource.class)) arguments.add(dataSource);
-				else if (parameterType.equals(DataRepository.class)) arguments.add(dataRepository);
+				else if (parameterType.equals(IDataRepository.class)) arguments.add(dataRepository);
 			}
 
 			// add custom arguments

@@ -1,4 +1,4 @@
-package org.jvalue.ods.db;
+package org.jvalue.ods.db.couchdb;
 
 
 import com.fasterxml.jackson.core.JsonPointer;
@@ -11,29 +11,31 @@ import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.DesignDocument;
 import org.ektorp.support.DesignDocumentFactory;
 import org.ektorp.support.StdDesignDocumentFactory;
-import org.jvalue.commons.couchdb.DbConnectorFactory;
+import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.commons.utils.Assert;
 import org.jvalue.ods.api.data.Cursor;
 import org.jvalue.ods.api.data.Data;
-import org.jvalue.ods.api.views.DataView;
+import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
 import org.jvalue.ods.decoupleDatabase.IDataRepository;
+
 
 import java.util.*;
 
-public final class DataRepository extends CouchDbRepositorySupport<JsonNode> implements IDataRepository<JsonNode>{
+
+public final class DataRepository extends CouchDbRepositorySupport<JsonNode> implements IDataRepository<CouchDbDataView, JsonNode> {
 
 	private static final String DESIGN_DOCUMENT_NAME = "Data";
 	private static final String DESIGN_DOCUMENT_ID = "_design/" + DESIGN_DOCUMENT_NAME;
 	private static final DesignDocumentFactory designFactory = new StdDesignDocumentFactory();
 
 	private final CouchDbConnector connector;
-	private final DataView domainIdView;
-	private final DataView revAndIdByDomainIdView;
+	private final CouchDbDataView domainIdView;
+	private final CouchDbDataView revAndIdByDomainIdView;
 
 	@Inject
 	public DataRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName, @Assisted JsonPointer domainIdKey) {
-		super(JsonNode.class, dbConnectorFactory.createConnector(databaseName, true), DESIGN_DOCUMENT_NAME);
-		this.connector = dbConnectorFactory.createConnector(databaseName, true);
+		super(JsonNode.class, (CouchDbConnector) dbConnectorFactory.createConnector(databaseName, true), DESIGN_DOCUMENT_NAME);
+		this.connector = (CouchDbConnector) dbConnectorFactory.createConnector(databaseName, true);
 		initStandardDesignDocument();
 
 		domainIdView = createObjectByDomainIdView(domainIdKey);
@@ -42,7 +44,7 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> imp
 		revAndIdByDomainIdView = createIdAndRevByDomainIdView(domainIdKey);
 		if (!containsView(revAndIdByDomainIdView)) addView(revAndIdByDomainIdView);
 
-		DataView allView = createAllView(domainIdKey);
+		CouchDbDataView allView = createAllView(domainIdKey);
 		if (!containsView(allView)) addView(allView);
 	}
 
@@ -51,6 +53,7 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> imp
 		return findByDomainId(Id);
 	}
 
+	@Override
 	public JsonNode findByDomainId(String domainId) {
 		List<JsonNode> resultList = executeQuery(domainIdView, domainId);
 		if (resultList.isEmpty()) throw new DocumentNotFoundException(domainId);
@@ -59,7 +62,7 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> imp
 	}
 
 
-	public List<JsonNode> executeQuery(DataView view, String param) {
+	public List<JsonNode> executeQuery(CouchDbDataView view, String param) {
 		ViewQuery query = createQuery(view.getId());
 
 		if (param != null) query = query.key(param);
@@ -68,7 +71,7 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> imp
 	}
 
 
-	public void addView(DataView dataView) {
+	public void addView(CouchDbDataView dataView) {
 		Assert.assertNotNull(dataView);
 
 		DesignDocument designDocument;
@@ -92,7 +95,7 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> imp
 	}
 
 
-	public void removeView(DataView view) {
+	public void removeView(CouchDbDataView view) {
 		Assert.assertNotNull(view);
 
 		if (!connector.contains(DESIGN_DOCUMENT_ID)) return;
@@ -102,21 +105,21 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> imp
 	}
 
 
-	public boolean containsView(DataView dataView) {
-		Assert.assertNotNull(dataView);
+	public boolean containsView(CouchDbDataView view) {
+		Assert.assertNotNull(view);
 
 		if (!connector.contains(DESIGN_DOCUMENT_ID)) return false;
 		DesignDocument designDocument = connector.get(DesignDocument.class, DESIGN_DOCUMENT_ID);
-		return designDocument.containsView(dataView.getId());
+		return designDocument.containsView(view.getId());
 	}
 
 
 	public Map<String, JsonNode> executeBulkGet(Collection<String> ids) {
 		ViewQuery query = new ViewQuery()
-				.designDocId(DESIGN_DOCUMENT_ID)
-				.viewName(domainIdView.getId())
-				.includeDocs(true)
-				.keys(ids);
+			.designDocId(DESIGN_DOCUMENT_ID)
+			.viewName(domainIdView.getId())
+			.includeDocs(true)
+			.keys(ids);
 
 		Map<String, JsonNode> nodes = new HashMap<>();
 		for (ViewResult.Row row : connector.queryView(query).getRows()) {
@@ -141,11 +144,11 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> imp
 	 */
 	public Data executePaginatedGet(String startDomainId, int count) {
 		ViewQuery query = new ViewQuery()
-				.designDocId(DESIGN_DOCUMENT_ID)
-				.viewName(domainIdView.getId())
-				.includeDocs(true)
-				.descending(false)
-				.limit(count + 1);
+			.designDocId(DESIGN_DOCUMENT_ID)
+			.viewName(domainIdView.getId())
+			.includeDocs(true)
+			.descending(false)
+			.limit(count + 1);
 		if (startDomainId != null) query = query.startKey(startDomainId);
 
 		List<JsonNode> result = new LinkedList<>();
@@ -171,8 +174,8 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> imp
 
 	public void removeAll() {
 		ViewQuery query = new ViewQuery()
-				.designDocId(DESIGN_DOCUMENT_ID)
-				.viewName(revAndIdByDomainIdView.getId());
+			.designDocId(DESIGN_DOCUMENT_ID)
+			.viewName(revAndIdByDomainIdView.getId());
 
 		Collection<JsonNode> deletedObjects = new LinkedList<>();
 		for (ViewResult.Row row : connector.queryView(query).getRows()) {
@@ -193,7 +196,7 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> imp
 	}
 
 
-	private DataView createObjectByDomainIdView(JsonPointer domainIdKey) {
+	private CouchDbDataView createObjectByDomainIdView(JsonPointer domainIdKey) {
 		String viewName = "findObjectByDomainId";
 		String domainIdProperty = createDomainIdJavascriptProperty(domainIdKey);
 
@@ -203,11 +206,11 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> imp
 		mapBuilder.append(") emit(");
 		mapBuilder.append(domainIdProperty);
 		mapBuilder.append(", doc) }");
-		return new DataView(viewName, mapBuilder.toString());
+		return new CouchDbDataView(viewName, mapBuilder.toString());
 	}
 
 
-	private DataView createIdAndRevByDomainIdView(JsonPointer domainIdKey) {
+	private CouchDbDataView createIdAndRevByDomainIdView(JsonPointer domainIdKey) {
 		String viewName = "findIdAndRevByDomainId";
 		String domainIdProperty = createDomainIdJavascriptProperty(domainIdKey);
 
@@ -217,11 +220,11 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> imp
 		mapBuilder.append(") emit(");
 		mapBuilder.append(domainIdProperty);
 		mapBuilder.append(", { _id : doc._id, _rev : doc._rev }) }");
-		return new DataView(viewName, mapBuilder.toString());
+		return new CouchDbDataView(viewName, mapBuilder.toString());
 	}
 
 
-	private DataView createAllView(JsonPointer domainIdKey) {
+	private CouchDbDataView createAllView(JsonPointer domainIdKey) {
 		String viewName = "all";
 		String domainIdProperty = createDomainIdJavascriptProperty(domainIdKey);
 
@@ -229,7 +232,7 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> imp
 		mapBuilder.append("function(doc) { if (");
 		mapBuilder.append(domainIdProperty);
 		mapBuilder.append(" != null) emit(null,doc) }");
-		return new DataView(viewName, mapBuilder.toString());
+		return new CouchDbDataView(viewName, mapBuilder.toString());
 	}
 
 

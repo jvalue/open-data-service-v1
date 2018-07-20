@@ -6,10 +6,10 @@ import org.ektorp.DocumentNotFoundException;
 import org.jvalue.commons.utils.Assert;
 import org.jvalue.commons.utils.Cache;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.api.views.DataView;
+import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
 import org.jvalue.ods.db.RepositoryFactory;
 import org.jvalue.ods.decoupleDatabase.IDataRepository;
-import org.jvalue.ods.decoupleDatabase.IRepository;
+import org.jvalue.commons.db.IRepository;
 
 import java.util.List;
 
@@ -30,24 +30,24 @@ public abstract class AbstractDataSourcePropertyManager<T, R extends IRepository
 	}
 
 
-	public final void add(DataSource source, IDataRepository<JsonNode> dataRepository, T data) {
+	public final void add(DataSource source, IDataRepository<CouchDbDataView, JsonNode> dataRepository, T data) {
 		Assert.assertNotNull(source, data);
 		assertRepository(source).add(data);
 		doAdd(source, dataRepository, data);
 	}
 
 
-	protected abstract void doAdd(DataSource source, IDataRepository<JsonNode> dataRepository, T data);
+	protected abstract void doAdd(DataSource source, IDataRepository<CouchDbDataView, JsonNode> dataRepository, T data);
 
 
-	public final void remove(DataSource source, IDataRepository<JsonNode> dataRepository, T data) {
+	public final void remove(DataSource source, IDataRepository<CouchDbDataView, JsonNode> dataRepository, T data) {
 		Assert.assertNotNull(source, data);
 		assertRepository(source).remove(data);
 		doRemove(source, dataRepository, data);
 	}
 
 
-	protected abstract void doRemove(DataSource source, IDataRepository<JsonNode> dataRepository, T data);
+	protected abstract void doRemove(DataSource source, IDataRepository<CouchDbDataView, JsonNode> dataRepository, T data);
 
 
 	public final void removeAll(DataSource source) {

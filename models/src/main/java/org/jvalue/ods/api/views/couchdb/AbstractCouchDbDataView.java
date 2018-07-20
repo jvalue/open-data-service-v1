@@ -1,4 +1,4 @@
-package org.jvalue.ods.api.views;
+package org.jvalue.ods.api.views.couchdb;
 
 
 import com.google.common.base.Objects;
@@ -6,7 +6,7 @@ import com.google.common.base.Objects;
 import javax.validation.constraints.NotNull;
 
 
-public abstract class AbstractDataView {
+public abstract class AbstractCouchDbDataView {
 
 	@NotNull private final String mapFunction;
 	private final String reduceFunction;
@@ -16,7 +16,7 @@ public abstract class AbstractDataView {
 	 * @param mapFunction the map function written in JavaScript
 	 * @param reduceFunction the optional reduce function written in JavaScript
 	 */
-	protected AbstractDataView(
+	protected AbstractCouchDbDataView(
 			String mapFunction,
 			String reduceFunction) {
 
@@ -37,9 +37,9 @@ public abstract class AbstractDataView {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other == null || !(other instanceof AbstractDataView)) return false;
+		if (other == null || !(other instanceof AbstractCouchDbDataView)) return false;
 		if (other == this) return true;
-		AbstractDataView view = (AbstractDataView) other;
+		AbstractCouchDbDataView view = (AbstractCouchDbDataView) other;
 		return Objects.equal(mapFunction, view.mapFunction)
 				&& Objects.equal(reduceFunction, view.reduceFunction);
 

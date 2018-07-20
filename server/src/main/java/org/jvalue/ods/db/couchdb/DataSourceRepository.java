@@ -1,4 +1,4 @@
-package org.jvalue.ods.db;
+package org.jvalue.ods.db.couchdb;
 
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -13,8 +13,9 @@ import org.ektorp.support.View;
 import org.jvalue.commons.couchdb.DbDocument;
 import org.jvalue.commons.couchdb.DbDocumentAdaptable;
 import org.jvalue.commons.couchdb.RepositoryAdapter;
+
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.decoupleDatabase.IRepository;
+import org.jvalue.commons.db.IRepository;
 
 import java.util.List;
 
@@ -23,10 +24,10 @@ public final class DataSourceRepository extends RepositoryAdapter<
 		DataSourceRepository.DataSourceDocument,
 		DataSource> implements IRepository<DataSource>{
 
-	static final String DATABASE_NAME = "dataSources";
+	public static final String DATABASE_NAME = "dataSources";
 	private static final String DOCUMENT_ID = "doc.value.id != null && doc.value.domainIdKey != null";
 
-		@Inject
+	@Inject
 	public DataSourceRepository(@Named(DATABASE_NAME) CouchDbConnector connector) {
 		super(new DataSourceCouchDbRepository(connector));
 	}

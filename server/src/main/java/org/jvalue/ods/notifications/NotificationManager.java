@@ -8,12 +8,11 @@ import org.jvalue.commons.utils.Cache;
 import org.jvalue.commons.utils.Log;
 import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.api.views.DataView;
+import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
 import org.jvalue.ods.data.AbstractDataSourcePropertyManager;
-import org.jvalue.ods.db.NotificationClientRepository;
 import org.jvalue.ods.db.RepositoryFactory;
 import org.jvalue.ods.decoupleDatabase.IDataRepository;
-import org.jvalue.ods.decoupleDatabase.IRepository;
+import org.jvalue.commons.db.IRepository;
 import org.jvalue.ods.notifications.sender.Sender;
 import org.jvalue.ods.notifications.sender.SenderCache;
 import org.jvalue.ods.notifications.sender.SenderResult;
@@ -90,11 +89,11 @@ public final class NotificationManager
 
 
 	@Override
-	protected void doAdd(DataSource source, IDataRepository<JsonNode> dataRepository, Client client) { }
+	protected void doAdd(DataSource source, IDataRepository<CouchDbDataView, JsonNode> dataRepository, Client client) { }
 
 
 	@Override
-	protected void doRemove(DataSource source, IDataRepository<JsonNode> dataRepository, Client client) { }
+	protected void doRemove(DataSource source, IDataRepository<CouchDbDataView, JsonNode> dataRepository, Client client) { }
 
 
 	@Override
