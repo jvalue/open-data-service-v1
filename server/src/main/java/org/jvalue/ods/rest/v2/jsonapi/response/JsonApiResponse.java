@@ -81,6 +81,7 @@ public class JsonApiResponse {
 
 		@Override
 		public WithRelationship addIncluded(JsonApiIdentifiable included, URI location) {
+			//assert has relationship
 			instance.jsonApiEntity.addIncluded(included, location);
 			return this;
 		}
@@ -98,26 +99,66 @@ public class JsonApiResponse {
 		}
 	}
 
-
+	/**
+	 * Interface for a Responsebuilder that needs an entity for further processing
+	 */
 	public interface RequiredEntity {
+		/**
+		 * Add a single entity to a response.
+		 * @param entity the entity to add.
+		 * @return A buildable Responsebuilder.
+		 */
 		Buildable data(JsonApiIdentifiable entity);
 
 		Buildable data(Collection<? extends JsonApiIdentifiable> entityCollection);
 	}
 
-
+	/**
+	 * Interface for a Responsebuilder that meets all requirements to build the response.
+	 */
 	public interface Buildable {
 		Response build();
 
+		/**
+		 * Restricts the serialization of the generated response body to a certain attribute,
+		 * i.e. creates a view which removes every attribute except type, id, selflink and attribute
+		 * @param attribute the name of the attribute which should appear
+		 * @return a buildable Responsebuilder.
+		 */
 		Buildable restrictTo(String attribute);
 
+		/**
+		 * Adds a link on document level to the generated response body.
+		 * @param name the name of the link.
+		 * @param ref the reference of the link.
+		 * @return a buildable Responsebuilder.
+		 */
 		Buildable addLink(String name, URI ref);
 
+		/**
+		 * Adds a relationship to the generated response body. The corresponding entity is represented as
+		 * a ResourceIdentifier with a selflink on resource level.
+		 * @param name the name of the relationship in the generated response body.
+		 * @param entity the corresponding entity to which the relationship should be added.
+		 * @param location the endpoint where the entity is located.
+		 * @return a buildable Responsebuilder on which addIncluded() can be called.
+		 */
 		WithRelationship addRelationship(String name, JsonApiIdentifiable entity, URI location);
 	}
 
 
+	/**
+	 * Interface for a Responsebuilder which has at least one relationship added.
+	 * It is needed to ensure that included entities can only be added to responses that contain relationships.
+	 * Extends Buildable since it can only be returned if the Responsebuilder already contains an entity
+	 */
 	public interface WithRelationship extends Buildable{
+		/**
+		 * Adds a included resource to the generated response body.
+		 * @param included the entity to be included. Entity has to be added as a relationship before.
+		 * @param location the location of the entity
+		 * @return a buildable ResponseBuilder on which addIncluded() can be called.
+		 */
 		WithRelationship addIncluded(JsonApiIdentifiable included, URI location);
 	}
 
