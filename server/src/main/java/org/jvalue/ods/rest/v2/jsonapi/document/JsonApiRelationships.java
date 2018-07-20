@@ -36,7 +36,7 @@ public class JsonApiRelationships {
 		return false;
 	}
 
-	private class Relationship {
+	class Relationship {
 
 		@JsonFormat(with = JsonFormat.Feature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED)
 		private final List<JsonApiResourceIdentifier> data = new LinkedList<>();
@@ -44,7 +44,7 @@ public class JsonApiRelationships {
 		private final Map<String, URI> links = new HashMap<>();
 
 
-		public Relationship(JsonApiIdentifiable entity, URI location) {
+		private Relationship(JsonApiIdentifiable entity, URI location) {
 			data.add(new JsonApiResourceIdentifier(entity));
 			links.put(RELATED, location);
 		}

@@ -16,8 +16,8 @@ public class TestEntityProvider {
 		return () -> TEST_ID;
 	}
 
-	public static JsonApiIdentifiable createCollectableEntity(int id) {
-		return () -> String.valueOf(id);
+	public static JsonApiIdentifiable createCustomMinimalEntity(String id) {
+		return () -> id;
 	}
 
 	public static JsonApiIdentifiable createEntityWithAttributes() {
