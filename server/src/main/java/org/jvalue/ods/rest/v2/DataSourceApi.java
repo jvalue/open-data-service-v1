@@ -48,11 +48,13 @@ public final class DataSourceApi extends AbstractApi {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		DataSource other = sourceManager.getAll().get(0);
+		URI otherURI = uriInfo.getAbsolutePath().resolve(URI.create(other.getId()));
 
 		return JsonApiResponse
 				.createGetResponse(uriInfo)
 				.data(source)
-				.addRelationship("test", other, uriInfo.getAbsolutePath().resolve(URI.create("brandenburg")))
+				.addRelationship("test", other, otherURI)
+				.addIncluded(other, otherURI)
 				.build();
 	}
 

@@ -80,6 +80,13 @@ public class JsonApiResponse {
 
 
 		@Override
+		public WithRelationship addIncluded(JsonApiIdentifiable included, URI location) {
+			instance.jsonApiEntity.addIncluded(included, location);
+			return this;
+		}
+
+
+		@Override
 		public Response build() {
 			Response.ResponseBuilder responseBuilder = Response.status(instance.statusCode);
 			if (instance.jsonApiEntity != null) {
@@ -111,7 +118,7 @@ public class JsonApiResponse {
 
 
 	public interface WithRelationship extends Buildable{
-
+		WithRelationship addIncluded(JsonApiIdentifiable included, URI location);
 	}
 
 }

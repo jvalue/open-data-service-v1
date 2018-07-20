@@ -1,6 +1,7 @@
 package org.jvalue.ods.rest.v2.jsonapi.document;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.jvalue.ods.api.jsonapi.JsonApiIdentifiable;
 
 import javax.ws.rs.core.UriInfo;
@@ -19,6 +20,8 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 			JsonFormat.Feature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED,
 			JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY})
 	protected List<JsonApiResource> data = new LinkedList<>();
+
+	private final List<JsonApiResource> included = new LinkedList<>();
 
 
 	public JsonApiDocument(JsonApiIdentifiable entity, URI uri) {
@@ -50,6 +53,12 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 	}
 
 
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
+	public List<JsonApiResource> getIncluded() {
+		return included;
+	}
+
+
 	public void restrictTo(String attribute) {
 		data = data
 			.stream()
@@ -63,6 +72,15 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 			.stream()
 			.map(r -> r.addRelationship(name, entity, location))
 			.collect(Collectors.toList());
+	}
+
+
+	public void addIncluded(JsonApiIdentifiable entity, URI location) {
+		//assert included exists in relationship?
+
+		JsonApiResource includedResource = new JsonApiResource(entity, location);
+		includedResource.addSelfLink(location);
+		included.add(includedResource);
 	}
 
 
