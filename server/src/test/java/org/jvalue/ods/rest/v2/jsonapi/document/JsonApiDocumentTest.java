@@ -41,7 +41,6 @@ public class JsonApiDocumentTest {
 
     	Assert.assertEquals(1, result.getData().size());
     	Assert.assertEquals(dummyObj01, resource.getEntity());
-		assertSelfLinkExists(result);
     }
 
 
@@ -60,13 +59,13 @@ public class JsonApiDocumentTest {
 						.stream()
 						.map(r -> ((JsonApiResource) r).getEntity())
 						.collect(Collectors.toList()));
-		assertSelfLinkExists(result);
 	}
 
 
 	@Test
     public void testLinks() {
 		JsonApiDocument result = new JsonApiDocument(dummyObj01, uriInfoMock);
+		result.addSelfLink(uri);
 
 		result.addLink(linkName, uri);
 
