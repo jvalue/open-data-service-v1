@@ -1,12 +1,17 @@
 package org.jvalue.ods.rest.v2.jsonapi.response;
 
+import org.jvalue.commons.utils.Assert;
 import org.jvalue.ods.api.jsonapi.JsonApiIdentifiable;
 import org.jvalue.ods.rest.v2.jsonapi.document.JsonApiDocument;
+import org.jvalue.ods.rest.v2.jsonapi.document.JsonApiResource;
+import org.jvalue.ods.rest.v2.jsonapi.document.JsonApiResourceIdentifier;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class JsonApiResponse {
 
@@ -81,7 +86,8 @@ public class JsonApiResponse {
 
 		@Override
 		public WithRelationship addIncluded(JsonApiIdentifiable included, URI location) {
-			//assert has relationship
+			Assert.assertTrue(instance.jsonApiEntity.hasRelationshipTo(included));
+
 			instance.jsonApiEntity.addIncluded(included, location);
 			return this;
 		}
@@ -97,6 +103,8 @@ public class JsonApiResponse {
 			}
 			return responseBuilder.build();
 		}
+
+
 	}
 
 	/**

@@ -50,6 +50,11 @@ public class JsonApiResource extends JsonApiResourceIdentifier implements JsonLi
     }
 
 
+    public boolean hasRelationshipTo(JsonApiIdentifiable entity) {
+    	return relationships.hasRelationshipTo(entity);
+	}
+
+
     public JsonApiResource addRelationship(String name, JsonApiIdentifiable entity, URI location) {
 		if(relationships == null) {
 			relationships = new JsonApiRelationships();

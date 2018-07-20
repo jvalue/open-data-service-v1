@@ -5,10 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import org.jvalue.ods.api.jsonapi.JsonApiIdentifiable;
 
 import java.net.URI;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.jvalue.ods.rest.v2.jsonapi.document.JsonLinks.RELATED;
 
@@ -27,6 +24,17 @@ public class JsonApiRelationships {
 		relationships.put(name, new Relationship(entity, location));
 	}
 
+
+	public boolean hasRelationshipTo(JsonApiIdentifiable other) {
+
+		for (Map.Entry<String, Relationship> entry: relationships.entrySet()) {
+			if(entry.getValue().containsEntity(other)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 
 	private class Relationship {
 
@@ -49,6 +57,24 @@ public class JsonApiRelationships {
 
 		public Map<String, URI> getLinks() {
 			return links;
+		}
+
+
+		/**
+		 * Checks whether a relation to a certain JsonApiIdentifiable exists,
+		 * more formally, returns true iff this relationships data list contains at least one
+		 * element which has the same type and id as the given entity
+		 * @param entity the entity to check
+		 * @return true if a relation to entity exists, false otherwise
+		 */
+		private boolean containsEntity(JsonApiIdentifiable entity) {
+			for(JsonApiResourceIdentifier identifier: data) {
+				if(identifier.getId().equals(entity.getId())
+					&& identifier.getType().equals(entity.getClass().getSimpleName())) {
+					return true;
+				}
+			}
+			return false;
 		}
 	}
 }
