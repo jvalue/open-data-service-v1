@@ -62,11 +62,12 @@ public final class DataSourceApi extends AbstractApi {
 	public Response getSourceSchema(@PathParam("sourceId") String sourceId) {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
-
+		URI sourceURI = uriInfo.getAbsolutePath().resolve(URI.create("./"));
 		return JsonApiResponse
 				.createGetResponse(uriInfo)
 				.data(source)
 				.restrictTo("schema")
+				.addLink("source", sourceURI)
 				.build();
 	}
 
@@ -103,7 +104,7 @@ public final class DataSourceApi extends AbstractApi {
 		sourceManager.remove(sourceManager.findBySourceId(sourceId));
 	}
 
-	
+
 	private void assertDataSourceNotExist(String sourceId) {
 		if (sourceManager.isValidSourceId(sourceId)) {
 			int statusCode = Response.Status.CONFLICT.getStatusCode();
