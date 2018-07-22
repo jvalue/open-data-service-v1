@@ -24,12 +24,6 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 	private final List<JsonApiResource> included = new LinkedList<>();
 
 
-	public JsonApiDocument(JsonApiIdentifiable entity, URI uri) {
-		data.add(new JsonApiResource(entity, uri));
-
-	}
-
-
 	public JsonApiDocument(JsonApiIdentifiable entity, UriInfo uriInfo) {
 		this.uriInfo = uriInfo;
 		data.add(new JsonApiResource(entity, uriInfo.getAbsolutePath()));

@@ -81,7 +81,7 @@ public class JsonApiResponse {
 
 		@Override
 		public WithRelationship addIncluded(JsonApiIdentifiable included, URI location) {
-			assertHasRelationShip(included);
+			assertHasRelationship(included);
 
 			instance.jsonApiEntity.addIncluded(included, location);
 			return this;
@@ -99,7 +99,7 @@ public class JsonApiResponse {
 			return responseBuilder.build();
 		}
 
-		private void assertHasRelationShip(JsonApiIdentifiable relationship) {
+		private void assertHasRelationship(JsonApiIdentifiable relationship) {
 			if(!instance.jsonApiEntity.hasRelationshipTo(relationship)) {
 				throw new IllegalArgumentException(
 					"It is not supported to add includes to resources with which there is no prior relationship. " +
