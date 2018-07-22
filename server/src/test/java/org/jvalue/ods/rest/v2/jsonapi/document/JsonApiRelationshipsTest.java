@@ -1,6 +1,5 @@
 package org.jvalue.ods.rest.v2.jsonapi.document;
 
-import com.google.api.client.json.Json;
 import org.junit.Assert;
 import org.junit.Test;
 import org.jvalue.ods.api.jsonapi.JsonApiIdentifiable;
