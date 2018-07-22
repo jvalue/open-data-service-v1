@@ -34,7 +34,7 @@ public class JsonUtilsTest {
 
         @Override
         public String getId() {
-            return null;
+            return id;
         }
     }
 

@@ -226,7 +226,7 @@ public class JsonApiResponseTest {
 		JsonApiIdentifiable unrleatedEntity = createCustomMinimalEntity("unrelated");
 
 		//Replay
-		Response result = JsonApiResponse
+		JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(minimalEntity)
 			.addRelationship("related", relatedEntity, uriInfo.getAbsolutePath())
@@ -243,7 +243,7 @@ public class JsonApiResponseTest {
 		JsonApiIdentifiable unrelatedEntity = createEntityWithAttributes();
 
 		//Replay
-		Response result = JsonApiResponse
+		JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(minimalEntity)
 			.addRelationship("related", relatedEntity, uriInfo.getAbsolutePath())
