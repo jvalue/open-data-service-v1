@@ -86,8 +86,6 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 
 
 	public void addIncluded(JsonApiIdentifiable entity, URI location) {
-		assertHasRelationship(entity);
-
 		JsonApiResource includedResource = new JsonApiResource(entity, location);
 		includedResource.addSelfLink(location);
 		included.add(includedResource);
@@ -103,15 +101,6 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 	@Override
 	public void addLink(String name, URI ref) {
 		links.put(name, ref);
-	}
-
-
-	private void assertHasRelationship(JsonApiIdentifiable entity) {
-		if(!hasRelationshipTo(entity)) {
-			throw new IllegalArgumentException(
-				"It is not supported to add includes to resources whith which there is no prior relationship. " +
-				"Try adding it as relationship first.");
-		}
 	}
 
 

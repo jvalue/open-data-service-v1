@@ -1,6 +1,5 @@
 package org.jvalue.ods.rest.v2.jsonapi.response;
 
-import org.jvalue.commons.utils.Assert;
 import org.jvalue.ods.api.jsonapi.JsonApiIdentifiable;
 import org.jvalue.ods.rest.v2.jsonapi.document.JsonApiDocument;
 
@@ -82,7 +81,7 @@ public class JsonApiResponse {
 
 		@Override
 		public WithRelationship addIncluded(JsonApiIdentifiable included, URI location) {
-			Assert.assertTrue(instance.jsonApiEntity.hasRelationshipTo(included));
+			assertHasRelationShip(included);
 
 			instance.jsonApiEntity.addIncluded(included, location);
 			return this;
@@ -100,6 +99,13 @@ public class JsonApiResponse {
 			return responseBuilder.build();
 		}
 
+		private void assertHasRelationShip(JsonApiIdentifiable relationship) {
+			if(!instance.jsonApiEntity.hasRelationshipTo(relationship)) {
+				throw new IllegalArgumentException(
+					"It is not supported to add includes to resources with which there is no prior relationship. " +
+						"Try adding it as relationship first.");
+			}
+		}
 
 	}
 
