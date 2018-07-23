@@ -58,7 +58,7 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 
 		for(JsonApiResource dataElement: data) {
 			if (dataElement.hasRelationshipTo(relationship)) {
-				relationshipURI = dataElement.getRelationships().getRelationshipUri(relationship);
+				relationshipURI = dataElement.getRelationshipUri(relationship);
 			}
 		}
 

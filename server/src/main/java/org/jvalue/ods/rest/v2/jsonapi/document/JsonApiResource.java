@@ -17,7 +17,7 @@ public class JsonApiResource extends JsonApiResourceIdentifier implements JsonLi
     private final URI uri;
     private final JsonApiIdentifiable entity;
     private final Map<String, URI> links = new HashMap<>();
-    private JsonApiRelationships relationships;
+    private final Map<String, JsonApiRelationship> relationships = new HashMap<>();
 
     public JsonApiResource(JsonApiIdentifiable entity, URI uri) {
         super(entity);
@@ -33,8 +33,8 @@ public class JsonApiResource extends JsonApiResourceIdentifier implements JsonLi
     }
 
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-	public JsonApiRelationships getRelationships() {
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+	public Map<String, JsonApiRelationship> getRelationships() {
 		return relationships;
 	}
 
@@ -57,26 +57,46 @@ public class JsonApiResource extends JsonApiResourceIdentifier implements JsonLi
 	}
 
 
-	public boolean hasRelationshipTo(JsonApiIdentifiable entity) {
-    	return relationships.hasRelationshipTo(entity);
+	public boolean hasRelationshipTo(JsonApiIdentifiable related) {
+
+		for (Map.Entry<String, JsonApiRelationship> entry: relationships.entrySet()) {
+			if(entry.getValue().containsEntity(related)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 
-    public JsonApiResource addRelationship(String name, JsonApiIdentifiable entity, URI location) {
-		if(relationships == null) {
-			relationships = new JsonApiRelationships();
+	public URI getRelationshipUri(JsonApiIdentifiable related) {
+		URI relationshipURI = null;
+
+		for (Map.Entry<String, JsonApiRelationship> entry: relationships.entrySet()) {
+			JsonApiRelationship match = entry.getValue();
+			if(match.containsEntity(related)) {
+				if(match.getData().size() == 1) { //the relationship contains a single resource object
+					relationshipURI =  match.getLinks().get(RELATED);
+				} else { //the relationship contains a collection of resource objects
+					relationshipURI = match.getLinks().get(RELATED).resolve(related.getId());
+				}
+				break;
+			}
 		}
-		relationships.addRelationship(name, entity, location);
+
+		return relationshipURI;
+	}
+
+
+    public JsonApiResource addRelationship(String name, JsonApiIdentifiable related, URI location) {
+		relationships.put(name, new JsonApiRelationship(related, location));
 		return this;
 	}
 
 
-	public JsonApiResource addRelationship(String name, Collection<? extends JsonApiIdentifiable> entityCollection, URI location) {
-    	if(relationships == null) {
-    		relationships = new JsonApiRelationships();
-		}
-		relationships.addRelationship(name, entityCollection, location);
-    	return this;
+	public JsonApiResource addRelationship(String name, Collection<? extends JsonApiIdentifiable> relatedCollection, URI location) {
+		relationships.put(name, new JsonApiRelationship(relatedCollection, location));
+		return this;
 	}
 
 
