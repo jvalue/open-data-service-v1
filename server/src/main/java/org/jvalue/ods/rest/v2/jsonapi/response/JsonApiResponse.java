@@ -1,5 +1,6 @@
 package org.jvalue.ods.rest.v2.jsonapi.response;
 
+import org.jvalue.commons.utils.Assert;
 import org.jvalue.ods.api.jsonapi.JsonApiIdentifiable;
 import org.jvalue.ods.rest.v2.jsonapi.document.JsonApiDocument;
 
@@ -15,22 +16,30 @@ public class JsonApiResponse {
 	private Response.StatusType statusCode;
 
 	private JsonApiResponse(UriInfo uriInfo, Response.StatusType statusCode) {
+		Assert.assertNotNull(uriInfo, statusCode);
+
 		this.uriInfo = uriInfo;
 		this.statusCode = statusCode;
 	}
 
 
 	public static RequiredEntity createGetResponse(UriInfo uriInfo) {
+		Assert.assertNotNull(uriInfo);
+
 		return new Builder(new JsonApiResponse(uriInfo, Response.Status.OK));
 	}
 
 
 	public static RequiredEntity createPostResponse(UriInfo uriInfo) {
+		Assert.assertNotNull(uriInfo);
+
 		return new Builder(new JsonApiResponse(uriInfo, Response.Status.CREATED));
 	}
 
 
 	public static RequiredEntity createPutResponse(UriInfo uriInfo) {
+		Assert.assertNotNull(uriInfo);
+
 		return new Builder(new JsonApiResponse(uriInfo, Response.Status.OK));
 	}
 
@@ -46,6 +55,8 @@ public class JsonApiResponse {
 
 		@Override
 		public Buildable data(JsonApiIdentifiable entity) {
+			Assert.assertNotNull(entity);
+
 			instance.jsonApiEntity = new JsonApiDocument(entity, instance.uriInfo);
 			instance.jsonApiEntity.addSelfLink(instance.uriInfo);
 			return this;
@@ -54,6 +65,8 @@ public class JsonApiResponse {
 
 		@Override
 		public Buildable data(Collection<? extends JsonApiIdentifiable> entityCollection) {
+			Assert.assertNotNull(entityCollection);
+
 			instance.jsonApiEntity = new JsonApiDocument(entityCollection, instance.uriInfo);
 			instance.jsonApiEntity.addSelfLink(instance.uriInfo);
 			return this;
@@ -61,12 +74,16 @@ public class JsonApiResponse {
 
 
 		public Buildable addLink(String name, URI ref) {
+			Assert.assertNotNull(name, ref);
+
 			instance.jsonApiEntity.addLink(name, ref);
 			return this;
 		}
 
 		@Override
 		public WithRelationship addRelationship(String name, JsonApiIdentifiable entity, URI location) {
+			Assert.assertNotNull(name, entity, location);
+
 			instance.jsonApiEntity.addRelationship(name, entity, location);
 			return this;
 		}
@@ -74,6 +91,8 @@ public class JsonApiResponse {
 
 		@Override
 		public Buildable restrictTo(String attribute) {
+			Assert.assertNotNull(attribute);
+
 			instance.jsonApiEntity.restrictTo(attribute);
 			return this;
 		}
