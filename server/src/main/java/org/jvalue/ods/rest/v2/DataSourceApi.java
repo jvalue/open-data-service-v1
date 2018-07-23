@@ -43,7 +43,7 @@ public final class DataSourceApi extends AbstractApi {
 
 
 	@GET
-	@Path("/{sourceId}")
+	@Path("{sourceId}")
 	public Response getSource(@PathParam("sourceId") String sourceId) {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
@@ -56,7 +56,7 @@ public final class DataSourceApi extends AbstractApi {
 
 
 	@GET
-	@Path("/{sourceId}/schema")
+	@Path("{sourceId}/schema")
 	public Response getSourceSchema(@PathParam("sourceId") String sourceId) {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
@@ -71,7 +71,7 @@ public final class DataSourceApi extends AbstractApi {
 
 
 	@POST
-	@Path("/{sourceId}")
+	@Path("{sourceId}")
 	public Response addSource(
 			@RestrictedTo(Role.ADMIN) User user,
 			@PathParam("sourceId") String sourceId,
@@ -94,7 +94,7 @@ public final class DataSourceApi extends AbstractApi {
 
 
 	@DELETE
-	@Path("/{sourceId}")
+	@Path("{sourceId}")
 	public void deleteSource(
 			@RestrictedTo(Role.ADMIN) User user,
 			@PathParam("sourceId") String sourceId) {
@@ -112,17 +112,17 @@ public final class DataSourceApi extends AbstractApi {
 
 
 	@GET
-	@Path("/test/{sourceId}")
+	@Path("test/{sourceId}")
 	public Response test(@PathParam("sourceId") String sourceId) {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		Collection<DataSource> sources = sourceManager.getAll();
-		URI otherURI = URI.create(BASE_URL);
+		URI relatedUri = uriInfo.getAbsolutePath().resolve(URI.create(BASE_URL));
 
 		JsonApiResponse.WithRelationship builder = JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(source)
-			.addRelationship("datasources", sources, otherURI);
+			.addRelationship("datasources", sources, relatedUri);
 
 		sources.forEach(builder::addIncluded);
 
