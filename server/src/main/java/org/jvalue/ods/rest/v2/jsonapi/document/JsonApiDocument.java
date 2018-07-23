@@ -53,7 +53,7 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 	}
 
 
-	public URI getRelationshipURI (JsonApiIdentifiable relationship) {
+	private URI getRelationshipURI (JsonApiIdentifiable relationship) {
 		URI relationshipURI = null;
 
 		for(JsonApiResource dataElement: data) {
