@@ -58,7 +58,7 @@ public class JsonApiResponse {
 			Assert.assertNotNull(entity);
 
 			instance.jsonApiEntity = new JsonApiDocument(entity, instance.uriInfo);
-			instance.jsonApiEntity.addSelfLink(instance.uriInfo);
+			instance.jsonApiEntity.addSelfLink();
 			return this;
 		}
 
@@ -68,7 +68,7 @@ public class JsonApiResponse {
 			Assert.assertNotNull(entityCollection);
 
 			instance.jsonApiEntity = new JsonApiDocument(entityCollection, instance.uriInfo);
-			instance.jsonApiEntity.addSelfLink(instance.uriInfo);
+			instance.jsonApiEntity.addSelfLink();
 			return this;
 		}
 

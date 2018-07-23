@@ -65,7 +65,7 @@ public class JsonApiDocumentTest {
 	@Test
     public void testLinks() {
 		JsonApiDocument result = new JsonApiDocument(dummyObj01, uriInfoMock);
-		result.addSelfLink(uri);
+		result.addSelfLink();
 
 		result.addLink(linkName, uri);
 
