@@ -18,6 +18,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
+import java.util.Collection;
 
 @Path(AbstractApi.BASE_URL)
 public final class DataSourceApi extends AbstractApi {
@@ -46,14 +47,10 @@ public final class DataSourceApi extends AbstractApi {
 	public Response getSource(@PathParam("sourceId") String sourceId) {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
-		DataSource other = sourceManager.getAll().get(0);
-		URI otherURI = uriInfo.getAbsolutePath().resolve(URI.create(other.getId()));
 
 		return JsonApiResponse
 				.createGetResponse(uriInfo)
 				.data(source)
-				.addRelationship("test", other, otherURI)
-				.addIncluded(other)
 				.build();
 	}
 
@@ -113,4 +110,22 @@ public final class DataSourceApi extends AbstractApi {
 		}
 	}
 
+
+	@GET
+	@Path("/test/{sourceId}")
+	public Response test(@PathParam("sourceId") String sourceId) {
+
+		DataSource source = sourceManager.findBySourceId(sourceId);
+		Collection<DataSource> sources = sourceManager.getAll();
+		URI otherURI = URI.create(BASE_URL);
+
+		JsonApiResponse.WithRelationship builder = JsonApiResponse
+			.createGetResponse(uriInfo)
+			.data(source)
+			.addRelationship("datasources", sources, otherURI);
+
+		sources.forEach(builder::addIncluded);
+
+		return builder.build();
+	}
 }
