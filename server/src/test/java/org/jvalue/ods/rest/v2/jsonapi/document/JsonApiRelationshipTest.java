@@ -1,12 +1,11 @@
 package org.jvalue.ods.rest.v2.jsonapi.document;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.jvalue.ods.api.jsonapi.JsonApiIdentifiable;
 
 import java.net.URI;
-import java.util.LinkedList;
+import java.util.Arrays;
 import java.util.List;
 
 public class JsonApiRelationshipTest {
@@ -15,14 +14,7 @@ public class JsonApiRelationshipTest {
 	private final Dummy dummy1 = new Dummy("1");
 	private final Dummy dummy2 = new Dummy("2");
 	private final AnotherDummyClass anotherDummyClass = new AnotherDummyClass("2");
-	private final List<JsonApiIdentifiable> relatedList = new LinkedList<>();
-
-
-	@Before
-	public void setUp() {
-		relatedList.add(dummy1);
-		relatedList.add(anotherDummyClass);
-	}
+	private final List<JsonApiIdentifiable> relatedList = Arrays.asList(dummy1, anotherDummyClass);
 
 
 	@Test
@@ -32,6 +24,24 @@ public class JsonApiRelationshipTest {
 		Assert.assertTrue(result.containsEntity(dummy1));
 		Assert.assertTrue(result.containsEntity(anotherDummyClass));
 		Assert.assertFalse(result.containsEntity(dummy2));
+	}
+
+
+	@Test
+	public void testGetData() {
+		Assert.fail("Not implemented yet!");
+	}
+
+
+	@Test
+	public void testGetLinks() {
+		Assert.fail("Not implemented yet!");
+	}
+
+
+	@Test
+	public void testEquals() {
+		Assert.fail("Not implemented yet!");
 	}
 
 
