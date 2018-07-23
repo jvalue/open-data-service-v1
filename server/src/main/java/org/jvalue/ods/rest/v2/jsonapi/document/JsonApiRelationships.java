@@ -46,8 +46,13 @@ public class JsonApiRelationships {
 		URI relationshipURI = null;
 
 		for (Map.Entry<String, Relationship> entry: relationships.entrySet()) {
-			if(entry.getValue().containsEntity(relationship)) {
-				relationshipURI =  entry.getValue().getLinks().get(RELATED);
+			Relationship match = entry.getValue();
+			if(match.containsEntity(relationship)) {
+				if(match.data.size() == 1) { //the relationship contains a single resource object
+					relationshipURI =  match.getLinks().get(RELATED);
+				} else { //the relationship contains a collection of resource objects
+					relationshipURI = match.getLinks().get(RELATED).resolve(relationship.getId());
+				}
 				break;
 			}
 		}
