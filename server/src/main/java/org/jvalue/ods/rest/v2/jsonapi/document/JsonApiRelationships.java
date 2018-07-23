@@ -36,6 +36,21 @@ public class JsonApiRelationships {
 		return false;
 	}
 
+
+	public URI getRelationshipUri(JsonApiIdentifiable relationship) {
+		URI relationshipURI = null;
+
+		for (Map.Entry<String, Relationship> entry: relationships.entrySet()) {
+			if(entry.getValue().containsEntity(relationship)) {
+				relationshipURI =  entry.getValue().getLinks().get(RELATED);
+				break;
+			}
+		}
+
+		return relationshipURI;
+	}
+
+
 	class Relationship {
 
 		@JsonFormat(with = JsonFormat.Feature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED)

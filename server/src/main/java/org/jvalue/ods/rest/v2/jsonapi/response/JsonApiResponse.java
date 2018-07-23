@@ -80,6 +80,7 @@ public class JsonApiResponse {
 			return this;
 		}
 
+
 		@Override
 		public WithRelationship addRelationship(String name, JsonApiIdentifiable entity, URI location) {
 			Assert.assertNotNull(name, entity, location);
@@ -99,10 +100,10 @@ public class JsonApiResponse {
 
 
 		@Override
-		public WithRelationship addIncluded(JsonApiIdentifiable included, URI location) {
+		public WithRelationship addIncluded(JsonApiIdentifiable included) {
 			assertHasRelationship(included);
 
-			instance.jsonApiEntity.addIncluded(included, location);
+			instance.jsonApiEntity.addIncluded(included);
 			return this;
 		}
 
@@ -117,6 +118,7 @@ public class JsonApiResponse {
 			}
 			return responseBuilder.build();
 		}
+
 
 		private void assertHasRelationship(JsonApiIdentifiable relationship) {
 			if(!instance.jsonApiEntity.hasRelationshipTo(relationship)) {
@@ -185,10 +187,9 @@ public class JsonApiResponse {
 		/**
 		 * Adds a included resource to the generated response body.
 		 * @param included the entity to be included. Entity has to be added as a relationship before.
-		 * @param location the location of the entity
 		 * @return a buildable ResponseBuilder on which addIncluded() can be called.
 		 */
-		WithRelationship addIncluded(JsonApiIdentifiable included, URI location);
+		WithRelationship addIncluded(JsonApiIdentifiable included);
 	}
 
 }

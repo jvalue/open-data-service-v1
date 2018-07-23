@@ -204,7 +204,7 @@ public class JsonApiResponseTest {
 			.createGetResponse(uriInfo)
 			.data(minimalEntity)
 			.addRelationship("related", relatedEntity, uriInfo.getAbsolutePath())
-			.addIncluded(relatedEntity, uriInfo.getAbsolutePath())
+			.addIncluded(relatedEntity)
 			.build();
 
 		//Verify
@@ -230,7 +230,7 @@ public class JsonApiResponseTest {
 			.createGetResponse(uriInfo)
 			.data(minimalEntity)
 			.addRelationship("related", relatedEntity, uriInfo.getAbsolutePath())
-			.addIncluded(unrleatedEntity, uriInfo.getAbsolutePath())
+			.addIncluded(unrleatedEntity)
 			.build();
 	}
 
@@ -247,7 +247,7 @@ public class JsonApiResponseTest {
 			.createGetResponse(uriInfo)
 			.data(minimalEntity)
 			.addRelationship("related", relatedEntity, uriInfo.getAbsolutePath())
-			.addIncluded(unrelatedEntity, uriInfo.getAbsolutePath())
+			.addIncluded(unrelatedEntity)
 			.build();
 	}
 

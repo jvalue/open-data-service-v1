@@ -53,6 +53,23 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 	}
 
 
+	public URI getRelationshipURI (JsonApiIdentifiable relationship) {
+		URI relationshipURI = null;
+
+		for(JsonApiResource dataElement: data) {
+			if (dataElement.hasRelationshipTo(relationship)) {
+				relationshipURI = dataElement.getRelationships().getRelationshipUri(relationship);
+			}
+		}
+
+		if(relationshipURI == null) {
+			throw new IllegalArgumentException("relationship " + relationship.getId() + " does not exist.");
+		}
+
+		return relationshipURI;
+	}
+
+
 	public boolean hasRelationshipTo(JsonApiIdentifiable entity) {
 		for(JsonApiResource dataElement: data) {
 			if (dataElement.hasRelationshipTo(entity)) {
@@ -79,7 +96,8 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 	}
 
 
-	public void addIncluded(JsonApiIdentifiable entity, URI location) {
+	public void addIncluded(JsonApiIdentifiable entity) {
+		URI location = getRelationshipURI(entity);
 		JsonApiResource includedResource = new JsonApiResource(entity, location);
 		includedResource.addSelfLink(location);
 		included.add(includedResource);

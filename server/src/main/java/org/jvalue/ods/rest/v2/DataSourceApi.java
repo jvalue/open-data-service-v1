@@ -53,7 +53,7 @@ public final class DataSourceApi extends AbstractApi {
 				.createGetResponse(uriInfo)
 				.data(source)
 				.addRelationship("test", other, otherURI)
-				.addIncluded(other, otherURI)
+				.addIncluded(other)
 				.build();
 	}
 
