@@ -53,6 +53,24 @@ public class JsonApiRelationshipsTest {
 	}
 
 
+	@Test
+	public void testGetRelationshipURI() {
+		JsonApiRelationships result = new JsonApiRelationships();
+		result.addRelationship("dummy1", dummy1, testLocation);
+
+		Assert.assertEquals(testLocation, result.getRelationshipUri(dummy1));
+	}
+
+
+	@Test
+	public void testGetRelationshipURIWithUnrelatedDummy() {
+		JsonApiRelationships result = new JsonApiRelationships();
+		result.addRelationship("dummy2", dummy2, testLocation);
+
+		Assert.assertEquals(null,result.getRelationshipUri(dummy1));
+	}
+
+
 	private class Dummy implements JsonApiIdentifiable {
 
 		private final String id;

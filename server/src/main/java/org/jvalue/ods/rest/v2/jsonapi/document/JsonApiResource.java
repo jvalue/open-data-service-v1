@@ -7,6 +7,7 @@ import org.jvalue.ods.api.jsonapi.JsonApiIdentifiable;
 import org.jvalue.ods.utils.JsonUtils;
 
 import java.net.URI;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -67,6 +68,15 @@ public class JsonApiResource extends JsonApiResourceIdentifier implements JsonLi
 		}
 		relationships.addRelationship(name, entity, location);
 		return this;
+	}
+
+
+	public JsonApiResource addRelationship(String name, Collection<? extends JsonApiIdentifiable> entityCollection, URI location) {
+    	if(relationships == null) {
+    		relationships = new JsonApiRelationships();
+		}
+		relationships.addRelationship(name, entityCollection, location);
+    	return this;
 	}
 
 

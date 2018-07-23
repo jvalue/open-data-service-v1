@@ -17,12 +17,15 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.jvalue.ods.rest.v2.jsonapi.response.TestEntityProvider.*;
 
 @RunWith(JMockit.class)
 public class JsonApiResponseTest {
+	private static final int NR_ENTITIES = 10;
 
 	@Mocked
 	private UriInfo uriInfo;
@@ -63,8 +66,6 @@ public class JsonApiResponseTest {
 
 	@Test
 	public void testGetResponseCollection() {
-
-		final int NR_ENTITIES = 10;
 
 		//Record
 		new Expectations() {{
@@ -194,6 +195,36 @@ public class JsonApiResponseTest {
 
 
 	@Test
+	public void testAddRelationshipCollection() {
+		//Record
+		final int numberOfEntities = 10;
+		JsonApiIdentifiable minimalEntity = createMinimalEntity();
+		Collection<JsonApiIdentifiable> relatedCollection = new LinkedList<>();
+		for(int i = 0; i < numberOfEntities; i++) {
+			relatedCollection.add(createCustomMinimalEntity(String.valueOf(i)));
+		}
+
+		//Replay
+		Response result = JsonApiResponse
+			.createGetResponse(uriInfo)
+			.data(minimalEntity)
+			.addRelationship("related", relatedCollection, uriInfo.getAbsolutePath())
+			.build();
+
+		//Verify
+		assertIsValidJsonApiDataResponse(result);
+		JsonNode resultJson = extractJsonEntity(result).get("data");
+		Assert.assertEquals(1, resultJson.get("relationships").size());
+		Assert.assertTrue(resultJson.get("relationships").has("related"));
+		JsonNode relationshipNode = resultJson.get("relationships").get("related");
+		assertHasValidRelationshipData(relationshipNode);
+		for(int i = 0; i < NR_ENTITIES; i++) {
+			Assert.assertEquals(String.valueOf(i), relationshipNode.get("data").get(i).get("id").textValue());
+		}
+	}
+
+
+	@Test
 	public void testAddIncluded() {
 		//Record
 		JsonApiIdentifiable minimalEntity = createMinimalEntity();
@@ -289,8 +320,14 @@ public class JsonApiResponseTest {
 
 
 	private static void assertIsValidDataNode(JsonNode dataNode) {
-		Assert.assertTrue(dataNode.has("id"));
-		Assert.assertTrue(dataNode.has("type"));
+		if(dataNode.isArray()) {
+			for(int i = 0; i < NR_ENTITIES; i++) {
+				assertIsValidDataNode(dataNode.get(i));
+			}
+		} else {
+			Assert.assertTrue(dataNode.has("id"));
+			Assert.assertTrue(dataNode.has("type"));
+		}
 	}
 
 

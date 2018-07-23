@@ -25,6 +25,11 @@ public class JsonApiRelationships {
 	}
 
 
+	public void addRelationship(String name, Collection<? extends JsonApiIdentifiable> entityCollection, URI location) {
+		relationships.put(name, new Relationship(entityCollection, location));
+	}
+
+
 	public boolean hasRelationshipTo(JsonApiIdentifiable other) {
 
 		for (Map.Entry<String, Relationship> entry: relationships.entrySet()) {
@@ -64,6 +69,12 @@ public class JsonApiRelationships {
 			links.put(RELATED, location);
 		}
 
+		private Relationship(Collection<? extends JsonApiIdentifiable> entityCollection, URI location) {
+			entityCollection.forEach(
+				e -> data.add(new JsonApiResourceIdentifier(e))
+			);
+			links.put(RELATED, location);
+		}
 
 		public List<JsonApiResourceIdentifier> getData() {
 			return data;

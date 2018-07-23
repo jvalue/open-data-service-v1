@@ -96,6 +96,14 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 	}
 
 
+	public void addRelationship(String name, Collection<? extends JsonApiIdentifiable> entity, URI location) {
+		data = data
+			.stream()
+			.map(r -> r.addRelationship(name, entity, location))
+			.collect(Collectors.toList());
+	}
+
+
 	public void addIncluded(JsonApiIdentifiable entity) {
 		URI location = getRelationshipURI(entity);
 		JsonApiResource includedResource = new JsonApiResource(entity, location);

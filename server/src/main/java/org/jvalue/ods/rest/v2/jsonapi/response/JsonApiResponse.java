@@ -89,6 +89,15 @@ public class JsonApiResponse {
 			return this;
 		}
 
+		@Override
+		public WithRelationship addRelationship(String name, Collection<? extends JsonApiIdentifiable> entityCollection, URI location) {
+			Assert.assertNotNull(entityCollection);
+			entityCollection.forEach(Assert::assertNotNull);
+
+			instance.jsonApiEntity.addRelationship(name, entityCollection, location);
+			return this;
+		}
+
 
 		@Override
 		public Buildable restrictTo(String attribute) {
@@ -175,6 +184,16 @@ public class JsonApiResponse {
 		 * @return a buildable Responsebuilder on which addIncluded() can be called.
 		 */
 		WithRelationship addRelationship(String name, JsonApiIdentifiable entity, URI location);
+
+		/**
+		 * Adds a relationship to the generated response body. The corresponding collection of entities is represented as
+		 * a collection of ResourceIdentifiers with selflinks on resource level.
+		 * @param name the name of the relationship in the generated response body.
+		 * @param entityCollection the collection of entities to which the relationship should be added
+		 * @param location the endpoint where the entity is located.
+		 * @return a buildable Responsebuilder on which addIncluded() can be called.
+		 */
+		WithRelationship addRelationship(String name, Collection<? extends JsonApiIdentifiable> entityCollection, URI location);
 	}
 
 
