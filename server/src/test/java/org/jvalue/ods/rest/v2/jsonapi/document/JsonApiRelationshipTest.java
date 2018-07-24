@@ -8,9 +8,12 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.jvalue.ods.rest.v2.jsonapi.document.JsonLinks.RELATED;
+
 public class JsonApiRelationshipTest {
 
 	private final URI testLocation = URI.create("http://www.test.com");
+	private final URI anotherLocation = URI.create("http://www.test.org");
 	private final Dummy dummy1 = new Dummy("1");
 	private final Dummy dummy2 = new Dummy("2");
 	private final AnotherDummyClass anotherDummyClass = new AnotherDummyClass("2");
@@ -29,19 +32,36 @@ public class JsonApiRelationshipTest {
 
 	@Test
 	public void testGetData() {
-		Assert.fail("Not implemented yet!");
+		JsonApiRelationship result = new JsonApiRelationship(relatedList, testLocation);
+
+
+		Assert.assertEquals(2, result.getData().size());
+		Assert.assertEquals(new JsonApiResourceIdentifier(dummy1), result.getData().get(0));
+		Assert.assertEquals(new JsonApiResourceIdentifier(anotherDummyClass), result.getData().get(1));
 	}
 
 
 	@Test
 	public void testGetLinks() {
-		Assert.fail("Not implemented yet!");
+		JsonApiRelationship result = new JsonApiRelationship(dummy1, testLocation);
+
+		Assert.assertEquals(testLocation, result.getLinks().get(RELATED));
 	}
 
 
 	@Test
 	public void testEquals() {
-		Assert.fail("Not implemented yet!");
+		List<JsonApiIdentifiable> anotherList = Arrays.asList(dummy1, dummy2);
+
+		JsonApiRelationship result1 = new JsonApiRelationship(relatedList, testLocation);
+		JsonApiRelationship result2 = new JsonApiRelationship(relatedList, testLocation);
+		JsonApiRelationship result3 = new JsonApiRelationship(relatedList, anotherLocation);
+		JsonApiRelationship result4 = new JsonApiRelationship(anotherList, testLocation);
+
+		Assert.assertTrue(result1.equals(result2));
+		Assert.assertFalse(result1.equals(result3));
+		Assert.assertFalse(result1.equals(result4));
+		Assert.assertFalse(result3.equals(result4));
 	}
 
 
