@@ -99,10 +99,14 @@ public class JsonApiDocumentTest {
             this.id = id;
         }
 
-
 		@Override
 		public String getId() {
 			return id;
+		}
+
+		@Override
+		public String getType() {
+			return Dummy.class.getSimpleName();
 		}
 	}
 }

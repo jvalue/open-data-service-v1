@@ -57,6 +57,11 @@ public class JsonApiRelationshipTest {
 		public String getId() {
 			return id;
 		}
+
+		@Override
+		public String getType() {
+			return Dummy.class.getSimpleName();
+		}
 	}
 
 
@@ -71,6 +76,11 @@ public class JsonApiRelationshipTest {
 		@Override
 		public String getId() {
 			return id;
+		}
+
+		@Override
+		public String getType() {
+			return AnotherDummyClass.class.getSimpleName();
 		}
 	}
 }

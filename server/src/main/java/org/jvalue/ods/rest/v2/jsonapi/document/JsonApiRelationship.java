@@ -11,26 +11,24 @@ import static org.jvalue.ods.rest.v2.jsonapi.document.JsonLinks.RELATED;
 public class JsonApiRelationship {
 
 	@JsonFormat(with = JsonFormat.Feature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED)
-	private final List<JsonApiResourceIdentifier> data = new LinkedList<>();
+	private final List<JsonApiIdentifiable> data = new LinkedList<>();
 
 	private final Map<String, URI> links = new HashMap<>();
 
 
 	public JsonApiRelationship(JsonApiIdentifiable entity, URI location) {
-		data.add(new JsonApiResourceIdentifier(entity));
+		data.add(entity);
 		links.put(RELATED, location);
 	}
 
 
 	public JsonApiRelationship(Collection<? extends JsonApiIdentifiable> entityCollection, URI location) {
-		entityCollection.forEach(
-			e -> data.add(new JsonApiResourceIdentifier(e))
-		);
+		data.addAll(entityCollection);
 		links.put(RELATED, location);
 	}
 
 
-	public List<JsonApiResourceIdentifier> getData() {
+	public List<JsonApiIdentifiable> getData() {
 		return data;
 	}
 
@@ -49,13 +47,8 @@ public class JsonApiRelationship {
 	 * @return true if a relation to entity exists, false otherwise
 	 */
 	public boolean containsEntity(JsonApiIdentifiable entity) {
-		for (JsonApiResourceIdentifier identifier : data) {
-			if (identifier.getId().equals(entity.getId())
-				&& identifier.getType().equals(entity.getClass().getSimpleName())) {
-				return true;
-			}
-		}
-		return false;
+		return data.stream()
+			.anyMatch(id -> id.equals(entity));
 	}
 
 

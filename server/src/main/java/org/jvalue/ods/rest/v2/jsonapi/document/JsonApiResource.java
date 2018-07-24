@@ -58,14 +58,8 @@ public class JsonApiResource extends JsonApiResourceIdentifier implements JsonLi
 
 
 	public boolean hasRelationshipTo(JsonApiIdentifiable related) {
-
-		for (Map.Entry<String, JsonApiRelationship> entry: relationships.entrySet()) {
-			if(entry.getValue().containsEntity(related)) {
-				return true;
-			}
-		}
-
-		return false;
+		return relationships.entrySet().stream()
+			.anyMatch(r -> r.getValue().containsEntity(related));
 	}
 
 

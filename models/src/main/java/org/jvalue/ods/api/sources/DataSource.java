@@ -24,8 +24,15 @@ public final class DataSource extends AbstractDataSource implements JsonApiIdent
 	}
 
 
+	@Override
 	public String getId() {
 		return id;
+	}
+
+
+	@Override
+	public String getType() {
+		return DataSource.class.getSimpleName();
 	}
 
 

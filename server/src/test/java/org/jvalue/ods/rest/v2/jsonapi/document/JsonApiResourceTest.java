@@ -100,6 +100,11 @@ public class JsonApiResourceTest {
         public String getId() {
             return id;
         }
+
+		@Override
+		public String getType() {
+			return Dummy.class.getSimpleName();
+		}
     }
 
 
@@ -114,6 +119,11 @@ public class JsonApiResourceTest {
 		@Override
 		public String getId() {
 			return id;
+		}
+
+		@Override
+		public String getType() {
+			return AnotherDummyClass.class.getSimpleName();
 		}
 	}
 }

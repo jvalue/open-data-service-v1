@@ -1,6 +1,7 @@
 package org.jvalue.ods.rest.v2.jsonapi.response;
 
 import org.jvalue.ods.api.jsonapi.JsonApiIdentifiable;
+import org.jvalue.ods.rest.v2.jsonapi.document.JsonApiResourceIdentifier;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,16 +14,17 @@ public class TestEntityProvider {
 	public final static String ENTITY_PATH = COLLECTION_PATH + "/entity";
 
 	public static JsonApiIdentifiable createMinimalEntity() {
-		return () -> TEST_ID;
+		return new JsonApiResourceIdentifier(TEST_ID, TestEntityProvider.class.getSimpleName());
 	}
 
 	public static JsonApiIdentifiable createCustomMinimalEntity(String id) {
-		return () -> id;
+		return new JsonApiResourceIdentifier(id, TestEntityProvider.class.getSimpleName());
 	}
 
 	public static JsonApiIdentifiable createEntityWithAttributes() {
 		return new JsonApiIdentifiable() {
 			private final String id = TEST_ID;
+			private final String type = "TestJsonApiIdentifiable";
 			private final int intAttribute = 1;
 			private final String stringAttribute = "";
 			private final Map<String, String> mapAttribute = new HashMap<String, String>() {{
@@ -34,6 +36,8 @@ public class TestEntityProvider {
 			public String getId() {
 				return id;
 			}
+
+			public String getType() {return type;}
 
 			public int getIntAttribute() {
 				return intAttribute;

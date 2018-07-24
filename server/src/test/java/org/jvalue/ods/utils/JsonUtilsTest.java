@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.Assert;
 import org.junit.Test;
 import org.jvalue.ods.api.jsonapi.JsonApiIdentifiable;
+import org.jvalue.ods.rest.v2.jsonapi.document.JsonApiResourceIdentifierTest;
 
 public class JsonUtilsTest {
 
@@ -36,6 +37,11 @@ public class JsonUtilsTest {
         public String getId() {
             return id;
         }
+
+		@Override
+		public String getType() {
+			return Dummy.class.getSimpleName();
+		}
     }
 
 
