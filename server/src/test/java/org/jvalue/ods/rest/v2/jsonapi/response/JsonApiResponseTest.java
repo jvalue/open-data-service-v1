@@ -197,10 +197,9 @@ public class JsonApiResponseTest {
 	@Test
 	public void testAddRelationshipCollection() {
 		//Record
-		final int numberOfEntities = 10;
 		JsonApiIdentifiable minimalEntity = createMinimalEntity();
 		Collection<JsonApiIdentifiable> relatedCollection = new LinkedList<>();
-		for(int i = 0; i < numberOfEntities; i++) {
+		for(int i = 0; i < NR_ENTITIES; i++) {
 			relatedCollection.add(createCustomMinimalEntity(String.valueOf(i)));
 		}
 
@@ -246,6 +245,34 @@ public class JsonApiResponseTest {
 		JsonNode includedData = resultJson.get("included").get(0);
 		assertIsValidDataNode(includedData);
 		Assert.assertEquals("related", includedData.get("id").textValue());
+	}
+
+
+	@Test
+	public void testAddIncludedWithCollection() {
+		//Record
+		JsonApiIdentifiable minimalEntity = createMinimalEntity();
+		List<JsonApiIdentifiable> relatedCollection = new LinkedList<>();
+		for(int i = 0; i < NR_ENTITIES; i++) {
+			relatedCollection.add(createCustomMinimalEntity(String.valueOf(i)));
+		}
+
+		//Replay
+		Response result = JsonApiResponse
+			.createGetResponse(uriInfo)
+			.data(minimalEntity)
+			.addRelationship("relatedCollection", relatedCollection, uriInfo.getAbsolutePath())
+			.addIncluded(relatedCollection.get(0))
+			.build();
+
+		//Verify
+		assertIsValidJsonApiDataResponse(result);
+		JsonNode resultJson = extractJsonEntity(result);
+		Assert.assertTrue(resultJson.has("included"));
+		Assert.assertEquals(1, resultJson.get("included").size());
+		JsonNode includedData = resultJson.get("included").get(0);
+		assertIsValidDataNode(includedData);
+		Assert.assertEquals("0", includedData.get("id").textValue());
 	}
 
 

@@ -21,9 +21,9 @@ public class TestEntityProvider {
 		return new JsonApiResourceIdentifier(id, TestEntityProvider.class.getSimpleName());
 	}
 
-	public static JsonApiIdentifiable createEntityWithAttributes() {
+	public static JsonApiIdentifiable createEntityWithAttributes(String identifier) {
 		return new JsonApiIdentifiable() {
-			private final String id = TEST_ID;
+			private String id = identifier;
 			private final String type = "TestJsonApiIdentifiable";
 			private final int intAttribute = 1;
 			private final String stringAttribute = "";
@@ -63,6 +63,10 @@ public class TestEntityProvider {
 				}
 			}
 		};
+	}
+
+	public static JsonApiIdentifiable createEntityWithAttributes() {
+		return createEntityWithAttributes(TEST_ID);
 	}
 }
 
