@@ -83,7 +83,7 @@ public class JsonApiResourceTest {
 		JsonApiResource result = new JsonApiResource(dummyObj, uri);
 		result.addRelationship("dummy2", dummy02, uri);
 
-		Assert.assertEquals(null,result.getRelationshipUri(dummy02));
+		Assert.assertNull(result.getRelationshipUri(dummy03));
 	}
 
 
