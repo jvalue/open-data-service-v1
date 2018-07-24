@@ -75,6 +75,16 @@ public class JsonApiDocumentTest {
 	}
 
 
+	@Test
+	public void hasRelationshipTo() {
+		JsonApiDocument document = new JsonApiDocument(dummyObj01, uriInfoMock);
+		document.addRelationship("rel1", dummyObj42, uri);
+
+		Assert.assertTrue(document.hasRelationshipTo(dummyObj42));
+		Assert.assertFalse(document.hasRelationshipTo(dummyObj43));
+	}
+
+
     @Test
     public void testEquals() {
 		JsonApiDocument result1 = new JsonApiDocument(dummyObj01, uriInfoMock);
