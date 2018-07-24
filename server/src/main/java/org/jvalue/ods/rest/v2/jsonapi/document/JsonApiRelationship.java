@@ -48,7 +48,7 @@ public class JsonApiRelationship {
 	 */
 	public boolean containsEntity(JsonApiIdentifiable entity) {
 		return data.stream()
-			.anyMatch(id -> id.getId().equals(entity.getId()) && id.getType().equals(entity.getType()));
+			.anyMatch(id -> id.isSame(entity));
 	}
 
 
