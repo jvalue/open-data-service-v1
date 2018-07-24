@@ -71,12 +71,8 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 
 
 	public boolean hasRelationshipTo(JsonApiIdentifiable entity) {
-		for(JsonApiResource dataElement: data) {
-			if (dataElement.hasRelationshipTo(entity)) {
-				return true;
-			}
-		}
-		return false;
+		return data.stream()
+			.anyMatch(e -> e.hasRelationshipTo(entity));
 	}
 
 
