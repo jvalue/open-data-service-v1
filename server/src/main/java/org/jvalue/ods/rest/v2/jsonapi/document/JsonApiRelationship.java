@@ -17,13 +17,13 @@ public class JsonApiRelationship {
 
 
 	public JsonApiRelationship(JsonApiIdentifiable entity, URI location) {
-		data.add(entity);
+		data.add(new JsonApiResourceIdentifier(entity));
 		links.put(RELATED, location);
 	}
 
 
 	public JsonApiRelationship(Collection<? extends JsonApiIdentifiable> entityCollection, URI location) {
-		data.addAll(entityCollection);
+		entityCollection.forEach(entity -> data.add(new JsonApiResourceIdentifier(entity)));
 		links.put(RELATED, location);
 	}
 
