@@ -226,13 +226,13 @@ public class JsonApiResponseTest {
 	@Test
 	public void testAddIncluded() {
 		//Record
-		JsonApiIdentifiable minimalEntity = createMinimalEntity();
-		JsonApiIdentifiable relatedEntity = createCustomMinimalEntity("related");
+		JsonApiIdentifiable entityWithAttributes = createEntityWithAttributes();
+		JsonApiIdentifiable relatedEntity = createEntityWithAttributes("related");
 
 		//Replay
 		Response result = JsonApiResponse
 			.createGetResponse(uriInfo)
-			.data(minimalEntity)
+			.data(entityWithAttributes)
 			.addRelationship("related", relatedEntity, uriInfo.getAbsolutePath())
 			.addIncluded(relatedEntity)
 			.build();
