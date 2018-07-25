@@ -11,19 +11,18 @@ import org.ektorp.CouchDbConnector;
 import org.ektorp.CouchDbInstance;
 import org.ektorp.http.StdHttpClient;
 import org.ektorp.impl.StdCouchDbInstance;
-
 import org.jvalue.commons.auth.UserRepository;
 import org.jvalue.commons.couchdb.CouchDbConfig;
 import org.jvalue.commons.db.DbConnectorFactory;
+import org.jvalue.commons.db.GenericRepository;
 import org.jvalue.commons.utils.Cache;
 import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.api.processors.PluginMetaData;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
+import org.jvalue.ods.api.views.QueryObject;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
-import org.jvalue.ods.db.RepositoryFactory;
-import org.jvalue.ods.decoupleDatabase.IDataRepository;
-import org.jvalue.commons.db.IRepository;
+import org.jvalue.commons.db.GenericDataRepository;
 
 import java.net.MalformedURLException;
 
@@ -54,52 +53,52 @@ public class CouchDbModule extends AbstractModule {
 
 			bind(DbConnectorFactory.class).toInstance(connectorFactory);
 
-			bind(new TypeLiteral<Cache<IRepository<CouchDbDataView>>>() { }).in(Singleton.class);
-			bind(new TypeLiteral<Cache<IRepository<ProcessorReferenceChain>>>() { }).in(Singleton.class);
-			bind(new TypeLiteral<Cache<IRepository<Client>>>() { }).in(Singleton.class);
-			bind(new TypeLiteral<Cache<IRepository<PluginMetaData>>>() { }).in(Singleton.class);
-			bind(new TypeLiteral<Cache<IRepository<JsonNode>>>() { }).in(Singleton.class);
+			bind(new TypeLiteral<Cache<GenericRepository<CouchDbDataView>>>() { }).in(Singleton.class);
+			bind(new TypeLiteral<Cache<GenericRepository<ProcessorReferenceChain>>>() { }).in(Singleton.class);
+			bind(new TypeLiteral<Cache<GenericRepository<Client>>>() { }).in(Singleton.class);
+			bind(new TypeLiteral<Cache<GenericRepository<PluginMetaData>>>() { }).in(Singleton.class);
+			bind(new TypeLiteral<Cache<GenericRepository<JsonNode>>>() { }).in(Singleton.class);
+			bind(new TypeLiteral<GenericRepository<DataSource>>() {}).to(DataSourceRepository.class);
 
-
-			bind(new TypeLiteral<IRepository<DataSource>>() {}).to(DataSourceRepository.class);
 			install(new FactoryModuleBuilder()
 				.implement(
-					new TypeLiteral<IRepository<CouchDbDataView>>() {
+					new TypeLiteral<GenericRepository<CouchDbDataView>>() {
 					},
 					Names.named(RepositoryFactory.NAME_DATA_VIEW_REPOSITORY),
 					DataViewRepository.class)
 
 				.implement(
-					new TypeLiteral<IRepository<DataSource>>() {
+					new TypeLiteral<GenericRepository<DataSource>>() {
 					},
 					Names.named(RepositoryFactory.NAME_DATA_SOURCE_REPOSITORY),
 					DataSourceRepository.class)
 
 				.implement(
-					new TypeLiteral<IDataRepository<CouchDbDataView, JsonNode>>() {
+					new TypeLiteral<GenericDataRepository<CouchDbDataView, JsonNode>>() {
 					},
 					Names.named(RepositoryFactory.NAME_DATA_REPOSITORY),
 					DataRepository.class)
 
 				.implement(
-					new TypeLiteral<IRepository<ProcessorReferenceChain>>() {
+					new TypeLiteral<GenericRepository<ProcessorReferenceChain>>() {
 					},
 					Names.named(RepositoryFactory.NAME_FILTER_CHAIN_REF_REPOSITORY),
 					ProcessorChainReferenceRepository.class)
 
 				.implement(
-					new TypeLiteral<IRepository<Client>>() {
+					new TypeLiteral<GenericRepository<Client>>() {
 					},
 					Names.named(RepositoryFactory.NAME_NOTIFICATION_CLIENT_REPOSITORY),
 					NotificationClientRepository.class)
 
 				.implement(
-					new TypeLiteral<IRepository<PluginMetaData>>() {
+					new TypeLiteral<GenericRepository<PluginMetaData>>() {
 					},
 					Names.named(RepositoryFactory.NAME_PLUGIN_META_DATA_REPOSITORY),
 					PluginMetaDataRepository.class)
 
 				.build(RepositoryFactory.class));
+
 		} catch (MalformedURLException mue) {
 			throw new RuntimeException(mue);
 		}

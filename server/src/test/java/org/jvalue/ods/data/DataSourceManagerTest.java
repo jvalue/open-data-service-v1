@@ -17,8 +17,10 @@ import org.jvalue.ods.api.sources.DataSourceMetaData;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
 import org.jvalue.ods.db.couchdb.DataRepository;
 import org.jvalue.ods.db.couchdb.DataSourceRepository;
-import org.jvalue.ods.db.RepositoryFactory;
-import org.jvalue.ods.decoupleDatabase.IDataRepository;
+import org.jvalue.ods.db.couchdb.RepositoryFactory;
+import org.jvalue.commons.db.GenericDataRepository;
+import org.jvalue.ods.db.couchdb.data.DataSourceManager;
+import org.jvalue.ods.db.couchdb.data.DataViewManager;
 import org.jvalue.ods.notifications.NotificationManager;
 import org.jvalue.ods.processor.ProcessorChainManager;
 
@@ -36,7 +38,7 @@ public final class DataSourceManagerTest {
 	private static final String SOURCE_ID = "someSourceId";
 
 	@Mocked private DataSourceRepository sourceRepository;
-	@Mocked private Cache<IDataRepository<CouchDbDataView, JsonNode>> dataRepositoryCache;
+	@Mocked private Cache<GenericDataRepository<CouchDbDataView, JsonNode>> dataRepositoryCache;
 	@Mocked private DbConnectorFactory dbConnectorFactory;
 	@Mocked private RepositoryFactory repositoryFactory;
 	@Mocked private ProcessorChainManager processorChainManager;
@@ -80,7 +82,7 @@ public final class DataSourceManagerTest {
 		sourceManager.start();
 
 		new Verifications() {{
-			Map<DataSource, IDataRepository<CouchDbDataView, JsonNode>> sources;
+			Map<DataSource, GenericDataRepository<CouchDbDataView, JsonNode>> sources;
 			processorChainManager.startAllProcessorChains(sources = withCapture());
 			Assert.assertTrue(sources.containsKey(dataSource));
 		}};

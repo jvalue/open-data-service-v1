@@ -27,7 +27,7 @@ import org.ektorp.DocumentOperationResult;
 import org.jvalue.ods.admin.monitoring.PauseableTimer;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
-import org.jvalue.ods.decoupleDatabase.IDataRepository;
+import org.jvalue.commons.db.GenericDataRepository;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -37,7 +37,7 @@ import java.util.Map;
 
 final class DbInsertionFilter extends AbstractFilter<ObjectNode, ObjectNode> {
 
-	private final IDataRepository<CouchDbDataView, JsonNode> dataRepository;
+	private final GenericDataRepository<CouchDbDataView, JsonNode> dataRepository;
 	private final boolean updateDataIfExists;
 
 	// for bulk operations
@@ -51,7 +51,7 @@ final class DbInsertionFilter extends AbstractFilter<ObjectNode, ObjectNode> {
 
 	@Inject
 	DbInsertionFilter(
-			@Assisted IDataRepository<CouchDbDataView, JsonNode> dataRepository,
+			@Assisted GenericDataRepository<CouchDbDataView, JsonNode> dataRepository,
 			@Assisted DataSource source,
 			@Assisted boolean updateDataIfExists,
 			MetricRegistry registry) {
@@ -90,7 +90,7 @@ final class DbInsertionFilter extends AbstractFilter<ObjectNode, ObjectNode> {
 	private void writeBulkData() throws FilterException {
 		if (updateDataIfExists) {
 			timerContextBulkRead.resume();
-			Map<String, JsonNode> bulkLoaded = dataRepository.executeBulkGet(bulkDomainIds);
+			Map<String, JsonNode> bulkLoaded = dataRepository.getData(bulkDomainIds);
 			try {
 				for (ObjectNode node : bulkObjects) {
 					String domainId = node.at(source.getDomainIdKey()).asText();
@@ -107,7 +107,7 @@ final class DbInsertionFilter extends AbstractFilter<ObjectNode, ObjectNode> {
 
 		timerContextBulkWrite.resume();
 		try {
-			Collection<DocumentOperationResult> results = dataRepository.executeBulkCreateAndUpdate((List) bulkObjects);
+			Collection<DocumentOperationResult> results = dataRepository.writeData((List) bulkObjects);
 			for (DocumentOperationResult result : results) {
 				if (result.isErroneous())
 					throw new FilterException("db insertion failed for id " + result.getId() + ", reason: " + result.getReason());

@@ -1,17 +1,16 @@
-package org.jvalue.ods.db;
+package org.jvalue.ods.db.couchdb;
 
 
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.name.Named;
-import org.ektorp.CouchDbConnector;
+import org.jvalue.commons.db.GenericDataRepository;
+import org.jvalue.commons.db.GenericRepository;
 import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.api.processors.PluginMetaData;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
-import org.jvalue.ods.api.sources.DataSource;
+import org.jvalue.ods.api.views.QueryObject;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
-import org.jvalue.ods.decoupleDatabase.IDataRepository;
-import org.jvalue.commons.db.IRepository;
 
 public interface RepositoryFactory {
 	static final String
@@ -23,20 +22,17 @@ public interface RepositoryFactory {
 		NAME_PLUGIN_META_DATA_REPOSITORY = "PluginMetaDataRepository";
 
 	@Named(NAME_DATA_VIEW_REPOSITORY)
-	public IRepository<CouchDbDataView> createDataViewRepository(String databaseName);
-
-	@Named(NAME_DATA_SOURCE_REPOSITORY)
-	public IRepository<DataSource> createDataSourceRepository(CouchDbConnector connector);
+	public GenericRepository<CouchDbDataView> createDataViewRepository(String databaseName);
 
 	@Named(NAME_DATA_REPOSITORY)
-	public IDataRepository<CouchDbDataView, JsonNode> createSourceDataRepository(String databaseName, JsonPointer domainIdKey);
+	public GenericDataRepository<CouchDbDataView, JsonNode> createSourceDataRepository(String databaseName, JsonPointer domainIdKey);
 
 	@Named(NAME_FILTER_CHAIN_REF_REPOSITORY)
-	public IRepository<ProcessorReferenceChain> createFilterChainReferenceRepository(String databaseName);
+	public GenericRepository<ProcessorReferenceChain> createFilterChainReferenceRepository(String databaseName);
 
 	@Named(NAME_NOTIFICATION_CLIENT_REPOSITORY)
-	public IRepository<Client> createNotificationClientRepository(String databaseName);
+	public GenericRepository<Client> createNotificationClientRepository(String databaseName);
 
 	@Named(NAME_PLUGIN_META_DATA_REPOSITORY)
-	public IRepository<PluginMetaData> createPluginMetaDataRepository(String databaseName);
+	public GenericRepository<PluginMetaData> createPluginMetaDataRepository(String databaseName);
 }

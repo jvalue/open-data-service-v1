@@ -5,9 +5,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Sets;
 
 import org.jvalue.ods.api.sources.DataSource;
+import org.jvalue.ods.api.views.QueryObject;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
-import org.jvalue.ods.data.DataSourceManager;
-import org.jvalue.ods.decoupleDatabase.IDataRepository;
+import org.jvalue.ods.db.couchdb.data.DataSourceManager;
+import org.jvalue.commons.db.GenericDataRepository;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -34,7 +35,7 @@ public class DataHealthCheck extends HealthCheck implements Constants {
 	@Override
 	protected Result check() throws Exception {
 		final DataSource source = dataSourceManager.findBySourceId(DATA_SOURCE_ID);
-		final IDataRepository<CouchDbDataView, JsonNode> dataRepository = dataSourceManager.getDataRepository(source);
+		final GenericDataRepository<CouchDbDataView, JsonNode> dataRepository = dataSourceManager.getDataRepository(source);
 
 		long averageTimestamp = 0;
 

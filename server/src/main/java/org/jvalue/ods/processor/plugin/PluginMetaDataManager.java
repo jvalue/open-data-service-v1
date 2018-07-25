@@ -24,22 +24,23 @@ import org.jvalue.commons.utils.Assert;
 import org.jvalue.commons.utils.Cache;
 import org.jvalue.ods.api.processors.PluginMetaData;
 import org.jvalue.ods.api.sources.DataSource;
+import org.jvalue.ods.api.views.QueryObject;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
-import org.jvalue.ods.data.AbstractDataSourcePropertyManager;
+import org.jvalue.ods.db.couchdb.data.AbstractDataSourcePropertyManager;
 import org.jvalue.ods.db.couchdb.PluginMetaDataRepository;
-import org.jvalue.ods.db.RepositoryFactory;
-import org.jvalue.ods.decoupleDatabase.IDataRepository;
-import org.jvalue.commons.db.IRepository;
+import org.jvalue.ods.db.couchdb.RepositoryFactory;
+import org.jvalue.commons.db.GenericDataRepository;
+import org.jvalue.commons.db.GenericRepository;
 
 import java.io.InputStream;
 
 
-public final class PluginMetaDataManager extends AbstractDataSourcePropertyManager<PluginMetaData, IRepository<PluginMetaData>> {
+public final class PluginMetaDataManager extends AbstractDataSourcePropertyManager<PluginMetaData, GenericRepository<PluginMetaData>> {
 
 
 	@Inject
 	PluginMetaDataManager(
-			Cache<IRepository<PluginMetaData>> repositoryCache,
+			Cache<GenericRepository<PluginMetaData>> repositoryCache,
 			RepositoryFactory repositoryFactory) {
 
 		super(repositoryCache, repositoryFactory);
@@ -60,11 +61,11 @@ public final class PluginMetaDataManager extends AbstractDataSourcePropertyManag
 
 
 	@Override
-	protected void doAdd(DataSource source, IDataRepository<CouchDbDataView,JsonNode> dataRepository, PluginMetaData metaData) { }
+	protected void doAdd(DataSource source, GenericDataRepository<CouchDbDataView,JsonNode> dataRepository, PluginMetaData metaData) { }
 
 
 	@Override
-	protected void doRemove(DataSource source, IDataRepository<CouchDbDataView, JsonNode> dataRepository, PluginMetaData metaData) { }
+	protected void doRemove(DataSource source, GenericDataRepository<CouchDbDataView, JsonNode> dataRepository, PluginMetaData metaData) { }
 
 
 	@Override
@@ -72,7 +73,7 @@ public final class PluginMetaDataManager extends AbstractDataSourcePropertyManag
 
 
 	@Override
-	protected IRepository<PluginMetaData> createNewRepository(String sourceId, RepositoryFactory repositoryFactory) {
+	protected GenericRepository<PluginMetaData> createNewRepository(String sourceId, RepositoryFactory repositoryFactory) {
 		return repositoryFactory.createPluginMetaDataRepository(sourceId);
 	}
 

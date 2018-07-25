@@ -8,7 +8,7 @@ import com.google.inject.name.Named;
 
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
-import org.jvalue.ods.decoupleDatabase.IDataRepository;
+import org.jvalue.commons.db.GenericDataRepository;
 import org.jvalue.ods.processor.specification.Argument;
 import org.jvalue.ods.processor.specification.CreationMethod;
 import org.jvalue.ods.api.processors.ProcessorType;
@@ -38,7 +38,7 @@ public interface FilterFactory {
 	@Named(NAME_DB_INSERTION_FILTER)
 	public Filter<ObjectNode, ObjectNode> createDbInsertionFilter(
 		DataSource source,
-		IDataRepository<CouchDbDataView, JsonNode> dataRepository,
+		GenericDataRepository<CouchDbDataView, JsonNode> dataRepository,
 		@Argument(ARGUMENT_UPDATE_DATA) boolean updateDataIfExists);
 
 

@@ -15,14 +15,14 @@ import org.jvalue.commons.couchdb.DbDocumentAdaptable;
 import org.jvalue.commons.couchdb.RepositoryAdapter;
 
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.commons.db.IRepository;
+import org.jvalue.commons.db.GenericRepository;
 
 import java.util.List;
 
 public final class DataSourceRepository extends RepositoryAdapter<
 		DataSourceRepository.DataSourceCouchDbRepository,
 		DataSourceRepository.DataSourceDocument,
-		DataSource> implements IRepository<DataSource>{
+		DataSource> implements GenericRepository<DataSource> {
 
 	public static final String DATABASE_NAME = "dataSources";
 	private static final String DOCUMENT_ID = "doc.value.id != null && doc.value.domainIdKey != null";

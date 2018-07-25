@@ -1,4 +1,4 @@
-package org.jvalue.ods.data;
+package org.jvalue.ods.db.couchdb.data;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -6,13 +6,13 @@ import com.google.inject.Inject;
 import io.dropwizard.lifecycle.Managed;
 import org.ektorp.DocumentNotFoundException;
 import org.jvalue.commons.db.DbConnectorFactory;
+import org.jvalue.commons.db.GenericDataRepository;
+import org.jvalue.commons.db.GenericRepository;
 import org.jvalue.commons.utils.Assert;
 import org.jvalue.commons.utils.Cache;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
-import org.jvalue.ods.db.RepositoryFactory;
-import org.jvalue.ods.decoupleDatabase.IDataRepository;
-import org.jvalue.commons.db.IRepository;
+import org.jvalue.ods.db.couchdb.RepositoryFactory;
 import org.jvalue.ods.notifications.NotificationManager;
 import org.jvalue.ods.processor.ProcessorChainManager;
 
@@ -22,8 +22,8 @@ import java.util.Map;
 
 public final class DataSourceManager implements Managed {
 
-	private final IRepository<DataSource> dataSourceRepository;
-	private final Cache<IDataRepository<CouchDbDataView, JsonNode>> dataRepositoryCache;
+	private final GenericRepository<DataSource> dataSourceRepository;
+	private final Cache<GenericDataRepository<CouchDbDataView, JsonNode>> dataRepositoryCache;
 	private final DbConnectorFactory dbConnectorFactory;
 	private final RepositoryFactory repositoryFactory;
 	private final ProcessorChainManager processorChainManager;
@@ -32,8 +32,8 @@ public final class DataSourceManager implements Managed {
 
 	@Inject
 	public DataSourceManager(
-		IRepository<DataSource> dataSourceRepository,
-		Cache<IDataRepository<CouchDbDataView, JsonNode>> dataRepositoryCache,
+		GenericRepository<DataSource> dataSourceRepository,
+		Cache<GenericDataRepository<CouchDbDataView, JsonNode>> dataRepositoryCache,
 		DbConnectorFactory dbConnectorFactory,
 		RepositoryFactory repositoryFactory,
 		ProcessorChainManager processorChainManager,
@@ -86,7 +86,7 @@ public final class DataSourceManager implements Managed {
 	}
 
 
-	public IDataRepository<CouchDbDataView, JsonNode> getDataRepository(DataSource source) {
+	public GenericDataRepository<CouchDbDataView, JsonNode> getDataRepository(DataSource source) {
 		Assert.assertNotNull(source);
 		return dataRepositoryCache.get(source.getId());
 	}
@@ -105,7 +105,7 @@ public final class DataSourceManager implements Managed {
 	@Override
 	public void start() {
 		// create data repositories
-		Map<DataSource, IDataRepository<CouchDbDataView, JsonNode>> sources = new HashMap<>();
+		Map<DataSource, GenericDataRepository<CouchDbDataView, JsonNode>> sources = new HashMap<>();
 		for (DataSource source : dataSourceRepository.getAll()) {
 			sources.put(source, createDataRepository(source));
 		}
@@ -121,8 +121,8 @@ public final class DataSourceManager implements Managed {
 	}
 
 
-	private IDataRepository<CouchDbDataView, JsonNode> createDataRepository(DataSource source) {
-		IDataRepository<CouchDbDataView, JsonNode> dataRepository = repositoryFactory.createSourceDataRepository(source.getId(), source.getDomainIdKey());
+	private GenericDataRepository<CouchDbDataView, JsonNode> createDataRepository(DataSource source) {
+		GenericDataRepository<CouchDbDataView, JsonNode> dataRepository = repositoryFactory.createSourceDataRepository(source.getId(), source.getDomainIdKey());
 		dataRepositoryCache.put(source.getId(), dataRepository);
 		return dataRepository;
 	}

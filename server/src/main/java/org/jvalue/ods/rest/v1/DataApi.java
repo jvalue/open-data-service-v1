@@ -11,9 +11,10 @@ import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
 import org.jvalue.commons.rest.RestUtils;
 import org.jvalue.ods.api.data.Data;
+import org.jvalue.ods.api.views.QueryObject;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
-import org.jvalue.ods.data.DataSourceManager;
-import org.jvalue.ods.decoupleDatabase.IDataRepository;
+import org.jvalue.ods.db.couchdb.data.DataSourceManager;
+import org.jvalue.commons.db.GenericDataRepository;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -45,8 +46,8 @@ public final class DataApi extends AbstractApi {
 
 		if (count < 1 || count > 100) throw RestUtils.createJsonFormattedException("count must be > 0 and < 100", 400);
 
-		IDataRepository<CouchDbDataView, JsonNode> repository = assertIsValidSource(sourceId);
-		return repository.executePaginatedGet(startId, count);
+		GenericDataRepository<CouchDbDataView, JsonNode> repository = assertIsValidSource(sourceId);
+		return repository.getPaginatedData(startId, count);
 	}
 
 
@@ -55,7 +56,7 @@ public final class DataApi extends AbstractApi {
 			@RestrictedTo(Role.ADMIN) User user,
 			@PathParam("sourceId") String sourceId) {
 
-		IDataRepository<CouchDbDataView, JsonNode> repository = assertIsValidSource(sourceId);
+		GenericDataRepository<CouchDbDataView, JsonNode> repository = assertIsValidSource(sourceId);
 		repository.removeAll();
 	}
 
@@ -82,7 +83,7 @@ public final class DataApi extends AbstractApi {
 	}
 
 
-	private IDataRepository<CouchDbDataView, JsonNode> assertIsValidSource(String sourceId) {
+	private GenericDataRepository<CouchDbDataView, JsonNode> assertIsValidSource(String sourceId) {
 		return sourceManager.getDataRepository(sourceManager.findBySourceId(sourceId));
 	}
 

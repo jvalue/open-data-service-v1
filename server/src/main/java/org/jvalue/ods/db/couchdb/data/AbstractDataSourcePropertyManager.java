@@ -1,20 +1,20 @@
-package org.jvalue.ods.data;
+package org.jvalue.ods.db.couchdb.data;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.ektorp.DocumentNotFoundException;
+import org.jvalue.commons.db.GenericDataRepository;
+import org.jvalue.commons.db.GenericRepository;
 import org.jvalue.commons.utils.Assert;
 import org.jvalue.commons.utils.Cache;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
-import org.jvalue.ods.db.RepositoryFactory;
-import org.jvalue.ods.decoupleDatabase.IDataRepository;
-import org.jvalue.commons.db.IRepository;
+import org.jvalue.ods.db.couchdb.RepositoryFactory;
 
 import java.util.List;
 
 
-public abstract class AbstractDataSourcePropertyManager<T, R extends IRepository<T>> {
+public abstract class AbstractDataSourcePropertyManager<T, R extends GenericRepository<T>> {
 
 	private final Cache<R> repositoryCache;
 	private final RepositoryFactory repositoryFactory;
@@ -30,24 +30,24 @@ public abstract class AbstractDataSourcePropertyManager<T, R extends IRepository
 	}
 
 
-	public final void add(DataSource source, IDataRepository<CouchDbDataView, JsonNode> dataRepository, T data) {
+	public final void add(DataSource source, GenericDataRepository<CouchDbDataView, JsonNode> dataRepository, T data) {
 		Assert.assertNotNull(source, data);
 		assertRepository(source).add(data);
 		doAdd(source, dataRepository, data);
 	}
 
 
-	protected abstract void doAdd(DataSource source, IDataRepository<CouchDbDataView, JsonNode> dataRepository, T data);
+	protected abstract void doAdd(DataSource source, GenericDataRepository<CouchDbDataView, JsonNode> dataRepository, T data);
 
 
-	public final void remove(DataSource source, IDataRepository<CouchDbDataView, JsonNode> dataRepository, T data) {
+	public final void remove(DataSource source, GenericDataRepository<CouchDbDataView, JsonNode> dataRepository, T data) {
 		Assert.assertNotNull(source, data);
 		assertRepository(source).remove(data);
 		doRemove(source, dataRepository, data);
 	}
 
 
-	protected abstract void doRemove(DataSource source, IDataRepository<CouchDbDataView, JsonNode> dataRepository, T data);
+	protected abstract void doRemove(DataSource source, GenericDataRepository<CouchDbDataView, JsonNode> dataRepository, T data);
 
 
 	public final void removeAll(DataSource source) {

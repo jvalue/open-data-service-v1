@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-
 import org.ektorp.CouchDbConnector;
 import org.ektorp.DocumentNotFoundException;
 import org.ektorp.support.CouchDbRepositorySupport;
@@ -14,8 +13,8 @@ import org.jvalue.commons.couchdb.DbDocument;
 import org.jvalue.commons.couchdb.DbDocumentAdaptable;
 import org.jvalue.commons.couchdb.RepositoryAdapter;
 import org.jvalue.commons.db.DbConnectorFactory;
+import org.jvalue.commons.db.GenericRepository;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
-import org.jvalue.commons.db.IRepository;
 
 import java.util.List;
 
@@ -23,7 +22,7 @@ import java.util.List;
 public final class DataViewRepository extends RepositoryAdapter<
 		DataViewRepository.DataViewCouchDbRepository,
 		DataViewRepository.DataViewDocument,
-	CouchDbDataView> implements IRepository<CouchDbDataView>{
+	CouchDbDataView> implements GenericRepository<CouchDbDataView> {
 
 	private static final String DOCUMENT_ID = "doc.value.id != null && doc.value.mapFunction != null";
 

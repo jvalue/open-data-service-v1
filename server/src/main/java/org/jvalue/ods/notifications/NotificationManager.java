@@ -8,18 +8,19 @@ import org.jvalue.commons.utils.Cache;
 import org.jvalue.commons.utils.Log;
 import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.api.sources.DataSource;
+import org.jvalue.ods.api.views.QueryObject;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
-import org.jvalue.ods.data.AbstractDataSourcePropertyManager;
-import org.jvalue.ods.db.RepositoryFactory;
-import org.jvalue.ods.decoupleDatabase.IDataRepository;
-import org.jvalue.commons.db.IRepository;
+import org.jvalue.ods.db.couchdb.data.AbstractDataSourcePropertyManager;
+import org.jvalue.ods.db.couchdb.RepositoryFactory;
+import org.jvalue.commons.db.GenericDataRepository;
+import org.jvalue.commons.db.GenericRepository;
 import org.jvalue.ods.notifications.sender.Sender;
 import org.jvalue.ods.notifications.sender.SenderCache;
 import org.jvalue.ods.notifications.sender.SenderResult;
 
 
 public final class NotificationManager
-		extends AbstractDataSourcePropertyManager<Client, IRepository<Client>>
+		extends AbstractDataSourcePropertyManager<Client, GenericRepository<Client>>
 		implements DataSink {
 
 
@@ -27,7 +28,7 @@ public final class NotificationManager
 
 	@Inject
 	NotificationManager(
-			Cache<IRepository<Client>> repositoryCache,
+			Cache<GenericRepository<Client>> repositoryCache,
 			RepositoryFactory repositoryFactory,
 			SenderCache senderCache) {
 
@@ -89,11 +90,11 @@ public final class NotificationManager
 
 
 	@Override
-	protected void doAdd(DataSource source, IDataRepository<CouchDbDataView, JsonNode> dataRepository, Client client) { }
+	protected void doAdd(DataSource source, GenericDataRepository<CouchDbDataView, JsonNode> dataRepository, Client client) { }
 
 
 	@Override
-	protected void doRemove(DataSource source, IDataRepository<CouchDbDataView, JsonNode> dataRepository, Client client) { }
+	protected void doRemove(DataSource source, GenericDataRepository<CouchDbDataView, JsonNode> dataRepository, Client client) { }
 
 
 	@Override
@@ -101,7 +102,7 @@ public final class NotificationManager
 
 
 	@Override
-	protected IRepository<Client> createNewRepository(String sourceId, RepositoryFactory repositoryFactory) {
+	protected GenericRepository<Client> createNewRepository(String sourceId, RepositoryFactory repositoryFactory) {
 		return repositoryFactory.createNotificationClientRepository(sourceId);
 	}
 

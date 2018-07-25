@@ -17,7 +17,7 @@ import org.jvalue.commons.couchdb.DbDocumentAdaptable;
 import org.jvalue.commons.couchdb.RepositoryAdapter;
 import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.ods.api.processors.PluginMetaData;
-import org.jvalue.commons.db.IRepository;
+import org.jvalue.commons.db.GenericRepository;
 
 import java.io.InputStream;
 import java.util.List;
@@ -27,7 +27,7 @@ import java.util.Map;
 public final class PluginMetaDataRepository extends RepositoryAdapter<
 		PluginMetaDataRepository.PluginMetaDataCouchDbRepository,
 		PluginMetaDataRepository.PluginMetaDataDocument,
-		PluginMetaData> implements IRepository<PluginMetaData>{
+		PluginMetaData> implements GenericRepository<PluginMetaData> {
 
 	private static final String DOCUMENT_ID = "doc.value.id != null && doc.value.author != null";
 

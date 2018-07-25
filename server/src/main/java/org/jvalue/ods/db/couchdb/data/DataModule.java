@@ -1,4 +1,4 @@
-package org.jvalue.ods.data;
+package org.jvalue.ods.db.couchdb.data;
 
 
 import com.google.inject.AbstractModule;

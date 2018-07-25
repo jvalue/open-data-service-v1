@@ -12,7 +12,7 @@ import org.jvalue.commons.auth.User;
 import org.jvalue.commons.rest.RestUtils;
 import org.jvalue.ods.api.processors.PluginMetaData;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.data.DataSourceManager;
+import org.jvalue.ods.db.couchdb.data.DataSourceManager;
 import org.jvalue.ods.processor.plugin.PluginMetaDataManager;
 
 import java.io.InputStream;

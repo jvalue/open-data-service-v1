@@ -15,14 +15,14 @@ import org.jvalue.commons.couchdb.DbDocumentAdaptable;
 import org.jvalue.commons.couchdb.RepositoryAdapter;
 import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.ods.api.notifications.Client;
-import org.jvalue.commons.db.IRepository;
+import org.jvalue.commons.db.GenericRepository;
 
 import java.util.List;
 
 public final class NotificationClientRepository extends RepositoryAdapter<
 		NotificationClientRepository.NotificationClientCouchDbRepository,
 		NotificationClientRepository.ClientDocument,
-		Client> implements IRepository<Client>{
+		Client> implements GenericRepository<Client> {
 
 	private static final String DOCUMENT_ID = "doc.value.id != null && doc.value.type != null";
 
