@@ -10,8 +10,8 @@ import com.google.inject.name.Names;
 import org.ektorp.CouchDbInstance;
 import org.ektorp.http.StdHttpClient;
 import org.ektorp.impl.StdCouchDbInstance;
-import org.jvalue.commons.auth.BasicCredentialsRepositoryFactory;
-import org.jvalue.commons.auth.CouchDbBasicCredentialsRepositoryFactory;
+import org.jvalue.commons.auth.*;
+import org.jvalue.commons.auth.MongoDbUserRepositoryFactory;
 import org.jvalue.commons.couchdb.CouchDbConfig;
 import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.commons.db.GenericDataRepository;
@@ -54,6 +54,7 @@ public class CouchDbModule extends AbstractModule {
 			bind(DbConnectorFactory.class).toInstance(connectorFactory);
 			bind(DataSourceFactory.class).to(CouchDbDataSourceFactory.class);
 			bind(BasicCredentialsRepositoryFactory.class).to(CouchDbBasicCredentialsRepositoryFactory.class);
+			bind(UserRepositoryFactory.class).to(CouchDbUserRepositoryFactory.class);
 
 			bind(new TypeLiteral<Cache<GenericRepository<CouchDbDataView>>>() { }).in(Singleton.class);
 			bind(new TypeLiteral<Cache<GenericRepository<ProcessorReferenceChain>>>() { }).in(Singleton.class);
