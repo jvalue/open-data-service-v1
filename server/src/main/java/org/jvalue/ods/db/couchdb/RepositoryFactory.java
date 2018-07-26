@@ -9,7 +9,6 @@ import org.jvalue.commons.db.GenericRepository;
 import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.api.processors.PluginMetaData;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
-import org.jvalue.ods.api.views.QueryObject;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
 
 public interface RepositoryFactory {

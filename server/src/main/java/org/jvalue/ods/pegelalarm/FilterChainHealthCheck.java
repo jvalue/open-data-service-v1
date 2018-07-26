@@ -3,7 +3,7 @@ package org.jvalue.ods.pegelalarm;
 import com.codahale.metrics.health.HealthCheck;
 
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.db.couchdb.data.DataSourceManager;
+import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.processor.ProcessorChainManager;
 
 import javax.inject.Inject;

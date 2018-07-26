@@ -1,4 +1,4 @@
-package org.jvalue.ods.db.couchdb.data;
+package org.jvalue.ods.data;
 
 
 import com.fasterxml.jackson.databind.JsonNode;

@@ -6,15 +6,17 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.name.Named;
 import org.ektorp.*;
 import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.DesignDocument;
 import org.ektorp.support.DesignDocumentFactory;
 import org.ektorp.support.StdDesignDocumentFactory;
+import org.jvalue.commons.couchdb.RepositoryAdapter;
 import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.commons.utils.Assert;
-import org.jvalue.ods.api.data.Cursor;
-import org.jvalue.ods.api.data.Data;
+import org.jvalue.commons.db.data.Cursor;
+import org.jvalue.commons.db.data.Data;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
 import org.jvalue.commons.db.GenericDocumentOperationResult;
 import org.jvalue.commons.db.GenericDataRepository;
@@ -27,6 +29,7 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> imp
 	private static final String DESIGN_DOCUMENT_NAME = "Data";
 	private static final String DESIGN_DOCUMENT_ID = "_design/" + DESIGN_DOCUMENT_NAME;
 	private static final DesignDocumentFactory designFactory = new StdDesignDocumentFactory();
+	public static final String COUCHDB_DATA_REPOSITORY = "CouchDbDataRepository";
 
 	private final CouchDbConnector connector;
 	private final CouchDbDataView domainIdView;

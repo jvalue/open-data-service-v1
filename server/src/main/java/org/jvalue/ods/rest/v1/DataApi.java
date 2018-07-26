@@ -5,23 +5,16 @@ import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 import com.hubspot.jackson.jaxrs.PropertyFiltering;
-
 import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
-import org.jvalue.commons.rest.RestUtils;
-import org.jvalue.ods.api.data.Data;
-import org.jvalue.ods.api.views.QueryObject;
-import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
-import org.jvalue.ods.db.couchdb.data.DataSourceManager;
 import org.jvalue.commons.db.GenericDataRepository;
+import org.jvalue.commons.rest.RestUtils;
+import org.jvalue.commons.db.data.Data;
+import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
+import org.jvalue.ods.data.DataSourceManager;
 
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 @Path(AbstractApi.BASE_URL + "/{sourceId}/data")

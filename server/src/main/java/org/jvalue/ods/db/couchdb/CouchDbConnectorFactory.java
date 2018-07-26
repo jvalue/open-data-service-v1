@@ -2,6 +2,7 @@ package org.jvalue.ods.db.couchdb;
 
 import org.ektorp.CouchDbConnector;
 import org.ektorp.CouchDbInstance;
+import org.ektorp.DbAccessException;
 import org.jvalue.commons.db.DbConnectorFactory;
 
 public class CouchDbConnectorFactory extends DbConnectorFactory<CouchDbInstance, CouchDbConnector> {
@@ -12,7 +13,7 @@ public class CouchDbConnectorFactory extends DbConnectorFactory<CouchDbInstance,
 
 
 	@Override
-	public CouchDbConnector doCreateConnector(String databaseName, boolean createIfNotExists) {
+	public CouchDbConnector doCreateConnector(String databaseName, boolean createIfNotExists) throws DbAccessException{
 		return dbInstance.createConnector(dbPrefix + "-" + databaseName, createIfNotExists);
 	}
 

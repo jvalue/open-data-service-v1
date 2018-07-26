@@ -1,10 +1,12 @@
-package org.jvalue.ods.db.couchdb.data;
+package org.jvalue.ods.data;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import io.dropwizard.lifecycle.Managed;
 import org.ektorp.DocumentNotFoundException;
+import org.jvalue.commons.couchdb.RepositoryAdapter;
 import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.commons.db.GenericDataRepository;
 import org.jvalue.commons.db.GenericRepository;
@@ -12,6 +14,8 @@ import org.jvalue.commons.utils.Assert;
 import org.jvalue.commons.utils.Cache;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
+import org.jvalue.ods.db.couchdb.DataRepository;
+import org.jvalue.ods.db.DataSourceFactory;
 import org.jvalue.ods.db.couchdb.RepositoryFactory;
 import org.jvalue.ods.notifications.NotificationManager;
 import org.jvalue.ods.processor.ProcessorChainManager;
@@ -32,7 +36,7 @@ public final class DataSourceManager implements Managed {
 
 	@Inject
 	public DataSourceManager(
-		GenericRepository<DataSource> dataSourceRepository,
+		DataSourceFactory dataSourceFactory,
 		Cache<GenericDataRepository<CouchDbDataView, JsonNode>> dataRepositoryCache,
 		DbConnectorFactory dbConnectorFactory,
 		RepositoryFactory repositoryFactory,
@@ -40,7 +44,7 @@ public final class DataSourceManager implements Managed {
 		DataViewManager dataViewManager,
 		NotificationManager notificationManager) {
 
-		this.dataSourceRepository = dataSourceRepository;
+		this.dataSourceRepository = dataSourceFactory.createDataSource();
 		this.dataRepositoryCache = dataRepositoryCache;
 		this.dbConnectorFactory = dbConnectorFactory;
 		this.repositoryFactory = repositoryFactory;

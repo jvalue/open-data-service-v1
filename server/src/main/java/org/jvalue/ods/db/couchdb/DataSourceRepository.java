@@ -14,6 +14,7 @@ import org.jvalue.commons.couchdb.DbDocument;
 import org.jvalue.commons.couchdb.DbDocumentAdaptable;
 import org.jvalue.commons.couchdb.RepositoryAdapter;
 
+import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.commons.db.GenericRepository;
 
@@ -27,9 +28,8 @@ public final class DataSourceRepository extends RepositoryAdapter<
 	public static final String DATABASE_NAME = "dataSources";
 	private static final String DOCUMENT_ID = "doc.value.id != null && doc.value.domainIdKey != null";
 
-	@Inject
-	public DataSourceRepository(@Named(DATABASE_NAME) CouchDbConnector connector) {
-		super(new DataSourceCouchDbRepository(connector));
+	public DataSourceRepository(DbConnectorFactory connectorFactory) {
+		super(new DataSourceCouchDbRepository((CouchDbConnector) connectorFactory.createConnector(DATABASE_NAME, true)));
 	}
 
 

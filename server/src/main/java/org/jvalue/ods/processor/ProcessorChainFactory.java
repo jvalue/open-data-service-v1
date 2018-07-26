@@ -9,7 +9,6 @@ import org.jvalue.commons.utils.Assert;
 import org.jvalue.ods.api.processors.ProcessorReference;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.api.views.QueryObject;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
 import org.jvalue.ods.processor.adapter.SourceAdapter;
 import org.jvalue.ods.processor.adapter.SourceAdapterFactory;

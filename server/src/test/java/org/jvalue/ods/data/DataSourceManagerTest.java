@@ -19,8 +19,8 @@ import org.jvalue.ods.db.couchdb.DataRepository;
 import org.jvalue.ods.db.couchdb.DataSourceRepository;
 import org.jvalue.ods.db.couchdb.RepositoryFactory;
 import org.jvalue.commons.db.GenericDataRepository;
-import org.jvalue.ods.db.couchdb.data.DataSourceManager;
-import org.jvalue.ods.db.couchdb.data.DataViewManager;
+import org.jvalue.ods.data.DataSourceManager;
+import org.jvalue.ods.data.DataViewManager;
 import org.jvalue.ods.notifications.NotificationManager;
 import org.jvalue.ods.processor.ProcessorChainManager;
 

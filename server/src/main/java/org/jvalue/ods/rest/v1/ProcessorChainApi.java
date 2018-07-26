@@ -10,7 +10,7 @@ import org.jvalue.commons.rest.RestUtils;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.db.couchdb.data.DataSourceManager;
+import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.processor.ProcessorChainManager;
 
 import java.util.EnumSet;

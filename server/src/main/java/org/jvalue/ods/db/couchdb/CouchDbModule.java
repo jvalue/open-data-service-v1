@@ -7,22 +7,22 @@ import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
-import org.ektorp.CouchDbConnector;
 import org.ektorp.CouchDbInstance;
 import org.ektorp.http.StdHttpClient;
 import org.ektorp.impl.StdCouchDbInstance;
-import org.jvalue.commons.auth.UserRepository;
+import org.jvalue.commons.auth.BasicCredentialsRepositoryFactory;
+import org.jvalue.commons.auth.CouchDbBasicCredentialsRepositoryFactory;
 import org.jvalue.commons.couchdb.CouchDbConfig;
 import org.jvalue.commons.db.DbConnectorFactory;
+import org.jvalue.commons.db.GenericDataRepository;
 import org.jvalue.commons.db.GenericRepository;
 import org.jvalue.commons.utils.Cache;
 import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.api.processors.PluginMetaData;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.api.views.QueryObject;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
-import org.jvalue.commons.db.GenericDataRepository;
+import org.jvalue.ods.db.DataSourceFactory;
 
 import java.net.MalformedURLException;
 
@@ -45,20 +45,22 @@ public class CouchDbModule extends AbstractModule {
 					.build());
 			DbConnectorFactory connectorFactory = new CouchDbConnectorFactory(couchDbInstance, couchDbConfig.getDbPrefix());
 
-			CouchDbConnector dataSourceConnector = (CouchDbConnector) connectorFactory.createConnector(DataSourceRepository.DATABASE_NAME, true);
-			bind(CouchDbConnector.class).annotatedWith(Names.named(DataSourceRepository.DATABASE_NAME)).toInstance(dataSourceConnector);
+//			CouchDbConnector dataSourceConnector = (CouchDbConnector) connectorFactory.createConnector(DataSourceRepository.DATABASE_NAME, true);
+//			bind(CouchDbConnector.class).annotatedWith(Names.named(RepositoryAdapter.COUCHDB_CONNECTOR_FACTORY)).toInstance(dataSourceConnector);
 
-			CouchDbConnector userConnector = (CouchDbConnector) connectorFactory.createConnector(UserRepository.DATABASE_NAME, true);
-			bind(CouchDbConnector.class).annotatedWith(Names.named(UserRepository.DATABASE_NAME)).toInstance(userConnector);
+//			CouchDbConnector userConnector = (CouchDbConnector) connectorFactory.createConnector(UserRepository.DATABASE_NAME, true);
+//			bind(CouchDbConnector.class).annotatedWith(Names.named(UserRepository.DATABASE_NAME)).toInstance(userConnector);
 
 			bind(DbConnectorFactory.class).toInstance(connectorFactory);
+			bind(DataSourceFactory.class).to(CouchDbDataSourceFactory.class);
+			bind(BasicCredentialsRepositoryFactory.class).to(CouchDbBasicCredentialsRepositoryFactory.class);
 
 			bind(new TypeLiteral<Cache<GenericRepository<CouchDbDataView>>>() { }).in(Singleton.class);
 			bind(new TypeLiteral<Cache<GenericRepository<ProcessorReferenceChain>>>() { }).in(Singleton.class);
 			bind(new TypeLiteral<Cache<GenericRepository<Client>>>() { }).in(Singleton.class);
 			bind(new TypeLiteral<Cache<GenericRepository<PluginMetaData>>>() { }).in(Singleton.class);
 			bind(new TypeLiteral<Cache<GenericRepository<JsonNode>>>() { }).in(Singleton.class);
-			bind(new TypeLiteral<GenericRepository<DataSource>>() {}).to(DataSourceRepository.class);
+
 
 			install(new FactoryModuleBuilder()
 				.implement(

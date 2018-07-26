@@ -27,9 +27,10 @@ import org.jvalue.ods.admin.monitoring.MonitoringModule;
 import org.jvalue.ods.admin.rest.AdminFilterChainApi;
 import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
 import org.jvalue.ods.auth.AuthModule;
-import org.jvalue.ods.db.couchdb.data.DataModule;
-import org.jvalue.ods.db.couchdb.data.DataSourceManager;
+import org.jvalue.ods.data.DataModule;
+import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.db.couchdb.CouchDbModule;
+import org.jvalue.ods.db.mongodb.MongoDbModule;
 import org.jvalue.ods.notifications.NotificationsModule;
 import org.jvalue.ods.pegelalarm.*;
 import org.jvalue.ods.processor.ProcessorModule;
@@ -59,15 +60,16 @@ public final class OdsApplication extends Application<OdsConfig> {
 	@Override
 	@Context
 	public void run(OdsConfig configuration, Environment environment) {
-		assertCouchDbIsReady(configuration.getCouchDb().getUrl());
+//		assertCouchDbIsReady(configuration.getCouchDb().getUrl());
 
 		Injector injector = Guice.createInjector(
 				new MonitoringModule(environment.metrics()),
 				new ConfigModule(configuration),
 				new ProcessorModule(),
-				new CouchDbModule(configuration.getCouchDb()),
-				new NotificationsModule(),
+//				new CouchDbModule(configuration.getCouchDb()),
+				new MongoDbModule(configuration.getMongoDbConfig()),
 				new DataModule(),
+				new NotificationsModule(),
 				new AuthModule(configuration.getAuth()),
 				new DataTransformationModule());
 

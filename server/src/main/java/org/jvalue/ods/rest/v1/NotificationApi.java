@@ -17,7 +17,7 @@ import org.jvalue.ods.api.notifications.GcmClientDescription;
 import org.jvalue.ods.api.notifications.HttpClient;
 import org.jvalue.ods.api.notifications.HttpClientDescription;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.db.couchdb.data.DataSourceManager;
+import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.notifications.NotificationManager;
 
 import java.util.List;

@@ -2,18 +2,19 @@ package org.jvalue.ods.db.mongodb;
 
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
+import com.mongodb.client.MongoDatabase;
 import org.jvalue.commons.db.DbConnectorFactory;
 
-public class MongoDbConnectorFactory extends DbConnectorFactory<MongoClient, DB > {
+public class MongoDbConnectorFactory extends DbConnectorFactory<MongoClient, MongoDatabase > {
 
-	public MongoDbConnectorFactory(MongoClient couchDbInstance, String dbPrefix) {
-		super(couchDbInstance, dbPrefix);
+	public MongoDbConnectorFactory(MongoClient mongoClient, String dbPrefix) {
+		super(mongoClient, dbPrefix);
 	}
 
 
 	@Override
-	public DB doCreateConnector(String databaseName, boolean createIfNotExists) {
-		return dbInstance.getDB(dbPrefix + "-" + databaseName);
+	public MongoDatabase doCreateConnector(String databaseName, boolean createIfNotExists) {
+		return dbInstance.getDatabase(dbPrefix + "-" + databaseName);
 	}
 
 
