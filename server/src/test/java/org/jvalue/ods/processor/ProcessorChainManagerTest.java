@@ -32,8 +32,8 @@ import mockit.Expectations;
 import mockit.Mocked;
 import mockit.Verifications;
 import mockit.integration.junit4.JMockit;
-import org.jvalue.commons.db.GenericDataRepository;
-import org.jvalue.commons.db.GenericRepository;
+import org.jvalue.commons.db.repositories.GenericDataRepository;
+import org.jvalue.commons.db.repositories.GenericRepository;
 
 @RunWith(JMockit.class)
 public final class ProcessorChainManagerTest {

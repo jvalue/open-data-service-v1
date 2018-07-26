@@ -8,7 +8,7 @@ import com.hubspot.jackson.jaxrs.PropertyFiltering;
 import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
-import org.jvalue.commons.db.GenericDataRepository;
+import org.jvalue.commons.db.repositories.GenericDataRepository;
 import org.jvalue.commons.rest.RestUtils;
 import org.jvalue.commons.db.data.Data;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;

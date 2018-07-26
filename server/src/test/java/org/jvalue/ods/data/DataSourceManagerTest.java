@@ -14,7 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.jvalue.commons.db.DbConnectorFactory;
-import org.jvalue.commons.db.GenericDataRepository;
+import org.jvalue.commons.db.repositories.GenericDataRepository;
 import org.jvalue.commons.utils.Cache;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceMetaData;

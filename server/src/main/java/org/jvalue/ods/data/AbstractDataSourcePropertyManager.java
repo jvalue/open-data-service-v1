@@ -3,8 +3,8 @@ package org.jvalue.ods.data;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.ektorp.DocumentNotFoundException;
-import org.jvalue.commons.db.GenericDataRepository;
-import org.jvalue.commons.db.GenericRepository;
+import org.jvalue.commons.db.repositories.GenericDataRepository;
+import org.jvalue.commons.db.repositories.GenericRepository;
 import org.jvalue.commons.utils.Assert;
 import org.jvalue.commons.utils.Cache;
 import org.jvalue.ods.api.sources.DataSource;

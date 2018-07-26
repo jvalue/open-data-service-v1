@@ -8,7 +8,7 @@ import com.google.inject.name.Named;
 
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
-import org.jvalue.commons.db.GenericDataRepository;
+import org.jvalue.commons.db.repositories.GenericDataRepository;
 import org.jvalue.ods.processor.specification.Argument;
 import org.jvalue.ods.processor.specification.CreationMethod;
 import org.jvalue.ods.api.processors.ProcessorType;

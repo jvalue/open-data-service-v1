@@ -18,7 +18,6 @@ import org.jvalue.commons.couchdb.RepositoryAdapter;
 import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.commons.db.repositories.GenericPluginMetaDataRepository;
 import org.jvalue.ods.api.processors.PluginMetaData;
-import org.jvalue.commons.db.GenericRepository;
 
 import java.io.InputStream;
 import java.util.List;

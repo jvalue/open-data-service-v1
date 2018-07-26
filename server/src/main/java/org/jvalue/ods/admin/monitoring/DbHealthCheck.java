@@ -4,7 +4,7 @@ package org.jvalue.ods.admin.monitoring;
 import com.codahale.metrics.health.HealthCheck;
 import com.google.inject.Inject;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.commons.db.GenericRepository;
+import org.jvalue.commons.db.repositories.GenericRepository;
 import org.jvalue.ods.db.DataSourceFactory;
 
 /**

@@ -3,7 +3,7 @@ package org.jvalue.ods.db.mongodb;
 import org.jvalue.commons.auth.BasicCredentials;
 import org.jvalue.commons.auth.BasicCredentialsRepositoryFactory;
 import org.jvalue.commons.db.DbConnectorFactory;
-import org.jvalue.commons.db.GenericRepository;
+import org.jvalue.commons.db.repositories.GenericRepository;
 
 import javax.inject.Inject;
 

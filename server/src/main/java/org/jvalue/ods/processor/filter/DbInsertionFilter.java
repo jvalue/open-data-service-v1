@@ -27,7 +27,7 @@ import org.ektorp.DocumentOperationResult;
 import org.jvalue.ods.admin.monitoring.PauseableTimer;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
-import org.jvalue.commons.db.GenericDataRepository;
+import org.jvalue.commons.db.repositories.GenericDataRepository;
 
 import java.util.Collection;
 import java.util.LinkedList;

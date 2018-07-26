@@ -16,7 +16,7 @@ import org.jvalue.ods.api.notifications.HttpClient;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.db.couchdb.repositories.NotificationClientRepository;
 import org.jvalue.ods.db.couchdb.RepositoryFactory;
-import org.jvalue.commons.db.GenericRepository;
+import org.jvalue.commons.db.repositories.GenericRepository;
 import org.jvalue.ods.notifications.sender.Sender;
 import org.jvalue.ods.notifications.sender.SenderCache;
 import org.jvalue.ods.notifications.sender.SenderResult;
