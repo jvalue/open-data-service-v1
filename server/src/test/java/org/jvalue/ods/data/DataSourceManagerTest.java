@@ -5,37 +5,36 @@ import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
+import mockit.Expectations;
+import mockit.Mocked;
+import mockit.Verifications;
+import mockit.integration.junit4.JMockit;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.jvalue.commons.couchdb.DbConnectorFactory;
+import org.jvalue.commons.db.DbConnectorFactory;
+import org.jvalue.commons.db.GenericDataRepository;
 import org.jvalue.commons.utils.Cache;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceMetaData;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
+import org.jvalue.ods.db.DataSourceFactory;
 import org.jvalue.ods.db.couchdb.DataRepository;
 import org.jvalue.ods.db.couchdb.DataSourceRepository;
 import org.jvalue.ods.db.couchdb.RepositoryFactory;
-import org.jvalue.commons.db.GenericDataRepository;
-import org.jvalue.ods.data.DataSourceManager;
-import org.jvalue.ods.data.DataViewManager;
 import org.jvalue.ods.notifications.NotificationManager;
 import org.jvalue.ods.processor.ProcessorChainManager;
 
 import java.util.Arrays;
 import java.util.Map;
 
-import mockit.Expectations;
-import mockit.Mocked;
-import mockit.Verifications;
-import mockit.integration.junit4.JMockit;
-
 @RunWith(JMockit.class)
 public final class DataSourceManagerTest {
 
 	private static final String SOURCE_ID = "someSourceId";
+
+	@Mocked private DataSourceFactory dataSourceFactory;
 
 	@Mocked private DataSourceRepository sourceRepository;
 	@Mocked private Cache<GenericDataRepository<CouchDbDataView, JsonNode>> dataRepositoryCache;
@@ -59,7 +58,7 @@ public final class DataSourceManagerTest {
                 new DataSourceMetaData("", "", "", "", "", "", ""));
 
 		this.sourceManager = new DataSourceManager(
-				sourceRepository,
+				dataSourceFactory,
 				dataRepositoryCache,
 				dbConnectorFactory,
 				repositoryFactory,

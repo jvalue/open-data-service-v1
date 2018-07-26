@@ -56,7 +56,7 @@ public final class DbInsertionFilterTest {
 		filter.onComplete();
 
 		new Verifications() {{
-			repository.executeBulkCreateAndUpdate((List<JsonNode>) any); times = 1;
+			repository.writeData((List<JsonNode>) any); times = 1;
 		}};
 	}
 
@@ -72,7 +72,7 @@ public final class DbInsertionFilterTest {
 			Map<String, JsonNode> nodes = new HashMap<>();
 			nodes.put(VALUE_DOMAIN_ID, addDbIdAndRev(createObject(VALUE_DOMAIN_ID)));
 
-			repository.executeBulkGet(keys);
+			repository.getData(keys);
 			result = nodes;
 		}};
 
@@ -82,7 +82,7 @@ public final class DbInsertionFilterTest {
 
 		new Verifications() {{
 			Collection<JsonNode> nodeList;
-			repository.executeBulkCreateAndUpdate(nodeList = withCapture()); times = 1;
+			repository.writeData(nodeList = withCapture()); times = 1;
 
 			for (JsonNode node : nodeList) {
 				Assert.assertTrue(node instanceof ObjectNode);
