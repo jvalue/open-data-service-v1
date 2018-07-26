@@ -9,7 +9,6 @@ import com.google.inject.name.Names;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import org.jvalue.commons.auth.BasicCredentialsRepositoryFactory;
-import org.jvalue.commons.auth.CouchDbBasicCredentialsRepositoryFactory;
 import org.jvalue.commons.auth.MongoDbUserRepositoryFactory;
 import org.jvalue.commons.auth.UserRepositoryFactory;
 import org.jvalue.commons.db.DbConnectorFactory;
@@ -23,9 +22,8 @@ import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
 import org.jvalue.ods.db.DataSourceFactory;
 import org.jvalue.ods.db.couchdb.*;
+import org.jvalue.ods.db.couchdb.repositories.*;
 import org.value.commons.mongodb.MongoDbConfig;
-
-import java.net.MalformedURLException;
 
 public class MongoDbModule extends AbstractModule {
 

@@ -5,7 +5,7 @@ import org.jvalue.commons.couchdb.DbConnectorFactory;
 import org.jvalue.commons.couchdb.RepositoryAdapter;
 import org.jvalue.commons.couchdb.test.AbstractRepositoryAdapterTest;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
-import org.jvalue.ods.db.couchdb.DataViewRepository;
+import org.jvalue.ods.db.couchdb.repositories.DataViewRepository;
 
 public class DataViewRepositoryTest extends AbstractRepositoryAdapterTest<CouchDbDataView> {
 

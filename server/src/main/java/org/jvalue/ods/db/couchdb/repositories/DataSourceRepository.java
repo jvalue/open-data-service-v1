@@ -1,10 +1,8 @@
-package org.jvalue.ods.db.couchdb;
+package org.jvalue.ods.db.couchdb.repositories;
 
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 import org.ektorp.CouchDbConnector;
 import org.ektorp.DocumentNotFoundException;

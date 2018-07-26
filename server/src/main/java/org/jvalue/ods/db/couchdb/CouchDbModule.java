@@ -11,7 +11,6 @@ import org.ektorp.CouchDbInstance;
 import org.ektorp.http.StdHttpClient;
 import org.ektorp.impl.StdCouchDbInstance;
 import org.jvalue.commons.auth.*;
-import org.jvalue.commons.auth.MongoDbUserRepositoryFactory;
 import org.jvalue.commons.couchdb.CouchDbConfig;
 import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.commons.db.GenericDataRepository;
@@ -23,6 +22,7 @@ import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
 import org.jvalue.ods.db.DataSourceFactory;
+import org.jvalue.ods.db.couchdb.repositories.*;
 
 import java.net.MalformedURLException;
 
@@ -48,8 +48,8 @@ public class CouchDbModule extends AbstractModule {
 //			CouchDbConnector dataSourceConnector = (CouchDbConnector) connectorFactory.createConnector(DataSourceRepository.DATABASE_NAME, true);
 //			bind(CouchDbConnector.class).annotatedWith(Names.named(RepositoryAdapter.COUCHDB_CONNECTOR_FACTORY)).toInstance(dataSourceConnector);
 
-//			CouchDbConnector userConnector = (CouchDbConnector) connectorFactory.createConnector(UserRepository.DATABASE_NAME, true);
-//			bind(CouchDbConnector.class).annotatedWith(Names.named(UserRepository.DATABASE_NAME)).toInstance(userConnector);
+//			CouchDbConnector userConnector = (CouchDbConnector) connectorFactory.createConnector(GenericUserRepository.DATABASE_NAME, true);
+//			bind(CouchDbConnector.class).annotatedWith(Names.named(GenericUserRepository.DATABASE_NAME)).toInstance(userConnector);
 
 			bind(DbConnectorFactory.class).toInstance(connectorFactory);
 			bind(DataSourceFactory.class).to(CouchDbDataSourceFactory.class);

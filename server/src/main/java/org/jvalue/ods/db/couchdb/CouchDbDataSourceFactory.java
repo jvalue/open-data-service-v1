@@ -1,11 +1,11 @@
 package org.jvalue.ods.db.couchdb;
 
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.commons.db.GenericRepository;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.db.DataSourceFactory;
+import org.jvalue.ods.db.couchdb.repositories.DataSourceRepository;
 
 
 public class CouchDbDataSourceFactory implements DataSourceFactory {

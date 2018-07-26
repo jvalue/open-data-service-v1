@@ -1,4 +1,4 @@
-package org.jvalue.ods.db.couchdb;
+package org.jvalue.ods.db.couchdb.repositories;
 
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
-import com.google.inject.name.Named;
 import org.ektorp.Attachment;
 import org.ektorp.AttachmentInputStream;
 import org.ektorp.CouchDbConnector;
@@ -17,6 +16,7 @@ import org.jvalue.commons.couchdb.DbDocument;
 import org.jvalue.commons.couchdb.DbDocumentAdaptable;
 import org.jvalue.commons.couchdb.RepositoryAdapter;
 import org.jvalue.commons.db.DbConnectorFactory;
+import org.jvalue.commons.db.repositories.GenericPluginMetaDataRepository;
 import org.jvalue.ods.api.processors.PluginMetaData;
 import org.jvalue.commons.db.GenericRepository;
 
@@ -28,7 +28,7 @@ import java.util.Map;
 public final class PluginMetaDataRepository extends RepositoryAdapter<
 		PluginMetaDataRepository.PluginMetaDataCouchDbRepository,
 		PluginMetaDataRepository.PluginMetaDataDocument,
-		PluginMetaData> implements GenericRepository<PluginMetaData> {
+		PluginMetaData> implements GenericPluginMetaDataRepository<PluginMetaData> {
 
 	private static final String DOCUMENT_ID = "doc.value.id != null && doc.value.author != null";
 

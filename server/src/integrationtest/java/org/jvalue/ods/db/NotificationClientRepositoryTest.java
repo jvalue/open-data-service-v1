@@ -6,7 +6,7 @@ import org.jvalue.commons.couchdb.RepositoryAdapter;
 import org.jvalue.commons.couchdb.test.AbstractRepositoryAdapterTest;
 import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.api.notifications.GcmClient;
-import org.jvalue.ods.db.couchdb.NotificationClientRepository;
+import org.jvalue.ods.db.couchdb.repositories.NotificationClientRepository;
 
 public class NotificationClientRepositoryTest extends AbstractRepositoryAdapterTest<Client> {
 

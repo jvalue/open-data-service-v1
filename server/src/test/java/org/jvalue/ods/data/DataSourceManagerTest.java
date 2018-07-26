@@ -21,7 +21,7 @@ import org.jvalue.ods.api.sources.DataSourceMetaData;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
 import org.jvalue.ods.db.DataSourceFactory;
 import org.jvalue.ods.db.couchdb.DataRepository;
-import org.jvalue.ods.db.couchdb.DataSourceRepository;
+import org.jvalue.ods.db.couchdb.repositories.DataSourceRepository;
 import org.jvalue.ods.db.couchdb.RepositoryFactory;
 import org.jvalue.ods.notifications.NotificationManager;
 import org.jvalue.ods.processor.ProcessorChainManager;

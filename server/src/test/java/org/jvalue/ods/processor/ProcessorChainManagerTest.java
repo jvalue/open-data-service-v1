@@ -19,7 +19,7 @@ import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceMetaData;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
-import org.jvalue.ods.db.couchdb.ProcessorChainReferenceRepository;
+import org.jvalue.ods.db.couchdb.repositories.ProcessorChainReferenceRepository;
 import org.jvalue.ods.db.couchdb.RepositoryFactory;
 
 import java.util.HashMap;

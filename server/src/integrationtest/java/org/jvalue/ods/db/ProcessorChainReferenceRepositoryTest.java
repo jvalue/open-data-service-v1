@@ -7,7 +7,7 @@ import org.jvalue.commons.couchdb.test.AbstractRepositoryAdapterTest;
 import org.jvalue.ods.api.processors.ExecutionInterval;
 import org.jvalue.ods.api.processors.ProcessorReference;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
-import org.jvalue.ods.db.couchdb.ProcessorChainReferenceRepository;
+import org.jvalue.ods.db.couchdb.repositories.ProcessorChainReferenceRepository;
 
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;

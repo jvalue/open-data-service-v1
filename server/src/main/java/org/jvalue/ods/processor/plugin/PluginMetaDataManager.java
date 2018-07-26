@@ -26,7 +26,7 @@ import org.jvalue.commons.utils.Cache;
 import org.jvalue.ods.api.processors.PluginMetaData;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
-import org.jvalue.ods.db.couchdb.PluginMetaDataRepository;
+import org.jvalue.ods.db.couchdb.repositories.PluginMetaDataRepository;
 import org.jvalue.ods.db.couchdb.RepositoryFactory;
 import org.jvalue.ods.data.AbstractDataSourcePropertyManager;
 
