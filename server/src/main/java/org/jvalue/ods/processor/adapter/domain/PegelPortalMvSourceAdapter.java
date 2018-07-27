@@ -128,8 +128,8 @@ public final class PegelPortalMvSourceAdapter extends AbstractSourceAdapter {
 				else throw new SourceAdapterException("Unknown type " + type.getName());
 			}
 
-			objectNode.put(KEY_LEVEL_UNIT, "cm ü PNP");
-			objectNode.put(KEY_EFFLUENT_UNIT, "m³/s");
+			objectNode.put(KEY_LEVEL_UNIT, "cm \u00fc PNP");
+			objectNode.put(KEY_EFFLUENT_UNIT, "m\u00b3/s");
 			objectNode.put("id", String.valueOf(currentRowIdx++)); // website does not contain any one row with unique values --> combined keys required
 			return objectNode;
 		}
