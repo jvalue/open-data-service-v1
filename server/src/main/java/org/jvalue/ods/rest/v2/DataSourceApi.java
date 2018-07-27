@@ -34,39 +34,21 @@ public final class DataSourceApi extends AbstractApi {
 	@JsonFormat(with = {JsonFormat.Feature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED, JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY})
 	@GET
 	public Response getAllSources() {
-		return JsonApiResponse
-				.createGetResponse(uriInfo)
-				.data(sourceManager.getAll())
-				.build();
+		return null;
 	}
 
 
 	@GET
 	@Path("/{sourceId}")
 	public Response getSource(@PathParam("sourceId") String sourceId) {
-
-		DataSource source = sourceManager.findBySourceId(sourceId);
-
-		return JsonApiResponse
-				.createGetResponse(uriInfo)
-				.data(source)
-				.build();
+		return Response.status(Response.Status.NOT_IMPLEMENTED).build();
 	}
 
 
 	@GET
 	@Path("/{sourceId}/schema")
 	public Response getSourceSchema(@PathParam("sourceId") String sourceId) {
-
-		String id = sourceId + "_schema";
-		DataSource source = sourceManager.findBySourceId(sourceId);
-		JsonNode schema = source.getSchema();
-
-		//TODO: return datasource as JsonAPI object with schema as only attribute.
-		return JsonApiResponse
-				.createGetResponse(uriInfo)
-				.data(source)
-				.build();
+		return Response.status(Response.Status.NOT_IMPLEMENTED).build();
 	}
 
 
@@ -77,36 +59,17 @@ public final class DataSourceApi extends AbstractApi {
 			@PathParam("sourceId") String sourceId,
 			@Valid DataSourceDescription sourceDescription) {
 
-		assertDataSourceNotExist(sourceId);
-
-		DataSource source = new DataSource(
-				sourceId,
-				sourceDescription.getDomainIdKey(),
-				sourceDescription.getSchema(),
-				sourceDescription.getMetaData());
-
-		sourceManager.add(source);
-
-		return JsonApiResponse.createPostResponse(uriInfo)
-				.data(source)
-				.build();
+		return Response.status(Response.Status.NOT_IMPLEMENTED).build();
 	}
 
 
 	@DELETE
 	@Path("/{sourceId}")
-	public void deleteSource(
+	public Response deleteSource(
 			@RestrictedTo(Role.ADMIN) User user,
 			@PathParam("sourceId") String sourceId) {
 
-		sourceManager.remove(sourceManager.findBySourceId(sourceId));
-	}
-
-	private void assertDataSourceNotExist(String sourceId) {
-		if (sourceManager.isValidSourceId(sourceId)) {
-			int statusCode = Response.Status.CONFLICT.getStatusCode();
-			throw RestUtils.createJsonFormattedException("source with id " + sourceId + " already exists", statusCode);
-		}
+		return Response.status(Response.Status.NOT_IMPLEMENTED).build();
 	}
 
 }
