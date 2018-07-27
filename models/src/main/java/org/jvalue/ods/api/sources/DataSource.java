@@ -9,7 +9,7 @@ import org.jvalue.ods.api.jsonapi.JsonApiIdentifiableWithMetaData;
 import javax.validation.constraints.NotNull;
 
 
-public final class DataSource extends AbstractDataSource implements JsonApiIdentifiableWithMetaData{
+public final class DataSource extends AbstractDataSource {
 
 	@NotNull private final String id;
 

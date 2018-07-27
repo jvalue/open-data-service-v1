@@ -35,97 +35,42 @@ public final class DataSourceApi extends AbstractApi {
 	@JsonFormat(with = {JsonFormat.Feature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED, JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY})
 	@GET
 	public Response getAllSources() {
-		return JsonApiResponse
-				.createGetResponse(uriInfo)
-				.data(sourceManager.getAll())
-				.build();
+		return null;
 	}
 
 
 	@GET
-	@Path("{sourceId}")
+	@Path("/{sourceId}")
 	public Response getSource(@PathParam("sourceId") String sourceId) {
-
-		DataSource source = sourceManager.findBySourceId(sourceId);
-
-		return JsonApiResponse
-				.createGetResponse(uriInfo)
-				.data(source)
-				.build();
+		return Response.status(Response.Status.NOT_IMPLEMENTED).build();
 	}
 
 
 	@GET
-	@Path("{sourceId}/schema")
+	@Path("/{sourceId}/schema")
 	public Response getSourceSchema(@PathParam("sourceId") String sourceId) {
-
-		DataSource source = sourceManager.findBySourceId(sourceId);
-		URI sourceURI = uriInfo.getAbsolutePath().resolve(URI.create("./"));
-		return JsonApiResponse
-				.createGetResponse(uriInfo)
-				.data(source)
-				.restrictTo("schema")
-				.addLink("source", sourceURI)
-				.build();
+		return Response.status(Response.Status.NOT_IMPLEMENTED).build();
 	}
 
 
 	@POST
-	@Path("{sourceId}")
+	@Path("/{sourceId}")
 	public Response addSource(
 			@RestrictedTo(Role.ADMIN) User user,
 			@PathParam("sourceId") String sourceId,
 			@Valid DataSourceDescription sourceDescription) {
 
-		assertDataSourceNotExist(sourceId);
-
-		DataSource source = new DataSource(
-				sourceId,
-				sourceDescription.getDomainIdKey(),
-				sourceDescription.getSchema(),
-				sourceDescription.getMetaData());
-
-		sourceManager.add(source);
-
-		return JsonApiResponse.createPostResponse(uriInfo)
-				.data(source)
-				.build();
+		return Response.status(Response.Status.NOT_IMPLEMENTED).build();
 	}
 
 
 	@DELETE
-	@Path("{sourceId}")
-	public void deleteSource(
+	@Path("/{sourceId}")
+	public Response deleteSource(
 			@RestrictedTo(Role.ADMIN) User user,
 			@PathParam("sourceId") String sourceId) {
 
-		sourceManager.remove(sourceManager.findBySourceId(sourceId));
+		return Response.status(Response.Status.NOT_IMPLEMENTED).build();
 	}
 
-
-	private void assertDataSourceNotExist(String sourceId) {
-		if (sourceManager.isValidSourceId(sourceId)) {
-			int statusCode = Response.Status.CONFLICT.getStatusCode();
-			throw RestUtils.createJsonFormattedException("source with id " + sourceId + " already exists", statusCode);
-		}
-	}
-
-
-	@GET
-	@Path("test/{sourceId}")
-	public Response test(@PathParam("sourceId") String sourceId) {
-
-		DataSource source = sourceManager.findBySourceId(sourceId);
-		Collection<DataSource> sources = sourceManager.getAll();
-		URI relatedUri = uriInfo.getAbsolutePath().resolve(URI.create(BASE_URL));
-
-		JsonApiResponse.WithRelationship builder = JsonApiResponse
-			.createGetResponse(uriInfo)
-			.data(source)
-			.addRelationship("datasources", sources, relatedUri);
-
-		sources.forEach(builder::addIncluded);
-
-		return builder.build();
-	}
 }
