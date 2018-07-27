@@ -1,4 +1,4 @@
-package org.jvalue.ods.db.mongodb;
+package org.jvalue.ods.db;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
+import org.jvalue.ods.db.mongodb.MongoDbConnectorFactory;
 import org.jvalue.ods.db.mongodb.repositories.MongoDbDataViewRepository;
 
 public class MongoDbDataViewRepositoryTest {
