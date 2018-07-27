@@ -13,7 +13,7 @@ import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
 
 public interface RepositoryFactory {
 	static final String
-		NAME_DATA_VIEW_REPOSITORY = "DataViewRepository",
+		NAME_DATA_VIEW_REPOSITORY = "MongoDbDataViewRepository",
 		NAME_DATA_SOURCE_REPOSITORY = "SourceDataRepository",
 		NAME_DATA_REPOSITORY = "DataRepository",
 		NAME_FILTER_CHAIN_REF_REPOSITORY = "FilterChainRepository",

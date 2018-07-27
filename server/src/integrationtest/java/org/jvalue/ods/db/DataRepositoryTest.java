@@ -9,11 +9,11 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.ektorp.DocumentNotFoundException;
 import org.junit.Assert;
 import org.junit.Test;
-import org.jvalue.commons.couchdb.DbConnectorFactory;
 import org.jvalue.commons.couchdb.test.AbstractRepositoryTest;
+import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.commons.db.data.Data;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
-import org.jvalue.ods.db.couchdb.DataRepository;
+import org.jvalue.ods.db.couchdb.repositories.DataRepository;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -100,7 +100,7 @@ public final class DataRepositoryTest extends AbstractRepositoryTest {
 		ids.add("id1");
 		ids.add("id2");
 
-		Map<String, JsonNode> result = repository.executeBulkGet(ids);
+		Map<String, JsonNode> result = repository.getBulk(ids);
 		Assert.assertEquals(2, result.size());
 
 		assertEquals(node1, result.get("id1"));
@@ -114,7 +114,7 @@ public final class DataRepositoryTest extends AbstractRepositoryTest {
 		JsonNode node2 = createObjectNode("id2", "world");
 
 		List<JsonNode> nodes = Arrays.asList(node1, node2);
-		repository.executeBulkCreateAndUpdate(nodes);
+		repository.writeBulk(nodes);
 
 		List<JsonNode> createdNodes = repository.getAll();
 		Assert.assertEquals(2, createdNodes.size());
@@ -123,7 +123,7 @@ public final class DataRepositoryTest extends AbstractRepositoryTest {
 			o.put("somethingElse", "foobar");
 		}
 
-		repository.executeBulkCreateAndUpdate(createdNodes);
+		repository.writeBulk(createdNodes);
 		for (JsonNode node : createdNodes) {
 			Assert.assertEquals("foobar", node.get("somethingElse").asText());
 		}
@@ -144,7 +144,7 @@ public final class DataRepositoryTest extends AbstractRepositoryTest {
 		Data data;
 		String currentId = null;
 		do {
-			data = repository.executePaginatedGet(currentId, 3);
+			data = repository.getPaginatedData(currentId, 3);
 			fetchedNodes.addAll(data.getResult());
 			currentId = data.getCursor().getNext();
 		} while(data.getCursor().getHasNext());

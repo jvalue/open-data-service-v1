@@ -5,9 +5,9 @@ import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import org.jvalue.commons.couchdb.DbConnectorFactory;
 import org.jvalue.commons.couchdb.RepositoryAdapter;
 import org.jvalue.commons.couchdb.test.AbstractRepositoryAdapterTest;
+import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceMetaData;
 import org.jvalue.ods.db.couchdb.repositories.DataSourceRepository;
@@ -16,7 +16,7 @@ public class DataSourceRepositoryTest extends AbstractRepositoryAdapterTest<Data
 
 	@Override
 	protected RepositoryAdapter<?, ?, DataSource> doCreateAdapter(DbConnectorFactory connectorFactory) {
-		return new DataSourceRepository(connectorFactory.createConnector(getClass().getSimpleName(), true));
+		return new DataSourceRepository((DbConnectorFactory) connectorFactory.createConnector(getClass().getSimpleName(), true));
 	}
 
 

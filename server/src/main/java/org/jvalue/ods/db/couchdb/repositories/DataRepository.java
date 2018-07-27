@@ -1,4 +1,4 @@
-package org.jvalue.ods.db.couchdb;
+package org.jvalue.ods.db.couchdb.repositories;
 
 
 import com.fasterxml.jackson.core.JsonPointer;
@@ -27,7 +27,6 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> imp
 	private static final String DESIGN_DOCUMENT_NAME = "Data";
 	private static final String DESIGN_DOCUMENT_ID = "_design/" + DESIGN_DOCUMENT_NAME;
 	private static final DesignDocumentFactory designFactory = new StdDesignDocumentFactory();
-	public static final String COUCHDB_DATA_REPOSITORY = "CouchDbDataRepository";
 
 	private final CouchDbConnector connector;
 	private final CouchDbDataView domainIdView;
@@ -50,13 +49,6 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> imp
 		if (!containsQuery(allView)) addQuery(allView);
 	}
 
-
-	@Override
-	public JsonNode findById(String Id) {
-		return findByDomainId(Id);
-	}
-
-
 	@Override
 	public JsonNode findByDomainId(String domainId) {
 		List<JsonNode> resultList = executeQuery(domainIdView, domainId);
@@ -73,7 +65,6 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> imp
 
 		return connector.queryView(query, JsonNode.class);
 	}
-
 
 	public void addQuery(CouchDbDataView dataView) {
 		Assert.assertNotNull(dataView);
@@ -119,7 +110,7 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> imp
 
 
 	@Override
-	public Map<String, JsonNode> getData(Collection<String> ids) {
+	public Map<String, JsonNode> getBulk(Collection<String> ids) {
 		return executeBulkGet(ids);
 	}
 
@@ -140,7 +131,7 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> imp
 
 
 	@Override
-	public Collection<GenericDocumentOperationResult> writeData(Collection<JsonNode> data) {
+	public Collection<GenericDocumentOperationResult> writeBulk(Collection<JsonNode> data) {
 		Collection<DocumentOperationResult> documentOperationResults = executeBulkCreateAndUpdate(data);
 		List<GenericDocumentOperationResult> documentResults = new LinkedList<>();
 

@@ -60,7 +60,7 @@ public class CouchDbModule extends AbstractModule {
 			bind(new TypeLiteral<Cache<GenericRepository<ProcessorReferenceChain>>>() { }).in(Singleton.class);
 			bind(new TypeLiteral<Cache<GenericRepository<Client>>>() { }).in(Singleton.class);
 			bind(new TypeLiteral<Cache<GenericRepository<PluginMetaData>>>() { }).in(Singleton.class);
-			bind(new TypeLiteral<Cache<GenericRepository<JsonNode>>>() { }).in(Singleton.class);
+//			bind(new TypeLiteral<Cache<GenericRepository<JsonNode>>>() { }).in(Singleton.class);
 
 
 			install(new FactoryModuleBuilder()

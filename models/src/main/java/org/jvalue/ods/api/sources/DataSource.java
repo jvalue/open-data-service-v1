@@ -4,11 +4,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Objects;
+import org.jvalue.commons.EntityBase;
 
 import javax.validation.constraints.NotNull;
 
 
-public final class DataSource extends AbstractDataSource {
+public final class DataSource extends AbstractDataSource implements EntityBase {
 
 	@NotNull private final String id;
 
@@ -22,7 +23,7 @@ public final class DataSource extends AbstractDataSource {
 		this.id = id;
 	}
 
-
+	@Override
 	public String getId() {
 		return id;
 	}

@@ -53,8 +53,8 @@ public class MongoDbModule extends AbstractModule {
 		}).in(Singleton.class);
 		bind(new TypeLiteral<Cache<GenericRepository<PluginMetaData>>>() {
 		}).in(Singleton.class);
-		bind(new TypeLiteral<Cache<GenericRepository<JsonNode>>>() {
-		}).in(Singleton.class);
+//		bind(new TypeLiteral<Cache<GenericRepository<JsonNode>>>() {
+//		}).in(Singleton.class);
 
 
 		install(new FactoryModuleBuilder()

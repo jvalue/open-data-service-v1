@@ -3,6 +3,7 @@ package org.jvalue.ods.data;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.ektorp.DocumentNotFoundException;
+import org.jvalue.commons.EntityBase;
 import org.jvalue.commons.db.repositories.GenericDataRepository;
 import org.jvalue.commons.db.repositories.GenericRepository;
 import org.jvalue.commons.utils.Assert;
@@ -14,7 +15,7 @@ import org.jvalue.ods.db.couchdb.RepositoryFactory;
 import java.util.List;
 
 
-public abstract class AbstractDataSourcePropertyManager<T, R extends GenericRepository<T>> {
+public abstract class AbstractDataSourcePropertyManager<T extends EntityBase, R extends GenericRepository<T>> {
 
 	private final Cache<R> repositoryCache;
 	private final RepositoryFactory repositoryFactory;

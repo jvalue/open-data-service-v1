@@ -1,9 +1,10 @@
 package org.jvalue.ods.db;
 
 
-import org.jvalue.commons.couchdb.DbConnectorFactory;
+
 import org.jvalue.commons.couchdb.RepositoryAdapter;
 import org.jvalue.commons.couchdb.test.AbstractRepositoryAdapterTest;
+import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.api.notifications.GcmClient;
 import org.jvalue.ods.db.couchdb.repositories.NotificationClientRepository;

@@ -90,7 +90,7 @@ final class DbInsertionFilter extends AbstractFilter<ObjectNode, ObjectNode> {
 	private void writeBulkData() throws FilterException {
 		if (updateDataIfExists) {
 			timerContextBulkRead.resume();
-			Map<String, JsonNode> bulkLoaded = dataRepository.getData(bulkDomainIds);
+			Map<String, JsonNode> bulkLoaded = dataRepository.getBulk(bulkDomainIds);
 			try {
 				for (ObjectNode node : bulkObjects) {
 					String domainId = node.at(source.getDomainIdKey()).asText();
@@ -107,7 +107,7 @@ final class DbInsertionFilter extends AbstractFilter<ObjectNode, ObjectNode> {
 
 		timerContextBulkWrite.resume();
 		try {
-			Collection<DocumentOperationResult> results = dataRepository.writeData((List) bulkObjects);
+			Collection<DocumentOperationResult> results = dataRepository.writeBulk((List) bulkObjects);
 			for (DocumentOperationResult result : results) {
 				if (result.isErroneous())
 					throw new FilterException("db insertion failed for id " + result.getId() + ", reason: " + result.getReason());

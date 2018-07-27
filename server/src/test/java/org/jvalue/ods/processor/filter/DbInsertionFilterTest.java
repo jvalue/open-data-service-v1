@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceMetaData;
-import org.jvalue.ods.db.couchdb.DataRepository;
+import org.jvalue.ods.db.couchdb.repositories.DataRepository;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -56,7 +56,7 @@ public final class DbInsertionFilterTest {
 		filter.onComplete();
 
 		new Verifications() {{
-			repository.writeData((List<JsonNode>) any); times = 1;
+			repository.writeBulk((List<JsonNode>) any); times = 1;
 		}};
 	}
 
@@ -72,7 +72,7 @@ public final class DbInsertionFilterTest {
 			Map<String, JsonNode> nodes = new HashMap<>();
 			nodes.put(VALUE_DOMAIN_ID, addDbIdAndRev(createObject(VALUE_DOMAIN_ID)));
 
-			repository.getData(keys);
+			repository.getBulk(keys);
 			result = nodes;
 		}};
 
@@ -82,7 +82,7 @@ public final class DbInsertionFilterTest {
 
 		new Verifications() {{
 			Collection<JsonNode> nodeList;
-			repository.writeData(nodeList = withCapture()); times = 1;
+			repository.writeBulk(nodeList = withCapture()); times = 1;
 
 			for (JsonNode node : nodeList) {
 				Assert.assertTrue(node instanceof ObjectNode);
