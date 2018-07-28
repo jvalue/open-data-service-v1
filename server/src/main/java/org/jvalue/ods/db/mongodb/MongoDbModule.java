@@ -20,18 +20,20 @@ import org.jvalue.ods.api.processors.PluginMetaData;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
-import org.jvalue.ods.db.generic.DataSourceFactory;
-import org.jvalue.ods.db.couchdb.*;
+import org.jvalue.ods.db.couchdb.RepositoryFactory;
 import org.jvalue.ods.db.couchdb.repositories.*;
+import org.jvalue.ods.db.generic.DataSourceFactory;
 import org.value.commons.mongodb.MongoDbConfig;
 
 public class MongoDbModule extends AbstractModule {
 
 	private final MongoDbConfig mongoDbConfig;
 
+
 	public MongoDbModule(MongoDbConfig mongoDbConfig) {
 		this.mongoDbConfig = mongoDbConfig;
 	}
+
 
 	@Override
 	protected void configure() {

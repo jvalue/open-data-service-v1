@@ -12,9 +12,11 @@ public class MongoDbBasicCredentialsRepositoryFactory implements BasicCredential
 
 
 	@Inject
-	public MongoDbBasicCredentialsRepositoryFactory(DbConnectorFactory dbConnectorFactory){
+	public MongoDbBasicCredentialsRepositoryFactory(DbConnectorFactory dbConnectorFactory) {
 		this.dbConnectorFactory = dbConnectorFactory;
 	}
+
+
 	@Override
 	public GenericRepository<BasicCredentials> createBasicCredentialRepository() {
 		return null;

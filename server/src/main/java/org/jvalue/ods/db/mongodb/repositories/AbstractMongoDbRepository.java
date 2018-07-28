@@ -18,36 +18,42 @@ import java.util.List;
 import static com.mongodb.client.model.Filters.eq;
 
 
-public abstract class AbstractMongoDbRepository<T extends EntityBase> implements GenericRepository<T>{
+public abstract class AbstractMongoDbRepository<T extends EntityBase> implements GenericRepository<T> {
 
 	public static final String DATABASE_NAME = "ods";
 	final MongoDatabase database;
 	protected MongoCollection<Document> collection;
 	ObjectMapper mapper;
 
-	public AbstractMongoDbRepository(DbConnectorFactory connectorFactory, String collectionName){
-		this.database = (MongoDatabase) connectorFactory.createConnector(DATABASE_NAME,true);
+
+	public AbstractMongoDbRepository(DbConnectorFactory connectorFactory, String collectionName) {
+		this.database = (MongoDatabase) connectorFactory.createConnector(DATABASE_NAME, true);
 		this.collection = database.getCollection(collectionName);
 		this.mapper = new ObjectMapper();
 	}
+
+
 	@Override
 	public T findById(String Id) {
 		//should only return one
 		Document document = collection.find(eq("_id", Id)).first();
-		if(document == null){
+		if (document == null) {
 			return null;
 		}
 		return deserializeDocument(document, getEntityType());
 	}
 
+
 	protected abstract Class<?> getEntityType();
+
 
 	private T deserializeDocument(Document document, Class<?> type) {
 		//remove first id field
 		T couchDbDataView;
-		couchDbDataView = new Gson().fromJson(document.toJson(), (Class<T>) type) ;
+		couchDbDataView = new Gson().fromJson(document.toJson(), (Class<T>) type);
 		return couchDbDataView;
 	}
+
 
 	@Override
 	public void add(T Value) {
@@ -57,7 +63,7 @@ public abstract class AbstractMongoDbRepository<T extends EntityBase> implements
 			objectAsJsonString = new Gson().toJson(Value);
 			Document parse = Document.parse(objectAsJsonString);
 			collection.insertOne(parse);
-		} catch (Exception e){
+		} catch (Exception e) {
 			Log.info(e.getMessage());
 		}
 	}
@@ -76,8 +82,9 @@ public abstract class AbstractMongoDbRepository<T extends EntityBase> implements
 		}
 	}
 
+
 	@Override
-	public void remove(T Value){
+	public void remove(T Value) {
 		collection.deleteOne(Filters.eq("_id", Value.getId()));
 	}
 
@@ -86,7 +93,7 @@ public abstract class AbstractMongoDbRepository<T extends EntityBase> implements
 	public List<T> getAll() {
 		FindIterable<Document> documents = collection.find();
 		List<T> entityList = new ArrayList<>();
-		for (Document doc : documents){
+		for (Document doc : documents) {
 			T documentAsObject;
 			documentAsObject = deserializeDocument(doc, getEntityType());
 			entityList.add(documentAsObject);

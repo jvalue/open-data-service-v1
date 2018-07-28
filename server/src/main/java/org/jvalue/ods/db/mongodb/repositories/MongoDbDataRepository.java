@@ -24,11 +24,13 @@ public class MongoDbDataRepository implements GenericDataRepository<MongoDbQuery
 	private final MongoCollection<Document> mongObQueries;
 	private static final String COLLECTION_NAME = "MongoDbQueries";
 
+
 	@Inject
-	public MongoDbDataRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName, @Assisted JsonPointer domainIdKey){
-		this.database = (MongoDatabase) dbConnectorFactory.createConnector(databaseName,true);
+	public MongoDbDataRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName, @Assisted JsonPointer domainIdKey) {
+		this.database = (MongoDatabase) dbConnectorFactory.createConnector(databaseName, true);
 		this.mongObQueries = database.getCollection(COLLECTION_NAME);
 	}
+
 
 	@Override
 	public JsonNode findByDomainId(String domainId) {
@@ -41,7 +43,6 @@ public class MongoDbDataRepository implements GenericDataRepository<MongoDbQuery
 
 	@Override
 	public List<JsonNode> executeQuery(MongoDbQuery mongoDbQuery, String param) {
-//		mongObQueries.find(mongoDbQuery);
 		return null;
 	}
 

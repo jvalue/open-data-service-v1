@@ -10,9 +10,10 @@ public class MongoDbUserRepositoryFactory implements UserRepositoryFactory {
 
 
 	@Inject
-	public MongoDbUserRepositoryFactory(DbConnectorFactory dbConnectorFactory){
+	public MongoDbUserRepositoryFactory(DbConnectorFactory dbConnectorFactory) {
 		this.dbConnectorFactory = dbConnectorFactory;
 	}
+
 
 	@Override
 	public GenericRepository<User> createUserRepository() {

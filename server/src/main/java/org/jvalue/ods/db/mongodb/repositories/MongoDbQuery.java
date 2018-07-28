@@ -14,16 +14,17 @@ public final class MongoDbQuery extends Document implements EntityBase {
 	@NotNull
 	private final String id;
 
+
 	/**
 	 * Create a new map reduce view on the data.
+	 *
 	 * @param id the id of the view
 	 */
 	@JsonCreator
 	public MongoDbQuery(
-		@JsonProperty("id") String id){
+		@JsonProperty("id") String id) {
 		this.id = id;
 	}
-
 
 
 	@Override

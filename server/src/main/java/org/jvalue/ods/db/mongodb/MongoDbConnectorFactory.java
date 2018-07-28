@@ -9,7 +9,7 @@ import org.jvalue.commons.db.DbConnectorFactory;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
-public class MongoDbConnectorFactory extends DbConnectorFactory<MongoClient, MongoDatabase > {
+public class MongoDbConnectorFactory extends DbConnectorFactory<MongoClient, MongoDatabase> {
 
 	public MongoDbConnectorFactory(MongoClient mongoClient, String dbPrefix) {
 		super(mongoClient, dbPrefix);
@@ -24,6 +24,7 @@ public class MongoDbConnectorFactory extends DbConnectorFactory<MongoClient, Mon
 
 		return dbInstance.getDatabase(dbPrefix + "-" + databaseName).withCodecRegistry(pojoCodecRegistry);
 	}
+
 
 	@Override
 	public void doDeleteDatabase(String databaseName) {

@@ -12,6 +12,7 @@ public class MongoDbDocument<V> extends Document {
 		this.value = value;
 	}
 
+
 	public V getValue() {
 		return value;
 	}
