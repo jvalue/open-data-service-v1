@@ -41,7 +41,6 @@ public class JsonApiDocumentTest {
 
     	Assert.assertEquals(1, result.getData().size());
     	Assert.assertEquals(dummyObj01, resource.getEntity());
-		assertSelfLinkExists(result);
     }
 
 
@@ -60,32 +59,29 @@ public class JsonApiDocumentTest {
 						.stream()
 						.map(r -> ((JsonApiResource) r).getEntity())
 						.collect(Collectors.toList()));
-		assertSelfLinkExists(result);
 	}
 
 
-    @Test
-    public void testToIdentifier() {
-		JsonApiDocument document = new JsonApiDocument(dummyObj01, uriInfoMock);
-
-		Class originalClass = document.getData().get(0).getClass();
-		document.toIdentifier();
-		Class resultClass = document.getData().get(0).getClass();
-
-		Assert.assertEquals(JsonApiResource.class, originalClass);
-		Assert.assertEquals(JsonApiResourceIdentifier.class, resultClass);
-	}
-
-
-    @Test
+	@Test
     public void testLinks() {
 		JsonApiDocument result = new JsonApiDocument(dummyObj01, uriInfoMock);
+		result.addSelfLink();
 
 		result.addLink(linkName, uri);
 
 		Assert.assertEquals(2, result.getLinks().size());
 		Assert.assertEquals(uri , result.getLinks().get(linkName));
 		assertSelfLinkExists(result);
+	}
+
+
+	@Test
+	public void hasRelationshipTo() {
+		JsonApiDocument document = new JsonApiDocument(dummyObj01, uriInfoMock);
+		document.addRelationship("rel1", dummyObj42, uri);
+
+		Assert.assertTrue(document.hasRelationshipTo(dummyObj42));
+		Assert.assertFalse(document.hasRelationshipTo(dummyObj43));
 	}
 
 
@@ -113,10 +109,14 @@ public class JsonApiDocumentTest {
             this.id = id;
         }
 
-
 		@Override
 		public String getId() {
 			return id;
+		}
+
+		@Override
+		public String getType() {
+			return Dummy.class.getSimpleName();
 		}
 	}
 }
