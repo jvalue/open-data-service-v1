@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
+import com.google.gson.annotations.SerializedName;
 import org.jvalue.commons.EntityBase;
 
 import javax.validation.constraints.NotNull;
@@ -13,6 +14,7 @@ import javax.validation.constraints.NotNull;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public final class CouchDbDataView extends AbstractCouchDbDataView implements EntityBase {
 
+	@SerializedName("_id")
 	@NotNull private final String id;
 
 	/**

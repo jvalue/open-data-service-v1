@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.google.common.base.Objects;
+import com.google.gson.annotations.SerializedName;
 import org.jvalue.commons.EntityBase;
 
 import javax.validation.constraints.NotNull;
@@ -40,6 +41,7 @@ import javax.validation.constraints.NotNull;
 })
 public abstract class Client implements EntityBase {
 
+	@SerializedName("_id")
 	@NotNull private final String id;
 	@NotNull private final String type;
 

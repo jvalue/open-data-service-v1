@@ -19,7 +19,7 @@ import org.jvalue.commons.utils.Cache;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceMetaData;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
-import org.jvalue.ods.db.DataSourceFactory;
+import org.jvalue.ods.db.generic.DataSourceFactory;
 import org.jvalue.ods.db.couchdb.repositories.DataRepository;
 import org.jvalue.ods.db.couchdb.repositories.DataSourceRepository;
 import org.jvalue.ods.db.couchdb.RepositoryFactory;

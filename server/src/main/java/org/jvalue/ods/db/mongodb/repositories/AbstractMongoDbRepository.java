@@ -1,15 +1,22 @@
 package org.jvalue.ods.db.mongodb.repositories;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import org.bson.Document;
 import org.jvalue.commons.EntityBase;
 import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.commons.db.repositories.GenericRepository;
+import org.jvalue.commons.utils.Log;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static com.mongodb.client.model.Filters.eq;
+
 
 public abstract class AbstractMongoDbRepository<T extends EntityBase> implements GenericRepository<T>{
 
@@ -24,42 +31,66 @@ public abstract class AbstractMongoDbRepository<T extends EntityBase> implements
 		this.mapper = new ObjectMapper();
 	}
 	@Override
-	public abstract T findById(String Id);
+	public T findById(String Id) {
+		//should only return one
+		Document document = collection.find(eq("_id", Id)).first();
+		if(document == null){
+			return null;
+		}
+		return deserializeDocument(document, getEntityType());
+	}
 
+	protected abstract Class<?> getEntityType();
+
+	private T deserializeDocument(Document document, Class<?> type) {
+		//remove first id field
+		T couchDbDataView;
+		couchDbDataView = new Gson().fromJson(document.toJson(), (Class<T>) type) ;
+		return couchDbDataView;
+	}
 
 	@Override
-	public void add(T Value){
-		String objectAsJsonString = null;
+	public void add(T Value) {
+		String objectAsJsonString;
+
 		try {
-			objectAsJsonString = mapper.writeValueAsString(Value);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
+			objectAsJsonString = new Gson().toJson(Value);
+			Document parse = Document.parse(objectAsJsonString);
+			collection.insertOne(parse);
+		} catch (Exception e){
+			Log.info(e.getMessage());
 		}
-		Document parse = Document.parse(objectAsJsonString);
-		parse.append("_id", Value.getId());
-		collection.insertOne(parse);
 	}
 
 
 	@Override
 	public void update(T value) {
-		String objectAsJsonString = null;
+		String objectAsJsonString;
+
 		try {
-			objectAsJsonString = mapper.writeValueAsString(value);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
+			objectAsJsonString = new Gson().toJson(value);
+			Document parse = Document.parse(objectAsJsonString);
+			collection.updateOne(Filters.eq("_id", value.getId()), parse);
+		} catch (Exception e) {
+			Log.info(e.getMessage());
 		}
-		Document parse = Document.parse(objectAsJsonString);
-		Document searchQuery = new Document("_id", value.getId());
-		collection.updateOne(searchQuery, parse);
 	}
 
 	@Override
 	public void remove(T Value){
-		Document searchQuery = new Document("_id", Value.getId());
-		collection.deleteOne(searchQuery);
+		collection.deleteOne(Filters.eq("_id", Value.getId()));
 	}
 
+
 	@Override
-	public abstract List<T> getAll();
+	public List<T> getAll() {
+		FindIterable<Document> documents = collection.find();
+		List<T> entityList = new ArrayList<>();
+		for (Document doc : documents){
+			T documentAsObject;
+			documentAsObject = deserializeDocument(doc, getEntityType());
+			entityList.add(documentAsObject);
+		}
+		return entityList;
+	}
 }

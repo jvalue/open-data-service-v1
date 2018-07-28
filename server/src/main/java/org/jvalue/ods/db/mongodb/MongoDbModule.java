@@ -20,7 +20,7 @@ import org.jvalue.ods.api.processors.PluginMetaData;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
-import org.jvalue.ods.db.DataSourceFactory;
+import org.jvalue.ods.db.generic.DataSourceFactory;
 import org.jvalue.ods.db.couchdb.*;
 import org.jvalue.ods.db.couchdb.repositories.*;
 import org.value.commons.mongodb.MongoDbConfig;
