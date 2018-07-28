@@ -11,8 +11,8 @@ import org.jvalue.commons.EntityBase;
 import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.commons.db.repositories.GenericRepository;
 import org.jvalue.commons.utils.Log;
+import org.value.commons.mongodb.MongoDocumentNotFoundException;
 
-import javax.print.Doc;
 import java.util.ArrayList;
 import java.util.List;
 
