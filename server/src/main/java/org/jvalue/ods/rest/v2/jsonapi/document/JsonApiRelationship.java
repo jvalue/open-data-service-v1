@@ -1,7 +1,7 @@
 package org.jvalue.ods.rest.v2.jsonapi.document;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.jvalue.ods.api.jsonapi.JsonApiIdentifiable;
+import org.jvalue.ods.rest.v2.jsonapi.wrapper.JsonApiIdentifiable;
 
 import java.net.URI;
 import java.util.*;

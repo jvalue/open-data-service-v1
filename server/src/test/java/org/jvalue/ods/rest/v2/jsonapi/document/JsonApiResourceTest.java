@@ -2,7 +2,7 @@ package org.jvalue.ods.rest.v2.jsonapi.document;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.jvalue.ods.api.jsonapi.JsonApiIdentifiable;
+import org.jvalue.ods.rest.v2.jsonapi.wrapper.JsonApiIdentifiable;
 
 import java.net.URI;
 

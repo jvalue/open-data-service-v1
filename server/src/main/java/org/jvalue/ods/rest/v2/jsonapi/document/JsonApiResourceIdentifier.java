@@ -1,6 +1,6 @@
 package org.jvalue.ods.rest.v2.jsonapi.document;
 
-import org.jvalue.ods.api.jsonapi.JsonApiIdentifiable;
+import org.jvalue.ods.rest.v2.jsonapi.wrapper.JsonApiIdentifiable;
 import java.util.Objects;
 
 public class JsonApiResourceIdentifier implements JsonApiIdentifiable {

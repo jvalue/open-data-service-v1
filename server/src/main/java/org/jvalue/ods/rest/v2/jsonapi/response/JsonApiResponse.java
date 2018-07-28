@@ -1,7 +1,7 @@
 package org.jvalue.ods.rest.v2.jsonapi.response;
 
 import org.jvalue.commons.utils.Assert;
-import org.jvalue.ods.api.jsonapi.JsonApiIdentifiable;
+import org.jvalue.ods.rest.v2.jsonapi.wrapper.JsonApiIdentifiable;
 import org.jvalue.ods.rest.v2.jsonapi.document.JsonApiDocument;
 
 import javax.ws.rs.core.Response;

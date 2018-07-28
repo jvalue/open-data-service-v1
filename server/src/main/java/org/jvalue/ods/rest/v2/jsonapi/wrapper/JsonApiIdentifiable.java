@@ -1,4 +1,4 @@
-package org.jvalue.ods.api.jsonapi;
+package org.jvalue.ods.rest.v2.jsonapi.wrapper;
 
 public interface JsonApiIdentifiable {
 	String getId();
