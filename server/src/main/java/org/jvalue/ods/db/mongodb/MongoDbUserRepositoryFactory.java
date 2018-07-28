@@ -1,7 +1,9 @@
-package org.jvalue.commons.auth;
+package org.jvalue.ods.db.mongodb;
 
+import org.jvalue.commons.auth.GenericUserRepository;
+import org.jvalue.commons.auth.User;
+import org.jvalue.commons.auth.UserRepositoryFactory;
 import org.jvalue.commons.db.DbConnectorFactory;
-import org.jvalue.commons.db.repositories.GenericRepository;
 
 import javax.inject.Inject;
 
@@ -16,7 +18,7 @@ public class MongoDbUserRepositoryFactory implements UserRepositoryFactory {
 
 
 	@Override
-	public GenericRepository<User> createUserRepository() {
+	public GenericUserRepository<User> createUserRepository() {
 		return null;
 	}
 }
