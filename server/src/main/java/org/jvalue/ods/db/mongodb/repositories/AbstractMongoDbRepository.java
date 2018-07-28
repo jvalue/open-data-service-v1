@@ -24,7 +24,7 @@ public abstract class AbstractMongoDbRepository<T extends EntityBase> implements
 	private Class<T> type;
 
 
-	public AbstractMongoDbRepository(DbConnectorFactory connectorFactory, String databaseName, String collectionName, Class<T> type) {
+	AbstractMongoDbRepository(DbConnectorFactory connectorFactory, String databaseName, String collectionName, Class<T> type) {
 		MongoDatabase database = (MongoDatabase) connectorFactory.createConnector(databaseName, true);
 		this.collection = database.getCollection(collectionName);
 		this.type = type;
