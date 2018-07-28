@@ -1,4 +1,4 @@
-package org.jvalue.ods.db;
+package org.jvalue.ods.db.couchdb;
 
 
 import com.fasterxml.jackson.core.JsonPointer;
