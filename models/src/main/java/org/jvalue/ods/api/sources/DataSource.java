@@ -8,9 +8,10 @@ import com.google.common.base.Objects;
 import javax.validation.constraints.NotNull;
 
 
-public final class DataSource extends AbstractDataSource {
+public class DataSource extends AbstractDataSource {
 
-	@NotNull private final String id;
+	@NotNull
+	protected final String id;
 
 	public DataSource(
 			@JsonProperty("id") String id,
