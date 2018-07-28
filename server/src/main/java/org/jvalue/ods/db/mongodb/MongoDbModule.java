@@ -9,7 +9,6 @@ import com.google.inject.name.Names;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import org.jvalue.commons.auth.BasicCredentialsRepositoryFactory;
-import org.jvalue.commons.auth.MongoDbUserRepositoryFactory;
 import org.jvalue.commons.auth.UserRepositoryFactory;
 import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.commons.db.repositories.GenericDataRepository;
