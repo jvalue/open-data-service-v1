@@ -44,7 +44,7 @@ public final class DataSourceApi extends AbstractApi {
 
 
 	@GET
-	@Path("{sourceId}")
+	@Path("/{sourceId}")
 	public Response getSource(@PathParam("sourceId") String sourceId) {
 		DataSource source = sourceManager.findBySourceId(sourceId);
 
@@ -56,7 +56,7 @@ public final class DataSourceApi extends AbstractApi {
 
 
 	@GET
-	@Path("{sourceId}/schema")
+	@Path("/{sourceId}/schema")
 	public Response getSourceSchema(@PathParam("sourceId") String sourceId) {
 		DataSource source = sourceManager.findBySourceId(sourceId);
 
@@ -69,7 +69,7 @@ public final class DataSourceApi extends AbstractApi {
 
 
 	@POST
-	@Path("{sourceId}")
+	@Path("/{sourceId}")
 	public Response addSource(
 			@RestrictedTo(Role.ADMIN) User user,
 			@PathParam("sourceId") String sourceId,
@@ -93,7 +93,7 @@ public final class DataSourceApi extends AbstractApi {
 
 
 	@DELETE
-	@Path("{sourceId}")
+	@Path("/{sourceId}")
 	public Response deleteSource(
 			@RestrictedTo(Role.ADMIN) User user,
 			@PathParam("sourceId") String sourceId) {

@@ -11,5 +11,5 @@ import javax.ws.rs.Produces;
 abstract class AbstractApi {
 
 
-	protected static final String BASE_URL = "/v2/datasources/";
+	protected static final String BASE_URL = "/v2/datasources";
 }

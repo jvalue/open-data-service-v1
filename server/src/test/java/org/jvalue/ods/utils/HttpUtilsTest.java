@@ -13,13 +13,15 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-    
+
  */
 package org.jvalue.ods.utils;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 
 
@@ -37,6 +39,19 @@ public class HttpUtilsTest {
 	@Test()
 	public void testGetJSON() throws IOException {
 		HttpUtils.readUrl(new URL(testUrl), "UTF-8");
+	}
+
+
+	@Test
+	public void testAppendTrailingSlash() {
+		URI withTrailingSlash = URI.create("http://www.pegelonline.wsv.de/webservices/rest-api/v2/");
+		URI withoutTrailingSlash = URI.create("http://www.pegelonline.wsv.de/webservices/rest-api/v2/");
+
+		URI resultUnchanged = HttpUtils.appendTrailingSlash(withTrailingSlash);
+		URI resultSlashAdded = HttpUtils.appendTrailingSlash(withoutTrailingSlash);
+
+		Assert.assertEquals(withTrailingSlash, resultUnchanged);
+		Assert.assertEquals(withTrailingSlash, resultSlashAdded);
 	}
 
 }
