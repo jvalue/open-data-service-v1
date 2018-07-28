@@ -1,6 +1,5 @@
 package org.jvalue.ods.db.mongodb.repositories;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -21,15 +20,14 @@ import static com.mongodb.client.model.Filters.eq;
 
 public abstract class AbstractMongoDbRepository<T extends EntityBase> implements GenericRepository<T> {
 
-	final MongoDatabase database;
-	protected MongoCollection<Document> collection;
-	ObjectMapper mapper;
+	private MongoCollection<Document> collection;
+	private Class<T> type;
 
 
-	public AbstractMongoDbRepository(DbConnectorFactory connectorFactory, String databaseName, String collectionName) {
-		this.database = (MongoDatabase) connectorFactory.createConnector(databaseName, true);
+	public AbstractMongoDbRepository(DbConnectorFactory connectorFactory, String databaseName, String collectionName, Class<T> type) {
+		MongoDatabase database = (MongoDatabase) connectorFactory.createConnector(databaseName, true);
 		this.collection = database.getCollection(collectionName);
-		this.mapper = new ObjectMapper();
+		this.type = type;
 	}
 
 
@@ -37,7 +35,7 @@ public abstract class AbstractMongoDbRepository<T extends EntityBase> implements
 	public T findById(String Id) {
 		//should only return one
 		Document document = findDocumentById(Id);
-		return deserializeDocument(document, getEntityType());
+		return deserializeDocument(document);
 	}
 
 	private Document findDocumentById(String Id){
@@ -49,13 +47,10 @@ public abstract class AbstractMongoDbRepository<T extends EntityBase> implements
 		return document;
 	}
 
-	protected abstract Class<?> getEntityType();
-
-
-	private T deserializeDocument(Document document, Class<?> type) {
+	private T deserializeDocument(Document document) {
 		//remove first id field
 		T entity;
-		entity = new Gson().fromJson(document.toJson(), (Class<T>) type);
+		entity = new Gson().fromJson(document.toJson(), type);
 		return entity;
 	}
 
@@ -100,7 +95,7 @@ public abstract class AbstractMongoDbRepository<T extends EntityBase> implements
 		List<T> entityList = new ArrayList<>();
 		for (Document doc : documents) {
 			T documentAsObject;
-			documentAsObject = deserializeDocument(doc, getEntityType());
+			documentAsObject = deserializeDocument(doc);
 			entityList.add(documentAsObject);
 		}
 		return entityList;

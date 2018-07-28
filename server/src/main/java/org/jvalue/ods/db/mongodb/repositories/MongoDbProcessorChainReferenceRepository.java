@@ -8,18 +8,11 @@ import javax.inject.Inject;
 
 public class MongoDbProcessorChainReferenceRepository extends AbstractMongoDbRepository<ProcessorReferenceChain> {
 
-	public static final String COLLECTION_NAME = "processorChainReferenceCollection";
+	private static final String COLLECTION_NAME = "processorChainReferenceCollection";
+
 
 	@Inject
 	public MongoDbProcessorChainReferenceRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName) {
-		super(dbConnectorFactory, databaseName, "processorChainReferenceCollection");
+		super(dbConnectorFactory, databaseName, COLLECTION_NAME, ProcessorReferenceChain.class);
 	}
-
-
-	@Override
-	protected Class<?> getEntityType() {
-		return ProcessorReferenceChain.class;
-	}
-
-
 }

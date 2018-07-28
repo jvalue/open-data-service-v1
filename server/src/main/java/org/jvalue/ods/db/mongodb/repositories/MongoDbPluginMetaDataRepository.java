@@ -8,18 +8,10 @@ import javax.inject.Inject;
 
 public class MongoDbPluginMetaDataRepository extends AbstractMongoDbRepository<PluginMetaData> {
 
-	public static final String COLLECTION_NAME = "pluginMetaDataCollection";
+	private static final String COLLECTION_NAME = "pluginMetaDataCollection";
 
 	@Inject
 	public MongoDbPluginMetaDataRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName) {
-		super(dbConnectorFactory, databaseName, COLLECTION_NAME);
+		super(dbConnectorFactory, databaseName, COLLECTION_NAME, PluginMetaData.class);
 	}
-
-
-	@Override
-	protected Class<?> getEntityType() {
-		return PluginMetaData.class;
-	}
-
-
 }

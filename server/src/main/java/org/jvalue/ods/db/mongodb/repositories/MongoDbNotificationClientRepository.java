@@ -7,18 +7,11 @@ import org.jvalue.ods.api.notifications.Client;
 
 public class MongoDbNotificationClientRepository extends AbstractMongoDbRepository<Client> {
 
-	public static final String COLLECTION_NAME = "notificationClientCollection";
+	private static final String COLLECTION_NAME = "notificationClientCollection";
+
 
 	@Inject
 	public MongoDbNotificationClientRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName) {
-		super(dbConnectorFactory, databaseName, COLLECTION_NAME);
+		super(dbConnectorFactory, databaseName, COLLECTION_NAME, Client.class);
 	}
-
-
-	@Override
-	protected Class<?> getEntityType() {
-		return Client.class;
-	}
-
-
 }
