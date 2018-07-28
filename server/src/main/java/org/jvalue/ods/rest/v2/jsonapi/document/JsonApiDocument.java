@@ -3,6 +3,7 @@ package org.jvalue.ods.rest.v2.jsonapi.document;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.JsonApiIdentifiable;
+import org.jvalue.ods.utils.HttpUtils;
 
 import javax.ws.rs.core.UriInfo;
 import java.io.Serializable;
@@ -32,10 +33,10 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 
 	public JsonApiDocument(Collection<? extends JsonApiIdentifiable> entityCollection, UriInfo uriInfo) {
 		this.uriInfo = uriInfo;
+		URI collectionURI = HttpUtils.appendTrailingSlash(uriInfo.getAbsolutePath());
 
 		for (JsonApiIdentifiable entity : entityCollection) {
-			URI entityUri = uriInfo.getAbsolutePath().resolve(entity.getId());
-			JsonApiResource resource = new JsonApiResource(entity, entityUri);
+			JsonApiResource resource = new JsonApiResource(entity, collectionURI.resolve(entity.getId()));
 			resource.addSelfLink();
 			data.add(resource);
 		}
