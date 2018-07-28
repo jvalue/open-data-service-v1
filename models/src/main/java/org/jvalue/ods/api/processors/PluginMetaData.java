@@ -4,14 +4,12 @@ package org.jvalue.ods.api.processors;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
-import com.google.gson.annotations.SerializedName;
 import org.jvalue.commons.EntityBase;
 
 import javax.validation.constraints.NotNull;
 
 public final class PluginMetaData implements EntityBase {
 
-	@SerializedName("_id")
 	@NotNull
 	private final String id;
 

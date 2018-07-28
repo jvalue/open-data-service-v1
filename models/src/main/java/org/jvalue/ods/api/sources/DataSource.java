@@ -1,5 +1,6 @@
 package org.jvalue.ods.api.sources;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -8,8 +9,9 @@ import org.jvalue.commons.EntityBase;
 
 import javax.validation.constraints.NotNull;
 
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public final class DataSource extends AbstractDataSource implements EntityBase {
+
 
 	@NotNull private final String id;
 
@@ -23,7 +25,7 @@ public final class DataSource extends AbstractDataSource implements EntityBase {
 		this.id = id;
 	}
 
-	@Override
+
 	public String getId() {
 		return id;
 	}

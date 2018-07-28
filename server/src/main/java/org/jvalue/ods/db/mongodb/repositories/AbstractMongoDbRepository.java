@@ -1,6 +1,6 @@
 package org.jvalue.ods.db.mongodb.repositories;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -12,6 +12,7 @@ import org.jvalue.commons.db.repositories.GenericRepository;
 import org.jvalue.commons.utils.Log;
 import org.value.commons.mongodb.MongoDocumentNotFoundException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import static com.mongodb.client.model.Filters.eq;
 
 public abstract class AbstractMongoDbRepository<T extends EntityBase> implements GenericRepository<T> {
 
+	private final ObjectMapper mapper;
 	private MongoCollection<Document> collection;
 	private Class<T> type;
 
@@ -28,6 +30,7 @@ public abstract class AbstractMongoDbRepository<T extends EntityBase> implements
 		MongoDatabase database = (MongoDatabase) connectorFactory.createConnector(databaseName, true);
 		this.collection = database.getCollection(collectionName);
 		this.type = type;
+		mapper = new ObjectMapper();
 	}
 
 
@@ -44,13 +47,18 @@ public abstract class AbstractMongoDbRepository<T extends EntityBase> implements
 		if (document == null) {
 			throw new MongoDocumentNotFoundException();
 		}
+		document.remove("_id");
 		return document;
 	}
 
 	private T deserializeDocument(Document document) {
 		//remove first id field
-		T entity;
-		entity = new Gson().fromJson(document.toJson(), type);
+		T entity = null;
+		try {
+			entity = mapper.readValue(document.toJson(), type);
+		} catch (IOException e) {
+			Log.info("Could not deserialize json:" + document.toJson());
+		}
 		return entity;
 	}
 
@@ -60,8 +68,9 @@ public abstract class AbstractMongoDbRepository<T extends EntityBase> implements
 		String objectAsJsonString;
 
 		try {
-			objectAsJsonString = new Gson().toJson(Value);
+			objectAsJsonString = mapper.writeValueAsString(Value);
 			Document parse = Document.parse(objectAsJsonString);
+			parse.append("_id", Value.getId());
 			collection.insertOne(parse);
 		} catch (Exception e) {
 			Log.info(e.getMessage());
@@ -74,7 +83,7 @@ public abstract class AbstractMongoDbRepository<T extends EntityBase> implements
 		String objectAsJsonString;
 
 		try {
-			objectAsJsonString = new Gson().toJson(value);
+			objectAsJsonString = mapper.writeValueAsString(value);
 			Document parse = Document.parse(objectAsJsonString);
 			collection.replaceOne(Filters.eq("_id", value.getId()), parse);
 		} catch (Exception e) {
