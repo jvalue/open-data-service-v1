@@ -2,7 +2,7 @@ package org.jvalue.ods.rest.v2.jsonapi.document;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.jvalue.ods.api.jsonapi.JsonApiIdentifiable;
+import org.jvalue.ods.rest.v2.jsonapi.wrapper.JsonApiIdentifiable;
 
 public class JsonApiResourceIdentifierTest {
 
@@ -18,16 +18,6 @@ public class JsonApiResourceIdentifierTest {
 
         Assert.assertEquals("id_42", result2.getId());
         Assert.assertEquals("Dummy", result2.getType());
-    }
-
-
-    @Test
-    public void testToIdentifier() {
-        JsonApiResourceIdentifier id = new JsonApiResourceIdentifier(dummyObj);
-
-        JsonApiResourceIdentifier result = id.toIdentifier();
-
-        Assert.assertEquals(id, result);
     }
 
 
@@ -52,5 +42,10 @@ public class JsonApiResourceIdentifierTest {
         public String getId() {
             return id;
         }
+
+        @Override
+		public String getType() {
+        	return Dummy.class.getSimpleName();
+		}
     }
 }
