@@ -6,10 +6,12 @@ import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.ods.api.notifications.Client;
 
 public class MongoDbNotificationClientRepository extends AbstractMongoDbRepository<Client> {
-	
+
+	public static final String COLLECTION_NAME = "notificationClientCollection";
+
 	@Inject
 	public MongoDbNotificationClientRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName) {
-		super(dbConnectorFactory, databaseName);
+		super(dbConnectorFactory, databaseName, COLLECTION_NAME);
 	}
 
 

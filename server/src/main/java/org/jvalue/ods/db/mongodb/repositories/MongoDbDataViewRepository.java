@@ -7,9 +7,12 @@ import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
 
 public class MongoDbDataViewRepository extends AbstractMongoDbRepository<CouchDbDataView> {
 
+	public static final String COLLECTION_NAME = "dataViewCollection";
+
+
 	@Inject
 	public MongoDbDataViewRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName) {
-		super(dbConnectorFactory, databaseName);
+		super(dbConnectorFactory, databaseName, COLLECTION_NAME);
 	}
 
 

@@ -5,11 +5,12 @@ import org.jvalue.ods.api.sources.DataSource;
 
 public class MongoDbDataSourceRepository extends AbstractMongoDbRepository<DataSource> {
 
-	public static final String COLLECTION_NAME = "dataSource";
+	public static final String DATABASE_NAME = "dataSources";
+	public static final String COLLECTION_NAME = "dataSourceCollection";
 
 
 	public MongoDbDataSourceRepository(DbConnectorFactory connectorFactory) {
-		super(connectorFactory, COLLECTION_NAME);
+		super(connectorFactory, DATABASE_NAME, COLLECTION_NAME);
 	}
 
 
@@ -18,3 +19,4 @@ public class MongoDbDataSourceRepository extends AbstractMongoDbRepository<DataS
 		return DataSource.class;
 	}
 }
+
