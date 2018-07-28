@@ -7,13 +7,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
 
 
 public class HttpUtils {
 
-	private HttpUtils () { } 
+	private HttpUtils () { }
 
 	public static String readUrl(URL url, String charsetName) throws IOException {
 		Assert.assertNotNull(url, charsetName);
@@ -41,6 +42,16 @@ public class HttpUtils {
 				Log.error("Failed to close reader", e);
 			}
 		}
+	}
+
+
+	public static URI appendTrailingSlash(URI uri) {
+		String uriString = uri.toString();
+
+		if(uriString.matches(".*/$")) {
+			return uri;
+		}
+		else return URI.create(uriString + "/");
 	}
 
 }
