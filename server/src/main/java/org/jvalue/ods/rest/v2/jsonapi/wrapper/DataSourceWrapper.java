@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class DataSourceWrapper extends DataSource implements JsonApiIdentifiable {
 
 
-	public DataSourceWrapper(String id, JsonPointer domainIdKey, JsonNode schema, DataSourceMetaData metaData) {
+	private DataSourceWrapper(String id, JsonPointer domainIdKey, JsonNode schema, DataSourceMetaData metaData) {
 		super(id, domainIdKey, schema, metaData);
 	}
 
