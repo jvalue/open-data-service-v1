@@ -1,0 +1,123 @@
+package org.jvalue.ods.rest.v2;
+
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.inject.Inject;
+import io.dropwizard.jersey.params.IntParam;
+import org.jvalue.commons.auth.RestrictedTo;
+import org.jvalue.commons.auth.Role;
+import org.jvalue.commons.auth.User;
+import org.jvalue.ods.api.data.Data;
+import org.jvalue.ods.data.DataSourceManager;
+import org.jvalue.ods.db.DataRepository;
+import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
+import org.jvalue.ods.rest.v2.jsonapi.wrapper.DataWrapper;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
+
+import java.net.URI;
+import java.util.List;
+
+import static org.jvalue.ods.rest.v2.AbstractApi.BASE_URL;
+
+@Path(BASE_URL + "/{sourceId}/data")
+public final class DataApi extends AbstractApi {
+
+	private static final String DEFAULT_LIMIT = "100";
+	private static final int DEFAULT_LIMIT_INT = Integer.parseInt(DEFAULT_LIMIT);
+	private static final String DEFAULT_OFFSET = "0";
+
+	private final DataSourceManager sourceManager;
+
+
+
+	@Inject
+	public DataApi(DataSourceManager sourceManager) {
+		this.sourceManager = sourceManager;
+	}
+
+	@Context
+	private UriInfo uriInfo;
+
+
+	@GET
+	public Response getPaginatedData(
+			@PathParam("sourceId") String sourceId,
+			@QueryParam("offset") @DefaultValue(DEFAULT_OFFSET) IntParam _offset,
+			@QueryParam("limit") @DefaultValue(DEFAULT_LIMIT) IntParam _limit) {
+
+		int offset = _offset.get();
+		int limit = _limit.get();
+
+		if (limit < 1 || limit > 100) {
+			limit = DEFAULT_LIMIT_INT;
+		}
+
+		UriBuilder nextBuilder = uriInfo.getAbsolutePathBuilder().queryParam("offset", offset + limit);
+		if(limit != DEFAULT_LIMIT_INT) {
+			nextBuilder.queryParam("limit", _limit).build();
+		}
+		URI nextUri = nextBuilder.build();
+
+		DataRepository repository = getDataRepository(sourceId);
+		Data data = repository.executePaginatedGet(String.valueOf(offset), limit);
+		List<JsonNode> dataNodes = data.getResult();
+
+		return JsonApiResponse
+			.createGetResponse(uriInfo)
+			.data(DataWrapper.fromCollection(dataNodes))
+			.addLink("first", uriInfo.getAbsolutePath())
+			.addLink("next", nextUri)
+			.build();
+	}
+
+
+	@DELETE
+	public void deleteAllObjects(
+			@RestrictedTo(Role.ADMIN) User user,
+			@PathParam("sourceId") String sourceId) {
+
+		DataRepository repository = getDataRepository(sourceId);
+		repository.removeAll();
+	}
+
+
+	@GET
+	@Path("/{objectId}")
+	public Response getSingleDataObject(
+			@PathParam("sourceId") String sourceId,
+			@PathParam("objectId") String domainId) {
+
+		JsonNode resultNode = getDataRepository(sourceId).findByDomainId(domainId);
+
+		return JsonApiResponse
+			.createGetResponse(uriInfo)
+			.data(DataWrapper.from(resultNode))
+			.build();
+	}
+
+	@GET
+	@Path("/{objectId}/{attribute}")
+	public Response getObjectAttribute(
+		@PathParam("sourceId") String sourceId,
+		@PathParam("objectId") String domainId,
+		@PathParam("attribute") String attribute) {
+
+		JsonNode resultNode = getDataRepository(sourceId).findByDomainId(domainId);
+
+		return JsonApiResponse
+			.createGetResponse(uriInfo)
+			.data(DataWrapper.from(resultNode))
+			.restrictTo(attribute)
+			.build();
+	}
+
+	private DataRepository getDataRepository(String sourceId) {
+		return sourceManager.getDataRepository(sourceManager.findBySourceId(sourceId));
+	}
+
+}
