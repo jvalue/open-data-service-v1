@@ -15,6 +15,7 @@ import org.jvalue.commons.couchdb.RepositoryAdapter;
 import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.commons.db.repositories.GenericRepository;
+import org.jvalue.ods.db.couchdb.CouchDbConnectorFactory;
 
 import java.util.List;
 

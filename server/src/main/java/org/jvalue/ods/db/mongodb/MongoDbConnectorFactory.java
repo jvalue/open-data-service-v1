@@ -18,11 +18,7 @@ public class MongoDbConnectorFactory extends DbConnectorFactory<MongoClient, Mon
 
 	@Override
 	public MongoDatabase doCreateConnector(String databaseName, boolean createIfNotExists) {
-		// create codec registry for POJOs
-		CodecRegistry pojoCodecRegistry = fromRegistries(MongoClient.getDefaultCodecRegistry(),
-			fromProviders(PojoCodecProvider.builder().automatic(true).build()));
-
-		return dbInstance.getDatabase(dbPrefix + "-" + databaseName).withCodecRegistry(pojoCodecRegistry);
+		return dbInstance.getDatabase(dbPrefix + "-" + databaseName);
 	}
 
 

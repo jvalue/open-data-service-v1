@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
+import org.value.commons.mongodb.AbstractMongoDbRepository;
 
 public class MongoDbDataViewRepository extends AbstractMongoDbRepository<CouchDbDataView> {
 

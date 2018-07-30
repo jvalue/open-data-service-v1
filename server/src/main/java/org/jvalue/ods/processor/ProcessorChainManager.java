@@ -15,7 +15,7 @@ import org.jvalue.commons.utils.Log;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
-import org.jvalue.ods.db.couchdb.RepositoryFactory;
+import org.jvalue.ods.db.generic.RepositoryFactory;
 import org.jvalue.ods.data.AbstractDataSourcePropertyManager;
 
 import java.util.HashMap;

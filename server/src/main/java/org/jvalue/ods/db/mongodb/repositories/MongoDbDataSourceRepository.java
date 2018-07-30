@@ -2,6 +2,7 @@ package org.jvalue.ods.db.mongodb.repositories;
 
 import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.ods.api.sources.DataSource;
+import org.value.commons.mongodb.AbstractMongoDbRepository;
 
 public class MongoDbDataSourceRepository extends AbstractMongoDbRepository<DataSource> {
 

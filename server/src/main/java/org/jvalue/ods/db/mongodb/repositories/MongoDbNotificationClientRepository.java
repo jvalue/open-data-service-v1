@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.ods.api.notifications.Client;
+import org.value.commons.mongodb.AbstractMongoDbRepository;
 
 public class MongoDbNotificationClientRepository extends AbstractMongoDbRepository<Client> {
 

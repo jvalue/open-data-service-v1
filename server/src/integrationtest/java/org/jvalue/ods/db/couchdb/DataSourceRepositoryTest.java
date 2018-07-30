@@ -16,7 +16,7 @@ public class DataSourceRepositoryTest extends AbstractRepositoryAdapterTest<Data
 
 	@Override
 	protected RepositoryAdapter<?, ?, DataSource> doCreateAdapter(DbConnectorFactory connectorFactory) {
-		return new DataSourceRepository((DbConnectorFactory) connectorFactory.createConnector(getClass().getSimpleName(), true));
+		return new DataSourceRepository(connectorFactory);
 	}
 
 

@@ -8,18 +8,16 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
-import org.jvalue.commons.auth.BasicCredentialsRepositoryFactory;
-import org.jvalue.commons.auth.UserRepositoryFactory;
 import org.jvalue.commons.db.DbConnectorFactory;
+import org.jvalue.commons.db.factories.AuthRepositoryFactory;
 import org.jvalue.commons.db.repositories.GenericDataRepository;
 import org.jvalue.commons.db.repositories.GenericRepository;
 import org.jvalue.commons.utils.Cache;
 import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.api.processors.PluginMetaData;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
-import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
-import org.jvalue.ods.db.couchdb.RepositoryFactory;
+import org.jvalue.ods.db.generic.RepositoryFactory;
 import org.jvalue.ods.db.couchdb.repositories.*;
 import org.jvalue.ods.db.generic.DataSourceFactory;
 import org.value.commons.mongodb.MongoDbConfig;
@@ -43,8 +41,7 @@ public class MongoDbModule extends AbstractModule {
 
 		bind(DbConnectorFactory.class).toInstance(connectorFactory);
 		bind(DataSourceFactory.class).to(MongoDbDataSourceFactory.class);
-		bind(BasicCredentialsRepositoryFactory.class).to(MongoDbBasicCredentialsRepositoryFactory.class);
-		bind(UserRepositoryFactory.class).to(MongoDbUserRepositoryFactory.class);
+		bind(AuthRepositoryFactory.class).to(MongoDbAuthRepositoryFactory.class);
 
 		bind(new TypeLiteral<Cache<GenericRepository<CouchDbDataView>>>() {
 		}).in(Singleton.class);
@@ -64,12 +61,6 @@ public class MongoDbModule extends AbstractModule {
 				},
 				Names.named(RepositoryFactory.NAME_DATA_VIEW_REPOSITORY),
 				DataViewRepository.class)
-
-			.implement(
-				new TypeLiteral<GenericRepository<DataSource>>() {
-				},
-				Names.named(RepositoryFactory.NAME_DATA_SOURCE_REPOSITORY),
-				DataSourceRepository.class)
 
 			.implement(
 				new TypeLiteral<GenericDataRepository<CouchDbDataView, JsonNode>>() {

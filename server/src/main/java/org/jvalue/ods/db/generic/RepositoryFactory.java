@@ -1,4 +1,4 @@
-package org.jvalue.ods.db.couchdb;
+package org.jvalue.ods.db.generic;
 
 
 import com.fasterxml.jackson.core.JsonPointer;
@@ -14,10 +14,9 @@ import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
 public interface RepositoryFactory {
 	static final String
 		NAME_DATA_VIEW_REPOSITORY = "DataViewRepository",
-		NAME_DATA_SOURCE_REPOSITORY = "SourceDataRepository",
 		NAME_DATA_REPOSITORY = "DataRepository",
 		NAME_FILTER_CHAIN_REF_REPOSITORY = "FilterChainRepository",
-		NAME_NOTIFICATION_CLIENT_REPOSITORY = "NotifictionClientRepository",
+		NAME_NOTIFICATION_CLIENT_REPOSITORY = "NotificationClientRepository",
 		NAME_PLUGIN_META_DATA_REPOSITORY = "PluginMetaDataRepository";
 
 	@Named(NAME_DATA_VIEW_REPOSITORY)
