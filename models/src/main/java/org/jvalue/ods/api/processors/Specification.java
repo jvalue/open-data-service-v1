@@ -9,7 +9,7 @@ import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
-public final class Specification {
+public class Specification {
 
 	@NotNull private final String name;
 	@NotNull private final ProcessorType type;

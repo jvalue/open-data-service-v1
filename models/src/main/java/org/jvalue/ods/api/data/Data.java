@@ -10,7 +10,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-public final class Data {
+public class Data {
 
 	@NotNull private final List<JsonNode> result;
 	@NotNull private final Cursor cursor;

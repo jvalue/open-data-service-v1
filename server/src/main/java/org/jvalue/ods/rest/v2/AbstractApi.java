@@ -10,6 +10,7 @@ import javax.ws.rs.Produces;
 @Consumes(JsonApiMediaType.JSONAPI)
 abstract class AbstractApi {
 
+	protected static final String VERSION = "/v2";
 
-	protected static final String BASE_URL = "/v2/datasources";
+	protected static final String BASE_URL = VERSION + "/datasources";
 }
