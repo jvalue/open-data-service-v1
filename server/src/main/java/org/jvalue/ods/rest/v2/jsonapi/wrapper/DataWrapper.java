@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.jvalue.ods.api.data.Data;
+import org.jvalue.ods.api.sources.DataSource;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -17,8 +18,8 @@ public class DataWrapper implements JsonApiIdentifiable{
 	private final String id;
 	private Map<String, Object> attributes;
 
-	private DataWrapper(JsonNode jsonNode) {
-		this.id = jsonNode.get("gaugeId").textValue();
+	private DataWrapper(JsonNode jsonNode, String domainIdKey) {
+		this.id = jsonNode.get(domainIdKey).textValue();
 		try {
 			this.attributes = getMapFromJson(jsonNode);
 		} catch (IOException e) {
@@ -46,14 +47,22 @@ public class DataWrapper implements JsonApiIdentifiable{
 	}
 
 
-	public static DataWrapper from(JsonNode node) {
-		return new DataWrapper(node);
+	public static DataWrapper from(JsonNode node, DataSource source) {
+		return new DataWrapper(node, getDomainIdKey(source));
 	}
 
 
-	public static Collection<DataWrapper> fromCollection(Collection<JsonNode> nodes) {
+	public static Collection<DataWrapper> fromCollection(Collection<JsonNode> nodes, DataSource source) {
 		return nodes.stream()
-			.map(DataWrapper::from)
+			.map(n -> DataWrapper.from(n, source))
 			.collect(Collectors.toList());
+	}
+
+
+	private static String getDomainIdKey(DataSource source) {
+		return source
+			.getDomainIdKey()
+			.toString()
+			.substring(1); //remove leading slash from domainIdKey in jsonPointer
 	}
 }
