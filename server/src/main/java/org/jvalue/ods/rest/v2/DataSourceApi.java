@@ -1,7 +1,6 @@
 package org.jvalue.ods.rest.v2;
 
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.inject.Inject;
 import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;

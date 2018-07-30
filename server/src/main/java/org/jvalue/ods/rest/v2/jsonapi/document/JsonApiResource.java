@@ -26,7 +26,7 @@ public class JsonApiResource extends JsonApiResourceIdentifier implements JsonLi
     }
 
 
-    @JsonIgnoreProperties(value = {"id"})
+    @JsonIgnoreProperties(value = {"id", "type"})
     @JsonProperty("attributes")
     public Object getEntity() {
         return entity;
