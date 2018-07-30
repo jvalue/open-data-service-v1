@@ -69,7 +69,7 @@ public final class DataApi extends AbstractApi {
 
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
-			.data(DataWrapper.fromCollection(dataNodes))
+			.data(DataWrapper.fromCollection(dataNodes, sourceManager.findBySourceId(sourceId)))
 			.addLink("first", uriInfo.getAbsolutePath())
 			.addLink("next", nextUri)
 			.build();
@@ -96,7 +96,7 @@ public final class DataApi extends AbstractApi {
 
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
-			.data(DataWrapper.from(resultNode))
+			.data(DataWrapper.from(resultNode, sourceManager.findBySourceId(sourceId)))
 			.build();
 	}
 
@@ -111,7 +111,7 @@ public final class DataApi extends AbstractApi {
 
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
-			.data(DataWrapper.from(resultNode))
+			.data(DataWrapper.from(resultNode, sourceManager.findBySourceId(sourceId)))
 			.restrictTo(attribute)
 			.build();
 	}
