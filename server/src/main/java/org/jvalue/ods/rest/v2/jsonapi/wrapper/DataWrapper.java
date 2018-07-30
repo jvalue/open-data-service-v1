@@ -1,5 +1,6 @@
 package org.jvalue.ods.rest.v2.jsonapi.wrapper;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.jvalue.ods.api.data.Cursor;
 import org.jvalue.ods.api.data.Data;
@@ -15,7 +16,7 @@ public class DataWrapper extends Data implements JsonApiIdentifiable{
 
 	@Override
 	public String getId() {
-		return getCursor().getNext() + "+" + getCursor().getCount();
+		return getResult().get(0).get("_id").textValue() + "+" + getCursor().getCount();
 	}
 
 
@@ -24,6 +25,12 @@ public class DataWrapper extends Data implements JsonApiIdentifiable{
 		return Data.class.getSimpleName();
 	}
 
+
+	@Override
+	@JsonIgnoreProperties({"_id","_rev"})
+	public List<JsonNode> getResult() {
+		return super.getResult();
+	}
 
 	/**
 	 * Wrap instance of Data class
