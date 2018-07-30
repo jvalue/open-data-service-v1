@@ -123,7 +123,7 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 
 	@Override
 	public URI getURI() {
-		return uriInfo.getAbsolutePath();
+		return uriInfo.getRequestUri();
 	}
 
 
