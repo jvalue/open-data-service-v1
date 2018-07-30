@@ -6,84 +6,83 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.commons.db.GenericDocumentOperationResult;
 import org.jvalue.commons.db.data.Data;
 import org.jvalue.commons.db.repositories.GenericDataRepository;
-import org.jvalue.ods.utils.BsonToJsonUtils;
+import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
+import org.jvalue.ods.db.mongodb.wrapper.JsonNodeEntity;
+import org.value.commons.mongodb.AbstractMongoDbRepository;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class MongoDbDataRepository implements GenericDataRepository<MongoDbQuery, JsonNode> {
+public class MongoDbDataRepository extends AbstractMongoDbRepository implements GenericDataRepository<CouchDbDataView, JsonNode> {
 
-	private final MongoDatabase database;
-	private final MongoCollection<Document> mongObQueries;
-	private static final String COLLECTION_NAME = "MongoDbQueries";
-
+	private static final String COLLECTION_NAME = "data";
 
 	@Inject
 	public MongoDbDataRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName, @Assisted JsonPointer domainIdKey) {
-		this.database = (MongoDatabase) dbConnectorFactory.createConnector(databaseName, true);
-		this.mongObQueries = database.getCollection(COLLECTION_NAME);
+		super(dbConnectorFactory, databaseName, COLLECTION_NAME, CouchDbDataView.class);
 	}
 
 
 	@Override
-	public JsonNode findByDomainId(String domainId) {
-		Document findByIdQuery = new Document();
-		findByIdQuery.put("_id", new ObjectId(domainId));
-		//should only return one
-		return BsonToJsonUtils.BsonToJson(mongObQueries.find(findByIdQuery));
-	}
-
-
-	@Override
-	public List<JsonNode> executeQuery(MongoDbQuery mongoDbQuery, String param) {
+	public JsonNode findByDomainId(String s) {
 		return null;
 	}
 
 
 	@Override
-	public void addQuery(MongoDbQuery mongoDbQuery) {
-		mongObQueries.insertOne(mongoDbQuery);
+	public List<JsonNode> executeQuery(CouchDbDataView mongoDbQuery, String param) {
+		return null;
 	}
 
 
 	@Override
-	public void removeQuery(MongoDbQuery mongoDbQuery) {
-		mongObQueries.deleteOne(mongoDbQuery);
+	public void addQuery(CouchDbDataView mongoDbQuery) {
+
 	}
 
 
 	@Override
-	public boolean containsQuery(MongoDbQuery mongoDbQuery) {
-		return mongObQueries.find(mongoDbQuery) != null;
+	public void removeQuery(CouchDbDataView mongoDbQuery) {
+
+	}
+
+
+	@Override
+	public boolean containsQuery(CouchDbDataView mongoDbQuery) {
+		return false;
 	}
 
 
 	@Override
 	public Map<String, JsonNode> getBulk(Collection<String> ids) {
-//		Document query = new Document();
-//
-//		for(String id : ids){
-//			query.append("_id", id);
+		return executeBulkGet(ids);
+	}
+
+	private Map<String, JsonNode> executeBulkGet(Collection<String> ids) {
+//		List<Bson> bsonFilterList = new ArrayList<>();
+//		for (String id: ids) {
+//			bsonFilterList.add(("",""));
 //		}
+//		Filters.or()
+//		database.getCollection(collectionName).find();
+//		ViewQuery query = new ViewQuery()
+//			.designDocId(DESIGN_DOCUMENT_ID)
+//			.viewName(domainIdView.getId())
+//			.includeDocs(true)
+//			.keys(ids);
 //
 //		Map<String, JsonNode> nodes = new HashMap<>();
-//
-//		for (Document doc : mongObQueries.find(query)) {
-//			nodes.put(, doc.toJson());
+//		for (ViewResult.Row row : connector.queryView(query).getRows()) {
+//			nodes.put(row.getKey(), row.getDocAsNode());
 //		}
 //		return nodes;
-//		List<Document> list = new ArrayList<>();
-//		for (String id : ids){
-//			list.add(new Document());
-//		}
-//		mongObQueries.bulkWrite()
 		return null;
 	}
 

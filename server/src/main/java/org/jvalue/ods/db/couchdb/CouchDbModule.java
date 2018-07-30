@@ -46,12 +46,6 @@ public class CouchDbModule extends AbstractModule {
 					.build());
 			DbConnectorFactory connectorFactory = new CouchDbConnectorFactory(couchDbInstance, couchDbConfig.getDbPrefix());
 
-//			CouchDbConnector dataSourceConnector = (CouchDbConnector) connectorFactory.createConnector(DataSourceRepository.DATABASE_NAME, true);
-//			bind(CouchDbConnector.class).annotatedWith(Names.named(RepositoryAdapter.COUCHDB_CONNECTOR_FACTORY)).toInstance(dataSourceConnector);
-
-//			CouchDbConnector userConnector = (CouchDbConnector) connectorFactory.createConnector(GenericUserRepository.DATABASE_NAME, true);
-//			bind(CouchDbConnector.class).annotatedWith(Names.named(GenericUserRepository.DATABASE_NAME)).toInstance(userConnector);
-
 			bind(DbConnectorFactory.class).toInstance(connectorFactory);
 			bind(DataSourceFactory.class).to(CouchDbDataSourceFactory.class);
 			bind(AuthRepositoryFactory.class).to(CouchDbAuthRepositoryFactory.class);
@@ -60,7 +54,7 @@ public class CouchDbModule extends AbstractModule {
 			bind(new TypeLiteral<Cache<GenericRepository<ProcessorReferenceChain>>>() { }).in(Singleton.class);
 			bind(new TypeLiteral<Cache<GenericRepository<Client>>>() { }).in(Singleton.class);
 			bind(new TypeLiteral<Cache<GenericRepository<PluginMetaData>>>() { }).in(Singleton.class);
-//			bind(new TypeLiteral<Cache<GenericRepository<JsonNode>>>() { }).in(Singleton.class);
+			bind(new TypeLiteral<Cache<DataRepository>>() { }).in(Singleton.class);
 
 
 			install(new FactoryModuleBuilder()

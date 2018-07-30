@@ -20,6 +20,7 @@ import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
 import org.jvalue.ods.db.generic.RepositoryFactory;
 import org.jvalue.ods.db.couchdb.repositories.*;
 import org.jvalue.ods.db.generic.DataSourceFactory;
+import org.jvalue.ods.db.mongodb.repositories.*;
 import org.value.commons.mongodb.MongoDbConfig;
 
 public class MongoDbModule extends AbstractModule {
@@ -43,16 +44,12 @@ public class MongoDbModule extends AbstractModule {
 		bind(DataSourceFactory.class).to(MongoDbDataSourceFactory.class);
 		bind(AuthRepositoryFactory.class).to(MongoDbAuthRepositoryFactory.class);
 
-		bind(new TypeLiteral<Cache<GenericRepository<CouchDbDataView>>>() {
-		}).in(Singleton.class);
-		bind(new TypeLiteral<Cache<GenericRepository<ProcessorReferenceChain>>>() {
-		}).in(Singleton.class);
-		bind(new TypeLiteral<Cache<GenericRepository<Client>>>() {
-		}).in(Singleton.class);
-		bind(new TypeLiteral<Cache<GenericRepository<PluginMetaData>>>() {
-		}).in(Singleton.class);
-//		bind(new TypeLiteral<Cache<GenericRepository<JsonNode>>>() {
-//		}).in(Singleton.class);
+		bind(new TypeLiteral<Cache<GenericRepository<CouchDbDataView>>>() {}).in(Singleton.class);
+		bind(new TypeLiteral<Cache<GenericRepository<ProcessorReferenceChain>>>() {}).in(Singleton.class);
+		bind(new TypeLiteral<Cache<GenericRepository<Client>>>() {}).in(Singleton.class);
+		bind(new TypeLiteral<Cache<GenericRepository<PluginMetaData>>>() {}).in(Singleton.class);
+
+		bind(new TypeLiteral<Cache<MongoDbDataRepository>>() {}).in(Singleton.class);
 
 
 		install(new FactoryModuleBuilder()
@@ -60,31 +57,31 @@ public class MongoDbModule extends AbstractModule {
 				new TypeLiteral<GenericRepository<CouchDbDataView>>() {
 				},
 				Names.named(RepositoryFactory.NAME_DATA_VIEW_REPOSITORY),
-				DataViewRepository.class)
+				MongoDbDataViewRepository.class)
 
 			.implement(
 				new TypeLiteral<GenericDataRepository<CouchDbDataView, JsonNode>>() {
 				},
 				Names.named(RepositoryFactory.NAME_DATA_REPOSITORY),
-				DataRepository.class)
+				MongoDbDataRepository.class)
 
 			.implement(
 				new TypeLiteral<GenericRepository<ProcessorReferenceChain>>() {
 				},
 				Names.named(RepositoryFactory.NAME_FILTER_CHAIN_REF_REPOSITORY),
-				ProcessorChainReferenceRepository.class)
+				MongoDbProcessorChainReferenceRepository.class)
 
 			.implement(
 				new TypeLiteral<GenericRepository<Client>>() {
 				},
 				Names.named(RepositoryFactory.NAME_NOTIFICATION_CLIENT_REPOSITORY),
-				NotificationClientRepository.class)
+				MongoDbNotificationClientRepository.class)
 
 			.implement(
 				new TypeLiteral<GenericRepository<PluginMetaData>>() {
 				},
 				Names.named(RepositoryFactory.NAME_PLUGIN_META_DATA_REPOSITORY),
-				PluginMetaDataRepository.class)
+				MongoDbPluginMetaDataRepository.class)
 
 			.build(RepositoryFactory.class));
 

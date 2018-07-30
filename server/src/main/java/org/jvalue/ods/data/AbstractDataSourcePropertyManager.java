@@ -2,8 +2,8 @@ package org.jvalue.ods.data;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.ektorp.DocumentNotFoundException;
 import org.jvalue.commons.EntityBase;
+import org.jvalue.commons.db.GenericDocumentNotFoundException;
 import org.jvalue.commons.db.repositories.GenericDataRepository;
 import org.jvalue.commons.db.repositories.GenericRepository;
 import org.jvalue.commons.utils.Assert;
@@ -80,7 +80,7 @@ public abstract class AbstractDataSourcePropertyManager<T extends EntityBase, R 
 		try {
 			get(source, propertyId);
 			return true;
-		} catch (DocumentNotFoundException dnfe) {
+		} catch (GenericDocumentNotFoundException dnfe) {
 			return false;
 		}
 	}
