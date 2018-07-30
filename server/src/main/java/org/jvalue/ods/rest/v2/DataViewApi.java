@@ -11,9 +11,14 @@ import org.jvalue.ods.api.views.DataView;
 import org.jvalue.ods.api.views.DataViewDescription;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.data.DataViewManager;
+import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
+import org.jvalue.ods.rest.v2.jsonapi.wrapper.DataViewWrapper;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.util.List;
 
 import static org.jvalue.ods.rest.v2.AbstractApi.BASE_URL;
@@ -23,6 +28,9 @@ public final class DataViewApi extends AbstractApi {
 
 	private final DataSourceManager sourceManager;
 	private final DataViewManager viewManager;
+
+	@Context
+	private UriInfo uriInfo;
 
 	@Inject
 	public DataViewApi(
@@ -35,15 +43,20 @@ public final class DataViewApi extends AbstractApi {
 
 
 	@GET
-	public List<DataView> getAllViews(@PathParam("sourceId") String sourceId) {
+	public Response getAllViews(@PathParam("sourceId") String sourceId) {
 		DataSource source = sourceManager.findBySourceId(sourceId);
-		return viewManager.getAll(source);
+		List<DataView> views = viewManager.getAll(source);
+
+		return JsonApiResponse
+			.createGetResponse(uriInfo)
+			.data(DataViewWrapper.fromCollection(views))
+			.build();
 	}
 
 
 	@GET
 	@Path("/{viewId}")
-	public Object getView(
+	public Response getView(
 			@PathParam("sourceId") String sourceId,
 			@PathParam("viewId") String viewId,
 			@QueryParam("execute") boolean execute,
@@ -52,14 +65,21 @@ public final class DataViewApi extends AbstractApi {
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		DataView view = viewManager.get(source, viewId);
 
-		if (!execute) return view;
-		return viewManager.executeView(sourceManager.getDataRepository(source), view, argument);
+		if (!execute) {
+			return JsonApiResponse
+				.createGetResponse(uriInfo)
+				.data(DataViewWrapper.from(view))
+				.build();
+		}
+		else {
+			return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+		}
 	}
 
 
-	@PUT
+	@POST
 	@Path("/{viewId}")
-	public DataView addView(
+	public Response addView(
 			@RestrictedTo(Role.ADMIN) User user,
 			@PathParam("sourceId") String sourceId,
 			@PathParam("viewId") String viewId,
@@ -71,7 +91,10 @@ public final class DataViewApi extends AbstractApi {
 
 		DataView view = new DataView(viewId, viewDescription.getMapFunction(), viewDescription.getReduceFunction());
 		viewManager.add(source, sourceManager.getDataRepository(source), view);
-		return view;
+		return JsonApiResponse
+			.createPostResponse(uriInfo)
+			.data(DataViewWrapper.from(view))
+			.build();
 	}
 
 
