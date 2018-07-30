@@ -3,29 +3,37 @@ package org.jvalue.ods.rest.v2;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
-import com.hubspot.jackson.jaxrs.PropertyFiltering;
+import io.dropwizard.jersey.params.IntParam;
 import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
-import org.jvalue.commons.rest.RestUtils;
 import org.jvalue.ods.api.data.Data;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
-import org.jvalue.ods.rest.v2.jsonapi.wrapper.DataNode;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.DataWrapper;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
+
+import java.net.URI;
+import java.util.List;
 
 import static org.jvalue.ods.rest.v2.AbstractApi.BASE_URL;
 
 @Path(BASE_URL + "/{sourceId}/data")
 public final class DataApi extends AbstractApi {
 
+	private static final String DEFAULT_LIMIT = "100";
+	private static final int DEFAULT_LIMIT_INT = Integer.parseInt(DEFAULT_LIMIT);
+	private static final String DEFAULT_OFFSET = "0";
+
 	private final DataSourceManager sourceManager;
+
+
 
 	@Inject
 	public DataApi(DataSourceManager sourceManager) {
@@ -37,22 +45,33 @@ public final class DataApi extends AbstractApi {
 
 
 	@GET
-	@PropertyFiltering(always = {"!data.attributes.result._id", "!data.attributes.result._rev"})
-	public Response getObjects(
+	public Response getPaginatedData(
 			@PathParam("sourceId") String sourceId,
-			@QueryParam("startId") String startId,
-			@QueryParam("count") int count,
-			@QueryParam("property") String propertyFilter) {
+			@QueryParam("offset") @DefaultValue(DEFAULT_OFFSET) IntParam _offset,
+			@QueryParam("limit") @DefaultValue(DEFAULT_LIMIT) IntParam _limit) {
 
-		//statt data objects einfach eigene verwenden?
-		if (count < 1 || count > 100) throw RestUtils.createJsonFormattedException("count must be > 0 and <= 100", 400);
+		int offset = _offset.get();
+		int limit = _limit.get();
+
+		if (limit < 1 || limit > 100) {
+			limit = DEFAULT_LIMIT_INT;
+		}
+
+		UriBuilder nextBuilder = uriInfo.getAbsolutePathBuilder().queryParam("offset", offset + limit);
+		if(limit != DEFAULT_LIMIT_INT) {
+			nextBuilder.queryParam("limit", _limit).build();
+		}
+		URI nextUri = nextBuilder.build();
 
 		DataRepository repository = getDataRepository(sourceId);
-		Data data = repository.executePaginatedGet(startId, count);
+		Data data = repository.executePaginatedGet(String.valueOf(offset), limit);
+		List<JsonNode> dataNodes = data.getResult();
 
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
-			.data(DataWrapper.from(data))
+			.data(DataWrapper.fromCollection(dataNodes))
+			.addLink("first", uriInfo.getAbsolutePath())
+			.addLink("next", nextUri)
 			.build();
 	}
 
@@ -77,7 +96,7 @@ public final class DataApi extends AbstractApi {
 
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
-			.data(DataNode.from(resultNode))
+			.data(DataWrapper.from(resultNode))
 			.build();
 	}
 
@@ -92,7 +111,7 @@ public final class DataApi extends AbstractApi {
 
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
-			.data(DataNode.from(resultNode))
+			.data(DataWrapper.from(resultNode))
 			.restrictTo(attribute)
 			.build();
 	}
