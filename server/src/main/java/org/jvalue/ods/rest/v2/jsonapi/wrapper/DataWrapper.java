@@ -1,22 +1,35 @@
 package org.jvalue.ods.rest.v2.jsonapi.wrapper;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.jvalue.ods.api.data.Cursor;
 import org.jvalue.ods.api.data.Data;
 
-import java.util.List;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-public class DataWrapper extends Data implements JsonApiIdentifiable{
+import static org.jvalue.ods.utils.JsonUtils.getMapFromJson;
 
-	private DataWrapper(List<JsonNode> result, Cursor cursor) {
-		super(result, cursor);
+public class DataWrapper implements JsonApiIdentifiable{
+
+	private final String id;
+	private Map<String, Object> attributes;
+
+	private DataWrapper(JsonNode jsonNode) {
+		this.id = jsonNode.get("gaugeId").textValue();
+		try {
+			this.attributes = getMapFromJson(jsonNode);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 
 	@Override
 	public String getId() {
-		return getResult().get(0).get("_id").textValue() + "+" + getCursor().getCount();
+		return id;
 	}
 
 
@@ -26,20 +39,21 @@ public class DataWrapper extends Data implements JsonApiIdentifiable{
 	}
 
 
-	@Override
+	@JsonAnyGetter
 	@JsonIgnoreProperties({"_id","_rev"})
-	public List<JsonNode> getResult() {
-		return super.getResult();
+	public Map<String, Object> getAttributes() {
+		return attributes;
 	}
 
-	/**
-	 * Wrap instance of Data class
-	 * @param data the data to be wrapped
-	 * @return a DataWrapper which wraps {@param data}
-	 */
-	public static DataWrapper from(Data data) {
-		return new DataWrapper(
-			data.getResult(),
-			data.getCursor());
+
+	public static DataWrapper from(JsonNode node) {
+		return new DataWrapper(node);
+	}
+
+
+	public static Collection<DataWrapper> fromCollection(Collection<JsonNode> nodes) {
+		return nodes.stream()
+			.map(DataWrapper::from)
+			.collect(Collectors.toList());
 	}
 }
