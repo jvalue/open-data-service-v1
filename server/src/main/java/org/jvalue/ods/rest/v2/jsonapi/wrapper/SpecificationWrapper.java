@@ -1,10 +1,8 @@
 package org.jvalue.ods.rest.v2.jsonapi.wrapper;
 
-import org.jvalue.ods.api.processors.ProcessorType;
 import org.jvalue.ods.api.processors.Specification;
 
 import java.util.Collection;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class SpecificationWrapper implements JsonApiIdentifiable {
