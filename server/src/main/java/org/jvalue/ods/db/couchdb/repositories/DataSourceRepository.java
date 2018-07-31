@@ -17,22 +17,23 @@ import org.jvalue.ods.api.sources.DataSource;
 import java.util.List;
 
 public final class DataSourceRepository extends RepositoryAdapter<
-		DataSourceRepository.DataSourceCouchDbRepository,
-		DataSourceRepository.DataSourceDocument,
-		DataSource> implements GenericRepository<DataSource> {
+	DataSourceRepository.DataSourceCouchDbRepository,
+	DataSourceRepository.DataSourceDocument,
+	DataSource> implements GenericRepository<DataSource> {
 
 	public static final String DATABASE_NAME = "dataSources";
 	private static final String DOCUMENT_ID = "doc.value.id != null && doc.value.domainIdKey != null";
+
 
 	public DataSourceRepository(DbConnectorFactory connectorFactory) {
 		super(new DataSourceCouchDbRepository((CouchDbConnector) connectorFactory.createConnector(DATABASE_NAME, true)));
 	}
 
 
-	@View( name = "all", map = "function(doc) { if (" + DOCUMENT_ID + ") emit(null, doc)}")
+	@View(name = "all", map = "function(doc) { if (" + DOCUMENT_ID + ") emit(null, doc)}")
 	static final class DataSourceCouchDbRepository
-			extends CouchDbRepositorySupport<DataSourceRepository.DataSourceDocument>
-			implements DbDocumentAdaptable<DataSourceDocument, DataSource> {
+		extends CouchDbRepositorySupport<DataSourceRepository.DataSourceDocument>
+		implements DbDocumentAdaptable<DataSourceDocument, DataSource> {
 
 
 		public DataSourceCouchDbRepository(CouchDbConnector connector) {
@@ -69,7 +70,7 @@ public final class DataSourceRepository extends RepositoryAdapter<
 
 		@JsonCreator
 		public DataSourceDocument(
-				@JsonProperty("value") DataSource dataSource) {
+			@JsonProperty("value") DataSource dataSource) {
 			super(dataSource);
 		}
 

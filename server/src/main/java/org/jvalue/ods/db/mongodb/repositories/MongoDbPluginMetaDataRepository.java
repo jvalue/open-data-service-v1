@@ -11,6 +11,7 @@ public class MongoDbPluginMetaDataRepository extends AbstractMongoDbRepository<P
 
 	private static final String COLLECTION_NAME = "pluginMetaDataCollection";
 
+
 	@Inject
 	public MongoDbPluginMetaDataRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName) {
 		super(dbConnectorFactory, databaseName, COLLECTION_NAME, PluginMetaData.class);

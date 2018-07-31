@@ -6,19 +6,22 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-import org.ektorp.*;
+import org.ektorp.CouchDbConnector;
+import org.ektorp.DocumentOperationResult;
+import org.ektorp.ViewQuery;
+import org.ektorp.ViewResult;
 import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.DesignDocument;
 import org.ektorp.support.DesignDocumentFactory;
 import org.ektorp.support.StdDesignDocumentFactory;
 import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.commons.db.GenericDocumentNotFoundException;
-import org.jvalue.commons.utils.Assert;
+import org.jvalue.commons.db.GenericDocumentOperationResult;
 import org.jvalue.commons.db.data.Cursor;
 import org.jvalue.commons.db.data.Data;
-import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
-import org.jvalue.commons.db.GenericDocumentOperationResult;
 import org.jvalue.commons.db.repositories.GenericDataRepository;
+import org.jvalue.commons.utils.Assert;
+import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
 
 import java.util.*;
 
@@ -50,6 +53,7 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> imp
 		if (!containsQuery(allView)) addQuery(allView);
 	}
 
+
 	@Override
 	public JsonNode findByDomainId(String domainId) {
 		List<JsonNode> resultList = executeQuery(domainIdView, domainId);
@@ -66,6 +70,7 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> imp
 
 		return connector.queryView(query, JsonNode.class);
 	}
+
 
 	public void addQuery(CouchDbDataView dataView) {
 		Assert.assertNotNull(dataView);

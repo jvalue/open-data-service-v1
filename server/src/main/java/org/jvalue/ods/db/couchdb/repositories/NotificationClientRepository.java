@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-
 import org.ektorp.CouchDbConnector;
 import org.ektorp.DocumentNotFoundException;
 import org.ektorp.support.CouchDbRepositorySupport;
@@ -14,17 +13,18 @@ import org.jvalue.commons.couchdb.DbDocument;
 import org.jvalue.commons.couchdb.DbDocumentAdaptable;
 import org.jvalue.commons.couchdb.RepositoryAdapter;
 import org.jvalue.commons.db.DbConnectorFactory;
-import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.commons.db.repositories.GenericRepository;
+import org.jvalue.ods.api.notifications.Client;
 
 import java.util.List;
 
 public final class NotificationClientRepository extends RepositoryAdapter<
-		NotificationClientRepository.NotificationClientCouchDbRepository,
-		NotificationClientRepository.ClientDocument,
-		Client> implements GenericRepository<Client> {
+	NotificationClientRepository.NotificationClientCouchDbRepository,
+	NotificationClientRepository.ClientDocument,
+	Client> implements GenericRepository<Client> {
 
 	private static final String DOCUMENT_ID = "doc.value.id != null && doc.value.type != null";
+
 
 	@Inject
 	public NotificationClientRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName) {
@@ -32,10 +32,10 @@ public final class NotificationClientRepository extends RepositoryAdapter<
 	}
 
 
-	@View( name = "all", map = "function(doc) { if (" + DOCUMENT_ID + ") emit(null, doc)}")
+	@View(name = "all", map = "function(doc) { if (" + DOCUMENT_ID + ") emit(null, doc)}")
 	static class NotificationClientCouchDbRepository
-			extends CouchDbRepositorySupport<NotificationClientRepository.ClientDocument>
-			implements DbDocumentAdaptable<ClientDocument, Client> {
+		extends CouchDbRepositorySupport<NotificationClientRepository.ClientDocument>
+		implements DbDocumentAdaptable<ClientDocument, Client> {
 
 		public NotificationClientCouchDbRepository(CouchDbConnector connector) {
 			super(ClientDocument.class, connector);
@@ -70,7 +70,7 @@ public final class NotificationClientRepository extends RepositoryAdapter<
 
 		@JsonCreator
 		public ClientDocument(
-				@JsonProperty("value") Client client) {
+			@JsonProperty("value") Client client) {
 			super(client);
 		}
 

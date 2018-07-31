@@ -10,15 +10,16 @@ import org.jvalue.commons.db.factories.AuthRepositoryFactory;
 import org.jvalue.commons.db.repositories.GenericRepository;
 import org.jvalue.commons.db.repositories.GenericUserRepository;
 
-public class MongoDbAuthRepositoryFactory  implements AuthRepositoryFactory {
+public class MongoDbAuthRepositoryFactory implements AuthRepositoryFactory {
 
 	private final DbConnectorFactory dbConnectorFactory;
 
 
 	@Inject
-	public MongoDbAuthRepositoryFactory(DbConnectorFactory dbConnectorFactory){
+	public MongoDbAuthRepositoryFactory(DbConnectorFactory dbConnectorFactory) {
 		this.dbConnectorFactory = dbConnectorFactory;
 	}
+
 
 	@Override
 	public GenericUserRepository<User> createUserRepository() {

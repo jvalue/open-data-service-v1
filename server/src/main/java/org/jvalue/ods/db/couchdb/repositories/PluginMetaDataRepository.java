@@ -24,11 +24,12 @@ import java.util.Map;
 
 
 public final class PluginMetaDataRepository extends RepositoryAdapter<
-		PluginMetaDataRepository.PluginMetaDataCouchDbRepository,
-		PluginMetaDataRepository.PluginMetaDataDocument,
-		PluginMetaData> implements GenericPluginMetaDataRepository<PluginMetaData> {
+	PluginMetaDataRepository.PluginMetaDataCouchDbRepository,
+	PluginMetaDataRepository.PluginMetaDataDocument,
+	PluginMetaData> implements GenericPluginMetaDataRepository<PluginMetaData> {
 
 	private static final String DOCUMENT_ID = "doc.value.id != null && doc.value.author != null";
+
 
 	@Inject
 	public PluginMetaDataRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName) {
@@ -46,12 +47,13 @@ public final class PluginMetaDataRepository extends RepositoryAdapter<
 	}
 
 
-	@View( name = "all", map = "function(doc) { if (" + DOCUMENT_ID + ") emit( null, doc)}")
+	@View(name = "all", map = "function(doc) { if (" + DOCUMENT_ID + ") emit( null, doc)}")
 	static final class PluginMetaDataCouchDbRepository
-			extends CouchDbRepositorySupport<PluginMetaDataRepository.PluginMetaDataDocument>
-			implements DbDocumentAdaptable<PluginMetaDataDocument, PluginMetaData> {
+		extends CouchDbRepositorySupport<PluginMetaDataRepository.PluginMetaDataDocument>
+		implements DbDocumentAdaptable<PluginMetaDataDocument, PluginMetaData> {
 
 		private final CouchDbConnector connector;
+
 
 		PluginMetaDataCouchDbRepository(CouchDbConnector connector) {
 			super(PluginMetaDataDocument.class, connector);
@@ -91,7 +93,8 @@ public final class PluginMetaDataRepository extends RepositoryAdapter<
 		public InputStream getAttachment(PluginMetaDataDocument metaData) {
 			Map<String, Attachment> attachments = metaData.getAttachments();
 			Attachment attachment = attachments.get(metaData.getValue().getId());
-			if (attachment == null) throw new IllegalStateException("did not find any attachments for plugin " + metaData.getValue().getId());
+			if (attachment == null)
+				throw new IllegalStateException("did not find any attachments for plugin " + metaData.getValue().getId());
 			return connector.getAttachment(metaData.getId(), metaData.getValue().getId());
 		}
 
@@ -102,7 +105,7 @@ public final class PluginMetaDataRepository extends RepositoryAdapter<
 
 		@JsonCreator
 		public PluginMetaDataDocument(
-				@JsonProperty("value") PluginMetaData metaData) {
+			@JsonProperty("value") PluginMetaData metaData) {
 			super(metaData);
 		}
 

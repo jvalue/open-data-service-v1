@@ -13,7 +13,7 @@ public class CouchDbConnectorFactory extends DbConnectorFactory<CouchDbInstance,
 
 
 	@Override
-	public CouchDbConnector doCreateConnector(String databaseName, boolean createIfNotExists) throws DbAccessException{
+	public CouchDbConnector doCreateConnector(String databaseName, boolean createIfNotExists) throws DbAccessException {
 		return dbInstance.createConnector(dbPrefix + "-" + databaseName, createIfNotExists);
 	}
 

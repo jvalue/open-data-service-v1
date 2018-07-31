@@ -20,11 +20,12 @@ import java.util.List;
 
 
 public final class DataViewRepository extends RepositoryAdapter<
-		DataViewRepository.DataViewCouchDbRepository,
-		DataViewRepository.DataViewDocument,
+	DataViewRepository.DataViewCouchDbRepository,
+	DataViewRepository.DataViewDocument,
 	CouchDbDataView> implements GenericRepository<CouchDbDataView> {
 
 	private static final String DOCUMENT_ID = "doc.value.id != null && doc.value.mapFunction != null";
+
 
 	@Inject
 	public DataViewRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName) {
@@ -32,10 +33,10 @@ public final class DataViewRepository extends RepositoryAdapter<
 	}
 
 
-	@View( name = "all", map = "function(doc) { if (" + DOCUMENT_ID + ") emit(null, doc) }")
+	@View(name = "all", map = "function(doc) { if (" + DOCUMENT_ID + ") emit(null, doc) }")
 	static final class DataViewCouchDbRepository
-			extends CouchDbRepositorySupport<DataViewRepository.DataViewDocument>
-			implements DbDocumentAdaptable<DataViewDocument, CouchDbDataView> {
+		extends CouchDbRepositorySupport<DataViewRepository.DataViewDocument>
+		implements DbDocumentAdaptable<DataViewDocument, CouchDbDataView> {
 
 
 		public DataViewCouchDbRepository(CouchDbConnector connector) {
@@ -73,7 +74,7 @@ public final class DataViewRepository extends RepositoryAdapter<
 
 		@JsonCreator
 		public DataViewDocument(
-				@JsonProperty("value") CouchDbDataView dataView) {
+			@JsonProperty("value") CouchDbDataView dataView) {
 			super(dataView);
 		}
 

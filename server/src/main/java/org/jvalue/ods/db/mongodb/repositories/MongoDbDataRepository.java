@@ -5,19 +5,15 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-import org.bson.types.ObjectId;
 import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.commons.db.GenericDocumentOperationResult;
 import org.jvalue.commons.db.data.Cursor;
 import org.jvalue.commons.db.data.Data;
 import org.jvalue.commons.db.repositories.GenericDataRepository;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
-import org.jvalue.ods.db.mongodb.wrapper.JsonNodeEntity;
 import org.value.commons.mongodb.AbstractMongoDbRepository;
 
 import java.io.IOException;
@@ -26,6 +22,7 @@ import java.util.*;
 public class MongoDbDataRepository extends AbstractMongoDbRepository implements GenericDataRepository<CouchDbDataView, JsonNode> {
 
 	private static final String COLLECTION_NAME = "data";
+
 
 	@Inject
 	public MongoDbDataRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName, @Assisted JsonPointer domainIdKey) {
@@ -75,10 +72,11 @@ public class MongoDbDataRepository extends AbstractMongoDbRepository implements 
 		return executeBulkGet(ids);
 	}
 
+
 	private Map<String, JsonNode> executeBulkGet(Collection<String> ids) {
 		List<Bson> bsonFilterList = new ArrayList<>();
-		for (String id: ids) {
-			bsonFilterList.add(Filters.eq("value.id",id));
+		for (String id : ids) {
+			bsonFilterList.add(Filters.eq("value.id", id));
 		}
 		Bson selectAllIds = Filters.or(bsonFilterList);
 		FindIterable<Document> documents = database.getCollection(collectionName).find(selectAllIds);
@@ -89,7 +87,7 @@ public class MongoDbDataRepository extends AbstractMongoDbRepository implements 
 			JsonNode jsonNode = null;
 			try {
 				jsonNode = mapper.readValue(doc.toJson(), JsonNode.class);
-			}catch (IOException e){
+			} catch (IOException e) {
 
 			}
 			nodes.put((String) doc.get("id"), jsonNode);
@@ -102,11 +100,11 @@ public class MongoDbDataRepository extends AbstractMongoDbRepository implements 
 	public Collection<GenericDocumentOperationResult> writeBulk(Collection<JsonNode> data) {
 		Collection<GenericDocumentOperationResult> result = new ArrayList<>();
 
-		for(JsonNode jsonNode : data){
+		for (JsonNode jsonNode : data) {
 			Document document = Document.parse(jsonNode.toString());
 			try {
 				database.getCollection(collectionName).insertOne(document);
-			} catch (Exception e){
+			} catch (Exception e) {
 				result.add(GenericDocumentOperationResult.newInstance((String) document.get("id"), e.getMessage(), e.getCause().getMessage()));
 			}
 		}
@@ -119,10 +117,10 @@ public class MongoDbDataRepository extends AbstractMongoDbRepository implements 
 		FindIterable<Document> documents = database.getCollection(collectionName).find(Filters.exists("id")).limit(count);
 		List<JsonNode> jsonNodes = new ArrayList<>();
 		int resultCount = 0;
-		for(Document doc : documents){
+		for (Document doc : documents) {
 			JsonNode jsonNode = null;
 			try {
-				 jsonNode = mapper.readValue(doc.toJson(), JsonNode.class);
+				jsonNode = mapper.readValue(doc.toJson(), JsonNode.class);
 			} catch (IOException e) {
 
 			}

@@ -16,9 +16,10 @@ public class CouchDbAuthRepositoryFactory implements AuthRepositoryFactory {
 
 
 	@Inject
-	public CouchDbAuthRepositoryFactory(DbConnectorFactory dbConnectorFactory){
+	public CouchDbAuthRepositoryFactory(DbConnectorFactory dbConnectorFactory) {
 		this.dbConnectorFactory = dbConnectorFactory;
 	}
+
 
 	@Override
 	public GenericUserRepository<User> createUserRepository() {

@@ -10,7 +10,6 @@ import com.google.inject.name.Names;
 import org.ektorp.CouchDbInstance;
 import org.ektorp.http.StdHttpClient;
 import org.ektorp.impl.StdCouchDbInstance;
-import org.jvalue.commons.auth.*;
 import org.jvalue.commons.couchdb.CouchDbConfig;
 import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.commons.db.factories.AuthRepositoryFactory;
@@ -21,8 +20,8 @@ import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.api.processors.PluginMetaData;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
-import org.jvalue.ods.db.generic.DataSourceFactory;
 import org.jvalue.ods.db.couchdb.repositories.*;
+import org.jvalue.ods.db.generic.DataSourceFactory;
 import org.jvalue.ods.db.generic.RepositoryFactory;
 
 import java.net.MalformedURLException;
@@ -31,30 +30,37 @@ public class CouchDbModule extends AbstractModule {
 
 	private final CouchDbConfig couchDbConfig;
 
+
 	public CouchDbModule(CouchDbConfig couchDbConfig) {
 		this.couchDbConfig = couchDbConfig;
 	}
+
 
 	@Override
 	protected void configure() {
 		try {
 			CouchDbInstance couchDbInstance = new StdCouchDbInstance(new StdHttpClient.Builder()
-					.url(couchDbConfig.getUrl())
-					.username(couchDbConfig.getAdmin().getUsername())
-					.password(couchDbConfig.getAdmin().getPassword())
-					.maxConnections(couchDbConfig.getMaxConnections())
-					.build());
+				.url(couchDbConfig.getUrl())
+				.username(couchDbConfig.getAdmin().getUsername())
+				.password(couchDbConfig.getAdmin().getPassword())
+				.maxConnections(couchDbConfig.getMaxConnections())
+				.build());
 			DbConnectorFactory connectorFactory = new CouchDbConnectorFactory(couchDbInstance, couchDbConfig.getDbPrefix());
 
 			bind(DbConnectorFactory.class).toInstance(connectorFactory);
 			bind(DataSourceFactory.class).to(CouchDbDataSourceFactory.class);
 			bind(AuthRepositoryFactory.class).to(CouchDbAuthRepositoryFactory.class);
 
-			bind(new TypeLiteral<Cache<GenericRepository<CouchDbDataView>>>() { }).in(Singleton.class);
-			bind(new TypeLiteral<Cache<GenericRepository<ProcessorReferenceChain>>>() { }).in(Singleton.class);
-			bind(new TypeLiteral<Cache<GenericRepository<Client>>>() { }).in(Singleton.class);
-			bind(new TypeLiteral<Cache<GenericRepository<PluginMetaData>>>() { }).in(Singleton.class);
-			bind(new TypeLiteral<Cache<DataRepository>>() { }).in(Singleton.class);
+			bind(new TypeLiteral<Cache<GenericRepository<CouchDbDataView>>>() {
+			}).in(Singleton.class);
+			bind(new TypeLiteral<Cache<GenericRepository<ProcessorReferenceChain>>>() {
+			}).in(Singleton.class);
+			bind(new TypeLiteral<Cache<GenericRepository<Client>>>() {
+			}).in(Singleton.class);
+			bind(new TypeLiteral<Cache<GenericRepository<PluginMetaData>>>() {
+			}).in(Singleton.class);
+			bind(new TypeLiteral<Cache<DataRepository>>() {
+			}).in(Singleton.class);
 
 
 			install(new FactoryModuleBuilder()

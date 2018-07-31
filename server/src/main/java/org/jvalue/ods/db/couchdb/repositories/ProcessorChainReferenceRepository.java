@@ -20,11 +20,12 @@ import java.util.List;
 
 
 public final class ProcessorChainReferenceRepository extends RepositoryAdapter<
-		ProcessorChainReferenceRepository.ProcessorChainReferenceCouchDbRepository,
-		ProcessorChainReferenceRepository.ProcessorReferenceChainDocument,
-		ProcessorReferenceChain> implements GenericRepository<ProcessorReferenceChain> {
+	ProcessorChainReferenceRepository.ProcessorChainReferenceCouchDbRepository,
+	ProcessorChainReferenceRepository.ProcessorReferenceChainDocument,
+	ProcessorReferenceChain> implements GenericRepository<ProcessorReferenceChain> {
 
 	private static final String DOCUMENT_ID = "doc.value.id != null && doc.value.processors != null";
+
 
 	@Inject
 	public ProcessorChainReferenceRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName) {
@@ -32,10 +33,10 @@ public final class ProcessorChainReferenceRepository extends RepositoryAdapter<
 	}
 
 
-	@View( name = "all", map = "function(doc) { if (" + DOCUMENT_ID + ") emit(null, doc) }")
+	@View(name = "all", map = "function(doc) { if (" + DOCUMENT_ID + ") emit(null, doc) }")
 	static final class ProcessorChainReferenceCouchDbRepository
-			extends CouchDbRepositorySupport<ProcessorChainReferenceRepository.ProcessorReferenceChainDocument>
-			implements DbDocumentAdaptable<ProcessorReferenceChainDocument, ProcessorReferenceChain> {
+		extends CouchDbRepositorySupport<ProcessorChainReferenceRepository.ProcessorReferenceChainDocument>
+		implements DbDocumentAdaptable<ProcessorReferenceChainDocument, ProcessorReferenceChain> {
 
 		ProcessorChainReferenceCouchDbRepository(CouchDbConnector connector) {
 			super(ProcessorReferenceChainDocument.class, connector);
@@ -72,7 +73,7 @@ public final class ProcessorChainReferenceRepository extends RepositoryAdapter<
 
 		@JsonCreator
 		public ProcessorReferenceChainDocument(
-				@JsonProperty("value") ProcessorReferenceChain reference) {
+			@JsonProperty("value") ProcessorReferenceChain reference) {
 			super(reference);
 		}
 

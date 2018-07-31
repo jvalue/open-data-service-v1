@@ -2,12 +2,7 @@ package org.jvalue.ods.db.mongodb;
 
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
-import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.codecs.pojo.PojoCodecProvider;
 import org.jvalue.commons.db.DbConnectorFactory;
-
-import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
-import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 public class MongoDbConnectorFactory extends DbConnectorFactory<MongoClient, MongoDatabase> {
 

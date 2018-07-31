@@ -11,10 +11,12 @@ public class MongoDbDataSourceFactory implements DataSourceFactory {
 
 	private final DbConnectorFactory dbConnectorFactory;
 
+
 	@Inject
-	public MongoDbDataSourceFactory(DbConnectorFactory dbConnectorFactory){
+	public MongoDbDataSourceFactory(DbConnectorFactory dbConnectorFactory) {
 		this.dbConnectorFactory = dbConnectorFactory;
 	}
+
 
 	@Override
 	public GenericRepository<DataSource> createDataSource() {
