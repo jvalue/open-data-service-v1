@@ -12,7 +12,6 @@ import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceDescription;
 import org.jvalue.ods.api.views.DataView;
-import org.jvalue.ods.data.AbstractDataSourcePropertyManager;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.data.DataViewManager;
 import org.jvalue.ods.notifications.NotificationManager;
@@ -29,6 +28,8 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.List;
 
+import static org.jvalue.ods.utils.HttpUtils.getSanitizedPath;
+
 @Path(AbstractApi.BASE_URL)
 public final class DataSourceApi extends AbstractApi {
 
@@ -37,7 +38,6 @@ public final class DataSourceApi extends AbstractApi {
 	private final PluginMetaDataManager pluginManager;
 	private final NotificationManager notificationManager;
 	private final DataViewManager viewManager;
-	private final AbstractDataSourcePropertyManager[] managers;
 	@Context
 	private UriInfo uriInfo;
 
@@ -52,10 +52,6 @@ public final class DataSourceApi extends AbstractApi {
 		this.pluginManager = pluginManager;
 		this.notificationManager = notificationManager;
 		this.viewManager = viewManager;
-		this.managers = new AbstractDataSourcePropertyManager[]{
-			chainManager, pluginManager, notificationManager, viewManager
-		};
-
 	}
 
 	@GET
@@ -76,7 +72,8 @@ public final class DataSourceApi extends AbstractApi {
 
 		JsonApiResponse.Buildable response = JsonApiResponse
 			.createGetResponse(uriInfo)
-			.data(DataSourceWrapper.from(source));
+			.data(DataSourceWrapper.from(source))
+			.addLink("sources", getSanitizedPath(uriInfo).resolve(".."));
 
 		response = addDatasourceRelationships(response, source);
 
@@ -92,6 +89,7 @@ public final class DataSourceApi extends AbstractApi {
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(DataSourceWrapper.from(source))
+			.addLink("source", getSanitizedPath(uriInfo).resolve(".."))
 			.restrictTo("schema")
 			.build();
 	}
@@ -117,6 +115,7 @@ public final class DataSourceApi extends AbstractApi {
 		return JsonApiResponse
 			.createPostResponse(uriInfo)
 			.data(DataSourceWrapper.from(source))
+			.addLink("sources", getSanitizedPath(uriInfo).resolve(".."))
 			.build();
 	}
 
@@ -127,11 +126,17 @@ public final class DataSourceApi extends AbstractApi {
 			@RestrictedTo(Role.ADMIN) User user,
 			@PathParam("sourceId") String sourceId) {
 
-		return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+		sourceManager.remove(sourceManager.findBySourceId(sourceId));
+
+		return Response
+			.ok()
+			.build();
 	}
 
 
-	private JsonApiResponse.Buildable addDatasourceRelationships(JsonApiResponse.Buildable response, DataSource source) {
+	private JsonApiResponse.Buildable addDatasourceRelationships(JsonApiResponse.Buildable response,
+																 DataSource source) {
+
 		List<ProcessorReferenceChain> chains = chainManager.getAll(source);
 		List<PluginMetaData> plugins = pluginManager.getAll(source);
 		List<Client> notifications = notificationManager.getAll(source);
