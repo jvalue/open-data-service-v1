@@ -3,6 +3,7 @@ package org.jvalue.ods.rest.v2.jsonapi.wrapper;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.jvalue.commons.utils.Log;
 import org.jvalue.ods.api.data.Data;
 import org.jvalue.ods.api.sources.DataSource;
 
@@ -61,8 +62,9 @@ public class DataWrapper implements JsonApiIdentifiable{
 
 	private static String getDomainId(JsonNode node, String domainIdKey) {
 		if(!node.has(domainIdKey)) {
-			//log error
-			return "NO_ID";
+			String dbId = node.get("_id").asText("NO_ID");
+			Log.error("Node " + node.get("_id") + " has no domainId! It has been serialized using its database id.");
+			return dbId;
 		}
 		else {
 			return node.get(domainIdKey).textValue();
