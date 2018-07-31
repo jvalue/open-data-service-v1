@@ -5,17 +5,16 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-
 import org.ektorp.CouchDbConnector;
-import org.ektorp.DocumentNotFoundException;
 import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.View;
 import org.jvalue.commons.couchdb.DbDocument;
 import org.jvalue.commons.couchdb.DbDocumentAdaptable;
 import org.jvalue.commons.couchdb.RepositoryAdapter;
 import org.jvalue.commons.db.DbConnectorFactory;
-import org.jvalue.ods.api.processors.ProcessorReferenceChain;
+import org.jvalue.commons.db.GenericDocumentNotFoundException;
 import org.jvalue.commons.db.repositories.GenericRepository;
+import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 
 import java.util.List;
 
@@ -48,7 +47,7 @@ public final class ProcessorChainReferenceRepository extends RepositoryAdapter<
 		@View(name = "by_id", map = "function(doc) { if (" + DOCUMENT_ID + ") emit(doc.value.id, doc._id) }")
 		public ProcessorReferenceChainDocument findById(String processorChainId) {
 			List<ProcessorReferenceChainDocument> chains = queryView("by_id", processorChainId);
-			if (chains.isEmpty()) throw new DocumentNotFoundException(processorChainId);
+			if (chains.isEmpty()) throw new GenericDocumentNotFoundException(processorChainId);
 			if (chains.size() > 1)
 				throw new IllegalStateException("found more than one chain for id " + processorChainId);
 			return chains.get(0);

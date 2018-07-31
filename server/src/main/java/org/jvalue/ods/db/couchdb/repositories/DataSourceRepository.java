@@ -3,19 +3,16 @@ package org.jvalue.ods.db.couchdb.repositories;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import org.ektorp.CouchDbConnector;
-import org.ektorp.DocumentNotFoundException;
 import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.View;
 import org.jvalue.commons.couchdb.DbDocument;
 import org.jvalue.commons.couchdb.DbDocumentAdaptable;
 import org.jvalue.commons.couchdb.RepositoryAdapter;
-
 import org.jvalue.commons.db.DbConnectorFactory;
-import org.jvalue.ods.api.sources.DataSource;
+import org.jvalue.commons.db.GenericDocumentNotFoundException;
 import org.jvalue.commons.db.repositories.GenericRepository;
-import org.jvalue.ods.db.couchdb.CouchDbConnectorFactory;
+import org.jvalue.ods.api.sources.DataSource;
 
 import java.util.List;
 
@@ -48,7 +45,7 @@ public final class DataSourceRepository extends RepositoryAdapter<
 		@View(name = "by_id", map = "function(doc) { if (" + DOCUMENT_ID + ") emit(doc.value.id, doc._id)}")
 		public DataSourceDocument findById(String sourceId) {
 			List<DataSourceDocument> sources = queryView("by_id", sourceId);
-			if (sources.isEmpty()) throw new DocumentNotFoundException(sourceId);
+			if (sources.isEmpty()) throw new GenericDocumentNotFoundException(sourceId);
 			if (sources.size() > 1)
 				throw new IllegalStateException("found more than one source for id " + sourceId);
 			return sources.get(0);

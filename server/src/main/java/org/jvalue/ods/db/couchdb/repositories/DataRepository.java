@@ -12,6 +12,7 @@ import org.ektorp.support.DesignDocument;
 import org.ektorp.support.DesignDocumentFactory;
 import org.ektorp.support.StdDesignDocumentFactory;
 import org.jvalue.commons.db.DbConnectorFactory;
+import org.jvalue.commons.db.GenericDocumentNotFoundException;
 import org.jvalue.commons.utils.Assert;
 import org.jvalue.commons.db.data.Cursor;
 import org.jvalue.commons.db.data.Data;
@@ -52,7 +53,7 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> imp
 	@Override
 	public JsonNode findByDomainId(String domainId) {
 		List<JsonNode> resultList = executeQuery(domainIdView, domainId);
-		if (resultList.isEmpty()) throw new DocumentNotFoundException(domainId);
+		if (resultList.isEmpty()) throw new GenericDocumentNotFoundException(domainId);
 		else if (resultList.size() == 1) return resultList.get(0);
 		else throw new IllegalStateException("found more than one element for given domain id");
 	}

@@ -5,17 +5,16 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-
 import org.ektorp.Attachment;
 import org.ektorp.AttachmentInputStream;
 import org.ektorp.CouchDbConnector;
-import org.ektorp.DocumentNotFoundException;
 import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.View;
 import org.jvalue.commons.couchdb.DbDocument;
 import org.jvalue.commons.couchdb.DbDocumentAdaptable;
 import org.jvalue.commons.couchdb.RepositoryAdapter;
 import org.jvalue.commons.db.DbConnectorFactory;
+import org.jvalue.commons.db.GenericDocumentNotFoundException;
 import org.jvalue.ods.api.processors.PluginMetaData;
 import org.jvalue.ods.db.generic.GenericPluginMetaDataRepository;
 
@@ -65,7 +64,7 @@ public final class PluginMetaDataRepository extends RepositoryAdapter<
 		@View(name = "by_id", map = "function(doc) { if (" + DOCUMENT_ID + ") emit(doc.value.id, doc._id) }")
 		public PluginMetaDataDocument findById(String pluginId) {
 			List<PluginMetaDataDocument> plugins = queryView("by_id", pluginId);
-			if (plugins.isEmpty()) throw new DocumentNotFoundException(pluginId);
+			if (plugins.isEmpty()) throw new GenericDocumentNotFoundException(pluginId);
 			if (plugins.size() > 1) throw new IllegalStateException("found more than one plugin for id " + pluginId);
 			return plugins.get(0);
 		}
