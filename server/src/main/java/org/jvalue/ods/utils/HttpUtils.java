@@ -3,6 +3,7 @@ package org.jvalue.ods.utils;
 import org.jvalue.commons.utils.Assert;
 import org.jvalue.commons.utils.Log;
 
+import javax.ws.rs.core.UriInfo;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -52,6 +53,11 @@ public class HttpUtils {
 			return uri;
 		}
 		else return URI.create(uriString + "/");
+	}
+
+
+	public static URI getSanitizedPath(UriInfo uriInfo) {
+		return appendTrailingSlash(uriInfo.getAbsolutePath());
 	}
 
 }
