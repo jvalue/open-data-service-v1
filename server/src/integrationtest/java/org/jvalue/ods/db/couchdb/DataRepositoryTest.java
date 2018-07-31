@@ -11,6 +11,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.jvalue.commons.couchdb.test.AbstractRepositoryTest;
 import org.jvalue.commons.db.DbConnectorFactory;
+import org.jvalue.commons.db.GenericDocumentNotFoundException;
 import org.jvalue.commons.db.data.Data;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
 import org.jvalue.ods.db.couchdb.repositories.DataRepository;
@@ -49,7 +50,7 @@ public final class DataRepositoryTest extends AbstractRepositoryTest {
 	}
 
 
-	@Test(expected = DocumentNotFoundException.class)
+	@Test(expected = GenericDocumentNotFoundException.class)
 	public void testNotFound() {
 		repository.findByDomainId("someId");
 	}
