@@ -73,6 +73,7 @@ public final class DataSourceApi extends AbstractApi {
 		JsonApiResponse.Buildable response = JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(DataSourceWrapper.from(source))
+			.addLink("data", getSanitizedPath(uriInfo).resolve("data"))
 			.addLink("sources", getSanitizedPath(uriInfo).resolve(".."));
 
 		response = addDatasourceRelationships(response, source);

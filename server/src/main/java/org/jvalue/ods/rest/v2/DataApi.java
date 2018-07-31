@@ -8,9 +8,11 @@ import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
 import org.jvalue.ods.api.data.Data;
+import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
+import org.jvalue.ods.rest.v2.jsonapi.wrapper.DataSourceWrapper;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.DataWrapper;
 
 import javax.ws.rs.*;
@@ -23,6 +25,7 @@ import java.net.URI;
 import java.util.List;
 
 import static org.jvalue.ods.rest.v2.AbstractApi.BASE_URL;
+import static org.jvalue.ods.utils.HttpUtils.getSanitizedPath;
 
 @Path(BASE_URL + "/{sourceId}/data")
 public final class DataApi extends AbstractApi {
@@ -57,22 +60,31 @@ public final class DataApi extends AbstractApi {
 			limit = DEFAULT_LIMIT_INT;
 		}
 
-		UriBuilder nextBuilder = uriInfo.getAbsolutePathBuilder().queryParam("offset", offset + limit);
+		UriBuilder pathBuilder = uriInfo.getAbsolutePathBuilder();
 		if(limit != DEFAULT_LIMIT_INT) {
-			nextBuilder.queryParam("limit", _limit).build();
+			pathBuilder.queryParam("limit", _limit);
 		}
-		URI nextUri = nextBuilder.build();
+		URI firstUri = pathBuilder.build();
+		URI nextUri = pathBuilder
+			.queryParam("offset", offset + limit)
+			.build();
 
 		DataRepository repository = getDataRepository(sourceId);
 		Data data = repository.executePaginatedGet(String.valueOf(offset), limit);
 		List<JsonNode> dataNodes = data.getResult();
 
-		return JsonApiResponse
+		JsonApiResponse.Buildable response = JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(DataWrapper.fromCollection(dataNodes, sourceManager.findBySourceId(sourceId)))
-			.addLink("first", uriInfo.getAbsolutePath())
-			.addLink("next", nextUri)
-			.build();
+			.addLink("source", getSanitizedPath(uriInfo).resolve(".."));
+
+		System.out.println(dataNodes.size());
+		if(dataNodes.size() >= limit) {
+			response.addLink("next", nextUri)
+				.addLink("first", firstUri);
+		}
+
+		return response.build();
 	}
 
 
@@ -93,12 +105,16 @@ public final class DataApi extends AbstractApi {
 			@PathParam("objectId") String domainId) {
 
 		JsonNode resultNode = getDataRepository(sourceId).findByDomainId(domainId);
+		DataSource source = sourceManager.findBySourceId(sourceId);
 
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
-			.data(DataWrapper.from(resultNode, sourceManager.findBySourceId(sourceId)))
+			.data(DataWrapper.from(resultNode, source))
+			.addRelationship("DataSource", DataSourceWrapper.from(source), getSanitizedPath(uriInfo).resolve(".."))
+			.addLink("data", getSanitizedPath(uriInfo).resolve(".."))
 			.build();
 	}
+
 
 	@GET
 	@Path("/{objectId}/{attribute}")
@@ -112,9 +128,11 @@ public final class DataApi extends AbstractApi {
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(DataWrapper.from(resultNode, sourceManager.findBySourceId(sourceId)))
+			.addLink("dataNode", getSanitizedPath(uriInfo).resolve(".."))
 			.restrictTo(attribute)
 			.build();
 	}
+
 
 	private DataRepository getDataRepository(String sourceId) {
 		return sourceManager.getDataRepository(sourceManager.findBySourceId(sourceId));
