@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 
+import static org.jvalue.ods.utils.HttpUtils.getDirectoryURI;
 import static org.jvalue.ods.utils.HttpUtils.getSanitizedPath;
 
 
@@ -71,6 +72,19 @@ public class HttpUtilsTest {
 		URI result = getSanitizedPath(uriInfo);
 
 		Assert.assertEquals("http://www.pegelonline.wsv.de/webservices/rest-api/v2/", result.toString());
+	}
+
+
+	@Test
+	public void testGetDirectoryURI() {
+		new Expectations() {{
+			uriInfo.getAbsolutePath();
+			result = URI.create("http://www.pegelonline.wsv.de/webservices/rest-api/v2");
+		}};
+
+		URI result = getDirectoryURI(uriInfo);
+
+		Assert.assertEquals("http://www.pegelonline.wsv.de/webservices/rest-api/", result.toString());
 	}
 
 }
