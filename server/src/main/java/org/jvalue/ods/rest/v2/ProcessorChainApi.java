@@ -24,24 +24,25 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static org.jvalue.ods.rest.v2.AbstractApi.BASE_URL;
-import static org.jvalue.ods.utils.HttpUtils.getSanitizedPath;
+import static org.jvalue.ods.utils.HttpUtils.getDirectoryURI;
 
 @Path(BASE_URL + "/{sourceId}/filterChains")
 public final class ProcessorChainApi extends AbstractApi {
 
 	// avoid executing filter chains faster than every second
 	private static final EnumSet<TimeUnit> validExecutionIntervalUnits
-			= EnumSet.of(TimeUnit.SECONDS, TimeUnit.MINUTES, TimeUnit.HOURS, TimeUnit.DAYS);
+		= EnumSet.of(TimeUnit.SECONDS, TimeUnit.MINUTES, TimeUnit.HOURS, TimeUnit.DAYS);
 
 	private final DataSourceManager sourceManager;
 	private final ProcessorChainManager chainManager;
 
-	@Context private UriInfo uriInfo;
+	@Context
+	private UriInfo uriInfo;
 
 	@Inject
 	public ProcessorChainApi(
-			DataSourceManager sourceManager,
-			ProcessorChainManager chainManager) {
+		DataSourceManager sourceManager,
+		ProcessorChainManager chainManager) {
 
 		this.sourceManager = sourceManager;
 		this.chainManager = chainManager;
@@ -50,14 +51,14 @@ public final class ProcessorChainApi extends AbstractApi {
 
 	@GET
 	public Response getAllProcessorChains(
-			@PathParam("sourceId") String sourceId) {
+		@PathParam("sourceId") String sourceId) {
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		List<ProcessorReferenceChain> chains = chainManager.getAll(source);
 
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(ProcessorReferenceChainWrapper.fromCollection(chains))
-			.addLink("source", getSanitizedPath(uriInfo).resolve(".."))
+			.addLink("source", getDirectoryURI(uriInfo))
 			.build();
 	}
 
@@ -65,8 +66,8 @@ public final class ProcessorChainApi extends AbstractApi {
 	@GET
 	@Path("/{filterChainId}")
 	public Response getProcessorChain(
-			@PathParam("sourceId") String sourceId,
-			@PathParam("filterChainId") String filterChainId) {
+		@PathParam("sourceId") String sourceId,
+		@PathParam("filterChainId") String filterChainId) {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		ProcessorReferenceChain chain = chainManager.get(source, filterChainId);
@@ -74,7 +75,7 @@ public final class ProcessorChainApi extends AbstractApi {
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(ProcessorReferenceChainWrapper.from(chain))
-			.addLink("filterChains", getSanitizedPath(uriInfo).resolve(".."))
+			.addLink("filterChains", getDirectoryURI(uriInfo))
 			.build();
 	}
 
@@ -82,10 +83,10 @@ public final class ProcessorChainApi extends AbstractApi {
 	@POST
 	@Path("/{filterChainId}")
 	public Response addProcessorChain(
-			@RestrictedTo(Role.ADMIN) User user,
-			@PathParam("sourceId") String sourceId,
-			@PathParam("filterChainId") String filterChainId,
-			@Valid ProcessorReferenceChainDescription processorChain) {
+		@RestrictedTo(Role.ADMIN) User user,
+		@PathParam("sourceId") String sourceId,
+		@PathParam("filterChainId") String filterChainId,
+		@Valid ProcessorReferenceChainDescription processorChain) {
 
 		if (processorChain.getExecutionInterval() != null) {
 			assertIsValidTimeUnit(processorChain.getExecutionInterval().getUnit());
@@ -96,17 +97,18 @@ public final class ProcessorChainApi extends AbstractApi {
 			throw RestUtils.createJsonFormattedException("filter chain with id " + filterChainId + " already exists", 409);
 
 		ProcessorReferenceChain chainReference = new ProcessorReferenceChain(
-				filterChainId,
-				processorChain.getProcessors(),
-				processorChain.getExecutionInterval());
+			filterChainId,
+			processorChain.getProcessors(),
+			processorChain.getExecutionInterval());
 
-		if (processorChain.getExecutionInterval() != null) chainManager.add(source, sourceManager.getDataRepository(source), chainReference);
+		if (processorChain.getExecutionInterval() != null)
+			chainManager.add(source, sourceManager.getDataRepository(source), chainReference);
 		else chainManager.executeOnce(source, sourceManager.getDataRepository(source), chainReference);
 
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(ProcessorReferenceChainWrapper.from(chainReference))
-			.addLink("filterChains", getSanitizedPath(uriInfo).resolve(".."))
+			.addLink("filterChains", getDirectoryURI(uriInfo))
 			.build();
 	}
 
@@ -114,9 +116,9 @@ public final class ProcessorChainApi extends AbstractApi {
 	@DELETE
 	@Path("/{filterChainId}")
 	public void deleteProcessorChain(
-			@RestrictedTo(Role.ADMIN) User user,
-			@PathParam("sourceId") String sourceId,
-			@PathParam("filterChainId") String filterChainId) {
+		@RestrictedTo(Role.ADMIN) User user,
+		@PathParam("sourceId") String sourceId,
+		@PathParam("filterChainId") String filterChainId) {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		ProcessorReferenceChain reference = chainManager.get(source, filterChainId);

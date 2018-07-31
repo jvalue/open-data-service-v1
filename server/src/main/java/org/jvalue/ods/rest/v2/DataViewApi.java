@@ -25,7 +25,7 @@ import java.net.URI;
 import java.util.List;
 
 import static org.jvalue.ods.rest.v2.AbstractApi.BASE_URL;
-import static org.jvalue.ods.utils.HttpUtils.getSanitizedPath;
+import static org.jvalue.ods.utils.HttpUtils.getDirectoryURI;
 
 @Path(BASE_URL + "/{sourceId}/views")
 public final class DataViewApi extends AbstractApi {
@@ -54,7 +54,7 @@ public final class DataViewApi extends AbstractApi {
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(DataViewWrapper.fromCollection(views))
-			.addLink("source", getSanitizedPath(uriInfo).resolve(".."))
+			.addLink("source", getDirectoryURI(uriInfo))
 			.build();
 	}
 
@@ -79,7 +79,7 @@ public final class DataViewApi extends AbstractApi {
 			return JsonApiResponse
 				.createGetResponse(uriInfo)
 				.data(DataViewWrapper.from(view))
-				.addLink("views", getSanitizedPath(uriInfo).resolve(".."))
+				.addLink("views", getDirectoryURI(uriInfo))
 				.addLink("execute", executeURI)
 				.build();
 		} else {
@@ -111,7 +111,7 @@ public final class DataViewApi extends AbstractApi {
 		return JsonApiResponse
 			.createPostResponse(uriInfo)
 			.data(DataViewWrapper.from(view))
-			.addLink("views", getSanitizedPath(uriInfo).resolve(".."))
+			.addLink("views", getDirectoryURI(uriInfo))
 			.build();
 	}
 

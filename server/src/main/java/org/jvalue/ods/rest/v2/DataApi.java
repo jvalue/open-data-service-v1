@@ -20,12 +20,11 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
-
 import java.net.URI;
 import java.util.List;
 
 import static org.jvalue.ods.rest.v2.AbstractApi.BASE_URL;
-import static org.jvalue.ods.utils.HttpUtils.getSanitizedPath;
+import static org.jvalue.ods.utils.HttpUtils.getDirectoryURI;
 
 @Path(BASE_URL + "/{sourceId}/data")
 public final class DataApi extends AbstractApi {
@@ -35,7 +34,6 @@ public final class DataApi extends AbstractApi {
 	private static final String DEFAULT_OFFSET = "0";
 
 	private final DataSourceManager sourceManager;
-
 
 
 	@Inject
@@ -49,9 +47,9 @@ public final class DataApi extends AbstractApi {
 
 	@GET
 	public Response getPaginatedData(
-			@PathParam("sourceId") String sourceId,
-			@QueryParam("offset") @DefaultValue(DEFAULT_OFFSET) IntParam _offset,
-			@QueryParam("limit") @DefaultValue(DEFAULT_LIMIT) IntParam _limit) {
+		@PathParam("sourceId") String sourceId,
+		@QueryParam("offset") @DefaultValue(DEFAULT_OFFSET) IntParam _offset,
+		@QueryParam("limit") @DefaultValue(DEFAULT_LIMIT) IntParam _limit) {
 
 		int offset = _offset.get();
 		int limit = _limit.get();
@@ -61,7 +59,7 @@ public final class DataApi extends AbstractApi {
 		}
 
 		UriBuilder pathBuilder = uriInfo.getAbsolutePathBuilder();
-		if(limit != DEFAULT_LIMIT_INT) {
+		if (limit != DEFAULT_LIMIT_INT) {
 			pathBuilder.queryParam("limit", _limit);
 		}
 		URI firstUri = pathBuilder.build();
@@ -76,10 +74,10 @@ public final class DataApi extends AbstractApi {
 		JsonApiResponse.Buildable response = JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(DataWrapper.fromCollection(dataNodes, sourceManager.findBySourceId(sourceId)))
-			.addLink("source", getSanitizedPath(uriInfo).resolve(".."));
+			.addLink("source", getDirectoryURI(uriInfo));
 
 		System.out.println(dataNodes.size());
-		if(dataNodes.size() >= limit) {
+		if (dataNodes.size() >= limit) {
 			response.addLink("next", nextUri)
 				.addLink("first", firstUri);
 		}
@@ -90,8 +88,8 @@ public final class DataApi extends AbstractApi {
 
 	@DELETE
 	public void deleteAllObjects(
-			@RestrictedTo(Role.ADMIN) User user,
-			@PathParam("sourceId") String sourceId) {
+		@RestrictedTo(Role.ADMIN) User user,
+		@PathParam("sourceId") String sourceId) {
 
 		DataRepository repository = getDataRepository(sourceId);
 		repository.removeAll();
@@ -101,8 +99,8 @@ public final class DataApi extends AbstractApi {
 	@GET
 	@Path("/{objectId}")
 	public Response getSingleDataObject(
-			@PathParam("sourceId") String sourceId,
-			@PathParam("objectId") String domainId) {
+		@PathParam("sourceId") String sourceId,
+		@PathParam("objectId") String domainId) {
 
 		JsonNode resultNode = getDataRepository(sourceId).findByDomainId(domainId);
 		DataSource source = sourceManager.findBySourceId(sourceId);
@@ -110,8 +108,8 @@ public final class DataApi extends AbstractApi {
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(DataWrapper.from(resultNode, source))
-			.addRelationship("DataSource", DataSourceWrapper.from(source), getSanitizedPath(uriInfo).resolve(".."))
-			.addLink("data", getSanitizedPath(uriInfo).resolve(".."))
+			.addRelationship("DataSource", DataSourceWrapper.from(source), getDirectoryURI(uriInfo))
+			.addLink("data", getDirectoryURI(uriInfo))
 			.build();
 	}
 
@@ -128,7 +126,7 @@ public final class DataApi extends AbstractApi {
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(DataWrapper.from(resultNode, sourceManager.findBySourceId(sourceId)))
-			.addLink("dataNode", getSanitizedPath(uriInfo).resolve(".."))
+			.addLink("dataNode", getDirectoryURI(uriInfo))
 			.restrictTo(attribute)
 			.build();
 	}

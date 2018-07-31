@@ -25,25 +25,26 @@ import java.io.InputStream;
 import java.util.List;
 
 import static org.jvalue.ods.rest.v2.AbstractApi.BASE_URL;
-import static org.jvalue.ods.utils.HttpUtils.getSanitizedPath;
+import static org.jvalue.ods.utils.HttpUtils.getDirectoryURI;
 
 
 @Path(BASE_URL + "/{sourceId}/plugins")
 public final class PluginApi extends AbstractApi {
 
 	private static final String
-			TYPE_X_JAVA_ARCHIVE = "application/x-java-archive",
-			TYPE_JAVA_ARCHIVE = "application/java-archive";
+		TYPE_X_JAVA_ARCHIVE = "application/x-java-archive",
+		TYPE_JAVA_ARCHIVE = "application/java-archive";
 
 	private final DataSourceManager sourceManager;
 	private final PluginMetaDataManager pluginManager;
 
-	@Context private UriInfo uriInfo;
+	@Context
+	private UriInfo uriInfo;
 
 	@Inject
 	PluginApi(
-			PluginMetaDataManager pluginManager,
-			DataSourceManager sourceManager) {
+		PluginMetaDataManager pluginManager,
+		DataSourceManager sourceManager) {
 
 		this.pluginManager = pluginManager;
 		this.sourceManager = sourceManager;
@@ -54,15 +55,16 @@ public final class PluginApi extends AbstractApi {
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Path("/{pluginId}")
 	public Response addPlugin(
-			@RestrictedTo(Role.ADMIN) User user,
-			@PathParam("sourceId") String sourceId,
-			@PathParam("pluginId") String pluginId,
-			@FormDataParam("file") InputStream fileInputStream,
-			@FormDataParam("file") FormDataContentDisposition contentDisposition,
-			@FormDataParam("file") FormDataBodyPart bodyPart) {
+		@RestrictedTo(Role.ADMIN) User user,
+		@PathParam("sourceId") String sourceId,
+		@PathParam("pluginId") String pluginId,
+		@FormDataParam("file") InputStream fileInputStream,
+		@FormDataParam("file") FormDataContentDisposition contentDisposition,
+		@FormDataParam("file") FormDataBodyPart bodyPart) {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
-		if (pluginManager.contains(source, pluginId)) throw RestUtils.createJsonFormattedException("plugin with id " + pluginId + " already exists", 409);
+		if (pluginManager.contains(source, pluginId))
+			throw RestUtils.createJsonFormattedException("plugin with id " + pluginId + " already exists", 409);
 
 		String contentType = bodyPart.getMediaType().toString();
 		System.out.println("contentType = " + contentType);
@@ -75,21 +77,21 @@ public final class PluginApi extends AbstractApi {
 		return JsonApiResponse
 			.createPostResponse(uriInfo)
 			.data(PluginMetaDataWrapper.from(metaData))
-			.addLink("plugins", getSanitizedPath(uriInfo).resolve(".."))
+			.addLink("plugins", getDirectoryURI(uriInfo))
 			.build();
 	}
 
 
 	@GET
 	public Response getAllPlugins(
-			@PathParam("sourceId") String sourceId) {
+		@PathParam("sourceId") String sourceId) {
 
 		List<PluginMetaData> metaDataList = pluginManager.getAll(sourceManager.findBySourceId(sourceId));
 
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(PluginMetaDataWrapper.fromCollection(metaDataList))
-			.addLink("source", getSanitizedPath(uriInfo).resolve(".."))
+			.addLink("source", getDirectoryURI(uriInfo))
 			.build();
 	}
 
@@ -97,9 +99,9 @@ public final class PluginApi extends AbstractApi {
 	@GET
 	@Path("/{pluginId}")
 	public Response getPlugin(
-			@PathParam("sourceId") String sourceId,
-			@PathParam("pluginId") String pluginId,
-			@QueryParam("download") boolean download) {
+		@PathParam("sourceId") String sourceId,
+		@PathParam("pluginId") String pluginId,
+		@QueryParam("download") boolean download) {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		PluginMetaData metaData = pluginManager.get(source, pluginId);
@@ -107,10 +109,9 @@ public final class PluginApi extends AbstractApi {
 			return JsonApiResponse
 				.createGetResponse(uriInfo)
 				.data(PluginMetaDataWrapper.from(metaData))
-				.addLink("plugins", getSanitizedPath(uriInfo).resolve(".."))
+				.addLink("plugins", getDirectoryURI(uriInfo))
 				.build();
-		}
-		else {
+		} else {
 			return Response
 				.status(Response.Status.NOT_IMPLEMENTED)
 				.build();
@@ -121,9 +122,9 @@ public final class PluginApi extends AbstractApi {
 	@DELETE
 	@Path("/{pluginId}")
 	public void deletePlugin(
-			@RestrictedTo(Role.ADMIN) User user,
-			@PathParam("sourceId") String sourceId,
-			@PathParam("pluginId") String pluginId) {
+		@RestrictedTo(Role.ADMIN) User user,
+		@PathParam("sourceId") String sourceId,
+		@PathParam("pluginId") String pluginId) {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		pluginManager.remove(source, sourceManager.getDataRepository(source), pluginManager.get(source, pluginId));

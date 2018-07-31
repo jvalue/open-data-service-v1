@@ -28,6 +28,7 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.List;
 
+import static org.jvalue.ods.utils.HttpUtils.getDirectoryURI;
 import static org.jvalue.ods.utils.HttpUtils.getSanitizedPath;
 
 @Path(AbstractApi.BASE_URL)
@@ -74,7 +75,7 @@ public final class DataSourceApi extends AbstractApi {
 			.createGetResponse(uriInfo)
 			.data(DataSourceWrapper.from(source))
 			.addLink("data", getSanitizedPath(uriInfo).resolve("data"))
-			.addLink("sources", getSanitizedPath(uriInfo).resolve(".."));
+			.addLink("sources", getDirectoryURI(uriInfo));
 
 		response = addDatasourceRelationships(response, source);
 
@@ -90,7 +91,7 @@ public final class DataSourceApi extends AbstractApi {
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(DataSourceWrapper.from(source))
-			.addLink("source", getSanitizedPath(uriInfo).resolve(".."))
+			.addLink("source", getDirectoryURI(uriInfo))
 			.restrictTo("schema")
 			.build();
 	}
@@ -99,9 +100,9 @@ public final class DataSourceApi extends AbstractApi {
 	@POST
 	@Path("/{sourceId}")
 	public Response addSource(
-			@RestrictedTo(Role.ADMIN) User user,
-			@PathParam("sourceId") String sourceId,
-			@Valid DataSourceDescription sourceDescription) {
+		@RestrictedTo(Role.ADMIN) User user,
+		@PathParam("sourceId") String sourceId,
+		@Valid DataSourceDescription sourceDescription) {
 
 		if (sourceManager.isValidSourceId(sourceId))
 			throw RestUtils.createJsonFormattedException("source with id " + sourceId + " already exists", 409);
@@ -116,7 +117,7 @@ public final class DataSourceApi extends AbstractApi {
 		return JsonApiResponse
 			.createPostResponse(uriInfo)
 			.data(DataSourceWrapper.from(source))
-			.addLink("sources", getSanitizedPath(uriInfo).resolve(".."))
+			.addLink("sources", getDirectoryURI(uriInfo))
 			.build();
 	}
 
@@ -124,8 +125,8 @@ public final class DataSourceApi extends AbstractApi {
 	@DELETE
 	@Path("/{sourceId}")
 	public Response deleteSource(
-			@RestrictedTo(Role.ADMIN) User user,
-			@PathParam("sourceId") String sourceId) {
+		@RestrictedTo(Role.ADMIN) User user,
+		@PathParam("sourceId") String sourceId) {
 
 		sourceManager.remove(sourceManager.findBySourceId(sourceId));
 
@@ -145,16 +146,16 @@ public final class DataSourceApi extends AbstractApi {
 
 		URI path = getSanitizedPath(uriInfo);
 
-		if(!chains.isEmpty()) {
+		if (!chains.isEmpty()) {
 			response.addRelationship("filterChains", ProcessorReferenceChainWrapper.fromCollection(chains), path.resolve("./filterChains"));
 		}
-		if(!plugins.isEmpty()) {
+		if (!plugins.isEmpty()) {
 			response.addRelationship("plugins", PluginMetaDataWrapper.fromCollection(plugins), path.resolve("./plugins"));
 		}
-		if(!notifications.isEmpty()) {
+		if (!notifications.isEmpty()) {
 			response.addRelationship("notifications", ClientWrapper.fromCollection(notifications), path.resolve("./notifications"));
 		}
-		if(!views.isEmpty()) {
+		if (!views.isEmpty()) {
 			response.addRelationship("views", DataViewWrapper.fromCollection(views), path.resolve("./views"));
 		}
 
