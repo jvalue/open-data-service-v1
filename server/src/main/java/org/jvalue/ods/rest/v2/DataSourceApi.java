@@ -143,7 +143,7 @@ public final class DataSourceApi extends AbstractApi {
 		List<Client> notifications = notificationManager.getAll(source);
 		List<DataView> views = viewManager.getAll(source);
 
-		URI path = uriInfo.getAbsolutePath();
+		URI path = getSanitizedPath(uriInfo);
 
 		if(!chains.isEmpty()) {
 			response.addRelationship("FilterChains", ProcessorReferenceChainWrapper.fromCollection(chains), path.resolve("./filterChains"));
