@@ -33,10 +33,12 @@ public class JsonApiResponseTest {
 
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		//Record
 		new Expectations() {{
 			uriInfo.getAbsolutePath();
+			result = URI.create(ENTITY_PATH);
+			uriInfo.getRequestUri();
 			result = URI.create(ENTITY_PATH);
 		}};
 	}

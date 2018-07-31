@@ -37,7 +37,7 @@ public class JsonApiDocumentTest {
     public void testConstructorWithEntity() {
     	JsonApiDocument result = new JsonApiDocument(dummyObj01, uriInfoMock);
 
-    	JsonApiResource resource = (JsonApiResource) result.getData().get(0);
+    	JsonApiResource resource = result.getData().get(0);
 
     	Assert.assertEquals(1, result.getData().size());
     	Assert.assertEquals(dummyObj01, resource.getEntity());
@@ -57,13 +57,18 @@ public class JsonApiDocumentTest {
 				result
 						.getData()
 						.stream()
-						.map(r -> ((JsonApiResource) r).getEntity())
+						.map(JsonApiResource::getEntity)
 						.collect(Collectors.toList()));
 	}
 
 
 	@Test
     public void testLinks() {
+		new Expectations() {{
+			uriInfoMock.getRequestUri();
+			result = uri;
+		}};
+
 		JsonApiDocument result = new JsonApiDocument(dummyObj01, uriInfoMock);
 		result.addSelfLink();
 
