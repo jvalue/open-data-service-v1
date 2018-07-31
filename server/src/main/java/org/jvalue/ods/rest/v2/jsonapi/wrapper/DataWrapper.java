@@ -19,7 +19,7 @@ public class DataWrapper implements JsonApiIdentifiable{
 	private Map<String, Object> attributes;
 
 	private DataWrapper(JsonNode jsonNode, String domainIdKey) {
-		this.id = jsonNode.get(domainIdKey).textValue();
+		this.id = getDomainId(jsonNode, domainIdKey);
 		try {
 			this.attributes = getMapFromJson(jsonNode);
 		} catch (IOException e) {
@@ -56,6 +56,17 @@ public class DataWrapper implements JsonApiIdentifiable{
 		return nodes.stream()
 			.map(n -> DataWrapper.from(n, source))
 			.collect(Collectors.toList());
+	}
+
+
+	private static String getDomainId(JsonNode node, String domainIdKey) {
+		if(!node.has(domainIdKey)) {
+			//log error
+			return "NO_ID";
+		}
+		else {
+			return node.get(domainIdKey).textValue();
+		}
 	}
 
 
