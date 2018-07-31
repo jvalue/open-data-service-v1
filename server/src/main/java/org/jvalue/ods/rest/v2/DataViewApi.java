@@ -3,7 +3,6 @@ package org.jvalue.ods.rest.v2;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
-import org.jsoup.nodes.DataNode;
 import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
@@ -22,9 +21,11 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 import java.util.List;
 
 import static org.jvalue.ods.rest.v2.AbstractApi.BASE_URL;
+import static org.jvalue.ods.utils.HttpUtils.getSanitizedPath;
 
 @Path(BASE_URL + "/{sourceId}/views")
 public final class DataViewApi extends AbstractApi {
@@ -37,8 +38,8 @@ public final class DataViewApi extends AbstractApi {
 
 	@Inject
 	public DataViewApi(
-			DataSourceManager sourceManager,
-			DataViewManager viewManager) {
+		DataSourceManager sourceManager,
+		DataViewManager viewManager) {
 
 		this.sourceManager = sourceManager;
 		this.viewManager = viewManager;
@@ -53,6 +54,7 @@ public final class DataViewApi extends AbstractApi {
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(DataViewWrapper.fromCollection(views))
+			.addLink("source", getSanitizedPath(uriInfo).resolve(".."))
 			.build();
 	}
 
@@ -60,26 +62,33 @@ public final class DataViewApi extends AbstractApi {
 	@GET
 	@Path("/{viewId}")
 	public Response getView(
-			@PathParam("sourceId") String sourceId,
-			@PathParam("viewId") String viewId,
-			@QueryParam("execute") boolean execute,
-			@QueryParam("argument") String argument) {
+		@PathParam("sourceId") String sourceId,
+		@PathParam("viewId") String viewId,
+		@QueryParam("execute") boolean execute,
+		@QueryParam("argument") String argument) {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		DataView view = viewManager.get(source, viewId);
 
 		if (!execute) {
+			URI executeURI = uriInfo
+				.getAbsolutePathBuilder()
+				.queryParam("execute", true)
+				.build();
+
 			return JsonApiResponse
 				.createGetResponse(uriInfo)
 				.data(DataViewWrapper.from(view))
+				.addLink("views", getSanitizedPath(uriInfo).resolve(".."))
+				.addLink("execute", executeURI)
 				.build();
-		}
-		else {
+		} else {
 			List<JsonNode> result = viewManager.executeView(sourceManager.getDataRepository(source), view, argument);
 
 			return JsonApiResponse
 				.createGetResponse(uriInfo)
 				.data(DataWrapper.fromCollection(result, source))
+				.addLink("view", uriInfo.getAbsolutePath())
 				.build();
 		}
 	}
@@ -88,10 +97,10 @@ public final class DataViewApi extends AbstractApi {
 	@POST
 	@Path("/{viewId}")
 	public Response addView(
-			@RestrictedTo(Role.ADMIN) User user,
-			@PathParam("sourceId") String sourceId,
-			@PathParam("viewId") String viewId,
-			@Valid DataViewDescription viewDescription) {
+		@RestrictedTo(Role.ADMIN) User user,
+		@PathParam("sourceId") String sourceId,
+		@PathParam("viewId") String viewId,
+		@Valid DataViewDescription viewDescription) {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		if (viewManager.contains(source, viewId))
@@ -102,6 +111,7 @@ public final class DataViewApi extends AbstractApi {
 		return JsonApiResponse
 			.createPostResponse(uriInfo)
 			.data(DataViewWrapper.from(view))
+			.addLink("views", getSanitizedPath(uriInfo).resolve(".."))
 			.build();
 	}
 
@@ -109,9 +119,9 @@ public final class DataViewApi extends AbstractApi {
 	@DELETE
 	@Path("/{viewId}")
 	public void deleteView(
-			@RestrictedTo(Role.ADMIN) User user,
-			@PathParam("sourceId") String sourceId,
-			@PathParam("viewId") String viewId) {
+		@RestrictedTo(Role.ADMIN) User user,
+		@PathParam("sourceId") String sourceId,
+		@PathParam("viewId") String viewId) {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		DataView view = viewManager.get(source, viewId);
