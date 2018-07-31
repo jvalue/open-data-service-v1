@@ -146,16 +146,16 @@ public final class DataSourceApi extends AbstractApi {
 		URI path = getSanitizedPath(uriInfo);
 
 		if(!chains.isEmpty()) {
-			response.addRelationship("FilterChains", ProcessorReferenceChainWrapper.fromCollection(chains), path.resolve("./filterChains"));
+			response.addRelationship("filterChains", ProcessorReferenceChainWrapper.fromCollection(chains), path.resolve("./filterChains"));
 		}
 		if(!plugins.isEmpty()) {
-			response.addRelationship("Plugins", PluginMetaDataWrapper.fromCollection(plugins), path.resolve("./plugins"));
+			response.addRelationship("plugins", PluginMetaDataWrapper.fromCollection(plugins), path.resolve("./plugins"));
 		}
 		if(!notifications.isEmpty()) {
-			response.addRelationship("Notifications", ClientWrapper.fromCollection(notifications), path.resolve("./notifications"));
+			response.addRelationship("notifications", ClientWrapper.fromCollection(notifications), path.resolve("./notifications"));
 		}
 		if(!views.isEmpty()) {
-			response.addRelationship("Views", DataViewWrapper.fromCollection(views), path.resolve("./views"));
+			response.addRelationship("views", DataViewWrapper.fromCollection(views), path.resolve("./views"));
 		}
 
 		return response;
