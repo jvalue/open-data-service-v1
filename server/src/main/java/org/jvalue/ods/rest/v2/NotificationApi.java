@@ -21,6 +21,7 @@ import javax.ws.rs.core.UriInfo;
 import java.util.List;
 
 import static org.jvalue.ods.rest.v2.AbstractApi.BASE_URL;
+import static org.jvalue.ods.utils.HttpUtils.getSanitizedPath;
 
 @Path(BASE_URL + "/{sourceId}/notifications")
 public final class NotificationApi extends AbstractApi {
@@ -50,12 +51,16 @@ public final class NotificationApi extends AbstractApi {
 			@Valid ClientDescription clientDescription) {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
-		if (notificationManager.contains(source, clientId)) throw RestUtils.createJsonFormattedException("client with id " + clientId + " already exists", 409);
+		if (notificationManager.contains(source, clientId)) {
+			 throw RestUtils.createJsonFormattedException("client with id " + clientId + " already exists", 409);
+		}
 		Client client = clientDescription.accept(clientAdapter, clientId);
 		notificationManager.add(source, sourceManager.getDataRepository(source), client);
+
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(ClientWrapper.from(client))
+			.addLink("notifications", getSanitizedPath(uriInfo).resolve(".."))
 			.build();
 	}
 
@@ -85,6 +90,7 @@ public final class NotificationApi extends AbstractApi {
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(ClientWrapper.from(client))
+			.addLink("notifications", getSanitizedPath(uriInfo).resolve(".."))
 			.build();
 	}
 
@@ -99,6 +105,7 @@ public final class NotificationApi extends AbstractApi {
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(ClientWrapper.fromCollection(clients))
+			.addLink("source", getSanitizedPath(uriInfo).resolve(".."))
 			.build();
 	}
 

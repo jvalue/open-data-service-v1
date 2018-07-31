@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static org.jvalue.ods.rest.v2.AbstractApi.BASE_URL;
+import static org.jvalue.ods.utils.HttpUtils.getSanitizedPath;
 
 @Path(BASE_URL + "/{sourceId}/filterChains")
 public final class ProcessorChainApi extends AbstractApi {
@@ -56,6 +57,7 @@ public final class ProcessorChainApi extends AbstractApi {
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(ProcessorReferenceChainWrapper.fromCollection(chains))
+			.addLink("source", getSanitizedPath(uriInfo).resolve(".."))
 			.build();
 	}
 
@@ -72,6 +74,7 @@ public final class ProcessorChainApi extends AbstractApi {
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(ProcessorReferenceChainWrapper.from(chain))
+			.addLink("filterChains", getSanitizedPath(uriInfo).resolve(".."))
 			.build();
 	}
 
@@ -103,6 +106,7 @@ public final class ProcessorChainApi extends AbstractApi {
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(ProcessorReferenceChainWrapper.from(chainReference))
+			.addLink("filterChains", getSanitizedPath(uriInfo).resolve(".."))
 			.build();
 	}
 

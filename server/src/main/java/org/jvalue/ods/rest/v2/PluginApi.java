@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import static org.jvalue.ods.rest.v2.AbstractApi.BASE_URL;
+import static org.jvalue.ods.utils.HttpUtils.getSanitizedPath;
 
 
 @Path(BASE_URL + "/{sourceId}/plugins")
@@ -74,6 +75,7 @@ public final class PluginApi extends AbstractApi {
 		return JsonApiResponse
 			.createPostResponse(uriInfo)
 			.data(PluginMetaDataWrapper.from(metaData))
+			.addLink("plugins", getSanitizedPath(uriInfo).resolve(".."))
 			.build();
 	}
 
@@ -87,6 +89,7 @@ public final class PluginApi extends AbstractApi {
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(PluginMetaDataWrapper.fromCollection(metaDataList))
+			.addLink("source", getSanitizedPath(uriInfo).resolve(".."))
 			.build();
 	}
 
@@ -104,6 +107,7 @@ public final class PluginApi extends AbstractApi {
 			return JsonApiResponse
 				.createGetResponse(uriInfo)
 				.data(PluginMetaDataWrapper.from(metaData))
+				.addLink("plugins", getSanitizedPath(uriInfo).resolve(".."))
 				.build();
 		}
 		else {

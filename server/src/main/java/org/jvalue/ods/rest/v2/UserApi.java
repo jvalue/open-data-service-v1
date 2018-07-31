@@ -15,6 +15,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
 
+import static org.jvalue.ods.utils.HttpUtils.getSanitizedPath;
+
 /**
  * Empty class which calls the referenced UserApi from jvalue commons for every single method.
  * The former (v1) inheritance hack could not be used because overriding the endpoints with new
@@ -52,6 +54,7 @@ public class UserApi {
 		return JsonApiResponse
 			.createPostResponse(uriInfo)
 			.data(UserWrapper.from(result))
+			.addLink("users", getSanitizedPath(uriInfo).resolve(".."))
 			.build();
 	}
 
@@ -64,6 +67,7 @@ public class UserApi {
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(UserWrapper.from(result))
+			.addLink("users", getSanitizedPath(uriInfo).resolve(".."))
 			.build();
 	}
 
@@ -76,6 +80,7 @@ public class UserApi {
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(UserWrapper.from(result))
+			.addLink("users", getSanitizedPath(uriInfo).resolve(".."))
 			.build();
 	}
 
