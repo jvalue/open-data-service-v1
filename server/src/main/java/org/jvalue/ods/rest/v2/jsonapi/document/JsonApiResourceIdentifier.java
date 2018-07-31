@@ -1,6 +1,6 @@
 package org.jvalue.ods.rest.v2.jsonapi.document;
 
-import org.jvalue.ods.api.jsonapi.JsonApiIdentifiable;
+import org.jvalue.ods.rest.v2.jsonapi.wrapper.JsonApiIdentifiable;
 import java.util.Objects;
 
 public class JsonApiResourceIdentifier implements JsonApiIdentifiable {
@@ -8,22 +8,21 @@ public class JsonApiResourceIdentifier implements JsonApiIdentifiable {
     private final String id;
     private final String type;
 
-
-    public JsonApiResourceIdentifier(JsonApiResourceIdentifier identifier) {
-        this.id = identifier.id;
-        this.type = identifier.type;
-    }
-
-
     public JsonApiResourceIdentifier(JsonApiIdentifiable entity) {
         this.id = entity.getId();
-        this.type = entity.getClass().getSimpleName();
+        this.type = entity.getType();
     }
+
+
+    public JsonApiResourceIdentifier(String id, String type) {
+    	this.id = id;
+    	this.type = type;
+	}
 
 
     public JsonApiResourceIdentifier toIdentifier() {
-        return new JsonApiResourceIdentifier(this);
-    }
+    	return new JsonApiResourceIdentifier(this);
+	}
 
 
     @Override
@@ -32,6 +31,7 @@ public class JsonApiResourceIdentifier implements JsonApiIdentifiable {
     }
 
 
+	@Override
     public String getType() {
         return type;
     }

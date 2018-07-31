@@ -5,7 +5,7 @@ import mockit.Mocked;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.jvalue.ods.api.jsonapi.JsonApiIdentifiable;
+import org.jvalue.ods.rest.v2.jsonapi.wrapper.JsonApiIdentifiable;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
@@ -37,11 +37,10 @@ public class JsonApiDocumentTest {
     public void testConstructorWithEntity() {
     	JsonApiDocument result = new JsonApiDocument(dummyObj01, uriInfoMock);
 
-    	JsonApiResource resource = (JsonApiResource) result.getData().get(0);
+    	JsonApiResource resource = result.getData().get(0);
 
     	Assert.assertEquals(1, result.getData().size());
     	Assert.assertEquals(dummyObj01, resource.getEntity());
-		assertSelfLinkExists(result);
     }
 
 
@@ -58,34 +57,36 @@ public class JsonApiDocumentTest {
 				result
 						.getData()
 						.stream()
-						.map(r -> ((JsonApiResource) r).getEntity())
+						.map(JsonApiResource::getEntity)
 						.collect(Collectors.toList()));
-		assertSelfLinkExists(result);
 	}
 
 
-    @Test
-    public void testToIdentifier() {
-		JsonApiDocument document = new JsonApiDocument(dummyObj01, uriInfoMock);
-
-		Class originalClass = document.getData().get(0).getClass();
-		document.toIdentifier();
-		Class resultClass = document.getData().get(0).getClass();
-
-		Assert.assertEquals(JsonApiResource.class, originalClass);
-		Assert.assertEquals(JsonApiResourceIdentifier.class, resultClass);
-	}
-
-
-    @Test
+	@Test
     public void testLinks() {
+		new Expectations() {{
+			uriInfoMock.getRequestUri();
+			result = uri;
+		}};
+
 		JsonApiDocument result = new JsonApiDocument(dummyObj01, uriInfoMock);
+		result.addSelfLink();
 
 		result.addLink(linkName, uri);
 
 		Assert.assertEquals(2, result.getLinks().size());
 		Assert.assertEquals(uri , result.getLinks().get(linkName));
 		assertSelfLinkExists(result);
+	}
+
+
+	@Test
+	public void hasRelationshipTo() {
+		JsonApiDocument document = new JsonApiDocument(dummyObj01, uriInfoMock);
+		document.addRelationship("rel1", dummyObj42, uri);
+
+		Assert.assertTrue(document.hasRelationshipTo(dummyObj42));
+		Assert.assertFalse(document.hasRelationshipTo(dummyObj43));
 	}
 
 
@@ -113,10 +114,14 @@ public class JsonApiDocumentTest {
             this.id = id;
         }
 
-
 		@Override
 		public String getId() {
 			return id;
+		}
+
+		@Override
+		public String getType() {
+			return Dummy.class.getSimpleName();
 		}
 	}
 }
