@@ -76,7 +76,7 @@ public class MongoDbDataRepository extends AbstractMongoDbRepository implements 
 	private Map<String, JsonNode> executeBulkGet(Collection<String> ids) {
 		List<Bson> bsonFilterList = new ArrayList<>();
 		for (String id : ids) {
-			bsonFilterList.add(Filters.eq("value.id", id));
+			bsonFilterList.add(Filters.eq("id", id));
 		}
 		Bson selectAllIds = Filters.or(bsonFilterList);
 		FindIterable<Document> documents = database.getCollection(collectionName).find(selectAllIds);
@@ -114,7 +114,7 @@ public class MongoDbDataRepository extends AbstractMongoDbRepository implements 
 
 	@Override
 	public Data getPaginatedData(String startDomainId, int count) {
-		FindIterable<Document> documents = database.getCollection(collectionName).find(Filters.exists("id")).limit(count);
+		FindIterable<Document> documents = database.getCollection(collectionName).find().limit(count);
 		List<JsonNode> jsonNodes = new ArrayList<>();
 		int resultCount = 0;
 		for (Document doc : documents) {
