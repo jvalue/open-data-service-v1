@@ -1,7 +1,9 @@
 package org.jvalue.ods.rest.v2;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
+import org.jsoup.nodes.DataNode;
 import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
@@ -13,6 +15,7 @@ import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.data.DataViewManager;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.DataViewWrapper;
+import org.jvalue.ods.rest.v2.jsonapi.wrapper.DataWrapper;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;
@@ -72,7 +75,12 @@ public final class DataViewApi extends AbstractApi {
 				.build();
 		}
 		else {
-			return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+			List<JsonNode> result = viewManager.executeView(sourceManager.getDataRepository(source), view, argument);
+
+			return JsonApiResponse
+				.createGetResponse(uriInfo)
+				.data(DataWrapper.fromCollection(result, source))
+				.build();
 		}
 	}
 
