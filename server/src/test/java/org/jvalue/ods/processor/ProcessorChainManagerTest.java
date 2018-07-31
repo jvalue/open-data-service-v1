@@ -12,6 +12,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.jvalue.commons.db.GenericDocumentNotFoundException;
 import org.jvalue.commons.utils.Cache;
 import org.jvalue.ods.api.processors.ExecutionInterval;
 import org.jvalue.ods.api.processors.ProcessorReference;
@@ -133,7 +134,7 @@ public final class ProcessorChainManagerTest {
 			repositoryCache.get(anyString);
 			result = referenceRepository;
 			referenceRepository.findById(anyString);
-			result = new DocumentNotFoundException("");
+			result = new GenericDocumentNotFoundException("");
 		}};
 
 		Assert.assertFalse(manager.contains(source, FILTER_CHAIN_ID));
