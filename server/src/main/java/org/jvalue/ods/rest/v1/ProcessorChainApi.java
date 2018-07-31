@@ -107,7 +107,12 @@ public final class ProcessorChainApi extends AbstractApi {
 			@PathParam("sourceId") String sourceId,
 			@PathParam("filterChainId") String filterChainId) {
 
-		DataSource source = sourceManager.findBySourceId(sourceId);
+		DataSource source;
+		try{
+			source = sourceManager.findBySourceId(sourceId);
+		}catch (GenericDocumentNotFoundException e){
+			throw RestUtils.createJsonFormattedException("source with id "+ sourceId + " does not exist.", 404);
+		}
 		ProcessorReferenceChain reference = chainManager.get(source, filterChainId);
 		chainManager.remove(source, sourceManager.getDataRepository(source), reference);
 	}
