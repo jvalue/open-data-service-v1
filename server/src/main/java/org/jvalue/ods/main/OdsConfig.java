@@ -17,20 +17,20 @@ public final class OdsConfig extends Configuration {
 
 	@NotNull private final String gcmApiKey;
 	@NotNull @Valid private final CouchDbConfig couchDb;
-	@Valid private final MongoDbConfig mongoDbConfig;
+	@Valid private final MongoDbConfig mongoDb;
 	@NotNull @Valid private final AuthConfig auth;
 
 	@JsonCreator
 	public OdsConfig(
 			@JsonProperty("gcmApiKey") String gcmApiKey,
 			@JsonProperty("couchDb") CouchDbConfig couchDb,
-			@JsonProperty("mongoDb") MongoDbConfig mongoDbConfig,
+			@JsonProperty("mongoDb") MongoDbConfig mongoDb,
 			@JsonProperty("auth") AuthConfig auth) {
 
 		this.gcmApiKey = gcmApiKey;
 		this.couchDb = couchDb;
 		this.auth = auth;
-		this.mongoDbConfig = mongoDbConfig;
+		this.mongoDb = mongoDb;
 	}
 
 
@@ -49,7 +49,7 @@ public final class OdsConfig extends Configuration {
 	}
 
 
-	public MongoDbConfig getMongoDbConfig() {
-		return mongoDbConfig;
+	public MongoDbConfig getMongoDb() {
+		return mongoDb;
 	}
 }
