@@ -31,7 +31,7 @@ public class DataSourceWrapper extends DataSource implements JsonApiIdentifiable
 	/**
 	 * Wrap a single DataSource
 	 * @param dataSource the source to wrap
-	 * @return a DataSourceWrapper which wraps {@param dataSource}
+	 * @return a DataSourceWrapper which wraps dataSource
 	 */
 	public static DataSourceWrapper from(DataSource dataSource) {
 		return new DataSourceWrapper(
@@ -45,7 +45,7 @@ public class DataSourceWrapper extends DataSource implements JsonApiIdentifiable
 	/**
 	 * Wrap a collection of DataSources
 	 * @param sourcesCollection the collection to wrap
-	 * @return a collection of DataSourcesWrappers wrapping the elements of {@param sourcesCollection}
+	 * @return a collection of DataSourcesWrappers wrapping the elements of sourcesCollection
 	 */
 	public static Collection<DataSourceWrapper> fromCollection(Collection<DataSource> sourcesCollection) {
 		return sourcesCollection

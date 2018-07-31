@@ -39,8 +39,7 @@ public class JsonUtils {
 	/**
 	 * Converts a given JsonNode to a map
 	 * @param node the node to convert
-	 * @return a map containing each attribute of the {@param node} as entry
-	 * @throws IOException
+	 * @return a map containing each attribute of the node as entry
 	 */
     public static Map<String, Object> getMapFromJson(JsonNode node) throws IOException {
     	return objectMapper.readValue(
