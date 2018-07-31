@@ -4,6 +4,8 @@ package org.jvalue.ods.main;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.hubspot.jackson.jaxrs.PropertyFilteringMessageBodyWriter;
+import com.mongodb.MongoClientURI;
+import com.mongodb.MongoClient;
 import io.dropwizard.Application;
 import io.dropwizard.jersey.DropwizardResourceConfig;
 import io.dropwizard.jersey.setup.JerseyContainerHolder;
@@ -22,6 +24,7 @@ import org.jvalue.commons.couchdb.rest.DbExceptionMapper;
 import org.jvalue.commons.rest.JsonExceptionMapper;
 import org.jvalue.commons.rest.NotFoundExceptionMapper;
 import org.jvalue.commons.utils.HttpServiceCheck;
+import org.jvalue.commons.utils.Log;
 import org.jvalue.ods.admin.monitoring.DbHealthCheck;
 import org.jvalue.ods.admin.monitoring.MonitoringModule;
 import org.jvalue.ods.admin.rest.AdminFilterChainApi;
@@ -60,15 +63,15 @@ public final class OdsApplication extends Application<OdsConfig> {
 	@Override
 	@Context
 	public void run(OdsConfig configuration, Environment environment) {
-		//TODO: implement a generic db ready assertion
 //		assertCouchDbIsReady(configuration.getCouchDb().getUrl());
+		assertMongoDbIsReady(configuration.getMongoDb().getUrl());
 
 		Injector injector = Guice.createInjector(
 				new MonitoringModule(environment.metrics()),
 				new ConfigModule(configuration),
 				new ProcessorModule(),
 //				new CouchDbModule(configuration.getCouchDb()),
-				new MongoDbModule(configuration.getMongoDbConfig()),
+				new MongoDbModule(configuration.getMongoDb()),
 				new DataModule(),
 				new NotificationsModule(),
 				new AuthModule(configuration.getAuth()),
@@ -135,6 +138,19 @@ public final class OdsApplication extends Application<OdsConfig> {
 			throw new RuntimeException("CouchDB service is not ready [" + couchDbUrl+ "]");
 		}
 
+	}
+
+	private void assertMongoDbIsReady(String mongoDbUrl){
+		MongoClient mongoClient = new MongoClient(new MongoClientURI(mongoDbUrl));
+
+		try {
+			mongoClient.getAddress();
+		} catch (Exception e) {
+			Log.error("MongoDb is not available.");
+			throw new RuntimeException("MongoDb is not available");
+		}finally {
+			mongoClient.close();
+		}
 	}
 
 }
