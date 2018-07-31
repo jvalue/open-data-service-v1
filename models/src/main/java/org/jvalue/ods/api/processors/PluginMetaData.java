@@ -7,7 +7,7 @@ import com.google.common.base.Objects;
 
 import javax.validation.constraints.NotNull;
 
-public final class PluginMetaData {
+public class PluginMetaData {
 
 	@NotNull private final String id, author;
 
