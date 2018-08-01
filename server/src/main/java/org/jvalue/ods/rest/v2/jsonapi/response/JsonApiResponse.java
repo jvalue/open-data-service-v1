@@ -73,6 +73,16 @@ public class JsonApiResponse {
 		}
 
 
+		@Override
+		public Buildable fromRepositoryURI(URI uri) {
+			Assert.assertNotNull(uri);
+
+			instance.jsonApiEntity.setResourceCollectionURI(uri);
+
+			return this;
+		}
+
+
 		public Buildable addLink(String name, URI ref) {
 			Assert.assertNotNull(name, ref);
 
@@ -166,6 +176,15 @@ public class JsonApiResponse {
 		 * @return a buildable Responsebuilder.
 		 */
 		Buildable restrictTo(String attribute);
+
+
+		/**
+		 * Sets the location for the responses entity.
+		 * @param uri the location of the entity
+		 * @return a buildable ResponseBuilder
+		 */
+		Buildable fromRepositoryURI(URI uri);
+
 
 		/**
 		 * Adds a link on document level to the generated response body.

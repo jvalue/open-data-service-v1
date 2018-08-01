@@ -26,6 +26,7 @@ import java.util.List;
 
 import static org.jvalue.ods.rest.v2.AbstractApi.BASE_URL;
 import static org.jvalue.ods.utils.HttpUtils.getDirectoryURI;
+import static org.jvalue.ods.utils.HttpUtils.getSanitizedPath;
 
 @Path(BASE_URL + "/{sourceId}/views")
 public final class DataViewApi extends AbstractApi {
@@ -70,27 +71,38 @@ public final class DataViewApi extends AbstractApi {
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		DataView view = viewManager.get(source, viewId);
 
-		if (!execute) {
+		Response response;
+
+		if (!execute) { //get view
 			URI executeURI = uriInfo
 				.getAbsolutePathBuilder()
 				.queryParam("execute", true)
 				.build();
 
-			return JsonApiResponse
+			response = JsonApiResponse
 				.createGetResponse(uriInfo)
 				.data(DataViewWrapper.from(view))
 				.addLink("views", getDirectoryURI(uriInfo))
 				.addLink("execute", executeURI)
 				.build();
-		} else {
+		}
+		else { //execute view
 			List<JsonNode> result = viewManager.executeView(sourceManager.getDataRepository(source), view, argument);
 
-			return JsonApiResponse
+			URI dataURI = getSanitizedPath(uriInfo).resolve("../../data");
+
+			//filter out view itself (is on position 0 of result)
+			result = result.subList(1, result.size());
+
+			response = JsonApiResponse
 				.createGetResponse(uriInfo)
 				.data(DataWrapper.fromCollection(result, source))
+				.fromRepositoryURI(dataURI)
 				.addLink("view", uriInfo.getAbsolutePath())
 				.build();
 		}
+
+		return response;
 	}
 
 

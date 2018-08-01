@@ -11,6 +11,8 @@ import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.jvalue.ods.utils.HttpUtils.appendTrailingSlash;
+
 public class JsonApiDocument implements Serializable, JsonLinks {
 
 	private UriInfo uriInfo;
@@ -25,21 +27,31 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 	private final List<JsonApiResource> included = new LinkedList<>();
 
 
-	public JsonApiDocument(JsonApiIdentifiable entity, UriInfo uriInfo) {
+	public JsonApiDocument(JsonApiIdentifiable entity,
+						   UriInfo uriInfo) {
 		this.uriInfo = uriInfo;
 		data.add(new JsonApiResource(entity, uriInfo.getAbsolutePath()));
 	}
 
 
-	public JsonApiDocument(Collection<? extends JsonApiIdentifiable> entityCollection, UriInfo uriInfo) {
+	public JsonApiDocument(Collection<? extends JsonApiIdentifiable> entityCollection,
+						   UriInfo uriInfo) {
 		this.uriInfo = uriInfo;
-		URI collectionURI = HttpUtils.appendTrailingSlash(uriInfo.getAbsolutePath());
+		URI collectionURI = appendTrailingSlash(uriInfo.getAbsolutePath());
 
 		for (JsonApiIdentifiable entity : entityCollection) {
 			JsonApiResource resource = new JsonApiResource(entity, collectionURI.resolve(entity.getId()));
 			resource.addSelfLink();
 			data.add(resource);
 		}
+	}
+
+
+	public void setResourceCollectionURI(URI collectionURI) {
+		data.forEach(r -> {
+			r.getLinks().clear();
+			r.addLink(JsonLinks.SELF, appendTrailingSlash(collectionURI).resolve(r.getId()));
+		});
 	}
 
 
