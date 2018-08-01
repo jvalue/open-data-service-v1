@@ -62,6 +62,7 @@ public final class DataSourceApi extends AbstractApi {
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(DataSourceWrapper.fromCollection(sources))
+			.addLink(ENTRYPOINT, getDirectoryURI(uriInfo))
 			.build();
 	}
 

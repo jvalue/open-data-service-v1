@@ -11,17 +11,19 @@ import static org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse.JSONAPI_TY
 @Consumes(JSONAPI_TYPE)
 abstract class AbstractApi {
 
-	protected static final String DATASOURCES = "datasources";
-	protected static final String FILTERTYPES = "filterTypes";
-	protected static final String USERS = "users";
-	protected static final String DATA = "data";
-	protected static final String FILTERCHAINS = "filterChains";
-	protected static final String PLUGINS = "plugins";
-	protected static final String NOTIFICATIONS = "notifications";
-	protected static final String VIEWS = "views";
+	static final String DATASOURCES = "datasources";
+	static final String FILTERTYPES = "filterTypes";
+	static final String USERS = "users";
+	static final String DATA = "data";
+	static final String FILTERCHAINS = "filterChains";
+	static final String PLUGINS = "plugins";
+	static final String NOTIFICATIONS = "notifications";
+	static final String VIEWS = "views";
+	static final String ENTRYPOINT = "entryPoint";
+	static final String VERSION = "version";
 
-	protected static final String VERSION = "/v2";
+	protected static final String V2 = "/v2";
 
-	protected static final String BASE_URL = VERSION + "/" + DATASOURCES;
+	protected static final String BASE_URL = V2 + "/" + DATASOURCES;
 
 }

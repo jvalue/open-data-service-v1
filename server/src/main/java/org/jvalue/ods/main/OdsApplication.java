@@ -115,6 +115,7 @@ public final class OdsApplication extends Application<OdsConfig> {
 		environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.api.VersionApi.class));
 		environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.api.NotificationApi.class));
 		environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.api.UserApi.class));
+		environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.api.EntryPoint.class));
 
 
 		// setup users

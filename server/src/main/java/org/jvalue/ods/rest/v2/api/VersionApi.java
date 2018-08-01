@@ -13,10 +13,13 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import static org.jvalue.ods.rest.v2.api.AbstractApi.ENTRYPOINT;
+import static org.jvalue.ods.rest.v2.api.AbstractApi.V2;
 import static org.jvalue.ods.rest.v2.api.AbstractApi.VERSION;
 import static org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse.JSONAPI_TYPE;
+import static org.jvalue.ods.utils.HttpUtils.getDirectoryURI;
 
-@Path(VERSION + "/" + VERSION)
+@Path(V2 + "/" + VERSION)
 @Produces(JSONAPI_TYPE)
 public final class VersionApi {
 
@@ -33,6 +36,7 @@ public final class VersionApi {
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(VersionInfoWrapper.from(version))
+			.addLink(ENTRYPOINT, getDirectoryURI(uriInfo))
 			.build();
 	}
 

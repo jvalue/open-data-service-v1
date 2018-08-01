@@ -17,8 +17,9 @@ import java.util.Set;
 
 import static org.jvalue.ods.rest.v2.api.AbstractApi.FILTERTYPES;
 import static org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse.JSONAPI_TYPE;
+import static org.jvalue.ods.utils.HttpUtils.getDirectoryURI;
 
-@Path(AbstractApi.VERSION + "/" + FILTERTYPES)
+@Path(AbstractApi.V2 + "/" + FILTERTYPES)
 @Produces(JSONAPI_TYPE)
 public final class ProcessorSpecificationApi extends AbstractApi {
 
@@ -40,6 +41,7 @@ public final class ProcessorSpecificationApi extends AbstractApi {
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(SpecificationWrapper.fromCollection(specs))
+			.addLink(ENTRYPOINT, getDirectoryURI(uriInfo))
 			.build();
 	}
 }
