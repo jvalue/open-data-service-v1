@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Assert;
 import org.junit.Test;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.JsonApiIdentifiable;
-import org.jvalue.ods.rest.v2.jsonapi.document.JsonApiResourceIdentifierTest;
 
 import java.io.IOException;
 import java.util.Map;

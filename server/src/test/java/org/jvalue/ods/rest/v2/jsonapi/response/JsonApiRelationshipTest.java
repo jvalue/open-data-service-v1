@@ -1,4 +1,4 @@
-package org.jvalue.ods.rest.v2.jsonapi.document;
+package org.jvalue.ods.rest.v2.jsonapi.response;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -8,7 +8,7 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.jvalue.ods.rest.v2.jsonapi.document.JsonLinks.RELATED;
+import static org.jvalue.ods.rest.v2.jsonapi.response.JsonLinks.RELATED;
 
 public class JsonApiRelationshipTest {
 

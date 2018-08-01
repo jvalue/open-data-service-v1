@@ -1,4 +1,4 @@
-package org.jvalue.ods.rest.v2.jsonapi.document;
+package org.jvalue.ods.rest.v2.jsonapi.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;

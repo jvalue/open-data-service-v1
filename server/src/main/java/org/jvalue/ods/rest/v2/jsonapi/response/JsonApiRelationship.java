@@ -1,4 +1,4 @@
-package org.jvalue.ods.rest.v2.jsonapi.document;
+package org.jvalue.ods.rest.v2.jsonapi.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.JsonApiIdentifiable;
@@ -6,7 +6,7 @@ import org.jvalue.ods.rest.v2.jsonapi.wrapper.JsonApiIdentifiable;
 import java.net.URI;
 import java.util.*;
 
-import static org.jvalue.ods.rest.v2.jsonapi.document.JsonLinks.RELATED;
+import static org.jvalue.ods.rest.v2.jsonapi.response.JsonLinks.RELATED;
 
 public class JsonApiRelationship {
 
@@ -16,13 +16,13 @@ public class JsonApiRelationship {
 	private final Map<String, URI> links = new HashMap<>();
 
 
-	public JsonApiRelationship(JsonApiIdentifiable entity, URI location) {
+	JsonApiRelationship(JsonApiIdentifiable entity, URI location) {
 		data.add(new JsonApiResourceIdentifier(entity));
 		links.put(RELATED, location);
 	}
 
 
-	public JsonApiRelationship(Collection<? extends JsonApiIdentifiable> entityCollection, URI location) {
+	JsonApiRelationship(Collection<? extends JsonApiIdentifiable> entityCollection, URI location) {
 		entityCollection.forEach(entity -> data.add(new JsonApiResourceIdentifier(entity)));
 		links.put(RELATED, location);
 	}
@@ -46,7 +46,7 @@ public class JsonApiRelationship {
 	 * @param entity the entity to check
 	 * @return true if a relation to entity exists, false otherwise
 	 */
-	public boolean containsEntity(JsonApiIdentifiable entity) {
+	boolean containsEntity(JsonApiIdentifiable entity) {
 		return data.stream()
 			.anyMatch(id -> id.isSame(entity));
 	}

@@ -1,10 +1,9 @@
-package org.jvalue.ods.rest.v2;
+package org.jvalue.ods.rest.v2.api;
 
 import org.jvalue.commons.auth.AbstractUserDescription;
 import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
-import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiMediaType;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.UserWrapper;
 
@@ -15,6 +14,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
 
+import static org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse.JSONAPI_TYPE;
 import static org.jvalue.ods.utils.HttpUtils.getDirectoryURI;
 
 /**
@@ -23,7 +23,7 @@ import static org.jvalue.ods.utils.HttpUtils.getDirectoryURI;
  * return types is not possible (yes, it still is unfortunately a hack ...).
  */
 @Path(AbstractApi.VERSION + "/users")
-@Produces(JsonApiMediaType.JSONAPI)
+@Produces(JSONAPI_TYPE)
 public class UserApi {
 
 	private final org.jvalue.commons.auth.rest.UserApi userApiReference;

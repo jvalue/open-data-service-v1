@@ -1,6 +1,5 @@
 package org.jvalue.ods.rest.v2.jsonapi.response;
 
-import org.jvalue.ods.rest.v2.jsonapi.document.JsonApiResourceIdentifier;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.JsonApiIdentifiable;
 
 import java.util.HashMap;

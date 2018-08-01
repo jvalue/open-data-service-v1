@@ -1,4 +1,4 @@
-package org.jvalue.ods.rest.v2.jsonapi.document;
+package org.jvalue.ods.rest.v2.jsonapi.response;
 
 import org.junit.Assert;
 import org.junit.Test;

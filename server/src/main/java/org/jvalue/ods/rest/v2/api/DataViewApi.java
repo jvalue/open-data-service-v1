@@ -1,4 +1,4 @@
-package org.jvalue.ods.rest.v2;
+package org.jvalue.ods.rest.v2.api;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -24,7 +24,7 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.List;
 
-import static org.jvalue.ods.rest.v2.AbstractApi.BASE_URL;
+import static org.jvalue.ods.rest.v2.api.AbstractApi.BASE_URL;
 import static org.jvalue.ods.utils.HttpUtils.getDirectoryURI;
 import static org.jvalue.ods.utils.HttpUtils.getSanitizedPath;
 
@@ -85,8 +85,7 @@ public final class DataViewApi extends AbstractApi {
 				.addLink("views", getDirectoryURI(uriInfo))
 				.addLink("execute", executeURI)
 				.build();
-		}
-		else { //execute view
+		} else { //execute view
 			List<JsonNode> result = viewManager.executeView(sourceManager.getDataRepository(source), view, argument);
 
 			URI dataURI = getSanitizedPath(uriInfo).resolve("../../data");

@@ -1,15 +1,11 @@
-package org.jvalue.ods.rest.v2;
+package org.jvalue.ods.rest.v2.api;
 
 
 import com.google.inject.Inject;
-
 import org.jvalue.ods.api.processors.Specification;
 import org.jvalue.ods.processor.specification.SpecificationManager;
-import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiMediaType;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.SpecificationWrapper;
-
-import java.util.Set;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -17,14 +13,18 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.util.Set;
+
+import static org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse.JSONAPI_TYPE;
 
 @Path(AbstractApi.VERSION + "/filterTypes")
-@Produces(JsonApiMediaType.JSONAPI)
+@Produces(JSONAPI_TYPE)
 public final class ProcessorSpecificationApi extends AbstractApi {
 
 	private final SpecificationManager descriptionManager;
 
-	@Context private UriInfo uriInfo;
+	@Context
+	private UriInfo uriInfo;
 
 	@Inject
 	public ProcessorSpecificationApi(SpecificationManager descriptionManager) {

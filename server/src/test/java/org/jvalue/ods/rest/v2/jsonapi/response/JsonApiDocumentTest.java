@@ -1,4 +1,4 @@
-package org.jvalue.ods.rest.v2.jsonapi.document;
+package org.jvalue.ods.rest.v2.jsonapi.response;
 
 import mockit.Expectations;
 import mockit.Mocked;
@@ -11,7 +11,6 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.stream.Collectors;
 
 public class JsonApiDocumentTest {

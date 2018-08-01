@@ -1,4 +1,4 @@
-package org.jvalue.ods.rest.v2;
+package org.jvalue.ods.rest.v2.api;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -23,7 +23,7 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.List;
 
-import static org.jvalue.ods.rest.v2.AbstractApi.BASE_URL;
+import static org.jvalue.ods.rest.v2.api.AbstractApi.BASE_URL;
 import static org.jvalue.ods.utils.HttpUtils.getDirectoryURI;
 
 @Path(BASE_URL + "/{sourceId}/data")

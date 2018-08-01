@@ -1,9 +1,8 @@
-package org.jvalue.ods.rest.v2.jsonapi.document;
+package org.jvalue.ods.rest.v2.jsonapi.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.JsonApiIdentifiable;
-import org.jvalue.ods.utils.HttpUtils;
 
 import javax.ws.rs.core.UriInfo;
 import java.io.Serializable;
@@ -15,13 +14,13 @@ import static org.jvalue.ods.utils.HttpUtils.appendTrailingSlash;
 
 public class JsonApiDocument implements Serializable, JsonLinks {
 
-	private UriInfo uriInfo;
+	private final UriInfo uriInfo;
 
 	private final Map<String, URI> links = new HashMap<>();
 
 	@JsonFormat(with = {
-			JsonFormat.Feature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED,
-			JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY})
+		JsonFormat.Feature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED,
+		JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY})
 	protected List<JsonApiResource> data = new LinkedList<>();
 
 	private final List<JsonApiResource> included = new LinkedList<>();
@@ -66,16 +65,16 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 	}
 
 
-	private URI getRelationshipURI (JsonApiIdentifiable relationship) {
+	private URI getRelationshipURI(JsonApiIdentifiable relationship) {
 		URI relationshipURI = null;
 
-		for(JsonApiResource dataElement: data) {
+		for (JsonApiResource dataElement : data) {
 			if (dataElement.hasRelationshipTo(relationship)) {
 				relationshipURI = dataElement.getRelationshipUri(relationship);
 			}
 		}
 
-		if(relationshipURI == null) {
+		if (relationshipURI == null) {
 			throw new IllegalArgumentException("relationship " + relationship.getId() + " does not exist.");
 		}
 
@@ -145,8 +144,8 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 		if (o == null || getClass() != o.getClass()) return false;
 		JsonApiDocument that = (JsonApiDocument) o;
 		return Objects.equals(links, that.links) &&
-				Objects.equals(uriInfo, that.uriInfo) &&
-				Objects.equals(data, that.data);
+			Objects.equals(uriInfo, that.uriInfo) &&
+			Objects.equals(data, that.data);
 	}
 
 

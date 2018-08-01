@@ -1,4 +1,4 @@
-package org.jvalue.ods.rest.v2;
+package org.jvalue.ods.rest.v2.api;
 
 
 import com.google.inject.Inject;
@@ -20,7 +20,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
 
-import static org.jvalue.ods.rest.v2.AbstractApi.BASE_URL;
+import static org.jvalue.ods.rest.v2.api.AbstractApi.BASE_URL;
 import static org.jvalue.ods.utils.HttpUtils.getDirectoryURI;
 
 @Path(BASE_URL + "/{sourceId}/notifications")

@@ -2,7 +2,6 @@ package org.jvalue.ods.rest.v2.jsonapi.response;
 
 import org.jvalue.commons.utils.Assert;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.JsonApiIdentifiable;
-import org.jvalue.ods.rest.v2.jsonapi.document.JsonApiDocument;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -10,6 +9,8 @@ import java.net.URI;
 import java.util.Collection;
 
 public class JsonApiResponse {
+
+	public static final String JSONAPI_TYPE = "application/vnd.api+json";
 
 	private UriInfo uriInfo;
 	private JsonApiDocument jsonApiEntity;
@@ -132,15 +133,15 @@ public class JsonApiResponse {
 			Response.ResponseBuilder responseBuilder = Response.status(instance.statusCode);
 			if (instance.jsonApiEntity != null) {
 				responseBuilder
-						.type(JsonApiMediaType.JSONAPI)
-						.entity(instance.jsonApiEntity);
+					.type(JSONAPI_TYPE)
+					.entity(instance.jsonApiEntity);
 			}
 			return responseBuilder.build();
 		}
 
 
 		private void assertHasRelationship(JsonApiIdentifiable relationship) {
-			if(!instance.jsonApiEntity.hasRelationshipTo(relationship)) {
+			if (!instance.jsonApiEntity.hasRelationshipTo(relationship)) {
 				throw new IllegalArgumentException(
 					"It is not supported to add includes to resources with which there is no prior relationship. " +
 						"Try adding it as relationship first.");
@@ -155,6 +156,7 @@ public class JsonApiResponse {
 	public interface RequiredEntity {
 		/**
 		 * Add a single entity to a response.
+		 *
 		 * @param entity the entity to add.
 		 * @return A buildable Responsebuilder.
 		 */
@@ -172,6 +174,7 @@ public class JsonApiResponse {
 		/**
 		 * Restricts the serialization of the generated response body to a certain attribute,
 		 * i.e. creates a view which removes every attribute except type, id, selflink and attribute
+		 *
 		 * @param attribute the name of the attribute which should appear
 		 * @return a buildable Responsebuilder.
 		 */
@@ -180,6 +183,7 @@ public class JsonApiResponse {
 
 		/**
 		 * Sets the location for the responses entity.
+		 *
 		 * @param uri the location of the entity
 		 * @return a buildable ResponseBuilder
 		 */
@@ -188,8 +192,9 @@ public class JsonApiResponse {
 
 		/**
 		 * Adds a link on document level to the generated response body.
+		 *
 		 * @param name the name of the link.
-		 * @param ref the reference of the link.
+		 * @param ref  the reference of the link.
 		 * @return a buildable Responsebuilder.
 		 */
 		Buildable addLink(String name, URI ref);
@@ -197,8 +202,9 @@ public class JsonApiResponse {
 		/**
 		 * Adds a relationship to the generated response body. The corresponding entity is represented as
 		 * a ResourceIdentifier with a selflink on resource level.
-		 * @param name the name of the relationship in the generated response body.
-		 * @param entity the corresponding entity to which the relationship should be added.
+		 *
+		 * @param name     the name of the relationship in the generated response body.
+		 * @param entity   the corresponding entity to which the relationship should be added.
 		 * @param location the endpoint where the entity is located.
 		 * @return a buildable Responsebuilder on which addIncluded() can be called.
 		 */
@@ -207,9 +213,10 @@ public class JsonApiResponse {
 		/**
 		 * Adds a relationship to the generated response body. The corresponding collection of entities is represented as
 		 * a collection of ResourceIdentifiers with selflinks on resource level.
-		 * @param name the name of the relationship in the generated response body.
+		 *
+		 * @param name             the name of the relationship in the generated response body.
 		 * @param entityCollection the collection of entities to which the relationship should be added
-		 * @param location the endpoint where the entity is located.
+		 * @param location         the endpoint where the entity is located.
 		 * @return a buildable Responsebuilder on which addIncluded() can be called.
 		 */
 		WithRelationship addRelationship(String name, Collection<? extends JsonApiIdentifiable> entityCollection, URI location);
@@ -221,9 +228,10 @@ public class JsonApiResponse {
 	 * It is needed to ensure that included entities can only be added to responses that contain relationships.
 	 * Extends Buildable since it can only be returned if the Responsebuilder already contains an entity
 	 */
-	public interface WithRelationship extends Buildable{
+	public interface WithRelationship extends Buildable {
 		/**
 		 * Adds a included resource to the generated response body.
+		 *
 		 * @param included the entity to be included. Entity has to be added as a relationship before.
 		 * @return a buildable ResponseBuilder on which addIncluded() can be called.
 		 */

@@ -1,7 +1,6 @@
 package org.jvalue.ods.rest.v2.jsonapi.wrapper;
 
 import org.jvalue.ods.api.processors.PluginMetaData;
-import org.jvalue.ods.rest.v2.jsonapi.document.JsonApiDocument;
 
 import java.util.Collection;
 import java.util.stream.Collectors;

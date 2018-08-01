@@ -1,13 +1,14 @@
-package org.jvalue.ods.rest.v2;
+package org.jvalue.ods.rest.v2.api;
 
-
-import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiMediaType;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 
-@Produces(JsonApiMediaType.JSONAPI)
-@Consumes(JsonApiMediaType.JSONAPI)
+import static org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse.JSONAPI_TYPE;
+
+
+@Produces(JSONAPI_TYPE)
+@Consumes(JSONAPI_TYPE)
 abstract class AbstractApi {
 
 	protected static final String VERSION = "/v2";

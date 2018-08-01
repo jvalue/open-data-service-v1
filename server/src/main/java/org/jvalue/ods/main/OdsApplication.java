@@ -106,15 +106,15 @@ public final class OdsApplication extends Application<OdsConfig> {
 		environment.jersey().register(new NotFoundExceptionMapper());
 
 		// v2
-        environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.DataSourceApi.class));
-		environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.DataApi.class));
-		environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.DataViewApi.class));
-		environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.ProcessorChainApi.class));
-		environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.ProcessorSpecificationApi.class));
-		environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.PluginApi.class));
-		environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.VersionApi.class));
-		environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.NotificationApi.class));
-		environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.UserApi.class));
+        environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.api.DataSourceApi.class));
+		environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.api.DataApi.class));
+		environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.api.DataViewApi.class));
+		environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.api.ProcessorChainApi.class));
+		environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.api.ProcessorSpecificationApi.class));
+		environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.api.PluginApi.class));
+		environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.api.VersionApi.class));
+		environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.api.NotificationApi.class));
+		environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.api.UserApi.class));
 
 
 		// setup users

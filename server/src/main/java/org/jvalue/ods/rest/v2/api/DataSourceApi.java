@@ -1,4 +1,4 @@
-package org.jvalue.ods.rest.v2;
+package org.jvalue.ods.rest.v2.api;
 
 
 import com.google.inject.Inject;
