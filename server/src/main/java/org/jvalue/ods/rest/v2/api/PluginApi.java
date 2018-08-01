@@ -25,10 +25,11 @@ import java.io.InputStream;
 import java.util.List;
 
 import static org.jvalue.ods.rest.v2.api.AbstractApi.BASE_URL;
+import static org.jvalue.ods.rest.v2.api.AbstractApi.PLUGINS;
 import static org.jvalue.ods.utils.HttpUtils.getDirectoryURI;
 
 
-@Path(BASE_URL + "/{sourceId}/plugins")
+@Path(BASE_URL + "/{sourceId}/" + PLUGINS)
 public final class PluginApi extends AbstractApi {
 
 	private static final String
@@ -77,7 +78,7 @@ public final class PluginApi extends AbstractApi {
 		return JsonApiResponse
 			.createPostResponse(uriInfo)
 			.data(PluginMetaDataWrapper.from(metaData))
-			.addLink("plugins", getDirectoryURI(uriInfo))
+			.addLink(PLUGINS, getDirectoryURI(uriInfo))
 			.build();
 	}
 
@@ -109,7 +110,7 @@ public final class PluginApi extends AbstractApi {
 			return JsonApiResponse
 				.createGetResponse(uriInfo)
 				.data(PluginMetaDataWrapper.from(metaData))
-				.addLink("plugins", getDirectoryURI(uriInfo))
+				.addLink(PLUGINS, getDirectoryURI(uriInfo))
 				.build();
 		} else {
 			return Response

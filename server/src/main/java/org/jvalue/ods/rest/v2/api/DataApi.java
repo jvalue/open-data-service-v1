@@ -24,9 +24,10 @@ import java.net.URI;
 import java.util.List;
 
 import static org.jvalue.ods.rest.v2.api.AbstractApi.BASE_URL;
+import static org.jvalue.ods.rest.v2.api.AbstractApi.DATA;
 import static org.jvalue.ods.utils.HttpUtils.getDirectoryURI;
 
-@Path(BASE_URL + "/{sourceId}/data")
+@Path(BASE_URL + "/{sourceId}/" + DATA)
 public final class DataApi extends AbstractApi {
 
 	private static final String DEFAULT_LIMIT = "100";
@@ -109,7 +110,7 @@ public final class DataApi extends AbstractApi {
 			.createGetResponse(uriInfo)
 			.data(DataWrapper.from(resultNode, source))
 			.addRelationship("DataSource", DataSourceWrapper.from(source), getDirectoryURI(uriInfo))
-			.addLink("data", getDirectoryURI(uriInfo))
+			.addLink(DATA, getDirectoryURI(uriInfo))
 			.build();
 	}
 

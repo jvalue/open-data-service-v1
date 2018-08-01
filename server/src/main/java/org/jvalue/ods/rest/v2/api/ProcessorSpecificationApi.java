@@ -15,9 +15,10 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.Set;
 
+import static org.jvalue.ods.rest.v2.api.AbstractApi.FILTERTYPES;
 import static org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse.JSONAPI_TYPE;
 
-@Path(AbstractApi.VERSION + "/filterTypes")
+@Path(AbstractApi.VERSION + "/" + FILTERTYPES)
 @Produces(JSONAPI_TYPE)
 public final class ProcessorSpecificationApi extends AbstractApi {
 

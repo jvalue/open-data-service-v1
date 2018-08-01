@@ -16,7 +16,7 @@ import javax.ws.rs.core.UriInfo;
 import static org.jvalue.ods.rest.v2.api.AbstractApi.VERSION;
 import static org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse.JSONAPI_TYPE;
 
-@Path(VERSION + "/version")
+@Path(VERSION + "/" + VERSION)
 @Produces(JSONAPI_TYPE)
 public final class VersionApi {
 

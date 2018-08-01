@@ -21,9 +21,10 @@ import javax.ws.rs.core.UriInfo;
 import java.util.List;
 
 import static org.jvalue.ods.rest.v2.api.AbstractApi.BASE_URL;
+import static org.jvalue.ods.rest.v2.api.AbstractApi.NOTIFICATIONS;
 import static org.jvalue.ods.utils.HttpUtils.getDirectoryURI;
 
-@Path(BASE_URL + "/{sourceId}/notifications")
+@Path(BASE_URL + "/{sourceId}/" + NOTIFICATIONS)
 public final class NotificationApi extends AbstractApi {
 
 	private final DataSourceManager sourceManager;
@@ -61,7 +62,7 @@ public final class NotificationApi extends AbstractApi {
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(ClientWrapper.from(client))
-			.addLink("notifications", getDirectoryURI(uriInfo))
+			.addLink(NOTIFICATIONS, getDirectoryURI(uriInfo))
 			.build();
 	}
 
@@ -91,7 +92,7 @@ public final class NotificationApi extends AbstractApi {
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(ClientWrapper.from(client))
-			.addLink("notifications", getDirectoryURI(uriInfo))
+			.addLink(NOTIFICATIONS, getDirectoryURI(uriInfo))
 			.build();
 	}
 

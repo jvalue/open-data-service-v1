@@ -74,7 +74,7 @@ public final class DataSourceApi extends AbstractApi {
 		JsonApiResponse.Buildable response = JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(DataSourceWrapper.from(source))
-			.addLink("data", getSanitizedPath(uriInfo).resolve("data"))
+			.addLink(DATA, getSanitizedPath(uriInfo).resolve(DATA))
 			.addLink("sources", getDirectoryURI(uriInfo));
 
 		response = addDatasourceRelationships(response, source);
@@ -147,16 +147,16 @@ public final class DataSourceApi extends AbstractApi {
 		URI path = getSanitizedPath(uriInfo);
 
 		if (!chains.isEmpty()) {
-			response.addRelationship("filterChains", ProcessorReferenceChainWrapper.fromCollection(chains), path.resolve("./filterChains"));
+			response.addRelationship(FILTERCHAINS, ProcessorReferenceChainWrapper.fromCollection(chains), path.resolve(FILTERCHAINS));
 		}
 		if (!plugins.isEmpty()) {
-			response.addRelationship("plugins", PluginMetaDataWrapper.fromCollection(plugins), path.resolve("./plugins"));
+			response.addRelationship(PLUGINS, PluginMetaDataWrapper.fromCollection(plugins), path.resolve(PLUGINS));
 		}
 		if (!notifications.isEmpty()) {
-			response.addRelationship("notifications", ClientWrapper.fromCollection(notifications), path.resolve("./notifications"));
+			response.addRelationship(NOTIFICATIONS, ClientWrapper.fromCollection(notifications), path.resolve(NOTIFICATIONS));
 		}
 		if (!views.isEmpty()) {
-			response.addRelationship("views", DataViewWrapper.fromCollection(views), path.resolve("./views"));
+			response.addRelationship(VIEWS, DataViewWrapper.fromCollection(views), path.resolve(VIEWS));
 		}
 
 		return response;

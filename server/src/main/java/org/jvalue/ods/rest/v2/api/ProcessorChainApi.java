@@ -24,9 +24,10 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static org.jvalue.ods.rest.v2.api.AbstractApi.BASE_URL;
+import static org.jvalue.ods.rest.v2.api.AbstractApi.FILTERCHAINS;
 import static org.jvalue.ods.utils.HttpUtils.getDirectoryURI;
 
-@Path(BASE_URL + "/{sourceId}/filterChains")
+@Path(BASE_URL + "/{sourceId}/" + FILTERCHAINS)
 public final class ProcessorChainApi extends AbstractApi {
 
 	// avoid executing filter chains faster than every second
@@ -75,7 +76,7 @@ public final class ProcessorChainApi extends AbstractApi {
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(ProcessorReferenceChainWrapper.from(chain))
-			.addLink("filterChains", getDirectoryURI(uriInfo))
+			.addLink(FILTERCHAINS, getDirectoryURI(uriInfo))
 			.build();
 	}
 
@@ -108,7 +109,7 @@ public final class ProcessorChainApi extends AbstractApi {
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(ProcessorReferenceChainWrapper.from(chainReference))
-			.addLink("filterChains", getDirectoryURI(uriInfo))
+			.addLink(FILTERCHAINS, getDirectoryURI(uriInfo))
 			.build();
 	}
 

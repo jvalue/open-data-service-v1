@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
 
+import static org.jvalue.ods.rest.v2.api.AbstractApi.USERS;
 import static org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse.JSONAPI_TYPE;
 import static org.jvalue.ods.utils.HttpUtils.getDirectoryURI;
 
@@ -22,7 +23,7 @@ import static org.jvalue.ods.utils.HttpUtils.getDirectoryURI;
  * The former (v1) inheritance hack could not be used because overriding the endpoints with new
  * return types is not possible (yes, it still is unfortunately a hack ...).
  */
-@Path(AbstractApi.VERSION + "/users")
+@Path(AbstractApi.VERSION + "/" + USERS)
 @Produces(JSONAPI_TYPE)
 public class UserApi {
 
@@ -55,7 +56,7 @@ public class UserApi {
 		return JsonApiResponse
 			.createPostResponse(uriInfo)
 			.data(UserWrapper.from(result))
-			.addLink("users", getDirectoryURI(uriInfo))
+			.addLink(USERS, getDirectoryURI(uriInfo))
 			.build();
 	}
 
@@ -68,7 +69,7 @@ public class UserApi {
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(UserWrapper.from(result))
-			.addLink("users", getDirectoryURI(uriInfo))
+			.addLink(USERS, getDirectoryURI(uriInfo))
 			.build();
 	}
 
@@ -81,7 +82,7 @@ public class UserApi {
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(UserWrapper.from(result))
-			.addLink("users", getDirectoryURI(uriInfo))
+			.addLink(USERS, getDirectoryURI(uriInfo))
 			.build();
 	}
 
