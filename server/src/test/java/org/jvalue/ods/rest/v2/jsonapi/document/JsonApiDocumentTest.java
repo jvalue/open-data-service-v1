@@ -9,6 +9,7 @@ import org.jvalue.ods.rest.v2.jsonapi.wrapper.JsonApiIdentifiable;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.stream.Collectors;
@@ -46,10 +47,7 @@ public class JsonApiDocumentTest {
 
     @Test
     public void testConstructorWithCollection() {
-		Collection<JsonApiIdentifiable> dummyCollection = new LinkedList<>();
-		dummyCollection.add(dummyObj01);
-		dummyCollection.add(dummyObj42);
-		dummyCollection.add(dummyObj43);
+		Collection<JsonApiIdentifiable> dummyCollection = Arrays.asList(dummyObj01, dummyObj42, dummyObj43);
 
 		JsonApiDocument result = new JsonApiDocument(dummyCollection, uriInfoMock);
 
@@ -59,6 +57,22 @@ public class JsonApiDocumentTest {
 						.stream()
 						.map(JsonApiResource::getEntity)
 						.collect(Collectors.toList()));
+	}
+
+
+	@Test
+	public void testSetResourceCollection() {
+		URI collectionURI = URI.create("http://localhost:8080/path/to/collection/");
+		Collection<JsonApiIdentifiable> dummyCollection = Arrays.asList(dummyObj01, dummyObj42, dummyObj43);
+
+		JsonApiDocument result = new JsonApiDocument(dummyCollection, uriInfoMock);
+		result.setResourceCollectionURI(collectionURI);
+
+		result.data.stream().allMatch(r -> r.getLinks().size() == 1);
+		Assert.assertEquals(collectionURI.resolve("id_01"), result.getData().get(0).getSelfLink());
+		Assert.assertEquals(collectionURI.resolve("id_42"), result.getData().get(1).getSelfLink());
+		Assert.assertEquals(collectionURI.resolve("id_43"), result.getData().get(2).getSelfLink());
+
 	}
 
 

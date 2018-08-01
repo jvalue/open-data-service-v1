@@ -312,6 +312,34 @@ public class JsonApiResponseTest {
 	}
 
 
+	@Test
+	public void testFromRepositoryURI() {
+		//Record
+		URI collectionURI = URI.create("http://localhost:8080/path/to/collection");
+		List<JsonApiIdentifiable> entities = new ArrayList<>();
+		for(int i = 0; i < NR_ENTITIES; i++) {
+			entities.add(createCustomMinimalEntity(String.valueOf(i)));
+		}
+
+		//Replay
+		Response result = JsonApiResponse
+			.createGetResponse(uriInfo)
+			.data(entities)
+			.fromRepositoryURI(collectionURI)
+			.build();
+
+		//Verify
+		assertIsValidJsonApiDataResponse(result);
+		JsonNode resultNode = extractJsonEntity(result);
+		assertIsValidDataNode(resultNode.get("data"));
+		for(int i = 0; i < NR_ENTITIES; i++) {
+			JsonNode links = resultNode.get("data").get(i).get("links");
+			Assert.assertEquals(1, links.size());
+			Assert.assertEquals(collectionURI.toString() + "/" + i, links.get("self").textValue());
+		}
+
+	}
+
 	/*
 	TEST UTILS
 	 */

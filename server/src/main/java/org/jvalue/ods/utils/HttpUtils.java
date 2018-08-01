@@ -3,6 +3,7 @@ package org.jvalue.ods.utils;
 import org.jvalue.commons.utils.Assert;
 import org.jvalue.commons.utils.Log;
 
+import javax.ws.rs.core.UriInfo;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,7 +15,8 @@ import java.nio.charset.Charset;
 
 public class HttpUtils {
 
-	private HttpUtils () { }
+	private HttpUtils() {
+	}
 
 	public static String readUrl(URL url, String charsetName) throws IOException {
 		Assert.assertNotNull(url, charsetName);
@@ -25,8 +27,8 @@ public class HttpUtils {
 			connection.setRequestMethod("GET");
 
 			reader = new BufferedReader(new InputStreamReader(
-					connection.getInputStream(),
-					Charset.forName(charsetName)));
+				connection.getInputStream(),
+				Charset.forName(charsetName)));
 
 			StringBuilder stringBuilder = new StringBuilder();
 			String line;
@@ -37,7 +39,7 @@ public class HttpUtils {
 
 		} finally {
 			try {
-				if (reader != null)  reader.close();
+				if (reader != null) reader.close();
 			} catch (IOException e) {
 				Log.error("Failed to close reader", e);
 			}
@@ -48,10 +50,18 @@ public class HttpUtils {
 	public static URI appendTrailingSlash(URI uri) {
 		String uriString = uri.toString();
 
-		if(uriString.matches(".*/$")) {
+		if (uriString.matches(".*/$")) {
 			return uri;
-		}
-		else return URI.create(uriString + "/");
+		} else return URI.create(uriString + "/");
+	}
+
+
+	public static URI getSanitizedPath(UriInfo uriInfo) {
+		return appendTrailingSlash(uriInfo.getAbsolutePath());
+	}
+
+	public static URI getDirectoryURI(UriInfo uriInfo) {
+		return getSanitizedPath(uriInfo).resolve("..");
 	}
 
 }

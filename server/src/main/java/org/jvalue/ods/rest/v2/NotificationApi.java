@@ -21,6 +21,7 @@ import javax.ws.rs.core.UriInfo;
 import java.util.List;
 
 import static org.jvalue.ods.rest.v2.AbstractApi.BASE_URL;
+import static org.jvalue.ods.utils.HttpUtils.getDirectoryURI;
 
 @Path(BASE_URL + "/{sourceId}/notifications")
 public final class NotificationApi extends AbstractApi {
@@ -29,12 +30,13 @@ public final class NotificationApi extends AbstractApi {
 	private final NotificationManager notificationManager;
 	private final ClientAdapter clientAdapter = new ClientAdapter();
 
-	@Context private UriInfo uriInfo;
+	@Context
+	private UriInfo uriInfo;
 
 	@Inject
 	NotificationApi(
-			DataSourceManager sourceManager,
-			NotificationManager notificationManager) {
+		DataSourceManager sourceManager,
+		NotificationManager notificationManager) {
 
 		this.sourceManager = sourceManager;
 		this.notificationManager = notificationManager;
@@ -44,18 +46,22 @@ public final class NotificationApi extends AbstractApi {
 	@POST
 	@Path("/{clientId}")
 	public Response registerClient(
-			@RestrictedTo(Role.ADMIN) User user,
-			@PathParam("sourceId") String sourceId,
-			@PathParam("clientId") String clientId,
-			@Valid ClientDescription clientDescription) {
+		@RestrictedTo(Role.ADMIN) User user,
+		@PathParam("sourceId") String sourceId,
+		@PathParam("clientId") String clientId,
+		@Valid ClientDescription clientDescription) {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
-		if (notificationManager.contains(source, clientId)) throw RestUtils.createJsonFormattedException("client with id " + clientId + " already exists", 409);
+		if (notificationManager.contains(source, clientId)) {
+			throw RestUtils.createJsonFormattedException("client with id " + clientId + " already exists", 409);
+		}
 		Client client = clientDescription.accept(clientAdapter, clientId);
 		notificationManager.add(source, sourceManager.getDataRepository(source), client);
+
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(ClientWrapper.from(client))
+			.addLink("notifications", getDirectoryURI(uriInfo))
 			.build();
 	}
 
@@ -63,9 +69,9 @@ public final class NotificationApi extends AbstractApi {
 	@DELETE
 	@Path("/{clientId}")
 	public void unregisterClient(
-			@RestrictedTo(Role.ADMIN) User user,
-			@PathParam("sourceId") String sourceId,
-			@PathParam("clientId") String clientId) {
+		@RestrictedTo(Role.ADMIN) User user,
+		@PathParam("sourceId") String sourceId,
+		@PathParam("clientId") String clientId) {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		Client client = notificationManager.get(source, clientId);
@@ -76,8 +82,8 @@ public final class NotificationApi extends AbstractApi {
 	@GET
 	@Path("/{clientId}")
 	public Response getClient(
-			@PathParam("sourceId") String sourceId,
-			@PathParam("clientId") String clientId) {
+		@PathParam("sourceId") String sourceId,
+		@PathParam("clientId") String clientId) {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		Client client = notificationManager.get(source, clientId);
@@ -85,13 +91,14 @@ public final class NotificationApi extends AbstractApi {
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(ClientWrapper.from(client))
+			.addLink("notifications", getDirectoryURI(uriInfo))
 			.build();
 	}
 
 
 	@GET
 	public Response getAllClients(
-			@PathParam("sourceId") String sourceId) {
+		@PathParam("sourceId") String sourceId) {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		List<Client> clients = notificationManager.getAll(source);
@@ -99,6 +106,7 @@ public final class NotificationApi extends AbstractApi {
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(ClientWrapper.fromCollection(clients))
+			.addLink("source", getDirectoryURI(uriInfo))
 			.build();
 	}
 
