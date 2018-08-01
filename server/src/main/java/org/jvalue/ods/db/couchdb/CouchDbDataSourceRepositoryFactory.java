@@ -5,16 +5,16 @@ import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.commons.db.repositories.GenericRepository;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.db.couchdb.repositories.DataSourceRepository;
-import org.jvalue.ods.db.generic.DataSourceFactory;
+import org.jvalue.ods.db.generic.DataSourceRepositoryFactory;
 
 
-public class CouchDbDataSourceFactory implements DataSourceFactory {
+public class CouchDbDataSourceRepositoryFactory implements DataSourceRepositoryFactory {
 
 	private final DbConnectorFactory dbConnectorFactory;
 
 
 	@Inject
-	public CouchDbDataSourceFactory(DbConnectorFactory dbConnectorFactory) {
+	public CouchDbDataSourceRepositoryFactory(DbConnectorFactory dbConnectorFactory) {
 		this.dbConnectorFactory = dbConnectorFactory;
 	}
 

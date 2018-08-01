@@ -17,7 +17,7 @@ import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.api.processors.PluginMetaData;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
-import org.jvalue.ods.db.generic.DataSourceFactory;
+import org.jvalue.ods.db.generic.DataSourceRepositoryFactory;
 import org.jvalue.ods.db.generic.RepositoryFactory;
 import org.jvalue.ods.db.mongodb.repositories.*;
 import org.value.commons.mongodb.MongoDbConfig;
@@ -40,7 +40,7 @@ public class MongoDbModule extends AbstractModule {
 		MongoDbConnectorFactory connectorFactory = new MongoDbConnectorFactory(mongoClient, mongoDbConfig.getDbPrefix());
 
 		bind(DbConnectorFactory.class).toInstance(connectorFactory);
-		bind(DataSourceFactory.class).to(MongoDbDataSourceFactory.class);
+		bind(DataSourceRepositoryFactory.class).to(MongoDbDataSourceRepositoryFactory.class);
 		bind(AuthRepositoryFactory.class).to(MongoDbAuthRepositoryFactory.class);
 
 		bind(new TypeLiteral<Cache<GenericRepository<CouchDbDataView>>>() {

@@ -4,16 +4,16 @@ import com.google.inject.Inject;
 import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.commons.db.repositories.GenericRepository;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.db.generic.DataSourceFactory;
+import org.jvalue.ods.db.generic.DataSourceRepositoryFactory;
 import org.jvalue.ods.db.mongodb.repositories.MongoDbDataSourceRepository;
 
-public class MongoDbDataSourceFactory implements DataSourceFactory {
+public class MongoDbDataSourceRepositoryFactory implements DataSourceRepositoryFactory {
 
 	private final DbConnectorFactory dbConnectorFactory;
 
 
 	@Inject
-	public MongoDbDataSourceFactory(DbConnectorFactory dbConnectorFactory) {
+	public MongoDbDataSourceRepositoryFactory(DbConnectorFactory dbConnectorFactory) {
 		this.dbConnectorFactory = dbConnectorFactory;
 	}
 

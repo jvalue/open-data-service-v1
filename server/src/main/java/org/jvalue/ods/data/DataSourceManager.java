@@ -12,7 +12,7 @@ import org.jvalue.commons.utils.Assert;
 import org.jvalue.commons.utils.Cache;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
-import org.jvalue.ods.db.generic.DataSourceFactory;
+import org.jvalue.ods.db.generic.DataSourceRepositoryFactory;
 import org.jvalue.ods.db.generic.RepositoryFactory;
 import org.jvalue.ods.notifications.NotificationManager;
 import org.jvalue.ods.processor.ProcessorChainManager;
@@ -33,7 +33,7 @@ public final class DataSourceManager implements Managed {
 
 	@Inject
 	public DataSourceManager(
-		DataSourceFactory dataSourceFactory,
+		DataSourceRepositoryFactory dataSourceFactory,
 		Cache<GenericDataRepository<CouchDbDataView, JsonNode>> dataRepositoryCache,
 		DbConnectorFactory dbConnectorFactory,
 		RepositoryFactory repositoryFactory,

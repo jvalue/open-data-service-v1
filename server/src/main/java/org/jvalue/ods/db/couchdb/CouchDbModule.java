@@ -21,7 +21,7 @@ import org.jvalue.ods.api.processors.PluginMetaData;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
 import org.jvalue.ods.db.couchdb.repositories.*;
-import org.jvalue.ods.db.generic.DataSourceFactory;
+import org.jvalue.ods.db.generic.DataSourceRepositoryFactory;
 import org.jvalue.ods.db.generic.RepositoryFactory;
 
 import java.net.MalformedURLException;
@@ -48,7 +48,7 @@ public class CouchDbModule extends AbstractModule {
 			DbConnectorFactory connectorFactory = new CouchDbConnectorFactory(couchDbInstance, couchDbConfig.getDbPrefix());
 
 			bind(DbConnectorFactory.class).toInstance(connectorFactory);
-			bind(DataSourceFactory.class).to(CouchDbDataSourceFactory.class);
+			bind(DataSourceRepositoryFactory.class).to(CouchDbDataSourceRepositoryFactory.class);
 			bind(AuthRepositoryFactory.class).to(CouchDbAuthRepositoryFactory.class);
 
 			bind(new TypeLiteral<Cache<GenericRepository<CouchDbDataView>>>() {
