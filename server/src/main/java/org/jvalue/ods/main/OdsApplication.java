@@ -142,15 +142,19 @@ public final class OdsApplication extends Application<OdsConfig> {
 
 	private void assertMongoDbIsReady(String mongoDbUrl){
 		MongoClient mongoClient = new MongoClient(new MongoClientURI(mongoDbUrl));
+		int retryCounter = 50;
+		do{
+			try {
+				mongoClient.getAddress();
+			} catch (Exception e) {
+				Log.error("MongoDb is not available.");
+			}finally {
+				mongoClient.close();
+			}
+			--retryCounter;
+		}while (retryCounter > 0);
 
-		try {
-			mongoClient.getAddress();
-		} catch (Exception e) {
-			Log.error("MongoDb is not available.");
-			throw new RuntimeException("MongoDb is not available");
-		}finally {
-			mongoClient.close();
-		}
+		throw new RuntimeException("MongoDb is not available");
 	}
 
 }
