@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
  */
-package org.jvalue.ods.processor.filter;
+package org.jvalue.ods.processor.filter.db;
 
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -28,6 +28,8 @@ import org.jvalue.ods.admin.monitoring.PauseableTimer;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
 import org.jvalue.commons.db.repositories.GenericDataRepository;
+import org.jvalue.ods.processor.filter.AbstractFilter;
+import org.jvalue.ods.processor.filter.FilterException;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -35,22 +37,22 @@ import java.util.List;
 import java.util.Map;
 
 
-final class DbInsertionFilter extends AbstractFilter<ObjectNode, ObjectNode> {
+public class CouchDbInsertionFilter extends AbstractFilter<ObjectNode, ObjectNode> {
 
-	private final GenericDataRepository<CouchDbDataView, JsonNode> dataRepository;
+	protected final GenericDataRepository<CouchDbDataView, JsonNode> dataRepository;
 	private final boolean updateDataIfExists;
 
 	// for bulk operations
 	private static final int BULK_SIZE = 2000;
-	private final List<String> bulkDomainIds = new LinkedList<>();
-	private final List<ObjectNode> bulkObjects = new LinkedList<>();
+	final List<String> bulkDomainIds = new LinkedList<>();
+	final List<ObjectNode> bulkObjects = new LinkedList<>();
 
-	private PauseableTimer.Context timerContextBulkRead, timerContextBulkWrite;
+	PauseableTimer.Context timerContextBulkRead, timerContextBulkWrite;
 
 
 
 	@Inject
-	DbInsertionFilter(
+	CouchDbInsertionFilter(
 			@Assisted GenericDataRepository<CouchDbDataView, JsonNode> dataRepository,
 			@Assisted DataSource source,
 			@Assisted boolean updateDataIfExists,
@@ -60,8 +62,8 @@ final class DbInsertionFilter extends AbstractFilter<ObjectNode, ObjectNode> {
 		this.dataRepository = dataRepository;
 		this.updateDataIfExists = updateDataIfExists;
 
-		PauseableTimer timerBulkRead = PauseableTimer.createTimer(registry, MetricRegistry.name(DbInsertionFilter.class, "bulk-read"));
-		PauseableTimer timerBulkWrite = PauseableTimer.createTimer(registry, MetricRegistry.name(DbInsertionFilter.class, "bulk-write"));
+		PauseableTimer timerBulkRead = PauseableTimer.createTimer(registry, MetricRegistry.name(CouchDbInsertionFilter.class, "bulk-read"));
+		PauseableTimer timerBulkWrite = PauseableTimer.createTimer(registry, MetricRegistry.name(CouchDbInsertionFilter.class, "bulk-write"));
 		this.timerContextBulkRead = timerBulkRead.createContext();
 		this.timerContextBulkWrite = timerBulkWrite.createContext();
 	}
@@ -87,7 +89,7 @@ final class DbInsertionFilter extends AbstractFilter<ObjectNode, ObjectNode> {
 
 
 	@SuppressWarnings("unchecked")
-	private void writeBulkData() throws FilterException {
+	protected void writeBulkData() throws FilterException {
 		if (updateDataIfExists) {
 			timerContextBulkRead.resume();
 			Map<String, JsonNode> bulkLoaded = dataRepository.getBulk(bulkDomainIds);

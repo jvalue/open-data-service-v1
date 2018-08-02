@@ -25,6 +25,7 @@ public class MongoDbPluginMetaDataRepository extends MongoDbRepositoryAdapter<
 		super(new MongoDbPluginMetaDataRepositoryImpl(dbConnectorFactory, databaseName, COLLECTION_NAME));
 	}
 
+
 	static class MongoDbPluginMetaDataRepositoryImpl extends AbstractMongoDbRepository<MongoDbPluginMetaDataDocument> implements MongoDbDocumentAdaptable<MongoDbPluginMetaDataDocument, PluginMetaData> {
 
 		protected MongoDbPluginMetaDataRepositoryImpl(DbConnectorFactory connectorFactory, String databaseName, String collectionName) {
@@ -60,6 +61,8 @@ public class MongoDbPluginMetaDataRepository extends MongoDbRepositoryAdapter<
 		public MongoDbPluginMetaDataDocument(PluginMetaData valueObject) {
 			super(valueObject, PluginMetaData.class);
 		}
+
+
 		public MongoDbPluginMetaDataDocument(Document document) {
 			super(document, PluginMetaData.class);
 		}

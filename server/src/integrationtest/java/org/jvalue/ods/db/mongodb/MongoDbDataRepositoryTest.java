@@ -23,7 +23,6 @@ public class MongoDbDataRepositoryTest extends AbstractRepositoryTest {
 	private MongoDbDataRepository repository;
 
 
-
 	@Override
 	protected void doCreateDatabase(DbConnectorFactory connectorFactory) {
 		this.repository = new MongoDbDataRepository(connectorFactory, getClass().getSimpleName());
@@ -141,7 +140,7 @@ public class MongoDbDataRepositoryTest extends AbstractRepositoryTest {
 			data = repository.getPaginatedData(currentId, 3);
 			fetchedNodes.addAll(data.getResult());
 			currentId = data.getCursor().getNext();
-		} while(data.getCursor().getHasNext());
+		} while (data.getCursor().getHasNext());
 
 		Assert.assertEquals(nodes, fetchedNodes);
 	}

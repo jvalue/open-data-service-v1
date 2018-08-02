@@ -14,7 +14,7 @@ import org.value.commons.mongodb.MongoDbRepositoryAdapter;
 public class MongoDbNotificationClientRepository extends MongoDbRepositoryAdapter<
 	MongoDbNotificationClientRepository.MongoDbNotificationClientRepositoryImpl,
 	MongoDbNotificationClientRepository.MongoDbNotificationClientDocument,
-	Client> implements GenericRepository<Client>{
+	Client> implements GenericRepository<Client> {
 
 	private static final String COLLECTION_NAME = "notificationClientCollection";
 
@@ -23,6 +23,7 @@ public class MongoDbNotificationClientRepository extends MongoDbRepositoryAdapte
 	public MongoDbNotificationClientRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName) {
 		super(new MongoDbNotificationClientRepositoryImpl(dbConnectorFactory, databaseName, COLLECTION_NAME));
 	}
+
 
 	static class MongoDbNotificationClientRepositoryImpl extends AbstractMongoDbRepository<MongoDbNotificationClientDocument> implements MongoDbDocumentAdaptable<MongoDbNotificationClientDocument, Client> {
 
@@ -59,6 +60,8 @@ public class MongoDbNotificationClientRepository extends MongoDbRepositoryAdapte
 		public MongoDbNotificationClientDocument(Client valueObject) {
 			super(valueObject, Client.class);
 		}
+
+
 		public MongoDbNotificationClientDocument(Document document) {
 			super(document, Client.class);
 		}

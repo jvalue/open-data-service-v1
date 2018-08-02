@@ -22,6 +22,7 @@ public class MongoDbDataSourceRepository extends MongoDbRepositoryAdapter<
 		super(new MongoDbDataSourceRepositoryImpl(connectorFactory, DATABASE_NAME, COLLECTION_NAME));
 	}
 
+
 	static class MongoDbDataSourceRepositoryImpl extends AbstractMongoDbRepository<MongoDbDataSourceDocument> implements MongoDbDocumentAdaptable<MongoDbDataSourceDocument, DataSource> {
 
 		protected MongoDbDataSourceRepositoryImpl(DbConnectorFactory connectorFactory, String databaseName, String collectionName) {
@@ -57,6 +58,8 @@ public class MongoDbDataSourceRepository extends MongoDbRepositoryAdapter<
 		public MongoDbDataSourceDocument(DataSource valueObject) {
 			super(valueObject, DataSource.class);
 		}
+
+
 		public MongoDbDataSourceDocument(Document document) {
 			super(document, DataSource.class);
 		}

@@ -21,8 +21,9 @@ public class MongoDbDataViewRepository extends MongoDbRepositoryAdapter<
 
 	@Inject
 	public MongoDbDataViewRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName) {
-		super(new MongoDbDataViewRepositoryImpl(dbConnectorFactory, databaseName, COLLECTION_NAME ));
+		super(new MongoDbDataViewRepositoryImpl(dbConnectorFactory, databaseName, COLLECTION_NAME));
 	}
+
 
 	static class MongoDbDataViewRepositoryImpl extends AbstractMongoDbRepository<MongoDbDataViewDocument> implements MongoDbDocumentAdaptable<MongoDbDataViewDocument, CouchDbDataView> {
 
@@ -59,6 +60,8 @@ public class MongoDbDataViewRepository extends MongoDbRepositoryAdapter<
 		public MongoDbDataViewDocument(CouchDbDataView valueObject) {
 			super(valueObject, CouchDbDataView.class);
 		}
+
+
 		public MongoDbDataViewDocument(Document document) {
 			super(document, CouchDbDataView.class);
 		}

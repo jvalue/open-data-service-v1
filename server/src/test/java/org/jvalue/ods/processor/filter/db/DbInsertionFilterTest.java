@@ -1,4 +1,4 @@
-package org.jvalue.ods.processor.filter;
+package org.jvalue.ods.processor.filter.db;
 
 
 import com.codahale.metrics.MetricRegistry;
@@ -24,6 +24,9 @@ import mockit.Expectations;
 import mockit.Mocked;
 import mockit.Verifications;
 import mockit.integration.junit4.JMockit;
+import org.jvalue.ods.processor.filter.AbstractFilter;
+import org.jvalue.ods.processor.filter.db.CouchDbInsertionFilter;
+import org.jvalue.ods.processor.filter.db.DbInsertionFilter;
 
 @RunWith(JMockit.class)
 public final class DbInsertionFilterTest {
@@ -51,7 +54,7 @@ public final class DbInsertionFilterTest {
 	public void testAdd(
 			@Mocked final DataRepository repository) throws Exception {
 
-		AbstractFilter<ObjectNode, ObjectNode> filter = new DbInsertionFilter(repository, source, true, registry);
+		AbstractFilter<ObjectNode, ObjectNode> filter = new CouchDbInsertionFilter(repository, source, true, registry);
 		filter.filter(createObject(VALUE_DOMAIN_ID));
 		filter.onComplete();
 

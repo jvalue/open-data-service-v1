@@ -25,6 +25,7 @@ public class MongoDbProcessorChainReferenceRepository extends MongoDbRepositoryA
 		super(new MongoDbProcessorChainReferenceRepositoryImpl(dbConnectorFactory, databaseName, COLLECTION_NAME));
 	}
 
+
 	static class MongoDbProcessorChainReferenceRepositoryImpl extends AbstractMongoDbRepository<MongoDbProcessorChainReferenceDocument> implements MongoDbDocumentAdaptable<MongoDbProcessorChainReferenceDocument, ProcessorReferenceChain> {
 
 		protected MongoDbProcessorChainReferenceRepositoryImpl(DbConnectorFactory connectorFactory, String databaseName, String collectionName) {
@@ -60,6 +61,8 @@ public class MongoDbProcessorChainReferenceRepository extends MongoDbRepositoryA
 		public MongoDbProcessorChainReferenceDocument(ProcessorReferenceChain valueObject) {
 			super(valueObject, ProcessorReferenceChain.class);
 		}
+
+
 		public MongoDbProcessorChainReferenceDocument(Document document) {
 			super(document, ProcessorReferenceChain.class);
 		}

@@ -32,6 +32,7 @@ public class MongoDbDataRepository extends MongoDbRepositoryAdapter<
 		super(new MongoDbDataRepositoryImpl(connectorFactory, databaseName, "DataRepositoryCollection"));
 	}
 
+
 	@Override
 	public JsonNode findByDomainId(String domainId) {
 		return repository.findById(domainId).getValue();
@@ -67,6 +68,7 @@ public class MongoDbDataRepository extends MongoDbRepositoryAdapter<
 		return repository.executeBulkGet(ids);
 	}
 
+
 	@Override
 	public Collection<GenericDocumentOperationResult> writeBulk(Collection<JsonNode> data) {
 		return repository.writeBulk(data);
@@ -82,7 +84,7 @@ public class MongoDbDataRepository extends MongoDbRepositoryAdapter<
 	@Override
 	public void removeAll() {
 		List<MongoDbDataDocument> all = repository.getAll();
-		for (MongoDbDataDocument doc : all){
+		for (MongoDbDataDocument doc : all) {
 			repository.remove(doc);
 		}
 	}
@@ -99,6 +101,7 @@ public class MongoDbDataRepository extends MongoDbRepositoryAdapter<
 		protected MongoDbDataRepositoryImpl(DbConnectorFactory connectorFactory, String databaseName, String collectionName) {
 			super(connectorFactory, databaseName, collectionName, MongoDbDataDocument.class);
 		}
+
 
 		@Override
 		protected MongoDbDataDocument createNewDocument(Document document) {
@@ -124,7 +127,14 @@ public class MongoDbDataRepository extends MongoDbRepositoryAdapter<
 		}
 
 
-		public Map<String,JsonNode> executeBulkGet(Collection<String> ids) {
+		@Override
+		protected Bson createIdFilter(String Id){
+			int id = Integer.parseInt(Id);
+			return Filters.eq("value.id", id);
+		}
+
+
+		public Map<String, JsonNode> executeBulkGet(Collection<String> ids) {
 
 			List<Bson> bsonFilterList = new ArrayList<>();
 			for (String id : ids) {
@@ -142,7 +152,7 @@ public class MongoDbDataRepository extends MongoDbRepositoryAdapter<
 				} catch (IOException e) {
 
 				}
-				nodes.put((String) ((Document) doc.get("value")).get("id"), jsonNode.get("value"));
+				nodes.put(((Document) doc.get("value")).get("id").toString(), jsonNode.get("value"));
 			}
 			return nodes;
 		}
@@ -166,10 +176,10 @@ public class MongoDbDataRepository extends MongoDbRepositoryAdapter<
 		public Data getPaginatedData(String startDomainId, int count) {
 
 			FindIterable<Document> documents;
-			if(startDomainId != null){
+			if (startDomainId != null) {
 				ObjectId objectId = new ObjectId(startDomainId);
 				documents = database.getCollection(collectionName).find(Filters.gte("_id", objectId)).limit(count + 1);
-			}else{
+			} else {
 				documents = database.getCollection(collectionName).find().limit(count + 1);
 			}
 			List<JsonNode> jsonNodes = new ArrayList<>();
@@ -202,6 +212,8 @@ public class MongoDbDataRepository extends MongoDbRepositoryAdapter<
 		public MongoDbDataDocument(JsonNode valueObject) {
 			super(valueObject, JsonNode.class);
 		}
+
+
 		public MongoDbDataDocument(Document document) {
 			super(document, JsonNode.class);
 		}

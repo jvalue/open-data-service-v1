@@ -54,7 +54,7 @@ public final class ProcessorChainApiTest {
 	public void testProcessorReferenceChainValidation() {
 		List<ProcessorReference> processors = Arrays.asList(
 				new ProcessorReference("JsonSourceAdapter", new HashMap<String, Object>()),
-				new ProcessorReference("DbInsertionFilter", new HashMap<String, Object>()));
+				new ProcessorReference("CouchDbInsertionFilter", new HashMap<String, Object>()));
 		ProcessorReferenceChainDescription description = new ProcessorReferenceChainDescription(
 				processors,
 				new ExecutionInterval(100, TimeUnit.SECONDS));
