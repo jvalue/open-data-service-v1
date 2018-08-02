@@ -6,27 +6,19 @@ import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
+import mockit.Expectations;
+import mockit.Mocked;
+import mockit.Verifications;
+import mockit.integration.junit4.JMockit;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceMetaData;
 import org.jvalue.ods.db.couchdb.repositories.DataRepository;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import mockit.Expectations;
-import mockit.Mocked;
-import mockit.Verifications;
-import mockit.integration.junit4.JMockit;
 import org.jvalue.ods.processor.filter.AbstractFilter;
-import org.jvalue.ods.processor.filter.db.CouchDbInsertionFilter;
-import org.jvalue.ods.processor.filter.db.DbInsertionFilter;
+
+import java.util.*;
 
 @RunWith(JMockit.class)
 public final class DbInsertionFilterTest {
@@ -79,7 +71,7 @@ public final class DbInsertionFilterTest {
 			result = nodes;
 		}};
 
-		AbstractFilter<ObjectNode, ObjectNode> filter = new DbInsertionFilter(repository, source, true, registry);
+		AbstractFilter<ObjectNode, ObjectNode> filter = new CouchDbInsertionFilter(repository, source, true, registry);
 		filter.filter(createObject(VALUE_DOMAIN_ID));
 		filter.onComplete();
 
