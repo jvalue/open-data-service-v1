@@ -146,12 +146,18 @@ public final class OdsApplication extends Application<OdsConfig> {
 		do{
 			try {
 				mongoClient.getAddress();
+				return;
 			} catch (Exception e) {
 				Log.error("MongoDb is not available.");
 			}finally {
 				mongoClient.close();
 			}
 			--retryCounter;
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}while (retryCounter > 0);
 
 		throw new RuntimeException("MongoDb is not available");

@@ -1,6 +1,8 @@
 package org.jvalue.ods.db.mongodb.repositories;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Filters;
 import org.bson.Document;
@@ -24,11 +26,11 @@ public class MongoDbDataRepository extends MongoDbRepositoryAdapter<
 	MongoDbDataRepository.MongoDbDataRepositoryImpl,
 	MongoDbDataRepository.MongoDbDataDocument,
 	JsonNode> implements GenericDataRepository<CouchDbDataView, JsonNode> {
-	public MongoDbDataRepository(DbConnectorFactory connectorFactory, String databaseName, String collectionName) {
-		super(new MongoDbDataRepositoryImpl(connectorFactory, databaseName, collectionName));
 
+	@Inject
+	public MongoDbDataRepository(DbConnectorFactory connectorFactory, @Assisted String databaseName) {
+		super(new MongoDbDataRepositoryImpl(connectorFactory, databaseName, "DataRepositoryCollection"));
 	}
-
 
 	@Override
 	public JsonNode findByDomainId(String domainId) {
