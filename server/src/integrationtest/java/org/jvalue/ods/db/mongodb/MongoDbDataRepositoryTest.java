@@ -15,9 +15,10 @@ import org.jvalue.ods.db.mongodb.repositories.MongoDbDataRepository;
 
 import java.util.*;
 
+@SuppressWarnings("Duplicates")
 public class MongoDbDataRepositoryTest extends AbstractRepositoryTest {
 
-	private static final String DOMAIN_ID = "domainId";
+	private static final String DOMAIN_ID = "id";
 
 	private MongoDbDataRepository repository;
 
@@ -25,13 +26,13 @@ public class MongoDbDataRepositoryTest extends AbstractRepositoryTest {
 
 	@Override
 	protected void doCreateDatabase(DbConnectorFactory connectorFactory) {
-		this.repository = new MongoDbDataRepository(connectorFactory, getClass().getSimpleName(), JsonPointer.compile("/" + DOMAIN_ID));
+		this.repository = new MongoDbDataRepository(connectorFactory, getClass().getSimpleName(), "DataTests");
 	}
 
 
 	@Override
 	protected void doDeleteDatabase(DbConnectorFactory dbConnectorFactory) {
-
+		dbConnectorFactory.doDeleteDatabase(getClass().getSimpleName());
 	}
 
 
@@ -39,8 +40,8 @@ public class MongoDbDataRepositoryTest extends AbstractRepositoryTest {
 	public void testFindValidId() {
 		JsonNode node1 = createObjectNode("id1", "hello");
 		JsonNode node2 = createObjectNode("id2", "world");
-		repository.add(new JsonNodeEntity(node1));
-		repository.add(new JsonNodeEntity(node2));
+		repository.add(node1);
+		repository.add(node2);
 
 		JsonNode node = repository.findByDomainId("id1");
 		assertEquals(node, node1);
@@ -53,14 +54,6 @@ public class MongoDbDataRepositoryTest extends AbstractRepositoryTest {
 	@Test(expected = GenericDocumentNotFoundException.class)
 	public void testNotFound() {
 		repository.findByDomainId("someId");
-	}
-
-
-	@Test(expected = IllegalStateException.class)
-	public void testDuplicateId() {
-		repository.add(new JsonNodeEntity(createObjectNode("id", "hello")));
-		repository.add(new JsonNodeEntity(createObjectNode("id", "world")));
-		repository.findByDomainId("id");
 	}
 
 
@@ -91,8 +84,8 @@ public class MongoDbDataRepositoryTest extends AbstractRepositoryTest {
 	public void testBulkGet() {
 		JsonNode node1 = createObjectNode("id1", "hello");
 		JsonNode node2 = createObjectNode("id2", "world");
-		repository.add(new JsonNodeEntity(node1));
-		repository.add(new JsonNodeEntity(node2));
+		repository.add(node1);
+		repository.add(node2);
 
 		JsonNode node = repository.findByDomainId("id1");
 		assertEquals(node, node1);
@@ -137,7 +130,7 @@ public class MongoDbDataRepositoryTest extends AbstractRepositoryTest {
 		int nodeCount = 10;
 		for (int i = 0; i < nodeCount; ++i) {
 			JsonNode node = createObjectNode("id" + i, "data" + i);
-			repository.add(new JsonNodeEntity(node));
+			repository.add(node);
 			nodes.add(node);
 		}
 
@@ -156,8 +149,8 @@ public class MongoDbDataRepositoryTest extends AbstractRepositoryTest {
 
 	@Test
 	public void testRemoveAll() {
-		repository.add(new JsonNodeEntity(createObjectNode("id1", "hello")));
-		repository.add(new JsonNodeEntity(createObjectNode("id2", "world")));
+		repository.add(createObjectNode("id1", "hello"));
+		repository.add(createObjectNode("id2", "world"));
 
 		Assert.assertEquals(2, repository.getAll().size());
 		repository.removeAll();
