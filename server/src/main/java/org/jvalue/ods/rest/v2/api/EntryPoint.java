@@ -1,5 +1,9 @@
 package org.jvalue.ods.rest.v2.api;
 
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.jvalue.commons.rest.VersionInfo;
+import org.jvalue.ods.GitConstants;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.JsonApiIdentifiable;
 
@@ -15,6 +19,11 @@ import static org.jvalue.ods.utils.HttpUtils.getSanitizedPath;
 @Path(V2)
 public class EntryPoint extends AbstractApi {
 
+	private static final VersionInfo version = new VersionInfo(
+		GitConstants.VERSION,
+		"https://github.com/jvalue/open-data-service/commit/" + GitConstants.COMMIT_HASH);
+
+
 	private final EntryPointData data = new EntryPointData();
 
 	@Context private UriInfo uriInfo;
@@ -27,20 +36,30 @@ public class EntryPoint extends AbstractApi {
 			.addLink(DATASOURCES, getSanitizedPath(uriInfo).resolve(DATASOURCES))
 			.addLink(FILTERTYPES, getSanitizedPath(uriInfo).resolve(FILTERTYPES))
 			.addLink(USERS, getSanitizedPath(uriInfo).resolve(USERS))
-			.addLink(VERSION, getSanitizedPath(uriInfo).resolve(VERSION))
 			.build();
 	}
 
 	private class EntryPointData implements JsonApiIdentifiable{
 
+
 		@Override
 		public String getId() {
-			return "jValueODS_API_V2";
+			return "jValue_OpenDataService";
 		}
 
 		@Override
 		public String getType() {
 			return "EntryPoint";
+		}
+
+		@JsonProperty("API_version")
+		public String getApiVersion() {
+			return API_VERSION;
+		}
+
+		@JsonProperty("ODS_version")
+		public VersionInfo getOdsVersion() {
+			return version;
 		}
 	}
 }

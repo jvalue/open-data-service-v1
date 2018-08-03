@@ -11,6 +11,8 @@ import static org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse.JSONAPI_TY
 @Consumes(JSONAPI_TYPE)
 abstract class AbstractApi {
 
+	public static final String API_VERSION = "2.0.0";
+
 	static final String DATASOURCES = "datasources";
 	static final String FILTERTYPES = "filterTypes";
 	static final String USERS = "users";
