@@ -4,10 +4,13 @@ package org.jvalue.ods.processor.adapter;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
 
+import org.jvalue.ods.api.processors.ProcessorType;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.processor.specification.Argument;
 import org.jvalue.ods.processor.specification.CreationMethod;
-import org.jvalue.ods.api.processors.ProcessorType;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 public interface SourceAdapterFactory {
 
@@ -74,7 +77,6 @@ public interface SourceAdapterFactory {
 	@Named(NAME_OPEN_WEATHER_MAP_SOURCE_ADAPTER)
 	public SourceAdapter createOpenWeatherMapSourceAdapter(
 		DataSource source,
-		@Argument(ARGUMENT_LOCATIONS) @Assisted(ARGUMENT_LOCATIONS) String locations,
+		@Argument(ARGUMENT_LOCATIONS) @Assisted(ARGUMENT_LOCATIONS) ArrayList<LinkedHashMap<String, String>> locations,
 		@Argument(ARGUMENT_API_KEY) @Assisted(ARGUMENT_API_KEY) String apiKey);
-
 }

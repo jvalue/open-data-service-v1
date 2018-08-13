@@ -1,60 +1,75 @@
 package org.jvalue.ods.processor.adapter.domain.weather;
 
 import com.codahale.metrics.MetricRegistry;
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.assistedinject.Assisted;
 import org.jvalue.ods.api.sources.DataSource;
+import org.jvalue.ods.processor.adapter.JsonSourceIterator;
 import org.jvalue.ods.processor.adapter.SourceAdapter;
 import org.jvalue.ods.processor.adapter.SourceAdapterException;
 import org.jvalue.ods.processor.adapter.SourceAdapterFactory;
-import org.jvalue.ods.processor.adapter.SourceIterator;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.UriBuilder;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 final public class OpenWeatherMapSourceAdapter implements SourceAdapter {
 
+	private final ObjectMapper mapper = new ObjectMapper();
 	private final DataSource dataSource;
-	private final URL sourceUrl;
 	private final MetricRegistry registry;
+	private final List<Location> locations;
+	private final String apiKey;
+	private final String countryCode = "de";
 
 	@Inject
 	OpenWeatherMapSourceAdapter(
 		@Assisted DataSource dataSource,
-		@Assisted(SourceAdapterFactory.ARGUMENT_LOCATIONS) String locations,
+		@Assisted(SourceAdapterFactory.ARGUMENT_LOCATIONS) ArrayList<LinkedHashMap<String, String>> locations,
 		@Assisted(SourceAdapterFactory.ARGUMENT_API_KEY) String apiKey,
 		MetricRegistry registry) {
 
 		this.dataSource = dataSource;
 		this.registry = registry;
-		this.sourceUrl = createSourceUrl(locations, apiKey);
+		this.apiKey = apiKey;
+
+		this.locations = locations.stream()
+			.map(l -> mapper.convertValue(l, Location.class))
+			.collect(Collectors.toList());
 	}
 
 
 	@Override
 	public Iterator<ObjectNode> iterator() throws SourceAdapterException {
-		return new JsonSourceIterator(dataSource, sourceUrl, registry);
+		List<ObjectNode> result = new ArrayList<>();
+		for (Location location : locations) {
+			Iterator<ObjectNode> nodeIterator = new JsonSourceIterator(dataSource, createSourceUrl(location), registry);
+			if (nodeIterator.hasNext()) {
+				ObjectNode node = nodeIterator.next();
+				result.add(node);
+			}
+		}
+
+		return result.iterator();
 	}
 
 
-	private URL createSourceUrl(String location, String apiKey) {
+	private URL createSourceUrl(Location location) {
 		URI baseUri = URI.create("https://api.openweathermap.org/data/2.5/weather");
-		URI resultUri = UriBuilder.fromUri(baseUri)
-			.queryParam("q", location)
+		UriBuilder builder = UriBuilder.fromUri(baseUri)
 			.queryParam("APPID", apiKey)
 			.queryParam("units", "metric")
-			.queryParam("lang", "de")
-			.build();
+			.queryParam("lang", countryCode);
+		builder = addLocationQueryParam(builder, location);
+		URI resultUri = builder.build();
 
 		try {
 			return resultUri.toURL();
@@ -64,71 +79,18 @@ final public class OpenWeatherMapSourceAdapter implements SourceAdapter {
 	}
 
 
-	private static final class JsonSourceIterator extends SourceIterator {
-
-		private static final ObjectMapper mapper = new ObjectMapper();
-		private JsonParser jsonParser;
-
-		JsonSourceIterator(DataSource source, URL sourceUrl, MetricRegistry registry) {
-			super(source, sourceUrl, registry);
+	private UriBuilder addLocationQueryParam(UriBuilder builder, Location location) {
+		if (location.hasCoordinate()) {
+			builder.queryParam("lat", location.getCoordinate().getLatitude());
+			builder.queryParam("lon", location.getCoordinate().getLongitude());
+		} else if (location.hasZipCode()) {
+			builder.queryParam("zip", location.getZipCode() + "," + countryCode);
+		} else if (location.hasCity() ) {
+			builder.queryParam("q", location.getCity() + "," + countryCode);
+		} else {
+			throw new IllegalArgumentException("Location must not be empty");
 		}
-
-
-		@Override
-		protected boolean doHasNext() {
-			try {
-				initParserIfNotExist();
-				return hasToken(jsonParser);
-			} catch (IOException e) {
-				throw new SourceAdapterException(e);
-			}
-		}
-
-
-		@Override
-		protected JsonNode doNext() {
-			try {
-				initParserIfNotExist();
-				return getNode();
-			} catch (IOException e) {
-				throw new SourceAdapterException(e);
-			}
-		}
-
-
-		private void initParserIfNotExist() throws IOException{
-			if (jsonParser == null) {
-				jsonParser = new JsonFactory().createParser(sourceUrl);
-				jsonParser.nextToken();
-			}
-		}
-
-
-		private JsonNode getNode() throws IOException {
-			assertIsValidJsonToken(jsonParser.getCurrentToken());
-
-			if (jsonParser.getCurrentToken() == JsonToken.START_ARRAY) {
-				jsonParser.nextToken();
-			}
-			JsonNode node = mapper.readTree(jsonParser);
-			jsonParser.nextToken();
-
-			return node;
-		}
-
-
-		private boolean hasToken(JsonParser parser) {
-			return parser.hasCurrentToken()
-				&& parser.getCurrentToken() != JsonToken.END_ARRAY
-				&& parser.getCurrentToken() != JsonToken.END_OBJECT;
-		}
-
-
-		private void assertIsValidJsonToken(JsonToken token) {
-			if (token != JsonToken.START_ARRAY && token != JsonToken.START_OBJECT) {
-				throw new IllegalArgumentException("Json should start with array or object identifier");
-			}
-		}
-
+		return builder;
 	}
+
 }
