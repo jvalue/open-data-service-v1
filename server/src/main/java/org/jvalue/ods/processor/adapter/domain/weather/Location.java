@@ -68,7 +68,11 @@ public class Location implements Serializable {
 
 
 	public String getCountryCode() {
-		return countryCode;
+		if (isNotEmpty(countryCode)) {
+			return countryCode;
+		} else {
+			return DEFAULT_COUNTRY_CODE;
+		}
 	}
 
 
