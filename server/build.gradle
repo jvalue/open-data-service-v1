@@ -37,7 +37,6 @@ dependencies {
     compile "org.jsoup:jsoup:$jsoupVersion"
     compile "org.apache.commons:commons-text:$apacheCommonsTextVersion"
     compile "org.apache.commons:commons-csv:$apacheCommonsCsvVersion"
-	compile "org.apache.commons:commons-collections4:$apacheCommonsCollectionVerion"
     compile "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jacksonCoreVersion"
     compile "com.hubspot.jackson:jackson-jaxrs-propertyfiltering:$jacksonJaxrsVersion"
     compile "org.jvalue.commons:couchdb:$jvalueCommonsVersion"

@@ -1,7 +1,6 @@
 ext {
     apacheCommonsTextVersion = "1.4"
     apacheCommonsCsvVersion = "1.5"
-	apacheCommonsCollectionVerion = "4.2"
     dropwizardVersion = "1.3.2"
     ektorpVersion = "1.5.0"
     githashVersion = "0.1.2"
