@@ -5,13 +5,16 @@ import org.junit.Test;
 
 public class LocationTest {
 
+	private final  Coordinate erlangen = new Coordinate(49.592410, 11.004174);
+
 	@Test
 	public void testConstructor() {
-		Location location = new Location("Beverly Hills", "90210", "10:12");
+		Location location = new Location("Beverly Hills", "90210", erlangen, "us");
 
 		Assert.assertEquals("Beverly Hills", location.getCity());
 		Assert.assertEquals("90210", location.getZipCode());
-		Assert.assertEquals("10:12", location.getCoordinate());
+		Assert.assertEquals(erlangen, location.getCoordinate());
+		Assert.assertEquals("us", location.getCountryCode());
 	}
 
 	@Test
@@ -34,10 +37,18 @@ public class LocationTest {
 
 	@Test
 	public void testHasCoordinate() {
-		Location location = new Location(null, null, "10:12");
+		Location location = new Location(null, null, erlangen);
 
 		Assert.assertFalse(location.hasCity());
 		Assert.assertFalse(location.hasZipCode());
 		Assert.assertTrue(location.hasCoordinate());
+	}
+
+
+	@Test
+	public void testDefaultCountryCode() {
+		Location location = new Location(null, null, erlangen);
+
+		Assert.assertEquals("de", location.getCountryCode());
 	}
 }

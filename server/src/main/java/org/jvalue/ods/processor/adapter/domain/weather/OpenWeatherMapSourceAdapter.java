@@ -28,7 +28,6 @@ final public class OpenWeatherMapSourceAdapter implements SourceAdapter {
 	private final MetricRegistry registry;
 	private final List<Location> locations;
 	private final String apiKey;
-	private final String countryCode = "de";
 
 	@Inject
 	OpenWeatherMapSourceAdapter(
@@ -67,7 +66,7 @@ final public class OpenWeatherMapSourceAdapter implements SourceAdapter {
 		UriBuilder builder = UriBuilder.fromUri(baseUri)
 			.queryParam("APPID", apiKey)
 			.queryParam("units", "metric")
-			.queryParam("lang", countryCode);
+			.queryParam("lang", location.getCountryCode());
 		builder = addLocationQueryParam(builder, location);
 		URI resultUri = builder.build();
 
@@ -84,9 +83,9 @@ final public class OpenWeatherMapSourceAdapter implements SourceAdapter {
 			builder.queryParam("lat", location.getCoordinate().getLatitude());
 			builder.queryParam("lon", location.getCoordinate().getLongitude());
 		} else if (location.hasZipCode()) {
-			builder.queryParam("zip", location.getZipCode() + "," + countryCode);
+			builder.queryParam("zip", location.getZipCode() + "," + location.getCountryCode());
 		} else if (location.hasCity() ) {
-			builder.queryParam("q", location.getCity() + "," + countryCode);
+			builder.queryParam("q", location.getCity() + "," + location.getCountryCode());
 		} else {
 			throw new IllegalArgumentException("Location must not be empty");
 		}
