@@ -21,7 +21,8 @@ public interface SourceAdapterFactory {
 			NAME_OSM_SOURCE_ADAPTER = "OsmSourceAdapter",
 			NAME_PEGEL_PORTAL_MV_SOURCE_ADAPTER = "PegelPortalMvSourceAdapter",
 			NAME_PEGEL_BRANDENBURG = "PegelBrandenburg",
-			NAME_OPEN_WEATHER_MAP_SOURCE_ADAPTER = "OpenWeatherMapSourceAdapter";
+			NAME_OPEN_WEATHER_MAP_SOURCE_ADAPTER = "OpenWeatherMapSourceAdapter",
+			NAME_APIXU_SOURCE_ADAPTER = "APIXUSourceAdapter";
 
 	static final String
 			ARGUMENT_SOURCE_URL = "sourceUrl",
@@ -76,6 +77,14 @@ public interface SourceAdapterFactory {
 	@CreationMethod(name = NAME_OPEN_WEATHER_MAP_SOURCE_ADAPTER, filterType = ProcessorType.SOURCE_ADAPTER)
 	@Named(NAME_OPEN_WEATHER_MAP_SOURCE_ADAPTER)
 	public SourceAdapter createOpenWeatherMapSourceAdapter(
+		DataSource source,
+		@Argument(ARGUMENT_LOCATIONS) @Assisted(ARGUMENT_LOCATIONS) ArrayList<LinkedHashMap<String, String>> locations,
+		@Argument(ARGUMENT_API_KEY) @Assisted(ARGUMENT_API_KEY) String apiKey);
+
+
+	@CreationMethod(name = NAME_APIXU_SOURCE_ADAPTER, filterType = ProcessorType.SOURCE_ADAPTER)
+	@Named(NAME_APIXU_SOURCE_ADAPTER)
+	public SourceAdapter createAPIXUSourceAdapter(
 		DataSource source,
 		@Argument(ARGUMENT_LOCATIONS) @Assisted(ARGUMENT_LOCATIONS) ArrayList<LinkedHashMap<String, String>> locations,
 		@Argument(ARGUMENT_API_KEY) @Assisted(ARGUMENT_API_KEY) String apiKey);
