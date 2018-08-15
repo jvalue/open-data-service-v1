@@ -10,7 +10,7 @@ public class Weather {
 	private final String stationId;
 	private final Temperature temperature;
 	private final Pressure pressure;
-	private final double humidityInPercent;
+	private final int humidityInPercent;
 	private final Instant timestamp;
 	private final Location location;
 
@@ -44,7 +44,7 @@ public class Weather {
 	}
 
 
-	public double getHumidityInPercent() {
+	public int getHumidityInPercent() {
 		return humidityInPercent;
 	}
 
