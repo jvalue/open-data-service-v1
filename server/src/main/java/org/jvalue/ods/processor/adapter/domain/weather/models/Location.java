@@ -7,6 +7,8 @@ import java.io.Serializable;
 
 public class Location implements Serializable {
 
+	public static final String UNKNOWN = "UNKNOWN";
+
 	private static final String DEFAULT_COUNTRY_CODE = "de";
 	private final String countryCode;
 	private final String city;
@@ -14,7 +16,7 @@ public class Location implements Serializable {
 	private final Coordinate coordinate;
 
 	@JsonCreator
-	Location(
+	public Location(
 		@JsonProperty("city") String city,
 		@JsonProperty("zipCode") String zipCode,
 		@JsonProperty("coordinate") Coordinate coordinate,
@@ -26,7 +28,7 @@ public class Location implements Serializable {
 	}
 
 
-	Location(
+	public Location(
 		@JsonProperty("city") String city,
 		@JsonProperty("zipCode") String zipCode,
 		@JsonProperty("coordinate") Coordinate coordinate) {
