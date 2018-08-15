@@ -1,4 +1,4 @@
-package org.jvalue.ods.processor.adapter.domain.weather;
+package org.jvalue.ods.processor.adapter.domain.weather.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

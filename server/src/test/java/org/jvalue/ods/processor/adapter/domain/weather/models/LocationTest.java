@@ -1,11 +1,11 @@
-package org.jvalue.ods.processor.adapter.domain.weather;
+package org.jvalue.ods.processor.adapter.domain.weather.models;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 public class LocationTest {
 
-	private final  Coordinate erlangen = new Coordinate(49.592410, 11.004174);
+	private final Coordinate erlangen = new Coordinate(49.592410, 11.004174);
 
 	@Test
 	public void testConstructor() {

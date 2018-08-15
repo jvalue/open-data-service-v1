@@ -9,6 +9,7 @@ import org.jvalue.ods.processor.adapter.JsonSourceIterator;
 import org.jvalue.ods.processor.adapter.SourceAdapter;
 import org.jvalue.ods.processor.adapter.SourceAdapterException;
 import org.jvalue.ods.processor.adapter.SourceAdapterFactory;
+import org.jvalue.ods.processor.adapter.domain.weather.models.Location;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.UriBuilder;

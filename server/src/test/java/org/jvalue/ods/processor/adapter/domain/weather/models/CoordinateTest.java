@@ -1,11 +1,11 @@
-package org.jvalue.ods.processor.adapter.domain.weather;
+package org.jvalue.ods.processor.adapter.domain.weather.models;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 public class CoordinateTest {
 	private final static double DELTA = 0.0000001;
-	private final  Coordinate erlangen = new Coordinate(49.592410, 11.004174);
+	private final Coordinate erlangen = new Coordinate(49.592410, 11.004174);
 
 	@Test
 	public void testConstructor() {
@@ -32,6 +32,7 @@ public class CoordinateTest {
 	public void testLatitudeNotInRange() {
 		new Coordinate(110.0, 11.0);
 	}
+
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testLongitudeNotInRange() {
