@@ -1,6 +1,7 @@
 package org.jvalue.ods.processor.adapter.domain.weather;
 
 import com.codahale.metrics.MetricRegistry;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.assistedinject.Assisted;
@@ -9,13 +10,14 @@ import org.jvalue.ods.processor.adapter.JsonSourceIterator;
 import org.jvalue.ods.processor.adapter.SourceAdapter;
 import org.jvalue.ods.processor.adapter.SourceAdapterException;
 import org.jvalue.ods.processor.adapter.SourceAdapterFactory;
-import org.jvalue.ods.processor.adapter.domain.weather.models.Location;
+import org.jvalue.ods.processor.adapter.domain.weather.models.*;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.UriBuilder;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -54,7 +56,9 @@ final public class OpenWeatherMapSourceAdapter implements SourceAdapter {
 			Iterator<ObjectNode> nodeIterator = new JsonSourceIterator(dataSource, createSourceUrl(location), registry);
 			if (nodeIterator.hasNext()) {
 				ObjectNode node = nodeIterator.next();
-				result.add(node);
+				Weather weather = createWeatherFromObjectNode(node);
+				ObjectNode weatherNode = mapper.valueToTree(weather);
+				result.add(weatherNode);
 			}
 		}
 
@@ -91,6 +95,41 @@ final public class OpenWeatherMapSourceAdapter implements SourceAdapter {
 			throw new IllegalArgumentException("Location must not be empty");
 		}
 		return builder;
+	}
+
+
+	private Weather createWeatherFromObjectNode(ObjectNode node) {
+		JsonNode main = node.get("main");
+
+		String stationId = node.get("id").asText();
+
+		double temperatureValue = main.get("temp").doubleValue();
+		Temperature temperature = new Temperature(temperatureValue, TemperatureType.CELSIUS);
+
+		Pressure pressure = new Pressure(main.get("pressure").doubleValue(), PressureType.H_PA);
+
+		int humidityInPercent = main.get("humidity").intValue();
+
+		Instant timestamp = Instant.ofEpochSecond(node.get("dt").asInt());
+
+		Coordinate coordinate = new Coordinate(
+			node.get("coord").get("lat").asDouble(),
+			node.get("coord").get("lon").asDouble()
+		);
+		Location location = new Location(
+			node.get("name").textValue(),
+			Location.UNKNOWN,
+			coordinate,
+			Location.UNKNOWN
+		);
+
+		return new Weather(
+			stationId,
+			temperature,
+			pressure,
+			humidityInPercent,
+			timestamp,
+			location);
 	}
 
 }
