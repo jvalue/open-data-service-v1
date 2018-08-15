@@ -26,4 +26,15 @@ public class CoordinateTest {
 	public void testToString() {
 		Assert.assertEquals("49.59241:11.004174", erlangen.toString());
 	}
+
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testLatitudeNotInRange() {
+		new Coordinate(110.0, 11.0);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testLongitudeNotInRange() {
+		new Coordinate(50.0, 181.0);
+	}
 }

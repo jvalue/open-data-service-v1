@@ -14,6 +14,8 @@ public class Coordinate {
 		@JsonProperty("lng") double longitude
 		) {
 
+		assertIsValidLatitude(latitude);
+		assertIsValidLongitude(longitude);
 		this.latitude = latitude;
 		this.longitude = longitude;
 	}
@@ -48,5 +50,19 @@ public class Coordinate {
 	@Override
 	public int hashCode() {
 		return Objects.hash(latitude, longitude);
+	}
+
+
+	private void assertIsValidLatitude(double value) {
+		if (value < -90 || value > 90) {
+			throw new IllegalArgumentException("Latitude value must be in range [-90 .. 90]");
+		}
+	}
+
+
+	private void assertIsValidLongitude(double value) {
+		if (value < -180 || value > 180) {
+			throw new IllegalArgumentException("Longitude value must be in range [-180 .. 180]");
+		}
 	}
 }
