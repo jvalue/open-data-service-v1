@@ -3,9 +3,7 @@ package org.jvalue.ods.processor.adapter.domain.weather.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.io.Serializable;
-
-public class Location implements Serializable {
+public class Location {
 
 	public static final String UNKNOWN = "UNKNOWN";
 
