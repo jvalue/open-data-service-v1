@@ -46,6 +46,15 @@ public class LocationTest {
 
 
 	@Test
+	public void testUnknown() {
+		Location location = new Location(Location.UNKNOWN, Location.UNKNOWN, null);
+
+		Assert.assertFalse(location.hasCity());
+		Assert.assertFalse(location.hasZipCode());
+	}
+
+
+	@Test
 	public void testDefaultCountryCode() {
 		Location location = new Location(null, null, erlangen);
 

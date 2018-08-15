@@ -79,7 +79,7 @@ public class Location implements Serializable {
 
 
 	private boolean isNotEmpty(String value) {
-		return value != null && !value.isEmpty();
+		return value != null && !value.isEmpty() && !value.equals(UNKNOWN);
 	}
 
 }
