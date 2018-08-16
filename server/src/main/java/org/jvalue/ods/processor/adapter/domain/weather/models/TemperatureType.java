@@ -20,4 +20,21 @@ public enum TemperatureType {
 
 		return kelvin;
 	}
+
+
+	public double fromKelvin(double value) {
+		double result;
+		switch (this) {
+			case CELSIUS:
+				result = value - 273.15;
+				break;
+			case FAHRENHEIT:
+				result = value * 1.8 - 459.67;
+				break;
+			default:
+				result = value;
+		}
+
+		return result;
+	}
 }

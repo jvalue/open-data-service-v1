@@ -28,6 +28,26 @@ public class TemperatureTest {
 
 
 	@Test
+	public void testFromKelvin() {
+		Temperature celsiusL = Temperature.fromKelvin(273.15, TemperatureType.CELSIUS);
+		Temperature celsiusM = Temperature.fromKelvin(300, TemperatureType.CELSIUS);
+		Temperature celsiusH = Temperature.fromKelvin(773.15, TemperatureType.CELSIUS);
+
+		Temperature fahrenheitL = Temperature.fromKelvin(273.15, TemperatureType.FAHRENHEIT);
+		Temperature fahrenheitM = Temperature.fromKelvin(300, TemperatureType.FAHRENHEIT);
+		Temperature fahrenheitH = Temperature.fromKelvin(773.15, TemperatureType.FAHRENHEIT);
+
+		Assert.assertEquals(0, celsiusL.getValue(), DELTA);
+		Assert.assertEquals(26.85, celsiusM.getValue(), DELTA);
+		Assert.assertEquals(500, celsiusH.getValue(), DELTA);
+
+		Assert.assertEquals(32, fahrenheitL.getValue(), DELTA);
+		Assert.assertEquals(80.33, fahrenheitM.getValue(), DELTA);
+		Assert.assertEquals(932, fahrenheitH.getValue(), DELTA);
+	}
+
+
+	@Test
 	public void testEquals() {
 		Temperature tempA = new Temperature(31, TemperatureType.CELSIUS);
 		Temperature tempB = new Temperature(31, TemperatureType.CELSIUS);

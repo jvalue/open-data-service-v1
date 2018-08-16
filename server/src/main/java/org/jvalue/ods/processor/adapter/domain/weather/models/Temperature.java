@@ -15,6 +15,11 @@ public class Temperature {
 	}
 
 
+	public static Temperature fromKelvin(double value, TemperatureType type) {
+		return new Temperature(round(type.fromKelvin(value)), type);
+	}
+
+
 	public double getValue() {
 		return value;
 	}
@@ -31,7 +36,7 @@ public class Temperature {
 	}
 
 
-	private double round(double rawValue) {
+	private static double round(double rawValue) {
 		BigDecimal decimal = new BigDecimal(Double.toString(rawValue));
 		decimal = decimal.setScale(2, RoundingMode.HALF_UP);
 		return decimal.doubleValue();
