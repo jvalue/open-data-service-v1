@@ -1,6 +1,7 @@
 package org.jvalue.ods.processor.adapter.domain.weather.models;
 
-import java.text.DecimalFormat;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 
 public class Temperature {
@@ -9,7 +10,7 @@ public class Temperature {
 	private final TemperatureType type;
 
 	public Temperature(double value, TemperatureType type) {
-		this.value = Double.valueOf(new DecimalFormat("#.##").format(value));
+		this.value = round(value);
 		this.type = type;
 	}
 
@@ -19,8 +20,21 @@ public class Temperature {
 	}
 
 
+	public double getValueInKelvin() {
+		double kelvin = type.toKelvin(value);
+		return round(kelvin);
+	}
+
+
 	public TemperatureType getType() {
 		return type;
+	}
+
+
+	private double round(double rawValue) {
+		BigDecimal decimal = new BigDecimal(Double.toString(rawValue));
+		decimal = decimal.setScale(2, RoundingMode.HALF_UP);
+		return decimal.doubleValue();
 	}
 
 
