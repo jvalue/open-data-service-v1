@@ -24,6 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("Duplicates")
 public final class APIXUSourceAdapter implements SourceAdapter {
 
 	private final ObjectMapper mapper = new ObjectMapper();

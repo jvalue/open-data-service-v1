@@ -24,6 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("Duplicates")
 final public class OpenWeatherMapSourceAdapter implements SourceAdapter {
 
 	private final ObjectMapper mapper = new ObjectMapper();
