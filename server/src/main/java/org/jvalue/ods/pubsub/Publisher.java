@@ -6,6 +6,7 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import org.jvalue.commons.utils.Log;
 
+import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -13,12 +14,15 @@ import java.util.concurrent.TimeoutException;
 
 public class Publisher {
 
+	private ConnectionFactory factory;
 	private Connection connection;
 	private Channel channel;
 	@NotNull private String exchange;
 	@NotNull private String host;
 
-	public Publisher() {
+	@Inject
+	public Publisher(ConnectionFactory factory) {
+		this.factory = factory;
 	}
 
 
@@ -28,7 +32,6 @@ public class Publisher {
 		this.host = host;
 		this.exchange = exchange;
 
-		ConnectionFactory factory = new ConnectionFactory();
 		factory.setHost(host);
 
 		try {
