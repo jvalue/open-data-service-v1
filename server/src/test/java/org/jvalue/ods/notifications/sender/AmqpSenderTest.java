@@ -42,7 +42,7 @@ public class AmqpSenderTest {
     public void testSuccess() {
         new Expectations() {{
             publisher.connect(HOST, EXCHANGE, EXCHANGE_TYPE); result = true;
-            publisher.publish("{\"sourceId\":\"someSourceId\"}"); result = true;
+            publisher.publish("{\"sourceId\":\"someSourceId\"}", ""); result = true;
         }};
 
         ObjectNode sentData = new ObjectNode(JsonNodeFactory.instance);
@@ -61,7 +61,7 @@ public class AmqpSenderTest {
     public void testConnectionError() {
         new Expectations() {{
             publisher.connect((String) any, (String) any, (String) any); result = false;
-            publisher.publish((String) any); result = true;
+            publisher.publish((String) any, (String) any); result = true;
         }};
 
         sender.onNewDataStart();
@@ -77,7 +77,7 @@ public class AmqpSenderTest {
     public void testSentError() {
         new Expectations() {{
             publisher.connect((String) any, (String) any, (String) any); result = true;
-            publisher.publish((String) any); result = false;
+            publisher.publish((String) any, (String) any); result = false;
         }};
 
         sender.onNewDataStart();
