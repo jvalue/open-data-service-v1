@@ -63,15 +63,15 @@ public final class OdsApplication extends Application<OdsConfig> {
 	@Override
 	@Context
 	public void run(OdsConfig configuration, Environment environment) {
-//		assertCouchDbIsReady(configuration.getCouchDb().getUrl());
-		assertMongoDbIsReady(configuration.getMongoDb().getUrl());
+		assertCouchDbIsReady(configuration.getCouchDb().getUrl());
+//		assertMongoDbIsReady(configuration.getMongoDb().getUrl());
 
 		Injector injector = Guice.createInjector(
 				new MonitoringModule(environment.metrics()),
 				new ConfigModule(configuration),
 				new ProcessorModule(),
-//				new CouchDbModule(configuration.getCouchDb()),
-				new MongoDbModule(configuration.getMongoDb()),
+				new CouchDbModule(configuration.getCouchDb()),
+//				new MongoDbModule(configuration.getMongoDb()),
 				new DataModule(),
 				new NotificationsModule(),
 				new AuthModule(configuration.getAuth()),
