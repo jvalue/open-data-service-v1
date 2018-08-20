@@ -1,6 +1,5 @@
 package org.jvalue.ods.db.mongodb.repositories;
 
-import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
@@ -20,7 +19,7 @@ import java.util.*;
 public class MongoDbDataRepository extends AbstractMongoDbRepository<JsonNode> implements GenericDataRepository<CouchDbDataView, JsonNode> {
 
 	@Inject
-	public MongoDbDataRepository(DbConnectorFactory connectorFactory, @Assisted String databaseName, @Assisted JsonPointer domainIdKey) {
+	public MongoDbDataRepository(DbConnectorFactory connectorFactory, @Assisted String databaseName) {
 		super(connectorFactory, databaseName, "DataRepositoryCollection", JsonNode.class);
 	}
 
