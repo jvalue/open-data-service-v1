@@ -11,59 +11,19 @@ import org.value.commons.mongodb.MongoDbDocument;
 import org.value.commons.mongodb.MongoDbDocumentAdaptable;
 import org.value.commons.mongodb.MongoDbRepositoryAdapter;
 
-public class MongoDbNotificationClientRepository extends MongoDbRepositoryAdapter<
-	MongoDbNotificationClientRepository.MongoDbNotificationClientRepositoryImpl,
-	MongoDbNotificationClientRepository.MongoDbNotificationClientDocument,
-	Client> implements GenericRepository<Client> {
+public class MongoDbNotificationClientRepository extends AbstractMongoDbRepository<Client> {
 
 	private static final String COLLECTION_NAME = "notificationClientCollection";
 
 
 	@Inject
 	public MongoDbNotificationClientRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName) {
-		super(new MongoDbNotificationClientRepositoryImpl(dbConnectorFactory, databaseName, COLLECTION_NAME));
+		super(dbConnectorFactory, databaseName, COLLECTION_NAME, Client.class);
 	}
 
 
-	static class MongoDbNotificationClientRepositoryImpl extends AbstractMongoDbRepository<MongoDbNotificationClientDocument> implements MongoDbDocumentAdaptable<MongoDbNotificationClientDocument, Client> {
-
-		protected MongoDbNotificationClientRepositoryImpl(DbConnectorFactory connectorFactory, String databaseName, String collectionName) {
-			super(connectorFactory, databaseName, collectionName, MongoDbNotificationClientDocument.class);
-		}
-
-
-		@Override
-		protected MongoDbNotificationClientDocument createNewDocument(Document document) {
-			return new MongoDbNotificationClientDocument(document);
-		}
-
-
-		@Override
-		protected String getValueId(MongoDbNotificationClientDocument Value) {
-			return Value.getValue().getId();
-		}
-
-
-		@Override
-		public MongoDbNotificationClientDocument createDbDocument(Client value) {
-			return new MongoDbNotificationClientDocument(value);
-		}
-
-
-		@Override
-		public String getIdForValue(Client value) {
-			return value.getId();
-		}
-	}
-
-	static class MongoDbNotificationClientDocument extends MongoDbDocument<Client> {
-		public MongoDbNotificationClientDocument(Client valueObject) {
-			super(valueObject, Client.class);
-		}
-
-
-		public MongoDbNotificationClientDocument(Document document) {
-			super(document, Client.class);
-		}
+	@Override
+	protected String getValueId(Client Value) {
+		return Value.getId();
 	}
 }

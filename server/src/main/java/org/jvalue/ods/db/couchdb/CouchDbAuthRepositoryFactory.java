@@ -22,7 +22,7 @@ public class CouchDbAuthRepositoryFactory implements AuthRepositoryFactory {
 
 
 	@Override
-	public GenericUserRepository<User> createUserRepository() {
+	public GenericUserRepository createUserRepository() {
 		return new UserRepository(dbConnectorFactory);
 	}
 

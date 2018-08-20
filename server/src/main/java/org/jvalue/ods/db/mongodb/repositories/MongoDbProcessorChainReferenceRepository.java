@@ -12,59 +12,19 @@ import org.value.commons.mongodb.MongoDbRepositoryAdapter;
 
 import javax.inject.Inject;
 
-public class MongoDbProcessorChainReferenceRepository extends MongoDbRepositoryAdapter<
-	MongoDbProcessorChainReferenceRepository.MongoDbProcessorChainReferenceRepositoryImpl,
-	MongoDbProcessorChainReferenceRepository.MongoDbProcessorChainReferenceDocument,
-	ProcessorReferenceChain> implements GenericRepository<ProcessorReferenceChain> {
+public class MongoDbProcessorChainReferenceRepository extends AbstractMongoDbRepository<ProcessorReferenceChain> {
 
 	private static final String COLLECTION_NAME = "processorChainReferenceCollection";
 
 
 	@Inject
 	public MongoDbProcessorChainReferenceRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName) {
-		super(new MongoDbProcessorChainReferenceRepositoryImpl(dbConnectorFactory, databaseName, COLLECTION_NAME));
+		super(dbConnectorFactory, databaseName, COLLECTION_NAME, ProcessorReferenceChain.class);
 	}
 
 
-	static class MongoDbProcessorChainReferenceRepositoryImpl extends AbstractMongoDbRepository<MongoDbProcessorChainReferenceDocument> implements MongoDbDocumentAdaptable<MongoDbProcessorChainReferenceDocument, ProcessorReferenceChain> {
-
-		protected MongoDbProcessorChainReferenceRepositoryImpl(DbConnectorFactory connectorFactory, String databaseName, String collectionName) {
-			super(connectorFactory, databaseName, collectionName, MongoDbProcessorChainReferenceDocument.class);
-		}
-
-
-		@Override
-		protected MongoDbProcessorChainReferenceDocument createNewDocument(Document document) {
-			return new MongoDbProcessorChainReferenceDocument(document);
-		}
-
-
-		@Override
-		protected String getValueId(MongoDbProcessorChainReferenceDocument Value) {
-			return Value.getValue().getId();
-		}
-
-
-		@Override
-		public MongoDbProcessorChainReferenceDocument createDbDocument(ProcessorReferenceChain value) {
-			return new MongoDbProcessorChainReferenceDocument(value);
-		}
-
-
-		@Override
-		public String getIdForValue(ProcessorReferenceChain value) {
-			return value.getId();
-		}
-	}
-
-	static class MongoDbProcessorChainReferenceDocument extends MongoDbDocument<ProcessorReferenceChain> {
-		public MongoDbProcessorChainReferenceDocument(ProcessorReferenceChain valueObject) {
-			super(valueObject, ProcessorReferenceChain.class);
-		}
-
-
-		public MongoDbProcessorChainReferenceDocument(Document document) {
-			super(document, ProcessorReferenceChain.class);
-		}
+	@Override
+	protected String getValueId(ProcessorReferenceChain Value) {
+		return Value.getId();
 	}
 }

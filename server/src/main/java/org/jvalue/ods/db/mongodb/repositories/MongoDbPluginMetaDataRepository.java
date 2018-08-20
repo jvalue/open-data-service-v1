@@ -12,60 +12,19 @@ import org.value.commons.mongodb.MongoDbRepositoryAdapter;
 
 import javax.inject.Inject;
 
-public class MongoDbPluginMetaDataRepository extends MongoDbRepositoryAdapter<
-	MongoDbPluginMetaDataRepository.MongoDbPluginMetaDataRepositoryImpl,
-	MongoDbPluginMetaDataRepository.MongoDbPluginMetaDataDocument,
-	PluginMetaData> implements GenericRepository<PluginMetaData> {
+public class MongoDbPluginMetaDataRepository extends AbstractMongoDbRepository<PluginMetaData> {
 
 	private static final String COLLECTION_NAME = "pluginMetaDataCollection";
 
 
 	@Inject
 	public MongoDbPluginMetaDataRepository(DbConnectorFactory dbConnectorFactory, @Assisted String databaseName) {
-		super(new MongoDbPluginMetaDataRepositoryImpl(dbConnectorFactory, databaseName, COLLECTION_NAME));
+		super(dbConnectorFactory, databaseName, COLLECTION_NAME, PluginMetaData.class);
 	}
 
 
-	static class MongoDbPluginMetaDataRepositoryImpl extends AbstractMongoDbRepository<MongoDbPluginMetaDataDocument> implements MongoDbDocumentAdaptable<MongoDbPluginMetaDataDocument, PluginMetaData> {
-
-		protected MongoDbPluginMetaDataRepositoryImpl(DbConnectorFactory connectorFactory, String databaseName, String collectionName) {
-			super(connectorFactory, databaseName, collectionName, MongoDbPluginMetaDataDocument.class);
-		}
-
-
-		@Override
-		protected MongoDbPluginMetaDataDocument createNewDocument(Document document) {
-			return null;
-		}
-
-
-		@Override
-		protected String getValueId(MongoDbPluginMetaDataDocument Value) {
-			return Value.getValue().getId();
-		}
-
-
-		@Override
-		public MongoDbPluginMetaDataDocument createDbDocument(PluginMetaData value) {
-			return null;
-		}
-
-
-		@Override
-		public String getIdForValue(PluginMetaData value) {
-			return null;
-		}
-	}
-
-	static class MongoDbPluginMetaDataDocument extends MongoDbDocument<PluginMetaData> {
-		public MongoDbPluginMetaDataDocument(PluginMetaData valueObject) {
-			super(valueObject, PluginMetaData.class);
-		}
-
-
-		public MongoDbPluginMetaDataDocument(Document document) {
-			super(document, PluginMetaData.class);
-		}
-
+	@Override
+	protected String getValueId(PluginMetaData Value) {
+		return Value.getId();
 	}
 }

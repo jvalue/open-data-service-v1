@@ -22,7 +22,7 @@ public class MongoDbAuthRepositoryFactory implements AuthRepositoryFactory {
 
 
 	@Override
-	public GenericUserRepository<User> createUserRepository() {
+	public GenericUserRepository createUserRepository() {
 		return new MongoDbUserRepository(dbConnectorFactory);
 	}
 
