@@ -36,12 +36,12 @@ public class AmqpSender extends AbstractSender<AmqpClient> {
 
     @Override
     public void onNewDataComplete() {
-        boolean connected = publisher.connect(client.getHost(), client.getExchange());
+        boolean connected = publisher.connect(client.getHost(), client.getExchange(), client.getExchangeType());
 
         boolean sent = true;
 
         for (JsonNode node : buffer) {
-            boolean nodeSent = publisher.publish(node.toString());
+            boolean nodeSent = publisher.publish(node.toString(), client.getRoutingKey());
             if (!nodeSent) sent = false;
         }
 
