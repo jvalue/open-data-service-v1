@@ -1,5 +1,6 @@
 package org.jvalue.ods.db.mongodb;
 
+import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -25,7 +26,7 @@ public class MongoDbDataRepositoryTest extends AbstractRepositoryTest {
 
 	@Override
 	protected void doCreateDatabase(DbConnectorFactory connectorFactory) {
-		this.repository = new MongoDbDataRepository(connectorFactory, getClass().getSimpleName());
+		this.repository = new MongoDbDataRepository(connectorFactory, getClass().getSimpleName(), JsonPointer.compile("/" + DOMAIN_ID));
 	}
 
 
