@@ -26,7 +26,7 @@ public class MongoDbDataRepositoryTest extends AbstractRepositoryTest {
 
 	@Override
 	protected void doCreateDatabase(DbConnectorFactory connectorFactory) {
-		this.repository = new MongoDbDataRepository(connectorFactory, getClass().getSimpleName(), JsonPointer.compile("/" + DOMAIN_ID));
+		this.repository = new MongoDbDataRepository(connectorFactory, getClass().getSimpleName());
 	}
 
 
