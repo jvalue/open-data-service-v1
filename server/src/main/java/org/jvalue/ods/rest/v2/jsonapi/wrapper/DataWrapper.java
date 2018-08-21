@@ -67,7 +67,7 @@ public class DataWrapper implements JsonApiIdentifiable{
 			return dbId;
 		}
 		else {
-			return node.get(domainIdKey).textValue();
+			return node.get(domainIdKey).asText();
 		}
 	}
 
