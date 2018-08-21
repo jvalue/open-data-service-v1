@@ -8,6 +8,11 @@ couchDb:
     username: ADMIN_USERNAME
     password: ADMIN_PASSWORD
 
+mongoDb:
+  url: mongodb://localhost:27017/
+  dbPrefix: ods
+  maxConnections: 100
+
 server:
   applicationContextPath: /ods/api
 

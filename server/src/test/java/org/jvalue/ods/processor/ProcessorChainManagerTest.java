@@ -3,6 +3,7 @@ package org.jvalue.ods.processor;
 
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.core.JsonPointer;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -11,15 +12,16 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.jvalue.commons.db.GenericDocumentNotFoundException;
 import org.jvalue.commons.utils.Cache;
 import org.jvalue.ods.api.processors.ExecutionInterval;
 import org.jvalue.ods.api.processors.ProcessorReference;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceMetaData;
-import org.jvalue.ods.db.DataRepository;
-import org.jvalue.ods.db.ProcessorChainReferenceRepository;
-import org.jvalue.ods.db.RepositoryFactory;
+import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
+import org.jvalue.ods.db.couchdb.repositories.ProcessorChainReferenceRepository;
+import org.jvalue.ods.db.generic.RepositoryFactory;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -31,6 +33,8 @@ import mockit.Expectations;
 import mockit.Mocked;
 import mockit.Verifications;
 import mockit.integration.junit4.JMockit;
+import org.jvalue.commons.db.repositories.GenericDataRepository;
+import org.jvalue.commons.db.repositories.GenericRepository;
 
 @RunWith(JMockit.class)
 public final class ProcessorChainManagerTest {
@@ -43,7 +47,7 @@ public final class ProcessorChainManagerTest {
 			new ObjectNode(JsonNodeFactory.instance),
 			new DataSourceMetaData("", "", "", "", "", "", ""));
 	@Mocked private ProcessorChainFactory chainFactory;
-	@Mocked private Cache<ProcessorChainReferenceRepository> repositoryCache;
+	@Mocked private Cache<GenericRepository<ProcessorReferenceChain>> repositoryCache;
 	@Mocked private RepositoryFactory repositoryFactory;
 	@Mocked private MetricRegistry registry;
 	private ProcessorChainManager manager;
@@ -61,9 +65,9 @@ public final class ProcessorChainManagerTest {
 
 	@Test
 	public void testAddAndRemove(
-			@Mocked final DataRepository dataRepository,
-			@Mocked final ProcessorChainReferenceRepository referenceRepository,
-			@Mocked final ProcessorChain chain) throws Exception {
+		@Mocked final GenericDataRepository<CouchDbDataView, JsonNode> dataRepository,
+		@Mocked final ProcessorChainReferenceRepository referenceRepository,
+		@Mocked final ProcessorChain chain) throws Exception {
 
 		setupStartingFilterChain(dataRepository, referenceRepository, chain);
 
@@ -130,7 +134,7 @@ public final class ProcessorChainManagerTest {
 			repositoryCache.get(anyString);
 			result = referenceRepository;
 			referenceRepository.findById(anyString);
-			result = new DocumentNotFoundException("");
+			result = new GenericDocumentNotFoundException("");
 		}};
 
 		Assert.assertFalse(manager.contains(source, FILTER_CHAIN_ID));
@@ -139,7 +143,7 @@ public final class ProcessorChainManagerTest {
 
 	@Test
 	public void testStartAndStopAll(
-			@Mocked final DataRepository dataRepository,
+			@Mocked final GenericDataRepository<CouchDbDataView, JsonNode> dataRepository,
 			@Mocked final ProcessorChainReferenceRepository referenceRepository,
 			@Mocked final ProcessorChain chain) throws Exception {
 
@@ -151,7 +155,7 @@ public final class ProcessorChainManagerTest {
 			result = list;
 		}};
 
-		Map<DataSource, DataRepository> sources = new HashMap<>();
+		Map<DataSource, GenericDataRepository<CouchDbDataView, JsonNode>> sources = new HashMap<>();
 		sources.put(source, dataRepository);
 
 		// start all
@@ -170,7 +174,7 @@ public final class ProcessorChainManagerTest {
 
 
 	private void setupStartingFilterChain(
-			final DataRepository dataRepository,
+			final GenericDataRepository<CouchDbDataView, JsonNode> dataRepository,
 			final ProcessorChainReferenceRepository referenceRepository,
 			final ProcessorChain chain) {
 

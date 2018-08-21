@@ -8,6 +8,8 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 
+import org.jvalue.ods.processor.filter.db.CouchDbInsertionFilter;
+import org.jvalue.ods.processor.filter.db.MongoDbInsertionFilter;
 import org.jvalue.ods.processor.filter.domain.PegelBrandenburgMerger;
 import org.jvalue.ods.processor.filter.domain.PegelOnlineMerger;
 
@@ -24,8 +26,9 @@ public final class FilterModule extends AbstractModule {
 				.implement(
 						new TypeLiteral<Filter<ObjectNode, ObjectNode>>() {
 						},
+						// Use CouchDbInsertionFilter or MongoDbInsertionFilter
 						Names.named(FilterFactory.NAME_DB_INSERTION_FILTER),
-						DbInsertionFilter.class)
+						MongoDbInsertionFilter.class)
 				.implement(
 						new TypeLiteral<Filter<ObjectNode, ObjectNode>>() {
 						},

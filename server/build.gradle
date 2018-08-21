@@ -39,7 +39,9 @@ dependencies {
     compile "org.apache.commons:commons-csv:$apacheCommonsCsvVersion"
     compile "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jacksonCoreVersion"
     compile "com.hubspot.jackson:jackson-jaxrs-propertyfiltering:$jacksonJaxrsVersion"
+    compile "org.jvalue.commons:db:$jvalueCommonsVersion"
     compile "org.jvalue.commons:couchdb:$jvalueCommonsVersion"
+    compile "org.jvalue.commons:mongodb:$jvalueCommonsVersion"
     compile "org.jvalue.commons:auth:$jvalueCommonsVersion"
     compile "com.sun.net.httpserver:http:$httpserverVersion"
     compile "javax.xml.bind:jaxb-api:$jaxbVersion"
@@ -58,6 +60,7 @@ dependencies {
     testCompile "com.squareup.okhttp:okhttp-urlconnection:$okhttpVersion"
     testCompile "com.squareup.okhttp:mockwebserver:$okhttpVersion"
     testCompile "org.jvalue.commons:couchdb-test:$jvalueCommonsVersion"
+    testCompile "org.jvalue.commons:mongodb-test:$jvalueCommonsVersion"
     testCompile project(':client-retrofit')
 }
 

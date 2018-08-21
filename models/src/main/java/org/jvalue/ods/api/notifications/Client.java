@@ -13,7 +13,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-    
+
  */
 package org.jvalue.ods.api.notifications;
 
@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.google.common.base.Objects;
+import org.jvalue.commons.EntityBase;
 
 import javax.validation.constraints.NotNull;
 
@@ -37,7 +38,7 @@ import javax.validation.constraints.NotNull;
 		@JsonSubTypes.Type(value = GcmClient.class, name = GcmClient.CLIENT_TYPE),
 		@JsonSubTypes.Type(value = AmqpClient.class, name = AmqpClient.CLIENT_TYPE)
 })
-public abstract class Client {
+public abstract class Client implements EntityBase {
 
 	@NotNull private final String id;
 	@NotNull private final String type;
@@ -46,7 +47,6 @@ public abstract class Client {
 		this.id = id;
 		this.type = type;
 	}
-
 
 	public final String getId() {
 		return id;

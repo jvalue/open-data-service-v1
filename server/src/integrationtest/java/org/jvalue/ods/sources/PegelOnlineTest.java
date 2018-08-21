@@ -37,7 +37,7 @@ public final class PegelOnlineTest extends AbstractDataSourceTest {
 				.processor(new ProcessorReference.Builder("JsonSourceAdapter")
 						.argument("sourceUrl", "http://pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true&includeCharacteristicValues=true&waters=ELBE")
 						.build())
-				.processor(new ProcessorReference.Builder("DbInsertionFilter")
+				.processor(new ProcessorReference.Builder("CouchDbInsertionFilter")
 						.argument("updateData", true)
 						.build())
 				.build();

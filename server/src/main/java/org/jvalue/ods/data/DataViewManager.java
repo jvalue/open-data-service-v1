@@ -2,45 +2,44 @@ package org.jvalue.ods.data;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
-
+import org.jvalue.commons.db.repositories.GenericDataRepository;
+import org.jvalue.commons.db.repositories.GenericRepository;
 import org.jvalue.commons.utils.Assert;
 import org.jvalue.commons.utils.Cache;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.api.views.DataView;
-import org.jvalue.ods.db.DataRepository;
-import org.jvalue.ods.db.DataViewRepository;
-import org.jvalue.ods.db.RepositoryFactory;
+import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
+import org.jvalue.ods.db.generic.RepositoryFactory;
 
 import java.util.List;
 
 
-public final class DataViewManager extends AbstractDataSourcePropertyManager<DataView, DataViewRepository> {
+public final class DataViewManager extends AbstractDataSourcePropertyManager<CouchDbDataView, GenericRepository<CouchDbDataView>> {
 
 
 	@Inject
-	DataViewManager(
-			Cache<DataViewRepository> viewRepositoryCache,
+	public DataViewManager(
+			Cache<GenericRepository<CouchDbDataView>> viewRepositoryCache,
 			RepositoryFactory repositoryFactory) {
 
 		super(viewRepositoryCache, repositoryFactory);
 	}
 
 
-	public List<JsonNode> executeView(DataRepository dataRepository, DataView view, String argument) {
+	public List<JsonNode> executeView(GenericDataRepository<CouchDbDataView, JsonNode> dataRepository, CouchDbDataView view, String argument) {
 		Assert.assertNotNull(dataRepository, view);
 		return dataRepository.executeQuery(view, argument);
 	}
 
 
 	@Override
-	protected void doAdd(DataSource source, DataRepository dataRepository, DataView dataView) {
-		dataRepository.addView(dataView);
+	protected void doAdd(DataSource source, GenericDataRepository<CouchDbDataView, JsonNode> dataRepository, CouchDbDataView dataView) {
+		dataRepository.addQuery(dataView);
 	}
 
 
 	@Override
-	protected void doRemove(DataSource source, DataRepository dataRepository, DataView dataView) {
-		dataRepository.removeView(dataView);
+	protected void doRemove(DataSource source, GenericDataRepository<CouchDbDataView, JsonNode> dataRepository, CouchDbDataView dataView) {
+		dataRepository.removeQuery(dataView);
 	}
 
 
@@ -49,7 +48,7 @@ public final class DataViewManager extends AbstractDataSourcePropertyManager<Dat
 
 
 	@Override
-	protected DataViewRepository createNewRepository(String sourceId, RepositoryFactory repositoryFactory) {
+	protected GenericRepository<CouchDbDataView> createNewRepository(String sourceId, RepositoryFactory repositoryFactory) {
 		return repositoryFactory.createDataViewRepository(sourceId);
 	}
 

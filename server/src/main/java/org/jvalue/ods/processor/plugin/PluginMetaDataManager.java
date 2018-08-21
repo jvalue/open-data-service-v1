@@ -13,30 +13,32 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-    
+
  */
 package org.jvalue.ods.processor.plugin;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
-
+import org.jvalue.commons.db.repositories.GenericDataRepository;
+import org.jvalue.commons.db.repositories.GenericRepository;
 import org.jvalue.commons.utils.Assert;
 import org.jvalue.commons.utils.Cache;
 import org.jvalue.ods.api.processors.PluginMetaData;
 import org.jvalue.ods.api.sources.DataSource;
+import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
+import org.jvalue.ods.db.couchdb.repositories.PluginMetaDataRepository;
+import org.jvalue.ods.db.generic.RepositoryFactory;
 import org.jvalue.ods.data.AbstractDataSourcePropertyManager;
-import org.jvalue.ods.db.DataRepository;
-import org.jvalue.ods.db.PluginMetaDataRepository;
-import org.jvalue.ods.db.RepositoryFactory;
 
 import java.io.InputStream;
 
 
-public final class PluginMetaDataManager extends AbstractDataSourcePropertyManager<PluginMetaData, PluginMetaDataRepository> {
+public final class PluginMetaDataManager extends AbstractDataSourcePropertyManager<PluginMetaData, GenericRepository<PluginMetaData>> {
 
 
 	@Inject
 	PluginMetaDataManager(
-			Cache<PluginMetaDataRepository> repositoryCache,
+			Cache<GenericRepository<PluginMetaData>> repositoryCache,
 			RepositoryFactory repositoryFactory) {
 
 		super(repositoryCache, repositoryFactory);
@@ -46,22 +48,22 @@ public final class PluginMetaDataManager extends AbstractDataSourcePropertyManag
 	public void addFile(DataSource source, PluginMetaData metaData, InputStream inputStream, String contentType) {
 		Assert.assertNotNull(source, metaData, inputStream, contentType);
 		add(source, null, metaData);
-		getRepository(source).addAttachment(metaData, inputStream, contentType);
+		((PluginMetaDataRepository) getRepository(source)).addAttachment(metaData, inputStream, contentType);
 	}
 
 
 	public InputStream getFile(DataSource source, PluginMetaData metaData) {
 		Assert.assertNotNull(source, metaData);
-		return getRepository(source).getAttachment(metaData);
+		return ((PluginMetaDataRepository) getRepository(source)).getAttachment(metaData);
 	}
 
 
 	@Override
-	protected void doAdd(DataSource source, DataRepository dataRepository, PluginMetaData metaData) { }
+	protected void doAdd(DataSource source, GenericDataRepository<CouchDbDataView,JsonNode> dataRepository, PluginMetaData metaData) { }
 
 
 	@Override
-	protected void doRemove(DataSource source, DataRepository dataRepository, PluginMetaData metaData) { }
+	protected void doRemove(DataSource source, GenericDataRepository<CouchDbDataView, JsonNode> dataRepository, PluginMetaData metaData) { }
 
 
 	@Override
@@ -69,7 +71,7 @@ public final class PluginMetaDataManager extends AbstractDataSourcePropertyManag
 
 
 	@Override
-	protected PluginMetaDataRepository createNewRepository(String sourceId, RepositoryFactory repositoryFactory) {
+	protected GenericRepository<PluginMetaData> createNewRepository(String sourceId, RepositoryFactory repositoryFactory) {
 		return repositoryFactory.createPluginMetaDataRepository(sourceId);
 	}
 

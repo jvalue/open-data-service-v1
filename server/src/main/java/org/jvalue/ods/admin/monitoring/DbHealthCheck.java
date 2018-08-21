@@ -3,19 +3,20 @@ package org.jvalue.ods.admin.monitoring;
 
 import com.codahale.metrics.health.HealthCheck;
 import com.google.inject.Inject;
-
-import org.jvalue.ods.db.DataSourceRepository;
+import org.jvalue.ods.api.sources.DataSource;
+import org.jvalue.commons.db.repositories.GenericRepository;
+import org.jvalue.ods.db.generic.DataSourceRepositoryFactory;
 
 /**
  * Checks that CouchDb is reachable.
  */
 public final class DbHealthCheck extends HealthCheck {
 
-	private final DataSourceRepository sourceRepository;
+	private final GenericRepository<DataSource> sourceRepository;
 
 	@Inject
-	public DbHealthCheck(DataSourceRepository sourceRepository) {
-		this.sourceRepository = sourceRepository;
+	public DbHealthCheck(DataSourceRepositoryFactory dataSourceFactory) {
+		this.sourceRepository = dataSourceFactory.createDataSource();
 	}
 
 

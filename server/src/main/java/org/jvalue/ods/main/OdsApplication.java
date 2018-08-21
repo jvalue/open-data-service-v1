@@ -4,7 +4,12 @@ package org.jvalue.ods.main;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.hubspot.jackson.jaxrs.PropertyFilteringMessageBodyWriter;
-
+import com.mongodb.MongoClientURI;
+import com.mongodb.MongoClient;
+import io.dropwizard.Application;
+import io.dropwizard.jersey.DropwizardResourceConfig;
+import io.dropwizard.jersey.setup.JerseyContainerHolder;
+import io.dropwizard.setup.Environment;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.hibernate.validator.HibernateValidator;
@@ -19,6 +24,7 @@ import org.jvalue.commons.couchdb.rest.DbExceptionMapper;
 import org.jvalue.commons.rest.JsonExceptionMapper;
 import org.jvalue.commons.rest.NotFoundExceptionMapper;
 import org.jvalue.commons.utils.HttpServiceCheck;
+import org.jvalue.commons.utils.Log;
 import org.jvalue.ods.admin.monitoring.DbHealthCheck;
 import org.jvalue.ods.admin.monitoring.MonitoringModule;
 import org.jvalue.ods.admin.rest.AdminFilterChainApi;
@@ -26,36 +32,19 @@ import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
 import org.jvalue.ods.auth.AuthModule;
 import org.jvalue.ods.data.DataModule;
 import org.jvalue.ods.data.DataSourceManager;
-import org.jvalue.ods.db.DbModule;
+import org.jvalue.ods.db.couchdb.CouchDbModule;
+import org.jvalue.ods.db.mongodb.MongoDbModule;
 import org.jvalue.ods.notifications.NotificationsModule;
-import org.jvalue.ods.pegelalarm.CepsClientHealthCheck;
-import org.jvalue.ods.pegelalarm.DataHealthCheck;
-import org.jvalue.ods.pegelalarm.DataSourceHealthCheck;
-import org.jvalue.ods.pegelalarm.FilterChainHealthCheck;
-import org.jvalue.ods.pegelalarm.PegelOnlineHealthCheck;
+import org.jvalue.ods.pegelalarm.*;
 import org.jvalue.ods.processor.ProcessorModule;
 import org.jvalue.ods.processor.reference.ValidChainReference;
+import org.jvalue.ods.rest.v1.*;
 import org.jvalue.ods.transformation.DataTransformationModule;
-import org.jvalue.ods.rest.v1.DataApi;
-import org.jvalue.ods.rest.v1.DataSourceApi;
-import org.jvalue.ods.rest.v1.DataViewApi;
-import org.jvalue.ods.rest.v1.NotificationApi;
-import org.jvalue.ods.rest.v1.PluginApi;
-import org.jvalue.ods.rest.v1.ProcessorChainApi;
-import org.jvalue.ods.rest.v1.ProcessorSpecificationApi;
-import org.jvalue.ods.rest.v1.UserApi;
-import org.jvalue.ods.rest.v1.VersionApi;
 import org.jvalue.ods.utils.GuiceConstraintValidatorFactory;
-
-import java.util.List;
 
 import javax.validation.Validation;
 import javax.ws.rs.core.Context;
-
-import io.dropwizard.Application;
-import io.dropwizard.jersey.DropwizardResourceConfig;
-import io.dropwizard.jersey.setup.JerseyContainerHolder;
-import io.dropwizard.setup.Environment;
+import java.util.List;
 
 public final class OdsApplication extends Application<OdsConfig> {
 
@@ -74,15 +63,17 @@ public final class OdsApplication extends Application<OdsConfig> {
 	@Override
 	@Context
 	public void run(OdsConfig configuration, Environment environment) {
-		assertCouchDbIsReady(configuration.getCouchDb().getUrl());
+//		assertCouchDbIsReady(configuration.getCouchDb().getUrl());
+		assertMongoDbIsReady(configuration.getMongoDb().getUrl());
 
 		Injector injector = Guice.createInjector(
 				new MonitoringModule(environment.metrics()),
 				new ConfigModule(configuration),
 				new ProcessorModule(),
-				new DbModule(configuration.getCouchDb()),
-				new NotificationsModule(),
+//				new CouchDbModule(configuration.getCouchDb()),
+				new MongoDbModule(configuration.getMongoDb()),
 				new DataModule(),
+				new NotificationsModule(),
 				new AuthModule(configuration.getAuth()),
 				new DataTransformationModule());
 
@@ -150,6 +141,29 @@ public final class OdsApplication extends Application<OdsConfig> {
 			throw new RuntimeException("CouchDB service is not ready [" + couchDbUrl+ "]");
 		}
 
+	}
+
+	private void assertMongoDbIsReady(String mongoDbUrl){
+		MongoClient mongoClient = new MongoClient(new MongoClientURI(mongoDbUrl));
+		int retryCounter = 50;
+		do{
+			try {
+				mongoClient.getAddress();
+				return;
+			} catch (Exception e) {
+				Log.error("MongoDb is not available.");
+			}finally {
+				mongoClient.close();
+			}
+			--retryCounter;
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}while (retryCounter > 0);
+
+		throw new RuntimeException("MongoDb is not available");
 	}
 
 }

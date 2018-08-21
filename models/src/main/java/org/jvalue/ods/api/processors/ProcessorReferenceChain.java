@@ -3,12 +3,13 @@ package org.jvalue.ods.api.processors;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
+import org.jvalue.commons.EntityBase;
 
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-public final class ProcessorReferenceChain extends AbstractProcessorReferenceChain {
+public final class ProcessorReferenceChain extends AbstractProcessorReferenceChain implements EntityBase {
 
 	@NotNull private final String id;
 
@@ -21,7 +22,7 @@ public final class ProcessorReferenceChain extends AbstractProcessorReferenceCha
 		this.id = id;
 	}
 
-
+	@Override
 	public String getId() {
 		return id;
 	}

@@ -12,7 +12,7 @@
 		"longname": "ELBE"
 	},
 	"timeseries": [
-			{
+		{
 			"shortname": "W",
 			"longname": "WASSERSTAND ROHDATEN",
 			"unit": "cm",
