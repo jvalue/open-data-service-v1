@@ -68,7 +68,6 @@ public final class PluginApi extends AbstractApi {
 			throw RestUtils.createJsonFormattedException("plugin with id " + pluginId + " already exists", 409);
 
 		String contentType = bodyPart.getMediaType().toString();
-		System.out.println("contentType = " + contentType);
 		if (!contentType.equals(TYPE_X_JAVA_ARCHIVE) && !contentType.equals(TYPE_JAVA_ARCHIVE))
 			throw RestUtils.createJsonFormattedException("content type must be " + TYPE_X_JAVA_ARCHIVE + " or " + TYPE_JAVA_ARCHIVE, 415);
 

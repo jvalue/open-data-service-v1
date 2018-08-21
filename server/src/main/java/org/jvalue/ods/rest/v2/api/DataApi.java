@@ -77,7 +77,6 @@ public final class DataApi extends AbstractApi {
 			.data(DataWrapper.fromCollection(dataNodes, sourceManager.findBySourceId(sourceId)))
 			.addLink("source", getDirectoryURI(uriInfo));
 
-		System.out.println(dataNodes.size());
 		if (dataNodes.size() >= limit) {
 			response.addLink("next", nextUri)
 				.addLink("first", firstUri);
