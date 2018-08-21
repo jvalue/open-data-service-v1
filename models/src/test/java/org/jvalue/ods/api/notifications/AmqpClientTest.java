@@ -16,11 +16,11 @@ public class AmqpClientTest {
     @Test
     public final void testEquals() {
 
-        AmqpClient client1 = new AmqpClient("0", "host1", "exchange");
-        AmqpClient client2 = new AmqpClient("0", "host1", "exchange");
-        AmqpClient client3 = new AmqpClient("0", "host2", "exchange");
-        AmqpClient client4 = new AmqpClient("0", "host1", "exchange-other");
-        AmqpClient client5 = new AmqpClient("1", "host1", "exchange");
+        AmqpClient client1 = new AmqpClient("0", "host1", "exchange", "topic", "x.y.z");
+        AmqpClient client2 = new AmqpClient("0", "host1", "exchange", "topic", "x.y.z");
+        AmqpClient client3 = new AmqpClient("0", "host2", "exchange", "topic", "x.y.z");
+        AmqpClient client4 = new AmqpClient("0", "host1", "exchange-other", "topic", "x.y.z");
+        AmqpClient client5 = new AmqpClient("1", "host1", "exchange", "topic", "x.y.z");
 
         assertEquals(client1, client1);
         assertEquals(client1, client2);
@@ -40,17 +40,18 @@ public class AmqpClientTest {
 
     @Test
     public final void testGet() {
-        AmqpClient client = new AmqpClient("0", "host1", "exchange");
+        AmqpClient client = new AmqpClient("0", "host1", "exchange", "topic", "abcRouting");
         assertEquals(client.getId(), "0");
         assertEquals(client.getHost(), "host1");
         assertEquals(client.getExchange(), "exchange");
-
+        assertEquals(client.getExchangeType(), "topic");
+        assertEquals(client.getRoutingKey(), "abcRouting");
     }
 
 
     @Test
     public final void testJson() throws JsonProcessingException {
-        AmqpClient client =new AmqpClient("0", "host1", "exchange");
+        AmqpClient client =new AmqpClient("0", "host1", "exchange", "topic", "main.value");
         JsonNode json = mapper.valueToTree(client);
         assertNotNull(json);
         assertEquals(client, mapper.treeToValue(json, AmqpClient.class));
