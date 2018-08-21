@@ -38,6 +38,7 @@ dependencies {
     compile "org.apache.commons:commons-text:$apacheCommonsTextVersion"
     compile "org.apache.commons:commons-csv:$apacheCommonsCsvVersion"
     compile "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jacksonCoreVersion"
+	compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonCoreVersion"
     compile "com.hubspot.jackson:jackson-jaxrs-propertyfiltering:$jacksonJaxrsVersion"
     compile "org.jvalue.commons:couchdb:$jvalueCommonsVersion"
     compile "org.jvalue.commons:auth:$jvalueCommonsVersion"
