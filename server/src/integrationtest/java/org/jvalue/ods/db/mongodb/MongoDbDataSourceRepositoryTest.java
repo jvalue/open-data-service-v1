@@ -6,13 +6,13 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.Ignore;
 import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.commons.db.repositories.GenericRepository;
-import org.jvalue.commons.mongodb.test.AbstractRepositoryAdapterTest;
+import org.jvalue.commons.mongodb.test.AbstractRepositoryTestBase;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceMetaData;
 import org.jvalue.ods.db.mongodb.repositories.MongoDbDataSourceRepository;
 
 @Ignore
-public class MongoDbDataSourceRepositoryTest extends AbstractRepositoryAdapterTest<DataSource> {
+public class MongoDbDataSourceRepositoryTest extends AbstractRepositoryTestBase<DataSource> {
 	@Override
 	protected GenericRepository<DataSource> doCreateRepository(DbConnectorFactory connectorFactory) {
 		return new MongoDbDataSourceRepository(connectorFactory);

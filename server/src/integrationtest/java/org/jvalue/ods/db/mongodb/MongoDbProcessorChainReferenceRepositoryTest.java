@@ -3,7 +3,7 @@ package org.jvalue.ods.db.mongodb;
 import org.junit.Ignore;
 import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.commons.db.repositories.GenericRepository;
-import org.jvalue.commons.mongodb.test.AbstractRepositoryAdapterTest;
+import org.jvalue.commons.mongodb.test.AbstractRepositoryTestBase;
 import org.jvalue.ods.api.processors.ExecutionInterval;
 import org.jvalue.ods.api.processors.ProcessorReference;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 @Ignore
-public class MongoDbProcessorChainReferenceRepositoryTest extends AbstractRepositoryAdapterTest<ProcessorReferenceChain> {
+public class MongoDbProcessorChainReferenceRepositoryTest extends AbstractRepositoryTestBase<ProcessorReferenceChain> {
 	@Override
 	protected GenericRepository<ProcessorReferenceChain> doCreateRepository(DbConnectorFactory connectorFactory) {
 		return new MongoDbProcessorChainReferenceRepository(connectorFactory, getClass().getSimpleName());

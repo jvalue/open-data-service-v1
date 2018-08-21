@@ -22,7 +22,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.google.common.base.Objects;
-import org.jvalue.commons.EntityBase;
 
 import javax.validation.constraints.NotNull;
 
@@ -38,7 +37,7 @@ import javax.validation.constraints.NotNull;
 		@JsonSubTypes.Type(value = GcmClient.class, name = GcmClient.CLIENT_TYPE),
 		@JsonSubTypes.Type(value = AmqpClient.class, name = AmqpClient.CLIENT_TYPE)
 })
-public abstract class Client implements EntityBase {
+public abstract class Client {
 
 	@NotNull private final String id;
 	@NotNull private final String type;

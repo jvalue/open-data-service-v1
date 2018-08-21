@@ -4,12 +4,12 @@ package org.jvalue.ods.db.mongodb;
 import org.junit.Ignore;
 import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.commons.db.repositories.GenericRepository;
-import org.jvalue.commons.mongodb.test.AbstractRepositoryAdapterTest;
+import org.jvalue.commons.mongodb.test.AbstractRepositoryTestBase;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
 import org.jvalue.ods.db.mongodb.repositories.MongoDbDataViewRepository;
 
 @Ignore
-public class MongoDbDataViewRepositoryTest extends AbstractRepositoryAdapterTest<CouchDbDataView> {
+public class MongoDbDataViewRepositoryTest extends AbstractRepositoryTestBase<CouchDbDataView> {
 
 	@Override
 	protected GenericRepository<CouchDbDataView> doCreateRepository(DbConnectorFactory connectorFactory) {
