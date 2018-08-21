@@ -1,5 +1,6 @@
 package org.jvalue.ods.processor.adapter.domain.weather.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.Instant;
@@ -14,6 +15,7 @@ public class Weather {
 	private final Instant timestamp;
 	private final Location location;
 
+	@JsonCreator
 	public Weather(
 		@JsonProperty("stationId") String stationId,
 		@JsonProperty("temperature") Temperature temperature,
