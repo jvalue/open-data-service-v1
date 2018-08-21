@@ -1,5 +1,8 @@
 package org.jvalue.ods.processor.adapter.domain.weather.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.text.DecimalFormat;
 import java.util.Objects;
 
@@ -8,8 +11,10 @@ public class Pressure {
 	private final double value;
 	private final PressureType type;
 
-
-	public Pressure(double value, PressureType type) {
+	@JsonCreator
+	public Pressure(
+		@JsonProperty("value")  double value,
+		@JsonProperty("type") PressureType type) {
 		this.value = Double.valueOf(new DecimalFormat("#.##").format(value));
 		this.type = type;
 	}
