@@ -11,6 +11,7 @@ import org.jvalue.ods.processor.adapter.SourceAdapter;
 import org.jvalue.ods.processor.adapter.SourceAdapterException;
 import org.jvalue.ods.processor.adapter.SourceAdapterFactory;
 import org.jvalue.ods.processor.adapter.domain.weather.models.*;
+import org.jvalue.ods.utils.JsonMapper;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.UriBuilder;
@@ -27,7 +28,6 @@ import java.util.stream.Collectors;
 @SuppressWarnings("Duplicates")
 final public class OpenWeatherMapSourceAdapter implements SourceAdapter {
 
-	private final ObjectMapper mapper = new ObjectMapper();
 	private final DataSource dataSource;
 	private final MetricRegistry registry;
 	private final List<Location> locations;
@@ -45,7 +45,7 @@ final public class OpenWeatherMapSourceAdapter implements SourceAdapter {
 		this.apiKey = apiKey;
 
 		this.locations = locations.stream()
-			.map(l -> mapper.convertValue(l, Location.class))
+			.map(l -> JsonMapper.convertValue(l, Location.class))
 			.collect(Collectors.toList());
 	}
 
@@ -58,7 +58,7 @@ final public class OpenWeatherMapSourceAdapter implements SourceAdapter {
 			if (nodeIterator.hasNext()) {
 				ObjectNode node = nodeIterator.next();
 				Weather weather = createWeatherFromObjectNode(node);
-				ObjectNode weatherNode = mapper.valueToTree(weather);
+				ObjectNode weatherNode = JsonMapper.valueToTree(weather);
 				result.add(weatherNode);
 			}
 		}

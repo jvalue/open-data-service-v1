@@ -7,15 +7,7 @@ import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
 import org.jvalue.commons.rest.RestUtils;
-import org.jvalue.ods.api.notifications.AmqpClient;
-import org.jvalue.ods.api.notifications.AmqpClientDescription;
-import org.jvalue.ods.api.notifications.Client;
-import org.jvalue.ods.api.notifications.ClientDescription;
-import org.jvalue.ods.api.notifications.ClientDescriptionVisitor;
-import org.jvalue.ods.api.notifications.GcmClient;
-import org.jvalue.ods.api.notifications.GcmClientDescription;
-import org.jvalue.ods.api.notifications.HttpClient;
-import org.jvalue.ods.api.notifications.HttpClientDescription;
+import org.jvalue.ods.api.notifications.*;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.notifications.NotificationManager;
@@ -113,9 +105,16 @@ public final class NotificationApi extends AbstractApi {
 			return new HttpClient(clientId, client.getCallbackUrl(), client.getSendData());
 		}
 
+
 		@Override
 		public Client visit(AmqpClientDescription client, String clientId) {
 			return new AmqpClient(clientId, client.getHost(), client.getExchange(), client.getExchangeType(), client.getRoutingKey());
+		}
+
+
+		@Override
+		public Client visit(NdsClientDescription client, String clientId) {
+			return new NdsClient(clientId, client.getHost(), client.getExchange());
 		}
 
 	}
