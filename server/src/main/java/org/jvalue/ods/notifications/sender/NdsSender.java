@@ -8,6 +8,7 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.rabbitmq.client.BuiltinExchangeType;
 import org.apache.commons.io.IOUtils;
+import org.jvalue.commons.utils.Log;
 import org.jvalue.ods.api.notifications.NdsClient;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.processor.adapter.domain.weather.models.Temperature;
@@ -15,7 +16,13 @@ import org.jvalue.ods.processor.adapter.domain.weather.models.TemperatureType;
 import org.jvalue.ods.processor.adapter.domain.weather.models.Weather;
 import org.jvalue.ods.pubsub.Publisher;
 import org.jvalue.ods.utils.JsonMapper;
+import org.xml.sax.SAXException;
 
+import javax.xml.XMLConstants;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -25,6 +32,7 @@ public class NdsSender extends AbstractSender<NdsClient> {
 	private final static String EXCHANGE_TYPE = BuiltinExchangeType.TOPIC.getType();
 	private final ArrayNode buffer = new ArrayNode(JsonNodeFactory.instance);
 	private final Publisher publisher;
+	private final boolean validateMessage = true;
 
 	@Inject
 	protected NdsSender(@Assisted DataSource source, @Assisted NdsClient client, Publisher publisher) {
@@ -54,6 +62,11 @@ public class NdsSender extends AbstractSender<NdsClient> {
 		for (JsonNode node : buffer) {
 			Weather weather = getWeatherFromJsonNode(node);
 			String message = createCIMRepresentation(weather);
+
+			if (validateMessage && !validateXMLSchema(message, getCimXmlSchema())) {
+				Log.warn("CIM weather message is not valid!");
+			}
+
 			String routingKey = createRoutingKey(weather.getLocation().getCity());
 
 			boolean nodeSent = publisher.publish(message, routingKey);
@@ -114,11 +127,37 @@ public class NdsSender extends AbstractSender<NdsClient> {
 
 
 	private String getCimTemplate() {
-		InputStream resource = NdsSender.class.getClassLoader().getResourceAsStream("nds/CIM-Template.xml");
+		return doGetResource("nds/CIM-Template.xml");
+	}
+
+
+	private String getCimXmlSchema() {
+		return doGetResource("nds/Weather.xsd");
+	}
+
+
+	private String doGetResource(String path) {
+		InputStream resource = NdsSender.class.getClassLoader().getResourceAsStream(path);
 		try {
 			return IOUtils.toString(resource);
 		} catch (IOException e) {
+			Log.error("Unable to read resource " + path);
 			return "UNKNOWN";
 		}
+	}
+
+
+	private boolean validateXMLSchema(String xml, String xsd) {
+		try {
+			SchemaFactory factory =
+				SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+			Schema schema = factory.newSchema(new StreamSource(xsd));
+			Validator validator = schema.newValidator();
+			validator.validate(new StreamSource(xml));
+		} catch (IOException | SAXException e) {
+			Log.debug(e.getMessage());
+			return false;
+		}
+		return true;
 	}
 }
