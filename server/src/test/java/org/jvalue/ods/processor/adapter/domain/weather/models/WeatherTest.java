@@ -1,5 +1,6 @@
 package org.jvalue.ods.processor.adapter.domain.weather.models;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.Assert;
 import org.junit.Test;
 import org.jvalue.ods.utils.JsonMapper;
@@ -46,10 +47,20 @@ public class WeatherTest {
 
 
 	@Test
-	public void testDeserialization() throws IOException {
+	public void testDeserialization_Json() throws IOException {
 		String weatherStr = JsonMapper.writeValueAsString(weather);
 
 		Weather result = JsonMapper.readValue(weatherStr, Weather.class);
+
+		Assert.assertEquals(weather, result);
+	}
+
+
+	@Test
+	public void testDeserialization_JsonNode() {
+		ObjectNode node = JsonMapper.valueToTree(weather);
+
+		Weather result = JsonMapper.convertValue(node, Weather.class);
 
 		Assert.assertEquals(weather, result);
 	}
