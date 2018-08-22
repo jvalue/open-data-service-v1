@@ -3,7 +3,12 @@ package org.jvalue.ods.notifications.sender;
 
 import com.google.common.base.Objects;
 
-import org.jvalue.ods.api.notifications.*;
+import org.jvalue.ods.api.notifications.AmqpClient;
+import org.jvalue.ods.api.notifications.Client;
+import org.jvalue.ods.api.notifications.ClientVisitor;
+import org.jvalue.ods.api.notifications.GcmClient;
+import org.jvalue.ods.api.notifications.HttpClient;
+import org.jvalue.ods.api.notifications.NdsClient;
 import org.jvalue.ods.api.sources.DataSource;
 
 import java.util.HashMap;
