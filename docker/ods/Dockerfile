@@ -1,7 +1,6 @@
 #REPO: mojo-docker.cs.fau.de/osrg_ods_public/ods
 
-# Base Alpine Linux based image with OpenJDK JRE only
-FROM openjdk:8-jre-alpine
+FROM adoptopenjdk/openjdk10-openj9:x86_64-alpine-jdk-10.0.2.13_openj9-0.9.0-slim
 
 ENV ODS_LOG_DIR /var/log/ods
 
