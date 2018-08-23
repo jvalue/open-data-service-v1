@@ -13,13 +13,17 @@ public class NdsClient extends Client {
 
 	@NotNull private final String host;
 
+	private final boolean validateMessage;
+
 	public NdsClient(@JsonProperty("id") String id,
 					 @JsonProperty("host") String host,
-					 @JsonProperty("exchange") String exchange) {
+					 @JsonProperty("exchange") String exchange,
+					 @JsonProperty("validateMessage") boolean validateMessage) {
 
 		super(id, CLIENT_TYPE);
 		this.host = host;
 		this.exchange = exchange;
+		this.validateMessage = validateMessage;
 	}
 
 
@@ -33,6 +37,11 @@ public class NdsClient extends Client {
 	}
 
 
+	public boolean getValidateMessage() {
+		return validateMessage;
+	}
+
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -40,13 +49,14 @@ public class NdsClient extends Client {
 		if (!super.equals(o)) return false;
 		NdsClient ndsClient = (NdsClient) o;
 		return Objects.equals(exchange, ndsClient.exchange) &&
-			Objects.equals(host, ndsClient.host);
+			Objects.equals(host, ndsClient.host) &&
+			Objects.equals(validateMessage, ndsClient.validateMessage);
 	}
 
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(super.hashCode(), exchange, host);
+		return Objects.hash(super.hashCode(), exchange, host, validateMessage);
 	}
 
 

@@ -28,7 +28,7 @@ public class NdsSenderTest {
 	private static final String EXCHANGE = "dummy-exchange";
 
 	private  NdsSender sender;
-	private NdsClient client = new NdsClient("someId", HOST, EXCHANGE);
+	private NdsClient client = new NdsClient("someId", HOST, EXCHANGE, false);
 
 	private final Weather weather = new Weather(
 		"42",

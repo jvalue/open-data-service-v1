@@ -124,7 +124,7 @@ public final class NotificationApi extends AbstractApi {
 
 		@Override
 		public Client visit(NdsClientDescription client, String clientId) {
-			return new NdsClient(clientId, client.getHost(), client.getExchange());
+			return new NdsClient(clientId, client.getHost(), client.getExchange(), client.getValidateMessage());
 		}
 
 	}

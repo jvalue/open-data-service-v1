@@ -32,7 +32,6 @@ public class NdsSender extends AbstractSender<NdsClient> {
 	private final static String EXCHANGE_TYPE = BuiltinExchangeType.TOPIC.getType();
 	private final ArrayNode buffer = new ArrayNode(JsonNodeFactory.instance);
 	private final Publisher publisher;
-	private final boolean validateMessage = true;
 
 	@Inject
 	protected NdsSender(@Assisted DataSource source, @Assisted NdsClient client, Publisher publisher) {
@@ -63,8 +62,8 @@ public class NdsSender extends AbstractSender<NdsClient> {
 			Weather weather = getWeatherFromJsonNode(node);
 			String message = createCIMRepresentation(weather);
 
-			if (validateMessage && !validateXMLSchema(message, getCimXmlSchema())) {
-				Log.warn("CIM weather message is not valid!");
+			if (client.getValidateMessage()) {
+				validateMessage(message);
 			}
 
 			String routingKey = createRoutingKey(weather.getLocation().getCity());
@@ -147,7 +146,14 @@ public class NdsSender extends AbstractSender<NdsClient> {
 	}
 
 
-	private boolean validateXMLSchema(String xml, String xsd) {
+	private void validateMessage(String message) {
+		if (!isValidXMLSchema(message, getCimXmlSchema())) {
+			Log.warn("CIM weather message is not valid!");
+		}
+	}
+
+
+	private boolean isValidXMLSchema(String xml, String xsd) {
 		try {
 			SchemaFactory factory =
 				SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
