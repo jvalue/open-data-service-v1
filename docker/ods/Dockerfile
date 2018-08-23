@@ -1,6 +1,6 @@
 #REPO: mojo-docker.cs.fau.de/osrg_ods_public/ods
 
-FROM adoptopenjdk/openjdk10-openj9:x86_64-alpine-jdk-10.0.2.13_openj9-0.9.0-slim
+FROM adoptopenjdk/openjdk8-openj9:alpine
 
 ENV ODS_LOG_DIR /var/log/ods
 
