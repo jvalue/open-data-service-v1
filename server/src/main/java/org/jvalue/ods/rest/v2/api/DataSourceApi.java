@@ -23,14 +23,12 @@ import org.jvalue.ods.rest.v2.jsonapi.wrapper.*;
 import org.jvalue.ods.utils.JsonMapper;
 import org.jvalue.ods.utils.RequestValidator;
 
-import javax.validation.ConstraintViolation;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.List;
-import java.util.Set;
 
 import static org.jvalue.ods.utils.HttpUtils.getDirectoryURI;
 import static org.jvalue.ods.utils.HttpUtils.getSanitizedPath;
@@ -175,17 +173,7 @@ public final class DataSourceApi extends AbstractApi {
 
 	private void assertIsValidSourceDescription(DataSourceDescription sourceDescription, String id) {
 
-		Set<ConstraintViolation<DataSourceDescription>> violations = RequestValidator.validate(sourceDescription);
-		if (!violations.isEmpty()) {
-			StringBuilder violationStringBuilder = new StringBuilder();
-			for (ConstraintViolation<DataSourceDescription> violation : violations) {
-				violationStringBuilder.append(violation.getPropertyPath().toString())
-					.append(" ")
-					.append(violation.getMessage())
-					.append(System.lineSeparator());
-			}
-			throw RestUtils.createJsonFormattedException("Malformed DataSourceDescription: " + violationStringBuilder.toString(), 400);
-		}
+		RequestValidator.validate(sourceDescription);
 
 		if (sourceManager.isValidSourceId(id)) {
 			throw RestUtils.createJsonFormattedException("source with id " + id + " already exists", 409);
