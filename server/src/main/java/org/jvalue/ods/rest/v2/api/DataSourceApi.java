@@ -1,16 +1,21 @@
 package org.jvalue.ods.rest.v2.api;
 
 
+import com.fasterxml.jackson.core.JsonPointer;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
 import org.jvalue.commons.rest.RestUtils;
+import org.jvalue.commons.utils.Assert;
+import org.jvalue.commons.utils.Log;
 import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.api.processors.PluginMetaData;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.api.sources.DataSourceDescription;
+import org.jvalue.ods.api.sources.DataSourceMetaData;
 import org.jvalue.ods.api.views.DataView;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.data.DataViewManager;
@@ -20,7 +25,6 @@ import org.jvalue.ods.processor.plugin.PluginMetaDataManager;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.*;
 
-import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
@@ -30,6 +34,8 @@ import java.util.List;
 
 import static org.jvalue.ods.utils.HttpUtils.getDirectoryURI;
 import static org.jvalue.ods.utils.HttpUtils.getSanitizedPath;
+import static org.jvalue.ods.utils.JsonUtils.assertIsValidJsonApiSingleDataDocument;
+
 
 @Path(AbstractApi.BASE_URL)
 public final class DataSourceApi extends AbstractApi {
@@ -99,20 +105,23 @@ public final class DataSourceApi extends AbstractApi {
 
 
 	@POST
-	@Path("/{sourceId}")
 	public Response addSource(
 		@RestrictedTo(Role.ADMIN) User user,
-		@PathParam("sourceId") String sourceId,
-		@Valid DataSourceDescription sourceDescription) {
+		JsonNode sourceDescription) {
 
-		if (sourceManager.isValidSourceId(sourceId))
-			throw RestUtils.createJsonFormattedException("source with id " + sourceId + " already exists", 409);
+		try {
+			assertIsValidSourceDescription(sourceDescription);
+		} catch (IllegalArgumentException e) {
+			Log.error(e.toString() + "/n stacktrace: " + ExceptionUtils.getStackTrace(e));
+			throw RestUtils.createJsonFormattedException("SourceDescription has wrong format.", 400);
+		}
 
-		DataSource source = new DataSource(
-			sourceId,
-			sourceDescription.getDomainIdKey(),
-			sourceDescription.getSchema(),
-			sourceDescription.getMetaData());
+		DataSource source = createSource(sourceDescription);
+
+		if (sourceManager.isValidSourceId(source.getId())) {
+			throw RestUtils.createJsonFormattedException("source with id " + source.getId() + " already exists", 409);
+		}
+
 		sourceManager.add(source);
 
 		return JsonApiResponse
@@ -163,4 +172,58 @@ public final class DataSourceApi extends AbstractApi {
 		return response;
 	}
 
+
+	private DataSource createSource(JsonNode sourceDescription) {
+
+		String sourceId = sourceDescription.get("data").get("id").asText();
+
+		JsonNode attributeNode = sourceDescription.get("data").get("attributes");
+		String domainIdKey = attributeNode.get("domainIdKey").asText();
+		JsonNode schema = attributeNode.get("schema");
+
+		DataSourceMetaData metaData;
+
+		if(attributeNode.has("metaData")) {
+			JsonNode metaDataNode = attributeNode.get("metaData");
+			metaData = new DataSourceMetaData(
+				metaDataNode.get("name").asText(),
+				metaDataNode.get("title").asText(),
+				metaDataNode.get("author").asText(),
+				metaDataNode.get("authorEmail").asText(),
+				metaDataNode.get("notes").asText(),
+				metaDataNode.get("url").asText(),
+				metaDataNode.get("termsOfUse").asText()
+			);
+		} else {
+			metaData = new DataSourceMetaData("","","","","","","");
+		}
+
+		return new DataSource(
+			sourceId,
+			JsonPointer.compile(domainIdKey),
+			schema,
+			metaData
+		);
+	}
+
+
+	private static void assertIsValidSourceDescription(JsonNode sourceDescription) {
+
+		assertIsValidJsonApiSingleDataDocument(sourceDescription);
+
+		Assert.assertNotNull(sourceDescription);
+		Assert.assertTrue(sourceDescription.get("data").has("attributes"));
+
+		JsonNode attributeNode = sourceDescription.get("data").get("attributes");
+		Assert.assertTrue(attributeNode.has("domainIdKey"));
+
+		JsonNode metaDataNode = attributeNode.get("metaData");
+		Assert.assertTrue(metaDataNode.has("name"));
+		Assert.assertTrue(metaDataNode.has("title"));
+		Assert.assertTrue(metaDataNode.has("author"));
+		Assert.assertTrue(metaDataNode.has("authorEmail"));
+		Assert.assertTrue(metaDataNode.has("notes"));
+		Assert.assertTrue(metaDataNode.has("url"));
+		Assert.assertTrue(metaDataNode.has("termsOfUse"));
+	}
 }
