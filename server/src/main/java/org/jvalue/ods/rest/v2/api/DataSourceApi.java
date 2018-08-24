@@ -35,6 +35,7 @@ import java.util.List;
 import static org.jvalue.ods.utils.HttpUtils.getDirectoryURI;
 import static org.jvalue.ods.utils.HttpUtils.getSanitizedPath;
 import static org.jvalue.ods.utils.JsonUtils.assertIsValidJsonApiSingleDataDocument;
+import static org.jvalue.ods.utils.JsonUtils.getIfPresent;
 
 
 @Path(AbstractApi.BASE_URL)
@@ -179,24 +180,19 @@ public final class DataSourceApi extends AbstractApi {
 
 		JsonNode attributeNode = sourceDescription.get("data").get("attributes");
 		String domainIdKey = attributeNode.get("domainIdKey").asText();
-		JsonNode schema = attributeNode.get("schema");
+		JsonNode schema = getIfPresent(attributeNode,"schema");
 
-		DataSourceMetaData metaData;
+		JsonNode metaDataNode = getIfPresent(attributeNode, "metaData");
 
-		if(attributeNode.has("metaData")) {
-			JsonNode metaDataNode = attributeNode.get("metaData");
-			metaData = new DataSourceMetaData(
-				metaDataNode.get("name").asText(),
-				metaDataNode.get("title").asText(),
-				metaDataNode.get("author").asText(),
-				metaDataNode.get("authorEmail").asText(),
-				metaDataNode.get("notes").asText(),
-				metaDataNode.get("url").asText(),
-				metaDataNode.get("termsOfUse").asText()
+		DataSourceMetaData metaData = new DataSourceMetaData(
+			getIfPresent(metaDataNode,"name").asText(),
+			getIfPresent(metaDataNode,"title").asText(),
+			getIfPresent(metaDataNode,"author").asText(),
+			getIfPresent(metaDataNode,"authorEmail").asText(),
+			getIfPresent(metaDataNode,"notes").asText(),
+			getIfPresent(metaDataNode,"url").asText(),
+			getIfPresent(metaDataNode,"termsOfUse").asText()
 			);
-		} else {
-			metaData = new DataSourceMetaData("","","","","","","");
-		}
 
 		return new DataSource(
 			sourceId,
@@ -216,14 +212,5 @@ public final class DataSourceApi extends AbstractApi {
 
 		JsonNode attributeNode = sourceDescription.get("data").get("attributes");
 		Assert.assertTrue(attributeNode.has("domainIdKey"));
-
-		JsonNode metaDataNode = attributeNode.get("metaData");
-		Assert.assertTrue(metaDataNode.has("name"));
-		Assert.assertTrue(metaDataNode.has("title"));
-		Assert.assertTrue(metaDataNode.has("author"));
-		Assert.assertTrue(metaDataNode.has("authorEmail"));
-		Assert.assertTrue(metaDataNode.has("notes"));
-		Assert.assertTrue(metaDataNode.has("url"));
-		Assert.assertTrue(metaDataNode.has("termsOfUse"));
 	}
 }
