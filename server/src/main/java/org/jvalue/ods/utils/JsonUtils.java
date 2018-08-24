@@ -88,11 +88,17 @@ public class JsonUtils {
     }
 
 
-//    public static JsonNode getIfPresent(JsonNode from, String attribute, Object defaultValue) {
-//    	if(from.has(attribute)) {
-//    		return from.get("attribute");
-//		} else {
-//    		return defaultValue;
-//		}
-//	}
+	/**
+	 * get an attribute from a given JsonNode or an empty JsonNode if the attribute is not present
+	 * @param from the node to fetch from
+	 * @param attribute the attribute to get
+	 * @return the attribute as JsonNode or an empty JsonNode
+	 */
+    public static JsonNode getIfPresent(JsonNode from, String attribute) {
+    	if(from.has(attribute)) {
+    		return from.get(attribute);
+		} else {
+    		return objectMapper.createObjectNode();
+		}
+	}
 }
