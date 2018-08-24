@@ -16,7 +16,7 @@ ext {
     jaxrs2retrofitVersion = "0.2.0"
     jerseyVersion = "2.25.1"
     jsoupVersion = "1.10.3"
-    jvalueCommonsVersion = "0.2.1"
+    jvalueCommonsVersion = "0.2.2"
     rabbitmqVersion = "5.2.0"
     retrofitVersion = "1.9.0"
     rxjavaVersion = "1.0.8"
@@ -25,7 +25,7 @@ ext {
 
     //testCompile dependencies
     junitVersion ="4.12"
-    jmockitVersion ="1.35"
+    jmockitVersion ="1.37"
     mockFtpServerVersion = "2.7.1"
     okhttpVersion = "2.7.5"
 }

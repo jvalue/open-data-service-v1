@@ -1,32 +1,36 @@
-package org.jvalue.ods.transformation;
+package org.jvalue.ods.api.views.generic;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
+import org.jvalue.ods.api.views.DataView;
 
 import javax.validation.constraints.NotNull;
 
-public class TransformationFunction {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class TransformationFunction extends AbstractTransformationFunction implements DataView {
 	@NotNull
 	private final String id;
 
 	@NotNull
-	private final String transformFunction;
+	private final String transformationFunction;
 
 
 	/**
 	 * Create a new transformationFunction on the data.
 	 *
 	 * @param id                the id of the transformation function
-	 * @param transformFunction the transformation function written in JavaScript
+	 * @param transformationFunction the transformation function written in JavaScript
 	 */
 	@JsonCreator
 	public TransformationFunction(
 		@JsonProperty("id") String id,
-		@JsonProperty("transformFunction") String transformFunction) {
+		@JsonProperty("transformationFunction") String transformationFunction) {
+		super(transformationFunction);
 
 		this.id = id;
-		this.transformFunction = transformFunction;
+		this.transformationFunction = transformationFunction;
 	}
 
 
@@ -35,8 +39,8 @@ public class TransformationFunction {
 	}
 
 
-	public String getTransformFunction() {
-		return transformFunction;
+	public String getTransformationFunction() {
+		return transformationFunction;
 	}
 
 

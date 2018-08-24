@@ -13,6 +13,7 @@ import org.jvalue.commons.couchdb.DbDocument;
 import org.jvalue.commons.couchdb.DbDocumentAdaptable;
 import org.jvalue.commons.couchdb.RepositoryAdapter;
 import org.jvalue.commons.db.DbConnectorFactory;
+import org.jvalue.commons.db.GenericDocumentNotFoundException;
 import org.jvalue.commons.db.repositories.GenericRepository;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
 
@@ -49,7 +50,7 @@ public final class DataViewRepository extends RepositoryAdapter<
 		@View(name = "by_id", map = "function(doc) { if (" + DOCUMENT_ID + ") emit(doc.value.id, doc._id) }")
 		public DataViewDocument findById(String viewId) {
 			List<DataViewDocument> views = queryView("by_id", viewId);
-			if (views.isEmpty()) throw new DocumentNotFoundException(viewId);
+			if (views.isEmpty()) throw new GenericDocumentNotFoundException(viewId);
 			if (views.size() > 1)
 				throw new IllegalStateException("found more than one view for id " + viewId);
 			return views.get(0);

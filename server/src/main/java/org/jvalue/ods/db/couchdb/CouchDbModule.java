@@ -19,10 +19,12 @@ import org.jvalue.commons.utils.Cache;
 import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.api.processors.PluginMetaData;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
+import org.jvalue.ods.api.views.DataView;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
 import org.jvalue.ods.db.couchdb.repositories.*;
 import org.jvalue.ods.db.generic.DataSourceRepositoryFactory;
 import org.jvalue.ods.db.generic.RepositoryFactory;
+import org.jvalue.ods.api.views.generic.TransformationFunction;
 
 import java.net.MalformedURLException;
 
@@ -93,6 +95,12 @@ public class CouchDbModule extends AbstractModule {
 					},
 					Names.named(RepositoryFactory.NAME_PLUGIN_META_DATA_REPOSITORY),
 					PluginMetaDataRepository.class)
+
+				.implement(
+					new TypeLiteral<GenericRepository<TransformationFunction>>() {
+					},
+					Names.named(RepositoryFactory.NAME_TRANSFORMATION_FUNCTION_REPOSITORY),
+					TransformationFunctionRepository.class)
 
 				.build(RepositoryFactory.class));
 

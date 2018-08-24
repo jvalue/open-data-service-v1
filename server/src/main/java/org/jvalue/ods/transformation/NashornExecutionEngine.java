@@ -6,6 +6,7 @@ import delight.nashornsandbox.NashornSandbox;
 import delight.nashornsandbox.NashornSandboxes;
 import org.apache.commons.io.IOUtils;
 import org.jvalue.commons.utils.Log;
+import org.jvalue.ods.api.views.generic.TransformationFunction;
 
 import javax.script.Invocable;
 import javax.script.ScriptException;
@@ -48,7 +49,7 @@ public class NashornExecutionEngine extends AbstractExecutionEngine {
 		initNashornSandbox();
 		try {
 			//append custom transformation function to wrapper script
-			String script = wrapperScript + transformationFunction.getTransformFunction();
+			String script = wrapperScript + transformationFunction.getTransformationFunction();
 
 			//execute script
 			nashornSandbox.eval(script);

@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.transformation.DataTransformationManager;
-import org.jvalue.ods.transformation.TransformationFunction;
+import org.jvalue.ods.data.DataTransformationManager;
+import org.jvalue.ods.api.views.generic.TransformationFunction;
 
 public class TransformationFilter extends AbstractFilter<ObjectNode, ObjectNode> {
 

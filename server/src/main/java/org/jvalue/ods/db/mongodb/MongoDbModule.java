@@ -20,6 +20,7 @@ import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
 import org.jvalue.ods.db.generic.DataSourceRepositoryFactory;
 import org.jvalue.ods.db.generic.RepositoryFactory;
 import org.jvalue.ods.db.mongodb.repositories.*;
+import org.jvalue.ods.api.views.generic.TransformationFunction;
 import org.value.commons.mongodb.MongoDbConfig;
 
 public class MongoDbModule extends AbstractModule {
@@ -85,6 +86,12 @@ public class MongoDbModule extends AbstractModule {
 				},
 				Names.named(RepositoryFactory.NAME_PLUGIN_META_DATA_REPOSITORY),
 				MongoDbPluginMetaDataRepository.class)
+
+			.implement(
+				new TypeLiteral<GenericRepository<TransformationFunction>>() {
+				},
+				Names.named(RepositoryFactory.NAME_TRANSFORMATION_FUNCTION_REPOSITORY),
+				MongoDbTransformationFunctionRepository.class)
 
 			.build(RepositoryFactory.class));
 

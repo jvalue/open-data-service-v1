@@ -5,12 +5,13 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
+import org.jvalue.ods.api.views.DataView;
 
 import javax.validation.constraints.NotNull;
 
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public final class CouchDbDataView extends AbstractCouchDbDataView {
+public final class CouchDbDataView extends AbstractCouchDbDataView implements DataView {
 
 	@NotNull private final String id;
 

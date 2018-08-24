@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import delight.nashornsandbox.exceptions.ScriptCPUAbuseException;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
@@ -15,14 +14,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.jvalue.commons.utils.Log;
+import org.jvalue.ods.api.views.generic.TransformationFunction;
 
 import javax.script.ScriptException;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Paths;
 
 public final class NashornExecutionEngineTest {
 

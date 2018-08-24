@@ -90,6 +90,7 @@ public final class OdsApplication extends Application<OdsConfig> {
 		environment.jersey().register(injector.getInstance(ProcessorSpecificationApi.class));
 		environment.jersey().register(injector.getInstance(VersionApi.class));
 		environment.jersey().register(injector.getInstance(UserApi.class));
+		environment.jersey().register(injector.getInstance(DataTransformationApi.class));
 		environment.jersey().register(PropertyFilteringMessageBodyWriter.class);
 		environment.jersey().register(new DbExceptionMapper());
 		environment.jersey().register(new JsonExceptionMapper());
