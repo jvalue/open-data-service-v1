@@ -1,41 +1,39 @@
 package org.jvalue.ods.rest.v2.api;
 
 
-import com.fasterxml.jackson.core.JsonPointer;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
 import org.jvalue.commons.rest.RestUtils;
-import org.jvalue.commons.utils.Assert;
-import org.jvalue.commons.utils.Log;
 import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.api.processors.PluginMetaData;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.api.sources.DataSourceMetaData;
+import org.jvalue.ods.api.sources.DataSourceDescription;
 import org.jvalue.ods.api.views.DataView;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.data.DataViewManager;
 import org.jvalue.ods.notifications.NotificationManager;
 import org.jvalue.ods.processor.ProcessorChainManager;
 import org.jvalue.ods.processor.plugin.PluginMetaDataManager;
+import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiRequest;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.*;
+import org.jvalue.ods.utils.JsonMapper;
+import org.jvalue.ods.utils.RequestValidator;
 
+import javax.validation.ConstraintViolation;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.List;
+import java.util.Set;
 
 import static org.jvalue.ods.utils.HttpUtils.getDirectoryURI;
 import static org.jvalue.ods.utils.HttpUtils.getSanitizedPath;
-import static org.jvalue.ods.utils.JsonUtils.assertIsValidJsonApiSingleDataDocument;
-import static org.jvalue.ods.utils.JsonUtils.getIfPresent;
 
 
 @Path(AbstractApi.BASE_URL)
@@ -108,22 +106,23 @@ public final class DataSourceApi extends AbstractApi {
 	@POST
 	public Response addSource(
 		@RestrictedTo(Role.ADMIN) User user,
-		JsonNode sourceDescription) {
+		JsonApiRequest sourceDescriptionRequest) {
 
-		try {
-			assertIsValidSourceDescription(sourceDescription);
-		} catch (IllegalArgumentException e) {
-			Log.error(e.toString() + "/n stacktrace: " + ExceptionUtils.getStackTrace(e));
-			throw RestUtils.createJsonFormattedException("SourceDescription has wrong format.", 400);
-		}
+		DataSourceDescription sourceDescription = JsonMapper.convertValue(
+			sourceDescriptionRequest.getAttributes(),
+			DataSourceDescription.class
+		);
 
-		DataSource source = createSource(sourceDescription);
+		assertIsValidSourceDescription(sourceDescription, sourceDescriptionRequest.getId());
 
-		if (sourceManager.isValidSourceId(source.getId())) {
-			throw RestUtils.createJsonFormattedException("source with id " + source.getId() + " already exists", 409);
-		}
-
+		DataSource source = new DataSource(
+			sourceDescriptionRequest.getId(),
+			sourceDescription.getDomainIdKey(),
+			sourceDescription.getSchema(),
+			sourceDescription.getMetaData()
+		);
 		sourceManager.add(source);
+
 
 		return JsonApiResponse
 			.createPostResponse(uriInfo)
@@ -174,43 +173,22 @@ public final class DataSourceApi extends AbstractApi {
 	}
 
 
-	private DataSource createSource(JsonNode sourceDescription) {
+	private void assertIsValidSourceDescription(DataSourceDescription sourceDescription, String id) {
 
-		String sourceId = sourceDescription.get("data").get("id").asText();
+		Set<ConstraintViolation<DataSourceDescription>> violations = RequestValidator.validate(sourceDescription);
+		if (!violations.isEmpty()) {
+			StringBuilder violationStringBuilder = new StringBuilder();
+			for (ConstraintViolation<DataSourceDescription> violation : violations) {
+				violationStringBuilder.append(violation.getPropertyPath().toString())
+					.append(" ")
+					.append(violation.getMessage())
+					.append(System.lineSeparator());
+			}
+			throw RestUtils.createJsonFormattedException("Malformed DataSourceDescription: " + violationStringBuilder.toString(), 400);
+		}
 
-		JsonNode attributeNode = sourceDescription.get("data").get("attributes");
-		String domainIdKey = attributeNode.get("domainIdKey").asText();
-		JsonNode schema = getIfPresent(attributeNode,"schema");
-
-		JsonNode metaDataNode = getIfPresent(attributeNode, "metaData");
-
-		DataSourceMetaData metaData = new DataSourceMetaData(
-			getIfPresent(metaDataNode,"name").asText(),
-			getIfPresent(metaDataNode,"title").asText(),
-			getIfPresent(metaDataNode,"author").asText(),
-			getIfPresent(metaDataNode,"authorEmail").asText(),
-			getIfPresent(metaDataNode,"notes").asText(),
-			getIfPresent(metaDataNode,"url").asText(),
-			getIfPresent(metaDataNode,"termsOfUse").asText()
-			);
-
-		return new DataSource(
-			sourceId,
-			JsonPointer.compile(domainIdKey),
-			schema,
-			metaData
-		);
-	}
-
-
-	private static void assertIsValidSourceDescription(JsonNode sourceDescription) {
-
-		assertIsValidJsonApiSingleDataDocument(sourceDescription);
-
-		Assert.assertNotNull(sourceDescription);
-		Assert.assertTrue(sourceDescription.get("data").has("attributes"));
-
-		JsonNode attributeNode = sourceDescription.get("data").get("attributes");
-		Assert.assertTrue(attributeNode.has("domainIdKey"));
+		if (sourceManager.isValidSourceId(id)) {
+			throw RestUtils.createJsonFormattedException("source with id " + id + " already exists", 409);
+		}
 	}
 }

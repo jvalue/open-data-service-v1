@@ -1,6 +1,7 @@
 package org.jvalue.ods.main;
 
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.hubspot.jackson.jaxrs.PropertyFilteringMessageBodyWriter;
@@ -120,6 +121,7 @@ public final class OdsApplication extends Application<OdsConfig> {
 		environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.api.UserApi.class));
 		environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.api.EntryPoint.class));
 
+		environment.getObjectMapper().enable(DeserializationFeature.UNWRAP_ROOT_VALUE);
 
 		// setup users
 		setupDefaultUsers(injector.getInstance(UserManager.class), configuration.getAuth().getUsers());
