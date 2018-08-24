@@ -4,8 +4,11 @@ import org.jvalue.commons.auth.AbstractUserDescription;
 import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
+import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiRequest;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.UserWrapper;
+import org.jvalue.ods.utils.JsonMapper;
+import org.jvalue.ods.utils.RequestValidator;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -52,7 +55,15 @@ public class UserApi {
 
 
 	@POST
-	public Response addUser(@RestrictedTo(value = Role.ADMIN, isOptional = true) User user, AbstractUserDescription userDescription) {
+	public Response addUser(@RestrictedTo(value = Role.ADMIN, isOptional = true) User user, JsonApiRequest userDescriptionRequest) {
+
+		AbstractUserDescription userDescription = JsonMapper.convertValue(
+			userDescriptionRequest,
+			AbstractUserDescription.class
+		);
+
+		RequestValidator.validate(userDescription);
+
 		User result = userApiReference.addUser(user, userDescription);
 
 		return JsonApiResponse
