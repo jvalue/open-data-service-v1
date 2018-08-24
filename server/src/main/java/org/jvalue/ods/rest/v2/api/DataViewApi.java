@@ -12,11 +12,13 @@ import org.jvalue.ods.api.views.DataView;
 import org.jvalue.ods.api.views.DataViewDescription;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.data.DataViewManager;
+import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiRequest;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.DataViewWrapper;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.DataWrapper;
+import org.jvalue.ods.utils.JsonMapper;
+import org.jvalue.ods.utils.RequestValidator;
 
-import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
@@ -107,18 +109,20 @@ public final class DataViewApi extends AbstractApi {
 
 
 	@POST
-	@Path("/{viewId}")
 	public Response addView(
 		@RestrictedTo(Role.ADMIN) User user,
 		@PathParam("sourceId") String sourceId,
-		@PathParam("viewId") String viewId,
-		@Valid DataViewDescription viewDescription) {
+		JsonApiRequest viewDescriptionRequest) {
+
+		DataViewDescription viewDescription = JsonMapper.convertValue(
+			viewDescriptionRequest.getAttributes(),
+			DataViewDescription.class
+		);
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
-		if (viewManager.contains(source, viewId))
-			throw RestUtils.createJsonFormattedException("data view with id " + viewId + " already exists", 409);
+		assertIsValidViewDescription(viewDescription, viewDescriptionRequest.getId(), source);
 
-		DataView view = new DataView(viewId, viewDescription.getMapFunction(), viewDescription.getReduceFunction());
+		DataView view = new DataView(viewDescriptionRequest.getId(), viewDescription.getMapFunction(), viewDescription.getReduceFunction());
 		viewManager.add(source, sourceManager.getDataRepository(source), view);
 		return JsonApiResponse
 			.createPostResponse(uriInfo)
@@ -140,4 +144,12 @@ public final class DataViewApi extends AbstractApi {
 		viewManager.remove(source, sourceManager.getDataRepository(source), view);
 	}
 
+
+	private void assertIsValidViewDescription(DataViewDescription description, String id, DataSource source) {
+		RequestValidator.validate(description);
+
+		if (viewManager.contains(source, id)) {
+			throw RestUtils.createJsonFormattedException("data view with id " + id + " already exists", 409);
+		}
+	}
 }
