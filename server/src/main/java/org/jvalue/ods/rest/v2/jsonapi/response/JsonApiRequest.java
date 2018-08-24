@@ -1,11 +1,11 @@
 package org.jvalue.ods.rest.v2.jsonapi.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.annotation.*;
 
 import java.util.Map;
 
-@JsonRootName(value = "data")
+@JsonTypeName(value = "data")
+@JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
 public class JsonApiRequest {
 
 	private String type;
