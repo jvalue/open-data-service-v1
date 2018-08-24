@@ -91,7 +91,7 @@ public final class ProcessorChainApi extends AbstractApi {
 		@Valid JsonApiRequest processorChainRequest) {
 
 		ProcessorReferenceChainDescription processorChain = JsonMapper.convertValue(
-			processorChainRequest,
+			processorChainRequest.getAttributes(),
 			ProcessorReferenceChainDescription.class
 		);
 

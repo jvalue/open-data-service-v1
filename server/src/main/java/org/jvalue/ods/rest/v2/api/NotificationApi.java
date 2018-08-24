@@ -54,7 +54,7 @@ public final class NotificationApi extends AbstractApi {
 		@Valid JsonApiRequest clientDescriptionRequest) {
 
 		ClientDescription clientDescription = JsonMapper.convertValue(
-			clientDescriptionRequest,
+			clientDescriptionRequest.getAttributes(),
 			ClientDescription.class
 		);
 

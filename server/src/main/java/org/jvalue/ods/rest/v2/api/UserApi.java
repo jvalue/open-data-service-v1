@@ -58,7 +58,7 @@ public class UserApi {
 	public Response addUser(@RestrictedTo(value = Role.ADMIN, isOptional = true) User user, JsonApiRequest userDescriptionRequest) {
 
 		AbstractUserDescription userDescription = JsonMapper.convertValue(
-			userDescriptionRequest,
+			userDescriptionRequest.getAttributes(),
 			AbstractUserDescription.class
 		);
 
