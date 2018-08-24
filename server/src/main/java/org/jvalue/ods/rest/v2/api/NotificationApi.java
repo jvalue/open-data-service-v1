@@ -10,8 +10,11 @@ import org.jvalue.ods.api.notifications.*;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.notifications.NotificationManager;
+import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiRequest;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.ClientWrapper;
+import org.jvalue.ods.utils.JsonMapper;
+import org.jvalue.ods.utils.RequestValidator;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;
@@ -45,18 +48,21 @@ public final class NotificationApi extends AbstractApi {
 
 
 	@POST
-	@Path("/{clientId}")
 	public Response registerClient(
 		@RestrictedTo(Role.ADMIN) User user,
 		@PathParam("sourceId") String sourceId,
-		@PathParam("clientId") String clientId,
-		@Valid ClientDescription clientDescription) {
+		@Valid JsonApiRequest clientDescriptionRequest) {
+
+		ClientDescription clientDescription = JsonMapper.convertValue(
+			clientDescriptionRequest,
+			ClientDescription.class
+		);
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
-		if (notificationManager.contains(source, clientId)) {
-			throw RestUtils.createJsonFormattedException("client with id " + clientId + " already exists", 409);
-		}
-		Client client = clientDescription.accept(clientAdapter, clientId);
+
+		assertIsValidClientDescription(clientDescription, clientDescriptionRequest.getId(), source);
+
+		Client client = clientDescription.accept(clientAdapter, clientDescriptionRequest.getId());
 		notificationManager.add(source, sourceManager.getDataRepository(source), client);
 
 		return JsonApiResponse
@@ -65,7 +71,6 @@ public final class NotificationApi extends AbstractApi {
 			.addLink(NOTIFICATIONS, getDirectoryURI(uriInfo))
 			.build();
 	}
-
 
 	@DELETE
 	@Path("/{clientId}")
@@ -130,6 +135,15 @@ public final class NotificationApi extends AbstractApi {
 			return new AmqpClient(clientId, client.getHost(), client.getExchange(), client.getExchangeType(), client.getRoutingKey());
 		}
 
+	}
+
+
+	private void assertIsValidClientDescription(ClientDescription clientDescription, String id, DataSource source) {
+		RequestValidator.validate(clientDescription);
+
+		if (notificationManager.contains(source, id)) {
+			throw RestUtils.createJsonFormattedException("client with id " + id + " already exists", 409);
+		}
 	}
 
 }
