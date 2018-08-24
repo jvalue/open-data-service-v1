@@ -11,8 +11,11 @@ import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.processor.ProcessorChainManager;
+import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiRequest;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.ProcessorReferenceChainWrapper;
+import org.jvalue.ods.utils.JsonMapper;
+import org.jvalue.ods.utils.RequestValidator;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;
@@ -82,29 +85,30 @@ public final class ProcessorChainApi extends AbstractApi {
 
 
 	@POST
-	@Path("/{filterChainId}")
 	public Response addProcessorChain(
 		@RestrictedTo(Role.ADMIN) User user,
 		@PathParam("sourceId") String sourceId,
-		@PathParam("filterChainId") String filterChainId,
-		@Valid ProcessorReferenceChainDescription processorChain) {
+		@Valid JsonApiRequest processorChainRequest) {
 
-		if (processorChain.getExecutionInterval() != null) {
-			assertIsValidTimeUnit(processorChain.getExecutionInterval().getUnit());
-		}
+		ProcessorReferenceChainDescription processorChain = JsonMapper.convertValue(
+			processorChainRequest,
+			ProcessorReferenceChainDescription.class
+		);
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
-		if (chainManager.contains(source, filterChainId))
-			throw RestUtils.createJsonFormattedException("filter chain with id " + filterChainId + " already exists", 409);
+
+		assertIsValidProcessorChainDescription(processorChain, processorChainRequest.getId(), source);
 
 		ProcessorReferenceChain chainReference = new ProcessorReferenceChain(
-			filterChainId,
+			processorChainRequest.getId(),
 			processorChain.getProcessors(),
 			processorChain.getExecutionInterval());
 
-		if (processorChain.getExecutionInterval() != null)
+		if (processorChain.getExecutionInterval() != null) {
 			chainManager.add(source, sourceManager.getDataRepository(source), chainReference);
-		else chainManager.executeOnce(source, sourceManager.getDataRepository(source), chainReference);
+		} else {
+			chainManager.executeOnce(source, sourceManager.getDataRepository(source), chainReference);
+		}
 
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
@@ -124,6 +128,18 @@ public final class ProcessorChainApi extends AbstractApi {
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		ProcessorReferenceChain reference = chainManager.get(source, filterChainId);
 		chainManager.remove(source, sourceManager.getDataRepository(source), reference);
+	}
+
+
+	private void assertIsValidProcessorChainDescription(ProcessorReferenceChainDescription description, String id, DataSource source) {
+		RequestValidator.validate(description);
+
+		if (description.getExecutionInterval() != null) {
+			assertIsValidTimeUnit(description.getExecutionInterval().getUnit());
+		}
+
+		if (chainManager.contains(source, id))
+			throw RestUtils.createJsonFormattedException("filter chain with id " + id + " already exists", 409);
 	}
 
 
