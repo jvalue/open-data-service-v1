@@ -108,10 +108,10 @@ public final class DataSourceApi extends AbstractApi {
 
 		DataSourceDescription sourceDescription = JsonMapper.convertValue(
 			sourceDescriptionRequest.getAttributes(),
-			DataSourceDescription.class
-		);
+			DataSourceDescription.class);
 
-		assertIsValidSourceDescription(sourceDescription, sourceDescriptionRequest.getId());
+		assertIsValidSourceDescription(sourceDescription);
+		assertSourceDoesNotExist(sourceDescriptionRequest.getId());
 
 		DataSource source = new DataSource(
 			sourceDescriptionRequest.getId(),
@@ -120,7 +120,6 @@ public final class DataSourceApi extends AbstractApi {
 			sourceDescription.getMetaData()
 		);
 		sourceManager.add(source);
-
 
 		return JsonApiResponse
 			.createPostResponse(uriInfo)
@@ -171,12 +170,14 @@ public final class DataSourceApi extends AbstractApi {
 	}
 
 
-	private void assertIsValidSourceDescription(DataSourceDescription sourceDescription, String id) {
-
+	private void assertIsValidSourceDescription(DataSourceDescription sourceDescription) {
 		RequestValidator.validate(sourceDescription);
+	}
 
-		if (sourceManager.isValidSourceId(id)) {
-			throw RestUtils.createJsonFormattedException("source with id " + id + " already exists", 409);
+
+	private void assertSourceDoesNotExist(String sourceId) {
+		if (sourceManager.isValidSourceId(sourceId)) {
+			throw RestUtils.createJsonFormattedException("Source with id " + sourceId + " already exists!", 409);
 		}
 	}
 }
