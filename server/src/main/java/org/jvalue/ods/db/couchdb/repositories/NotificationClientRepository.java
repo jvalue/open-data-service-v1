@@ -6,13 +6,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import org.ektorp.CouchDbConnector;
-import org.ektorp.DocumentNotFoundException;
 import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.View;
 import org.jvalue.commons.couchdb.DbDocument;
 import org.jvalue.commons.couchdb.DbDocumentAdaptable;
 import org.jvalue.commons.couchdb.RepositoryAdapter;
 import org.jvalue.commons.db.DbConnectorFactory;
+import org.jvalue.commons.db.GenericDocumentNotFoundException;
 import org.jvalue.commons.db.repositories.GenericRepository;
 import org.jvalue.ods.api.notifications.Client;
 
@@ -46,7 +46,7 @@ public final class NotificationClientRepository extends RepositoryAdapter<
 		@View(name = "by_id", map = "function(doc) { if (" + DOCUMENT_ID + ") emit(doc.value.id, doc._id)}")
 		public ClientDocument findById(String clientId) {
 			List<ClientDocument> clients = queryView("by_id", clientId);
-			if (clients.isEmpty()) throw new DocumentNotFoundException(clientId);
+			if (clients.isEmpty()) throw new GenericDocumentNotFoundException(clientId);
 			if (clients.size() > 1) throw new IllegalStateException("found more than one client for id " + clientId);
 			return clients.get(0);
 		}
