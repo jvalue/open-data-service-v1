@@ -6,8 +6,9 @@ ext {
     githashVersion = "0.1.2"
     guavaVersion = "23.0"
     guiceVersion = "4.1.0"
+	hibernateVersion = "5.4.2.Final"
     httpserverVersion = "20070405"
-    nashornSandboxVersion = "0.1.15";
+    nashornSandboxVersion = "0.1.15"
     jacksonCoreVersion = "2.8.10"
     jacksonJaxrsVersion = "0.8.1"
     javaxActivationVersion = "1.1.0"
