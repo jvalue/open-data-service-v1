@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.jvalue.commons.rest.RestUtils;
 
 import java.io.IOException;
 
@@ -37,7 +38,14 @@ public class JsonMapper {
 
 
 	public static <T> T convertValue(Object fromValue, Class<T> toValueType) {
-		return getInstance().convertValue(fromValue, toValueType);
+		T result;
+		try {
+			result = getInstance().convertValue(fromValue, toValueType);
+		} catch (IllegalArgumentException e) {
+			throw RestUtils.createJsonFormattedException("Malformed " + toValueType.getSimpleName() + ": " + e.getMessage(), 400);
+		}
+
+		return result;
 	}
 
 
