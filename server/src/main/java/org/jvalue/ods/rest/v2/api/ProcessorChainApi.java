@@ -13,6 +13,7 @@ import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.processor.ProcessorChainManager;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiRequest;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
+import org.jvalue.ods.rest.v2.jsonapi.response.JsonLinks;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.ProcessorReferenceChainWrapper;
 import org.jvalue.ods.utils.JsonMapper;
 import org.jvalue.ods.utils.RequestValidator;
@@ -22,6 +23,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -29,6 +31,7 @@ import java.util.concurrent.TimeUnit;
 import static org.jvalue.ods.rest.v2.api.AbstractApi.BASE_URL;
 import static org.jvalue.ods.rest.v2.api.AbstractApi.FILTERCHAINS;
 import static org.jvalue.ods.utils.HttpUtils.getDirectoryURI;
+import static org.jvalue.ods.utils.HttpUtils.getSanitizedPath;
 
 @Path(BASE_URL + "/{sourceId}/" + FILTERCHAINS)
 public final class ProcessorChainApi extends AbstractApi {
@@ -110,10 +113,13 @@ public final class ProcessorChainApi extends AbstractApi {
 			chainManager.executeOnce(source, sourceManager.getDataRepository(source), chainReference);
 		}
 
+		URI directoryURI = getSanitizedPath(uriInfo);
+
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(ProcessorReferenceChainWrapper.from(chainReference))
-			.addLink(FILTERCHAINS, getDirectoryURI(uriInfo))
+			.addLink(JsonLinks.SELF, directoryURI.resolve(processorChainRequest.getId()))
+			.addLink(FILTERCHAINS, directoryURI)
 			.build();
 	}
 

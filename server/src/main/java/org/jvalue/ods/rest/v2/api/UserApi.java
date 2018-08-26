@@ -6,6 +6,7 @@ import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiRequest;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
+import org.jvalue.ods.rest.v2.jsonapi.response.JsonLinks;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.UserWrapper;
 import org.jvalue.ods.utils.JsonMapper;
 import org.jvalue.ods.utils.RequestValidator;
@@ -15,12 +16,14 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 import java.util.List;
 
 import static org.jvalue.ods.rest.v2.api.AbstractApi.ENTRYPOINT;
 import static org.jvalue.ods.rest.v2.api.AbstractApi.USERS;
 import static org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse.JSONAPI_TYPE;
 import static org.jvalue.ods.utils.HttpUtils.getDirectoryURI;
+import static org.jvalue.ods.utils.HttpUtils.getSanitizedPath;
 
 /**
  * Empty class which calls the referenced UserApi from jvalue commons for every single method.
@@ -66,10 +69,13 @@ public class UserApi {
 
 		User result = userApiReference.addUser(user, userDescription);
 
+		URI directoryURI = getSanitizedPath(uriInfo);
+
 		return JsonApiResponse
 			.createPostResponse(uriInfo)
 			.data(UserWrapper.from(result))
-			.addLink(USERS, getDirectoryURI(uriInfo))
+			.addLink(JsonLinks.SELF, directoryURI.resolve(userDescriptionRequest.getId()))
+			.addLink(USERS, directoryURI)
 			.build();
 	}
 

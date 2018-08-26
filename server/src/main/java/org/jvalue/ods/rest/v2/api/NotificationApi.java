@@ -12,6 +12,7 @@ import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.notifications.NotificationManager;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiRequest;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
+import org.jvalue.ods.rest.v2.jsonapi.response.JsonLinks;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.ClientWrapper;
 import org.jvalue.ods.utils.JsonMapper;
 import org.jvalue.ods.utils.RequestValidator;
@@ -21,11 +22,13 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 import java.util.List;
 
 import static org.jvalue.ods.rest.v2.api.AbstractApi.BASE_URL;
 import static org.jvalue.ods.rest.v2.api.AbstractApi.NOTIFICATIONS;
 import static org.jvalue.ods.utils.HttpUtils.getDirectoryURI;
+import static org.jvalue.ods.utils.HttpUtils.getSanitizedPath;
 
 @Path(BASE_URL + "/{sourceId}/" + NOTIFICATIONS)
 public final class NotificationApi extends AbstractApi {
@@ -65,10 +68,13 @@ public final class NotificationApi extends AbstractApi {
 		Client client = clientDescription.accept(clientAdapter, clientDescriptionRequest.getId());
 		notificationManager.add(source, sourceManager.getDataRepository(source), client);
 
+		URI directoryURI = getSanitizedPath(uriInfo);
+
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(ClientWrapper.from(client))
-			.addLink(NOTIFICATIONS, getDirectoryURI(uriInfo))
+			.addLink(JsonLinks.SELF, directoryURI.resolve(clientDescriptionRequest.getId()))
+			.addLink(NOTIFICATIONS, directoryURI)
 			.build();
 	}
 

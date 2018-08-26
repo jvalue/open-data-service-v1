@@ -19,6 +19,7 @@ import org.jvalue.ods.processor.ProcessorChainManager;
 import org.jvalue.ods.processor.plugin.PluginMetaDataManager;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiRequest;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
+import org.jvalue.ods.rest.v2.jsonapi.response.JsonLinks;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.*;
 import org.jvalue.ods.utils.JsonMapper;
 import org.jvalue.ods.utils.RequestValidator;
@@ -121,10 +122,13 @@ public final class DataSourceApi extends AbstractApi {
 		);
 		sourceManager.add(source);
 
+		URI directoryURI = getSanitizedPath(uriInfo);
+
 		return JsonApiResponse
 			.createPostResponse(uriInfo)
 			.data(DataSourceWrapper.from(source))
-			.addLink("sources", getDirectoryURI(uriInfo))
+			.addLink(JsonLinks.SELF, directoryURI.resolve(sourceDescriptionRequest.getId()))
+			.addLink("sources", directoryURI)
 			.build();
 	}
 

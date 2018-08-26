@@ -14,6 +14,7 @@ import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.data.DataViewManager;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiRequest;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
+import org.jvalue.ods.rest.v2.jsonapi.response.JsonLinks;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.DataViewWrapper;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.DataWrapper;
 import org.jvalue.ods.utils.JsonMapper;
@@ -124,10 +125,14 @@ public final class DataViewApi extends AbstractApi {
 
 		DataView view = new DataView(viewDescriptionRequest.getId(), viewDescription.getMapFunction(), viewDescription.getReduceFunction());
 		viewManager.add(source, sourceManager.getDataRepository(source), view);
+
+		URI directoryURI = getSanitizedPath(uriInfo);
+
 		return JsonApiResponse
 			.createPostResponse(uriInfo)
 			.data(DataViewWrapper.from(view))
-			.addLink(VIEWS, getDirectoryURI(uriInfo))
+			.addLink(JsonLinks.SELF, directoryURI.resolve(viewDescriptionRequest.getId()))
+			.addLink(VIEWS, directoryURI)
 			.build();
 	}
 
