@@ -3,6 +3,7 @@ package org.jvalue.ods.rest.v2.jsonapi.response;
 import com.fasterxml.jackson.annotation.*;
 
 import java.util.Map;
+import java.util.Objects;
 
 @JsonTypeName(value = "data")
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
@@ -35,5 +36,22 @@ public class JsonApiRequest {
 
 	public Map<String, Object> getAttributes() {
 		return attributes;
+	}
+
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		JsonApiRequest that = (JsonApiRequest) o;
+		return Objects.equals(type, that.type) &&
+			Objects.equals(id, that.id) &&
+			Objects.equals(attributes, that.attributes);
+	}
+
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(type, id, attributes);
 	}
 }
