@@ -39,7 +39,7 @@ import java.util.Map;
 
 public class CouchDbInsertionFilter extends AbstractFilter<ObjectNode, ObjectNode> {
 
-	protected final GenericDataRepository<CouchDbDataView, JsonNode> dataRepository;
+	protected final GenericDataRepository<JsonNode> dataRepository;
 	private final boolean updateDataIfExists;
 
 	// for bulk operations
@@ -53,7 +53,7 @@ public class CouchDbInsertionFilter extends AbstractFilter<ObjectNode, ObjectNod
 
 	@Inject
 	CouchDbInsertionFilter(
-			@Assisted GenericDataRepository<CouchDbDataView, JsonNode> dataRepository,
+			@Assisted GenericDataRepository<JsonNode> dataRepository,
 			@Assisted DataSource source,
 			@Assisted boolean updateDataIfExists,
 			MetricRegistry registry) {

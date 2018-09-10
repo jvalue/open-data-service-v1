@@ -66,16 +66,16 @@ public final class DataRepositoryTest extends AbstractRepositoryTest {
 	@Test
 	public void testCreateView() {
 		CouchDbDataView view = createDbView();
-		Assert.assertFalse(repository.containsQuery(view));
-		repository.addQuery(view);
-		Assert.assertTrue(repository.containsQuery(view));
+		Assert.assertFalse(repository.containsView(view));
+		repository.addView(view);
+		Assert.assertTrue(repository.containsView(view));
 	}
 
 
 	@Test
 	public void testExecuteView() {
 		CouchDbDataView view = createDbView();
-		repository.addQuery(view);
+		repository.addView(view);
 		repository.add(createObjectNode("id1", "hello"));
 		repository.add(createObjectNode("id2", "world"));
 

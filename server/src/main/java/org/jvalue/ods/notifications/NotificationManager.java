@@ -88,11 +88,11 @@ public final class NotificationManager
 
 
 	@Override
-	protected void doAdd(DataSource source, GenericDataRepository<CouchDbDataView, JsonNode> dataRepository, Client client) { }
+	protected void doAdd(DataSource source, GenericDataRepository<JsonNode> dataRepository, Client client) { }
 
 
 	@Override
-	protected void doRemove(DataSource source, GenericDataRepository<CouchDbDataView, JsonNode> dataRepository, Client client) { }
+	protected void doRemove(DataSource source, GenericDataRepository<JsonNode> dataRepository, Client client) { }
 
 
 	@Override

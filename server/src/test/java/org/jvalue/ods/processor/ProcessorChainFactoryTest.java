@@ -57,7 +57,7 @@ public final class ProcessorChainFactoryTest {
 	public void testCreation(
 			@Mocked final FilterFactory filterFactory,
 			@Mocked final SourceAdapterFactory adapterFactory,
-			@Mocked final GenericDataRepository<CouchDbDataView, JsonNode> dataRepository)
+			@Mocked final GenericDataRepository<JsonNode> dataRepository)
 			throws Exception {
 
 		final ProcessorChainFactory chainFactory = new ProcessorChainFactory(adapterFactory, filterFactory);
@@ -65,7 +65,7 @@ public final class ProcessorChainFactoryTest {
 
 		new Verifications() {{
 			adapterFactory.createJsonSourceAdapter((DataSource) any, anyString); times = 1;
-			filterFactory.createDbInsertionFilter((DataSource) any, (GenericDataRepository<CouchDbDataView, JsonNode>) any, anyBoolean); times = 1;
+			filterFactory.createDbInsertionFilter((DataSource) any, (GenericDataRepository<JsonNode>) any, anyBoolean); times = 1;
 			filterFactory.createNotificationFilter((DataSource) any); times = 1;
 			filterFactory.createTransformationFilter((DataSource) any, simpleExtension); times = 1;
 		}};

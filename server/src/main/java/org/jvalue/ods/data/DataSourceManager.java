@@ -24,7 +24,7 @@ import java.util.Map;
 public final class DataSourceManager implements Managed {
 
 	private final GenericRepository<DataSource> dataSourceRepository;
-	private final Cache<GenericDataRepository<CouchDbDataView, JsonNode>> dataRepositoryCache;
+	private final Cache<GenericDataRepository<JsonNode>> dataRepositoryCache;
 	private final DbConnectorFactory dbConnectorFactory;
 	private final RepositoryFactory repositoryFactory;
 	private final ProcessorChainManager processorChainManager;
@@ -34,7 +34,7 @@ public final class DataSourceManager implements Managed {
 	@Inject
 	public DataSourceManager(
 		DataSourceRepositoryFactory dataSourceFactory,
-		Cache<GenericDataRepository<CouchDbDataView, JsonNode>> dataRepositoryCache,
+		Cache<GenericDataRepository<JsonNode>> dataRepositoryCache,
 		DbConnectorFactory dbConnectorFactory,
 		RepositoryFactory repositoryFactory,
 		ProcessorChainManager processorChainManager,
@@ -87,7 +87,7 @@ public final class DataSourceManager implements Managed {
 	}
 
 
-	public GenericDataRepository<CouchDbDataView, JsonNode> getDataRepository(DataSource source) {
+	public GenericDataRepository<JsonNode> getDataRepository(DataSource source) {
 		Assert.assertNotNull(source);
 		return dataRepositoryCache.get(source.getId());
 	}
@@ -106,7 +106,7 @@ public final class DataSourceManager implements Managed {
 	@Override
 	public void start() {
 		// create data repositories
-		Map<DataSource, GenericDataRepository<CouchDbDataView, JsonNode>> sources = new HashMap<>();
+		Map<DataSource, GenericDataRepository<JsonNode>> sources = new HashMap<>();
 		for (DataSource source : dataSourceRepository.getAll()) {
 			sources.put(source, createDataRepository(source));
 		}
@@ -122,8 +122,8 @@ public final class DataSourceManager implements Managed {
 	}
 
 
-	private GenericDataRepository<CouchDbDataView, JsonNode> createDataRepository(DataSource source) {
-		GenericDataRepository<CouchDbDataView, JsonNode> dataRepository = repositoryFactory.createSourceDataRepository(source.getId(), source.getDomainIdKey());
+	private GenericDataRepository<JsonNode> createDataRepository(DataSource source) {
+		GenericDataRepository<JsonNode> dataRepository = repositoryFactory.createSourceDataRepository(source.getId(), source.getDomainIdKey());
 		dataRepositoryCache.put(source.getId(), dataRepository);
 		return dataRepository;
 	}

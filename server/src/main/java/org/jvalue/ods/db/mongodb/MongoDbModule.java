@@ -64,7 +64,7 @@ public class MongoDbModule extends AbstractModule {
 				MongoDbDataViewRepository.class)
 
 			.implement(
-				new TypeLiteral<GenericDataRepository<CouchDbDataView, JsonNode>>() {
+				new TypeLiteral<GenericDataRepository<JsonNode>>() {
 				},
 				Names.named(RepositoryFactory.NAME_DATA_REPOSITORY),
 				MongoDbDataRepository.class)

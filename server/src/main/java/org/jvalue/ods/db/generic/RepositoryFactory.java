@@ -25,7 +25,7 @@ public interface RepositoryFactory {
 	public GenericRepository<CouchDbDataView> createDataViewRepository(String databaseName);
 
 	@Named(NAME_DATA_REPOSITORY)
-	public GenericDataRepository<CouchDbDataView, JsonNode> createSourceDataRepository(String databaseName, JsonPointer domainIdKey);
+	public GenericDataRepository<JsonNode> createSourceDataRepository(String databaseName, JsonPointer domainIdKey);
 
 	@Named(NAME_FILTER_CHAIN_REF_REPOSITORY)
 	public GenericRepository<ProcessorReferenceChain> createFilterChainReferenceRepository(String databaseName);

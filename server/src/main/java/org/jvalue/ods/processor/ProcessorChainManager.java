@@ -55,21 +55,21 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 	}
 
 
-	public void executeOnce(DataSource source, GenericDataRepository<CouchDbDataView, JsonNode> dataRepository, ProcessorReferenceChain reference) {
+	public void executeOnce(DataSource source, GenericDataRepository<JsonNode> dataRepository, ProcessorReferenceChain reference) {
 		Assert.assertTrue(reference.getExecutionInterval() == null, "reference must not contain an execute interval");
 		startProcessorChain(source, dataRepository, reference);
 	}
 
 
 	@Override
-	protected void doAdd(DataSource source, GenericDataRepository<CouchDbDataView, JsonNode> dataRepository, ProcessorReferenceChain reference) {
+	protected void doAdd(DataSource source, GenericDataRepository<JsonNode> dataRepository, ProcessorReferenceChain reference) {
 		Assert.assertNotNull(reference.getExecutionInterval());
 		startProcessorChain(source, dataRepository, reference);
 	}
 
 
 	@Override
-	protected void doRemove(DataSource source, GenericDataRepository<CouchDbDataView, JsonNode> dataRepository, ProcessorReferenceChain reference) {
+	protected void doRemove(DataSource source, GenericDataRepository<JsonNode> dataRepository, ProcessorReferenceChain reference) {
 		stopProcessorChain(source, reference);
 	}
 
@@ -91,8 +91,8 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 	 * @param sources All sources including their data repositories to create the actual
 	 *                filter chain and start them.
 	 */
-	public void startAllProcessorChains(Map<DataSource, GenericDataRepository<CouchDbDataView, JsonNode>> sources) {
-		for (Map.Entry<DataSource, GenericDataRepository<CouchDbDataView, JsonNode>> sourceEntry : sources.entrySet()) {
+	public void startAllProcessorChains(Map<DataSource, GenericDataRepository<JsonNode>> sources) {
+		for (Map.Entry<DataSource, GenericDataRepository<JsonNode>> sourceEntry : sources.entrySet()) {
 			// start chain
 			for (ProcessorReferenceChain reference : getAll(sourceEntry.getKey())) {
 				startProcessorChain(sourceEntry.getKey(), sourceEntry.getValue(), reference);
@@ -114,7 +114,7 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 	}
 
 
-	private void startProcessorChain(DataSource source, GenericDataRepository<CouchDbDataView, JsonNode> dataRepository, ProcessorReferenceChain reference) {
+	private void startProcessorChain(DataSource source, GenericDataRepository<JsonNode> dataRepository, ProcessorReferenceChain reference) {
 		ProcessorKey key = new ProcessorKey(source.getId(), reference.getId());
 
 		Runnable runnable = new ProcessorRunnable(reference, source, dataRepository);
@@ -145,9 +145,9 @@ public final class ProcessorChainManager extends AbstractDataSourcePropertyManag
 
 		private final ProcessorReferenceChain reference;
 		private final DataSource source;
-		private final GenericDataRepository<CouchDbDataView, JsonNode> dataRepository;
+		private final GenericDataRepository<JsonNode> dataRepository;
 
-		public ProcessorRunnable(ProcessorReferenceChain reference, DataSource source, GenericDataRepository<CouchDbDataView, JsonNode> dataRepository) {
+		public ProcessorRunnable(ProcessorReferenceChain reference, DataSource source, GenericDataRepository<JsonNode> dataRepository) {
 			this.reference = reference;
 			this.source = source;
 			this.dataRepository = dataRepository;

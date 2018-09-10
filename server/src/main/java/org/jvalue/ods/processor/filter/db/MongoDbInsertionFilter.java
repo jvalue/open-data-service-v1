@@ -17,7 +17,7 @@ public class MongoDbInsertionFilter extends CouchDbInsertionFilter {
 
 
 	@Inject
-	MongoDbInsertionFilter(@Assisted GenericDataRepository<CouchDbDataView, JsonNode> dataRepository,
+	MongoDbInsertionFilter(@Assisted GenericDataRepository<JsonNode> dataRepository,
 						   @Assisted DataSource source,
 						   @Assisted boolean updateDataIfExists,
 						   MetricRegistry registry) {

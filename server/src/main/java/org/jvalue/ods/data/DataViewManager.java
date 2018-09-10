@@ -8,6 +8,7 @@ import org.jvalue.commons.utils.Assert;
 import org.jvalue.commons.utils.Cache;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
+import org.jvalue.ods.db.couchdb.repositories.DataRepository;
 import org.jvalue.ods.db.generic.RepositoryFactory;
 
 import java.util.List;
@@ -25,21 +26,24 @@ public final class DataViewManager extends AbstractDataSourcePropertyManager<Cou
 	}
 
 
-	public List<JsonNode> executeView(GenericDataRepository<CouchDbDataView, JsonNode> dataRepository, CouchDbDataView view, String argument) {
+	public List<JsonNode> executeView(GenericDataRepository<JsonNode> dataRepository, CouchDbDataView view, String argument) {
 		Assert.assertNotNull(dataRepository, view);
-		return dataRepository.executeQuery(view, argument);
+		DataRepository repo = (DataRepository) dataRepository;
+		return repo.executeQuery(view, argument);
 	}
 
 
 	@Override
-	protected void doAdd(DataSource source, GenericDataRepository<CouchDbDataView, JsonNode> dataRepository, CouchDbDataView dataView) {
-		dataRepository.addQuery(dataView);
+	protected void doAdd(DataSource source, GenericDataRepository<JsonNode> dataRepository, CouchDbDataView dataView) {
+		DataRepository repo = (DataRepository) dataRepository;
+		repo.addView(dataView);
 	}
 
 
 	@Override
-	protected void doRemove(DataSource source, GenericDataRepository<CouchDbDataView, JsonNode> dataRepository, CouchDbDataView dataView) {
-		dataRepository.removeQuery(dataView);
+	protected void doRemove(DataSource source, GenericDataRepository<JsonNode> dataRepository, CouchDbDataView dataView) {
+		DataRepository repo = (DataRepository) dataRepository;
+		repo.removeView(dataView);
 	}
 
 

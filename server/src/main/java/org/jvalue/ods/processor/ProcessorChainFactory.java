@@ -43,7 +43,7 @@ public final class ProcessorChainFactory {
 	public ProcessorChain createProcessorChain(
 		ProcessorReferenceChain chainReference,
 		DataSource source,
-		GenericDataRepository<CouchDbDataView, JsonNode> dataRepository) {
+		GenericDataRepository<JsonNode> dataRepository) {
 
 		Assert.assertNotNull(chainReference, source, dataRepository);
 
@@ -73,7 +73,7 @@ public final class ProcessorChainFactory {
 		Class<?> factoryClass, // hack as jmockit removed annotations from methods
 		ProcessorReference reference,
 		DataSource dataSource,
-		GenericDataRepository<CouchDbDataView, JsonNode> dataRepository) {
+		GenericDataRepository<JsonNode> dataRepository) {
 
 		for (Method method : factoryClass.getDeclaredMethods()) {
 			CreationMethod creationAnnotation = method.getAnnotation(CreationMethod.class);

@@ -64,7 +64,7 @@ public final class ProcessorChainManagerTest {
 
 	@Test
 	public void testAddAndRemove(
-		@Mocked final GenericDataRepository<CouchDbDataView, JsonNode> dataRepository,
+		@Mocked final GenericDataRepository<JsonNode> dataRepository,
 		@Mocked final ProcessorChainReferenceRepository referenceRepository,
 		@Mocked final ProcessorChain chain) throws Exception {
 
@@ -142,7 +142,7 @@ public final class ProcessorChainManagerTest {
 
 	@Test
 	public void testStartAndStopAll(
-			@Mocked final GenericDataRepository<CouchDbDataView, JsonNode> dataRepository,
+			@Mocked final GenericDataRepository<JsonNode> dataRepository,
 			@Mocked final ProcessorChainReferenceRepository referenceRepository,
 			@Mocked final ProcessorChain chain) throws Exception {
 
@@ -154,7 +154,7 @@ public final class ProcessorChainManagerTest {
 			result = list;
 		}};
 
-		Map<DataSource, GenericDataRepository<CouchDbDataView, JsonNode>> sources = new HashMap<>();
+		Map<DataSource, GenericDataRepository<JsonNode>> sources = new HashMap<>();
 		sources.put(source, dataRepository);
 
 		// start all
@@ -173,7 +173,7 @@ public final class ProcessorChainManagerTest {
 
 
 	private void setupStartingFilterChain(
-			final GenericDataRepository<CouchDbDataView, JsonNode> dataRepository,
+			final GenericDataRepository<JsonNode> dataRepository,
 			final ProcessorChainReferenceRepository referenceRepository,
 			final ProcessorChain chain) {
 

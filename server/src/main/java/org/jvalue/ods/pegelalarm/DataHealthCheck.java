@@ -32,7 +32,7 @@ public class DataHealthCheck extends HealthCheck implements Constants {
 	@Override
 	protected Result check() throws Exception {
 		final DataSource source = dataSourceManager.findBySourceId(DATA_SOURCE_ID);
-		final GenericDataRepository<CouchDbDataView, JsonNode> dataRepository = dataSourceManager.getDataRepository(source);
+		final GenericDataRepository<JsonNode> dataRepository = dataSourceManager.getDataRepository(source);
 
 		long averageTimestamp = 0;
 

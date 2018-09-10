@@ -10,10 +10,7 @@ import org.ektorp.CouchDbConnector;
 import org.ektorp.DocumentOperationResult;
 import org.ektorp.ViewQuery;
 import org.ektorp.ViewResult;
-import org.ektorp.support.CouchDbRepositorySupport;
-import org.ektorp.support.DesignDocument;
-import org.ektorp.support.DesignDocumentFactory;
-import org.ektorp.support.StdDesignDocumentFactory;
+import org.ektorp.support.*;
 import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.commons.db.GenericDocumentNotFoundException;
 import org.jvalue.commons.db.GenericDocumentOperationResult;
@@ -26,7 +23,7 @@ import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
 import java.util.*;
 
 
-public final class DataRepository extends CouchDbRepositorySupport<JsonNode> implements GenericDataRepository<CouchDbDataView, JsonNode> {
+public final class DataRepository extends CouchDbRepositorySupport<JsonNode> implements GenericDataRepository<JsonNode>, GenericRepository<JsonNode> {
 
 	private static final String DESIGN_DOCUMENT_NAME = "Data";
 	private static final String DESIGN_DOCUMENT_ID = "_design/" + DESIGN_DOCUMENT_NAME;
@@ -44,13 +41,13 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> imp
 		initStandardDesignDocument();
 
 		domainIdView = createObjectByDomainIdView(domainIdKey);
-		if (!containsQuery(domainIdView)) addQuery(domainIdView);
+		if (!containsView(domainIdView)) addView(domainIdView);
 
 		revAndIdByDomainIdView = createIdAndRevByDomainIdView(domainIdKey);
-		if (!containsQuery(revAndIdByDomainIdView)) addQuery(revAndIdByDomainIdView);
+		if (!containsView(revAndIdByDomainIdView)) addView(revAndIdByDomainIdView);
 
 		CouchDbDataView allView = createAllView(domainIdKey);
-		if (!containsQuery(allView)) addQuery(allView);
+		if (!containsView(allView)) addView(allView);
 	}
 
 
@@ -72,7 +69,7 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> imp
 	}
 
 
-	public void addQuery(CouchDbDataView dataView) {
+	public void addView(CouchDbDataView dataView) {
 		Assert.assertNotNull(dataView);
 
 		DesignDocument designDocument;
@@ -96,7 +93,7 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> imp
 	}
 
 
-	public void removeQuery(CouchDbDataView view) {
+	public void removeView(CouchDbDataView view) {
 		Assert.assertNotNull(view);
 
 		if (!connector.contains(DESIGN_DOCUMENT_ID)) return;
@@ -106,7 +103,7 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> imp
 	}
 
 
-	public boolean containsQuery(CouchDbDataView queryObject) {
+	public boolean containsView(CouchDbDataView queryObject) {
 		Assert.assertNotNull(queryObject);
 
 		if (!connector.contains(DESIGN_DOCUMENT_ID)) return false;

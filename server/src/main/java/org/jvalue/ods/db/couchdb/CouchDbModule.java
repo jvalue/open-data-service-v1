@@ -73,7 +73,7 @@ public class CouchDbModule extends AbstractModule {
 					DataViewRepository.class)
 
 				.implement(
-					new TypeLiteral<GenericDataRepository<CouchDbDataView, JsonNode>>() {
+					new TypeLiteral<GenericDataRepository<JsonNode>>() {
 					},
 					Names.named(RepositoryFactory.NAME_DATA_REPOSITORY),
 					DataRepository.class)

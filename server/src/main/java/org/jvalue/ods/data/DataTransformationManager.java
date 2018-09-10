@@ -38,7 +38,7 @@ public class DataTransformationManager extends AbstractDataSourcePropertyManager
 	}
 
 
-	public ArrayNode transform(GenericDataRepository<CouchDbDataView, JsonNode> dataRepository, TransformationFunction transformationFunction)
+	public ArrayNode transform(GenericDataRepository<JsonNode> dataRepository, TransformationFunction transformationFunction)
 		throws ScriptException, IOException, NoSuchMethodException {
 		Data paginatedData = dataRepository.getPaginatedData(null, 100);
 		List<JsonNode> result = paginatedData.getResult();
@@ -54,13 +54,13 @@ public class DataTransformationManager extends AbstractDataSourcePropertyManager
 
 
 	@Override
-	protected void doAdd(DataSource source, GenericDataRepository<CouchDbDataView, JsonNode> dataRepository, TransformationFunction data) {
+	protected void doAdd(DataSource source, GenericDataRepository<JsonNode> dataRepository, TransformationFunction data) {
 
 	}
 
 
 	@Override
-	protected void doRemove(DataSource source, GenericDataRepository<CouchDbDataView, JsonNode> dataRepository, TransformationFunction data) {
+	protected void doRemove(DataSource source, GenericDataRepository<JsonNode> dataRepository, TransformationFunction data) {
 
 	}
 

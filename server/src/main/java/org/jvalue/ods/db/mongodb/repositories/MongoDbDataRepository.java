@@ -16,7 +16,7 @@ import org.value.commons.mongodb.AbstractMongoDbRepository;
 
 import java.util.*;
 
-public class MongoDbDataRepository extends AbstractMongoDbRepository<JsonNode> implements GenericDataRepository<CouchDbDataView, JsonNode> {
+public class MongoDbDataRepository extends AbstractMongoDbRepository<JsonNode> implements GenericDataRepository<JsonNode> {
 
 	@Inject
 	public MongoDbDataRepository(DbConnectorFactory connectorFactory, @Assisted String databaseName) {
@@ -28,30 +28,6 @@ public class MongoDbDataRepository extends AbstractMongoDbRepository<JsonNode> i
 	public JsonNode findByDomainId(String domainId) {
 		JsonNode byId = findById(domainId);
 		return removeObjectId(byId);
-	}
-
-
-	@Override
-	public List<JsonNode> executeQuery(CouchDbDataView mongoDbQuery, String param) {
-		return null;
-	}
-
-
-	@Override
-	public void addQuery(CouchDbDataView mongoDbQuery) {
-
-	}
-
-
-	@Override
-	public void removeQuery(CouchDbDataView mongoDbQuery) {
-
-	}
-
-
-	@Override
-	public boolean containsQuery(CouchDbDataView mongoDbQuery) {
-		return false;
 	}
 
 

@@ -37,7 +37,7 @@ public final class DataSourceManagerTest {
 	@Mocked private DataSourceRepositoryFactory dataSourceFactory;
 
 	@Mocked private DataSourceRepository sourceRepository;
-	@Mocked private Cache<GenericDataRepository<CouchDbDataView, JsonNode>> dataRepositoryCache;
+	@Mocked private Cache<GenericDataRepository<JsonNode>> dataRepositoryCache;
 	@Mocked private DbConnectorFactory dbConnectorFactory;
 	@Mocked private RepositoryFactory repositoryFactory;
 	@Mocked private ProcessorChainManager processorChainManager;
@@ -81,7 +81,7 @@ public final class DataSourceManagerTest {
 		sourceManager.start();
 
 		new Verifications() {{
-			Map<DataSource, GenericDataRepository<CouchDbDataView, JsonNode>> sources;
+			Map<DataSource, GenericDataRepository<JsonNode>> sources;
 			processorChainManager.startAllProcessorChains(sources = withCapture());
 			Assert.assertTrue(sources.containsKey(dataSource));
 		}};

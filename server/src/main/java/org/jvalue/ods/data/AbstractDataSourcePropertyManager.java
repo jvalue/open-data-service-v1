@@ -30,24 +30,24 @@ public abstract class AbstractDataSourcePropertyManager<T, R extends GenericRepo
 	}
 
 
-	public final void add(DataSource source, GenericDataRepository<CouchDbDataView, JsonNode> dataRepository, T data) {
+	public final void add(DataSource source, GenericDataRepository<JsonNode> dataRepository, T data) {
 		Assert.assertNotNull(source, data);
 		assertRepository(source).add(data);
 		doAdd(source, dataRepository, data);
 	}
 
 
-	protected abstract void doAdd(DataSource source, GenericDataRepository<CouchDbDataView, JsonNode> dataRepository, T data);
+	protected abstract void doAdd(DataSource source, GenericDataRepository<JsonNode> dataRepository, T data);
 
 
-	public final void remove(DataSource source, GenericDataRepository<CouchDbDataView, JsonNode> dataRepository, T data) {
+	public final void remove(DataSource source, GenericDataRepository<JsonNode> dataRepository, T data) {
 		Assert.assertNotNull(source, data);
 		assertRepository(source).remove(data);
 		doRemove(source, dataRepository, data);
 	}
 
 
-	protected abstract void doRemove(DataSource source, GenericDataRepository<CouchDbDataView, JsonNode> dataRepository, T data);
+	protected abstract void doRemove(DataSource source, GenericDataRepository<JsonNode> dataRepository, T data);
 
 
 	public final void removeAll(DataSource source) {

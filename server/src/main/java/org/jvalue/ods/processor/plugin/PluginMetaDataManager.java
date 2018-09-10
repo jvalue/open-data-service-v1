@@ -59,11 +59,11 @@ public final class PluginMetaDataManager extends AbstractDataSourcePropertyManag
 
 
 	@Override
-	protected void doAdd(DataSource source, GenericDataRepository<CouchDbDataView,JsonNode> dataRepository, PluginMetaData metaData) { }
+	protected void doAdd(DataSource source, GenericDataRepository<JsonNode> dataRepository, PluginMetaData metaData) { }
 
 
 	@Override
-	protected void doRemove(DataSource source, GenericDataRepository<CouchDbDataView, JsonNode> dataRepository, PluginMetaData metaData) { }
+	protected void doRemove(DataSource source, GenericDataRepository<JsonNode> dataRepository, PluginMetaData metaData) { }
 
 
 	@Override

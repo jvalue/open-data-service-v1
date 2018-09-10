@@ -56,29 +56,6 @@ public class MongoDbDataRepositoryTest extends AbstractRepositoryTest {
 	}
 
 
-//	@Test
-//	public void testCreateView() {
-//		CouchDbDataView view = createDbView();
-//		Assert.assertFalse(repository.containsQuery(view));
-//		repository.addQuery(view);
-//		Assert.assertTrue(repository.containsQuery(view));
-//	}
-
-
-//	@Test
-//	public void testExecuteView() {
-//		CouchDbDataView view = createDbView();
-//		repository.addQuery(view);
-//		repository.add(createObjectNode("id1", "hello"));
-//		repository.add(createObjectNode("id2", "world"));
-//
-//		Assert.assertEquals(2, repository.executeQuery(view, null).size());
-//		Assert.assertEquals(1, repository.executeQuery(view, "hello").size());
-//		Assert.assertEquals(1, repository.executeQuery(view, "world").size());
-//		Assert.assertEquals(0, repository.executeQuery(view, "foo").size());
-//	}
-
-
 	@Test
 	public void testBulkGet() {
 		JsonNode node1 = createObjectNode("id1", "hello");

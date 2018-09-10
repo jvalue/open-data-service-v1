@@ -39,7 +39,7 @@ public final class DataApi extends AbstractApi {
 
 		if (count < 1 || count > 100) throw RestUtils.createJsonFormattedException("count must be > 0 and < 100", 400);
 
-		GenericDataRepository<CouchDbDataView, JsonNode> repository = assertIsValidSource(sourceId);
+		GenericDataRepository<JsonNode> repository = assertIsValidSource(sourceId);
 		return repository.getPaginatedData(startId, count);
 	}
 
@@ -49,7 +49,7 @@ public final class DataApi extends AbstractApi {
 			@RestrictedTo(Role.ADMIN) User user,
 			@PathParam("sourceId") String sourceId) {
 
-		GenericDataRepository<CouchDbDataView, JsonNode> repository = assertIsValidSource(sourceId);
+		GenericDataRepository<JsonNode> repository = assertIsValidSource(sourceId);
 		repository.removeAll();
 	}
 
@@ -76,7 +76,7 @@ public final class DataApi extends AbstractApi {
 	}
 
 
-	private GenericDataRepository<CouchDbDataView, JsonNode> assertIsValidSource(String sourceId) {
+	private GenericDataRepository<JsonNode> assertIsValidSource(String sourceId) {
 		return sourceManager.getDataRepository(sourceManager.findBySourceId(sourceId));
 	}
 

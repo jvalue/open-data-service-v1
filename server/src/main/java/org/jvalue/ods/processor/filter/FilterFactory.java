@@ -38,7 +38,7 @@ public interface FilterFactory {
 	@Named(NAME_DB_INSERTION_FILTER)
 	public Filter<ObjectNode, ObjectNode> createDbInsertionFilter(
 		DataSource source,
-		GenericDataRepository<CouchDbDataView, JsonNode> dataRepository,
+		GenericDataRepository<JsonNode> dataRepository,
 		@Argument(ARGUMENT_UPDATE_DATA) boolean updateDataIfExists);
 
 
