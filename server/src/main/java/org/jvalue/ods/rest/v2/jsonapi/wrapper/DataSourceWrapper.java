@@ -2,26 +2,37 @@ package org.jvalue.ods.rest.v2.jsonapi.wrapper;
 
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceMetaData;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class DataSourceWrapper extends DataSource implements JsonApiIdentifiable {
+@Schema(name = "dataSourceData")
+public class DataSourceWrapper implements JsonApiIdentifiable {
 
+	private final DataSource dataSource;
 
 	private DataSourceWrapper(String id, JsonPointer domainIdKey, JsonNode schema, DataSourceMetaData metaData) {
-		super(id, domainIdKey, schema, metaData);
+		this.dataSource = new DataSource(id, domainIdKey, schema, metaData);
 	}
 
 
+	@Schema(name = "attributes", required = true)
+	public DataSource getDataSource() {
+		return dataSource;
+	}
+
+
+	@Schema(example = "pegelonline", required = true)
 	@Override
 	public String getId() {
-		return id;
+		return dataSource.getId();
 	}
 
 
+	@Schema(allowableValues = "DataSource", required = true)
 	@Override
 	public String getType() {
 		return DataSource.class.getSimpleName();

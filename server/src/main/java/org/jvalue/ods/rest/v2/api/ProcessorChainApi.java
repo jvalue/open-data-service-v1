@@ -2,6 +2,13 @@ package org.jvalue.ods.rest.v2.api;
 
 
 import com.google.inject.Inject;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.links.Link;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
@@ -14,6 +21,7 @@ import org.jvalue.ods.processor.ProcessorChainManager;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiRequest;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonLinks;
+import org.jvalue.ods.rest.v2.jsonapi.swagger.JsonApiSchema;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.ProcessorReferenceChainWrapper;
 import org.jvalue.ods.utils.JsonMapper;
 import org.jvalue.ods.utils.RequestValidator;
@@ -56,25 +64,57 @@ public final class ProcessorChainApi extends AbstractApi {
 	}
 
 
+	@Operation(
+		operationId = FILTERCHAINS,
+		tags = FILTERCHAINS,
+		summary = "Get all filterchains",
+		description = "Get all filterchains registered for a datasource"
+	)
+	@ApiResponse(
+		responseCode = "200",
+		description = "Ok",
+		content = @Content(schema = @Schema(implementation = JsonApiSchema.ProcessorReferenceChainSchema.class)),
+		links = @Link(name = DATASOURCE, operationRef = DATASOURCE)
+	)
+	@ApiResponse(
+		responseCode = "404", description = "Datasource not found"
+	)
 	@GET
 	public Response getAllProcessorChains(
-		@PathParam("sourceId") String sourceId) {
+		@PathParam("sourceId") @Parameter(description = "Id of the datasource")
+			String sourceId) {
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		List<ProcessorReferenceChain> chains = chainManager.getAll(source);
 
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(ProcessorReferenceChainWrapper.fromCollection(chains))
-			.addLink("source", getDirectoryURI(uriInfo))
+			.addLink(DATASOURCE, getDirectoryURI(uriInfo))
 			.build();
 	}
 
 
+	@Operation(
+		tags = FILTERCHAINS,
+		summary = "Get a filterchain",
+		description = "Get a filterchain for a datasource by its id"
+	)
+	@ApiResponse(
+		responseCode = "200",
+		description = "Ok",
+		links = @Link(name = FILTERCHAINS, operationRef = FILTERCHAINS),
+		content = @Content(schema = @Schema(implementation = JsonApiSchema.ProcessorReferenceChainSchema.class))
+	)
+	@ApiResponse(
+		responseCode = "404", description = "Filterchain or datasource not found"
+	)
 	@GET
 	@Path("/{filterChainId}")
 	public Response getProcessorChain(
-		@PathParam("sourceId") String sourceId,
-		@PathParam("filterChainId") String filterChainId) {
+		@PathParam("sourceId") @Parameter(description = "Id of the datasource")
+			String sourceId,
+		@PathParam("filterChainId") @Parameter(description = "Id of the filterchain")
+			String filterChainId) {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		ProcessorReferenceChain chain = chainManager.get(source, filterChainId);
@@ -87,11 +127,35 @@ public final class ProcessorChainApi extends AbstractApi {
 	}
 
 
+	@Operation(
+		tags = FILTERCHAINS,
+		summary = "Add a filterchain",
+		description = "Add a filterchain to a datasource"
+	)
+	@ApiResponse(
+		responseCode = "201",
+		description = "filterchain added",
+		links = @Link(name = FILTERCHAINS, operationRef = FILTERCHAINS),
+		content = @Content(schema = @Schema(implementation = JsonApiSchema.ProcessorReferenceChainSchema.class))
+	)
+	@ApiResponse(
+		responseCode = "401", description = "Not authorized"
+	)
+	@ApiResponse(
+		responseCode = "401", description = "Not authorized"
+	)
+	@ApiResponse(
+		responseCode = "404", description = "Datasource not found"
+	)
+	@ApiResponse(
+		responseCode = "409", description = "Filterchain with given id already exists"
+	)
 	@POST
 	public Response addProcessorChain(
 		@RestrictedTo(Role.ADMIN) User user,
 		@PathParam("sourceId") String sourceId,
-		@Valid JsonApiRequest processorChainRequest) {
+		@Valid @RequestBody(content = @Content(schema = @Schema(implementation = JsonApiSchema.ProcessorReferenceChainSchema.class)))
+			JsonApiRequest processorChainRequest) {
 
 		ProcessorReferenceChainDescription processorChain = JsonMapper.convertValue(
 			processorChainRequest.getAttributes(),
@@ -124,12 +188,29 @@ public final class ProcessorChainApi extends AbstractApi {
 	}
 
 
+	@Operation(
+		tags = FILTERCHAINS,
+		summary = "Delete filterchain",
+		description = "Delete a filterchain from a datasource"
+	)
+	@ApiResponse(
+		responseCode = "200", description = "Filterchain deleted"
+	)
+	@ApiResponse(
+		responseCode = "401", description = "Not authorized"
+	)
+	@ApiResponse(
+		responseCode = "404", description = "Filterchain or datasource not found"
+	)
 	@DELETE
 	@Path("/{filterChainId}")
 	public void deleteProcessorChain(
-		@RestrictedTo(Role.ADMIN) User user,
-		@PathParam("sourceId") String sourceId,
-		@PathParam("filterChainId") String filterChainId) {
+		@RestrictedTo(Role.ADMIN) @Parameter(hidden = true)
+			User user,
+		@PathParam("sourceId") @Parameter(description = "Id of the source from which the filterchain shall be deleted")
+			String sourceId,
+		@PathParam("filterChainId") @Parameter(description = "Id of the filterchain to be deleted")
+			String filterChainId) {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		ProcessorReferenceChain reference = chainManager.get(source, filterChainId);

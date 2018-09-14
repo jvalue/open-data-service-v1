@@ -4,6 +4,7 @@ package org.jvalue.ods.api.sources;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.validation.constraints.NotNull;
 
@@ -31,36 +32,44 @@ public final class DataSourceMetaData {
 	}
 
 
+	@Schema(example = "de-pegelonline")
 	public String getName() {
 		return name;
 	}
 
 
+	@Schema(example = "pegelonline")
 	public String getTitle() {
 		return title;
 	}
 
 
+	@Schema(example = "Wasser- und Schifffahrtsverwaltung des Bundes (WSV)")
 	public String getAuthor() {
 		return author;
 	}
 
 
+	@Schema(example = "https://www.pegelonline.wsv.de/adminmail")
 	public String getAuthorEmail() {
 		return authorEmail;
 	}
 
 
+	@Schema(example =  "PEGELONLINE stellt kostenfrei tagesaktuelle Rohwerte verschiedener gewÃƒÂ¤sserkundlicher Parameter (z.B. Wasserstand)" +
+		" der Binnen- und KÃƒÂ¼stenpegel der WasserstraÃƒÅ¸en des Bundes bis maximal 30 Tage rÃƒÂ¼ckwirkend zur Ansicht und zum Download bereit.")
 	public String getNotes() {
 		return notes;
 	}
 
 
+	@Schema(example = "https://www.pegelonline.wsv.de")
 	public String getUrl() {
 		return url;
 	}
 
 
+	@Schema(example = "http://www.pegelonline.wsv.de/gast/nutzungsbedingungen")
 	public String getTermsOfUse() {
 		return termsOfUse;
 	}

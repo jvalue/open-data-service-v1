@@ -2,9 +2,15 @@ package org.jvalue.ods.rest.v2.api;
 
 
 import com.google.inject.Inject;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.links.Link;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.jvalue.ods.api.processors.Specification;
 import org.jvalue.ods.processor.specification.SpecificationManager;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
+import org.jvalue.ods.rest.v2.jsonapi.swagger.JsonApiSchema;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.SpecificationWrapper;
 
 import javax.ws.rs.GET;
@@ -34,6 +40,18 @@ public final class ProcessorSpecificationApi extends AbstractApi {
 	}
 
 
+	@Operation(
+		operationId = FILTERTYPES,
+		tags = FILTERTYPES,
+		summary = "Get all filtertypes",
+		description = "Get all types of filterchains registered at the Open-Data-Service" //todo: check
+	)
+	@ApiResponse(
+		responseCode = "200",
+		description = "Ok",
+		content = @Content(schema = @Schema(implementation = JsonApiSchema.ProcessorSpecificationSchema.class)),
+		links = @Link(name = ENTRYPOINT, operationRef = ENTRYPOINT)
+	)
 	@GET
 	public Response getAllSpecifications() {
 		Set<Specification> specs = descriptionManager.getAll();

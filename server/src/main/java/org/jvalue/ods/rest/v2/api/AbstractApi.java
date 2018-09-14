@@ -9,20 +9,24 @@ import static org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse.JSONAPI_TY
 
 @Produces(JSONAPI_TYPE)
 @Consumes(JSONAPI_TYPE)
-abstract class AbstractApi {
+public abstract class AbstractApi {
 
 	public static final String API_VERSION = "2.0.0";
 
-	static final String DATASOURCES = "datasources";
-	static final String FILTERTYPES = "filterTypes";
-	static final String USERS = "users";
-	static final String DATA = "data";
-	static final String FILTERCHAINS = "filterChains";
-	static final String PLUGINS = "plugins";
-	static final String NOTIFICATIONS = "notifications";
-	static final String VIEWS = "views";
-	static final String ENTRYPOINT = "entryPoint";
-	static final String VERSION = "version";
+	public static final String DATASOURCES = "datasources";
+	public static final String FILTERTYPES = "filterTypes";
+	public static final String USERS = "users";
+	public static final String DATA = "data";
+	public static final String FILTERCHAINS = "filterChains";
+	public static final String PLUGINS = "plugins";
+	public static final String NOTIFICATIONS = "notifications";
+	public static final String VIEWS = "views";
+	public static final String ENTRYPOINT = "entryPoint";
+	public static final String DOC = "doc";
+
+	static final String VIEW = "view";
+	static final String DATASOURCE = "datasource";
+
 
 	protected static final String V2 = "/v2";
 

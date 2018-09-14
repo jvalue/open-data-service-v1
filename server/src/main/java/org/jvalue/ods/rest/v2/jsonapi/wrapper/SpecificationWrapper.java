@@ -1,10 +1,12 @@
 package org.jvalue.ods.rest.v2.jsonapi.wrapper;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.jvalue.ods.api.processors.Specification;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+@Schema(name = "specificationData")
 public class SpecificationWrapper implements JsonApiIdentifiable {
 
 	private final Specification specification;
@@ -13,7 +15,13 @@ public class SpecificationWrapper implements JsonApiIdentifiable {
 		this.specification = specification;
 	}
 
+	@Schema(name = "attributes")
+	public Specification getSpecification() {
+		return specification;
+	}
 
+
+	@Schema(example = "NotificationFilter")
 	@Override
 	public String getId() {
 		return specification.getName();

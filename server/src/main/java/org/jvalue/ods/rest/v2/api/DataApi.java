@@ -4,6 +4,13 @@ package org.jvalue.ods.rest.v2.api;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 import io.dropwizard.jersey.params.IntParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.links.Link;
+import io.swagger.v3.oas.annotations.links.LinkParameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
@@ -12,6 +19,7 @@ import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
+import org.jvalue.ods.rest.v2.jsonapi.swagger.JsonApiSchema;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.DataSourceWrapper;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.DataWrapper;
 
@@ -34,6 +42,9 @@ public final class DataApi extends AbstractApi {
 	private static final int DEFAULT_LIMIT_INT = Integer.parseInt(DEFAULT_LIMIT);
 	private static final String DEFAULT_OFFSET = "0";
 
+	private static final String NEXT = "next";
+	private static final String FIRST = "first";
+
 	private final DataSourceManager sourceManager;
 
 
@@ -45,12 +56,53 @@ public final class DataApi extends AbstractApi {
 	@Context
 	private UriInfo uriInfo;
 
-
+	@Operation(
+		operationId = DATA,
+		tags = DATA,
+		summary = "Get data",
+		description = "Get a collection of data, containing $limit data nodes starting at $offset "
+	)
+	@ApiResponse(
+		responseCode = "200",
+		description = "The data collection",
+		content = @Content(schema = @Schema(implementation = JsonApiSchema.DataCollectionSchema.class)),
+		links = {
+			@Link(
+				name = DATASOURCE,
+				operationRef = DATASOURCE,
+				description = "Get the source of this data collection"),
+			@Link(
+				name = NEXT,
+				operationRef = DATA,
+				description = "Get the next $limit data nodes from this source",
+				parameters = {
+					@LinkParameter(name = "offset", expression = "$offset + $limit"),
+					@LinkParameter(name = "limit", expression = "$limit")
+				}),
+			@Link(
+				name = FIRST,
+				operationRef = DATA,
+				description = "Get the first $limit data nodes from this source",
+				parameters = {
+					@LinkParameter(name = "offset", expression = "0"),
+					@LinkParameter(name = "limit", expression = "$limit")
+				}
+			)
+		}
+	)
+	@ApiResponse(
+		responseCode = "404", description = "Source not found")
 	@GET
 	public Response getPaginatedData(
-		@PathParam("sourceId") String sourceId,
-		@QueryParam("offset") @DefaultValue(DEFAULT_OFFSET) IntParam _offset,
-		@QueryParam("limit") @DefaultValue(DEFAULT_LIMIT) IntParam _limit) {
+		@PathParam("sourceId")
+		@Parameter(description = "Id of the source of the data")
+			String sourceId,
+		@QueryParam("offset") @DefaultValue(DEFAULT_OFFSET)
+		@Parameter(description = "The start id for the fetched collection", schema = @Schema(implementation = Integer.class))
+			IntParam _offset,
+		@QueryParam("limit") @DefaultValue(DEFAULT_LIMIT)
+		@Parameter(description = "Amount of data nodes that will be returned" , schema = @Schema(implementation = Integer.class))
+			IntParam _limit) {
 
 		int offset = _offset.get();
 		int limit = _limit.get();
@@ -75,32 +127,54 @@ public final class DataApi extends AbstractApi {
 		JsonApiResponse.Buildable response = JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(DataWrapper.fromCollection(dataNodes, sourceManager.findBySourceId(sourceId)))
-			.addLink("source", getDirectoryURI(uriInfo));
+			.addLink(DATASOURCE, getDirectoryURI(uriInfo));
 
 		if (dataNodes.size() >= limit) {
 			response.addLink("next", nextUri)
 				.addLink("first", firstUri);
 		}
-
 		return response.build();
 	}
 
 
+	@Operation(
+		summary = "Delete data",
+		description = "Delete all data objects provided by a source",
+		tags = DATA
+	)
+	@ApiResponse(
+		responseCode = "200", description = "Deleted"
+	)
+	@ApiResponse(
+		responseCode = "401", description = "Not authorized"
+	)
+	@ApiResponse(
+		responseCode = "404", description = "Datasource not found"
+	)
 	@DELETE
 	public void deleteAllObjects(
-		@RestrictedTo(Role.ADMIN) User user,
-		@PathParam("sourceId") String sourceId) {
+		@RestrictedTo(Role.ADMIN) @Parameter(hidden = true) User user,
+		@PathParam("sourceId") @Parameter(description = "Id of the source") String sourceId) {
 
 		DataRepository repository = getDataRepository(sourceId);
 		repository.removeAll();
 	}
 
 
+	@Operation(
+		tags = DATA,
+		summary = "Get data object",
+		description = "Get a single data node")
+	@ApiResponse(
+		responseCode = "200", description = "Ok",
+		content = @Content(schema = @Schema(implementation = JsonApiSchema.DataSchema.class)))
+	@ApiResponse(
+		responseCode = "404", description = "Source not found or data node not found")
 	@GET
 	@Path("/{objectId}")
 	public Response getSingleDataObject(
-		@PathParam("sourceId") String sourceId,
-		@PathParam("objectId") String domainId) {
+		@PathParam("sourceId") @Parameter(description = "Id of the data object's source") String sourceId,
+		@PathParam("objectId") @Parameter(description = "Domain id of the data object") String domainId) {
 
 		JsonNode resultNode = getDataRepository(sourceId).findByDomainId(domainId);
 		DataSource source = sourceManager.findBySourceId(sourceId);
@@ -114,12 +188,26 @@ public final class DataApi extends AbstractApi {
 	}
 
 
+	@Operation(
+		summary = "Get attribute",
+		tags = DATA,
+		description = "Get one attribute of a data object, i.e. get the data object, restricted to type, id and the attribute"
+	)
+	@ApiResponse(
+		responseCode = "200",
+		description = "Ok",
+		content = @Content(schema = @Schema(implementation = JsonApiSchema.DataSchema.class))
+	)
+	@ApiResponse(
+		responseCode = "404",
+		description = "Data node not found"
+	)
 	@GET
 	@Path("/{objectId}/{attribute}")
 	public Response getObjectAttribute(
-		@PathParam("sourceId") String sourceId,
-		@PathParam("objectId") String domainId,
-		@PathParam("attribute") String attribute) {
+		@PathParam("sourceId") @Parameter(description = "The source of the data object") String sourceId,
+		@PathParam("objectId") @Parameter(description = "The domain id of the data object") String domainId,
+		@PathParam("attribute") @Parameter(description = "The attribute to be fetched") String attribute) {
 
 		JsonNode resultNode = getDataRepository(sourceId).findByDomainId(domainId);
 

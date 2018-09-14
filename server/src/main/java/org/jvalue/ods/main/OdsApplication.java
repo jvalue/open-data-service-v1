@@ -37,6 +37,7 @@ import org.jvalue.ods.pegelalarm.FilterChainHealthCheck;
 import org.jvalue.ods.pegelalarm.PegelOnlineHealthCheck;
 import org.jvalue.ods.processor.ProcessorModule;
 import org.jvalue.ods.processor.reference.ValidChainReference;
+import org.jvalue.ods.rest.v2.api.SpecificationApi;
 import org.jvalue.ods.transformation.DataTransformationModule;
 import org.jvalue.ods.rest.v1.DataApi;
 import org.jvalue.ods.rest.v1.DataSourceApi;
@@ -120,6 +121,7 @@ public final class OdsApplication extends Application<OdsConfig> {
 		environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.api.NotificationApi.class));
 		environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.api.UserApi.class));
 		environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.api.EntryPoint.class));
+		environment.jersey().register(injector.getInstance(SpecificationApi.class));
 
 		// setup users
 		setupDefaultUsers(injector.getInstance(UserManager.class), configuration.getAuth().getUsers());
@@ -159,6 +161,7 @@ public final class OdsApplication extends Application<OdsConfig> {
 				.constraintValidatorFactory(new GuiceConstraintValidatorFactory(injector))
 				.buildValidatorFactory()
 				.getValidator());
+
 	}
 
 

@@ -3,6 +3,14 @@ package org.jvalue.ods.rest.v2.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.links.Link;
+import io.swagger.v3.oas.annotations.links.LinkParameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
@@ -15,6 +23,7 @@ import org.jvalue.ods.data.DataViewManager;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiRequest;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonLinks;
+import org.jvalue.ods.rest.v2.jsonapi.swagger.JsonApiSchema;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.DataViewWrapper;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.DataWrapper;
 import org.jvalue.ods.utils.JsonMapper;
@@ -51,26 +60,62 @@ public final class DataViewApi extends AbstractApi {
 	}
 
 
+	@Operation(
+		tags = VIEWS,
+		operationId = VIEWS,
+		summary = "Get all views",
+		description = "Get all data views for a datasource"
+	)
+	@ApiResponse(
+		responseCode = "200", description = "Ok",
+		content = @Content(schema = @Schema(implementation = JsonApiSchema.DataViewSchema.class)),
+		links = @Link(name = DATASOURCE, operationRef = DATASOURCE, description = "Get corresponding datasource")
+	)
+	@ApiResponse(
+		responseCode = "404", description = "Source not found"
+	)
 	@GET
-	public Response getAllViews(@PathParam("sourceId") String sourceId) {
+	public Response getAllViews(
+		@PathParam("sourceId") @Parameter(description = "Id of the corresponding source")
+			String sourceId) {
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		List<DataView> views = viewManager.getAll(source);
 
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(DataViewWrapper.fromCollection(views))
-			.addLink("source", getDirectoryURI(uriInfo))
+			.addLink(DATASOURCE, getDirectoryURI(uriInfo))
 			.build();
 	}
 
 
+	@Operation(
+		tags = VIEWS,
+		operationId = VIEW,
+		summary = "Get a view",
+		description = "Get a view on the data of a source"
+	)
+	@ApiResponse(
+		responseCode = "200", description = "Ok",
+		content = @Content(schema = @Schema(implementation = JsonApiSchema.DataViewSchema.class)),
+		links = {
+			@Link(name = VIEWS, operationRef = VIEWS, description = "Get all views for the source"),
+			@Link(name = "execute", operationRef = VIEW, parameters = @LinkParameter(name = "execute", expression = "true"), description = "Execute the view")
+		}
+	)
+	@ApiResponse(
+		responseCode = "404", description = "Source or view not found"
+	)
 	@GET
 	@Path("/{viewId}")
 	public Response getView(
-		@PathParam("sourceId") String sourceId,
-		@PathParam("viewId") String viewId,
-		@QueryParam("execute") boolean execute,
-		@QueryParam("argument") String argument) {
+		@PathParam("sourceId") @Parameter(description = "Id of the corresponding source")
+			String sourceId,
+		@PathParam("viewId") @Parameter(description = "Id of the view")
+			String viewId,
+		@QueryParam("execute") @Parameter(description = "If true, get the result of the view's execution on the source data, else get the view itself")
+			boolean execute,
+		@QueryParam("argument") @Parameter(description = "Optional argument for view execution") String argument) {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		DataView view = viewManager.get(source, viewId);
@@ -101,7 +146,7 @@ public final class DataViewApi extends AbstractApi {
 				.createGetResponse(uriInfo)
 				.data(DataWrapper.fromCollection(result, source))
 				.fromRepositoryURI(dataURI)
-				.addLink("view", uriInfo.getAbsolutePath())
+				.addLink(VIEW, uriInfo.getAbsolutePath())
 				.build();
 		}
 
@@ -109,11 +154,37 @@ public final class DataViewApi extends AbstractApi {
 	}
 
 
+	@Operation(
+		tags = VIEWS,
+		summary = "Add view",
+		description = "Add a data view to a datasource"
+	)
+	@ApiResponse(
+		responseCode = "201",
+		description = "View created",
+		content = @Content(schema = @Schema(implementation = JsonApiSchema.DataViewSchema.class)),
+		links = @Link(name = VIEWS, operationRef = VIEWS, description = "Get all views for the source"))
+	@ApiResponse(responseCode = "401",
+		description = "Not authorized")
+	@ApiResponse(
+		responseCode = "404",
+		description = "Source not found"
+	)
+	@ApiResponse(
+		responseCode = "409",
+		description = "Data view with viewId already exists"
+	)
 	@POST
 	public Response addView(
-		@RestrictedTo(Role.ADMIN) User user,
-		@PathParam("sourceId") String sourceId,
-		JsonApiRequest viewDescriptionRequest) {
+		@RestrictedTo(Role.ADMIN) @Parameter(hidden = true)
+			User user,
+		@PathParam("sourceId")
+			String sourceId,
+		@RequestBody(
+			description = "Description of the DataView to be added.",
+			required = true,
+			content = @Content(schema = @Schema(implementation = JsonApiSchema.DataViewSchema.class)))
+			JsonApiRequest viewDescriptionRequest) {
 
 		DataViewDescription viewDescription = JsonMapper.convertValue(
 			viewDescriptionRequest.getAttributes(),
@@ -137,12 +208,30 @@ public final class DataViewApi extends AbstractApi {
 	}
 
 
+	@Operation(
+		tags = VIEWS,
+		summary = "Delete a view",
+		description = "Delete a view from a datasource"
+	)
+	@ApiResponse(
+		responseCode = "200",
+		description = "View deleted"
+	)
+	@ApiResponse(responseCode = "401",
+		description = "Not authorized")
+	@ApiResponse(
+		responseCode = "404",
+		description = "Source or view not found"
+	)
 	@DELETE
 	@Path("/{viewId}")
 	public void deleteView(
-		@RestrictedTo(Role.ADMIN) User user,
-		@PathParam("sourceId") String sourceId,
-		@PathParam("viewId") String viewId) {
+		@RestrictedTo(Role.ADMIN) @Parameter(hidden = true)
+			User user,
+		@PathParam("sourceId") @Parameter(description = "The id of the datasource from which the view should be deleted")
+			String sourceId,
+		@PathParam("viewId") @Parameter(description = "The id of the view to be deleted")
+			String viewId) {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		DataView view = viewManager.get(source, viewId);

@@ -22,6 +22,7 @@ ext {
     retrofitVersion = "1.9.0"
     rxjavaVersion = "1.0.8"
     shadowVersion = "2.0.2"
+	swaggerVersion = "2.0.2"
     osmosisVersion = "0.45"
 
     //testCompile dependencies

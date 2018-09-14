@@ -23,6 +23,7 @@ repositories {
 }
 
 dependencies {
+	compile "io.swagger.core.v3:swagger-jaxrs2:$swaggerVersion"
 	compile "org.hibernate:hibernate-validator:$hibernateVersion"
 	compile "org.hibernate:hibernate-validator-annotation-processor:$hibernateVersion"
     compile "org.glassfish.jersey.media:jersey-media-multipart:$jerseyVersion"

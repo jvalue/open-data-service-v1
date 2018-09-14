@@ -2,6 +2,7 @@ package org.jvalue.ods.api.views;
 
 
 import com.google.common.base.Objects;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.validation.constraints.NotNull;
 
@@ -25,6 +26,7 @@ abstract class AbstractDataView {
 	}
 
 
+	@Schema(example =  "function(doc) { emit(doc.viewId, doc); }", required = true)
 	public String getMapFunction() {
 		return mapFunction;
 	}

@@ -2,6 +2,8 @@ package org.jvalue.ods.api.processors;
 
 
 import com.google.common.base.Objects;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;
 
@@ -22,6 +24,8 @@ abstract class AbstractProcessorReferenceChain {
 	}
 
 
+	@Schema(required = true)
+	@ArraySchema(schema = @Schema(implementation = ProcessorReference.class))
 	public List<ProcessorReference> getProcessors() {
 		return processors;
 	}

@@ -2,6 +2,13 @@ package org.jvalue.ods.rest.v2.api;
 
 
 import com.google.inject.Inject;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.links.Link;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
@@ -13,6 +20,7 @@ import org.jvalue.ods.notifications.NotificationManager;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiRequest;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonLinks;
+import org.jvalue.ods.rest.v2.jsonapi.swagger.JsonApiSchema;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.ClientWrapper;
 import org.jvalue.ods.utils.JsonMapper;
 import org.jvalue.ods.utils.RequestValidator;
@@ -49,12 +57,31 @@ public final class NotificationApi extends AbstractApi {
 		this.notificationManager = notificationManager;
 	}
 
-
+	@Operation(
+		tags = NOTIFICATIONS,
+		summary = "Register client",
+		description = "Register a client at a datasource for notifications."
+	)
+	@ApiResponse(
+		responseCode = "201",
+		description = "Client registered",
+		links = @Link(name = NOTIFICATIONS, operationRef = NOTIFICATIONS)
+	)
+	@ApiResponse(
+		responseCode = "401", description = "Not authorized"
+	)
+	@ApiResponse(
+		responseCode = "404", description = "Source not found"
+	)
+	@ApiResponse(
+		responseCode = "409", description = "Client with given id already exists"
+	)
 	@POST
 	public Response registerClient(
 		@RestrictedTo(Role.ADMIN) User user,
 		@PathParam("sourceId") String sourceId,
-		@Valid JsonApiRequest clientDescriptionRequest) {
+		@Valid @RequestBody(content = @Content(schema = @Schema(implementation = JsonApiSchema.ClientSchema.class)))
+			JsonApiRequest clientDescriptionRequest) {
 
 		ClientDescription clientDescription = JsonMapper.convertValue(
 			clientDescriptionRequest.getAttributes(),
@@ -78,12 +105,30 @@ public final class NotificationApi extends AbstractApi {
 			.build();
 	}
 
+
+	@Operation(
+		tags = NOTIFICATIONS,
+		summary = "Unregister client",
+		description = "Unregister a client from notifications"
+	)
+	@ApiResponse(
+		responseCode = "200", description = "Client unregistered"
+	)
+	@ApiResponse(
+		responseCode = "401", description = "Not authorized"
+	)
+	@ApiResponse(
+		responseCode = "404", description = "Client or datasource not found"
+	)
 	@DELETE
 	@Path("/{clientId}")
 	public void unregisterClient(
-		@RestrictedTo(Role.ADMIN) User user,
-		@PathParam("sourceId") String sourceId,
-		@PathParam("clientId") String clientId) {
+		@RestrictedTo(Role.ADMIN) @Parameter(hidden = true)
+			User user,
+		@PathParam("sourceId") @Parameter(description = "Id of the source from which the client shall be unregistered.")
+			String sourceId,
+		@PathParam("clientId") @Parameter(description = "Id of the client to unregister")
+			String clientId) {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		Client client = notificationManager.get(source, clientId);
@@ -91,11 +136,27 @@ public final class NotificationApi extends AbstractApi {
 	}
 
 
+	@Operation(
+		tags = NOTIFICATIONS,
+		summary = "Get a client",
+		description = "Get a notification client from a datasource"
+	)
+	@ApiResponse(
+		responseCode = "200",
+		description = "Ok",
+		content = @Content(schema = @Schema(implementation = JsonApiSchema.ClientSchema.class)),
+		links = @Link(name = NOTIFICATIONS, operationRef = NOTIFICATIONS)
+	)
+	@ApiResponse(
+		responseCode = "404", description = "Client or datasource not found."
+	)
 	@GET
 	@Path("/{clientId}")
 	public Response getClient(
-		@PathParam("sourceId") String sourceId,
-		@PathParam("clientId") String clientId) {
+		@PathParam("sourceId") @Parameter(description = "Id of the corresponding datasource")
+			String sourceId,
+		@PathParam("clientId") @Parameter(description = "Id of the client")
+			String clientId) {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		Client client = notificationManager.get(source, clientId);
@@ -108,9 +169,24 @@ public final class NotificationApi extends AbstractApi {
 	}
 
 
+	@Operation(
+		operationId = NOTIFICATIONS,
+		tags = NOTIFICATIONS,
+		summary = "Get all clients",
+		description = "Get all clients registered for notifications at this datasource"
+	)
+	@ApiResponse(
+		responseCode = "200", description = "Ok.",
+		content = @Content(schema = @Schema(implementation = JsonApiSchema.ClientSchema.class)),
+		links = @Link(name = DATASOURCE, operationRef = DATASOURCE)
+	)
+	@ApiResponse(
+		responseCode = "404", description = "Datasource not found."
+	)
 	@GET
 	public Response getAllClients(
-		@PathParam("sourceId") String sourceId) {
+		@PathParam("sourceId") @Parameter(description = "Id of the datasource")
+			String sourceId) {
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
 		List<Client> clients = notificationManager.getAll(source);
@@ -118,7 +194,7 @@ public final class NotificationApi extends AbstractApi {
 		return JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(ClientWrapper.fromCollection(clients))
-			.addLink("source", getDirectoryURI(uriInfo))
+			.addLink(DATASOURCE, getDirectoryURI(uriInfo))
 			.build();
 	}
 

@@ -3,6 +3,7 @@ package org.jvalue.ods.api.processors;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class ProcessorReferenceChain extends AbstractProcessorReferenceChain {
 	}
 
 
+	@Schema(hidden = true)
 	public String getId() {
 		return id;
 	}

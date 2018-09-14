@@ -1,19 +1,36 @@
 package org.jvalue.ods.rest.v2.jsonapi.wrapper;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.jvalue.ods.api.views.DataView;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class DataViewWrapper extends DataView implements JsonApiIdentifiable {
+@Schema(name = "dataViewData")
+public class DataViewWrapper implements JsonApiIdentifiable {
 
+	private final DataView dataView;
 
 	private DataViewWrapper(String id, String mapFunction, String reduceFunction) {
-		super(id, mapFunction, reduceFunction);
+		this.dataView = new DataView(id, mapFunction, reduceFunction);
+	}
+
+
+	@Schema(name = "attributes", required = true)
+	public DataView getDataView() {
+		return dataView;
 	}
 
 
 	@Override
+	@Schema(example = "myView", required = true)
+	public String getId() {
+		return dataView.getId();
+	}
+
+
+	@Override
+	@Schema(allowableValues = "DataView", required = true)
 	public String getType() {
 		return DataView.class.getSimpleName();
 	}
