@@ -1,6 +1,7 @@
 package org.jvalue.ods.transformation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import mockit.Expectations;
@@ -26,15 +27,12 @@ public final class DataTransformationManagerTest {
 	@Mocked private RepositoryFactory repositoryFactory;
 	@Mocked private Cache<GenericRepository<TransformationFunction>> dataRepositoryCache;
 	@Mocked private NashornExecutionEngine executionEngine;
-
-	private ObjectNode objectNode;
+	@Mocked private ArrayNode arrayNode;
 
 	@Before
 	public void setupTransformationManager() {
 		this.transformationManager = new DataTransformationManager(executionEngine, dataRepositoryCache, repositoryFactory);
-		objectNode = new ObjectMapper().createObjectNode();
-		objectNode.put("key1", "test1");
-		objectNode.put("key2", "test2");
+		this.arrayNode = new ObjectMapper().createArrayNode();
 	}
 
 
@@ -43,11 +41,11 @@ public final class DataTransformationManagerTest {
 		TransformationFunction function = new TransformationFunction("1", "function");
 
 		new Expectations() {{
-			executionEngine.execute(new ObjectNode(JsonNodeFactory.instance), function);
-			result = objectNode;
+			executionEngine.execute(new ObjectNode(JsonNodeFactory.instance), function, true);
+			result = arrayNode;
 		}};
 
-		ObjectNode res = transformationManager.transform(new ObjectNode(JsonNodeFactory.instance), function);
-		Assert.assertEquals(objectNode, res);
+		ArrayNode res = transformationManager.transform(new ObjectNode(JsonNodeFactory.instance), function, true);
+		Assert.assertEquals(arrayNode, res);
 	}
 }

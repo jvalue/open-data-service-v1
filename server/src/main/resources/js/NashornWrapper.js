@@ -9,9 +9,9 @@ function init(){
 function transformationWrapper(jsonStr, query) {
 	init();
 	var json = JSON.parse(jsonStr);
-	transform(json);
+	var result = transform(json);
 	if(!query){
-		emit(new Date().getTime(),json);
+		emit(new Date().getTime(),result);
 	}
 	return resultSet;
 }

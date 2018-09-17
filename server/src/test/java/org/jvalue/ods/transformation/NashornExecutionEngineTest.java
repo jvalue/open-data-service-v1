@@ -137,43 +137,43 @@ public final class NashornExecutionEngineTest {
 	@Test
 	public void testExtensionTransformationExecution() throws ScriptException, IOException, NoSuchMethodException {
 		transformationFunction = new TransformationFunction("1", extension);
-		JsonNode result = executionEngine.execute(jsonData, transformationFunction);
+		JsonNode result = executionEngine.execute(jsonData, transformationFunction, false);
 
-		Assert.assertEquals("This is an extension", result.get("extension").asText());
+		Assert.assertEquals("This is an extension", result.get(0).get("extension").asText());
 	}
 
 
 	@Test
 	public void testReduceTransformationExecution() throws ScriptException, IOException, NoSuchMethodException {
 		transformationFunction = new TransformationFunction("1", reduction);
-		JsonNode result = executionEngine.execute(jsonData, transformationFunction);
-		Assert.assertEquals(4, result.get("keycount").intValue());
+		JsonNode result = executionEngine.execute(jsonData, transformationFunction, false);
+		Assert.assertEquals(4, result.get(0).get("keycount").intValue());
 	}
 
 
 	@Test
 	public void testMapTransformationExecution() throws ScriptException, IOException, NoSuchMethodException {
 		transformationFunction = new TransformationFunction("1", map);
-		JsonNode result = executionEngine.execute(jsonData, transformationFunction);
+		JsonNode result = executionEngine.execute(jsonData, transformationFunction, false);
 
-		Assert.assertEquals("RHEIN", result.get("water").get("shortname").asText());
-		Assert.assertEquals("RHEIN", result.get("water").get("longname").asText());
+		Assert.assertEquals("RHEIN", result.get(0).get("water").get("shortname").asText());
+		Assert.assertEquals("RHEIN", result.get(0).get("water").get("longname").asText());
 	}
 
 	@Test
 	public void testConcatTransformationExecution() throws ScriptException, IOException, NoSuchMethodException {
 		transformationFunction = new TransformationFunction("1", concatStrings);
-		JsonNode result = executionEngine.execute(jsonData, transformationFunction);
+		JsonNode result = executionEngine.execute(jsonData, transformationFunction, false);
 
-		Assert.assertEquals("13.929755188361455, 50.96458457915114", result.get("combinedCoords").asText());
+		Assert.assertEquals("13.929755188361455, 50.96458457915114", result.get(0).get("combinedCoords").asText());
 	}
 
 	@Test
 	public void testFilterTransformationExecution() throws ScriptException, IOException, NoSuchMethodException {
 		transformationFunction = new TransformationFunction("1", filter);
-		JsonNode result = executionEngine.execute(jsonData, transformationFunction);
+		JsonNode result = executionEngine.execute(jsonData, transformationFunction, false);
 
-		Assert.assertTrue(result.get("stringValues").isArray());
+		Assert.assertTrue(result.get(0).get("stringValues").isArray());
 
 		ArrayNode arrayNode = new ArrayNode(JsonNodeFactory.instance);
 		arrayNode.add("uuid");
@@ -182,22 +182,22 @@ public final class NashornExecutionEngineTest {
 		arrayNode.add("longname");
 		arrayNode.add("agency");
 
-		Assert.assertEquals(arrayNode, result.get("stringValues"));
+		Assert.assertEquals(arrayNode, result.get(0).get("stringValues"));
 	}
 
 	@Test
 	public void testArithmeticOperationsTransformationExecution() throws ScriptException, IOException, NoSuchMethodException {
 		transformationFunction = new TransformationFunction("1", arithmeticOperations);
-		JsonNode result = executionEngine.execute(jsonData, transformationFunction);
+		JsonNode result = executionEngine.execute(jsonData, transformationFunction, false);
 
-		Assert.assertEquals(489.75, result.get("result").asDouble(), 0);
+		Assert.assertEquals(489.75, result.get(0).get("result").asDouble(), 0);
 	}
 
 	@Test(expected = ScriptException.class)
 	public void testInvalidTransformationExecution()
 		throws ScriptException, IOException, NoSuchMethodException {
 		transformationFunction = new TransformationFunction("2", "invalid Javascript Code");
-		executionEngine.execute(jsonData, transformationFunction);
+		executionEngine.execute(jsonData, transformationFunction, false);
 	}
 
 
@@ -205,7 +205,7 @@ public final class NashornExecutionEngineTest {
 	public void testWrongFunctionSignatureTransformationExecution()
 		throws ScriptException, IOException, NoSuchMethodException {
 		transformationFunction = new TransformationFunction("10", "function test(hello){ return 1};");
-		executionEngine.execute(jsonData, transformationFunction);
+		executionEngine.execute(jsonData, transformationFunction, false);
 	}
 
 
@@ -217,7 +217,7 @@ public final class NashornExecutionEngineTest {
 		thrown.expectCause(CoreMatchers.isA(ScriptCPUAbuseException.class));
 
 		transformationFunction = new TransformationFunction("3", infiniteLoop);
-		executionEngine.execute(jsonData, transformationFunction);
+		executionEngine.execute(jsonData, transformationFunction, false);
 	}
 
 
@@ -229,6 +229,6 @@ public final class NashornExecutionEngineTest {
 		thrown.expectCause(CoreMatchers.isA(RuntimeException.class));
 
 		transformationFunction = new TransformationFunction("3", javaClassAccess);
-		executionEngine.execute(jsonData, transformationFunction);
+		executionEngine.execute(jsonData, transformationFunction, false);
 	}
 }
