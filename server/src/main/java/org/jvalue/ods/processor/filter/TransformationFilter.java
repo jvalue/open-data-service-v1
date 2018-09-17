@@ -1,6 +1,7 @@
 package org.jvalue.ods.processor.filter;
 
 import com.codahale.metrics.MetricRegistry;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -28,15 +29,15 @@ public class TransformationFilter extends AbstractFilter<ObjectNode, ObjectNode>
 
 	@Override
 	protected ObjectNode doFilter(ObjectNode node) throws FilterException {
-		ObjectNode result;
+		ArrayNode result;
 		try {
-			result = dataTransformationManager.transform(node, new TransformationFunction(source.getId(), transformationFunction));
+			result = dataTransformationManager.transform(node, new TransformationFunction(source.getId(), transformationFunction), false);
 		} catch (Exception e) {
 			// nothing to do if exception occurs -> throw it.
 			throw new FilterException(e.getMessage(), e);
 		}
 
-		return result;
+		return (ObjectNode) result.get(0);
 	}
 
 

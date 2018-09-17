@@ -1,9 +1,12 @@
 package org.jvalue.ods.transformation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import delight.nashornsandbox.NashornSandbox;
 import delight.nashornsandbox.NashornSandboxes;
+import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.apache.commons.io.IOUtils;
 import org.jvalue.commons.utils.Log;
 import org.jvalue.ods.api.views.generic.TransformationFunction;
@@ -12,6 +15,7 @@ import javax.script.Invocable;
 import javax.script.ScriptException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -44,7 +48,7 @@ public class NashornExecutionEngine extends AbstractExecutionEngine {
 
 
 	@Override
-	public ObjectNode execute(ObjectNode data, TransformationFunction transformationFunction)
+	public ArrayNode execute(ObjectNode data, TransformationFunction transformationFunction, boolean query)
 		throws ScriptException, IOException, NoSuchMethodException {
 		initNashornSandbox();
 		try {
@@ -54,8 +58,16 @@ public class NashornExecutionEngine extends AbstractExecutionEngine {
 			//execute script
 			nashornSandbox.eval(script);
 			Invocable sandboxedInvocable = nashornSandbox.getSandboxedInvocable();
-			String result = (String) sandboxedInvocable.invokeFunction(WRAPPER_FUNCTION, data.toString());
-			return (ObjectNode) objectMapper.readTree(result);
+			ScriptObjectMirror o = (ScriptObjectMirror) sandboxedInvocable.invokeFunction(WRAPPER_FUNCTION, data.toString(), query);
+			Collection<Object> values =  o.values();
+
+			//add every call of emit() to the result set
+			ArrayNode result = new ArrayNode(JsonNodeFactory.instance);
+			for (Object obj : values){
+				result.add(objectMapper.readTree(obj.toString()));
+			}
+
+			return result;
 		} finally {
 			ExecutorService executor = nashornSandbox.getExecutor();
 			executor.shutdown();

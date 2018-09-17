@@ -27,9 +27,11 @@ public class DbModule extends AbstractModule {
 		if (useMongoDb) {
 			assertMongoDbIsReady();
 			install(new MongoDbModule(configuration.getMongoDb()));
+			Log.info("Using MongoDB!");
 		} else {
 			assertCouchDbIsReady();
 			install(new CouchDbModule(configuration.getCouchDb()));
+			Log.info("Using CouchDB!");
 		}
 
 	}

@@ -57,7 +57,7 @@ public final class DataTransformationApi extends AbstractApi {
 
 		if (!execute) return transformationFunction;
 		try {
-			return dataTransformationManager.transform(sourceManager.getDataRepository(source), transformationFunction);
+			return dataTransformationManager.transform(sourceManager.getDataRepository(source), transformationFunction, true);
 		} catch (ScriptException | NoSuchMethodException e) {
 			throw RestUtils.createJsonFormattedException("Script execution error: Javascript may not be valid.", 500);
 		} catch (IOException e) {

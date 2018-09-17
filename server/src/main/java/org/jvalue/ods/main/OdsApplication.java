@@ -43,7 +43,7 @@ import java.util.List;
 
 public final class OdsApplication extends Application<OdsConfig> {
 
-	private static final boolean USE_MONGO_DB = true;
+	private static final boolean USE_MONGO_DB = false;
 
 	public static void main(String[] args) throws Exception {
 		new OdsApplication().run(args);

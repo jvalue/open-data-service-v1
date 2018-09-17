@@ -17,7 +17,9 @@ import org.jvalue.ods.transformation.ExecutionEngine;
 
 import javax.script.ScriptException;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class DataTransformationManager extends AbstractDataSourcePropertyManager<TransformationFunction, GenericRepository<TransformationFunction>> {
 	private final ExecutionEngine executionEngine;
@@ -32,24 +34,28 @@ public class DataTransformationManager extends AbstractDataSourcePropertyManager
 	}
 
 
-	public ObjectNode transform(ObjectNode data, TransformationFunction transformationFunction)
+	public ArrayNode transform(ObjectNode data, TransformationFunction transformationFunction, boolean query)
 		throws ScriptException, IOException, NoSuchMethodException {
-		return executionEngine.execute(data, transformationFunction);
+		return executionEngine.execute(data, transformationFunction, query);
 	}
 
 
-	public ArrayNode transform(GenericDataRepository<JsonNode> dataRepository, TransformationFunction transformationFunction)
+	public ArrayNode transform(GenericDataRepository<JsonNode> dataRepository, TransformationFunction transformationFunction, boolean query)
 		throws ScriptException, IOException, NoSuchMethodException {
 		Data paginatedData = dataRepository.getPaginatedData(null, 100);
 		List<JsonNode> result = paginatedData.getResult();
 
-		ArrayNode arrayNode = new ArrayNode(JsonNodeFactory.instance);
+		ArrayNode resultNode = new ArrayNode(JsonNodeFactory.instance);
 
 		for (JsonNode jsonNode : result){
-			ObjectNode execute = executionEngine.execute(jsonNode.deepCopy(), transformationFunction);
-			arrayNode.add(execute);
+			ArrayNode resultSet = executionEngine.execute(jsonNode.deepCopy(), transformationFunction, query);
+			Iterator<JsonNode> elements = resultSet.elements();
+			while(elements.hasNext()){
+				JsonNode next = elements.next();
+				resultNode.add(next);
+			}
 		}
-		return arrayNode;
+		return resultNode;
 	}
 
 
