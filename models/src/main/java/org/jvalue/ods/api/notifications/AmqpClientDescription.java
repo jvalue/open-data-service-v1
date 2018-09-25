@@ -12,15 +12,21 @@ public class AmqpClientDescription extends ClientDescription {
 
     @NotNull private final String exchange;
     @NotNull private final String host;
+	@NotNull private final String exchangeType;
+	private final String routingKey;
 
     @JsonCreator
     public AmqpClientDescription(
             @JsonProperty("host") String host,
-            @JsonProperty("exchange") String exchange) {
+            @JsonProperty("exchange") String exchange,
+			@JsonProperty("exchangeType") String exchangeType,
+			@JsonProperty("routingKey") String routingKey) {
 
         super(CLIENT_TYPE);
         this.exchange = exchange;
         this.host = host;
+        this.exchangeType = exchangeType;
+        this.routingKey = routingKey;
     }
 
 
@@ -34,25 +40,36 @@ public class AmqpClientDescription extends ClientDescription {
     }
 
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        AmqpClientDescription that = (AmqpClientDescription) o;
-        return Objects.equals(exchange, that.exchange) &&
-                Objects.equals(host, that.host);
-    }
+	public String getExchangeType() {
+		return exchangeType;
+	}
 
 
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(super.hashCode(), exchange, host);
-    }
+	public String getRoutingKey() {
+		return routingKey;
+	}
 
 
-    @Override
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		if (!super.equals(o)) return false;
+		AmqpClientDescription that = (AmqpClientDescription) o;
+		return Objects.equals(exchange, that.exchange) &&
+			Objects.equals(host, that.host) &&
+			Objects.equals(exchangeType, that.exchangeType) &&
+			Objects.equals(routingKey, that.routingKey);
+	}
+
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), exchange, host, exchangeType, routingKey);
+	}
+
+
+	@Override
     public <P, R> R accept(ClientDescriptionVisitor<P, R> visitor, P param) {
         return visitor.visit(this, param);
     }

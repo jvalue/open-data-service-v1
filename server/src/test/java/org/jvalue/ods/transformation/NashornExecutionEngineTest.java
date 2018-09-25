@@ -81,11 +81,11 @@ public final class NashornExecutionEngineTest {
 			+"		}, 0);"
 			+"}"
 			+
-		"function avarage(doubleValueArray){"
+			"function avarage(doubleValueArray){"
 			+"	return sum(doubleValueArray) / doubleValueArray.length;"
 			+"}"
 			+
-		"function transform(doc){"
+			"function transform(doc){"
 			+ "var values;"
 			+ "if(doc != null){"
 			+ "		values = doc.timeseries[0].characteristicValues.reduce("

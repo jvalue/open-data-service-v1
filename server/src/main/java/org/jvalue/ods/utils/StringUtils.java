@@ -6,8 +6,7 @@ import java.util.List;
 
 public final class StringUtils {
 
-	private StringUtils() { }
-
+	private StringUtils() {	}
 
 	private static final List<Character> PROPER_CASE_SEPERATOR = Arrays.asList(' ', '-');
 

@@ -24,10 +24,11 @@ public class AmqpSenderTest {
     private static final String HOST = "dummy-host";
 
     private static final String EXCHANGE = "dummy-exchange";
+	private static final String EXCHANGE_TYPE = "fanout";
 
     private  AmqpSender sender;
 
-    private AmqpClient client = new AmqpClient("someId", HOST, EXCHANGE);
+    private AmqpClient client = new AmqpClient("someId", HOST, EXCHANGE, EXCHANGE_TYPE, "");
 
     @Mocked
     private Publisher publisher;
@@ -40,8 +41,8 @@ public class AmqpSenderTest {
     @Test
     public void testSuccess() {
         new Expectations() {{
-            publisher.connect(HOST, EXCHANGE); result = true;
-            publisher.publish("{\"sourceId\":\"someSourceId\"}"); result = true;
+            publisher.connect(HOST, EXCHANGE, EXCHANGE_TYPE); result = true;
+            publisher.publish("{\"sourceId\":\"someSourceId\"}", ""); result = true;
         }};
 
         ObjectNode sentData = new ObjectNode(JsonNodeFactory.instance);
@@ -59,8 +60,8 @@ public class AmqpSenderTest {
     @Test
     public void testConnectionError() {
         new Expectations() {{
-            publisher.connect((String) any, (String) any); result = false;
-            publisher.publish((String) any); result = true;
+            publisher.connect((String) any, (String) any, (String) any); result = false;
+            publisher.publish((String) any, (String) any); result = true;
         }};
 
         sender.onNewDataStart();
@@ -75,8 +76,8 @@ public class AmqpSenderTest {
     @Test
     public void testSentError() {
         new Expectations() {{
-            publisher.connect((String) any, (String) any); result = true;
-            publisher.publish((String) any); result = false;
+            publisher.connect((String) any, (String) any, (String) any); result = true;
+            publisher.publish((String) any, (String) any); result = false;
         }};
 
         sender.onNewDataStart();
