@@ -15,7 +15,6 @@ import org.jvalue.ods.db.mongodb.repositories.MongoDbDataRepository;
 import java.util.*;
 
 @SuppressWarnings("Duplicates")
-@Ignore
 public class MongoDbDataRepositoryTest extends AbstractRepositoryTest {
 
 	private static final String DOMAIN_ID = "id";

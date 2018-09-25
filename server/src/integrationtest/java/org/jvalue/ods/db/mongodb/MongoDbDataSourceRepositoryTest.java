@@ -11,7 +11,6 @@ import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceMetaData;
 import org.jvalue.ods.db.mongodb.repositories.MongoDbDataSourceRepository;
 
-@Ignore
 public class MongoDbDataSourceRepositoryTest extends AbstractRepositoryTestBase<DataSource> {
 	@Override
 	protected GenericRepository<DataSource> doCreateRepository(DbConnectorFactory connectorFactory) {
