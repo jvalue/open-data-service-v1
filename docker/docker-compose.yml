@@ -20,3 +20,7 @@ services:
     environment:
       - COUCHDB_USER=admin
       - COUCHDB_PASSWORD=admin
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
