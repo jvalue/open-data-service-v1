@@ -39,7 +39,7 @@ public final class RostockTrashCansTest extends AbstractDataSourceTest {
 						.argument("sourceUrl", "https://geo.sv.rostock.de/download/opendata/abfallbehaelter/abfallbehaelter.csv")
 						.argument("csvFormat", "DEFAULT")
 						.build())
-				.processor(new ProcessorReference.Builder("CouchDbInsertionFilter")
+				.processor(new ProcessorReference.Builder("DbInsertionFilter")
 						.argument("updateData", true)
 						.build())
 				.build();
