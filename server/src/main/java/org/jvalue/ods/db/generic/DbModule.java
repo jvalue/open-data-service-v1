@@ -38,7 +38,7 @@ public class DbModule extends AbstractModule {
 
 
 	private void assertCouchDbIsReady() {
-		if (!HttpServiceCheck.check(HttpServiceCheck.COUCHDB_URL)) {
+		if (!HttpServiceCheck.check(configuration.getCouchDb().getUrl())) {
 			throw new RuntimeException("CouchDB service is not ready [" + HttpServiceCheck.COUCHDB_URL + "]");
 		}
 
