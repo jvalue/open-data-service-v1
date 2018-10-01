@@ -25,47 +25,13 @@ public class DbModule extends AbstractModule {
 	protected void configure() {
 
 		if (useMongoDb) {
-			assertMongoDbIsReady();
 			install(new MongoDbModule(configuration.getMongoDb()));
 			Log.info("Using MongoDB!");
 		} else {
-			assertCouchDbIsReady();
 			install(new CouchDbModule(configuration.getCouchDb()));
 			Log.info("Using CouchDB!");
 		}
 
-	}
-
-
-	private void assertCouchDbIsReady() {
-		if (!HttpServiceCheck.check(configuration.getCouchDb().getUrl())) {
-			throw new RuntimeException("CouchDB service is not ready [" + HttpServiceCheck.COUCHDB_URL + "]");
-		}
-
-	}
-
-
-	private void assertMongoDbIsReady() {
-		MongoClient mongoClient = new MongoClient(new MongoClientURI(configuration.getMongoDb().getUrl()));
-		int retryCounter = 50;
-		do {
-			try {
-				mongoClient.getAddress();
-				return;
-			} catch (Exception e) {
-				Log.error("MongoDb is not available.");
-			} finally {
-				mongoClient.close();
-			}
-			--retryCounter;
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		} while (retryCounter > 0);
-
-		throw new RuntimeException("MongoDb is not available");
 	}
 }
 

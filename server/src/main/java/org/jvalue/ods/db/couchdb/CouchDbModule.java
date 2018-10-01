@@ -16,15 +16,15 @@ import org.jvalue.commons.db.factories.AuthRepositoryFactory;
 import org.jvalue.commons.db.repositories.GenericDataRepository;
 import org.jvalue.commons.db.repositories.GenericRepository;
 import org.jvalue.commons.utils.Cache;
+import org.jvalue.commons.utils.HttpServiceCheck;
 import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.api.processors.PluginMetaData;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
-import org.jvalue.ods.api.views.DataView;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
+import org.jvalue.ods.api.views.generic.TransformationFunction;
 import org.jvalue.ods.db.couchdb.repositories.*;
 import org.jvalue.ods.db.generic.DataSourceRepositoryFactory;
 import org.jvalue.ods.db.generic.RepositoryFactory;
-import org.jvalue.ods.api.views.generic.TransformationFunction;
 
 import java.net.MalformedURLException;
 
@@ -40,6 +40,8 @@ public class CouchDbModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
+		assertCouchDbIsReady();
+
 		try {
 			CouchDbInstance couchDbInstance = new StdCouchDbInstance(new StdHttpClient.Builder()
 				.url(couchDbConfig.getUrl())
@@ -103,9 +105,15 @@ public class CouchDbModule extends AbstractModule {
 					TransformationFunctionRepository.class)
 
 				.build(RepositoryFactory.class));
+		} catch (Exception e) {
+			throw new RuntimeException("Could not load CouchDbModule", e);
+		}
+	}
 
-		} catch (MalformedURLException mue) {
-			throw new RuntimeException(mue);
+
+	private void assertCouchDbIsReady() {
+		if (!HttpServiceCheck.check(couchDbConfig.getUrl())) {
+			throw new RuntimeException("CouchDB service is not ready [" + HttpServiceCheck.COUCHDB_URL + "]");
 		}
 	}
 
