@@ -10,6 +10,7 @@ import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
 import org.jvalue.commons.db.repositories.GenericDataRepository;
+import org.jvalue.ods.db.couchdb.repositories.DataRepository;
 import org.jvalue.ods.processor.adapter.SourceAdapterFactory;
 import org.jvalue.ods.processor.filter.FilterFactory;
 
@@ -65,7 +66,7 @@ public final class ProcessorChainFactoryTest {
 
 		new Verifications() {{
 			adapterFactory.createJsonSourceAdapter((DataSource) any, anyString); times = 1;
-			filterFactory.createDbInsertionFilter((DataSource) any, (GenericDataRepository<JsonNode>) any, anyBoolean); times = 1;
+			filterFactory.createDbInsertionFilter((DataSource) any, (DataRepository) any, anyBoolean); times = 1;
 			filterFactory.createNotificationFilter((DataSource) any); times = 1;
 			filterFactory.createTransformationFilter((DataSource) any, simpleExtension); times = 1;
 		}};
