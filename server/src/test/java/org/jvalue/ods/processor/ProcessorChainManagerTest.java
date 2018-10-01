@@ -19,6 +19,7 @@ import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceMetaData;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
+import org.jvalue.ods.db.couchdb.repositories.DataRepository;
 import org.jvalue.ods.db.couchdb.repositories.ProcessorChainReferenceRepository;
 import org.jvalue.ods.db.generic.RepositoryFactory;
 
@@ -64,7 +65,7 @@ public final class ProcessorChainManagerTest {
 
 	@Test
 	public void testAddAndRemove(
-		@Mocked final GenericDataRepository<JsonNode> dataRepository,
+		@Mocked final DataRepository dataRepository,
 		@Mocked final ProcessorChainReferenceRepository referenceRepository,
 		@Mocked final ProcessorChain chain) throws Exception {
 
@@ -142,7 +143,7 @@ public final class ProcessorChainManagerTest {
 
 	@Test
 	public void testStartAndStopAll(
-			@Mocked final GenericDataRepository<JsonNode> dataRepository,
+			@Mocked final DataRepository dataRepository,
 			@Mocked final ProcessorChainReferenceRepository referenceRepository,
 			@Mocked final ProcessorChain chain) throws Exception {
 
