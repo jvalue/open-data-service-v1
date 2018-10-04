@@ -13,7 +13,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-    
+
  */
 package org.jvalue.ods.processor.adapter;
 
@@ -30,5 +30,7 @@ public interface SourceAdapter extends Iterable<ObjectNode> {
 	 * while reading data from the source.
 	 */
 	public Iterator<ObjectNode> iterator() throws SourceAdapterException;
+	public void setAlias(String name);
+	public String getAlias();
 
 }

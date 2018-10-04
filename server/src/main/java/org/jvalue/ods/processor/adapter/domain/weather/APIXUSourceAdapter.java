@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 @SuppressWarnings("Duplicates")
 public final class APIXUSourceAdapter implements SourceAdapter {
 
+	private String alias = this.getClass().getSimpleName();
 	private final ObjectMapper mapper = new ObjectMapper();
 	private final DataSource dataSource;
 	private final MetricRegistry registry;
@@ -67,6 +68,18 @@ public final class APIXUSourceAdapter implements SourceAdapter {
 	}
 
 
+	@Override
+	public void setAlias(String name) {
+		this.alias = name;
+	}
+
+
+	@Override
+	public String getAlias() {
+		return this.alias;
+	}
+
+
 	private URL createSourceUrl(Location location) {
 		URI baseUri = URI.create("http://api.apixu.com/v1/current.json");
 		UriBuilder builder = UriBuilder.fromUri(baseUri)
@@ -99,7 +112,7 @@ public final class APIXUSourceAdapter implements SourceAdapter {
 
 
 	private Weather createWeatherFromObjectNode(ObjectNode node) {
-		String city = node.get("location").get("name").asText();
+		String city = node.get("location").get("alias").asText();
 		JsonNode current = node.get("current");
 		double temperatureValue = current.get("temp_c").doubleValue();
 		Temperature temperature = new Temperature(temperatureValue, TemperatureType.CELSIUS);

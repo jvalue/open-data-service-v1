@@ -1,8 +1,8 @@
 package org.jvalue.ods.processor.adapter.server;
 
 
-import org.mockftpserver.fake.FakeFtpServer;
 import org.mockftpserver.fake.UserAccount;
+import org.mockftpserver.fake.FakeFtpServer;
 import org.mockftpserver.fake.filesystem.DirectoryEntry;
 import org.mockftpserver.fake.filesystem.FileEntry;
 import org.mockftpserver.fake.filesystem.FileSystem;
@@ -19,7 +19,7 @@ public final class FtpServer implements Server {
 	private FakeFtpServer ftpServer;
 
 	@Override
-	public void start(String content) {
+	public void start(String content, int port) {
 		ftpServer = new FakeFtpServer();
 		ftpServer.setServerControlPort(8083);
 		ftpServer.addUserAccount(new UserAccount("user", "pass", "/"));

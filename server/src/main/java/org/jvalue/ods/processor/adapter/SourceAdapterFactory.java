@@ -15,6 +15,7 @@ import java.util.LinkedHashMap;
 public interface SourceAdapterFactory {
 
 	static final String
+			NAME_MULTI_SOURCE_ADAPTER = "MultiSourceAdapter",
 			NAME_JSON_SOURCE_ADAPTER = "JsonSourceAdapter",
 			NAME_CSV_SOURCE_ADAPTER = "CsvSourceAdapter",
 			NAME_XML_SOURCE_ADAPTER = "XmlSourceAdapter",
@@ -28,7 +29,8 @@ public interface SourceAdapterFactory {
 			ARGUMENT_SOURCE_URL = "sourceUrl",
 			ARGUMENT_CSV_FORMAT = "csvFormat",
 			ARGUMENT_LOCATIONS = "locations",
-			ARGUMENT_API_KEY = "apiKey";
+			ARGUMENT_API_KEY = "apiKey",
+			ARGUMENT_MULTI_SOURCE = "sources";
 
 
 	@CreationMethod(name = NAME_JSON_SOURCE_ADAPTER, filterType = ProcessorType.SOURCE_ADAPTER)
@@ -88,4 +90,10 @@ public interface SourceAdapterFactory {
 		DataSource source,
 		@Argument(ARGUMENT_LOCATIONS) @Assisted(ARGUMENT_LOCATIONS) ArrayList<LinkedHashMap<String, String>> locations,
 		@Argument(ARGUMENT_API_KEY) @Assisted(ARGUMENT_API_KEY) String apiKey);
+
+	@CreationMethod(name = NAME_MULTI_SOURCE_ADAPTER, filterType = ProcessorType.SOURCE_ADAPTER)
+	@Named(NAME_MULTI_SOURCE_ADAPTER)
+	public SourceAdapter createMultiSourceAdapter(
+		DataSource source,
+		@Argument(ARGUMENT_MULTI_SOURCE) ArrayList<LinkedHashMap> sourceObjectsArray);
 }

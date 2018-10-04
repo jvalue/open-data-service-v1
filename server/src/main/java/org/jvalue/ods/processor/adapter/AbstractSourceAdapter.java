@@ -13,7 +13,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-    
+
  */
 package org.jvalue.ods.processor.adapter;
 
@@ -29,6 +29,8 @@ import java.util.Iterator;
 
 
 public abstract class AbstractSourceAdapter implements SourceAdapter {
+
+	private String name = AbstractSourceAdapter.class.getSimpleName();
 
 	private final DataSource dataSource;
 	private final URL sourceUrl;
@@ -53,5 +55,14 @@ public abstract class AbstractSourceAdapter implements SourceAdapter {
 
 	protected abstract SourceIterator doCreateIterator(DataSource source, URL sourceUrl, MetricRegistry registry);
 
+	@Override
+	public void setAlias(String name){
+		this.name = name;
+	}
+
+	@Override
+	public String getAlias(){
+		return this.name;
+	}
 
 }
