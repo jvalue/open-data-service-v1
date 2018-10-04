@@ -124,7 +124,7 @@ public class MultiSourceAdapter extends AbstractSourceAdapter {
 				if(result.size() == 1){
 					//add object Node
 					resultNode.set(adapter.getAlias(), result.get(0));
-				}else{
+				}else if (result.size() > 1){
 					//add arrayNode
 					ArrayNode arrayNode = mapper.valueToTree(result);
 					resultNode.set(adapter.getAlias(), arrayNode);
