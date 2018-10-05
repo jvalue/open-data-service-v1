@@ -91,7 +91,7 @@ public class MultiSourceAdapterTest {
 	@Test
 	public void testMultiJsonSourceAdapterObject() throws Exception {
 
-		ArrayList<LinkedHashMap> jsonSourceObjects = new ArrayList<>();
+		ArrayList<LinkedHashMap> sourceAdapters = new ArrayList<>();
 
 		LinkedHashMap<String, String> firstJsonEndpoint = new LinkedHashMap<>();
 		HttpServer httpServer1 = createHttpServer(JSON_OBJECT_1.toString(), SERVER_PORT_1);
@@ -113,10 +113,10 @@ public class MultiSourceAdapterTest {
 		sendNode2.put("source", secondJsonEndpoint);
 		sendNode2.put("alias", JSON_SOURCE_NAME_2);
 
-		jsonSourceObjects.add(sendNode);
-		jsonSourceObjects.add(sendNode2);
+		sourceAdapters.add(sendNode);
+		sourceAdapters.add(sendNode2);
 
-		MultiSourceAdapter adapter = createAdapter(jsonSourceObjects);
+		MultiSourceAdapter adapter = createAdapter(sourceAdapters);
 
 		ObjectNode result = getResult(adapter);
 
@@ -128,7 +128,7 @@ public class MultiSourceAdapterTest {
 	@Test
 	public void testMultiJsonSourceAdapterArray() throws Exception {
 
-		ArrayList<LinkedHashMap> jsonSourceObjects = new ArrayList<>();
+		ArrayList<LinkedHashMap> sourceAdapters = new ArrayList<>();
 
 		LinkedHashMap<String, String> firstJsonEndpoint = new LinkedHashMap<>();
 		HttpServer ArrayHttpServer1 = createHttpServer(JSON_ARRAY_1.toString(), SERVER_PORT_1);
@@ -149,11 +149,11 @@ public class MultiSourceAdapterTest {
 		sendNode2.put("source", secondJsonEndpoint);
 		sendNode2.put("alias", JSON_SOURCE_NAME_2);
 
-		jsonSourceObjects.add(sendNode);
-		jsonSourceObjects.add(sendNode2);
+		sourceAdapters.add(sendNode);
+		sourceAdapters.add(sendNode2);
 
 
-		MultiSourceAdapter adapter = createAdapter(jsonSourceObjects);
+		MultiSourceAdapter adapter = createAdapter(sourceAdapters);
 
 		ObjectNode result = getResult(adapter);
 
@@ -165,7 +165,7 @@ public class MultiSourceAdapterTest {
 	@Test
 	public void testMultiJsonSourceAdapterArrayAndObject() throws Exception {
 
-		ArrayList<LinkedHashMap> jsonSourceObjects = new ArrayList<>();
+		ArrayList<LinkedHashMap> sourceAdapters = new ArrayList<>();
 
 		LinkedHashMap<String, String> firstJsonEndpoint = new LinkedHashMap<>();
 		HttpServer arrayHttpServer1 = createHttpServer(JSON_ARRAY_1.toString(), SERVER_PORT_1);
@@ -187,10 +187,10 @@ public class MultiSourceAdapterTest {
 		sendNode2.put("alias", JSON_SOURCE_NAME_2);
 
 
-		jsonSourceObjects.add(sendNode);
-		jsonSourceObjects.add(sendNode2);
+		sourceAdapters.add(sendNode);
+		sourceAdapters.add(sendNode2);
 
-		MultiSourceAdapter adapter = createAdapter(jsonSourceObjects);
+		MultiSourceAdapter adapter = createAdapter(sourceAdapters);
 
 		ObjectNode result = getResult(adapter);
 
@@ -203,7 +203,7 @@ public class MultiSourceAdapterTest {
 	@Test
 	public void testMultiJsonSourceAndXmlSourceAdapter() throws Exception {
 
-		ArrayList<LinkedHashMap> jsonSourceObjects = new ArrayList<>();
+		ArrayList<LinkedHashMap> sourceAdapters = new ArrayList<>();
 
 		LinkedHashMap<String, String> jsonEndpoint = new LinkedHashMap<>();
 
@@ -227,10 +227,10 @@ public class MultiSourceAdapterTest {
 		sendNode2.put("source", xmlEndpoint);
 		sendNode2.put("alias", XML_SOURCE_NAME);
 
-		jsonSourceObjects.add(sendNode);
-		jsonSourceObjects.add(sendNode2);
+		sourceAdapters.add(sendNode);
+		sourceAdapters.add(sendNode2);
 
-		MultiSourceAdapter adapter = createAdapter(jsonSourceObjects);
+		MultiSourceAdapter adapter = createAdapter(sourceAdapters);
 
 		ObjectNode result = getResult(adapter);
 
@@ -254,8 +254,8 @@ public class MultiSourceAdapterTest {
 	}
 
 
-	protected MultiSourceAdapter createAdapter(ArrayList<LinkedHashMap> sourceObjects) {
-		return new MultiSourceAdapter(sourceAdapterFactory, source, sourceObjects, registry);
+	protected MultiSourceAdapter createAdapter(ArrayList<LinkedHashMap> sourceAdapters) {
+		return new MultiSourceAdapter(sourceAdapterFactory, source, sourceAdapters, registry);
 	}
 
 
@@ -327,7 +327,7 @@ public class MultiSourceAdapterTest {
 
 
 		@Override
-		public SourceAdapter createMultiSourceAdapter(DataSource source, ArrayList<LinkedHashMap> sourceObjectsArray) {
+		public SourceAdapter createMultiSourceAdapter(DataSource source, ArrayList<LinkedHashMap> sourceAdapters) {
 			return null;
 		}
 	}

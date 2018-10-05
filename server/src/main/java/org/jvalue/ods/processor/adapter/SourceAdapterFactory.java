@@ -95,5 +95,5 @@ public interface SourceAdapterFactory {
 	@Named(NAME_MULTI_SOURCE_ADAPTER)
 	public SourceAdapter createMultiSourceAdapter(
 		DataSource source,
-		@Argument(ARGUMENT_MULTI_SOURCE) ArrayList<LinkedHashMap> sourceObjectsArray);
+		@Argument(ARGUMENT_MULTI_SOURCE) ArrayList<LinkedHashMap> sourceAdapters);
 }
