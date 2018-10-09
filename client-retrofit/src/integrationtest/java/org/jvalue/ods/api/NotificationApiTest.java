@@ -12,6 +12,7 @@ import org.jvalue.ods.api.notifications.HttpClientDescription;
 
 import java.util.List;
 
+import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 
 public final class NotificationApiTest extends AbstractApiTest {
@@ -22,6 +23,8 @@ public final class NotificationApiTest extends AbstractApiTest {
 	private final ClientDescription
 			httpClientDescription = new HttpClientDescription(httpClient.getCallbackUrl(), httpClient.getSendData()),
 			gcmClientDescription = new GcmClientDescription(gcmClient.getGcmClientId());
+
+	private NotificationApi notificationApi;
 
 	@Test
 	public void testCrud() {
@@ -50,4 +53,9 @@ public final class NotificationApiTest extends AbstractApiTest {
 		Assert.fail();
 	}
 
+
+	@Override
+	protected void initApi(RestAdapter restAdapter) {
+		notificationApi = restAdapter.create(NotificationApi.class);
+	}
 }

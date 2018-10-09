@@ -13,7 +13,10 @@ import org.jvalue.ods.db.generic.RepositoryFactory;
 
 import java.util.List;
 
-
+/**
+ * Manages the DataViewApi supported CouchDB View mechanism.
+ * Only used when CouchDB is active.
+ */
 public final class DataViewManager extends AbstractDataSourcePropertyManager<CouchDbDataView, GenericRepository<CouchDbDataView>> {
 
 
