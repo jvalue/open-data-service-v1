@@ -40,13 +40,13 @@ public final class TransformationFunctionRepository extends RepositoryAdapter<
 
 		public TransformationFunctionCouchDbRepository(CouchDbConnector connector) {
 			super(TransformationFunctionDocument.class, connector);
-			initStandardDesignDocument();
 		}
 
 
 		@Override
 		@View(name = "by_id", map = "function(doc) { if (" + DOCUMENT_ID + ") emit(doc.value.id, doc._id) }")
 		public TransformationFunctionDocument findById(String viewId) {
+			initStandardDesignDocument();
 			List<TransformationFunctionDocument> views = queryView("by_id", viewId);
 			if (views.isEmpty()) throw new GenericDocumentNotFoundException(viewId);
 			if (views.size() > 1)
