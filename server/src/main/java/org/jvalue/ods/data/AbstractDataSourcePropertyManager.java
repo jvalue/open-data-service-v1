@@ -2,13 +2,11 @@ package org.jvalue.ods.data;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.jvalue.commons.db.GenericDocumentNotFoundException;
 import org.jvalue.commons.db.repositories.GenericDataRepository;
 import org.jvalue.commons.db.repositories.GenericRepository;
 import org.jvalue.commons.utils.Assert;
 import org.jvalue.commons.utils.Cache;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
 import org.jvalue.ods.db.generic.RepositoryFactory;
 
 import java.util.List;
@@ -79,7 +77,7 @@ public abstract class AbstractDataSourcePropertyManager<T, R extends GenericRepo
 		try {
 			get(source, propertyId);
 			return true;
-		} catch (GenericDocumentNotFoundException dnfe) {
+		} catch (Exception dnfe) {
 			return false;
 		}
 	}
