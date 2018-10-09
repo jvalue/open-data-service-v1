@@ -7,10 +7,14 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import org.jvalue.commons.db.repositories.GenericDataRepository;
+import org.jvalue.ods.api.processors.ProcessorReference;
 import org.jvalue.ods.api.sources.DataSource;
+import org.jvalue.ods.processor.specification.Argument;
 import org.jvalue.ods.processor.specification.CreationMethod;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -44,24 +48,31 @@ public class MultiSourceAdapter extends AbstractSourceAdapter {
 	}
 
 
+	@SuppressWarnings("Duplicates")
 	private void createAdapterInstances() {
 		for (HashMap hashMap : sourceObjects) {
 			Set outerKeySet = hashMap.keySet();
 			if (outerKeySet.size() != 2 || !outerKeySet.contains("source") || !outerKeySet.contains("alias"))
 				throw new SourceAdapterException("fields 'source' and 'alias' need to be declared.");
 
-			Object firstKey = hashMap.keySet().iterator().next();
-			HashMap innerHashMap = (HashMap) hashMap.get(firstKey);
-			Set innerKeySet = innerHashMap.keySet();
+			String alias = null;
+			HashMap<String, Object> sourceMap = null;
+			try {
+				alias = (String) hashMap.get("alias");
+			}catch (ClassCastException e){
+				throw new SourceAdapterException("field 'alias' needs to be a String.");
+			}
 
-			if (innerKeySet.size() != 2 || !innerKeySet.contains("name") || !innerKeySet.contains("url"))
-				throw new SourceAdapterException("fields 'name' and 'url' need to be declared.");
+			try {
+				sourceMap = (HashMap<String, Object>) hashMap.get("source");
+			}catch (ClassCastException e){
+				throw new SourceAdapterException("field 'source' needs to be a json object.");
+			}
 
-			HashMap sourceMap = (HashMap) hashMap.get("source");
+			if (!sourceMap.keySet().contains("name"))
+				throw new SourceAdapterException("field 'source.name' needs to be declared.");
+
 			String name = (String) sourceMap.get("name");
-			String url = (String) sourceMap.get("url");
-			String alias = (String) hashMap.get("alias");
-
 			for (Method method : SourceAdapterFactory.class.getDeclaredMethods()) {
 				CreationMethod creationAnnotation = method.getAnnotation(CreationMethod.class);
 				if (creationAnnotation == null) throw new IllegalArgumentException("creation annotation not found");
@@ -69,10 +80,23 @@ public class MultiSourceAdapter extends AbstractSourceAdapter {
 
 				List<Object> arguments = new LinkedList<>();
 
-				// add source and url arguments
+				// add source argument
 				for (Class<?> parameterType : method.getParameterTypes()) {
 					if (parameterType.equals(DataSource.class)) arguments.add(dataSource);
-					if (parameterType.equals(String.class)) arguments.add(url);
+				}
+
+				sourceMap.remove("name");
+				ProcessorReference reference = new ProcessorReference(name, sourceMap);
+
+				// add custom arguments
+				Annotation[][] allParamAnnotations = method.getParameterAnnotations();
+				for (Annotation[] paramAnnotations : allParamAnnotations) {
+					for (Annotation  annotation : paramAnnotations) {
+						if (annotation instanceof Argument) {
+							Argument arg = (Argument) annotation;
+							arguments.add(reference.getArguments().get(arg.value()));
+						}
+					}
 				}
 
 				try {
@@ -83,6 +107,7 @@ public class MultiSourceAdapter extends AbstractSourceAdapter {
 					throw new IllegalStateException(ie);
 				}
 			}
+
 		}
 	}
 
