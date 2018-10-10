@@ -96,7 +96,7 @@ public class MultiSourceAdapterTest {
 		LinkedHashMap<String, String> firstJsonEndpoint = new LinkedHashMap<>();
 		HttpServer httpServer1 = createHttpServer(JSON_OBJECT_1.toString(), SERVER_PORT_1);
 		firstJsonEndpoint.put("name", SourceAdapterFactory.NAME_JSON_SOURCE_ADAPTER);
-		firstJsonEndpoint.put("url", httpServer1.getFileUrl().toString());
+		firstJsonEndpoint.put("sourceUrl", httpServer1.getFileUrl().toString());
 
 
 		LinkedHashMap<String, Object> sendNode = new LinkedHashMap<>();
@@ -107,7 +107,7 @@ public class MultiSourceAdapterTest {
 		LinkedHashMap<String, String> secondJsonEndpoint = new LinkedHashMap<>();
 		HttpServer httpServer2 = createHttpServer(JSON_OBJECT_2.toString(), SERVER_PORT_2);
 		secondJsonEndpoint.put("name", SourceAdapterFactory.NAME_JSON_SOURCE_ADAPTER);
-		secondJsonEndpoint.put("url", httpServer2.getFileUrl().toString());
+		secondJsonEndpoint.put("sourceUrl", httpServer2.getFileUrl().toString());
 
 		LinkedHashMap<String, Object> sendNode2 = new LinkedHashMap<>();
 		sendNode2.put("source", secondJsonEndpoint);
@@ -133,7 +133,7 @@ public class MultiSourceAdapterTest {
 		LinkedHashMap<String, String> firstJsonEndpoint = new LinkedHashMap<>();
 		HttpServer ArrayHttpServer1 = createHttpServer(JSON_ARRAY_1.toString(), SERVER_PORT_1);
 		firstJsonEndpoint.put("name", SourceAdapterFactory.NAME_JSON_SOURCE_ADAPTER);
-		firstJsonEndpoint.put("url", ArrayHttpServer1.getFileUrl().toString());
+		firstJsonEndpoint.put("sourceUrl", ArrayHttpServer1.getFileUrl().toString());
 
 		LinkedHashMap<String, Object> sendNode = new LinkedHashMap<>();
 		sendNode.put("source", firstJsonEndpoint);
@@ -143,7 +143,7 @@ public class MultiSourceAdapterTest {
 		LinkedHashMap<String, String> secondJsonEndpoint = new LinkedHashMap<>();
 		HttpServer ArrayHttpServer2 = createHttpServer(JSON_ARRAY_2.toString(), SERVER_PORT_2);
 		secondJsonEndpoint.put("name", SourceAdapterFactory.NAME_JSON_SOURCE_ADAPTER);
-		secondJsonEndpoint.put("url", ArrayHttpServer2.getFileUrl().toString());
+		secondJsonEndpoint.put("sourceUrl", ArrayHttpServer2.getFileUrl().toString());
 
 		LinkedHashMap<String, Object> sendNode2 = new LinkedHashMap<>();
 		sendNode2.put("source", secondJsonEndpoint);
@@ -170,7 +170,7 @@ public class MultiSourceAdapterTest {
 		LinkedHashMap<String, String> firstJsonEndpoint = new LinkedHashMap<>();
 		HttpServer arrayHttpServer1 = createHttpServer(JSON_ARRAY_1.toString(), SERVER_PORT_1);
 		firstJsonEndpoint.put("name", SourceAdapterFactory.NAME_JSON_SOURCE_ADAPTER);
-		firstJsonEndpoint.put("url", arrayHttpServer1.getFileUrl().toString());
+		firstJsonEndpoint.put("sourceUrl", arrayHttpServer1.getFileUrl().toString());
 
 		LinkedHashMap<String, Object> sendNode = new LinkedHashMap<>();
 		sendNode.put("source", firstJsonEndpoint);
@@ -180,7 +180,7 @@ public class MultiSourceAdapterTest {
 
 		HttpServer objectHttpServer2 = createHttpServer(JSON_OBJECT_2.toString(), SERVER_PORT_2);
 		secondJsonEndpoint.put("name", SourceAdapterFactory.NAME_JSON_SOURCE_ADAPTER);
-		secondJsonEndpoint.put("url", objectHttpServer2.getFileUrl().toString());
+		secondJsonEndpoint.put("sourceUrl", objectHttpServer2.getFileUrl().toString());
 
 		LinkedHashMap<String, Object> sendNode2 = new LinkedHashMap<>();
 		sendNode2.put("source", secondJsonEndpoint);
@@ -209,7 +209,7 @@ public class MultiSourceAdapterTest {
 
 		HttpServer objectHttpServer2 = createHttpServer(JSON_OBJECT_1.toString(), SERVER_PORT_1);
 		jsonEndpoint.put("name", SourceAdapterFactory.NAME_JSON_SOURCE_ADAPTER);
-		jsonEndpoint.put("url", objectHttpServer2.getFileUrl().toString());
+		jsonEndpoint.put("sourceUrl", objectHttpServer2.getFileUrl().toString());
 
 		LinkedHashMap<String, Object> sendNode = new LinkedHashMap<>();
 		sendNode.put("source", jsonEndpoint);
@@ -221,7 +221,7 @@ public class MultiSourceAdapterTest {
 		String xmlContent = "<list><item><key>value1</key></item><item><key>value2</key></item></list>";
 		HttpServer xmlHttpServer3 = createHttpServer(xmlContent, SERVER_PORT_3);
 		xmlEndpoint.put("name", SourceAdapterFactory.NAME_XML_SOURCE_ADAPTER);
-		xmlEndpoint.put("url", xmlHttpServer3.getFileUrl().toString());
+		xmlEndpoint.put("sourceUrl", xmlHttpServer3.getFileUrl().toString());
 
 		LinkedHashMap<String, Object> sendNode2 = new LinkedHashMap<>();
 		sendNode2.put("source", xmlEndpoint);
