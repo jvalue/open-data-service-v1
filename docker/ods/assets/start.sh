@@ -4,4 +4,6 @@
 /bin/sh set-config.sh
 
 # Start ODS service
-/usr/bin/java -jar /ods.jar server ods-configuration.yml
+# JVM option "-Xtune:virtualized" is for OpenJ9 VMs
+# See: https://www.eclipse.org/openj9/docs/xtunevirtualized/
+java -jar -Xtune:virtualize /ods.jar server ods-configuration.yml
