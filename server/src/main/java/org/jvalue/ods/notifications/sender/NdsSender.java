@@ -25,6 +25,7 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 
 @SuppressWarnings("Duplicates")
 public class NdsSender extends AbstractSender<NdsClient> {
@@ -157,11 +158,11 @@ public class NdsSender extends AbstractSender<NdsClient> {
 		try {
 			SchemaFactory factory =
 				SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-			Schema schema = factory.newSchema(new StreamSource(xsd));
+			Schema schema = factory.newSchema(new StreamSource(new StringReader(xsd)));
 			Validator validator = schema.newValidator();
-			validator.validate(new StreamSource(xml));
+			validator.validate(new StreamSource(new StringReader(xml)));
 		} catch (IOException | SAXException e) {
-			Log.debug(e.getMessage());
+			Log.warn(e.getMessage());
 			return false;
 		}
 		return true;
