@@ -10,6 +10,7 @@ import retrofit.RestAdapter;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class MultiSourceAndTransformTest extends AbstractApiTest {
 
@@ -120,7 +121,7 @@ public class MultiSourceAndTransformTest extends AbstractApiTest {
 
 
 	@Test
-	public void fetchToTransformToSaveToRead() throws InterruptedException {
+	public void fetchToTransformToSaveToRead() throws InterruptedException, TimeoutException {
 
 		LinkedList<ProcessorReference> processorReferences = initTwoJsonAdapterProcessorChain();
 
@@ -133,11 +134,17 @@ public class MultiSourceAndTransformTest extends AbstractApiTest {
 		//add transformation view
 		transformationApi.addViewSynchronously(sourceId, transformationViewId, queryTransformation);
 
-		//wait to let the processor chain execute
-		Thread.sleep(3000);
-
 		//check resulting data object
-		ArrayList viewSynchronously = (ArrayList) transformationApi.getViewSynchronously(sourceId, transformationViewId, true, null);
+		ArrayList viewSynchronously = new ArrayList();
+		int trys = 0;
+		while(viewSynchronously.isEmpty()){
+			if(trys == 3){
+				throw new TimeoutException("timed out waiting on the processor chain execution.");
+			}
+			Thread.sleep(3000);
+			viewSynchronously = (ArrayList) transformationApi.getViewSynchronously(sourceId, transformationViewId, true, null);
+			trys++;
+		}
 
 		HashMap firstObject = (HashMap) viewSynchronously.get(0);
 		Assert.assertTrue(firstObject.keySet().contains("erlangen"));
@@ -150,6 +157,4 @@ public class MultiSourceAndTransformTest extends AbstractApiTest {
 		Assert.assertEquals("value", secondObject.get("key"));
 
 	}
-
-
 }
