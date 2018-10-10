@@ -35,7 +35,8 @@ import javax.validation.constraints.NotNull;
 @JsonSubTypes({
 		@JsonSubTypes.Type(value = HttpClientDescription.class, name = HttpClient.CLIENT_TYPE),
 		@JsonSubTypes.Type(value = GcmClientDescription.class, name = GcmClient.CLIENT_TYPE),
-		@JsonSubTypes.Type(value = AmqpClientDescription.class, name = AmqpClient.CLIENT_TYPE)
+		@JsonSubTypes.Type(value = AmqpClientDescription.class, name = AmqpClient.CLIENT_TYPE),
+		@JsonSubTypes.Type(value = NdsClientDescription.class, name = NdsClient.CLIENT_TYPE)
 })
 public abstract class ClientDescription {
 

@@ -3,6 +3,8 @@ package org.jvalue.ods.processor.adapter.domain.weather.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Objects;
+
 public class Location {
 
 	public static final String UNKNOWN = "UNKNOWN";
@@ -80,4 +82,21 @@ public class Location {
 		return value != null && !value.isEmpty() && !value.equals(UNKNOWN);
 	}
 
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Location location = (Location) o;
+		return Objects.equals(countryCode, location.countryCode) &&
+			Objects.equals(city, location.city) &&
+			Objects.equals(zipCode, location.zipCode) &&
+			Objects.equals(coordinate, location.coordinate);
+	}
+
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(countryCode, city, zipCode, coordinate);
+	}
 }

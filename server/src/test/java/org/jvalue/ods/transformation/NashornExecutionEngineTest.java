@@ -1,7 +1,6 @@
 package org.jvalue.ods.transformation;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -12,6 +11,7 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.jvalue.ods.utils.JsonMapper;
 
 import javax.script.ScriptException;
 import java.io.IOException;
@@ -28,17 +28,15 @@ public final class NashornExecutionEngineTest {
 	private static ObjectNode jsonData;
 	private static ExecutionEngine executionEngine;
 	private static TransformationFunction transformationFunction;
-	private static ObjectMapper mapper;
 
 
 	@BeforeClass
 	public static void initialize() throws IOException, URISyntaxException {
-		mapper = new ObjectMapper();
 
 		Path path = Paths.get(NashornExecutionEngine.class.getClassLoader()
 			.getResource("json/SampleWeatherData.json").toURI());
 		String sampleData = new String(Files.readAllBytes(path));
-		jsonData = (ObjectNode) mapper.readTree(sampleData);
+		jsonData = (ObjectNode) JsonMapper.getInstance().readTree(sampleData);
 
 		executionEngine = new NashornExecutionEngine();
 	}

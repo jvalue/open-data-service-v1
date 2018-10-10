@@ -1,15 +1,18 @@
 package org.jvalue.ods.processor.adapter.domain.weather.models;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.Assert;
 import org.junit.Test;
+import org.jvalue.ods.utils.JsonMapper;
 
+import java.io.IOException;
 import java.time.Instant;
 
 public class WeatherTest {
 
 	private final Temperature temperature = new Temperature(32.0, TemperatureType.CELSIUS);
 	private final Pressure pressure = new Pressure(1020, PressureType.H_PA);
-	private final Location location = new Location("Erlangen", Location.UNKNOWN, null);
+	private final Location location = new Location("Berlin", Location.UNKNOWN, null);
 	private final Instant timestamp = Instant.ofEpochSecond(1534332000);
 
 	private final Weather weather = new Weather(
@@ -19,6 +22,7 @@ public class WeatherTest {
 		45,
 		timestamp,
 		location);
+
 
 	@Test
 	public void testConstructor() {
@@ -33,8 +37,32 @@ public class WeatherTest {
 
 	@Test
 	public void testEquals() {
-		Weather other = new Weather("42", temperature, pressure, 45, timestamp,	location);
+		Temperature otherTemp = new Temperature(32.0, TemperatureType.CELSIUS);
+		Pressure otherPress = new Pressure(1020, PressureType.H_PA);
+		Location otherLoc = new Location("Berlin", Location.UNKNOWN, null);
+		Weather other = new Weather("42", otherTemp, otherPress, 45, timestamp,	otherLoc);
 
 		Assert.assertEquals(weather, other);
 	}
+
+
+	@Test
+	public void testDeserialization_Json() throws IOException {
+		String weatherStr = JsonMapper.writeValueAsString(weather);
+
+		Weather result = JsonMapper.readValue(weatherStr, Weather.class);
+
+		Assert.assertEquals(weather, result);
+	}
+
+
+	@Test
+	public void testDeserialization_JsonNode() {
+		ObjectNode node = JsonMapper.valueToTree(weather);
+
+		Weather result = JsonMapper.convertValue(node, Weather.class);
+
+		Assert.assertEquals(weather, result);
+	}
+
 }
