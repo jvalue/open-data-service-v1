@@ -1,6 +1,6 @@
 package org.jvalue.ods.api;
 
-import org.junit.BeforeClass;
+import org.junit.Assert;
 import org.junit.Test;
 import org.jvalue.ods.api.processors.ExecutionInterval;
 import org.jvalue.ods.api.processors.ProcessorReference;
@@ -8,30 +8,28 @@ import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
 import org.jvalue.ods.api.views.generic.TransformationFunctionDescription;
 import retrofit.RestAdapter;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class MultiSourceAndTransformTest extends AbstractApiTest {
 
-	protected static final String QUERY_FUNCTION =
+	protected static final String TRANSFORM_AFTER_SAVE =
 		"function transform(doc) {" +
 			"if (doc != null) { " +
-				"var newdoc = {}; " +
-				"newdoc.erlangen = {}; " +
-				"newdoc.duisburg = {}; " +
-				"newdoc.erlangen.weather = doc.weatherErlangen; " +
-				"newdoc.duisburg.weather = doc.weatherDuisburg; " +
-				"newdoc.extension = doc.extension; " +
-				"newdoc.id = doc.id" +
-				"emit(new Date(doc.created_at).getTime(), newdoc)" +
+			"	var newdoc = {}; " +
+			"	newdoc.erlangen = {}; " +
+			"	newdoc.duisburg = {}; " +
+			"	newdoc.erlangen.weather = doc.weatherErlangen; " +
+			"	newdoc.duisburg.weather = doc.weatherDuisburg; " +
+			"	newdoc.extension = doc.extension; " +
+			"	newdoc.id = doc.someId;" +
+			"	emit(new Date().getTime(), newdoc);" +
+			"	emit(new Date().getTime(), { key: \"value\"});" +
 			"} " +
 		"};";
 
 
-	protected static final String EXTENSION_FUNCTION =
+	protected static final String TRANSFORM_BEFORE_SAVE =
 		"function transform(doc) {" +
 			"	if(doc != null) {" +
 			"		doc.someId = \"uniqueID\"" +
@@ -45,41 +43,53 @@ public class MultiSourceAndTransformTest extends AbstractApiTest {
 
 	private final String MULTI_FILTER = "multiFilter";
 
-	private static LinkedList<ProcessorReference> processors;
+
 	private ProcessorReferenceChainDescription processorReferenceChainDescription;
 	private TransformationFunctionDescription queryTransformation;
 	private String transformationViewId = "transformationViewTest";
 
 
-	@BeforeClass
 	public static void initProcessorChain() {
-		processors = new LinkedList<>();
+
+	}
+
+
+	@Override
+	protected void initApi(RestAdapter restAdapter) {
+		transformationApi = restAdapter.create(DataTransformationApi.class);
+		queryTransformation = new TransformationFunctionDescription(TRANSFORM_AFTER_SAVE);
+		processorChainApi = restAdapter.create(ProcessorChainApi.class);
+	}
+
+
+	private LinkedList<ProcessorReference> initTwoJsonAdapterProcessorChain() {
+		LinkedList<ProcessorReference> processors = new LinkedList<>();
 
 
 		// MultiSourceAdapter
-		Map<String, String> APIXUAdapterArgument = new LinkedHashMap<>();
-		APIXUAdapterArgument.put("name", "JsonSourceAdapter");
-		APIXUAdapterArgument.put("sourceUrl", "https://api.openweathermap.org/data/2.5/weather?id=2929567&APPID=a28465af3405af818145d06a431baf88&units=metric&lang=de");
+		Map<String, String> OpenWeatherMapAdapterOneArgument = new LinkedHashMap<>();
+		OpenWeatherMapAdapterOneArgument.put("name", "JsonSourceAdapter");
+		OpenWeatherMapAdapterOneArgument.put("sourceUrl", "https://api.openweathermap.org/data/2.5/weather?id=2929567&APPID=a28465af3405af818145d06a431baf88&units=metric&lang=de");
 
 
-		Map<String, Object> APIXUAdapter = new LinkedHashMap<>();
-		APIXUAdapter.put("source", APIXUAdapterArgument);
-		APIXUAdapter.put("alias", "weatherErlangen");
+		Map<String, Object> OpenWeatherMapAdapterOne = new LinkedHashMap<>();
+		OpenWeatherMapAdapterOne.put("source", OpenWeatherMapAdapterOneArgument);
+		OpenWeatherMapAdapterOne.put("alias", "weatherErlangen");
 
 
-		Map<String, String> OWMAdapterArgument = new LinkedHashMap<>();
-		OWMAdapterArgument.put("name", "JsonSourceAdapter");
-		OWMAdapterArgument.put("sourceUrl", "https://api.openweathermap.org/data/2.5/weather?id=2934691&APPID=a28465af3405af818145d06a431baf88&units=metric&lang=de");
+		Map<String, String> OpenWeatherMapAdapterTwoArgument = new LinkedHashMap<>();
+		OpenWeatherMapAdapterTwoArgument.put("name", "JsonSourceAdapter");
+		OpenWeatherMapAdapterTwoArgument.put("sourceUrl", "https://api.openweathermap.org/data/2.5/weather?id=2934691&APPID=a28465af3405af818145d06a431baf88&units=metric&lang=de");
 
 
-		Map<String, Object> OWMAdapter = new LinkedHashMap<>();
-		OWMAdapter.put("source", OWMAdapterArgument);
-		OWMAdapter.put("alias", "weatherDuisburg");
+		Map<String, Object> OpenWeatherMapAdapterTwo = new LinkedHashMap<>();
+		OpenWeatherMapAdapterTwo.put("source", OpenWeatherMapAdapterTwoArgument);
+		OpenWeatherMapAdapterTwo.put("alias", "weatherDuisburg");
 
 
 		ArrayList<Map<String, Object>> multiSourceAdapterList = new ArrayList<>();
-		multiSourceAdapterList.add(APIXUAdapter);
-		multiSourceAdapterList.add(OWMAdapter);
+		multiSourceAdapterList.add(OpenWeatherMapAdapterOne);
+		multiSourceAdapterList.add(OpenWeatherMapAdapterTwo);
 
 		Map<String, Object> multiSourceAdapterArguments = new LinkedHashMap<>();
 		multiSourceAdapterArguments.put("sources", multiSourceAdapterList);
@@ -89,7 +99,7 @@ public class MultiSourceAndTransformTest extends AbstractApiTest {
 
 		//Transformationfilter
 		Map<String, Object> transformationFilterArguments = new LinkedHashMap<>();
-		transformationFilterArguments.put("transformationFunction", EXTENSION_FUNCTION);
+		transformationFilterArguments.put("transformationFunction", TRANSFORM_BEFORE_SAVE);
 		ProcessorReference transformationFilterReference = new ProcessorReference("TransformationFilter", transformationFilterArguments);
 
 		//AddTimestampFilter
@@ -104,30 +114,42 @@ public class MultiSourceAndTransformTest extends AbstractApiTest {
 		processors.add(transformationFilterReference);
 		processors.add(addTimestampFilterReference);
 		processors.add(dbInsertionFilterReference);
-	}
 
-
-	@Override
-	protected void initApi(RestAdapter restAdapter) {
-		transformationApi = restAdapter.create(DataTransformationApi.class);
-		queryTransformation = new TransformationFunctionDescription(QUERY_FUNCTION);
-		processorChainApi = restAdapter.create(ProcessorChainApi.class);
-
-		ExecutionInterval interval = new ExecutionInterval(60, TimeUnit.MINUTES);
-		processorReferenceChainDescription = new ProcessorReferenceChainDescription(processors, interval);
+		return processors;
 	}
 
 
 	@Test
-	public void fetchToTransformToSaveToRead() {
+	public void fetchToTransformToSaveToRead() throws InterruptedException {
+
+		LinkedList<ProcessorReference> processorReferences = initTwoJsonAdapterProcessorChain();
+
+		ExecutionInterval interval = new ExecutionInterval(60, TimeUnit.MINUTES);
+		processorReferenceChainDescription = new ProcessorReferenceChainDescription(processorReferences, interval);
+
 		//add processor chain
 		processorChainApi.addProcessorChainSynchronously(sourceId, MULTI_FILTER, processorReferenceChainDescription);
 
 		//add transformation view
 		transformationApi.addViewSynchronously(sourceId, transformationViewId, queryTransformation);
 
+		//wait to let the processor chain execute
+		Thread.sleep(3000);
+
 		//check resulting data object
-		Object viewSynchronously = transformationApi.getViewSynchronously(sourceId, transformationViewId, true, null);
+		ArrayList viewSynchronously = (ArrayList) transformationApi.getViewSynchronously(sourceId, transformationViewId, true, null);
+
+		HashMap firstObject = (HashMap) viewSynchronously.get(0);
+		Assert.assertTrue(firstObject.keySet().contains("erlangen"));
+		Assert.assertTrue(firstObject.keySet().contains("duisburg"));
+		Assert.assertTrue(firstObject.keySet().contains("extension"));
+		Assert.assertTrue(firstObject.keySet().contains("id"));
+
+		HashMap secondObject = (HashMap) viewSynchronously.get(1);
+		Assert.assertTrue(secondObject.keySet().contains("key"));
+		Assert.assertEquals("value", secondObject.get("key"));
 
 	}
+
+
 }
