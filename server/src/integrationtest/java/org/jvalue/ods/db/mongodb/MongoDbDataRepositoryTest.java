@@ -1,10 +1,10 @@
 package org.jvalue.ods.db.mongodb;
 
+import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.jvalue.commons.db.DbConnectorFactory;
 import org.jvalue.commons.db.GenericDocumentNotFoundException;
@@ -17,14 +17,14 @@ import java.util.*;
 @SuppressWarnings("Duplicates")
 public class MongoDbDataRepositoryTest extends AbstractRepositoryTest {
 
-	private static final String DOMAIN_ID = "id";
+	private static final String DOMAIN_ID = "domainId";
 
 	private MongoDbDataRepository repository;
 
 
 	@Override
 	protected void doCreateDatabase(DbConnectorFactory connectorFactory) {
-		this.repository = new MongoDbDataRepository(connectorFactory, getClass().getSimpleName());
+		this.repository = new MongoDbDataRepository(connectorFactory, getClass().getSimpleName(), JsonPointer.compile("/" + DOMAIN_ID));
 	}
 
 
@@ -139,11 +139,6 @@ public class MongoDbDataRepositoryTest extends AbstractRepositoryTest {
 		node.put("somethingElse", otherProperty);
 		return node;
 	}
-
-
-//	private CouchDbDataView createDbView() {
-//		return new CouchDbDataView("testView", "function(doc) { if(doc.somethingElse) emit(doc.somethingElse, doc) }");
-//	}
 
 
 	private void assertEquals(JsonNode node1, JsonNode node2) {

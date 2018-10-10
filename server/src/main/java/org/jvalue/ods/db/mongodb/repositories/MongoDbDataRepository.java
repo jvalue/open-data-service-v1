@@ -1,5 +1,6 @@
 package org.jvalue.ods.db.mongodb.repositories;
 
+import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
@@ -18,11 +19,19 @@ import java.util.*;
 
 public class MongoDbDataRepository extends AbstractMongoDbRepository<JsonNode> implements GenericDataRepository<JsonNode> {
 
+	private final JsonPointer domainIdKey;
+
+
 	@Inject
-	public MongoDbDataRepository(DbConnectorFactory connectorFactory, @Assisted String databaseName) {
+	public MongoDbDataRepository(DbConnectorFactory connectorFactory, @Assisted String databaseName, @Assisted JsonPointer domainIdKey) {
 		super(connectorFactory, databaseName, "DataRepositoryCollection", JsonNode.class);
+		this.domainIdKey = domainIdKey;
 	}
 
+	@Override
+	protected String createIdFilter(String Id) {
+		return "{ "+domainIdKey.getMatchingProperty()+" : '" + Id + "' }";
+	}
 
 	@Override
 	public JsonNode findByDomainId(String domainId) {
@@ -39,17 +48,15 @@ public class MongoDbDataRepository extends AbstractMongoDbRepository<JsonNode> i
 	public Map<String, JsonNode> executeBulkGet(Collection<String> ids) {
 
 		List<String> stringFilterList = new ArrayList<>();
-		for (String id : ids) {
-			stringFilterList.add(id);
-		}
+		stringFilterList.addAll(ids);
 
-		MongoCursor<JsonNode> jsonNodeCurser = jongo.getCollection(collectionName).find("{id : {$in:#}}", stringFilterList).as(JsonNode.class);
+		MongoCursor<JsonNode> jsonNodeCurser = jongo.getCollection(collectionName).find("{"+domainIdKey.getMatchingProperty()+" : {$in:#}}", stringFilterList).as(JsonNode.class);
 
 
 		Map<String, JsonNode> nodes = new HashMap<>();
 		for (JsonNode node : jsonNodeCurser) {
 			ObjectNode objectNode = removeObjectId(node);
-			nodes.put(objectNode.get("id").asText(), objectNode);
+			nodes.put(objectNode.at(domainIdKey).asText(), objectNode);
 		}
 		return nodes;
 	}
@@ -125,6 +132,6 @@ public class MongoDbDataRepository extends AbstractMongoDbRepository<JsonNode> i
 
 	@Override
 	protected String getValueId(JsonNode Value) {
-		return Value.get("id").asText();
+		return Value.at(domainIdKey).asText();
 	}
 }
