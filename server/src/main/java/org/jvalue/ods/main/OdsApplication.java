@@ -50,7 +50,7 @@ import io.dropwizard.setup.Environment;
 
 public final class OdsApplication extends Application<OdsConfig> {
 
-	private static final boolean USE_MONGO_DB = false;
+	private static final boolean USE_MONGO_DB = true;
 
 	public static void main(String[] args) throws Exception {
 		new OdsApplication().run(args);

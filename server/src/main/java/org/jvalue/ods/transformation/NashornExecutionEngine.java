@@ -1,6 +1,5 @@
 package org.jvalue.ods.transformation;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -10,6 +9,7 @@ import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.apache.commons.io.IOUtils;
 import org.jvalue.commons.utils.Log;
 import org.jvalue.ods.api.views.generic.TransformationFunction;
+import org.jvalue.ods.utils.JsonMapper;
 
 import javax.script.Invocable;
 import javax.script.ScriptException;
@@ -24,11 +24,9 @@ public class NashornExecutionEngine extends AbstractExecutionEngine {
 	private NashornSandbox nashornSandbox;
 
 	private static String wrapperScript = "";
-	private ObjectMapper objectMapper;
 
 
 	public NashornExecutionEngine() {
-		objectMapper = new ObjectMapper();
 		InputStream resource = NashornExecutionEngine.class.getClassLoader().getResourceAsStream("js/NashornWrapper.js");
 		try {
 			wrapperScript = IOUtils.toString(resource);
@@ -64,7 +62,7 @@ public class NashornExecutionEngine extends AbstractExecutionEngine {
 			//add every call of emit() to the result set
 			ArrayNode result = new ArrayNode(JsonNodeFactory.instance);
 			for (Object obj : values){
-				result.add(objectMapper.readTree(obj.toString()));
+				result.add(JsonMapper.getInstance().readTree(obj.toString()));
 			}
 
 			return result;

@@ -1,24 +1,21 @@
 package org.jvalue.ods.transformation;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import delight.nashornsandbox.exceptions.ScriptCPUAbuseException;
-import org.apache.commons.io.IOUtils;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.jvalue.commons.utils.Log;
 import org.jvalue.ods.api.views.generic.TransformationFunction;
+import org.jvalue.ods.utils.JsonMapper;
 
 import javax.script.ScriptException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,23 +29,17 @@ public final class NashornExecutionEngineTest {
 	private static ObjectNode jsonData;
 	private static ExecutionEngine executionEngine;
 	private static TransformationFunction transformationFunction;
-	private static ObjectMapper mapper;
-	private static String sampleData;
 
 
 	@BeforeClass
 	public static void initialize() throws IOException, URISyntaxException {
-		mapper = new ObjectMapper();
 
-		InputStream resource = NashornExecutionEngine.class.getClassLoader().getResourceAsStream("json/SampleWeatherData.json");
-		try {
-			sampleData = IOUtils.toString(resource);
-		}catch (IOException e){
-			Log.error(e.getMessage());
-		}
+		Path path = Paths.get(NashornExecutionEngine.class.getClassLoader()
+			.getResource("json/SampleWeatherData.json").toURI());
+		String sampleData = new String(Files.readAllBytes(path));
+		jsonData = (ObjectNode) JsonMapper.getInstance().readTree(sampleData);
 
 		executionEngine = new NashornExecutionEngine();
-		jsonData = (ObjectNode) mapper.readTree(sampleData);
 	}
 
 

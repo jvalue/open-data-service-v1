@@ -1,6 +1,9 @@
 package org.jvalue.ods.processor.adapter.domain.weather.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.jvalue.ods.utils.CustomInstantDeserializer;
 
 import java.time.Instant;
 import java.util.Objects;
@@ -11,9 +14,11 @@ public class Weather {
 	private final Temperature temperature;
 	private final Pressure pressure;
 	private final int humidityInPercent;
+	@JsonDeserialize(using = CustomInstantDeserializer.class)
 	private final Instant timestamp;
 	private final Location location;
 
+	@JsonCreator
 	public Weather(
 		@JsonProperty("stationId") String stationId,
 		@JsonProperty("temperature") Temperature temperature,
