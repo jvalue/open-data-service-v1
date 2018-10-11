@@ -195,6 +195,29 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> imp
 	}
 
 
+	@Override
+	public Data getAllDocuments() {
+		ViewQuery query = new ViewQuery()
+			.designDocId(DESIGN_DOCUMENT_ID)
+			.viewName(domainIdView.getId())
+			.includeDocs(true)
+			.descending(false);
+
+		List<JsonNode> result = new LinkedList<>();
+		int resultCount = 0;
+		String nextStartDomainId = null;
+		boolean hasNext = false;
+
+		for (ViewResult.Row row : connector.queryView(query).getRows()) {
+			result.add(row.getDocAsNode());
+			++resultCount;
+		}
+
+		Cursor cursor = new Cursor(nextStartDomainId, hasNext, resultCount);
+		return new Data(result, cursor);
+	}
+
+
 	public void removeAll() {
 		ViewQuery query = new ViewQuery()
 			.designDocId(DESIGN_DOCUMENT_ID)

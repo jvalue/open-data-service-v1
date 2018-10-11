@@ -107,6 +107,26 @@ public class MongoDbDataRepository extends AbstractMongoDbRepository<JsonNode> i
 	}
 
 
+	@Override
+	public Data getAllDocuments() {
+		MongoCursor<JsonNode> documents;
+		documents = jongo.getCollection(collectionName).find().as(JsonNode.class);
+
+		List<JsonNode> jsonNodes = new ArrayList<>();
+		int resultCount = 0;
+		String nextStartDomainId = null;
+		boolean hasNext = false;
+
+		for (JsonNode jsonNode : documents) {
+			ObjectNode objectNode = removeObjectId(jsonNode);
+			jsonNodes.add(objectNode);
+			++resultCount;
+		}
+		Cursor cursor = new Cursor(nextStartDomainId, hasNext, resultCount);
+		return new Data(jsonNodes, cursor);
+	}
+
+
 	private ObjectNode removeObjectId(JsonNode jsonNode) {
 		//remove unwanted ObjectIdField
 		ObjectNode objectNode = jsonNode.deepCopy();

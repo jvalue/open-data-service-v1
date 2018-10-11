@@ -42,7 +42,7 @@ public class DataTransformationManager extends AbstractDataSourcePropertyManager
 
 	public ArrayNode transform(GenericDataRepository<JsonNode> dataRepository, TransformationFunction transformationFunction, boolean query)
 		throws ScriptException, IOException, NoSuchMethodException {
-		Data paginatedData = dataRepository.getPaginatedData(null, 100);
+		Data paginatedData = dataRepository.getAllDocuments();
 		List<JsonNode> result = paginatedData.getResult();
 
 		ArrayNode resultNode = new ArrayNode(JsonNodeFactory.instance);
