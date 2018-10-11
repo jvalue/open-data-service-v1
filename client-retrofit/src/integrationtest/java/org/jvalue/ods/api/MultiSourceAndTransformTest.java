@@ -102,7 +102,7 @@ public class MultiSourceAndTransformTest extends AbstractApiTest {
 
 
 	@Test
-	public void fetchToTransformToSaveToRead() throws InterruptedException, TimeoutException {
+	public void fetchToTransformToStoreToGetViewDataTest() throws InterruptedException, TimeoutException {
 
 		LinkedList<ProcessorReference> processorReferences = twoJsonAdapterAndTransformProcessorChain();
 
@@ -118,14 +118,14 @@ public class MultiSourceAndTransformTest extends AbstractApiTest {
 
 		//check resulting data object
 		ArrayList viewSynchronously = new ArrayList();
-		int trys = 0;
+		int tries = 0;
 		while(viewSynchronously.isEmpty()){
-			if(trys == 3){
+			if(tries == 3){
 				throw new TimeoutException("timed out waiting on the processor chain execution.");
 			}
 			Thread.sleep(3000);
 			viewSynchronously = (ArrayList) transformationApi.getViewSynchronously(sourceId, transformationViewId, true, null);
-			trys++;
+			tries++;
 		}
 
 		HashMap firstObject = (HashMap) viewSynchronously.get(0);
