@@ -112,7 +112,7 @@ public final class APIXUSourceAdapter implements SourceAdapter {
 
 
 	private Weather createWeatherFromObjectNode(ObjectNode node) {
-		String city = node.get("location").get("alias").asText();
+		String city = node.get("location").get("name").asText();
 		JsonNode current = node.get("current");
 		double temperatureValue = current.get("temp_c").doubleValue();
 		Temperature temperature = new Temperature(temperatureValue, TemperatureType.CELSIUS);
