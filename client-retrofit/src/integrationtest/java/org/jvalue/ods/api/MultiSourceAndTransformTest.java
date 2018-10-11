@@ -1,6 +1,7 @@
 package org.jvalue.ods.api;
 
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.jvalue.ods.api.processors.ExecutionInterval;
 import org.jvalue.ods.api.processors.ProcessorReference;
@@ -8,62 +9,42 @@ import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
 import org.jvalue.ods.api.views.generic.TransformationFunctionDescription;
 import retrofit.RestAdapter;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public class MultiSourceAndTransformTest extends AbstractApiTest {
 
-	protected static final String TRANSFORM_AFTER_SAVE =
-		"function transform(doc) {" +
-			"if (doc != null) { " +
-			"	var newdoc = {}; " +
-			"	newdoc.erlangen = {}; " +
-			"	newdoc.duisburg = {}; " +
-			"	newdoc.erlangen.weather = doc.weatherErlangen; " +
-			"	newdoc.duisburg.weather = doc.weatherDuisburg; " +
-			"	newdoc.extension = doc.extension; " +
-			"	newdoc.id = doc.someId;" +
-			"	emit(new Date().getTime(), newdoc);" +
-			"	emit(new Date().getTime(), { key: \"value\"});" +
-			"} " +
-		"};";
-
-
-	protected static final String TRANSFORM_BEFORE_SAVE =
-		"function transform(doc) {" +
-			"	if(doc != null) {" +
-			"		doc.someId = \"uniqueID\"" +
-			"		doc.extension = \"This is an extension\";" +
-			"	}" +
-			"	return doc;" +
-			"}";
+	private static String transformFunctionAfterSave;
+	private static String transformFunctionBeforeSave;
 
 	private ProcessorChainApi processorChainApi;
 	private DataTransformationApi transformationApi;
 
 	private final String MULTI_FILTER = "multiFilter";
-
-
-	private ProcessorReferenceChainDescription processorReferenceChainDescription;
 	private TransformationFunctionDescription queryTransformation;
-	private String transformationViewId = "transformationViewTest";
 
 
-	public static void initProcessorChain() {
-
+	@BeforeClass
+	public static void setUp() throws IOException, URISyntaxException {
+		transformFunctionAfterSave = resourceFileToString("transformAfterStore.js");
+		transformFunctionBeforeSave = resourceFileToString("transformBeforeStore.js");
 	}
-
 
 	@Override
 	protected void initApi(RestAdapter restAdapter) {
 		transformationApi = restAdapter.create(DataTransformationApi.class);
-		queryTransformation = new TransformationFunctionDescription(TRANSFORM_AFTER_SAVE);
+		queryTransformation = new TransformationFunctionDescription(transformFunctionAfterSave);
 		processorChainApi = restAdapter.create(ProcessorChainApi.class);
 	}
 
 
-	private LinkedList<ProcessorReference> initTwoJsonAdapterProcessorChain() {
+	private LinkedList<ProcessorReference> twoJsonAdapterAndTransformProcessorChain() {
 		LinkedList<ProcessorReference> processors = new LinkedList<>();
 
 
@@ -100,7 +81,7 @@ public class MultiSourceAndTransformTest extends AbstractApiTest {
 
 		//Transformationfilter
 		Map<String, Object> transformationFilterArguments = new LinkedHashMap<>();
-		transformationFilterArguments.put("transformationFunction", TRANSFORM_BEFORE_SAVE);
+		transformationFilterArguments.put("transformationFunction", transformFunctionBeforeSave);
 		ProcessorReference transformationFilterReference = new ProcessorReference("TransformationFilter", transformationFilterArguments);
 
 		//AddTimestampFilter
@@ -123,15 +104,16 @@ public class MultiSourceAndTransformTest extends AbstractApiTest {
 	@Test
 	public void fetchToTransformToSaveToRead() throws InterruptedException, TimeoutException {
 
-		LinkedList<ProcessorReference> processorReferences = initTwoJsonAdapterProcessorChain();
+		LinkedList<ProcessorReference> processorReferences = twoJsonAdapterAndTransformProcessorChain();
 
 		ExecutionInterval interval = new ExecutionInterval(60, TimeUnit.MINUTES);
-		processorReferenceChainDescription = new ProcessorReferenceChainDescription(processorReferences, interval);
+		ProcessorReferenceChainDescription processorReferenceChainDescription = new ProcessorReferenceChainDescription(processorReferences, interval);
 
 		//add processor chain
 		processorChainApi.addProcessorChainSynchronously(sourceId, MULTI_FILTER, processorReferenceChainDescription);
 
 		//add transformation view
+		String transformationViewId = "transformationViewTest";
 		transformationApi.addViewSynchronously(sourceId, transformationViewId, queryTransformation);
 
 		//check resulting data object
@@ -156,5 +138,13 @@ public class MultiSourceAndTransformTest extends AbstractApiTest {
 		Assert.assertTrue(secondObject.keySet().contains("key"));
 		Assert.assertEquals("value", secondObject.get("key"));
 
+	}
+
+
+	private static String resourceFileToString(String fileName) throws URISyntaxException, IOException {
+		Path path = Paths.get(MultiSourceAndTransformTest.class.getClassLoader()
+			.getResource("transformation/" + fileName).toURI());
+
+		return new String(Files.readAllBytes(path));
 	}
 }
