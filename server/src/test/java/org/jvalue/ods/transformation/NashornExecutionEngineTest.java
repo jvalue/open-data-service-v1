@@ -32,13 +32,11 @@ public final class NashornExecutionEngineTest {
 	private static ObjectNode jsonData;
 	private static ExecutionEngine executionEngine;
 	private static TransformationFunction transformationFunction;
-	private static ObjectMapper mapper;
 	private static String sampleData;
 
 
 	@BeforeClass
 	public static void initialize() throws IOException, URISyntaxException {
-		mapper = new ObjectMapper();
 
 		InputStream resource = NashornExecutionEngine.class.getClassLoader().getResourceAsStream("json/SampleWeatherData.json");
 		try {
@@ -48,7 +46,7 @@ public final class NashornExecutionEngineTest {
 		}
 
 		executionEngine = new NashornExecutionEngine();
-		jsonData = (ObjectNode) mapper.readTree(sampleData);
+		jsonData = (ObjectNode) new ObjectMapper().readTree(sampleData);
 	}
 
 

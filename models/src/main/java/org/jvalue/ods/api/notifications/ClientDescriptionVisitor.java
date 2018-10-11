@@ -22,5 +22,6 @@ public interface ClientDescriptionVisitor<P,R> {
 	public R visit(GcmClientDescription clientDescription, P param);
 	public R visit(HttpClientDescription clientDescription, P param);
 	public R visit(AmqpClientDescription clientDescription, P param);
+	public R visit(NdsClientDescription clientDescription, P param);
 
 }

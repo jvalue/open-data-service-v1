@@ -7,7 +7,7 @@ ext {
     guavaVersion = "23.0"
     guiceVersion = "4.1.0"
     httpserverVersion = "20070405"
-    nashornSandboxVersion = "0.1.15";
+    nashornSandboxVersion = "0.1.15"
     jacksonCoreVersion = "2.8.10"
     jacksonJaxrsVersion = "0.8.1"
     javaxActivationVersion = "1.1.0"

@@ -2,7 +2,6 @@ package org.jvalue.ods.processor.adapter.domain.weather;
 
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.assistedinject.Assisted;
 import org.jvalue.ods.api.sources.DataSource;
@@ -11,6 +10,7 @@ import org.jvalue.ods.processor.adapter.SourceAdapter;
 import org.jvalue.ods.processor.adapter.SourceAdapterException;
 import org.jvalue.ods.processor.adapter.SourceAdapterFactory;
 import org.jvalue.ods.processor.adapter.domain.weather.models.*;
+import org.jvalue.ods.utils.JsonMapper;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.UriBuilder;
@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 final public class OpenWeatherMapSourceAdapter implements SourceAdapter {
 
 	private String alias = this.getClass().getSimpleName();
-	private final ObjectMapper mapper = new ObjectMapper();
 	private final DataSource dataSource;
 	private final MetricRegistry registry;
 	private final List<Location> locations;
@@ -46,7 +45,7 @@ final public class OpenWeatherMapSourceAdapter implements SourceAdapter {
 		this.apiKey = apiKey;
 
 		this.locations = locations.stream()
-			.map(l -> mapper.convertValue(l, Location.class))
+			.map(l -> JsonMapper.convertValue(l, Location.class))
 			.collect(Collectors.toList());
 	}
 
@@ -59,7 +58,7 @@ final public class OpenWeatherMapSourceAdapter implements SourceAdapter {
 			if (nodeIterator.hasNext()) {
 				ObjectNode node = nodeIterator.next();
 				Weather weather = createWeatherFromObjectNode(node);
-				ObjectNode weatherNode = mapper.valueToTree(weather);
+				ObjectNode weatherNode = JsonMapper.valueToTree(weather);
 				result.add(weatherNode);
 			}
 		}
