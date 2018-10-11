@@ -130,7 +130,7 @@ final public class OpenWeatherMapSourceAdapter implements SourceAdapter {
 			node.get("coord").get("lon").asDouble()
 		);
 		Location location = new Location(
-			node.get("alias").textValue(),
+			node.get("name").textValue(),
 			Location.UNKNOWN,
 			coordinate,
 			Location.UNKNOWN
