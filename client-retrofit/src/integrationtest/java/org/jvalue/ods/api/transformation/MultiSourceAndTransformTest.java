@@ -1,8 +1,10 @@
-package org.jvalue.ods.api;
+package org.jvalue.ods.api.transformation;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.jvalue.ods.api.DataTransformationApi;
+import org.jvalue.ods.api.ProcessorChainApi;
 import org.jvalue.ods.api.processors.ExecutionInterval;
 import org.jvalue.ods.api.processors.ProcessorReference;
 import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
@@ -11,42 +13,58 @@ import retrofit.RestAdapter;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-public class MultiSourceAndTransformTest extends AbstractApiTest {
-
-	private static String transformFunctionAfterSave;
-	private static String transformFunctionBeforeSave;
-
-	private ProcessorChainApi processorChainApi;
-	private DataTransformationApi transformationApi;
-
-	private final String MULTI_FILTER = "multiFilter";
-	private TransformationFunctionDescription queryTransformation;
+public class MultiSourceAndTransformTest extends BaseMultiSourceTransformTest {
 
 
 	@BeforeClass
 	public static void setUp() throws IOException, URISyntaxException {
-		transformFunctionAfterSave = resourceFileToString("transformAfterStore.js");
-		transformFunctionBeforeSave = resourceFileToString("transformBeforeStore.js");
+		transformationView = resourceFileToString("transformationViewTwoJsonOwm.js");
+		transformFunctionBeforeStore = resourceFileToString("transformBeforeStore.js");
 	}
+
 
 	@Override
 	protected void initApi(RestAdapter restAdapter) {
 		transformationApi = restAdapter.create(DataTransformationApi.class);
-		queryTransformation = new TransformationFunctionDescription(transformFunctionAfterSave);
+		queryTransformation = new TransformationFunctionDescription(transformationView);
 		processorChainApi = restAdapter.create(ProcessorChainApi.class);
 	}
 
 
-	private LinkedList<ProcessorReference> twoJsonAdapterAndTransformProcessorChain() {
-		LinkedList<ProcessorReference> processors = new LinkedList<>();
+	@Test
+	public void twoJsonSourceMultiTest() throws InterruptedException, TimeoutException {
+		LinkedList<ProcessorReference> processorReferences = buildTwoJsonAdapterAndTransformProcessorChain();
 
+		ExecutionInterval interval = new ExecutionInterval(60, TimeUnit.MINUTES);
+		ProcessorReferenceChainDescription processorReferenceChainDescription = new ProcessorReferenceChainDescription(processorReferences, interval);
+
+		//add processor chain
+		processorChainApi.addProcessorChainSynchronously(sourceId, MULTI_FILTER, processorReferenceChainDescription);
+
+		//add transformation view
+		transformationApi.addViewSynchronously(sourceId, transformationViewId, queryTransformation);
+
+		//check resulting data object
+		ArrayList viewSynchronously = getViewResult(transformationApi, transformationViewId);
+
+		HashMap firstObject = (HashMap) viewSynchronously.get(0);
+		Assert.assertTrue(firstObject.keySet().contains("erlangen"));
+		Assert.assertTrue(firstObject.keySet().contains("duisburg"));
+		Assert.assertTrue(firstObject.keySet().contains("extension"));
+		Assert.assertTrue(firstObject.keySet().contains("id"));
+
+		HashMap secondObject = (HashMap) viewSynchronously.get(1);
+		Assert.assertTrue(secondObject.keySet().contains("key"));
+		Assert.assertEquals("value", secondObject.get("key"));
+	}
+
+
+	private LinkedList<ProcessorReference> buildTwoJsonAdapterAndTransformProcessorChain() {
+		LinkedList<ProcessorReference> processors = new LinkedList<>();
 
 		// MultiSourceAdapter
 		Map<String, String> OpenWeatherMapAdapterOneArgument = new LinkedHashMap<>();
@@ -81,7 +99,7 @@ public class MultiSourceAndTransformTest extends AbstractApiTest {
 
 		//Transformationfilter
 		Map<String, Object> transformationFilterArguments = new LinkedHashMap<>();
-		transformationFilterArguments.put("transformationFunction", transformFunctionBeforeSave);
+		transformationFilterArguments.put("transformationFunction", transformFunctionBeforeStore);
 		ProcessorReference transformationFilterReference = new ProcessorReference("TransformationFilter", transformationFilterArguments);
 
 		//AddTimestampFilter
@@ -98,53 +116,5 @@ public class MultiSourceAndTransformTest extends AbstractApiTest {
 		processors.add(dbInsertionFilterReference);
 
 		return processors;
-	}
-
-
-	@Test
-	public void fetchToTransformToStoreToGetViewDataTest() throws InterruptedException, TimeoutException {
-
-		LinkedList<ProcessorReference> processorReferences = twoJsonAdapterAndTransformProcessorChain();
-
-		ExecutionInterval interval = new ExecutionInterval(60, TimeUnit.MINUTES);
-		ProcessorReferenceChainDescription processorReferenceChainDescription = new ProcessorReferenceChainDescription(processorReferences, interval);
-
-		//add processor chain
-		processorChainApi.addProcessorChainSynchronously(sourceId, MULTI_FILTER, processorReferenceChainDescription);
-
-		//add transformation view
-		String transformationViewId = "transformationViewTest";
-		transformationApi.addViewSynchronously(sourceId, transformationViewId, queryTransformation);
-
-		//check resulting data object
-		ArrayList viewSynchronously = new ArrayList();
-		int tries = 0;
-		while(viewSynchronously.isEmpty()){
-			if(tries == 3){
-				throw new TimeoutException("timed out waiting on the processor chain execution.");
-			}
-			Thread.sleep(3000);
-			viewSynchronously = (ArrayList) transformationApi.getViewSynchronously(sourceId, transformationViewId, true, null);
-			tries++;
-		}
-
-		HashMap firstObject = (HashMap) viewSynchronously.get(0);
-		Assert.assertTrue(firstObject.keySet().contains("erlangen"));
-		Assert.assertTrue(firstObject.keySet().contains("duisburg"));
-		Assert.assertTrue(firstObject.keySet().contains("extension"));
-		Assert.assertTrue(firstObject.keySet().contains("id"));
-
-		HashMap secondObject = (HashMap) viewSynchronously.get(1);
-		Assert.assertTrue(secondObject.keySet().contains("key"));
-		Assert.assertEquals("value", secondObject.get("key"));
-
-	}
-
-
-	private static String resourceFileToString(String fileName) throws URISyntaxException, IOException {
-		Path path = Paths.get(MultiSourceAndTransformTest.class.getClassLoader()
-			.getResource("transformation/" + fileName).toURI());
-
-		return new String(Files.readAllBytes(path));
 	}
 }
