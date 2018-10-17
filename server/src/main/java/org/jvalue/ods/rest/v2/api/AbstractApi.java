@@ -24,8 +24,8 @@ public abstract class AbstractApi {
 	public static final String ENTRYPOINT = "entryPoint";
 	public static final String DOC = "doc";
 
-	static final String VIEW = "view";
-	static final String DATASOURCE = "datasource";
+	public static final String VIEW = "view";
+	public static final String DATASOURCE = "datasource";
 
 
 	protected static final String V2 = "/v2";

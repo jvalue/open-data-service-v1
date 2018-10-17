@@ -57,13 +57,13 @@ public class JsonApiResource extends JsonApiResourceIdentifier implements JsonLi
 	}
 
 
-	boolean hasRelationshipTo(JsonApiIdentifiable related) {
+	protected boolean hasRelationshipTo(JsonApiIdentifiable related) {
 		return relationships.entrySet().stream()
 			.anyMatch(r -> r.getValue().containsEntity(related));
 	}
 
 
-	URI getRelationshipUri(JsonApiIdentifiable related) {
+	protected URI getRelationshipUri(JsonApiIdentifiable related) {
 		URI relationshipURI = null;
 
 		for (Map.Entry<String, JsonApiRelationship> entry : relationships.entrySet()) {
@@ -82,19 +82,19 @@ public class JsonApiResource extends JsonApiResourceIdentifier implements JsonLi
 	}
 
 
-	JsonApiResource addRelationship(String name, JsonApiIdentifiable related, URI location) {
+	protected JsonApiResource addRelationship(String name, JsonApiIdentifiable related, URI location) {
 		relationships.put(name, new JsonApiRelationship(related, location));
 		return this;
 	}
 
 
-	JsonApiResource addRelationship(String name, Collection<? extends JsonApiIdentifiable> relatedCollection, URI location) {
+	protected JsonApiResource addRelationship(String name, Collection<? extends JsonApiIdentifiable> relatedCollection, URI location) {
 		relationships.put(name, new JsonApiRelationship(relatedCollection, location));
 		return this;
 	}
 
 
-	JsonApiResource restrictTo(String attribute) {
+	protected JsonApiResource restrictTo(String attribute) {
 		return new JsonApiResource(entity, uri) {
 			@Override
 			public Object getEntity() {
