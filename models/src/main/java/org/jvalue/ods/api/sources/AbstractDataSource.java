@@ -12,8 +12,6 @@ import org.jvalue.ods.api.utils.JsonPointerSerializer;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.HashMap;
-import java.util.Map;
 
 
 abstract class AbstractDataSource {

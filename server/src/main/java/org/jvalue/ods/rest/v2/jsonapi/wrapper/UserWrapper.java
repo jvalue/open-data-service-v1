@@ -3,7 +3,6 @@ package org.jvalue.ods.rest.v2.jsonapi.wrapper;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
-import org.jvalue.ods.rest.v2.api.UserApi;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
