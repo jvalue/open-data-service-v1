@@ -53,24 +53,25 @@ public class MultiSourceAdapter extends AbstractSourceAdapter {
 		for (HashMap hashMap : sourceObjects) {
 			Set outerKeySet = hashMap.keySet();
 			if (outerKeySet.size() != 2 || !outerKeySet.contains("source") || !outerKeySet.contains("alias"))
-				throw new SourceAdapterException("fields 'source' and 'alias' need to be declared.");
+				throw new SourceAdapterException("Only fields 'source' and 'alias' need to be defined.");
 
-			String alias = null;
-			HashMap<String, Object> sourceMap = null;
+			String alias;
+			HashMap<String, Object> sourceMap;
+
 			try {
 				alias = (String) hashMap.get("alias");
 			}catch (ClassCastException e){
-				throw new SourceAdapterException("field 'alias' needs to be a String.");
+				throw new SourceAdapterException("Field 'alias' needs to be a String.");
 			}
 
 			try {
 				sourceMap = (HashMap<String, Object>) hashMap.get("source");
 			}catch (ClassCastException e){
-				throw new SourceAdapterException("field 'source' needs to be a json object.");
+				throw new SourceAdapterException("Field 'source' needs to be a json object.");
 			}
 
 			if (!sourceMap.keySet().contains("name"))
-				throw new SourceAdapterException("field 'source.name' needs to be declared.");
+				throw new SourceAdapterException("Field 'source.name' does not exist.");
 
 			String name = (String) sourceMap.get("name");
 			for (Method method : SourceAdapterFactory.class.getDeclaredMethods()) {
@@ -94,7 +95,11 @@ public class MultiSourceAdapter extends AbstractSourceAdapter {
 					for (Annotation  annotation : paramAnnotations) {
 						if (annotation instanceof Argument) {
 							Argument arg = (Argument) annotation;
-							arguments.add(reference.getArguments().get(arg.value()));
+							Object o = reference.getArguments().get(arg.value());
+							if(o == null){
+								throw new SourceAdapterException("Required field " + arg.value() + " does not exist.");
+							}
+							arguments.add(o);
 						}
 					}
 				}
@@ -133,8 +138,6 @@ public class MultiSourceAdapter extends AbstractSourceAdapter {
 
 		@Override
 		protected JsonNode doNext() throws IOException {
-
-
 			ObjectNode resultNode = new ObjectMapper().createObjectNode();
 			while (iterator.hasNext()) {
 				// traverse multiple adapters
