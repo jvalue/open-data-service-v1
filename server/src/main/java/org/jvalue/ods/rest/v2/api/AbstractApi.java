@@ -27,6 +27,7 @@ public abstract class AbstractApi {
 	public static final String VIEW = "view";
 	public static final String DATASOURCE = "datasource";
 
+	public static final String BASICAUTH = "basicAuth";
 
 	protected static final String V2 = "/v2";
 

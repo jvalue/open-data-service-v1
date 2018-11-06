@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
@@ -132,6 +133,7 @@ public final class ProcessorChainApi extends AbstractApi {
 		summary = "Add a filterchain",
 		description = "Add a filterchain to a datasource"
 	)
+	@SecurityRequirement(name = BASICAUTH)
 	@ApiResponse(
 		responseCode = "201",
 		description = "filterchain added",
@@ -193,6 +195,7 @@ public final class ProcessorChainApi extends AbstractApi {
 		summary = "Delete filterchain",
 		description = "Delete a filterchain from a datasource"
 	)
+	@SecurityRequirement(name = BASICAUTH)
 	@ApiResponse(
 		responseCode = "200", description = "Filterchain deleted"
 	)

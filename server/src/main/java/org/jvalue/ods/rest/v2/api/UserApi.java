@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.jvalue.commons.auth.AbstractUserDescription;
 import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
@@ -27,6 +28,7 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.List;
 
+import static org.jvalue.ods.rest.v2.api.AbstractApi.BASICAUTH;
 import static org.jvalue.ods.rest.v2.api.AbstractApi.ENTRYPOINT;
 import static org.jvalue.ods.rest.v2.api.AbstractApi.USERS;
 import static org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse.JSONAPI_TYPE;
@@ -69,6 +71,7 @@ public class UserApi {
 		responseCode = "401",
 		description = "Not authorized"
 	)
+	@SecurityRequirement(name = BASICAUTH)
 	@GET
 	public Response getAllUsers(
 		@RestrictedTo(Role.ADMIN) @Parameter(hidden = true)
@@ -98,6 +101,7 @@ public class UserApi {
 		responseCode = "401",
 		description = "Not authorized"
 	)
+	@SecurityRequirement(name = BASICAUTH)
 	@POST
 	public Response addUser(
 		@RestrictedTo(value = Role.ADMIN, isOptional = true) User user,
@@ -129,6 +133,7 @@ public class UserApi {
 		summary = "Get user",
 		description = "Get a specific user by its id"
 	)
+	@SecurityRequirement(name = BASICAUTH)
 	@ApiResponse(
 		responseCode = "200",
 		description = "Ok",
@@ -166,6 +171,7 @@ public class UserApi {
 		summary = "Get yourself",
 		description = "Get your own user data"
 	)
+	@SecurityRequirement(name = BASICAUTH)
 	@ApiResponse(
 		responseCode = "200",
 		description = "Ok",
@@ -193,6 +199,7 @@ public class UserApi {
 		summary = "Remove user",
 		description = "Remove a user from the Open-Data-Service"
 	)
+	@SecurityRequirement(name = BASICAUTH)
 	@ApiResponse(
 		responseCode = "200", description = "User removed"
 	)

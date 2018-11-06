@@ -2,9 +2,11 @@ package org.jvalue.ods.rest.v2.jsonapi.swagger;
 
 import io.swagger.v3.jaxrs2.Reader;
 import io.swagger.v3.oas.integration.SwaggerConfiguration;
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.tags.Tag;
 import org.jvalue.ods.rest.v2.api.*;
 
@@ -41,6 +43,14 @@ public class OpenApiProvider {
 		new Tag().name(USERS).description("Users of the Open-Data-Service")
 	);
 
+	private static final SecurityScheme securityScheme =
+			new SecurityScheme()
+				.scheme("basic")
+				.type(SecurityScheme.Type.HTTP)
+				.name(BASICAUTH);
+
+	private static final Components comps = new Components().addSecuritySchemes("Basic Auth", securityScheme);
+
 	private static final OpenAPI instance = new Reader(conf)
 		.read(new HashSet<>(Arrays.asList(
 			EntryPoint.class,
@@ -53,6 +63,7 @@ public class OpenApiProvider {
 			ProcessorSpecificationApi.class,
 			UserApi.class)
 		))
+		.components(comps)
 		.tags(tags)
 		.info(openApiInfo);
 

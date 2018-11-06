@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
@@ -149,6 +150,7 @@ public final class DataSourceApi extends AbstractApi {
 		tags = DATASOURCES,
 		summary = "Add a datasource",
 		description = "add a datasource to the open-data-service")
+	@SecurityRequirement(name = BASICAUTH)
 	@ApiResponse(responseCode = "201", description = "Datasource added")
 	@ApiResponse(responseCode = "401", description = "Not authorized")
 	@ApiResponse(responseCode = "409", description = "Source with sourceId already existing")
@@ -193,6 +195,7 @@ public final class DataSourceApi extends AbstractApi {
 		tags = DATASOURCES,
 		summary = "Delete a datasource",
 		description = "Delete a datasource from the open-data-service")
+	@SecurityRequirement(name = BASICAUTH)
 	@ApiResponse(responseCode = "200", description = "Source deleted")
 	@ApiResponse(responseCode = "401", description = "Not authorized")
 	@ApiResponse(responseCode = "404", description = "Source not found")

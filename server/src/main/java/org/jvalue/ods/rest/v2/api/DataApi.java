@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.links.LinkParameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
@@ -142,6 +143,7 @@ public final class DataApi extends AbstractApi {
 		description = "Delete all data objects provided by a source",
 		tags = DATA
 	)
+	@SecurityRequirement(name = BASICAUTH)
 	@ApiResponse(
 		responseCode = "200", description = "Deleted"
 	)

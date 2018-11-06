@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
@@ -62,6 +63,7 @@ public final class NotificationApi extends AbstractApi {
 		summary = "Register client",
 		description = "Register a client at a datasource for notifications."
 	)
+	@SecurityRequirement(name = BASICAUTH)
 	@ApiResponse(
 		responseCode = "201",
 		description = "Client registered",

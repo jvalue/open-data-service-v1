@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
@@ -159,6 +160,7 @@ public final class DataViewApi extends AbstractApi {
 		summary = "Add view",
 		description = "Add a data view to a datasource"
 	)
+	@SecurityRequirement(name = BASICAUTH)
 	@ApiResponse(
 		responseCode = "201",
 		description = "View created",
@@ -213,6 +215,7 @@ public final class DataViewApi extends AbstractApi {
 		summary = "Delete a view",
 		description = "Delete a view from a datasource"
 	)
+	@SecurityRequirement(name = BASICAUTH)
 	@ApiResponse(
 		responseCode = "200",
 		description = "View deleted"
