@@ -35,7 +35,6 @@ public class OpenApiProvider {
 		new Tag().name(VIEWS).description("Specify and apply moves on the data"),
 		new Tag().name(ENTRYPOINT).description("Entrance to start navigating the Open-Data-Service API"),
 		new Tag().name(NOTIFICATIONS).description("Client registration for notifications about data changes"),
-		new Tag().name(PLUGINS).description("Custom plugins for data sources"),
 		new Tag().name(FILTERCHAINS).description("Specify rules for fetching data"),
 		new Tag().name(FILTERTYPES).description("Overview about used filters"),
 		new Tag().name(DOC).description("OpenAPI specification"),
@@ -50,7 +49,6 @@ public class OpenApiProvider {
 			DataApi.class,
 			DataViewApi.class,
 			NotificationApi.class,
-			PluginApi.class,
 			ProcessorChainApi.class,
 			ProcessorSpecificationApi.class,
 			UserApi.class)
