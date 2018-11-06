@@ -3,6 +3,7 @@ package org.jvalue.ods.rest.v2.jsonapi.response;
 import org.jvalue.commons.utils.Assert;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.JsonApiIdentifiable;
 
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
@@ -20,6 +21,14 @@ public class JsonApiResponse {
 		Assert.assertNotNull(uriInfo, statusCode);
 
 		this.uriInfo = uriInfo;
+		this.statusCode = statusCode;
+	}
+
+	/**
+	 * Constructor for JsonApiResponses without UriInfo (i.e. exceptions)
+	 * @param statusCode
+	 */
+	private JsonApiResponse(Response.StatusType statusCode) {
 		this.statusCode = statusCode;
 	}
 
@@ -45,7 +54,20 @@ public class JsonApiResponse {
 	}
 
 
-	public static class Builder implements RequiredEntity, WithRelationship, Buildable {
+	public static BuildableException createExceptionResponse(int code) {
+		assertIsValidErrCode(code);
+
+		return new Builder(new JsonApiResponse(Response.Status.fromStatusCode(code)));
+	}
+
+	private static void assertIsValidErrCode(int code) {
+		if(code > 500 || code < 400) {
+			throw new IllegalArgumentException(code + "is not a valid HTTP Error Code");
+		}
+	}
+
+
+	public static class Builder implements RequiredEntity, WithRelationship, Buildable, BuildableException {
 
 		private final JsonApiResponse instance;
 
@@ -139,6 +161,12 @@ public class JsonApiResponse {
 			return responseBuilder.build();
 		}
 
+		@Override
+		public BuildableException message(String message) {
+
+			return this;
+		}
+
 
 		private void assertHasRelationship(JsonApiIdentifiable relationship) {
 			if (!instance.jsonApiEntity.hasRelationshipTo(relationship)) {
@@ -163,6 +191,15 @@ public class JsonApiResponse {
 		Buildable data(JsonApiIdentifiable entity);
 
 		Buildable data(Collection<? extends JsonApiIdentifiable> entityCollection);
+	}
+
+	/**
+	 * Interface for a Responsebuilder that meets all requirements to build a exception response.
+	 */
+	public interface BuildableException {
+		Response build();
+
+		BuildableException message(String message);
 	}
 
 	/**
