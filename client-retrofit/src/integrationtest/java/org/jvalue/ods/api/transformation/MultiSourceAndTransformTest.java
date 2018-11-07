@@ -30,7 +30,7 @@ public class MultiSourceAndTransformTest extends BaseMultiSourceTransformTest {
 	@Override
 	protected void initApi(RestAdapter restAdapter) {
 		transformationApi = restAdapter.create(DataTransformationApi.class);
-		queryTransformation = new TransformationFunctionDescription(transformationView);
+		queryTransformation = new TransformationFunctionDescription(transformationView, null);
 		processorChainApi = restAdapter.create(ProcessorChainApi.class);
 	}
 

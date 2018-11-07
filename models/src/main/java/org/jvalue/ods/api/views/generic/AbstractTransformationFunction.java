@@ -10,23 +10,30 @@ public abstract class AbstractTransformationFunction {
 	@NotNull
 	private final String transformationFunction;
 
+	private final String reduceFunction;
+
 
 	/**
 	 * Create a new transformationFunction on the data.
 	 *
 	 * @param transformFunction the transformation function written in JavaScript
+	 * @param reduceFunction optional reduce function written in JavaScript
 	 */
 	@JsonCreator
 	public AbstractTransformationFunction(
-		String transformFunction) {
+		String transformFunction, String reduceFunction) {
 
 		this.transformationFunction = transformFunction;
+		this.reduceFunction = reduceFunction;
 	}
 
 	public String getTransformationFunction() {
 		return transformationFunction;
 	}
 
+	public String getReduceFunction() {
+		return reduceFunction;
+	}
 
 	@Override
 	public boolean equals(Object other) {

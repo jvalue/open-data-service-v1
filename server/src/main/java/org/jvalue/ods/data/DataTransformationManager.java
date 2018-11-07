@@ -55,6 +55,10 @@ public class DataTransformationManager extends AbstractDataSourcePropertyManager
 				resultNode.add(next);
 			}
 		}
+
+		if(transformationFunction.getReduceFunction() != null)
+			return executionEngine.reduce(resultNode.deepCopy(), transformationFunction);
+
 		return resultNode;
 	}
 

@@ -12,7 +12,9 @@ public class TransformationFunctionDescription extends AbstractTransformationFun
 	 * @param transformationFunction the transformation function written in JavaScript
 	 */
 	@JsonCreator
-	public TransformationFunctionDescription(@JsonProperty("transformationFunction") String transformationFunction) {
-		super(transformationFunction);
+	public TransformationFunctionDescription(
+		@JsonProperty("transformationFunction") String transformationFunction,
+		@JsonProperty("reduceFunction") String reduceFunction) {
+		super(transformationFunction, reduceFunction);
 	}
 }

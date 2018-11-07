@@ -53,7 +53,7 @@ public final class NashornExecutionEngineTest {
 	@Test
 	public void testExtensionTransformationExecution() throws ScriptException, IOException, NoSuchMethodException, URISyntaxException {
 		String extensionFunc = resourceFileToString("extension.js");
-		transformationFunction = new TransformationFunction("1", extensionFunc);
+		transformationFunction = new TransformationFunction("1", extensionFunc,null);
 		JsonNode result = executionEngine.execute(jsonData, transformationFunction, false);
 
 		Assert.assertEquals("This is an extension", result.get(0).get("extension").asText());
@@ -63,7 +63,7 @@ public final class NashornExecutionEngineTest {
 	@Test
 	public void testReduceTransformationExecution() throws ScriptException, IOException, NoSuchMethodException, URISyntaxException {
 		String reductionFunc = resourceFileToString("reduction.js");
-		transformationFunction = new TransformationFunction("1", reductionFunc);
+		transformationFunction = new TransformationFunction("1", reductionFunc,null);
 		JsonNode result = executionEngine.execute(jsonData, transformationFunction, false);
 		Assert.assertEquals(4, result.get(0).get("keycount").intValue());
 	}
@@ -72,7 +72,7 @@ public final class NashornExecutionEngineTest {
 	@Test
 	public void testMapTransformationExecution() throws ScriptException, IOException, NoSuchMethodException, URISyntaxException {
 		String mapFunc = resourceFileToString("map.js");
-		transformationFunction = new TransformationFunction("1", mapFunc);
+		transformationFunction = new TransformationFunction("1", mapFunc,null);
 		JsonNode result = executionEngine.execute(jsonData, transformationFunction, false);
 
 		Assert.assertEquals("RHEIN", result.get(0).get("water").get("shortname").asText());
@@ -82,7 +82,7 @@ public final class NashornExecutionEngineTest {
 	@Test
 	public void testConcatTransformationExecution() throws ScriptException, IOException, NoSuchMethodException, URISyntaxException {
 		String concatFunc = resourceFileToString("concat.js");
-		transformationFunction = new TransformationFunction("1", concatFunc);
+		transformationFunction = new TransformationFunction("1", concatFunc,null);
 		JsonNode result = executionEngine.execute(jsonData, transformationFunction, false);
 
 		Assert.assertEquals("13.929755188361455, 50.96458457915114", result.get(0).get("combinedCoords").asText());
@@ -91,7 +91,7 @@ public final class NashornExecutionEngineTest {
 	@Test
 	public void testFilterTransformationExecution() throws ScriptException, IOException, NoSuchMethodException, URISyntaxException {
 		String filterFunc = resourceFileToString("filter.js");
-		transformationFunction = new TransformationFunction("1", filterFunc);
+		transformationFunction = new TransformationFunction("1", filterFunc,null);
 		JsonNode result = executionEngine.execute(jsonData, transformationFunction, false);
 
 		Assert.assertTrue(result.get(0).get("stringValues").isArray());
@@ -109,7 +109,7 @@ public final class NashornExecutionEngineTest {
 	@Test
 	public void testArithmeticOperationsTransformationExecution() throws ScriptException, IOException, NoSuchMethodException, URISyntaxException {
 		String arithmeticFunc = resourceFileToString("arithmetic.js");
-		transformationFunction = new TransformationFunction("1", arithmeticFunc);
+		transformationFunction = new TransformationFunction("1", arithmeticFunc,null);
 		JsonNode result = executionEngine.execute(jsonData, transformationFunction, false);
 
 		Assert.assertEquals(489.75, result.get(0).get("result").asDouble(), 0);
@@ -118,7 +118,7 @@ public final class NashornExecutionEngineTest {
 	@Test(expected = ScriptException.class)
 	public void testInvalidTransformationExecution()
 		throws ScriptException, IOException, NoSuchMethodException {
-		transformationFunction = new TransformationFunction("2", "invalid Javascript Code");
+		transformationFunction = new TransformationFunction("2", "invalid Javascript Code",null);
 		executionEngine.execute(jsonData, transformationFunction, false);
 	}
 
@@ -126,7 +126,7 @@ public final class NashornExecutionEngineTest {
 	@Test(expected = ScriptException.class)
 	public void testWrongFunctionSignatureTransformationExecution()
 		throws ScriptException, IOException, NoSuchMethodException {
-		transformationFunction = new TransformationFunction("10", "function test(hello){ return 1};");
+		transformationFunction = new TransformationFunction("10", "function test(hello){ return 1};",null);
 		executionEngine.execute(jsonData, transformationFunction, false);
 	}
 
@@ -139,7 +139,7 @@ public final class NashornExecutionEngineTest {
 		thrown.expectCause(CoreMatchers.isA(ScriptCPUAbuseException.class));
 
 		String infiniteLoopFunc = resourceFileToString("infiniteLoop.js");
-		transformationFunction = new TransformationFunction("3", infiniteLoopFunc);
+		transformationFunction = new TransformationFunction("3", infiniteLoopFunc,null);
 		executionEngine.execute(jsonData, transformationFunction, false);
 	}
 
@@ -152,7 +152,7 @@ public final class NashornExecutionEngineTest {
 		thrown.expectCause(CoreMatchers.isA(RuntimeException.class));
 
 		String javaClassAccessFunc = resourceFileToString("javaClassAccess.js");
-		transformationFunction = new TransformationFunction("3", javaClassAccessFunc);
+		transformationFunction = new TransformationFunction("3", javaClassAccessFunc,null);
 		executionEngine.execute(jsonData, transformationFunction, false);
 	}
 

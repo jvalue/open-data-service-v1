@@ -10,4 +10,6 @@ import java.io.IOException;
 public interface ExecutionEngine {
 	ArrayNode execute(ObjectNode data, TransformationFunction transformationFunction, boolean query) throws IOException,
 		ScriptException, NoSuchMethodException;
+	ArrayNode reduce(ArrayNode resultSet, TransformationFunction transformationFunction) throws IOException,
+		ScriptException, NoSuchMethodException;
 }

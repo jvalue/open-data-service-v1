@@ -29,7 +29,7 @@ public class TransformationApiTest extends AbstractApiTest {
 	@Override
 	protected void initApi(RestAdapter restAdapter) {
 		transformationApi = restAdapter.create(DataTransformationApi.class);
-		transformationFunctionDescription = new TransformationFunctionDescription(EXTENSION_FUNCTION);
+		transformationFunctionDescription = new TransformationFunctionDescription(EXTENSION_FUNCTION, null);
 	}
 
 	@Test

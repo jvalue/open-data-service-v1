@@ -16,31 +16,31 @@ public class TransformationFunction extends AbstractTransformationFunction imple
 	@NotNull
 	private final String transformationFunction;
 
+	private final String reduceFunction;
+
 
 	/**
 	 * Create a new transformationFunction on the data.
 	 *
 	 * @param id                the id of the transformation function
 	 * @param transformationFunction the transformation function written in JavaScript
+	 * @param reduceFunction optional reduce function written in JavaScript
 	 */
 	@JsonCreator
 	public TransformationFunction(
 		@JsonProperty("id") String id,
-		@JsonProperty("transformationFunction") String transformationFunction) {
-		super(transformationFunction);
+		@JsonProperty("transformationFunction") String transformationFunction,
+		@JsonProperty("reduceFunction") String reduceFunction) {
+		super(transformationFunction, reduceFunction);
 
 		this.id = id;
 		this.transformationFunction = transformationFunction;
+		this.reduceFunction = reduceFunction;
 	}
 
 
 	public String getId() {
 		return id;
-	}
-
-
-	public String getTransformationFunction() {
-		return transformationFunction;
 	}
 
 
@@ -56,5 +56,17 @@ public class TransformationFunction extends AbstractTransformationFunction imple
 	@Override
 	public int hashCode() {
 		return Objects.hashCode(id, super.hashCode());
+	}
+
+
+	@Override
+	public String getTransformationFunction() {
+		return transformationFunction;
+	}
+
+
+	@Override
+	public String getReduceFunction() {
+		return reduceFunction;
 	}
 }

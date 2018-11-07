@@ -1,9 +1,7 @@
 var resultSet;
-var keySet;
 
 function init(){
 	resultSet = [];
-	keySet = [];
 }
 
 function transformationWrapper(jsonStr, query) {
@@ -16,9 +14,16 @@ function transformationWrapper(jsonStr, query) {
 	return resultSet;
 }
 
-//key must be a sortable value
 function output(value){
 	resultSet.push(JSON.stringify(value));
+}
+
+function reduceWrapper(jsonStrResultSet, size) {
+	var jsonArray = [];
+	for(var i = 0; i < size; i++){
+		jsonArray.push(JSON.parse(jsonStrResultSet[i]));
+	}
+	return reduce(jsonArray);
 }
 
 

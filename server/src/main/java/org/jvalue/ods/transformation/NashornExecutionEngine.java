@@ -1,5 +1,6 @@
 package org.jvalue.ods.transformation;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -15,7 +16,9 @@ import javax.script.Invocable;
 import javax.script.ScriptException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -47,24 +50,28 @@ public class NashornExecutionEngine extends AbstractExecutionEngine {
 	}
 
 
+	private Invocable initInvocable(String function) throws ScriptException {
+		//append custom transformation function to wrapper script
+		String script = wrapperScript + function;
+
+		//execute script
+		nashornSandbox.eval(script);
+		return nashornSandbox.getSandboxedInvocable();
+	}
+
 	@Override
 	public ArrayNode execute(ObjectNode data, TransformationFunction transformationFunction, boolean query)
 		throws ScriptException, IOException, NoSuchMethodException {
 		initNashornSandbox();
 		try {
-			//append custom transformation function to wrapper script
-			String script = wrapperScript + transformationFunction.getTransformationFunction();
-
-			//execute script
-			nashornSandbox.eval(script);
-			Invocable sandboxedInvocable = nashornSandbox.getSandboxedInvocable();
-			ScriptObjectMirror o = (ScriptObjectMirror) sandboxedInvocable.invokeFunction(WRAPPER_FUNCTION, data.toString(), query);
-			Collection<Object> values =  o.values();
-
-			//add every call of emit() to the result set
+			Invocable sandboxedInvocable = initInvocable(transformationFunction.getTransformationFunction());
+			ScriptObjectMirror o = (ScriptObjectMirror) sandboxedInvocable.invokeFunction(TRANSFORMATION_FUNCTION, data.toString(), query);
 			ArrayNode result = new ArrayNode(JsonNodeFactory.instance);
-			for (Object obj : values){
-				result.add(objectMapper.readTree(obj.toString()));
+			if(o != null){
+				Collection<Object> values = o.values();
+				for (Object obj : values) {
+					result.add(objectMapper.readTree(obj.toString()));
+				}
 			}
 
 			return result;
@@ -72,5 +79,39 @@ public class NashornExecutionEngine extends AbstractExecutionEngine {
 			ExecutorService executor = nashornSandbox.getExecutor();
 			executor.shutdown();
 		}
+	}
+
+
+
+	@Override
+	public ArrayNode reduce(ArrayNode resultSet, TransformationFunction transformationFunction)
+		throws ScriptException, IOException, NoSuchMethodException {
+		initNashornSandbox();
+		try {
+			Invocable sandboxedInvocable = initInvocable(transformationFunction.getReduceFunction());
+			ArrayList<String> setAsList = convertArrayNodeToList(resultSet);
+			Object o = sandboxedInvocable.invokeFunction(REDUCE_FUNCTION, setAsList, setAsList.size());
+
+			ArrayNode resultNode = new ArrayNode(JsonNodeFactory.instance);
+			if (o != null) {
+				resultNode.add(o.toString());
+			}
+
+			return resultNode;
+		} finally {
+			ExecutorService executor = nashornSandbox.getExecutor();
+			executor.shutdown();
+		}
+	}
+
+
+	private ArrayList<String> convertArrayNodeToList(ArrayNode set) {
+		ArrayList<String> list = new ArrayList<>();
+		Iterator<JsonNode> elements = set.elements();
+		while (elements.hasNext()) {
+			JsonNode next = elements.next();
+			list.add(next.toString());
+		}
+		return list;
 	}
 }

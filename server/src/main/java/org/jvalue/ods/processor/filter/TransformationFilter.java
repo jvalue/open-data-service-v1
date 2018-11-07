@@ -13,6 +13,7 @@ import org.jvalue.ods.data.DataTransformationManager;
 public class TransformationFilter extends AbstractFilter<ObjectNode, ObjectNode> {
 
 	private final String transformationFunction;
+	private final String reduceFunction;
 	private final DataTransformationManager dataTransformationManager;
 
 
@@ -21,10 +22,12 @@ public class TransformationFilter extends AbstractFilter<ObjectNode, ObjectNode>
 		@Assisted DataSource source,
 		MetricRegistry registry,
 		DataTransformationManager dataTransformationManager,
-		@Assisted String transformationFunction) {
+		@Assisted String transformationFunction,
+		@Assisted String reduceFunction) {
 		super(source, registry);
 		this.transformationFunction = transformationFunction;
 		this.dataTransformationManager = dataTransformationManager;
+		this.reduceFunction = reduceFunction;
 	}
 
 
@@ -32,7 +35,7 @@ public class TransformationFilter extends AbstractFilter<ObjectNode, ObjectNode>
 	protected ObjectNode doFilter(ObjectNode node) throws FilterException {
 		ArrayNode result;
 		try {
-			result = dataTransformationManager.transform(node, new TransformationFunction(source.getId(), transformationFunction), false);
+			result = dataTransformationManager.transform(node, new TransformationFunction(source.getId(), transformationFunction, reduceFunction), false);
 		} catch (Exception e) {
 			// nothing to do if exception occurs -> throw it.
 			throw new FilterException(e.getMessage(), e);

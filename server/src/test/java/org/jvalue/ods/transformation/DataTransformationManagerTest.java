@@ -38,7 +38,7 @@ public final class DataTransformationManagerTest {
 
 	@Test
 	public void testTransform() throws ScriptException, IOException, NoSuchMethodException {
-		TransformationFunction function = new TransformationFunction("1", "function");
+		TransformationFunction function = new TransformationFunction("1", "function",null);
 
 		new Expectations() {{
 			executionEngine.execute(new ObjectNode(JsonNodeFactory.instance), function, true);

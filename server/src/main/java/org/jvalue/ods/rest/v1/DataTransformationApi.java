@@ -78,7 +78,7 @@ public final class DataTransformationApi extends AbstractApi {
 		if (dataTransformationManager.contains(source, viewId))
 			throw RestUtils.createJsonFormattedException("transformation view with id " + viewId + " already exists", 409);
 
-		TransformationFunction transformationFunction = new TransformationFunction(viewId, viewDescription.getTransformationFunction());
+		TransformationFunction transformationFunction = new TransformationFunction(viewId, viewDescription.getTransformationFunction(), viewDescription.getReduceFunction());
 
 
 		dataTransformationManager.add(source, sourceManager.getDataRepository(source), transformationFunction);
