@@ -26,7 +26,7 @@ public class JsonApiResponse {
 
 	/**
 	 * Constructor for JsonApiResponses without UriInfo (i.e. exceptions)
-	 * @param statusCode
+	 * @param statusCode the http status code of the response
 	 */
 	private JsonApiResponse(Response.StatusType statusCode) {
 		Assert.assertNotNull(statusCode);
@@ -62,13 +62,12 @@ public class JsonApiResponse {
 	public static BuildableException createExceptionResponse(int code) {
 		assertIsValidErrCode(code);
 
-		JsonApiResponse instance = new JsonApiResponse(Response.Status.fromStatusCode(code));
 		return new Builder(new JsonApiResponse(Response.Status.fromStatusCode(code)));
 	}
 
 	private static void assertIsValidErrCode(int code) {
 		if(code > 500 || code < 400) {
-			throw new IllegalArgumentException(code + "is not a valid HTTP Error Code");
+			throw new IllegalArgumentException(code + " is not a valid HTTP Error Code");
 		}
 	}
 
