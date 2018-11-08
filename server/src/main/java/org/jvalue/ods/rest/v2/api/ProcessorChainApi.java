@@ -13,7 +13,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
-import org.jvalue.commons.rest.RestUtils;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
 import org.jvalue.ods.api.sources.DataSource;
@@ -229,7 +228,7 @@ public final class ProcessorChainApi extends AbstractApi {
 		}
 
 		if (chainManager.contains(source, id))
-			throw RestUtils.createJsonFormattedException("filter chain with id " + id + " already exists", 409);
+			throw createJsonApiException("filter chain with id " + id + " already exists", 409);
 	}
 
 
@@ -243,7 +242,7 @@ public final class ProcessorChainApi extends AbstractApi {
 				else firstIter = false;
 				builder.append(validUnit.toString());
 			}
-			throw RestUtils.createJsonFormattedException(builder.toString(), 400);
+			throw createJsonApiException(builder.toString(), 400);
 		}
 	}
 

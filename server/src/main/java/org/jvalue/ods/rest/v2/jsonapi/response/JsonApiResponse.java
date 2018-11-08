@@ -29,7 +29,12 @@ public class JsonApiResponse {
 	 * @param statusCode
 	 */
 	private JsonApiResponse(Response.StatusType statusCode) {
+		Assert.assertNotNull(statusCode);
+
 		this.statusCode = statusCode;
+		JsonApiError error = new JsonApiError(
+			statusCode.getReasonPhrase(), statusCode.getStatusCode());
+		this.jsonApiEntity = new JsonApiDocument(error);
 	}
 
 
@@ -57,6 +62,7 @@ public class JsonApiResponse {
 	public static BuildableException createExceptionResponse(int code) {
 		assertIsValidErrCode(code);
 
+		JsonApiResponse instance = new JsonApiResponse(Response.Status.fromStatusCode(code));
 		return new Builder(new JsonApiResponse(Response.Status.fromStatusCode(code)));
 	}
 
@@ -163,6 +169,10 @@ public class JsonApiResponse {
 
 		@Override
 		public BuildableException message(String message) {
+			JsonApiError error = new JsonApiError(
+				instance.statusCode.getReasonPhrase() + ": " + message,
+				instance.statusCode.getStatusCode());
+			instance.jsonApiEntity = new JsonApiDocument(error);
 
 			return this;
 		}
@@ -199,6 +209,11 @@ public class JsonApiResponse {
 	public interface BuildableException {
 		Response build();
 
+		/**
+		 * Add a custom defined message to the exception response
+		 * @param message the message to be included. It will be added after the default reason phrase for the provided error code.
+		 * @return A buildable Responsebuilder for exception responses.
+		 */
 		BuildableException message(String message);
 	}
 

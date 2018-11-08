@@ -13,7 +13,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
-import org.jvalue.commons.rest.RestUtils;
 import org.jvalue.ods.api.notifications.*;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
@@ -226,7 +225,7 @@ public final class NotificationApi extends AbstractApi {
 		RequestValidator.validate(clientDescription);
 
 		if (notificationManager.contains(source, id)) {
-			throw RestUtils.createJsonFormattedException("client with id " + id + " already exists", 409);
+			throw createJsonApiException("client with id " + id + " already exists", 409);
 		}
 	}
 

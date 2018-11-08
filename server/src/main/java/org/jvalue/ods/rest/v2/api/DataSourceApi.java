@@ -13,7 +13,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
-import org.jvalue.commons.rest.RestUtils;
 import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.api.processors.PluginMetaData;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
@@ -248,7 +247,7 @@ public final class DataSourceApi extends AbstractApi {
 
 	private void assertSourceDoesNotExist(String sourceId) {
 		if (sourceManager.isValidSourceId(sourceId)) {
-			throw RestUtils.createJsonFormattedException("Source with id " + sourceId + " already exists!", 409);
+			throw createJsonApiException("Source with id " + sourceId + " already exists!", 409);
 		}
 	}
 }

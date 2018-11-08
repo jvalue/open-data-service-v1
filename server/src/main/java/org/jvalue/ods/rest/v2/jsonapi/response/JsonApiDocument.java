@@ -14,7 +14,7 @@ import static org.jvalue.ods.utils.HttpUtils.appendTrailingSlash;
 
 public class JsonApiDocument implements Serializable, JsonLinks {
 
-	private final UriInfo uriInfo;
+	private UriInfo uriInfo;
 
 	private final Map<String, URI> links = new HashMap<>();
 
@@ -23,7 +23,14 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 		JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY})
 	protected List<JsonApiResource> data = new LinkedList<>();
 
+	protected List<JsonApiError> errors = new LinkedList<>();
+
 	private final List<JsonApiResource> included = new LinkedList<>();
+
+
+	public JsonApiDocument(JsonApiError error) {
+		errors.add(error);
+	}
 
 
 	public JsonApiDocument(JsonApiIdentifiable entity,
@@ -54,8 +61,15 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 	}
 
 
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	public List<JsonApiResource> getData() {
 		return data;
+	}
+
+
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
+	public List<JsonApiError> getErrors() {
+		return errors;
 	}
 
 

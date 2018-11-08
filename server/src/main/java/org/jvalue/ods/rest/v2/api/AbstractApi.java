@@ -1,15 +1,12 @@
 package org.jvalue.ods.rest.v2.api;
 
 
-import org.jvalue.commons.rest.ErrorMessage;
-import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResource;
+
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 import static org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse.JSONAPI_TYPE;
 
