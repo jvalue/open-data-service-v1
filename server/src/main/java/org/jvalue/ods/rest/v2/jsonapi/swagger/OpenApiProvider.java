@@ -49,7 +49,7 @@ public class OpenApiProvider {
 				.type(SecurityScheme.Type.HTTP)
 				.name(BASICAUTH);
 
-	private static final Components comps = new Components().addSecuritySchemes("Basic Auth", securityScheme);
+	private static final Components comps = new Components().addSecuritySchemes("basicAuth", securityScheme);
 
 	private static final OpenAPI instance = new Reader(conf)
 		.read(new HashSet<>(Arrays.asList(
