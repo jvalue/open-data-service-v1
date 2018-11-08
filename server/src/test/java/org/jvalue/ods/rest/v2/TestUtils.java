@@ -13,6 +13,14 @@ public class TestUtils {
 	public static final int NR_ENTITIES = 10;
 	public static ObjectMapper objectMapper = new ObjectMapper();
 
+	public static final String MESSAGE = "test_message";
+	public static final int ERRCODE_VALID = 400;
+	public static final int ERRCODE_INVALID = 200;
+	public static final String COMBINED_MESSAGE =
+		Response.Status.fromStatusCode(ERRCODE_VALID).getReasonPhrase()
+			+ ": "
+			+ MESSAGE;
+
 
 	public static JsonNode extractJsonEntity(Response from) {
 		return objectMapper.valueToTree(from.getEntity());
