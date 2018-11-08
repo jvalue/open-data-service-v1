@@ -15,7 +15,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
-import org.jvalue.commons.rest.RestUtils;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.views.DataView;
 import org.jvalue.ods.api.views.DataViewDescription;
@@ -246,7 +245,7 @@ public final class DataViewApi extends AbstractApi {
 		RequestValidator.validate(description);
 
 		if (viewManager.contains(source, id)) {
-			throw RestUtils.createJsonFormattedException("data view with id " + id + " already exists", 409);
+			throw createJsonApiException("data view with id " + id + " already exists", 409);
 		}
 	}
 }

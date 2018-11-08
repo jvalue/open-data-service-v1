@@ -27,8 +27,7 @@ public class JsonApiResponseTest {
 	@Mocked
 	private UriInfo uriInfo;
 
-	@Before
-	public void setUp() {
+	public void setUpExpectations() {
 		//Record
 		new Expectations() {{
 			uriInfo.getAbsolutePath();
@@ -41,6 +40,7 @@ public class JsonApiResponseTest {
 	@Test
 	public void testGetResponse() {
 		//Record
+		setUpExpectations();
 		JsonApiIdentifiable minimalEntity = createMinimalEntity();
 
 
@@ -63,8 +63,8 @@ public class JsonApiResponseTest {
 
 	@Test
 	public void testGetResponseCollection() {
-
 		//Record
+		setUpExpectations();
 		new Expectations() {{
 			uriInfo.getAbsolutePath();
 			result = URI.create(COLLECTION_PATH);
@@ -92,6 +92,7 @@ public class JsonApiResponseTest {
 	@Test
 	public void testGetResponseRestrictTo() {
 		//Record
+		setUpExpectations();
 		JsonApiIdentifiable entity = createEntityWithAttributes();
 
 		//Replay
@@ -115,6 +116,7 @@ public class JsonApiResponseTest {
 	@Test
 	public void testPostResponse() {
 		//Record
+		setUpExpectations();
 		JsonApiIdentifiable testEntity = createEntityWithAttributes();
 
 		//Replay
@@ -133,6 +135,7 @@ public class JsonApiResponseTest {
 	@Test
 	public void testPutResponse() {
 		//Record
+		setUpExpectations();
 		JsonApiIdentifiable testEntity = createEntityWithAttributes();
 
 		//Replay
@@ -149,8 +152,46 @@ public class JsonApiResponseTest {
 
 
 	@Test
+	public void testExceptionResponse() {
+		//Replay
+		Response result = JsonApiResponse
+			.createExceptionResponse(ERRCODE_VALID)
+			.message(MESSAGE)
+			.build();
+
+		//Verify
+		Assert.assertEquals(ERRCODE_VALID, result.getStatus());
+		assertIsValidJsonApiErrorResponse(result);
+		assertExceptionResponseHasValues(result, COMBINED_MESSAGE, ERRCODE_VALID);
+	}
+
+
+	@Test
+	public void testExceptionResponseWithoutMessage() {
+		//Replay
+		Response result = JsonApiResponse
+			.createExceptionResponse(ERRCODE_VALID)
+			.build();
+
+		//Verify
+		Assert.assertEquals(ERRCODE_VALID, result.getStatus());
+		assertIsValidJsonApiErrorResponse(result);
+		assertExceptionResponseHasValues(result, VALID_ERRMSG, ERRCODE_VALID);
+	}
+
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testExceptionResponseInvalidCode() {
+		JsonApiResponse
+			.createExceptionResponse(ERRCODE_INVALID)
+			.message(MESSAGE)
+			.build();
+	}
+
+	@Test
 	public void testAddLinks() {
 		//Record
+		setUpExpectations();
 		JsonApiIdentifiable minimalEntity = createMinimalEntity();
 		String linkUrl = "http://test.de";
 
@@ -170,6 +211,7 @@ public class JsonApiResponseTest {
 	@Test
 	public void testAddRelationship() {
 		//Record
+		setUpExpectations();
 		JsonApiIdentifiable minimalEntity = createMinimalEntity();
 		JsonApiIdentifiable relatedEntity = createCustomMinimalEntity("related");
 
@@ -194,6 +236,7 @@ public class JsonApiResponseTest {
 	@Test
 	public void testAddRelationshipCollection() {
 		//Record
+		setUpExpectations();
 		JsonApiIdentifiable minimalEntity = createMinimalEntity();
 		Collection<JsonApiIdentifiable> relatedCollection = new LinkedList<>();
 		for (int i = 0; i < NR_ENTITIES; i++) {
@@ -223,6 +266,7 @@ public class JsonApiResponseTest {
 	@Test
 	public void testAddIncluded() {
 		//Record
+		setUpExpectations();
 		JsonApiIdentifiable entityWithAttributes = createEntityWithAttributes();
 		JsonApiIdentifiable relatedEntity = createEntityWithAttributes("related");
 
@@ -248,6 +292,7 @@ public class JsonApiResponseTest {
 	@Test
 	public void testAddIncludedWithCollection() {
 		//Record
+		setUpExpectations();
 		JsonApiIdentifiable minimalEntity = createMinimalEntity();
 		List<JsonApiIdentifiable> relatedCollection = new LinkedList<>();
 		for (int i = 0; i < NR_ENTITIES; i++) {
@@ -276,6 +321,7 @@ public class JsonApiResponseTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testAddIncludedWithDifferentIdThrowsIllegalArgumentException() {
 		//Record
+		setUpExpectations();
 		JsonApiIdentifiable minimalEntity = createMinimalEntity();
 		JsonApiIdentifiable relatedEntity = createCustomMinimalEntity("related");
 		JsonApiIdentifiable unrleatedEntity = createCustomMinimalEntity("unrelated");
@@ -293,6 +339,7 @@ public class JsonApiResponseTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testAddIncludedWithDifferentTypeThrowsIllegalArgumentException() {
 		//Record
+		setUpExpectations();
 		JsonApiIdentifiable minimalEntity = createMinimalEntity();
 		JsonApiIdentifiable relatedEntity = createCustomMinimalEntity(TEST_ID);
 		JsonApiIdentifiable unrelatedEntity = createEntityWithAttributes();
@@ -310,6 +357,7 @@ public class JsonApiResponseTest {
 	@Test
 	public void testFromRepositoryURI() {
 		//Record
+		setUpExpectations();
 		URI collectionURI = URI.create("http://localhost:8080/path/to/collection");
 		List<JsonApiIdentifiable> entities = new ArrayList<>();
 		for (int i = 0; i < NR_ENTITIES; i++) {
