@@ -16,8 +16,10 @@ public class TestUtils {
 	public static final String MESSAGE = "test_message";
 	public static final int ERRCODE_VALID = 400;
 	public static final int ERRCODE_INVALID = 200;
+	public static final String VALID_ERRMSG =
+		Response.Status.fromStatusCode(ERRCODE_VALID).getReasonPhrase();
 	public static final String COMBINED_MESSAGE =
-		Response.Status.fromStatusCode(ERRCODE_VALID).getReasonPhrase()
+			VALID_ERRMSG
 			+ ": "
 			+ MESSAGE;
 
@@ -32,6 +34,33 @@ public class TestUtils {
 	}
 
 
+	public static void assertIsValidJsonApiErrorResponse(Response response) {
+		Assert.assertTrue(response.getEntity() instanceof JsonApiDocument);
+		JsonApiDocument jDoc = (JsonApiDocument) response.getEntity();
+		Assert.assertTrue(jDoc.getErrors().size() > 0);
+		assertHasValidErrorObj(extractJsonEntity(response));
+	}
+
+
+	public static void assertHasValidErrorObj(JsonNode jsonApiDocument) {
+		Assert.assertFalse(jsonApiDocument.has("data"));
+		Assert.assertTrue(jsonApiDocument.has("errors"));
+		Assert.assertTrue(jsonApiDocument.get("errors").get(0).has("message"));
+		Assert.assertTrue(jsonApiDocument.get("errors").get(0).has("code"));
+	}
+
+
+	public static void assertExceptionResponseHasValues(Response response, String message, int code) {
+		JsonNode jDoc = extractJsonEntity(response);
+		assertExcDocHasValues(jDoc, message, code);
+	}
+
+	public static void assertExcDocHasValues(JsonNode jDoc, String message, int code) {
+		Assert.assertEquals(message, jDoc.get("errors").get(0).get("message").asText());
+		Assert.assertEquals(code, jDoc.get("errors").get(0).get("code").asInt());
+	}
+
+
 	public static void assertIsValidJsonApiDataResponse(Response response) {
 		Assert.assertTrue(response.getEntity() instanceof JsonApiDocument);
 		JsonApiDocument jDoc = (JsonApiDocument) response.getEntity();
@@ -40,6 +69,7 @@ public class TestUtils {
 
 
 	public static void assertHasValidData(JsonNode jsonApiDocument) {
+		Assert.assertFalse(jsonApiDocument.has("errors"));
 		Assert.assertTrue(jsonApiDocument.has("data"));
 		assertIsValidDataNode(jsonApiDocument.get("data"));
 

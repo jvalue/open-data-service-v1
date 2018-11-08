@@ -18,10 +18,8 @@ public class AbstractApiTest {
 
 		JsonNode result = TestUtils.extractJsonEntity(exception.getResponse());
 
-		Assert.assertTrue(result.has("errors"));
-		Assert.assertTrue(result.get("errors").isArray());
-		Assert.assertEquals(COMBINED_MESSAGE, result.get("errors").get(0).get("message").asText());
-		Assert.assertEquals(ERRCODE_VALID, result.get("errors").get(0).get("code").asInt());
+		assertHasValidErrorObj(result);
+		assertExcDocHasValues(result, COMBINED_MESSAGE, ERRCODE_VALID);
 	}
 
 

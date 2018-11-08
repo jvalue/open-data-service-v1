@@ -13,6 +13,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+import static org.jvalue.ods.rest.v2.TestUtils.COMBINED_MESSAGE;
+import static org.jvalue.ods.rest.v2.TestUtils.ERRCODE_VALID;
+import static org.jvalue.ods.rest.v2.TestUtils.MESSAGE;
+
 public class JsonApiDocumentTest {
 
 	private final Dummy dummyObj01 = new Dummy("id_01");
@@ -56,6 +60,19 @@ public class JsonApiDocumentTest {
 						.stream()
 						.map(JsonApiResource::getEntity)
 						.collect(Collectors.toList()));
+	}
+
+
+	@Test
+	public void testConstructorWithError() {
+		JsonApiError error = new JsonApiError(MESSAGE, ERRCODE_VALID);
+
+		JsonApiDocument result = new JsonApiDocument(error);
+
+		Assert.assertEquals(0, result.data.size());
+		Assert.assertEquals(1, result.errors.size());
+		Assert.assertEquals(ERRCODE_VALID, result.errors.get(0).getCode());
+		Assert.assertEquals(MESSAGE, result.errors.get(0).getMessage());
 	}
 
 
