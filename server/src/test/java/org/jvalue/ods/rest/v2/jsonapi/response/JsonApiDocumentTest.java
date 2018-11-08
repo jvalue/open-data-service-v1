@@ -28,8 +28,7 @@ public class JsonApiDocumentTest {
 	@Mocked
 	private UriInfo uriInfoMock;
 
-	@Before
-	public void setUp() {
+	private void setUpUriInfo() {
 		new Expectations() {{
 			uriInfoMock.getAbsolutePath();
 			result = uri;
@@ -39,6 +38,7 @@ public class JsonApiDocumentTest {
 
 	@Test
     public void testConstructorWithEntity() {
+		setUpUriInfo();
     	JsonApiDocument result = new JsonApiDocument(dummyObj01, uriInfoMock);
 
     	JsonApiResource resource = result.getData().get(0);
@@ -50,6 +50,7 @@ public class JsonApiDocumentTest {
 
     @Test
     public void testConstructorWithCollection() {
+		setUpUriInfo();
 		Collection<JsonApiIdentifiable> dummyCollection = Arrays.asList(dummyObj01, dummyObj42, dummyObj43);
 
 		JsonApiDocument result = new JsonApiDocument(dummyCollection, uriInfoMock);
@@ -78,6 +79,7 @@ public class JsonApiDocumentTest {
 
 	@Test
 	public void testSetResourceCollection() {
+		setUpUriInfo();
 		URI collectionURI = URI.create("http://localhost:8080/path/to/collection/");
 		Collection<JsonApiIdentifiable> dummyCollection = Arrays.asList(dummyObj01, dummyObj42, dummyObj43);
 
@@ -94,6 +96,7 @@ public class JsonApiDocumentTest {
 
 	@Test
     public void testLinks() {
+		setUpUriInfo();
 		new Expectations() {{
 			uriInfoMock.getRequestUri();
 			result = uri;
@@ -112,6 +115,7 @@ public class JsonApiDocumentTest {
 
 	@Test
 	public void hasRelationshipTo() {
+		setUpUriInfo();
 		JsonApiDocument document = new JsonApiDocument(dummyObj01, uriInfoMock);
 		document.addRelationship("rel1", dummyObj42, uri);
 
@@ -122,6 +126,7 @@ public class JsonApiDocumentTest {
 
     @Test
     public void testEquals() {
+		setUpUriInfo();
 		JsonApiDocument result1 = new JsonApiDocument(dummyObj01, uriInfoMock);
 		JsonApiDocument result2 = new JsonApiDocument(dummyObj01, uriInfoMock);
 		JsonApiDocument resultOther = new JsonApiDocument(dummyObj42, uriInfoMock);
