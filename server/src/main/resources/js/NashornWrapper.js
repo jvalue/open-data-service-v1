@@ -9,7 +9,11 @@ function transformationWrapper(jsonStr, query) {
 	var json = JSON.parse(jsonStr);
 	var result = transform(json);
 	if(!query){
-		output(result);
+		//discard previous output() calls in non-query mode
+		init();
+		if(result) {
+			output(result);
+		}
 	}
 	return resultSet;
 }

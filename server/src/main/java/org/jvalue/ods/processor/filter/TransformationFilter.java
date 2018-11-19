@@ -2,6 +2,7 @@ package org.jvalue.ods.processor.filter;
 
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
@@ -41,13 +42,25 @@ public class TransformationFilter extends AbstractFilter<ObjectNode, ObjectNode>
 			throw new FilterException(e.getMessage(), e);
 		}
 
-		ObjectNode resultObjectNode = (ObjectNode) result.get(0);
+		if(result.size() != 1){
+			throw new FilterException("The transformation function needs to return a valid JSON document.");
+		}
+
+		ObjectNode resultObjectNode;
+		try{
+			resultObjectNode = (ObjectNode) result.get(0);
+		}catch(ClassCastException e){
+			//object may not be a valid JSON document.
+			throw new FilterException("Return value of the transformation function is not a valid JSON document.", e);
+		} catch (Exception e){
+			throw new FilterException(e.getMessage(), e);
+		}
+
 		//check if object has a domainId, if not -> generate a domainId.
 		JsonNode at = node.at(source.getDomainIdKey());
 		if(at.isMissingNode()){
 			resultObjectNode.put(source.getDomainIdKey().getMatchingProperty(), Math.abs(resultObjectNode.hashCode()));
 		}
-
 		return resultObjectNode;
 	}
 
