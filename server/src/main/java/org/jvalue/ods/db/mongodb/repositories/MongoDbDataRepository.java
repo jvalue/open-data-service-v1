@@ -46,17 +46,14 @@ public class MongoDbDataRepository extends AbstractMongoDbRepository<JsonNode> i
 	}
 
 	public Map<String, JsonNode> executeBulkGet(Collection<String> ids) {
-
 		List<String> stringFilterList = new ArrayList<>();
 		stringFilterList.addAll(ids);
 
 		MongoCursor<JsonNode> jsonNodeCurser = jongo.getCollection(collectionName).find("{"+domainIdKey.getMatchingProperty()+" : {$in:#}}", stringFilterList).as(JsonNode.class);
 
-
 		Map<String, JsonNode> nodes = new HashMap<>();
 		for (JsonNode node : jsonNodeCurser) {
-			ObjectNode objectNode = removeObjectId(node);
-			nodes.put(objectNode.at(domainIdKey).asText(), objectNode);
+			nodes.put(node.at(domainIdKey).asText(), node);
 		}
 		return nodes;
 	}

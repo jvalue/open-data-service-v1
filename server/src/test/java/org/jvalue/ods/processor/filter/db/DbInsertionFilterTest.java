@@ -46,7 +46,7 @@ public final class DbInsertionFilterTest {
 	public void testAdd(
 			@Mocked final DataRepository repository) throws Exception {
 
-		AbstractFilter<ObjectNode, ObjectNode> filter = new CouchDbInsertionFilter(repository, source, true, registry);
+		AbstractFilter<ObjectNode, ObjectNode> filter = new DbInsertionFilter(repository, source, true, registry);
 		filter.filter(createObject(VALUE_DOMAIN_ID));
 		filter.onComplete();
 
@@ -71,7 +71,7 @@ public final class DbInsertionFilterTest {
 			result = nodes;
 		}};
 
-		AbstractFilter<ObjectNode, ObjectNode> filter = new CouchDbInsertionFilter(repository, source, true, registry);
+		AbstractFilter<ObjectNode, ObjectNode> filter = new DbInsertionFilter(repository, source, true, registry);
 		filter.filter(createObject(VALUE_DOMAIN_ID));
 		filter.onComplete();
 

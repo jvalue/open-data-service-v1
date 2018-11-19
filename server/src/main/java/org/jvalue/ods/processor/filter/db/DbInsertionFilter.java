@@ -26,7 +26,6 @@ import com.google.inject.assistedinject.Assisted;
 import org.ektorp.DocumentOperationResult;
 import org.jvalue.ods.admin.monitoring.PauseableTimer;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
 import org.jvalue.commons.db.repositories.GenericDataRepository;
 import org.jvalue.ods.processor.filter.AbstractFilter;
 import org.jvalue.ods.processor.filter.FilterException;
@@ -37,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class CouchDbInsertionFilter extends AbstractFilter<ObjectNode, ObjectNode> {
+public class DbInsertionFilter extends AbstractFilter<ObjectNode, ObjectNode> {
 
 	protected final GenericDataRepository<JsonNode> dataRepository;
 	private final boolean updateDataIfExists;
@@ -52,7 +51,7 @@ public class CouchDbInsertionFilter extends AbstractFilter<ObjectNode, ObjectNod
 
 
 	@Inject
-	CouchDbInsertionFilter(
+	DbInsertionFilter(
 			@Assisted GenericDataRepository<JsonNode> dataRepository,
 			@Assisted DataSource source,
 			@Assisted boolean updateDataIfExists,
@@ -62,8 +61,8 @@ public class CouchDbInsertionFilter extends AbstractFilter<ObjectNode, ObjectNod
 		this.dataRepository = dataRepository;
 		this.updateDataIfExists = updateDataIfExists;
 
-		PauseableTimer timerBulkRead = PauseableTimer.createTimer(registry, MetricRegistry.name(CouchDbInsertionFilter.class, "bulk-read"));
-		PauseableTimer timerBulkWrite = PauseableTimer.createTimer(registry, MetricRegistry.name(CouchDbInsertionFilter.class, "bulk-write"));
+		PauseableTimer timerBulkRead = PauseableTimer.createTimer(registry, MetricRegistry.name(DbInsertionFilter.class, "bulk-read"));
+		PauseableTimer timerBulkWrite = PauseableTimer.createTimer(registry, MetricRegistry.name(DbInsertionFilter.class, "bulk-write"));
 		this.timerContextBulkRead = timerBulkRead.createContext();
 		this.timerContextBulkWrite = timerBulkWrite.createContext();
 	}
@@ -98,8 +97,12 @@ public class CouchDbInsertionFilter extends AbstractFilter<ObjectNode, ObjectNod
 					String domainId = node.at(source.getDomainIdKey()).asText();
 					if (bulkLoaded.containsKey(domainId)) {
 						JsonNode oldNode = bulkLoaded.get(domainId);
-						node.put("_id", oldNode.get("_id").asText());
-						node.put("_rev", oldNode.get("_rev").asText());
+						if(oldNode.get("_id") != null){
+							node.put("_id", oldNode.get("_id").asText());
+						}
+						if(oldNode.get("_rev") != null) {
+							node.put("_rev", oldNode.get("_rev").asText());
+						}
 					}
 				}
 			} finally {
