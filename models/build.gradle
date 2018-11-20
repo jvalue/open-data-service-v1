@@ -1,12 +1,11 @@
 dependencies {
-    apply from: '../dependencies.gradle'
-
-	compile "io.swagger.core.v3:swagger-jaxrs2:$swaggerVersion"
+	apply from: '../dependencies.gradle'
 
 	compile "com.fasterxml.jackson.core:jackson-databind:$jacksonCoreVersion"
-    compile "com.fasterxml.jackson.core:jackson-annotations:$jacksonCoreVersion"
-    compile "com.google.guava:guava:$guavaVersion"
-    compile "javax.validation:validation-api:$javaxValidationVersion"
+	compile "com.fasterxml.jackson.core:jackson-annotations:$jacksonCoreVersion"
+	compile "com.google.guava:guava:$guavaVersion"
+	compile "javax.validation:validation-api:$javaxValidationVersion"
+	compile "io.swagger.core.v3:swagger-jaxrs2:$swaggerVersion"
 
-    testCompile "junit:junit:$junitVersion"
+	testCompile "junit:junit:$junitVersion"
 }
