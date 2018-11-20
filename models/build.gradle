@@ -1,10 +1,10 @@
 dependencies {
-    apply from: '../dependencies.gradle'
+	apply from: '../dependencies.gradle'
 
-    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonCoreVersion"
-    compile "com.fasterxml.jackson.core:jackson-annotations:$jacksonCoreVersion"
-    compile "com.google.guava:guava:$guavaVersion"
-    compile "javax.validation:validation-api:$javaxValidationVersion"
+	compile "com.fasterxml.jackson.core:jackson-databind:$jacksonCoreVersion"
+	compile "com.fasterxml.jackson.core:jackson-annotations:$jacksonCoreVersion"
+	compile "com.google.guava:guava:$guavaVersion"
+	compile "javax.validation:validation-api:$javaxValidationVersion"
 
-    testCompile "junit:junit:$junitVersion"
+	testCompile "junit:junit:$junitVersion"
 }
