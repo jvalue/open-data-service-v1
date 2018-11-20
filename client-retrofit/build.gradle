@@ -32,7 +32,7 @@ dependencies {
 }
 
 jaxRs2Retrofit {
-    inputDir = file(project(':server').projectDir.toString() + '/' + mainSourcesDir + '/org/jvalue/ods/rest/v1')
+	inputDir = file(project(':server').projectDir.toString() + '/' + mainSourcesDir + '/org/jvalue/ods/rest/v1')
 	outputDir = file(generatedSourcesDir)
 	packageName = 'org.jvalue.ods.api'
 	excludedClassNamesRegex = 'PluginApi|FilterDescriptionApi|Admin.*'
