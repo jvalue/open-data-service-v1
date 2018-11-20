@@ -6,6 +6,7 @@ ext {
 	githashVersion = "0.1.2"
 	guavaVersion = "23.0"
 	guiceVersion = "4.1.0"
+	hibernateVersion = "5.4.2.Final"
 	httpserverVersion = "20070405"
 	nashornSandboxVersion = "0.1.15"
 	jacksonCoreVersion = "2.8.10"
@@ -21,6 +22,7 @@ ext {
 	retrofitVersion = "1.9.0"
 	rxjavaVersion = "1.0.8"
 	shadowVersion = "2.0.2"
+	swaggerVersion = "2.0.2"
 	osmosisVersion = "0.45"
 
 	//testCompile dependencies

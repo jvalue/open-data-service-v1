@@ -5,6 +5,7 @@ dependencies {
 	compile "com.fasterxml.jackson.core:jackson-annotations:$jacksonCoreVersion"
 	compile "com.google.guava:guava:$guavaVersion"
 	compile "javax.validation:validation-api:$javaxValidationVersion"
+	compile "io.swagger.core.v3:swagger-jaxrs2:$swaggerVersion"
 
 	testCompile "junit:junit:$junitVersion"
 }

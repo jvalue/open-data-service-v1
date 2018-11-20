@@ -49,6 +49,9 @@ dependencies {
 	compile "javax.activation:com.springsource.javax.activation:$javaxActivationVersion"
 	compile "com.rabbitmq:amqp-client:$rabbitmqVersion"
 	compile "org.javadelight:delight-nashorn-sandbox:$nashornSandboxVersion"
+	compile "io.swagger.core.v3:swagger-jaxrs2:$swaggerVersion"
+	compile "org.hibernate:hibernate-validator:$hibernateVersion"
+	compile "org.hibernate:hibernate-validator-annotation-processor:$hibernateVersion"
 	compile project(':models')
 	compile fileTree(dir: 'libs', include: '*.jar')
 
