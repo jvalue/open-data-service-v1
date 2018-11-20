@@ -90,7 +90,7 @@ public class NashornExecutionEngine extends AbstractExecutionEngine {
 		try {
 			Invocable sandboxedInvocable = initInvocable(transformationFunction.getReduceFunction());
 			ArrayList<String> setAsList = convertArrayNodeToList(resultSet);
-			Object o = sandboxedInvocable.invokeFunction(REDUCE_FUNCTION, setAsList, setAsList.size());
+			Object o = sandboxedInvocable.invokeFunction(REDUCE_FUNCTION, setAsList);
 
 			ArrayNode resultNode = new ArrayNode(JsonNodeFactory.instance);
 			if (o != null) {

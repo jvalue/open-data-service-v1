@@ -1,16 +1,15 @@
-var resultSet;
+var resultSet = [];
 
-function init(){
-	resultSet = [];
+function output(value){
+	resultSet.push(JSON.stringify(value));
 }
 
 function transformationWrapper(jsonStr, query) {
-	init();
-	var json = JSON.parse(jsonStr);
-	var result = transform(json);
+	var jsObject = JSON.parse(jsonStr);
+	var result = transform(jsObject);
 	if(!query){
 		//discard previous output() calls in non-query mode
-		init();
+		resultSet = [];
 		if(result) {
 			output(result);
 		}
@@ -18,16 +17,12 @@ function transformationWrapper(jsonStr, query) {
 	return resultSet;
 }
 
-function output(value){
-	resultSet.push(JSON.stringify(value));
-}
-
-function reduceWrapper(jsonStrResultSet, size) {
-	var jsonArray = [];
-	for(var i = 0; i < size; i++){
-		jsonArray.push(JSON.parse(jsonStrResultSet[i]));
-	}
-	return reduce(jsonArray);
+function reduceWrapper(jsonStrResultSet) {
+	var jsObjectSet = [];
+	jsonStrResultSet.forEach(function(item){
+		jsObjectSet.push(JSON.parse(item));
+	});
+	return reduce(jsObjectSet);
 }
 
 
