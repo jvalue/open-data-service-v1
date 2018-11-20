@@ -1,5 +1,6 @@
 package org.jvalue.ods.rest.v2.jsonapi.wrapper;
 
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,6 +21,7 @@ public class DataSourceWrapper implements JsonApiIdentifiable {
 
 
 	@Schema(name = "attributes", required = true)
+	@JsonUnwrapped
 	public DataSource getDataSource() {
 		return dataSource;
 	}

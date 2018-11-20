@@ -1,7 +1,11 @@
 package org.jvalue.ods.rest.v2.jsonapi.response;
 
 import com.fasterxml.jackson.annotation.*;
+import org.jvalue.ods.rest.v2.jsonapi.wrapper.JsonApiIdentifiable;
+import org.jvalue.ods.utils.JsonMapper;
+import org.jvalue.ods.utils.JsonUtils;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
 
@@ -38,6 +42,14 @@ public class JsonApiRequest {
 		return attributes;
 	}
 
+
+	public static JsonApiRequest from (JsonApiIdentifiable entity) throws IOException {
+		return new JsonApiRequest(
+			entity.getType(),
+			entity.getId(),
+			JsonUtils.getMapFromJson(JsonMapper.valueToTree(entity))
+		);
+	}
 
 	@Override
 	public boolean equals(Object o) {
