@@ -1,5 +1,6 @@
 package org.jvalue.ods.rest.v2.jsonapi.wrapper;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.jvalue.ods.api.notifications.AmqpClient;
@@ -21,6 +22,7 @@ public class ClientWrapper implements JsonApiIdentifiable{
 
 	@Schema(name = "attributes", oneOf = {HttpClient.class, GcmClient.class, AmqpClient.class}, required = true)
 	@JsonUnwrapped
+	@JsonIgnoreProperties({"id", "type"})
 	public Client getClient() {
 		return client;
 	}

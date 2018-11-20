@@ -1,5 +1,6 @@
 package org.jvalue.ods.rest.v2.jsonapi.wrapper;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.jvalue.ods.api.views.DataView;
@@ -19,6 +20,7 @@ public class DataViewWrapper implements JsonApiIdentifiable {
 
 	@Schema(name = "attributes", required = true)
 	@JsonUnwrapped
+	@JsonIgnoreProperties({"id", "type"})
 	public DataView getDataView() {
 		return dataView;
 	}

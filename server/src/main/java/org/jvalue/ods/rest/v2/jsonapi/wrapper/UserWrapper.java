@@ -1,5 +1,6 @@
 package org.jvalue.ods.rest.v2.jsonapi.wrapper;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.jvalue.commons.auth.Role;
@@ -20,6 +21,7 @@ public class UserWrapper implements JsonApiIdentifiable{
 
 	@Schema(name = "attributes")
 	@JsonUnwrapped
+	@JsonIgnoreProperties({"id", "type"})
 	public User getUser() {
 		return user;
 	}
