@@ -73,7 +73,7 @@ public final class ProcessorChainManagerTest {
 
 		// remove chain
 		manager.remove(source, dataRepository, reference);
-		Thread.sleep(50);
+		Thread.sleep(100);
 
 		new Verifications() {{
 			// add chain
@@ -160,7 +160,7 @@ public final class ProcessorChainManagerTest {
 
 		// stop all
 		manager.stopAllProcessorChains();
-		Thread.sleep(50);
+		Thread.sleep(100);
 
 		new Verifications() {{
 			chain.startProcessing();

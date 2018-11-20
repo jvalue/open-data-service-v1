@@ -40,6 +40,9 @@ public final class ClientVisitorTest {
 		@Override
 		public String visit(AmqpClient client, String param) { return param; }
 
+		@Override
+		public String visit(NdsClient client, String param) { return param; }
+
 	}
 
 }

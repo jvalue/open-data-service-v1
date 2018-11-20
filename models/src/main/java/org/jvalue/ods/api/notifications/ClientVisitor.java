@@ -22,5 +22,6 @@ public interface ClientVisitor<P,R> {
 	public R visit(GcmClient client, P param);
 	public R visit(HttpClient client, P param);
 	public R visit(AmqpClient client, P param);
+	public R visit(NdsClient client, P param);
 
 }

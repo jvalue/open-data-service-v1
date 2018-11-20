@@ -1,5 +1,9 @@
 package org.jvalue.ods.processor.adapter.domain.weather.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
@@ -9,7 +13,10 @@ public class Temperature {
 	private final double value;
 	private final TemperatureType type;
 
-	public Temperature(double value, TemperatureType type) {
+	@JsonCreator
+	public Temperature(
+		@JsonProperty("value") double value,
+		@JsonProperty("type") TemperatureType type) {
 		this.value = round(value);
 		this.type = type;
 	}
@@ -25,6 +32,7 @@ public class Temperature {
 	}
 
 
+	@JsonIgnore
 	public double getValueInKelvin() {
 		double kelvin = type.toKelvin(value);
 		return round(kelvin);

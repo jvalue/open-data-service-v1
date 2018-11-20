@@ -8,6 +8,7 @@ import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.api.notifications.ClientVisitor;
 import org.jvalue.ods.api.notifications.GcmClient;
 import org.jvalue.ods.api.notifications.HttpClient;
+import org.jvalue.ods.api.notifications.NdsClient;
 import org.jvalue.ods.api.sources.DataSource;
 
 import java.util.HashMap;
@@ -65,6 +66,11 @@ public final class SenderCache {
 		@Override
 		public Sender<AmqpClient> visit(AmqpClient client, DataSource source) {
 			return senderFactory.createAmqpSender(source, client);
+		}
+
+		@Override
+		public Sender<NdsClient> visit(NdsClient client, DataSource source) {
+			return senderFactory.createNdsSender(source, client);
 		}
 	}
 
