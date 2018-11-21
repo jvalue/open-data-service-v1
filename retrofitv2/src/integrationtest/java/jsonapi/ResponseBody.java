@@ -38,6 +38,16 @@ public class ResponseBody {
 	}
 
 
+	public String getId() {
+		return data.get("id").asText();
+	}
+
+
+	public String getType() {
+		return data.get("type").asText();
+	}
+
+
 	public <T> T  dataToTargetObject(Class<T> valueType) {
 		JsonNode node =data.get("attributes");
 		return JsonMapper.convertValue(node, valueType);
