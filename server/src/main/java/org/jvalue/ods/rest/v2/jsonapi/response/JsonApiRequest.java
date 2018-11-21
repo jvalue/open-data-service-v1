@@ -37,7 +37,7 @@ public class JsonApiRequest {
 		return id;
 	}
 
-
+	@JsonIgnoreProperties({ "id", "type" })
 	public Map<String, Object> getAttributes() {
 		return attributes;
 	}
