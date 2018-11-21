@@ -1,7 +1,6 @@
 package api;
 
 
-import com.fasterxml.jackson.databind.JsonNode;
 import jsonapi.ResponseBody;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiRequest;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
@@ -18,6 +17,10 @@ public interface DataSourceApi {
 	@GET(BASE_URL + "/{sourceId}")
 	@Headers("Content-type: " + JsonApiResponse.JSONAPI_TYPE)
 	ResponseBody getSource(@Path("sourceId") String sourceId);
+
+	@GET(BASE_URL + "/{sourceId}/schema")
+	@Headers("Content-type: " + JsonApiResponse.JSONAPI_TYPE)
+	ResponseBody getSourceSchema(@Path("sourceId") String sourceId);
 
 	@POST(BASE_URL)
 	@Headers("Content-type: " + JsonApiResponse.JSONAPI_TYPE)

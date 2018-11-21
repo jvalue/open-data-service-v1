@@ -32,7 +32,7 @@ public abstract class AbstractApiTest {
 	protected final JsonPointer domainIdKey = JsonPointer.compile("/someId");
 	protected final JsonNode schema = new ObjectNode(JsonNodeFactory.instance);
 	protected final DataSourceMetaData metaData = new DataSourceMetaData("", "", "", "", "", "", "");
-	protected final String sourceId = getClass().getSimpleName() + "v2";
+	protected final String sourceId = getClass().getSimpleName() + "V2";
 	protected final DataSource dataSource = new DataSource(sourceId, domainIdKey, schema, metaData);
 	protected ResponseBody responseDataSource;
 
@@ -59,7 +59,7 @@ public abstract class AbstractApiTest {
 	}
 
 
-	private void addSource() throws IOException {
+	protected void addSource() throws IOException {
 		DataSourceWrapper addRequest = DataSourceWrapper.from(dataSource);
 		JsonApiRequest request = JsonApiRequest.from(addRequest);
 
@@ -68,7 +68,7 @@ public abstract class AbstractApiTest {
 
 
 	@After
-	public void removeSource() {
+	public void removeSource() throws IOException{
 		dataSourceApi.deleteSource(sourceId);
 	}
 
