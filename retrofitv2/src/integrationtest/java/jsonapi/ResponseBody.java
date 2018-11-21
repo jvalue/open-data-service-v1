@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.jvalue.ods.utils.JsonMapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ResponseBody {
 
 	private JsonNode data;
@@ -49,7 +52,23 @@ public class ResponseBody {
 
 
 	public <T> T  dataToTargetObject(Class<T> valueType) {
-		JsonNode node =data.get("attributes");
-		return JsonMapper.convertValue(node, valueType);
+		return doConvertAttributesToTargetObject(data, valueType);
+	}
+
+
+	public <T> List<T> dataToTargetObjectList(Class<T> valueType) {
+		List<T> retList = new ArrayList<>();
+
+		for (JsonNode node : data) {
+			retList.add(doConvertAttributesToTargetObject(node, valueType));
+		}
+
+		return retList;
+	}
+
+
+	private <T> T doConvertAttributesToTargetObject(JsonNode node, Class<T> valueType) {
+		JsonNode attributes =node.get("attributes");
+		return JsonMapper.convertValue(attributes, valueType);
 	}
 }
