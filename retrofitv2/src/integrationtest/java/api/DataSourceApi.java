@@ -1,10 +1,10 @@
 package api;
 
 
-import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiDocument;
+import com.fasterxml.jackson.databind.JsonNode;
+import jsonapi.ResponseBody;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiRequest;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
-import org.jvalue.ods.rest.v2.jsonapi.wrapper.DataSourceWrapper;
 import retrofit.client.Response;
 import retrofit.http.*;
 
@@ -13,15 +13,15 @@ public interface DataSourceApi {
 
 	@GET(BASE_URL)
 	@Headers("Content-type: " + JsonApiResponse.JSONAPI_TYPE)
-	JsonApiDocument getAllSources();
+	ResponseBody getAllSources();
 
 	@GET(BASE_URL + "/{sourceId}")
 	@Headers("Content-type: " + JsonApiResponse.JSONAPI_TYPE)
-	JsonApiDocument getSource(@Path("sourceId") String sourceId);
+	ResponseBody getSource(@Path("sourceId") String sourceId);
 
 	@POST(BASE_URL)
 	@Headers("Content-type: " + JsonApiResponse.JSONAPI_TYPE)
-	JsonApiDocument addSource(@Body JsonApiRequest sourceDescription);
+	ResponseBody addSource(@Body JsonApiRequest sourceDescription);
 
 	@DELETE(BASE_URL + "/{sourceId}")
 	Response deleteSource(@Path("sourceId") String sourceId);
