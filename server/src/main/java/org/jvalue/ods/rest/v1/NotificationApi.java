@@ -16,6 +16,8 @@ import org.jvalue.ods.api.notifications.GcmClient;
 import org.jvalue.ods.api.notifications.GcmClientDescription;
 import org.jvalue.ods.api.notifications.HttpClient;
 import org.jvalue.ods.api.notifications.HttpClientDescription;
+import org.jvalue.ods.api.notifications.NdsClient;
+import org.jvalue.ods.api.notifications.NdsClientDescription;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.notifications.NotificationManager;
@@ -113,9 +115,16 @@ public final class NotificationApi extends AbstractApi {
 			return new HttpClient(clientId, client.getCallbackUrl(), client.getSendData());
 		}
 
+
 		@Override
 		public Client visit(AmqpClientDescription client, String clientId) {
 			return new AmqpClient(clientId, client.getHost(), client.getExchange(), client.getExchangeType(), client.getRoutingKey());
+		}
+
+
+		@Override
+		public Client visit(NdsClientDescription client, String clientId) {
+			return new NdsClient(clientId, client.getHost(), client.getExchange(), client.getValidateMessage());
 		}
 
 	}

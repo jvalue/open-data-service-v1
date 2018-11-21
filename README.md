@@ -32,6 +32,18 @@ Once done you should be able to run
 
 which first downloads all required dependencies and then starts the ODS. The server should be be running at [http://localhost:8080/ods/api/v1](http://localhost:8080/ods/api/v1).
 
+## Docker
+
+An easy way to use the ODS is via a pre build Docker image.  Therefore use docker-compose to start the ODS Docker container and its dependent  services.
+
+`docker-compose -f docker/docker-compose.yml up`
+
+### Building a Docker Image
+You can build a local Docker image from source files using the Gradle task `./gradlew dockerBuild`.
+To run the local image with docker-compose call:
+
+`docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml up`
+
 
 ## Usage
 

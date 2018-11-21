@@ -15,11 +15,11 @@ plugins {
 
 allprojects {
     group = 'org.jvalue.ods'
-    version = '0.2.2'
+    version = '0.3.0'
 }
 
 wrapper {
-	gradleVersion = '4.7'
+	gradleVersion = '4.10'
 }
 
 subprojects {
