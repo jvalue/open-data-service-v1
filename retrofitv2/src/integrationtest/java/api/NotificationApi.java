@@ -1,6 +1,7 @@
 package api;
 
-import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiDocument;
+import jsonapi.ResponseBody;
+import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiRequest;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
 import retrofit.client.Response;
 import retrofit.http.*;
@@ -10,11 +11,11 @@ public interface NotificationApi {
 
 	@GET(BASE_URL + "/{clientId}")
 	@Headers("Content-type: " + JsonApiResponse.JSONAPI_TYPE)
-	JsonApiDocument getClient(@Path("sourceId") String sourceId, @Path("clientId") String clientId);
+	ResponseBody getClient(@Path("sourceId") String sourceId, @Path("clientId") String clientId);
 
 	@POST(BASE_URL)
 	@Headers("Content-type: " + JsonApiResponse.JSONAPI_TYPE)
-	JsonApiDocument registerClient();
+	ResponseBody registerClient(@Path("sourceId") String sourceId, @Body JsonApiRequest clientDescription);
 
 	@DELETE(BASE_URL + "/{clientId}")
 	@Headers("Content-type: " + JsonApiResponse.JSONAPI_TYPE)
