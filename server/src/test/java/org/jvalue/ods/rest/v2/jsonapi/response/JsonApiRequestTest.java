@@ -3,6 +3,7 @@ package org.jvalue.ods.rest.v2.jsonapi.response;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.jvalue.ods.rest.v2.jsonapi.wrapper.JsonApiIdentifiable;
 import org.jvalue.ods.utils.JsonMapper;
 
 import java.io.IOException;
@@ -33,6 +34,17 @@ public class JsonApiRequestTest {
 
 
 	@Test
+	public void testFromIdentifiable() throws IOException {
+		JsonApiRequest result = JsonApiRequest.from(new Dummy("42"));
+
+		Assert.assertEquals("42", result.getId());
+		Assert.assertEquals("Dummy", result.getType());
+		Assert.assertEquals(3, result.getAttributes().size());
+		Assert.assertTrue(result.getAttributes().containsKey("customField"));
+	}
+
+
+	@Test
 	public void testEquals() {
 		Map<String, Object> attributes = new LinkedHashMap<>();
 		attributes.put("name", "Rick");
@@ -40,6 +52,31 @@ public class JsonApiRequestTest {
 		JsonApiRequest result = new JsonApiRequest("myType","id42",attributes);
 
 		Assert.assertEquals(request, result);
+	}
+
+
+	private class Dummy implements JsonApiIdentifiable {
+
+		private String id;
+		private String customField = "someValue";
+
+		public Dummy (String id ) {
+			this.id = id;
+		}
+
+		public String getCustomField() {
+			return customField;
+		}
+
+		@Override
+		public String getId() {
+			return id;
+		}
+
+		@Override
+		public String getType() {
+			return "Dummy";
+		}
 	}
 
 }
