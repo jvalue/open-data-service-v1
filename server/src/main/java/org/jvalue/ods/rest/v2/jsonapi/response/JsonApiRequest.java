@@ -3,7 +3,6 @@ package org.jvalue.ods.rest.v2.jsonapi.response;
 import com.fasterxml.jackson.annotation.*;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.JsonApiIdentifiable;
 import org.jvalue.ods.utils.JsonMapper;
-import org.jvalue.ods.utils.JsonUtils;
 
 import java.io.IOException;
 import java.util.Map;
@@ -47,8 +46,7 @@ public class JsonApiRequest {
 		return new JsonApiRequest(
 			entity.getType(),
 			entity.getId(),
-			JsonUtils.getMapFromJson(JsonMapper.valueToTree(entity))
-		);
+			JsonMapper.convertValueToMap(entity));
 	}
 
 	@Override
