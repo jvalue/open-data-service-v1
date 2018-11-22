@@ -9,13 +9,11 @@ import org.jvalue.commons.utils.Log;
 import org.jvalue.ods.api.data.Data;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.rest.v2.jsonapi.swagger.ExampleObjects;
+import org.jvalue.ods.utils.JsonMapper;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static org.jvalue.ods.utils.JsonUtils.getMapFromJson;
 
 @Schema(name = "data")
 public class DataWrapper implements JsonApiIdentifiable{
@@ -25,11 +23,7 @@ public class DataWrapper implements JsonApiIdentifiable{
 
 	private DataWrapper(JsonNode jsonNode, String domainIdKey) {
 		this.id = getDomainId(jsonNode, domainIdKey);
-		try {
-			this.attributes = getMapFromJson(jsonNode);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.attributes = JsonMapper.convertValueToMap(jsonNode);
 	}
 
 
