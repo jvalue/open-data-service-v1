@@ -67,11 +67,13 @@ public class NashornExecutionEngine extends AbstractExecutionEngine {
 			Invocable sandboxedInvocable = initInvocable(transformationFunction.getTransformationFunction());
 			ScriptObjectMirror o = (ScriptObjectMirror) sandboxedInvocable.invokeFunction(TRANSFORMATION_FUNCTION, data.toString(), query);
 			ArrayNode result = new ArrayNode(JsonNodeFactory.instance);
-			if(o != null){
-				Collection<Object> values = o.values();
-				for (Object obj : values) {
-					result.add(objectMapper.readTree(obj.toString()));
-				}
+			if(o == null) {
+				throw new ScriptException("Return value of transform() is null.");
+			}
+
+			Collection<Object> values = o.values();
+			for (Object obj : values) {
+				result.add(objectMapper.readTree(obj.toString()));
 			}
 
 			return result;
@@ -93,9 +95,10 @@ public class NashornExecutionEngine extends AbstractExecutionEngine {
 			Object o = sandboxedInvocable.invokeFunction(REDUCE_FUNCTION, setAsList);
 
 			ArrayNode resultNode = new ArrayNode(JsonNodeFactory.instance);
-			if (o != null) {
-				resultNode.add(o.toString());
+			if (o == null) {
+				throw new ScriptException("Return value of reduce() is null.");
 			}
+			resultNode.add(o.toString());
 
 			return resultNode;
 		} finally {
