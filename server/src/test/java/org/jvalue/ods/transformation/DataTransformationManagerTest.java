@@ -41,11 +41,11 @@ public final class DataTransformationManagerTest {
 		TransformationFunction function = new TransformationFunction("1", "function",null);
 
 		new Expectations() {{
-			executionEngine.execute(new ObjectNode(JsonNodeFactory.instance), function, true);
+			executionEngine.execute(new ObjectNode(JsonNodeFactory.instance), function, false);
 			result = arrayNode;
 		}};
 
-		ArrayNode res = transformationManager.transform(new ObjectNode(JsonNodeFactory.instance), function, true);
+		ArrayNode res = transformationManager.transform(new ObjectNode(JsonNodeFactory.instance), function);
 		Assert.assertEquals(arrayNode, res);
 	}
 }

@@ -34,13 +34,13 @@ public class DataTransformationManager extends AbstractDataSourcePropertyManager
 	}
 
 
-	public ArrayNode transform(ObjectNode data, TransformationFunction transformationFunction, boolean query)
+	public ArrayNode transform(ObjectNode data, TransformationFunction transformationFunction)
 		throws ScriptException, IOException, NoSuchMethodException {
-		return executionEngine.execute(data, transformationFunction, query);
+		return executionEngine.execute(data, transformationFunction, false);
 	}
 
 
-	public ArrayNode transform(GenericDataRepository<JsonNode> dataRepository, TransformationFunction transformationFunction, boolean query)
+	public ArrayNode transformAndReduce(GenericDataRepository<JsonNode> dataRepository, TransformationFunction transformationFunction)
 		throws ScriptException, IOException, NoSuchMethodException {
 		Data paginatedData = dataRepository.getAllDocuments();
 		List<JsonNode> result = paginatedData.getResult();
@@ -48,7 +48,7 @@ public class DataTransformationManager extends AbstractDataSourcePropertyManager
 		ArrayNode resultNode = new ArrayNode(JsonNodeFactory.instance);
 
 		for (JsonNode jsonNode : result){
-			ArrayNode resultSet = executionEngine.execute(jsonNode.deepCopy(), transformationFunction, query);
+			ArrayNode resultSet = executionEngine.execute(jsonNode.deepCopy(), transformationFunction, true);
 			Iterator<JsonNode> elements = resultSet.elements();
 			while(elements.hasNext()){
 				JsonNode next = elements.next();

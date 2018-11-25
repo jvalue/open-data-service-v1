@@ -85,6 +85,6 @@ public final class TransformationFilterTest {
 
 
 	private ObjectNode applyFilter(String transformationFunction) throws Exception {
-		return new TransformationFilter(source, registry, transformationManager, transformationFunction,null).doFilter(baseNode);
+		return new TransformationFilter(source, registry, transformationManager, transformationFunction).doFilter(baseNode);
 	}
 }
