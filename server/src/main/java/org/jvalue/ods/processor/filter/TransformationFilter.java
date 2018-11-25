@@ -53,7 +53,7 @@ public class TransformationFilter extends AbstractFilter<ObjectNode, ObjectNode>
 		}
 
 		//check if object has a domainId, if not -> generate a domainId.
-		JsonNode at = node.at(source.getDomainIdKey());
+		JsonNode at = resultObjectNode.at(source.getDomainIdKey());
 		if(at.isMissingNode()){
 			resultObjectNode.put(source.getDomainIdKey().getMatchingProperty(), Math.abs(resultObjectNode.hashCode()));
 		}
