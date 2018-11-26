@@ -57,11 +57,11 @@ public class NashornExecutionEngine extends AbstractExecutionEngine {
 	}
 
 
-	private Invocable initInvocable(String transoformFunction, String reduceFunction) throws ScriptException {
+	private Invocable initInvocable(String transformationFunction, String reduceFunction) throws ScriptException {
 		//append custom transformation function to wrapper script
 		String script = wrapperScript;
-		if(transoformFunction != null){
-			script += transoformFunction;
+		if(transformationFunction != null){
+			script += transformationFunction;
 		}
 		if(reduceFunction != null){
 			script += reduceFunction;
