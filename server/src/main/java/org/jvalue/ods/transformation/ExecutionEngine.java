@@ -8,8 +8,8 @@ import javax.script.ScriptException;
 import java.io.IOException;
 
 public interface ExecutionEngine {
-	ArrayNode execute(ObjectNode data, TransformationFunction transformationFunction, boolean query) throws IOException,
+	ArrayNode execute(ObjectNode data,boolean query) throws IOException,
 		ScriptException, NoSuchMethodException;
-	ArrayNode reduce(ArrayNode resultSet, TransformationFunction transformationFunction) throws IOException,
+	ArrayNode reduce(ArrayNode resultSet) throws IOException,
 		ScriptException, NoSuchMethodException;
 }

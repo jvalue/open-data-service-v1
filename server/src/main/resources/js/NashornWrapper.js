@@ -4,7 +4,8 @@ function output(value){
 	resultSet.push(JSON.stringify(value));
 }
 
-function transformationWrapper(jsonStr, query) {
+function transformationWrapper(jsonStr, query){
+	resultSet = [];
 	var jsObject = JSON.parse(jsonStr);
 	var result = transform(jsObject);
 	if(!query){

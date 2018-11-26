@@ -33,6 +33,7 @@ import org.jvalue.ods.processor.ProcessorModule;
 import org.jvalue.ods.processor.reference.ValidChainReference;
 import org.jvalue.ods.rest.v1.*;
 import org.jvalue.ods.transformation.DataTransformationModule;
+import org.jvalue.ods.transformation.ExecutionEngineModule;
 import org.jvalue.ods.utils.GuiceConstraintValidatorFactory;
 
 import java.util.EnumSet;
@@ -75,7 +76,8 @@ public final class OdsApplication extends Application<OdsConfig> {
 				new DataModule(),
 				new NotificationsModule(),
 				new AuthModule(configuration.getAuth()),
-				new DataTransformationModule());
+				new DataTransformationModule(),
+				new ExecutionEngineModule());
 
 		// start data grabbing
 		environment.lifecycle().manage(injector.getInstance(DataSourceManager.class));

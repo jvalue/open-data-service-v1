@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 import delight.nashornsandbox.NashornSandbox;
 import delight.nashornsandbox.NashornSandboxes;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
@@ -24,13 +26,14 @@ import java.util.concurrent.Executors;
 
 public class NashornExecutionEngine extends AbstractExecutionEngine {
 
+	private final Invocable sandboxedInvocable;
 	private NashornSandbox nashornSandbox;
 
 	private static String wrapperScript = "";
 	private ObjectMapper objectMapper;
 
-
-	public NashornExecutionEngine() {
+	@Inject
+	public NashornExecutionEngine(@Assisted TransformationFunction transformationFunction) throws ScriptException {
 		objectMapper = new ObjectMapper();
 		InputStream resource = NashornExecutionEngine.class.getClassLoader().getResourceAsStream("js/NashornWrapper.js");
 		try {
@@ -39,6 +42,10 @@ public class NashornExecutionEngine extends AbstractExecutionEngine {
 			e.printStackTrace();
 			Log.error(e.getMessage());
 		}
+		initNashornSandbox();
+		sandboxedInvocable = initInvocable(
+			transformationFunction.getTransformationFunction(),
+			transformationFunction.getReduceFunction());
 	}
 
 
@@ -50,9 +57,15 @@ public class NashornExecutionEngine extends AbstractExecutionEngine {
 	}
 
 
-	private Invocable initInvocable(String function) throws ScriptException {
+	private Invocable initInvocable(String transoformFunction, String reduceFunction) throws ScriptException {
 		//append custom transformation function to wrapper script
-		String script = wrapperScript + function;
+		String script = wrapperScript;
+		if(transoformFunction != null){
+			script += transoformFunction;
+		}
+		if(reduceFunction != null){
+			script += reduceFunction;
+		}
 
 		//execute script
 		nashornSandbox.eval(script);
@@ -60,11 +73,9 @@ public class NashornExecutionEngine extends AbstractExecutionEngine {
 	}
 
 	@Override
-	public ArrayNode execute(ObjectNode data, TransformationFunction transformationFunction, boolean query)
+	public ArrayNode execute(ObjectNode data, boolean query)
 		throws ScriptException, IOException, NoSuchMethodException {
-		initNashornSandbox();
 		try {
-			Invocable sandboxedInvocable = initInvocable(transformationFunction.getTransformationFunction());
 			ScriptObjectMirror o = (ScriptObjectMirror) sandboxedInvocable.invokeFunction(TRANSFORMATION_FUNCTION, data.toString(), query);
 			ArrayNode result = new ArrayNode(JsonNodeFactory.instance);
 			if(o == null) {
@@ -78,19 +89,17 @@ public class NashornExecutionEngine extends AbstractExecutionEngine {
 
 			return result;
 		} finally {
-			ExecutorService executor = nashornSandbox.getExecutor();
-			executor.shutdown();
+//			ExecutorService executor = nashornSandbox.getExecutor();
+//			executor.shutdown();
 		}
 	}
 
 
 
 	@Override
-	public ArrayNode reduce(ArrayNode resultSet, TransformationFunction transformationFunction)
+	public ArrayNode reduce(ArrayNode resultSet)
 		throws ScriptException, IOException, NoSuchMethodException {
-		initNashornSandbox();
 		try {
-			Invocable sandboxedInvocable = initInvocable(transformationFunction.getReduceFunction());
 			ArrayList<String> setAsList = convertArrayNodeToList(resultSet);
 			Object o = sandboxedInvocable.invokeFunction(REDUCE_FUNCTION, setAsList);
 
@@ -102,8 +111,8 @@ public class NashornExecutionEngine extends AbstractExecutionEngine {
 
 			return resultNode;
 		} finally {
-			ExecutorService executor = nashornSandbox.getExecutor();
-			executor.shutdown();
+//			ExecutorService executor = nashornSandbox.getExecutor();
+//			executor.shutdown();
 		}
 	}
 

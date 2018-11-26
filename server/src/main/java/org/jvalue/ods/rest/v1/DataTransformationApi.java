@@ -18,6 +18,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @Path(AbstractApi.BASE_URL + "/{sourceId}/transformations")
 @Produces(MediaType.APPLICATION_JSON)
@@ -58,7 +59,7 @@ public final class DataTransformationApi extends AbstractApi {
 		if (!execute) return transformationFunction;
 		try {
 			return dataTransformationManager.transformAndReduce(sourceManager.getDataRepository(source), transformationFunction);
-		} catch (ScriptException | NoSuchMethodException e) {
+		} catch (ScriptException | NoSuchMethodException | InterruptedException | ExecutionException e) {
 			throw RestUtils.createJsonFormattedException("Script execution error: "+ e.getMessage(), 500);
 		} catch (IOException e) {
 			throw RestUtils.createJsonFormattedException("Script execution error: The return value of transformation function is not a valid JSON.", 500);

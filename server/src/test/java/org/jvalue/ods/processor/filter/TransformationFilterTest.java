@@ -18,7 +18,11 @@ import org.jvalue.ods.api.views.generic.TransformationFunction;
 import org.jvalue.ods.db.generic.RepositoryFactory;
 import org.jvalue.ods.data.DataTransformationManager;
 import org.jvalue.ods.transformation.ExecutionEngine;
+import org.jvalue.ods.transformation.ExecutionEngineFactory;
 import org.jvalue.ods.transformation.NashornExecutionEngine;
+import org.jvalue.ods.transformation.TestExecutionEngineFactory;
+
+import javax.script.ScriptException;
 
 @RunWith(JMockit.class)
 public final class TransformationFilterTest {
@@ -47,8 +51,9 @@ public final class TransformationFilterTest {
 		"function test(doc){};";
 
 
+
 	@Before
-	public void setUp() {
+	public void setUp() throws ScriptException {
 		this.source = createDataSource("/parent/id");
 		this.baseNode = new ObjectNode(JsonNodeFactory.instance);
 
@@ -57,8 +62,8 @@ public final class TransformationFilterTest {
 		baseNode.set("main", innerNode);
 		baseNode.put("key2", "value1");
 
-		ExecutionEngine executionEngine = new NashornExecutionEngine();
-		this.transformationManager = new DataTransformationManager(executionEngine, dataRepositoryCache, repositoryFactory);
+		ExecutionEngine executionEngine = new NashornExecutionEngine(new TransformationFunction("testId", null, null));
+		this.transformationManager = new DataTransformationManager(new TestExecutionEngineFactory(), dataRepositoryCache, repositoryFactory);
 	}
 
 
