@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class NashornExecutionEngine extends AbstractExecutionEngine {
@@ -31,6 +30,7 @@ public class NashornExecutionEngine extends AbstractExecutionEngine {
 
 	private static String wrapperScript = "";
 	private ObjectMapper objectMapper;
+
 
 	@Inject
 	public NashornExecutionEngine(@Assisted TransformationFunction transformationFunction) throws ScriptException {
@@ -60,10 +60,10 @@ public class NashornExecutionEngine extends AbstractExecutionEngine {
 	private Invocable initInvocable(String transformationFunction, String reduceFunction) throws ScriptException {
 		//append custom transformation function to wrapper script
 		String script = wrapperScript;
-		if(transformationFunction != null){
+		if (transformationFunction != null) {
 			script += transformationFunction;
 		}
-		if(reduceFunction != null){
+		if (reduceFunction != null) {
 			script += reduceFunction;
 		}
 
@@ -72,13 +72,14 @@ public class NashornExecutionEngine extends AbstractExecutionEngine {
 		return nashornSandbox.getSandboxedInvocable();
 	}
 
+
 	@Override
 	public ArrayNode execute(ObjectNode data, boolean query)
 		throws ScriptException, IOException, NoSuchMethodException {
 
 		ScriptObjectMirror o = (ScriptObjectMirror) sandboxedInvocable.invokeFunction(TRANSFORMATION_FUNCTION, data.toString(), query);
 		ArrayNode result = new ArrayNode(JsonNodeFactory.instance);
-		if(o == null) {
+		if (o == null) {
 			throw new ScriptException("Return value of transform() is null.");
 		}
 
@@ -89,7 +90,6 @@ public class NashornExecutionEngine extends AbstractExecutionEngine {
 
 		return result;
 	}
-
 
 
 	@Override
