@@ -75,23 +75,19 @@ public class NashornExecutionEngine extends AbstractExecutionEngine {
 	@Override
 	public ArrayNode execute(ObjectNode data, boolean query)
 		throws ScriptException, IOException, NoSuchMethodException {
-		try {
-			ScriptObjectMirror o = (ScriptObjectMirror) sandboxedInvocable.invokeFunction(TRANSFORMATION_FUNCTION, data.toString(), query);
-			ArrayNode result = new ArrayNode(JsonNodeFactory.instance);
-			if(o == null) {
-				throw new ScriptException("Return value of transform() is null.");
-			}
 
-			Collection<Object> values = o.values();
-			for (Object obj : values) {
-				result.add(objectMapper.readTree(obj.toString()));
-			}
-
-			return result;
-		} finally {
-//			ExecutorService executor = nashornSandbox.getExecutor();
-//			executor.shutdown();
+		ScriptObjectMirror o = (ScriptObjectMirror) sandboxedInvocable.invokeFunction(TRANSFORMATION_FUNCTION, data.toString(), query);
+		ArrayNode result = new ArrayNode(JsonNodeFactory.instance);
+		if(o == null) {
+			throw new ScriptException("Return value of transform() is null.");
 		}
+
+		Collection<Object> values = o.values();
+		for (Object obj : values) {
+			result.add(objectMapper.readTree(obj.toString()));
+		}
+
+		return result;
 	}
 
 
@@ -99,21 +95,17 @@ public class NashornExecutionEngine extends AbstractExecutionEngine {
 	@Override
 	public ArrayNode reduce(ArrayNode resultSet)
 		throws ScriptException, IOException, NoSuchMethodException {
-		try {
-			ArrayList<String> setAsList = convertArrayNodeToList(resultSet);
-			Object o = sandboxedInvocable.invokeFunction(REDUCE_FUNCTION, setAsList);
 
-			ArrayNode resultNode = new ArrayNode(JsonNodeFactory.instance);
-			if (o == null) {
-				throw new ScriptException("Return value of reduce() is null.");
-			}
-			resultNode.add(o.toString());
+		ArrayList<String> setAsList = convertArrayNodeToList(resultSet);
+		Object o = sandboxedInvocable.invokeFunction(REDUCE_FUNCTION, setAsList);
 
-			return resultNode;
-		} finally {
-//			ExecutorService executor = nashornSandbox.getExecutor();
-//			executor.shutdown();
+		ArrayNode resultNode = new ArrayNode(JsonNodeFactory.instance);
+		if (o == null) {
+			throw new ScriptException("Return value of reduce() is null.");
 		}
+		resultNode.add(o.toString());
+
+		return resultNode;
 	}
 
 
