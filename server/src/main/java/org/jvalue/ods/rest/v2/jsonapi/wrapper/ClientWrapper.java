@@ -3,10 +3,7 @@ package org.jvalue.ods.rest.v2.jsonapi.wrapper;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.jvalue.ods.api.notifications.AmqpClient;
-import org.jvalue.ods.api.notifications.Client;
-import org.jvalue.ods.api.notifications.GcmClient;
-import org.jvalue.ods.api.notifications.HttpClient;
+import org.jvalue.ods.api.notifications.*;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -20,7 +17,7 @@ public class ClientWrapper implements JsonApiIdentifiable{
 		this.client = client;
 	}
 
-	@Schema(name = "attributes", oneOf = {HttpClient.class, GcmClient.class, AmqpClient.class}, required = true)
+	@Schema(name = "attributes", oneOf = {HttpClient.class, GcmClient.class, AmqpClient.class, NdsClient.class}, required = true)
 	@JsonUnwrapped
 	@JsonIgnoreProperties({"id", "type"})
 	public Client getClient() {
@@ -32,7 +29,7 @@ public class ClientWrapper implements JsonApiIdentifiable{
 		return client.getId();
 	}
 
-	@Schema(allowableValues = "Client")
+	@Schema(allowableValues = {HttpClient.CLIENT_TYPE, GcmClient.CLIENT_TYPE, AmqpClient.CLIENT_TYPE, NdsClient.CLIENT_TYPE})
 	@Override
 	public String getType() {
 		return client.getType();
