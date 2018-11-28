@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.api.notifications.HttpClient;
+import org.jvalue.ods.utils.JsonMapper;
 
 public class ClientWrapperTest {
 
@@ -17,11 +18,9 @@ public class ClientWrapperTest {
 
 	@Test
 	public void testSerialization() throws JsonProcessingException {
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.disable(SerializationFeature.FAIL_ON_UNWRAPPED_TYPE_IDENTIFIERS);
 
 		String expectedJson = "{\"callbackUrl\":\"callback\",\"sendData\":false,\"id\":\"id\",\"type\":\"HTTP\"}";
-		String result = mapper.writeValueAsString(httpWrapped);
+		String result = JsonMapper.writeValueAsString(httpWrapped);
 
 		Assert.assertEquals(expectedJson, result);
 	}
