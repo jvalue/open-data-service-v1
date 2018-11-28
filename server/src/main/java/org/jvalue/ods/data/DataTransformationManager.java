@@ -33,6 +33,9 @@ public class DataTransformationManager extends AbstractDataSourcePropertyManager
 		this.executionEngineFactory = executionEngineFactory;
 	}
 
+	public void testEval(TransformationFunction transformationFunction) throws ScriptException {
+		executionEngineFactory.createExecutionEngine(transformationFunction);
+	}
 
 	public ArrayNode transform(ObjectNode data, TransformationFunction transformationFunction)
 		throws ScriptException, IOException, NoSuchMethodException {

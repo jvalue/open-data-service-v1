@@ -81,6 +81,12 @@ public final class DataTransformationApi extends AbstractApi {
 
 		TransformationFunction transformationFunction = new TransformationFunction(viewId, viewDescription.getTransformationFunction(), viewDescription.getReduceFunction());
 
+		try{
+			dataTransformationManager.testEval(transformationFunction);
+		}catch (ScriptException e){
+			throw RestUtils.createJsonFormattedException("Script evaluation error: " + e.getMessage(), 500);
+		}
+
 
 		dataTransformationManager.add(source, sourceManager.getDataRepository(source), transformationFunction);
 		return transformationFunction;
