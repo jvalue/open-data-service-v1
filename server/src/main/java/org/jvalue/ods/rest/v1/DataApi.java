@@ -5,21 +5,16 @@ import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 import com.hubspot.jackson.jaxrs.PropertyFiltering;
-
 import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
+import org.jvalue.commons.db.repositories.GenericDataRepository;
 import org.jvalue.commons.rest.RestUtils;
-import org.jvalue.ods.api.data.Data;
+import org.jvalue.commons.db.data.Data;
+import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
 import org.jvalue.ods.data.DataSourceManager;
-import org.jvalue.ods.db.DataRepository;
 
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 @Path(AbstractApi.BASE_URL + "/{sourceId}/data")
@@ -44,8 +39,8 @@ public final class DataApi extends AbstractApi {
 
 		if (count < 1 || count > 100) throw RestUtils.createJsonFormattedException("count must be > 0 and < 100", 400);
 
-		DataRepository repository = assertIsValidSource(sourceId);
-		return repository.executePaginatedGet(startId, count);
+		GenericDataRepository<JsonNode> repository = assertIsValidSource(sourceId);
+		return repository.getPaginatedData(startId, count);
 	}
 
 
@@ -54,7 +49,7 @@ public final class DataApi extends AbstractApi {
 			@RestrictedTo(Role.ADMIN) User user,
 			@PathParam("sourceId") String sourceId) {
 
-		DataRepository repository = assertIsValidSource(sourceId);
+		GenericDataRepository<JsonNode> repository = assertIsValidSource(sourceId);
 		repository.removeAll();
 	}
 
@@ -81,7 +76,7 @@ public final class DataApi extends AbstractApi {
 	}
 
 
-	private DataRepository assertIsValidSource(String sourceId) {
+	private GenericDataRepository<JsonNode> assertIsValidSource(String sourceId) {
 		return sourceManager.getDataRepository(sourceManager.findBySourceId(sourceId));
 	}
 

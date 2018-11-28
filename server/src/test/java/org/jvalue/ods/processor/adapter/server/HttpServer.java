@@ -16,9 +16,14 @@ public final class HttpServer implements Server {
 
 	private com.sun.net.httpserver.HttpServer httpServer;
 
+	private int port;
+
+
 	@Override
-	public void start(String content) throws Exception {
-		httpServer = com.sun.net.httpserver.HttpServer.create(new InetSocketAddress(8083), 0);
+	public void start(String content, int port) throws Exception {
+		if (port == 0) this.port = 8083;
+		else this.port = port;
+		httpServer = com.sun.net.httpserver.HttpServer.create(new InetSocketAddress(this.port), 0);
 		httpServer.createContext("/" + FILE_NAME, new FileHandler(content));
 		httpServer.setExecutor(null);
 		httpServer.start();
@@ -34,7 +39,7 @@ public final class HttpServer implements Server {
 
 	@Override
 	public URL getFileUrl() throws Exception {
-		return new URL("http://localhost:8083/" + FILE_NAME);
+		return new URL("http://localhost:"+port+"/" + FILE_NAME);
 	}
 
 
@@ -42,10 +47,12 @@ public final class HttpServer implements Server {
 
 		private final String content;
 
+
 		public FileHandler(String content) {
 			this.content = content;
 
 		}
+
 
 		@Override
 		public void handle(HttpExchange exchange) {

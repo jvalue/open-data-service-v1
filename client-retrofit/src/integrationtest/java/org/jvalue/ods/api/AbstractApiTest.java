@@ -20,7 +20,6 @@ import retrofit.converter.JacksonConverter;
 public abstract class AbstractApiTest {
 
 	protected DataSourceApi dataSourceApi;
-	protected NotificationApi notificationApi;
 
 	protected final JsonPointer domainIdKey = JsonPointer.compile("/someId");
 	protected final JsonNode schema = new ObjectNode(JsonNodeFactory.instance);
@@ -54,15 +53,15 @@ public abstract class AbstractApiTest {
 				})
 				.build();
 
+		//a data source is needed by all other Apis so it get initialized here
 		dataSourceApi = restAdapter.create(DataSourceApi.class);
-		notificationApi = restAdapter.create(NotificationApi.class);
+		dataSource = dataSourceApi.addSourceSynchronously(sourceId, dataSourceDescription);
+
+		initApi(restAdapter);
 	}
 
 
-	@Before
-	public void addSource() {
-		this.dataSource = dataSourceApi.addSourceSynchronously(sourceId, dataSourceDescription);
-	}
+	protected abstract void initApi(RestAdapter restAdapter);
 
 
 	@After

@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 @SuppressWarnings("Duplicates")
 public final class APIXUSourceAdapter implements SourceAdapter {
 
+	private String alias = this.getClass().getSimpleName();
 	private final ObjectMapper mapper = new ObjectMapper();
 	private final DataSource dataSource;
 	private final MetricRegistry registry;
@@ -64,6 +65,18 @@ public final class APIXUSourceAdapter implements SourceAdapter {
 		}
 
 		return result.iterator();
+	}
+
+
+	@Override
+	public void setAlias(String name) {
+		this.alias = name;
+	}
+
+
+	@Override
+	public String getAlias() {
+		return this.alias;
 	}
 
 

@@ -103,7 +103,7 @@ final class OsmSourceAdapter extends AbstractSourceAdapter {
 				thread.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 					@Override
 					public void uncaughtException(Thread thread, Throwable throwable) {
-						// TODO exception is not carried back to the chain manager
+						// TODO exception is not carried back to the chain data
 						Log.error("osmosis reader failed", throwable);
 					}
 				});

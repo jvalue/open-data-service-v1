@@ -24,11 +24,12 @@ dependencies {
     compile "com.squareup.retrofit:converter-jackson:$retrofitVersion"
     compile "io.reactivex:rxjava:$rxjavaVersion"
     compile "org.jvalue.commons:models:$jvalueCommonsVersion"
+    compile "org.jvalue.commons:db:$jvalueCommonsVersion"
     compile project(':models')
 
     testCompile "org.jmockit:jmockit:$jmockitVersion"
     testCompile "junit:junit:$junitVersion"
-	testCompile "org.jvalue.commons:utils:$jvalueCommonsVersion"
+    testCompile "org.jvalue.commons:utils:$jvalueCommonsVersion"
 }
 
 jaxRs2Retrofit {

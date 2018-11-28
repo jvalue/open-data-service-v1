@@ -6,6 +6,7 @@ import com.google.inject.Inject;
 import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
+import org.jvalue.commons.db.GenericDocumentNotFoundException;
 import org.jvalue.commons.rest.RestUtils;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
@@ -34,8 +35,8 @@ public final class ProcessorChainApi extends AbstractApi {
 	private static final EnumSet<TimeUnit> validExecutionIntervalUnits
 			= EnumSet.of(TimeUnit.SECONDS, TimeUnit.MINUTES, TimeUnit.HOURS, TimeUnit.DAYS);
 
-	private final DataSourceManager sourceManager;
 	private final ProcessorChainManager chainManager;
+	private final DataSourceManager sourceManager;
 
 	@Inject
 	public ProcessorChainApi(
@@ -78,7 +79,13 @@ public final class ProcessorChainApi extends AbstractApi {
 			assertIsValidTimeUnit(processorChain.getExecutionInterval().getUnit());
 		}
 
-		DataSource source = sourceManager.findBySourceId(sourceId);
+		DataSource source;
+		try{
+			source = sourceManager.findBySourceId(sourceId);
+		}catch (GenericDocumentNotFoundException e){
+			throw RestUtils.createJsonFormattedException("source with id "+ sourceId + " does not exist.", 404);
+		}
+
 		if (chainManager.contains(source, filterChainId))
 			throw RestUtils.createJsonFormattedException("filter chain with id " + filterChainId + " already exists", 409);
 
@@ -100,7 +107,12 @@ public final class ProcessorChainApi extends AbstractApi {
 			@PathParam("sourceId") String sourceId,
 			@PathParam("filterChainId") String filterChainId) {
 
-		DataSource source = sourceManager.findBySourceId(sourceId);
+		DataSource source;
+		try{
+			source = sourceManager.findBySourceId(sourceId);
+		}catch (GenericDocumentNotFoundException e){
+			throw RestUtils.createJsonFormattedException("source with id "+ sourceId + " does not exist.", 404);
+		}
 		ProcessorReferenceChain reference = chainManager.get(source, filterChainId);
 		chainManager.remove(source, sourceManager.getDataRepository(source), reference);
 	}

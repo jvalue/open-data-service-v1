@@ -59,17 +59,17 @@ public final class ChainReferenceValidatorTest {
 			Map<String, Class<?>> argTypes = new HashMap<>();
 			argTypes.put("key1", String.class);
 			descriptionManager.getByName(SourceAdapterFactory.NAME_JSON_SOURCE_ADAPTER);
-			result = Deencapsulation.newInnerInstance(Specification.class, SourceAdapterFactory.NAME_JSON_SOURCE_ADAPTER, ProcessorType.SOURCE_ADAPTER, argTypes);
+			result = new Specification(SourceAdapterFactory.NAME_JSON_SOURCE_ADAPTER, ProcessorType.SOURCE_ADAPTER, argTypes);
 
 			argTypes = new HashMap<>();
 			argTypes.put("key2", Integer.class);
 			descriptionManager.getByName(FilterFactory.NAME_DB_INSERTION_FILTER);
-			result = Deencapsulation.newInnerInstance(Specification.class, FilterFactory.NAME_DB_INSERTION_FILTER, ProcessorType.FILTER, argTypes);
+			result = new Specification(FilterFactory.NAME_DB_INSERTION_FILTER, ProcessorType.FILTER, argTypes);
 
 			argTypes = new HashMap<>();
 			argTypes.put("key3", Boolean.class);
 			descriptionManager.getByName(FilterFactory.NAME_NOTIFICATION_FILTER);
-			result = Deencapsulation.newInnerInstance(Specification.class, FilterFactory.NAME_NOTIFICATION_FILTER, ProcessorType.FILTER, argTypes);
+			result = new Specification(FilterFactory.NAME_NOTIFICATION_FILTER, ProcessorType.FILTER, argTypes);
 		}};
 
 		ProcessorReferenceChainDescription reference = new ProcessorReferenceChainDescription(
@@ -94,7 +94,7 @@ public final class ChainReferenceValidatorTest {
 			Map<String, Class<?>> argTypes = new HashMap<>();
 			argTypes.put("key3", Boolean.class);
 			descriptionManager.getByName(FilterFactory.NAME_NOTIFICATION_FILTER);
-			result = Deencapsulation.newInnerInstance(Specification.class, FilterFactory.NAME_NOTIFICATION_FILTER, ProcessorType.FILTER, argTypes);
+			result = new Specification(FilterFactory.NAME_NOTIFICATION_FILTER, ProcessorType.FILTER, argTypes);
 		}};
 
 		Assert.assertFalse(validator.isValid(new ProcessorReferenceChainDescription(
@@ -110,7 +110,7 @@ public final class ChainReferenceValidatorTest {
 			final Map<String, Class<?>> argTypes = new HashMap<>();
 			argTypes.put("someMissingKey", String.class);
 			descriptionManager.getByName(SourceAdapterFactory.NAME_JSON_SOURCE_ADAPTER);
-			result = Deencapsulation.newInnerInstance(Specification.class, SourceAdapterFactory.NAME_JSON_SOURCE_ADAPTER, ProcessorType.SOURCE_ADAPTER, argTypes);
+			result = new Specification(SourceAdapterFactory.NAME_JSON_SOURCE_ADAPTER, ProcessorType.SOURCE_ADAPTER, argTypes);
 		}};
 
 		Assert.assertFalse(validator.isValid(new ProcessorReferenceChainDescription(

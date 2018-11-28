@@ -9,7 +9,10 @@ import javax.validation.constraints.NotNull;
 
 public final class PluginMetaData {
 
-	@NotNull private final String id, author;
+	@NotNull
+	private final String id;
+
+	@NotNull private final String author;
 
 	@JsonCreator
 	public PluginMetaData(

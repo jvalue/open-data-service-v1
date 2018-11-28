@@ -8,6 +8,7 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 
+import org.jvalue.ods.processor.filter.db.DbInsertionFilter;
 import org.jvalue.ods.processor.filter.domain.PegelBrandenburgMerger;
 import org.jvalue.ods.processor.filter.domain.PegelOnlineMerger;
 

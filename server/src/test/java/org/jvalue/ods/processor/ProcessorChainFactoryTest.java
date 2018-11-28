@@ -1,13 +1,16 @@
 package org.jvalue.ods.processor;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.jvalue.ods.api.processors.ExecutionInterval;
 import org.jvalue.ods.api.processors.ProcessorReference;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.db.DataRepository;
+import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
+import org.jvalue.commons.db.repositories.GenericDataRepository;
+import org.jvalue.ods.db.couchdb.repositories.DataRepository;
 import org.jvalue.ods.processor.adapter.SourceAdapterFactory;
 import org.jvalue.ods.processor.filter.FilterFactory;
 
@@ -55,7 +58,7 @@ public final class ProcessorChainFactoryTest {
 	public void testCreation(
 			@Mocked final FilterFactory filterFactory,
 			@Mocked final SourceAdapterFactory adapterFactory,
-			@Mocked final DataRepository dataRepository)
+			@Mocked final GenericDataRepository<JsonNode> dataRepository)
 			throws Exception {
 
 		final ProcessorChainFactory chainFactory = new ProcessorChainFactory(adapterFactory, filterFactory);

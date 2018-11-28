@@ -23,7 +23,7 @@ abstract class AbstractSourceAdapterTest {
 		List<ObjectNode> jsonResult = null;
 
 		for (final Server server : serverList) {
-			server.start(content);
+			server.start(content, 0);
 			List<ObjectNode> tmpJsonResult = new LinkedList<>();
 			for (ObjectNode node : createAdapter(server.getFileUrl().toString())) tmpJsonResult.add(node);
 			server.stop();

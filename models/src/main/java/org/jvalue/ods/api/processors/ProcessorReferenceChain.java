@@ -4,18 +4,19 @@ package org.jvalue.ods.api.processors;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 
-import java.util.List;
-
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 public final class ProcessorReferenceChain extends AbstractProcessorReferenceChain {
 
-	@NotNull private final String id;
+	@NotNull
+	private final String id;
+
 
 	public ProcessorReferenceChain(
-			@JsonProperty("id") String id,
-			@JsonProperty("processors") List<ProcessorReference> processors,
-			@JsonProperty("executionInterval") ExecutionInterval executionInterval) {
+		@JsonProperty("id") String id,
+		@JsonProperty("processors") List<ProcessorReference> processors,
+		@JsonProperty("executionInterval") ExecutionInterval executionInterval) {
 
 		super(processors, executionInterval);
 		this.id = id;

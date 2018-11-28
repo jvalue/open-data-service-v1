@@ -1,16 +1,9 @@
 package org.jvalue.ods.transformation;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import javax.script.ScriptException;
-import java.io.IOException;
-
 public abstract class AbstractExecutionEngine implements ExecutionEngine {
 
-	protected static final String WRAPPER_FUNCTION = "transformationWrapper";
+	protected static final String TRANSFORMATION_FUNCTION = "transformationWrapper";
 
+	protected static final String REDUCE_FUNCTION = "reduceWrapper";
 
-	@Override
-	public abstract ObjectNode execute(ObjectNode data, TransformationFunction transformationFunction)
-		throws IOException, ScriptException, NoSuchMethodException;
 }

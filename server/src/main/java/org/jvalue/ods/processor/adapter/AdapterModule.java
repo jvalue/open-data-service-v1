@@ -48,6 +48,11 @@ public final class AdapterModule extends AbstractModule {
 						Names.named(SourceAdapterFactory.NAME_APIXU_SOURCE_ADAPTER),
 						APIXUSourceAdapter.class
 				)
+				.implement(
+						SourceAdapter.class,
+						Names.named(SourceAdapterFactory.NAME_MULTI_SOURCE_ADAPTER),
+						MultiSourceAdapter.class
+				)
 				.build(SourceAdapterFactory.class));
 	}
 

@@ -1,23 +1,24 @@
 package org.jvalue.ods.notifications;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
-
+import org.jvalue.commons.db.repositories.GenericDataRepository;
+import org.jvalue.commons.db.repositories.GenericRepository;
 import org.jvalue.commons.utils.Cache;
 import org.jvalue.commons.utils.Log;
 import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.api.sources.DataSource;
+import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
+import org.jvalue.ods.db.generic.RepositoryFactory;
 import org.jvalue.ods.data.AbstractDataSourcePropertyManager;
-import org.jvalue.ods.db.DataRepository;
-import org.jvalue.ods.db.NotificationClientRepository;
-import org.jvalue.ods.db.RepositoryFactory;
 import org.jvalue.ods.notifications.sender.Sender;
 import org.jvalue.ods.notifications.sender.SenderCache;
 import org.jvalue.ods.notifications.sender.SenderResult;
 
 
 public final class NotificationManager
-		extends AbstractDataSourcePropertyManager<Client, NotificationClientRepository>
+		extends AbstractDataSourcePropertyManager<Client, GenericRepository<Client>>
 		implements DataSink {
 
 
@@ -25,7 +26,7 @@ public final class NotificationManager
 
 	@Inject
 	NotificationManager(
-			Cache<NotificationClientRepository> repositoryCache,
+			Cache<GenericRepository<Client>> repositoryCache,
 			RepositoryFactory repositoryFactory,
 			SenderCache senderCache) {
 
@@ -87,11 +88,11 @@ public final class NotificationManager
 
 
 	@Override
-	protected void doAdd(DataSource source, DataRepository dataRepository, Client client) { }
+	protected void doAdd(DataSource source, GenericDataRepository<JsonNode> dataRepository, Client client) { }
 
 
 	@Override
-	protected void doRemove(DataSource source, DataRepository dataRepository, Client client) { }
+	protected void doRemove(DataSource source, GenericDataRepository<JsonNode> dataRepository, Client client) { }
 
 
 	@Override
@@ -99,7 +100,7 @@ public final class NotificationManager
 
 
 	@Override
-	protected NotificationClientRepository createNewRepository(String sourceId, RepositoryFactory repositoryFactory) {
+	protected GenericRepository<Client> createNewRepository(String sourceId, RepositoryFactory repositoryFactory) {
 		return repositoryFactory.createNotificationClientRepository(sourceId);
 	}
 

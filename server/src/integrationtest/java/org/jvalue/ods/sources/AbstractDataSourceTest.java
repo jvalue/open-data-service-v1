@@ -9,7 +9,7 @@ import org.jvalue.ods.ApiFactory;
 import org.jvalue.ods.api.DataApi;
 import org.jvalue.ods.api.DataSourceApi;
 import org.jvalue.ods.api.ProcessorChainApi;
-import org.jvalue.ods.api.data.Data;
+import org.jvalue.commons.db.data.Data;
 import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
 import org.jvalue.ods.api.sources.DataSourceDescription;
 

@@ -19,7 +19,6 @@ import org.jvalue.commons.auth.rest.UnauthorizedExceptionMapper;
 import org.jvalue.commons.couchdb.rest.DbExceptionMapper;
 import org.jvalue.commons.rest.JsonExceptionMapper;
 import org.jvalue.commons.rest.NotFoundExceptionMapper;
-import org.jvalue.commons.utils.HttpServiceCheck;
 import org.jvalue.ods.admin.monitoring.DbHealthCheck;
 import org.jvalue.ods.admin.monitoring.MonitoringModule;
 import org.jvalue.ods.admin.rest.AdminFilterChainApi;
@@ -27,25 +26,13 @@ import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
 import org.jvalue.ods.auth.AuthModule;
 import org.jvalue.ods.data.DataModule;
 import org.jvalue.ods.data.DataSourceManager;
-import org.jvalue.ods.db.DbModule;
+import org.jvalue.ods.db.generic.DbModule;
 import org.jvalue.ods.notifications.NotificationsModule;
-import org.jvalue.ods.pegelalarm.CepsClientHealthCheck;
-import org.jvalue.ods.pegelalarm.DataHealthCheck;
-import org.jvalue.ods.pegelalarm.DataSourceHealthCheck;
-import org.jvalue.ods.pegelalarm.FilterChainHealthCheck;
-import org.jvalue.ods.pegelalarm.PegelOnlineHealthCheck;
+import org.jvalue.ods.pegelalarm.*;
 import org.jvalue.ods.processor.ProcessorModule;
 import org.jvalue.ods.processor.reference.ValidChainReference;
+import org.jvalue.ods.rest.v1.*;
 import org.jvalue.ods.transformation.DataTransformationModule;
-import org.jvalue.ods.rest.v1.DataApi;
-import org.jvalue.ods.rest.v1.DataSourceApi;
-import org.jvalue.ods.rest.v1.DataViewApi;
-import org.jvalue.ods.rest.v1.NotificationApi;
-import org.jvalue.ods.rest.v1.PluginApi;
-import org.jvalue.ods.rest.v1.ProcessorChainApi;
-import org.jvalue.ods.rest.v1.ProcessorSpecificationApi;
-import org.jvalue.ods.rest.v1.UserApi;
-import org.jvalue.ods.rest.v1.VersionApi;
 import org.jvalue.ods.utils.GuiceConstraintValidatorFactory;
 
 import java.util.EnumSet;
@@ -63,6 +50,7 @@ import io.dropwizard.setup.Environment;
 
 public final class OdsApplication extends Application<OdsConfig> {
 
+	private static final boolean USE_MONGO_DB = false;
 
 	public static void main(String[] args) throws Exception {
 		new OdsApplication().run(args);
@@ -78,15 +66,14 @@ public final class OdsApplication extends Application<OdsConfig> {
 	@Override
 	@Context
 	public void run(OdsConfig configuration, Environment environment) {
-		assertCouchDbIsReady(configuration.getCouchDb().getUrl());
 
 		Injector injector = Guice.createInjector(
 				new MonitoringModule(environment.metrics()),
 				new ConfigModule(configuration),
 				new ProcessorModule(),
-				new DbModule(configuration.getCouchDb()),
-				new NotificationsModule(),
+				new DbModule(configuration, USE_MONGO_DB),
 				new DataModule(),
+				new NotificationsModule(),
 				new AuthModule(configuration.getAuth()),
 				new DataTransformationModule());
 
@@ -97,12 +84,18 @@ public final class OdsApplication extends Application<OdsConfig> {
 		environment.jersey().register(injector.getInstance(DataSourceApi.class));
 		environment.jersey().register(injector.getInstance(DataApi.class));
 		environment.jersey().register(injector.getInstance(ProcessorChainApi.class));
-		environment.jersey().register(injector.getInstance(DataViewApi.class));
+
+		//disable CouchDB specific DataViewApi if we are not using CouchDb
+		if(!USE_MONGO_DB){
+			environment.jersey().register(injector.getInstance(DataViewApi.class));
+		}
+
 		environment.jersey().register(injector.getInstance(NotificationApi.class));
 		environment.jersey().register(injector.getInstance(PluginApi.class));
 		environment.jersey().register(injector.getInstance(ProcessorSpecificationApi.class));
 		environment.jersey().register(injector.getInstance(VersionApi.class));
 		environment.jersey().register(injector.getInstance(UserApi.class));
+		environment.jersey().register(injector.getInstance(DataTransformationApi.class));
 		environment.jersey().register(PropertyFilteringMessageBodyWriter.class);
 		environment.jersey().register(new DbExceptionMapper());
 		environment.jersey().register(new JsonExceptionMapper());
@@ -160,11 +153,6 @@ public final class OdsApplication extends Application<OdsConfig> {
 	}
 
 
-	private void assertCouchDbIsReady(String couchDbUrl) {
-		if (!HttpServiceCheck.check(couchDbUrl)) {
-			throw new RuntimeException("CouchDB service is not ready [" + couchDbUrl+ "]");
-		}
 
-	}
 
 }

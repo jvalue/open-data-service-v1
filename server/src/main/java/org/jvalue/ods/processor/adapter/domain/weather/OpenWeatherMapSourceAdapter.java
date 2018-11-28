@@ -2,7 +2,6 @@ package org.jvalue.ods.processor.adapter.domain.weather;
 
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.assistedinject.Assisted;
 import org.jvalue.ods.api.sources.DataSource;
@@ -28,6 +27,7 @@ import java.util.stream.Collectors;
 @SuppressWarnings("Duplicates")
 final public class OpenWeatherMapSourceAdapter implements SourceAdapter {
 
+	private String alias = this.getClass().getSimpleName();
 	private final DataSource dataSource;
 	private final MetricRegistry registry;
 	private final List<Location> locations;
@@ -64,6 +64,18 @@ final public class OpenWeatherMapSourceAdapter implements SourceAdapter {
 		}
 
 		return result.iterator();
+	}
+
+
+	@Override
+	public void setAlias(String name) {
+		this.alias = name;
+	}
+
+
+	@Override
+	public String getAlias() {
+		return this.alias;
 	}
 
 

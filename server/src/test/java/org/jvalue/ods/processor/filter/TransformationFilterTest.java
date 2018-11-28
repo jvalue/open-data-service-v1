@@ -10,14 +10,21 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.jvalue.commons.db.repositories.GenericRepository;
+import org.jvalue.commons.utils.Cache;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceMetaData;
-import org.jvalue.ods.transformation.DataTransformationManager;
+import org.jvalue.ods.api.views.generic.TransformationFunction;
+import org.jvalue.ods.db.generic.RepositoryFactory;
+import org.jvalue.ods.data.DataTransformationManager;
 import org.jvalue.ods.transformation.ExecutionEngine;
 import org.jvalue.ods.transformation.NashornExecutionEngine;
 
 @RunWith(JMockit.class)
 public final class TransformationFilterTest {
+
+	@Mocked private RepositoryFactory repositoryFactory;
+	@Mocked private Cache<GenericRepository<TransformationFunction>> dataRepositoryCache;
 
 	@Mocked
 	private MetricRegistry registry;
@@ -51,7 +58,7 @@ public final class TransformationFilterTest {
 		baseNode.put("key2", "value1");
 
 		ExecutionEngine executionEngine = new NashornExecutionEngine();
-		this.transformationManager = new DataTransformationManager(executionEngine);
+		this.transformationManager = new DataTransformationManager(executionEngine, dataRepositoryCache, repositoryFactory);
 	}
 
 
@@ -78,6 +85,6 @@ public final class TransformationFilterTest {
 
 
 	private ObjectNode applyFilter(String transformationFunction) throws Exception {
-		return new TransformationFilter(source, registry, transformationManager, transformationFunction).doFilter(baseNode);
+		return new TransformationFilter(source, registry, transformationManager, transformationFunction,null).doFilter(baseNode);
 	}
 }

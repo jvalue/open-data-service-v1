@@ -1,14 +1,15 @@
 package org.jvalue.ods.processor;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
-
+import org.jvalue.commons.db.repositories.GenericDataRepository;
 import org.jvalue.commons.utils.Assert;
 import org.jvalue.ods.api.processors.ProcessorReference;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.db.DataRepository;
+import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
 import org.jvalue.ods.processor.adapter.SourceAdapter;
 import org.jvalue.ods.processor.adapter.SourceAdapterFactory;
 import org.jvalue.ods.processor.filter.Filter;
@@ -40,9 +41,9 @@ public final class ProcessorChainFactory {
 
 	@SuppressWarnings("unchecked")
 	public ProcessorChain createProcessorChain(
-			ProcessorReferenceChain chainReference,
-			DataSource source,
-			DataRepository dataRepository) {
+		ProcessorReferenceChain chainReference,
+		DataSource source,
+		GenericDataRepository<JsonNode> dataRepository) {
 
 		Assert.assertNotNull(chainReference, source, dataRepository);
 
@@ -68,11 +69,11 @@ public final class ProcessorChainFactory {
 
 
 	private Object createProcessorFromAnnotation(
-			Object factory,
-			Class<?> factoryClass, // hack as jmockit removed annotations from methods
-			ProcessorReference reference,
-			DataSource dataSource,
-			DataRepository dataRepository) {
+		Object factory,
+		Class<?> factoryClass, // hack as jmockit removed annotations from methods
+		ProcessorReference reference,
+		DataSource dataSource,
+		GenericDataRepository<JsonNode> dataRepository) {
 
 		for (Method method : factoryClass.getDeclaredMethods()) {
 			CreationMethod creationAnnotation = method.getAnnotation(CreationMethod.class);
@@ -84,7 +85,7 @@ public final class ProcessorChainFactory {
 			// add source and repository arguments
 			for (Class<?> parameterType : method.getParameterTypes()) {
 				if (parameterType.equals(DataSource.class)) arguments.add(dataSource);
-				else if (parameterType.equals(DataRepository.class)) arguments.add(dataRepository);
+				else if (parameterType.equals(GenericDataRepository.class)) arguments.add(dataRepository);
 			}
 
 			// add custom arguments

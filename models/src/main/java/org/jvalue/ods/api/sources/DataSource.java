@@ -1,5 +1,6 @@
 package org.jvalue.ods.api.sources;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -7,8 +8,9 @@ import com.google.common.base.Objects;
 
 import javax.validation.constraints.NotNull;
 
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public final class DataSource extends AbstractDataSource {
+
 
 	@NotNull private final String id;
 

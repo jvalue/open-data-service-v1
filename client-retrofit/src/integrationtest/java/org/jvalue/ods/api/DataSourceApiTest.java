@@ -7,6 +7,7 @@ import org.jvalue.ods.api.sources.DataSource;
 
 import java.util.List;
 
+import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 
 public final class DataSourceApiTest extends AbstractApiTest {
@@ -39,4 +40,9 @@ public final class DataSourceApiTest extends AbstractApiTest {
 		Assert.fail("source was not removed");
 	}
 
+
+	@Override
+	protected void initApi(RestAdapter restAdapter) {
+
+	}
 }
