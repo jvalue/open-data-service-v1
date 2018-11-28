@@ -22,8 +22,8 @@ public class DataSourceWrapper implements JsonApiIdentifiable {
 
 
 	@Schema(name = "attributes", required = true)
+	@JsonIgnoreProperties(value = "id")
 	@JsonUnwrapped
-	@JsonIgnoreProperties({"id", "type"})
 	public DataSource getDataSource() {
 		return dataSource;
 	}

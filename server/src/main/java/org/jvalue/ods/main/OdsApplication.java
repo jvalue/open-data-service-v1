@@ -1,6 +1,7 @@
 package org.jvalue.ods.main;
 
 
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.hubspot.jackson.jaxrs.PropertyFilteringMessageBodyWriter;
@@ -159,6 +160,9 @@ public final class OdsApplication extends Application<OdsConfig> {
 				.constraintValidatorFactory(new GuiceConstraintValidatorFactory(injector))
 				.buildValidatorFactory()
 				.getValidator());
+
+		// configure generic type serialization for ClientWrapper in api v2
+		environment.getObjectMapper().disable(SerializationFeature.FAIL_ON_UNWRAPPED_TYPE_IDENTIFIERS);
 
 	}
 

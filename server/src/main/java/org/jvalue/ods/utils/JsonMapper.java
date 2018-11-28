@@ -1,6 +1,7 @@
 package org.jvalue.ods.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -8,6 +9,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.jvalue.commons.rest.RestUtils;
 
 import java.io.IOException;
+import java.util.Map;
 
 public class JsonMapper {
 
@@ -20,6 +22,7 @@ public class JsonMapper {
 		if (objectMapper == null) {
 			objectMapper = new ObjectMapper();
 			objectMapper.registerModule(new JavaTimeModule());
+			objectMapper.configure(SerializationFeature.FAIL_ON_UNWRAPPED_TYPE_IDENTIFIERS, false);
 			objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 		}
 
@@ -46,6 +49,11 @@ public class JsonMapper {
 		}
 
 		return result;
+	}
+
+
+	public static Map<String, Object> convertValueToMap(Object fromValue) {
+		return getInstance().convertValue(fromValue, new TypeReference<Map<String,Object>>(){});
 	}
 
 

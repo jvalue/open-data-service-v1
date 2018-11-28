@@ -84,16 +84,14 @@ public final class NotificationApi extends AbstractApi {
 		@Valid @RequestBody(content = @Content(schema = @Schema(implementation = JsonApiSchema.ClientSchema.class)))
 			JsonApiRequest clientDescriptionRequest) {
 
-		ClientDescription clientDescription = JsonMapper.convertValue(
-			clientDescriptionRequest.getAttributes(),
-			ClientDescription.class
-		);
+
+		Client client = requestToClient(clientDescriptionRequest);
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
 
-		assertIsValidClientDescription(clientDescription, clientDescriptionRequest.getId(), source);
+		//assertIsValidClientDescription(clientDescription, clientDescriptionRequest.getId(), source);
 
-		Client client = clientDescription.accept(clientAdapter, clientDescriptionRequest.getId());
+		//Client client = clientDescription.accept(clientAdapter, clientDescriptionRequest.getId());
 		notificationManager.add(source, sourceManager.getDataRepository(source), client);
 
 		URI directoryURI = getSanitizedPath(uriInfo);
@@ -224,6 +222,15 @@ public final class NotificationApi extends AbstractApi {
 		public Client visit(NdsClientDescription client, String clientId) {
 			return new NdsClient(clientId, client.getHost(), client.getExchange(), client.getValidateMessage());
 		}
+	}
+
+
+	private Client requestToClient(JsonApiRequest request) {
+		request.getAttributes().put("id", request.getId());
+		request.getAttributes().put("type", request.getType());
+		return JsonMapper.convertValue(
+			request.getAttributes(),
+			Client.class);
 	}
 
 

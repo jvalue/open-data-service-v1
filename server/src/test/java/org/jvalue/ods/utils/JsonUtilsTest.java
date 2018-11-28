@@ -1,15 +1,9 @@
 package org.jvalue.ods.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Assert;
 import org.junit.Test;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.JsonApiIdentifiable;
-
-import java.io.IOException;
-import java.util.Map;
-
-import static org.jvalue.ods.utils.JsonUtils.getMapFromJson;
 
 public class JsonUtilsTest {
 
@@ -23,19 +17,6 @@ public class JsonUtilsTest {
         Assert.assertTrue(result.has("nestedDummy"));
         Assert.assertEquals(2, result.get("nestedDummy").size());
     }
-
-
-    @Test
-	public void testGetMapFromJson() throws IOException {
-    	ObjectMapper mapper = new ObjectMapper();
-    	JsonNode node = mapper.valueToTree(dummyObj);
-
-    	Map<String, Object> result = getMapFromJson(node);
-
-    	Assert.assertEquals("ID", result.get("id"));
-    	Assert.assertEquals(1, result.get("anotherAttribute"));
-    	Assert.assertTrue(result.containsKey("nestedDummy"));
-	}
 
 
     private class Dummy implements JsonApiIdentifiable {

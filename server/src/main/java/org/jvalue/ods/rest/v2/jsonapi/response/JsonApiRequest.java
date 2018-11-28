@@ -1,7 +1,10 @@
 package org.jvalue.ods.rest.v2.jsonapi.response;
 
 import com.fasterxml.jackson.annotation.*;
+import org.jvalue.ods.rest.v2.jsonapi.wrapper.JsonApiIdentifiable;
+import org.jvalue.ods.utils.JsonMapper;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
 
@@ -33,11 +36,18 @@ public class JsonApiRequest {
 		return id;
 	}
 
-
+	@JsonIgnoreProperties({ "id", "type" })
 	public Map<String, Object> getAttributes() {
 		return attributes;
 	}
 
+
+	public static JsonApiRequest from (JsonApiIdentifiable entity) throws IOException {
+		return new JsonApiRequest(
+			entity.getType(),
+			entity.getId(),
+			JsonMapper.convertValueToMap(entity));
+	}
 
 	@Override
 	public boolean equals(Object o) {
