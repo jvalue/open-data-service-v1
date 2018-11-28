@@ -7,7 +7,7 @@ import retrofit.client.Response;
 import retrofit.http.*;
 
 public interface NotificationApi {
-	String BASE_URL = "/v2/{sourceId}/notifications";
+	String BASE_URL = "/v2/datasources/{sourceId}/notifications";
 
 	@GET(BASE_URL + "/{clientId}")
 	@Headers("Content-type: " + JsonApiResponse.JSONAPI_TYPE)
