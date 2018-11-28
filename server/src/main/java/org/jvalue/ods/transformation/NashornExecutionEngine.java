@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 import delight.nashornsandbox.NashornSandbox;
 import delight.nashornsandbox.NashornSandboxes;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
@@ -19,18 +21,19 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class NashornExecutionEngine extends AbstractExecutionEngine {
 
+	private final Invocable sandboxedInvocable;
 	private NashornSandbox nashornSandbox;
 
 	private static String wrapperScript = "";
 	private ObjectMapper objectMapper;
 
 
-	public NashornExecutionEngine() {
+	@Inject
+	public NashornExecutionEngine(@Assisted TransformationFunction transformationFunction) throws ScriptException {
 		objectMapper = new ObjectMapper();
 		InputStream resource = NashornExecutionEngine.class.getClassLoader().getResourceAsStream("js/NashornWrapper.js");
 		try {
@@ -39,6 +42,10 @@ public class NashornExecutionEngine extends AbstractExecutionEngine {
 			e.printStackTrace();
 			Log.error(e.getMessage());
 		}
+		initNashornSandbox();
+		sandboxedInvocable = initInvocable(
+			transformationFunction.getTransformationFunction(),
+			transformationFunction.getReduceFunction());
 	}
 
 
@@ -50,9 +57,15 @@ public class NashornExecutionEngine extends AbstractExecutionEngine {
 	}
 
 
-	private Invocable initInvocable(String function) throws ScriptException {
+	private Invocable initInvocable(String transformationFunction, String reduceFunction) throws ScriptException {
 		//append custom transformation function to wrapper script
-		String script = wrapperScript + function;
+		String script = wrapperScript;
+		if (transformationFunction != null) {
+			script += transformationFunction;
+		}
+		if (reduceFunction != null) {
+			script += reduceFunction;
+		}
 
 		//execute script
 		nashornSandbox.eval(script);
@@ -61,48 +74,38 @@ public class NashornExecutionEngine extends AbstractExecutionEngine {
 
 
 	@Override
-	public ArrayNode execute(ObjectNode data, TransformationFunction transformationFunction, boolean query)
+	public ArrayNode execute(ObjectNode data, boolean query)
 		throws ScriptException, IOException, NoSuchMethodException {
-		initNashornSandbox();
-		try {
-			Invocable sandboxedInvocable = initInvocable(transformationFunction.getTransformationFunction());
-			ScriptObjectMirror o = (ScriptObjectMirror) sandboxedInvocable.invokeFunction(TRANSFORMATION_FUNCTION, data.toString(), query);
-			ArrayNode result = new ArrayNode(JsonNodeFactory.instance);
-			if(o != null){
-				Collection<Object> values = o.values();
-				for (Object obj : values) {
-					result.add(objectMapper.readTree(obj.toString()));
-				}
-			}
 
-			return result;
-		} finally {
-			ExecutorService executor = nashornSandbox.getExecutor();
-			executor.shutdown();
+		ScriptObjectMirror o = (ScriptObjectMirror) sandboxedInvocable.invokeFunction(TRANSFORMATION_FUNCTION, data.toString(), query);
+		ArrayNode result = new ArrayNode(JsonNodeFactory.instance);
+		if (o == null) {
+			throw new ScriptException("Return value of transform() is null.");
 		}
+
+		Collection<Object> values = o.values();
+		for (Object obj : values) {
+			result.add(objectMapper.readTree(obj.toString()));
+		}
+
+		return result;
 	}
 
 
-
 	@Override
-	public ArrayNode reduce(ArrayNode resultSet, TransformationFunction transformationFunction)
+	public ArrayNode reduce(ArrayNode resultSet)
 		throws ScriptException, IOException, NoSuchMethodException {
-		initNashornSandbox();
-		try {
-			Invocable sandboxedInvocable = initInvocable(transformationFunction.getReduceFunction());
-			ArrayList<String> setAsList = convertArrayNodeToList(resultSet);
-			Object o = sandboxedInvocable.invokeFunction(REDUCE_FUNCTION, setAsList);
 
-			ArrayNode resultNode = new ArrayNode(JsonNodeFactory.instance);
-			if (o != null) {
-				resultNode.add(o.toString());
-			}
+		ArrayList<String> setAsList = convertArrayNodeToList(resultSet);
+		Object o = sandboxedInvocable.invokeFunction(REDUCE_FUNCTION, setAsList);
 
-			return resultNode;
-		} finally {
-			ExecutorService executor = nashornSandbox.getExecutor();
-			executor.shutdown();
+		ArrayNode resultNode = new ArrayNode(JsonNodeFactory.instance);
+		if (o == null) {
+			throw new ScriptException("Return value of reduce() is null.");
 		}
+		resultNode.add(o.toString());
+
+		return resultNode;
 	}
 
 

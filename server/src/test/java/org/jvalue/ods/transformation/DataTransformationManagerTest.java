@@ -31,7 +31,7 @@ public final class DataTransformationManagerTest {
 
 	@Before
 	public void setupTransformationManager() {
-		this.transformationManager = new DataTransformationManager(executionEngine, dataRepositoryCache, repositoryFactory);
+		this.transformationManager = new DataTransformationManager(new TestExecutionEngineFactory(), dataRepositoryCache, repositoryFactory);
 		this.arrayNode = new ObjectMapper().createArrayNode();
 	}
 
@@ -41,11 +41,11 @@ public final class DataTransformationManagerTest {
 		TransformationFunction function = new TransformationFunction("1", "function",null);
 
 		new Expectations() {{
-			executionEngine.execute(new ObjectNode(JsonNodeFactory.instance), function, true);
+			executionEngine.execute(new ObjectNode(JsonNodeFactory.instance), false);
 			result = arrayNode;
 		}};
 
-		ArrayNode res = transformationManager.transform(new ObjectNode(JsonNodeFactory.instance), function, true);
+		ArrayNode res = transformationManager.transform(new ObjectNode(JsonNodeFactory.instance), function);
 		Assert.assertEquals(arrayNode, res);
 	}
 }

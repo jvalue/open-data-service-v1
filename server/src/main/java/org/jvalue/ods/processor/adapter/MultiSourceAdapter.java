@@ -157,6 +157,9 @@ public class MultiSourceAdapter extends AbstractSourceAdapter {
 					resultNode.set(adapter.getAlias(), arrayNode);
 				}
 			}
+
+			//new wrapper object does not have a domain id- > set a random domain id.
+			resultNode.put(source.getDomainIdKey().getMatchingProperty(), Math.abs(resultNode.hashCode()));
 			return resultNode;
 		}
 

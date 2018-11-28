@@ -2,7 +2,6 @@ package org.jvalue.ods.processor.filter;
 
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
@@ -14,7 +13,6 @@ import org.jvalue.ods.data.DataTransformationManager;
 public class TransformationFilter extends AbstractFilter<ObjectNode, ObjectNode> {
 
 	private final String transformationFunction;
-	private final String reduceFunction;
 	private final DataTransformationManager dataTransformationManager;
 
 
@@ -23,12 +21,10 @@ public class TransformationFilter extends AbstractFilter<ObjectNode, ObjectNode>
 		@Assisted DataSource source,
 		MetricRegistry registry,
 		DataTransformationManager dataTransformationManager,
-		@Assisted String transformationFunction,
-		@Assisted String reduceFunction) {
+		@Assisted String transformationFunction) {
 		super(source, registry);
 		this.transformationFunction = transformationFunction;
 		this.dataTransformationManager = dataTransformationManager;
-		this.reduceFunction = reduceFunction;
 	}
 
 
@@ -36,9 +32,9 @@ public class TransformationFilter extends AbstractFilter<ObjectNode, ObjectNode>
 	protected ObjectNode doFilter(ObjectNode node) throws FilterException {
 		ArrayNode result;
 		try {
-			result = dataTransformationManager.transform(node, new TransformationFunction(source.getId(), transformationFunction, reduceFunction), false);
+			result = dataTransformationManager.transform(node, new TransformationFunction(source.getId(), transformationFunction, null));
 		} catch (Exception e) {
-			// nothing to do if exception occurs -> throw it.
+			// some script execution error occurred -> throw it.
 			throw new FilterException(e.getMessage(), e);
 		}
 
@@ -57,7 +53,7 @@ public class TransformationFilter extends AbstractFilter<ObjectNode, ObjectNode>
 		}
 
 		//check if object has a domainId, if not -> generate a domainId.
-		JsonNode at = node.at(source.getDomainIdKey());
+		JsonNode at = resultObjectNode.at(source.getDomainIdKey());
 		if(at.isMissingNode()){
 			resultObjectNode.put(source.getDomainIdKey().getMatchingProperty(), Math.abs(resultObjectNode.hashCode()));
 		}

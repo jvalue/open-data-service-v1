@@ -10,54 +10,54 @@ import org.jvalue.commons.db.repositories.GenericDataRepository;
 import org.jvalue.commons.db.repositories.GenericRepository;
 import org.jvalue.commons.utils.Cache;
 import org.jvalue.ods.api.sources.DataSource;
-import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
 import org.jvalue.ods.api.views.generic.TransformationFunction;
 import org.jvalue.ods.db.generic.RepositoryFactory;
 import org.jvalue.ods.transformation.ExecutionEngine;
+import org.jvalue.ods.transformation.ExecutionEngineFactory;
 
 import javax.script.ScriptException;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class DataTransformationManager extends AbstractDataSourcePropertyManager<TransformationFunction, GenericRepository<TransformationFunction>> {
-	private final ExecutionEngine executionEngine;
+
+	private ExecutionEngineFactory executionEngineFactory;
 
 
 	@Inject
-	public DataTransformationManager(ExecutionEngine executionEngine,
+	public DataTransformationManager(ExecutionEngineFactory executionEngineFactory,
 									 Cache<GenericRepository<TransformationFunction>> viewRepositoryCache,
 									 RepositoryFactory repositoryFactory) {
 		super(viewRepositoryCache, repositoryFactory);
-		this.executionEngine = executionEngine;
+		this.executionEngineFactory = executionEngineFactory;
+	}
+
+	public void testEval(TransformationFunction transformationFunction) throws ScriptException {
+		executionEngineFactory.createExecutionEngine(transformationFunction);
+	}
+
+	public ArrayNode transform(ObjectNode data, TransformationFunction transformationFunction)
+		throws ScriptException, IOException, NoSuchMethodException {
+		return executionEngineFactory.createExecutionEngine(transformationFunction).execute(data, false);
 	}
 
 
-	public ArrayNode transform(ObjectNode data, TransformationFunction transformationFunction, boolean query)
-		throws ScriptException, IOException, NoSuchMethodException {
-		return executionEngine.execute(data, transformationFunction, query);
-	}
+	public ArrayNode transformAndReduce(GenericDataRepository<JsonNode> dataRepository, TransformationFunction transformationFunction)
+		throws ScriptException, IOException, NoSuchMethodException, ExecutionException, InterruptedException {
+		ExecutionEngine executionEngine = executionEngineFactory.createExecutionEngine(transformationFunction);
 
-
-	public ArrayNode transform(GenericDataRepository<JsonNode> dataRepository, TransformationFunction transformationFunction, boolean query)
-		throws ScriptException, IOException, NoSuchMethodException {
 		Data paginatedData = dataRepository.getAllDocuments();
 		List<JsonNode> result = paginatedData.getResult();
 
 		ArrayNode resultNode = new ArrayNode(JsonNodeFactory.instance);
-
-		for (JsonNode jsonNode : result){
-			ArrayNode resultSet = executionEngine.execute(jsonNode.deepCopy(), transformationFunction, query);
-			Iterator<JsonNode> elements = resultSet.elements();
-			while(elements.hasNext()){
-				JsonNode next = elements.next();
-				resultNode.add(next);
-			}
+		for (JsonNode jsonNode : result) {
+			ArrayNode resultSet = executionEngine.execute(jsonNode.deepCopy(), true);
+			resultNode.addAll(resultSet);
 		}
 
-		if(transformationFunction.getReduceFunction() != null)
-			return executionEngine.reduce(resultNode.deepCopy(), transformationFunction);
+		if (transformationFunction.getReduceFunction() != null)
+			return executionEngine.reduce(resultNode.deepCopy());
 
 		return resultNode;
 	}
