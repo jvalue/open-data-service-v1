@@ -13,6 +13,10 @@ public interface NotificationApi {
 	@Headers("Content-type: " + JsonApiResponse.JSONAPI_TYPE)
 	ResponseBody getClient(@Path("sourceId") String sourceId, @Path("clientId") String clientId);
 
+	@GET(BASE_URL)
+	@Headers("Content-type: " + JsonApiResponse.JSONAPI_TYPE)
+	ResponseBody getAllClients(@Path("sourceId") String sourceId);
+
 	@POST(BASE_URL)
 	@Headers("Content-type: " + JsonApiResponse.JSONAPI_TYPE)
 	ResponseBody registerClient(@Path("sourceId") String sourceId, @Body JsonApiRequest clientDescription);
