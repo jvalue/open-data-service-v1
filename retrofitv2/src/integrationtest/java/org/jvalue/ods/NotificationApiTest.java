@@ -1,5 +1,6 @@
 package org.jvalue.ods;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jsonapi.ResponseBody;
 import org.junit.Assert;
@@ -10,6 +11,8 @@ import org.jvalue.ods.rest.v2.jsonapi.wrapper.ClientWrapper;
 import org.jvalue.ods.utils.JsonMapper;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class NotificationApiTest extends AbstractApiTest {
 
@@ -28,10 +31,18 @@ public class NotificationApiTest extends AbstractApiTest {
 	@Test
 	public void testRegisterClient() throws IOException {
 		doTestClient(httpClient, httpClientDescription);
+
+		doTestClient(gcmClient, gcmClientDescription);
+
+		doTestGetAllClients();
+
+		doTestUnregisterClient();
 	}
 
 
 	public void doTestGetAllClients() {
+		ResponseBody response = notificationApi.getAllClients(sourceId);
+		JsonNode result = response.getData();
 	}
 
 
@@ -41,18 +52,23 @@ public class NotificationApiTest extends AbstractApiTest {
 
 		notificationApi.registerClient(sourceId, request);
 		ResponseBody response = notificationApi.getClient(sourceId, client.getId());
-		Client result = requestToClient(response);
+		Client result = responseToClient(response);
 
 		Assert.assertEquals(client, result);
 	}
 
 
-	private Client requestToClient(ResponseBody response) {
+	private Client responseToClient(ResponseBody response) {
 		((ObjectNode) response.getData().get("attributes")).put("id", response.getId());
 		((ObjectNode) response.getData().get("attributes")).put("type", response.getType());
 		return JsonMapper.convertValue(
 			response.getData().get("attributes"),
 			Client.class);
+	}
+
+
+	private List<Client> arrayResponseToClients(ResponseBody responseBody) {
+		return null;
 	}
 
 
