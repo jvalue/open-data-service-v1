@@ -1,19 +1,21 @@
 package org.jvalue.ods;
 
 import jsonapi.ResponseBody;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Test;
 import org.jvalue.ods.api.notifications.*;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiRequest;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.ClientWrapper;
+import retrofit.RetrofitError;
 
 import java.io.IOException;
 import java.util.List;
 
 public class NotificationApiTest extends AbstractApiTest {
 
-	private final HttpClient httpClient = new HttpClient("someHttpId", "someCallbackUrl", false);
-	private final GcmClient gcmClient = new GcmClient("someGcmId", "someDeviceId");
+	private static final HttpClient httpClient = new HttpClient("someHttpId", "someCallbackUrl", false);
+	private static final GcmClient gcmClient = new GcmClient("someGcmId", "someDeviceId");
 
 
 	@Test
@@ -67,5 +69,19 @@ public class NotificationApiTest extends AbstractApiTest {
 		List<Client> result = response.dataToTargetObjectList(Client.class);
 
 		Assert.assertTrue(result.isEmpty());
+	}
+
+
+	@AfterClass
+	public static void cleanUp() {
+		try {
+			notificationApi.unregisterClient(sourceId, httpClient.getId());
+		} catch (RetrofitError ignored) {
+		}
+
+		try {
+			notificationApi.unregisterClient(sourceId, gcmClient.getId());
+		} catch (RetrofitError ignored) {
+		}
 	}
 }

@@ -7,16 +7,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jsonapi.ResponseBody;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.jvalue.commons.utils.HttpServiceCheck;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceMetaData;
-import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiDocument;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiRequest;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.DataSourceWrapper;
-import org.jvalue.ods.utils.JsonMapper;
 import retrofit.RestAdapter;
 import retrofit.converter.JacksonConverter;
 
@@ -26,20 +24,19 @@ public abstract class AbstractApiTest {
 
 	private static final String ODS_API_URL = "http://localhost:8080/ods/api";
 
-	protected DataSourceApi dataSourceApi;
-	protected NotificationApi notificationApi;
+	protected static DataSourceApi dataSourceApi;
+	protected static NotificationApi notificationApi;
 
-	protected final JsonPointer domainIdKey = JsonPointer.compile("/someId");
-	protected final JsonNode schema = new ObjectNode(JsonNodeFactory.instance);
-	protected final DataSourceMetaData metaData = new DataSourceMetaData("", "", "", "", "", "", "");
-	protected final String sourceId = getClass().getSimpleName() + "V2";
-	protected final DataSource dataSource = new DataSource(sourceId, domainIdKey, schema, metaData);
-	protected ResponseBody responseDataSource;
+	protected static final JsonPointer domainIdKey = JsonPointer.compile("/someId");
+	protected static final JsonNode schema = new ObjectNode(JsonNodeFactory.instance);
+	protected static final DataSourceMetaData metaData = new DataSourceMetaData("", "", "", "", "", "", "");
+	protected static final String sourceId = DataSourceApiTest.class.getSimpleName() + "V2";
+	protected static final DataSource dataSource = new DataSource(sourceId, domainIdKey, schema, metaData);
+	protected static ResponseBody responseDataSource;
 
-	//protected DataSource dataSourceDescription;
 
-	@Before
-	public void setUp() throws IOException {
+	@BeforeClass
+	public static void setUp() throws IOException {
 		HttpServiceCheck.check(ODS_API_URL + "/v2");
 		RestAdapter restAdapter = new RestAdapter.Builder()
 			.setConverter(new JacksonConverter())
@@ -59,7 +56,7 @@ public abstract class AbstractApiTest {
 	}
 
 
-	protected void addSource() throws IOException {
+	protected static void addSource() throws IOException {
 		DataSourceWrapper addRequest = DataSourceWrapper.from(dataSource);
 		JsonApiRequest request = JsonApiRequest.from(addRequest);
 
@@ -67,14 +64,9 @@ public abstract class AbstractApiTest {
 	}
 
 
-	@After
-	public void removeSource() throws IOException{
+	@AfterClass
+	public static void removeSource() throws IOException{
 		dataSourceApi.deleteSource(sourceId);
-	}
-
-
-	protected static <T> T getEntityFromDoc(JsonApiDocument doc, Class<T> clazz, int index) {
-		return JsonMapper.convertValue(doc.getData().get(index).getEntity(), clazz);
 	}
 
 

@@ -1,7 +1,5 @@
 package org.jvalue.ods;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import jsonapi.ResponseBody;
 import org.junit.Assert;
 import org.junit.Test;
@@ -28,7 +26,7 @@ public class DataSourceApiTest extends AbstractApiTest {
 	@Test
 	public void testGetSingleDataSource() {
 		ResponseBody response = dataSourceApi.getSource(sourceId);
-		DataSource result = convertResponseToDataSource(response);
+		DataSource result = response.dataToTargetObject(DataSource.class);
 
 		Assert.assertTrue(response.getData().isObject());
 		Assert.assertEquals(dataSource, result);
@@ -38,7 +36,7 @@ public class DataSourceApiTest extends AbstractApiTest {
 	@Test
 	public void testGetAllDataSources() {
 		ResponseBody response = dataSourceApi.getAllSources();
-		List<DataSource> results = convertResponseToDataSourceList(response);
+		List<DataSource> results = response.dataToTargetObjectList(DataSource.class);
 
 		Assert.assertTrue(response.getData().isArray());
 		Assert.assertTrue(results.contains(dataSource));
@@ -48,7 +46,7 @@ public class DataSourceApiTest extends AbstractApiTest {
 	@Test
 	public void testGetSchema() {
 		ResponseBody response = dataSourceApi.getSourceSchema(sourceId);
-		DataSource result = convertResponseToDataSource(response);
+		DataSource result = response.dataToTargetObject(DataSource.class);
 
 		Assert.assertEquals(schema, result.getSchema());
 	}
@@ -68,26 +66,4 @@ public class DataSourceApiTest extends AbstractApiTest {
 		Assert.fail("data source was not removed");
 	}
 
-
-	private DataSource convertResponseToDataSource(ResponseBody response) {
-		addIdFieldToAttributes(response);
-		return response.dataToTargetObject(DataSource.class);
-	}
-
-
-	private List<DataSource> convertResponseToDataSourceList(ResponseBody response) {
-		addIdFieldToAttributes(response);
-		return response.dataToTargetObjectList(DataSource.class);
-	}
-
-
-	private void addIdFieldToAttributes(ResponseBody response) {
-		if(response.getData().isArray()) {
-			for (JsonNode node : response.getData()) {
-				((ObjectNode) node.get("attributes")).put("id", node.get("id").asText());
-			}
-		} else {
-			((ObjectNode) response.getData().get("attributes")).put("id", response.getId());
-		}
-	}
 }
