@@ -30,7 +30,5 @@ public interface SourceAdapter extends Iterable<ObjectNode> {
 	 * while reading data from the source.
 	 */
 	public Iterator<ObjectNode> iterator() throws SourceAdapterException;
-	public void setAlias(String name);
-	public String getAlias();
 
 }

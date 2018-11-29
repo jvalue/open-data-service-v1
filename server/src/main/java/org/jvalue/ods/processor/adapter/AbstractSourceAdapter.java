@@ -55,14 +55,4 @@ public abstract class AbstractSourceAdapter implements SourceAdapter {
 
 	protected abstract SourceIterator doCreateIterator(DataSource source, URL sourceUrl, MetricRegistry registry);
 
-	@Override
-	public void setAlias(String name){
-		this.name = name;
-	}
-
-	@Override
-	public String getAlias(){
-		return this.name;
-	}
-
 }

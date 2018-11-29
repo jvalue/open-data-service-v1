@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 @SuppressWarnings("Duplicates")
 final public class OpenWeatherMapSourceAdapter implements SourceAdapter {
 
-	private String alias = this.getClass().getSimpleName();
 	private final DataSource dataSource;
 	private final MetricRegistry registry;
 	private final List<Location> locations;
@@ -64,18 +63,6 @@ final public class OpenWeatherMapSourceAdapter implements SourceAdapter {
 		}
 
 		return result.iterator();
-	}
-
-
-	@Override
-	public void setAlias(String name) {
-		this.alias = name;
-	}
-
-
-	@Override
-	public String getAlias() {
-		return this.alias;
 	}
 
 
