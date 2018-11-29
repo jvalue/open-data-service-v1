@@ -17,6 +17,7 @@ import org.jvalue.commons.db.GenericDocumentOperationResult;
 import org.jvalue.commons.db.data.Cursor;
 import org.jvalue.commons.db.data.Data;
 import org.jvalue.commons.db.repositories.GenericDataRepository;
+import org.jvalue.commons.db.repositories.GenericRepository;
 import org.jvalue.commons.utils.Assert;
 import org.jvalue.ods.api.views.couchdb.CouchDbDataView;
 
@@ -50,6 +51,11 @@ public final class DataRepository extends CouchDbRepositorySupport<JsonNode> imp
 		if (!containsView(allView)) addView(allView);
 	}
 
+
+	@Override
+	public JsonNode findById(String Id) {
+		return findByDomainId(Id);
+	}
 
 	@Override
 	public JsonNode findByDomainId(String domainId) {
