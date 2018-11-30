@@ -3,7 +3,6 @@ package org.jvalue.ods.processor.adapter;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
-
 import org.jvalue.ods.api.processors.ProcessorType;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.processor.specification.Argument;
@@ -89,9 +88,11 @@ public interface SourceAdapterFactory {
 		@Argument(ARGUMENT_LOCATIONS) @Assisted(ARGUMENT_LOCATIONS) ArrayList<LinkedHashMap<String, String>> locations,
 		@Argument(ARGUMENT_API_KEY) @Assisted(ARGUMENT_API_KEY) String apiKey);
 
+
 	@CreationMethod(name = NAME_MULTI_SOURCE_ADAPTER, filterType = ProcessorType.SOURCE_ADAPTER)
 	@Named(NAME_MULTI_SOURCE_ADAPTER)
 	SourceAdapter createMultiSourceAdapter(
 		DataSource source,
-		@Argument(ARGUMENT_MULTI_SOURCE) ArrayList<LinkedHashMap> sourceAdapters);
+		@Argument(ARGUMENT_MULTI_SOURCE) @Assisted(ARGUMENT_MULTI_SOURCE) ArrayList<LinkedHashMap<String, Object>> sourceAdapters);
+
 }

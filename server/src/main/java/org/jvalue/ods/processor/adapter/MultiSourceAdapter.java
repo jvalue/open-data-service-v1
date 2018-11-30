@@ -2,171 +2,118 @@ package org.jvalue.ods.processor.adapter;
 
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import org.jvalue.ods.api.processors.ProcessorReference;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.processor.specification.Argument;
 import org.jvalue.ods.processor.specification.CreationMethod;
+import org.jvalue.ods.utils.JsonMapper;
 
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.util.*;
 
-public class MultiSourceAdapter extends AbstractSourceAdapter {
+final public class MultiSourceAdapter implements SourceAdapter {
 
-	private final ArrayList<SourceAdapter> sourceAdapters;
-	private final SourceAdapterFactory sourceAdapterFactory;
+	private final SourceAdapterFactory adapterFactory;
 	private final DataSource dataSource;
-	private final ArrayList<LinkedHashMap> sourceObjects;
+	private final MetricRegistry registry;
+	private final Map<String, SourceAdapter> adapterMap = new HashMap<>();
+
 
 	@Inject
-	protected MultiSourceAdapter(SourceAdapterFactory sourceAdapterFactory,
-								 @Assisted DataSource dataSource,
-								 @Assisted ArrayList<LinkedHashMap> sourceObjects,
-								 MetricRegistry registry) {
-		//dummy url
-		super(dataSource, "http://invalidurl.org", registry);
+	public MultiSourceAdapter(
+		SourceAdapterFactory adapterFactory,
+		@Assisted DataSource dataSource,
+		@Assisted(SourceAdapterFactory.ARGUMENT_MULTI_SOURCE) ArrayList<LinkedHashMap<String, Object>> sourceAdapters,
+		MetricRegistry registry) {
 
-		this.sourceAdapters = new ArrayList<>();
-		this.sourceAdapterFactory = sourceAdapterFactory;
+		this.adapterFactory = adapterFactory;
 		this.dataSource = dataSource;
-		this.sourceObjects = sourceObjects;
+		this.registry = registry;
 
-		try {
-			createAdapterInstances();
-		} catch (Exception e) {
-			throw new SourceAdapterException(e);
-		}
-	}
+		for (LinkedHashMap<String, Object> adapterItem : sourceAdapters) {
+			String alias = adapterItem.get("alias").toString();
+			ProcessorReference procRef = JsonMapper.convertValue(adapterItem.get("source"), ProcessorReference.class);
+			SourceAdapter adapter = createAdapter(procRef);
 
-
-	@SuppressWarnings("Duplicates")
-	private void createAdapterInstances() {
-		for (HashMap hashMap : sourceObjects) {
-			Set outerKeySet = hashMap.keySet();
-			if (outerKeySet.size() != 2 || !outerKeySet.contains("source") || !outerKeySet.contains("alias"))
-				throw new SourceAdapterException("Only fields 'source' and 'alias' need to be defined.");
-
-			String alias;
-			HashMap<String, Object> sourceMap;
-
-			try {
-				alias = (String) hashMap.get("alias");
-			}catch (ClassCastException e){
-				throw new SourceAdapterException("Field 'alias' needs to be a String.");
-			}
-
-			try {
-				sourceMap = (HashMap<String, Object>) hashMap.get("source");
-			}catch (ClassCastException e){
-				throw new SourceAdapterException("Field 'source' needs to be a json object.");
-			}
-
-			if (!sourceMap.keySet().contains("name"))
-				throw new SourceAdapterException("Field 'source.name' does not exist.");
-
-			String name = (String) sourceMap.get("name");
-			for (Method method : SourceAdapterFactory.class.getDeclaredMethods()) {
-				CreationMethod creationAnnotation = method.getAnnotation(CreationMethod.class);
-				if (creationAnnotation == null) throw new IllegalArgumentException("creation annotation not found");
-				if (!name.equals(creationAnnotation.name())) continue;
-
-				List<Object> arguments = new LinkedList<>();
-
-				// add source argument
-				for (Class<?> parameterType : method.getParameterTypes()) {
-					if (parameterType.equals(DataSource.class)) arguments.add(dataSource);
-				}
-
-				sourceMap.remove("name");
-				ProcessorReference reference = new ProcessorReference(name, sourceMap);
-
-				// add custom arguments
-				Annotation[][] allParamAnnotations = method.getParameterAnnotations();
-				for (Annotation[] paramAnnotations : allParamAnnotations) {
-					for (Annotation  annotation : paramAnnotations) {
-						if (annotation instanceof Argument) {
-							Argument arg = (Argument) annotation;
-							Object o = reference.getArguments().get(arg.value());
-							if(o == null){
-								throw new SourceAdapterException("Required field " + arg.value() + " does not exist.");
-							}
-							arguments.add(o);
-						}
-					}
-				}
-
-				try {
-					SourceAdapter adapter = (SourceAdapter) method.invoke(sourceAdapterFactory, arguments.toArray());
-					adapter.setAlias(alias);
-					sourceAdapters.add(adapter);
-				} catch (IllegalAccessException | InvocationTargetException ie) {
-					throw new IllegalStateException(ie);
-				}
-			}
-
+			this.adapterMap.put(alias, adapter);
 		}
 	}
 
 
 	@Override
-	protected SourceIterator doCreateIterator(DataSource source, URL sourceUrl, MetricRegistry registry) {
-		return new MultiSourceIterator(source, sourceUrl, registry, sourceAdapters);
+	public Iterator<ObjectNode> iterator() throws SourceAdapterException {
+		List<ObjectNode> results = new ArrayList<>();
+
+		ObjectNode resultNode = JsonNodeFactory.instance.objectNode();
+		for (Map.Entry<String, SourceAdapter> entry : adapterMap.entrySet()) {
+			String alias = entry.getKey();
+			SourceAdapter adapter = entry.getValue();
+
+			JsonNode adapterNode = JsonMapper.valueToTree(Lists.newArrayList(adapter.iterator()));
+			resultNode.set(alias, adapterNode);
+		}
+
+		results.add(resultNode);
+		return results.iterator();
 	}
 
-	private static final class MultiSourceIterator extends SourceIterator {
-		private final ArrayList<SourceAdapter> sourceAdapters;
-		private final Iterator<SourceAdapter> iterator;
-		private ObjectMapper mapper;
+
+	private SourceAdapter createAdapter(ProcessorReference reference) {
+		Method method = getCreationMethod(reference.getName());
+
+		List<Object> arguments = new LinkedList<>();
+		arguments = addDataSourceAsFirstArgument(arguments, dataSource, method);
+		arguments = addCustomArguments(arguments, reference, method);
+
+		try {
+			return (SourceAdapter) method.invoke(adapterFactory, arguments.toArray());
+
+		} catch (IllegalAccessException | InvocationTargetException ie) {
+			throw new IllegalStateException(ie);
+		}
+	}
 
 
-		public MultiSourceIterator(DataSource source, URL sourceUrl, MetricRegistry registry, ArrayList<SourceAdapter> sourceAdapters) {
-			super(source, sourceUrl, registry);
-			this.sourceAdapters = sourceAdapters;
-			this.iterator = this.sourceAdapters.iterator();
-			this.mapper = new ObjectMapper();
+	private Method getCreationMethod(String methodName) {
+		Optional<Method> method = Arrays.stream(SourceAdapterFactory.class.getDeclaredMethods())
+			.filter(m -> m.getAnnotation(CreationMethod.class).name().equals(methodName))
+			.findAny();
+
+		if (!method.isPresent()) {
+			throw new IllegalArgumentException("Couldn't find creation method with annotation '" + methodName + "'");
 		}
 
+		return method.get();
+	}
 
-		@Override
-		protected JsonNode doNext() throws IOException {
-			ObjectNode resultNode = new ObjectMapper().createObjectNode();
-			while (iterator.hasNext()) {
-				// traverse multiple adapters
-				SourceAdapter adapter = iterator.next();
-				//traverse documents in adapter
-				//possible to get array data
-				List<ObjectNode> result = new ArrayList<>();
-				for(ObjectNode node : adapter){
-					result.add(node);
-				}
 
-				if(result.size() == 1){
-					//add object Node
-					resultNode.set(adapter.getAlias(), result.get(0));
-				}else if (result.size() > 1){
-					//add arrayNode
-					ArrayNode arrayNode = mapper.valueToTree(result);
-					resultNode.set(adapter.getAlias(), arrayNode);
+	private List<Object> addDataSourceAsFirstArgument(List<Object> arguments, DataSource dataSource, Method method) {
+		for (Class<?> parameterType : method.getParameterTypes()) {
+			if (parameterType.equals(DataSource.class)) arguments.add(dataSource);
+		}
+
+		return arguments;
+	}
+
+
+	private List<Object> addCustomArguments(List<Object> arguments, ProcessorReference reference, Method method) {
+		Annotation[][] allParamAnnotations = method.getParameterAnnotations();
+		for (Annotation[] paramAnnotations : allParamAnnotations) {
+			for (Annotation  annotation : paramAnnotations) {
+				if (annotation instanceof Argument) {
+					Argument arg = (Argument) annotation;
+					arguments.add(reference.getArguments().get(arg.value()));
 				}
 			}
-
-			//new wrapper object does not have a domain id- > set a random domain id.
-			resultNode.put(source.getDomainIdKey().getMatchingProperty(), Math.abs(resultNode.hashCode()));
-			return resultNode;
 		}
 
-
-		@Override
-		protected boolean doHasNext() throws IOException {
-			return iterator.hasNext();
-		}
+		return arguments;
 	}
 }
