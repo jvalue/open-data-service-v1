@@ -7,6 +7,7 @@ import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 
 import static org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse.JSONAPI_TYPE;
 
@@ -37,7 +38,7 @@ public abstract class AbstractApi {
 
 	protected static final String BASE_URL = V2 + "/" + DATASOURCES;
 
-	protected static WebApplicationException createJsonApiException(String message, int code) {
+	protected static WebApplicationException createJsonApiException(String message, Response.Status code) {
 		return new WebApplicationException(
 				JsonApiResponse
 						.createExceptionResponse(code)

@@ -245,7 +245,7 @@ public final class DataViewApi extends AbstractApi {
 		RequestValidator.validate(description);
 
 		if (viewManager.contains(source, id)) {
-			throw createJsonApiException("data view with id " + id + " already exists", 409);
+			throw createJsonApiException("data view with id " + id + " already exists", Response.Status.CONFLICT);
 		}
 	}
 }

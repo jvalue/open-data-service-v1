@@ -228,7 +228,7 @@ public final class ProcessorChainApi extends AbstractApi {
 		}
 
 		if (chainManager.contains(source, id))
-			throw createJsonApiException("filter chain with id " + id + " already exists", 409);
+			throw createJsonApiException("filter chain with id " + id + " already exists", Response.Status.CONFLICT);
 	}
 
 
@@ -242,7 +242,7 @@ public final class ProcessorChainApi extends AbstractApi {
 				else firstIter = false;
 				builder.append(validUnit.toString());
 			}
-			throw createJsonApiException(builder.toString(), 400);
+			throw createJsonApiException(builder.toString(), Response.Status.BAD_REQUEST);
 		}
 	}
 
