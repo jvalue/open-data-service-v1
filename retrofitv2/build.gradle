@@ -11,6 +11,6 @@ repositories {
 
 dependencies {
 	testCompile "junit:junit:$junitVersion"
-	implementation 'com.squareup.retrofit2:retrofit:$retrofit-version'
+	implementation 'com.squareup.retrofit:retrofit:$retrofit-version'
 	compile project(':server')
 }
