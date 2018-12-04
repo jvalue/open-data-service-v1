@@ -14,7 +14,7 @@ public class AbstractApiTest {
 
 	@Test
 	public void testCreateJsonApiException() {
-		WebApplicationException exception = AbstractApi.createJsonApiException(MESSAGE, ERRCODE_VALID);
+		WebApplicationException exception = AbstractApi.createJsonApiException(MESSAGE, Response.Status.fromStatusCode(ERRCODE_VALID));
 
 		JsonNode result = TestUtils.extractJsonEntity(exception.getResponse());
 
@@ -25,6 +25,6 @@ public class AbstractApiTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testCreateJsonApiExceptionInvalidCode() {
-		AbstractApi.createJsonApiException(MESSAGE, ERRCODE_INVALID);
+		AbstractApi.createJsonApiException(MESSAGE, Response.Status.fromStatusCode(ERRCODE_INVALID));
 	}
 }

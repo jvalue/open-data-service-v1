@@ -155,7 +155,7 @@ public class JsonApiResponseTest {
 	public void testExceptionResponse() {
 		//Replay
 		Response result = JsonApiResponse
-			.createExceptionResponse(ERRCODE_VALID)
+			.createExceptionResponse(Response.Status.fromStatusCode(ERRCODE_VALID))
 			.message(MESSAGE)
 			.build();
 
@@ -170,7 +170,7 @@ public class JsonApiResponseTest {
 	public void testExceptionResponseWithoutMessage() {
 		//Replay
 		Response result = JsonApiResponse
-			.createExceptionResponse(ERRCODE_VALID)
+			.createExceptionResponse(Response.Status.fromStatusCode(ERRCODE_VALID))
 			.build();
 
 		//Verify
@@ -183,7 +183,7 @@ public class JsonApiResponseTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testExceptionResponseInvalidCode() {
 		JsonApiResponse
-			.createExceptionResponse(ERRCODE_INVALID)
+			.createExceptionResponse(Response.Status.fromStatusCode(ERRCODE_INVALID))
 			.message(MESSAGE)
 			.build();
 	}
