@@ -60,10 +60,14 @@ public class ResponseBody {
 
 	public <T> List<T> dataToTargetObjectList(Class<T> valueType) {
 		List<T> retList = new ArrayList<>();
-		for (JsonNode node : data) {
-			retList.add(doConvertAttributesToTargetObject(node, valueType));
+		if(!data.isArray()) { //responses containing collections of only one element are serialized as single data objects
+			retList.add(dataToTargetObject(valueType));
 		}
-
+		else {
+			for (JsonNode node : data) {
+				retList.add(doConvertAttributesToTargetObject(node, valueType));
+			}
+		}
 		return retList;
 	}
 
