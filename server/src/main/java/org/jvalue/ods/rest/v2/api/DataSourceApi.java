@@ -247,7 +247,7 @@ public final class DataSourceApi extends AbstractApi {
 
 	private void assertSourceDoesNotExist(String sourceId) {
 		if (sourceManager.isValidSourceId(sourceId)) {
-			throw createJsonApiException("Source with id " + sourceId + " already exists!", 409);
+			throw createJsonApiException("Source with id " + sourceId + " already exists!", Response.Status.CONFLICT);
 		}
 	}
 }

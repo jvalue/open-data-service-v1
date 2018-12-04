@@ -58,11 +58,10 @@ public class JsonApiResponse {
 		return new Builder(new JsonApiResponse(uriInfo, Response.Status.OK));
 	}
 
+	public static BuildableException createExceptionResponse(Response.Status code) {
+		assertIsValidErrCode(code.getStatusCode());
 
-	public static BuildableException createExceptionResponse(int code) {
-		assertIsValidErrCode(code);
-
-		return new Builder(new JsonApiResponse(Response.Status.fromStatusCode(code)));
+		return new Builder(new JsonApiResponse(code));
 	}
 
 	private static void assertIsValidErrCode(int code) {

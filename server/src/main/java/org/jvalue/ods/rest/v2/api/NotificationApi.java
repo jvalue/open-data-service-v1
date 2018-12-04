@@ -238,7 +238,7 @@ public final class NotificationApi extends AbstractApi {
 		RequestValidator.validate(clientDescription);
 
 		if (notificationManager.contains(source, id)) {
-			throw createJsonApiException("client with id " + id + " already exists", 409);
+			throw createJsonApiException("client with id " + id + " already exists", Response.Status.CONFLICT);
 		}
 	}
 
