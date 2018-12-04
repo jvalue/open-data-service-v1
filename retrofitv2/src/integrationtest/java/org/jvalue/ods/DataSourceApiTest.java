@@ -38,7 +38,6 @@ public class DataSourceApiTest extends AbstractApiTest {
 		ResponseBody response = dataSourceApi.getAllSources();
 		List<DataSource> results = response.dataToTargetObjectList(DataSource.class);
 
-		Assert.assertTrue(response.getData().isArray());
 		Assert.assertTrue(results.contains(dataSource));
 	}
 
