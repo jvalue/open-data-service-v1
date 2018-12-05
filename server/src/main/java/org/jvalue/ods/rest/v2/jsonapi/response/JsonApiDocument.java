@@ -70,7 +70,7 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 	}
 
 
-	@JsonInclude(JsonInclude.Include.NON_NULL)
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	public List<JsonApiResource> getIncluded() {
 		return included;
 	}
@@ -102,6 +102,9 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 
 
 	public void addIncluded(JsonApiIdentifiable entity) {
+		if(included == null) {
+			included = new LinkedList<>();
+		}
 		URI location = getRelationshipURI(entity);
 		JsonApiResource includedResource = new JsonApiResource(entity, location);
 		includedResource.addSelfLink();
