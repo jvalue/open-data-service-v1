@@ -3,17 +3,15 @@ package org.jvalue.ods.rest.v2.jsonapi.response;
 import mockit.Expectations;
 import mockit.Mocked;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.JsonApiIdentifiable;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.jvalue.ods.rest.v2.TestUtils.COMBINED_MESSAGE;
 import static org.jvalue.ods.rest.v2.TestUtils.ERRCODE_VALID;
 import static org.jvalue.ods.rest.v2.TestUtils.MESSAGE;
 
@@ -41,26 +39,29 @@ public class JsonApiDocumentTest {
 		setUpUriInfo();
     	JsonApiDocument result = new JsonApiDocument(dummyObj01, uriInfoMock);
 
-    	JsonApiResource resource = result.getData().get(0);
+    	JsonApiData data = result.getData();
 
-    	Assert.assertEquals(1, result.getData().size());
-    	Assert.assertEquals(dummyObj01, resource.getEntity());
+    	Assert.assertTrue(data instanceof JsonApiResource);
+    	Assert.assertEquals(dummyObj01, data.asSingleResource().getEntity());
     }
 
 
     @Test
     public void testConstructorWithCollection() {
 		setUpUriInfo();
-		Collection<JsonApiIdentifiable> dummyCollection = Arrays.asList(dummyObj01, dummyObj42, dummyObj43);
+		List<JsonApiIdentifiable> dummyCollection = Arrays.asList(dummyObj01, dummyObj42, dummyObj43);
 
 		JsonApiDocument result = new JsonApiDocument(dummyCollection, uriInfoMock);
 
-		Assert.assertEquals(dummyCollection,
-				result
-						.getData()
-						.stream()
-						.map(JsonApiResource::getEntity)
-						.collect(Collectors.toList()));
+		Assert.assertEquals(
+			dummyCollection,
+			result
+				.getData()
+				.asResourceCollection()
+				.getEntity()
+				.stream()
+				.map(JsonApiResource::getEntity)
+				.collect(Collectors.toList()));
 	}
 
 
@@ -70,7 +71,7 @@ public class JsonApiDocumentTest {
 
 		JsonApiDocument result = new JsonApiDocument(error);
 
-		Assert.assertEquals(0, result.data.size());
+		Assert.assertNull(result.data);
 		Assert.assertEquals(1, result.errors.size());
 		Assert.assertEquals(ERRCODE_VALID, result.errors.get(0).getCode());
 		Assert.assertEquals(MESSAGE, result.errors.get(0).getMessage());
@@ -81,15 +82,21 @@ public class JsonApiDocumentTest {
 	public void testSetResourceCollection() {
 		setUpUriInfo();
 		URI collectionURI = URI.create("http://localhost:8080/path/to/collection/");
-		Collection<JsonApiIdentifiable> dummyCollection = Arrays.asList(dummyObj01, dummyObj42, dummyObj43);
+		List<JsonApiIdentifiable> dummyCollection = Arrays.asList(dummyObj01, dummyObj42, dummyObj43);
 
 		JsonApiDocument result = new JsonApiDocument(dummyCollection, uriInfoMock);
 		result.setResourceCollectionURI(collectionURI);
 
-		result.data.stream().allMatch(r -> r.getLinks().size() == 1);
-		Assert.assertEquals(collectionURI.resolve("id_01"), result.getData().get(0).getSelfLink());
-		Assert.assertEquals(collectionURI.resolve("id_42"), result.getData().get(1).getSelfLink());
-		Assert.assertEquals(collectionURI.resolve("id_43"), result.getData().get(2).getSelfLink());
+		List<JsonApiResource> entityList = result.getData().asResourceCollection().getEntity();
+
+		Assert.assertTrue(
+			entityList
+				.stream()
+				.allMatch(r -> r.getLinks().size() == 1)
+		);
+		Assert.assertEquals(collectionURI.resolve("id_01"), entityList.get(0).getSelfLink());
+		Assert.assertEquals(collectionURI.resolve("id_42"), entityList.get(1).getSelfLink());
+		Assert.assertEquals(collectionURI.resolve("id_43"), entityList.get(2).getSelfLink());
 
 	}
 
