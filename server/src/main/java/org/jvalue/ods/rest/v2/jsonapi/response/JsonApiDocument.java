@@ -2,6 +2,7 @@ package org.jvalue.ods.rest.v2.jsonapi.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.jvalue.commons.utils.Assert;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.JsonApiIdentifiable;
 
 import javax.ws.rs.core.UriInfo;
@@ -21,27 +22,37 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 	@JsonFormat(with = {
 		JsonFormat.Feature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED,
 		JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY})
-	protected List<JsonApiResource> data = new LinkedList<>();
+	protected List<JsonApiResource> data;
 
-	protected List<JsonApiError> errors = new LinkedList<>();
+	protected List<JsonApiError> errors;
 
-	private final List<JsonApiResource> included = new LinkedList<>();
+	private List<JsonApiResource> included;
 
 
 	public JsonApiDocument(JsonApiError error) {
+		Assert.assertTrue(data == null);
+
+		errors = new LinkedList<>();
 		errors.add(error);
 	}
 
 
 	public JsonApiDocument(JsonApiIdentifiable entity,
 						   UriInfo uriInfo) {
+		Assert.assertTrue(errors == null);
+		Assert.assertTrue(included == null);
+
 		this.uriInfo = uriInfo;
+		data = new LinkedList<>();
 		data.add(new JsonApiResource(entity, uriInfo.getAbsolutePath()));
 	}
 
 
 	public JsonApiDocument(Collection<? extends JsonApiIdentifiable> entityCollection,
 						   UriInfo uriInfo) {
+		Assert.assertTrue(errors == null);
+
+		data = new LinkedList<>();
 		this.uriInfo = uriInfo;
 		URI collectionURI = appendTrailingSlash(uriInfo.getAbsolutePath());
 
@@ -61,19 +72,19 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 	}
 
 
-	@JsonInclude(JsonInclude.Include.NON_EMPTY)
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	public List<JsonApiResource> getData() {
 		return data;
 	}
 
 
-	@JsonInclude(JsonInclude.Include.NON_EMPTY)
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	public List<JsonApiError> getErrors() {
 		return errors;
 	}
 
 
-	@JsonInclude(JsonInclude.Include.NON_EMPTY)
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	public List<JsonApiResource> getIncluded() {
 		return included;
 	}
