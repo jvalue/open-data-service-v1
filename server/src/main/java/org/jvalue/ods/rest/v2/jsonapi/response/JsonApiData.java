@@ -22,4 +22,17 @@ interface JsonApiData {
 	boolean hasRelationshipTo(JsonApiIdentifiable related);
 
 	void setResourceCollectionURI(URI collectionURI);
+
+	/**
+	 * Get the resourceObject representation of this data object.
+	 * @return this, if the object is an instance of JsonApiResource, the first (and only) element of the collection if it is a one element resource collection.
+	 * @throws IllegalStateException if the data object is a resource collection containing zero or more than one elements.
+	 */
+	JsonApiResource asSingleResource() throws IllegalStateException;
+
+	/**
+	 * Get the resourceCollection representation of this data object.
+	 * @return this, if the object is an instance of JsonApiResourceCollection, a one element collection containing the resource object otherwise.
+	 */
+	JsonApiResourceCollection asResourceCollection();
 }

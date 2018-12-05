@@ -8,12 +8,9 @@ import org.jvalue.ods.rest.v2.jsonapi.wrapper.JsonApiIdentifiable;
 import org.jvalue.ods.utils.JsonUtils;
 
 import java.net.URI;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
-public class JsonApiResource extends JsonApiResourceIdentifier implements JsonLinks, JsonApiData{
+public class JsonApiResource extends JsonApiResourceIdentifier implements JsonLinks, JsonApiData {
 
 	private final URI uri;
 	private final JsonApiIdentifiable entity;
@@ -67,6 +64,16 @@ public class JsonApiResource extends JsonApiResourceIdentifier implements JsonLi
 	@Override
 	public void setResourceCollectionURI(URI collectionURI) {
 		throw new IllegalStateException("Method may only be applied to resourceCollections");
+	}
+
+	@Override
+	public JsonApiResource asSingleResource() {
+		return this;
+	}
+
+	@Override
+	public JsonApiResourceCollection asResourceCollection() {
+		return new JsonApiResourceCollection(this);
 	}
 
 

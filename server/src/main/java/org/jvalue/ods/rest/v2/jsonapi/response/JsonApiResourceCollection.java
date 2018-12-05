@@ -18,6 +18,12 @@ public class JsonApiResourceCollection implements JsonApiData {
 
 	private final List<JsonApiResource> resources = new LinkedList<>();
 
+
+	protected JsonApiResourceCollection(JsonApiResource resource) {
+		resources.add(resource);
+	}
+
+
 	public JsonApiResourceCollection(Collection<? extends JsonApiIdentifiable> entities, URI collectionUri) {
 		entities.forEach(
 			e -> resources.add(
@@ -26,10 +32,12 @@ public class JsonApiResourceCollection implements JsonApiData {
 
 	}
 
+
 	@JsonValue
 	public List<JsonApiResource> getResources() {
 		return resources;
 	}
+
 
 	@Override
 	public JsonApiData restrictTo(String attribute) {
@@ -40,6 +48,7 @@ public class JsonApiResourceCollection implements JsonApiData {
 		return this;
 	}
 
+
 	@Override
 	public JsonApiData addRelationship(String name, Collection<? extends JsonApiIdentifiable> relatedCollection, URI location) {
 		resources.forEach(
@@ -49,6 +58,7 @@ public class JsonApiResourceCollection implements JsonApiData {
 		return this;
 	}
 
+
 	@Override
 	public JsonApiData addRelationship(String name, JsonApiIdentifiable related, URI location) {
 		resources.forEach(
@@ -57,6 +67,7 @@ public class JsonApiResourceCollection implements JsonApiData {
 
 		return this;
 	}
+
 
 	@Override
 	public URI getRelationshipUri(JsonApiIdentifiable related) {
@@ -69,6 +80,7 @@ public class JsonApiResourceCollection implements JsonApiData {
 			.getRelationshipUri(related);
 	}
 
+
 	@Override
 	public boolean hasRelationshipTo(JsonApiIdentifiable related) {
 		return resources
@@ -76,11 +88,34 @@ public class JsonApiResourceCollection implements JsonApiData {
 				.anyMatch(r -> r.hasRelationshipTo(related));
 	}
 
+
 	@Override
 	public void setResourceCollectionURI(URI collectionURI) {
 		resources.forEach(r -> {
 				r.getLinks().clear();
 				r.addLink(JsonLinks.SELF, appendTrailingSlash(collectionURI).resolve(r.getId()));
 			});
+	}
+
+
+	public List<JsonApiResource> getEntity() {
+		return resources;
+	}
+
+
+	@Override
+	public JsonApiResource asSingleResource() {
+		if(resources.size() == 1) {
+			return resources.get(0);
+		}
+		else {
+			throw new IllegalStateException("Only collections with exactly one entry can be conversed to resource objects.");
+		}
+	}
+
+
+	@Override
+	public JsonApiResourceCollection asResourceCollection() {
+		return this;
 	}
 }
