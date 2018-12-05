@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class JsonApiResource extends JsonApiResourceIdentifier implements JsonLinks {
+public class JsonApiResource extends JsonApiResourceIdentifier implements JsonLinks, JsonApiData{
 
 	private final URI uri;
 	private final JsonApiIdentifiable entity;
@@ -58,13 +58,20 @@ public class JsonApiResource extends JsonApiResourceIdentifier implements JsonLi
 	}
 
 
-	protected boolean hasRelationshipTo(JsonApiIdentifiable related) {
+	@Override
+	public boolean hasRelationshipTo(JsonApiIdentifiable related) {
 		return relationships.entrySet().stream()
 			.anyMatch(r -> r.getValue().containsEntity(related));
 	}
 
+	@Override
+	public void setResourceCollectionURI(URI collectionURI) {
+		throw new IllegalStateException("Method may only be applied to resourceCollections");
+	}
 
-	protected URI getRelationshipUri(JsonApiIdentifiable related) {
+
+	@Override
+	public URI getRelationshipUri(JsonApiIdentifiable related) {
 		URI relationshipURI = null;
 
 		for (Map.Entry<String, JsonApiRelationship> entry : relationships.entrySet()) {
@@ -83,19 +90,22 @@ public class JsonApiResource extends JsonApiResourceIdentifier implements JsonLi
 	}
 
 
-	protected JsonApiResource addRelationship(String name, JsonApiIdentifiable related, URI location) {
+	@Override
+	public JsonApiResource addRelationship(String name, JsonApiIdentifiable related, URI location) {
 		relationships.put(name, new JsonApiRelationship(related, location));
 		return this;
 	}
 
 
-	protected JsonApiResource addRelationship(String name, Collection<? extends JsonApiIdentifiable> relatedCollection, URI location) {
+	@Override
+	public JsonApiResource addRelationship(String name, Collection<? extends JsonApiIdentifiable> relatedCollection, URI location) {
 		relationships.put(name, new JsonApiRelationship(relatedCollection, location));
 		return this;
 	}
 
 
-	protected JsonApiResource restrictTo(String attribute) {
+	@Override
+	public JsonApiResource restrictTo(String attribute) {
 		return new JsonApiResource(entity, uri) {
 			@Override
 			public Object getEntity() {
