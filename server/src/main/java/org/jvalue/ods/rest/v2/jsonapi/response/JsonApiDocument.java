@@ -26,6 +26,7 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 
 	public JsonApiDocument(JsonApiError error) {
 		Assert.assertTrue(data == null);
+		Assert.assertTrue(included == null);
 
 		errors = new LinkedList<>();
 		errors.add(error);
@@ -35,7 +36,6 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 	public JsonApiDocument(JsonApiIdentifiable entity,
 						   UriInfo uriInfo) {
 		Assert.assertTrue(errors == null);
-		Assert.assertTrue(included == null);
 
 		this.uriInfo = uriInfo;
 		this.data = new JsonApiResource(entity, uriInfo.getAbsolutePath());
