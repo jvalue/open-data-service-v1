@@ -105,7 +105,6 @@ public class JsonApiResponseTest {
 		//Verify
 		assertIsValidJsonApiDataResponse(result);
 		JsonNode resultJson = extractJsonEntity(result).get("data");
-		System.out.println(resultJson);
 		Assert.assertEquals(3, resultJson.size());
 		Assert.assertTrue(resultJson.has("attributes"));
 		Assert.assertEquals(1, resultJson.get("attributes").size());

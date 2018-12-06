@@ -1,14 +1,13 @@
 package org.jvalue.ods.rest.v2.jsonapi.response;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.jvalue.commons.utils.Assert;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.JsonApiIdentifiable;
 
 import javax.ws.rs.core.UriInfo;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.jvalue.ods.utils.HttpUtils.appendTrailingSlash;
 
@@ -18,56 +17,54 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 
 	private final Map<String, URI> links = new HashMap<>();
 
-	@JsonFormat(with = {
-		JsonFormat.Feature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED,
-		JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY})
-	protected List<JsonApiResource> data = new LinkedList<>();
+	protected JsonApiData data;
 
-	protected List<JsonApiError> errors = new LinkedList<>();
+	protected List<JsonApiError> errors;
 
-	private final List<JsonApiResource> included = new LinkedList<>();
+	private List<JsonApiResource> included;
 
 
 	public JsonApiDocument(JsonApiError error) {
+		Assert.assertTrue(data == null);
+		Assert.assertTrue(included == null);
+
+		errors = new LinkedList<>();
 		errors.add(error);
 	}
 
 
 	public JsonApiDocument(JsonApiIdentifiable entity,
 						   UriInfo uriInfo) {
+		Assert.assertTrue(errors == null);
+
 		this.uriInfo = uriInfo;
-		data.add(new JsonApiResource(entity, uriInfo.getAbsolutePath()));
+		this.data = new JsonApiResource(entity, uriInfo.getAbsolutePath());
 	}
 
 
 	public JsonApiDocument(Collection<? extends JsonApiIdentifiable> entityCollection,
 						   UriInfo uriInfo) {
+		Assert.assertTrue(errors == null);
+
 		this.uriInfo = uriInfo;
 		URI collectionURI = appendTrailingSlash(uriInfo.getAbsolutePath());
 
-		for (JsonApiIdentifiable entity : entityCollection) {
-			JsonApiResource resource = new JsonApiResource(entity, collectionURI.resolve(entity.getId()));
-			resource.addSelfLink();
-			data.add(resource);
-		}
+		data = new JsonApiResourceCollection(entityCollection, collectionURI);
 	}
 
 
 	public void setResourceCollectionURI(URI collectionURI) {
-		data.forEach(r -> {
-			r.getLinks().clear();
-			r.addLink(JsonLinks.SELF, appendTrailingSlash(collectionURI).resolve(r.getId()));
-		});
+		data.setResourceCollectionURI(collectionURI);
 	}
 
 
-	@JsonInclude(JsonInclude.Include.NON_EMPTY)
-	public List<JsonApiResource> getData() {
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	public JsonApiData getData() {
 		return data;
 	}
 
 
-	@JsonInclude(JsonInclude.Include.NON_EMPTY)
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	public List<JsonApiError> getErrors() {
 		return errors;
 	}
@@ -80,53 +77,34 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 
 
 	private URI getRelationshipURI(JsonApiIdentifiable relationship) {
-		URI relationshipURI = null;
-
-		for (JsonApiResource dataElement : data) {
-			if (dataElement.hasRelationshipTo(relationship)) {
-				relationshipURI = dataElement.getRelationshipUri(relationship);
-			}
-		}
-
-		if (relationshipURI == null) {
-			throw new IllegalArgumentException("relationship " + relationship.getId() + " does not exist.");
-		}
-
-		return relationshipURI;
+		return data.getRelationshipUri(relationship);
 	}
 
 
 	public boolean hasRelationshipTo(JsonApiIdentifiable entity) {
-		return data.stream()
-			.anyMatch(e -> e.hasRelationshipTo(entity));
+		return data.hasRelationshipTo(entity);
 	}
 
 
 	public void restrictTo(String attribute) {
-		data = data
-			.stream()
-			.map(r -> r.restrictTo(attribute))
-			.collect(Collectors.toList());
+		data = data.restrictTo(attribute);
 	}
 
 
 	public void addRelationship(String name, JsonApiIdentifiable entity, URI location) {
-		data = data
-			.stream()
-			.map(r -> r.addRelationship(name, entity, location))
-			.collect(Collectors.toList());
+		data.addRelationship(name, entity, location);
 	}
 
 
 	public void addRelationship(String name, Collection<? extends JsonApiIdentifiable> entity, URI location) {
-		data = data
-			.stream()
-			.map(r -> r.addRelationship(name, entity, location))
-			.collect(Collectors.toList());
+		data.addRelationship(name, entity, location);
 	}
 
 
 	public void addIncluded(JsonApiIdentifiable entity) {
+		if(included == null) {
+			included = new LinkedList<>();
+		}
 		URI location = getRelationshipURI(entity);
 		JsonApiResource includedResource = new JsonApiResource(entity, location);
 		includedResource.addSelfLink();
