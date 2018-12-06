@@ -87,7 +87,7 @@ public class JsonApiDocument implements Serializable, JsonLinks {
 
 
 	public void restrictTo(String attribute) {
-		data.restrictTo(attribute);
+		data = data.restrictTo(attribute);
 	}
 
 
