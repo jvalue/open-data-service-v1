@@ -4,7 +4,6 @@ package org.jvalue.ods.processor.adapter;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
-
 import org.jvalue.ods.processor.adapter.domain.BrandenburgPegelAdapter;
 import org.jvalue.ods.processor.adapter.domain.PegelPortalMvSourceAdapter;
 import org.jvalue.ods.processor.adapter.domain.weather.APIXUSourceAdapter;
