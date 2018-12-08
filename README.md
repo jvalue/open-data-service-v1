@@ -123,6 +123,11 @@ The are two types of tests in this repo: unit tests and integration tests. The u
 
 The ODS has a number of [health checks](https://dropwizard.github.io/dropwizard/getting-started.html#creating-a-health-check) which ensure that a running instance of the ODS conforms to the requirements of the Pegel Alarm application. To see the output of those health checks simply go to `/{adminContextPath}/healthcheck`. The default config for localhost is [http://localhost:8081/healthcheck](http://localhost:8081/healthcheck).
 
+
+## Additional information about filter and adapter
+
+- [Adapter](docs/adapter/Adapter.md)
+
 ## License
 Copyright 2014-2018 Friedrich-Alexander Universität Erlangen-Nürnberg
 
