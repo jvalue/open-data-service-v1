@@ -2,7 +2,6 @@ package org.jvalue.ods.rest.v2.jsonapi.swagger;
 
 import io.swagger.v3.jaxrs2.Reader;
 import io.swagger.v3.oas.integration.SwaggerConfiguration;
-import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
@@ -23,7 +22,7 @@ public class OpenApiProvider {
 		.readAllResources(false)
 		.prettyPrint(true);
 
-	private static final License license = new License().name("exampleLicense");
+	private static final License license = new License().name("GNU Affero General Public License v3.0");
 
 	private static final Info openApiInfo = new Info()
 		.description("This is the specification of the public Open-Data-Service API v2")
@@ -43,14 +42,6 @@ public class OpenApiProvider {
 		new Tag().name(USERS).description("Users of the Open-Data-Service")
 	);
 
-	private static final SecurityScheme securityScheme =
-			new SecurityScheme()
-				.scheme("basic")
-				.type(SecurityScheme.Type.HTTP)
-				.name(BASICAUTH);
-
-	private static final Components comps = new Components().addSecuritySchemes("basicAuth", securityScheme);
-
 	private static final OpenAPI instance = new Reader(conf)
 		.read(new HashSet<>(Arrays.asList(
 			EntryPoint.class,
@@ -63,14 +54,21 @@ public class OpenApiProvider {
 			ProcessorSpecificationApi.class,
 			UserApi.class)
 		))
-		.components(comps)
 		.tags(tags)
 		.info(openApiInfo);
 
+	private static final SecurityScheme securityScheme =
+		new SecurityScheme()
+			.scheme("basic")
+			.type(SecurityScheme.Type.HTTP)
+			.name(BASICAUTH);
+
+	static {
+		instance.getComponents().addSecuritySchemes("basicAuth", securityScheme);
+	}
 
 	public static OpenAPI getOpenAPI() {
 		return instance;
 	}
-
 
 }
