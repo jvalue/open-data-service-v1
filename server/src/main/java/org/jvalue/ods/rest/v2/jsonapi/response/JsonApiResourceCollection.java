@@ -12,7 +12,7 @@ import static org.jvalue.ods.utils.HttpUtils.appendTrailingSlash;
 
 /**
  * Class representation of resource collections.
- * @JsonValue annotation on getResources() method marks resource array as serialization root.
+ * Annotation "@JsonValue" on getResources() method marks resource array as serialization root.
  */
 public class JsonApiResourceCollection implements JsonApiData {
 

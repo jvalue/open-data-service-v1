@@ -1,10 +1,12 @@
 package org.jvalue.ods.rest.v2.jsonapi.response;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.JsonApiIdentifiable;
 import org.jvalue.ods.utils.JsonMapper;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
 
@@ -12,9 +14,9 @@ import java.util.Objects;
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
 public class JsonApiRequest {
 
-	private String type;
-	private String id;
-	private Map<String, Object> attributes;
+	private final String type;
+	private final String id;
+	private final Map<String, Object> attributes;
 
 	public JsonApiRequest(
 		@JsonProperty("type") String type,
@@ -42,12 +44,13 @@ public class JsonApiRequest {
 	}
 
 
-	public static JsonApiRequest from (JsonApiIdentifiable entity) throws IOException {
+	public static JsonApiRequest from (JsonApiIdentifiable entity) {
 		return new JsonApiRequest(
 			entity.getType(),
 			entity.getId(),
 			JsonMapper.convertValueToMap(entity));
 	}
+
 
 	@Override
 	public boolean equals(Object o) {

@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class DataWrapper implements JsonApiIdentifiable{
 
 	private final String id;
-	private Map<String, Object> attributes;
+	private final Map<String, Object> attributes;
 
 	private DataWrapper(JsonNode jsonNode, String domainIdKey) {
 		this.id = getDomainId(jsonNode, domainIdKey);

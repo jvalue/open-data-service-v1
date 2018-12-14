@@ -3,7 +3,6 @@ package org.jvalue.ods.rest.v2.jsonapi.response;
 import org.jvalue.commons.utils.Assert;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.JsonApiIdentifiable;
 
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
@@ -15,7 +14,7 @@ public class JsonApiResponse {
 
 	private UriInfo uriInfo;
 	private JsonApiDocument jsonApiEntity;
-	private Response.StatusType statusCode;
+	private final Response.StatusType statusCode;
 
 	private JsonApiResponse(UriInfo uriInfo, Response.StatusType statusCode) {
 		Assert.assertNotNull(uriInfo, statusCode);
@@ -165,6 +164,7 @@ public class JsonApiResponse {
 			return responseBuilder.build();
 		}
 
+
 		@Override
 		public BuildableException message(String message) {
 			JsonApiError error = new JsonApiError(
@@ -186,6 +186,7 @@ public class JsonApiResponse {
 
 	}
 
+
 	/**
 	 * Interface for a Responsebuilder that needs an entity for further processing
 	 */
@@ -201,6 +202,7 @@ public class JsonApiResponse {
 		Buildable data(Collection<? extends JsonApiIdentifiable> entityCollection);
 	}
 
+
 	/**
 	 * Interface for a Responsebuilder that meets all requirements to build a exception response.
 	 */
@@ -214,6 +216,7 @@ public class JsonApiResponse {
 		 */
 		BuildableException message(String message);
 	}
+
 
 	/**
 	 * Interface for a Responsebuilder that meets all requirements to build the response.

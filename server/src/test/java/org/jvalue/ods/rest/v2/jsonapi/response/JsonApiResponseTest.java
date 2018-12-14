@@ -5,7 +5,6 @@ import mockit.Expectations;
 import mockit.Mocked;
 import mockit.integration.junit4.JMockit;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.JsonApiIdentifiable;
@@ -187,6 +186,7 @@ public class JsonApiResponseTest {
 			.build();
 	}
 
+
 	@Test
 	public void testAddLinks() {
 		//Record
@@ -323,14 +323,14 @@ public class JsonApiResponseTest {
 		setUpExpectations();
 		JsonApiIdentifiable minimalEntity = createMinimalEntity();
 		JsonApiIdentifiable relatedEntity = createCustomMinimalEntity("related");
-		JsonApiIdentifiable unrleatedEntity = createCustomMinimalEntity("unrelated");
+		JsonApiIdentifiable unrelatedEntity = createCustomMinimalEntity("unrelated");
 
 		//Replay
 		JsonApiResponse
 			.createGetResponse(uriInfo)
 			.data(minimalEntity)
 			.addRelationship("related", relatedEntity, uriInfo.getAbsolutePath())
-			.addIncluded(unrleatedEntity)
+			.addIncluded(unrelatedEntity)
 			.build();
 	}
 
