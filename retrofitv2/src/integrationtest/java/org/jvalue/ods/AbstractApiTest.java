@@ -12,7 +12,7 @@ import org.junit.BeforeClass;
 import org.jvalue.commons.utils.HttpServiceCheck;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.api.sources.DataSourceMetaData;
-import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiRequest;
+import org.jvalue.ods.rest.v2.jsonapi.request.JsonApiRequest;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.DataSourceWrapper;
 import retrofit.RestAdapter;

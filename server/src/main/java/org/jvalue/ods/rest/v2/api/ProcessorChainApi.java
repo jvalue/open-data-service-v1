@@ -18,7 +18,7 @@ import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.processor.ProcessorChainManager;
-import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiRequest;
+import org.jvalue.ods.rest.v2.jsonapi.request.JsonApiRequest;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonLinks;
 import org.jvalue.ods.rest.v2.jsonapi.swagger.JsonApiSchema;

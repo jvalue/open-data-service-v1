@@ -4,8 +4,10 @@ import jsonapi.ResponseBody;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Test;
-import org.jvalue.ods.api.notifications.*;
-import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiRequest;
+import org.jvalue.ods.api.notifications.Client;
+import org.jvalue.ods.api.notifications.GcmClient;
+import org.jvalue.ods.api.notifications.HttpClient;
+import org.jvalue.ods.rest.v2.jsonapi.request.JsonApiRequest;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.ClientWrapper;
 import retrofit.RetrofitError;
 

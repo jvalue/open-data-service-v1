@@ -1,7 +1,7 @@
 package api;
 
 import jsonapi.ResponseBody;
-import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiRequest;
+import org.jvalue.ods.rest.v2.jsonapi.request.JsonApiRequest;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
 import retrofit.client.Response;
 import retrofit.http.*;

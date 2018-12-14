@@ -2,7 +2,7 @@ package org.jvalue.ods.utils;
 
 import org.junit.Test;
 import org.jvalue.ods.api.sources.DataSourceDescription;
-import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiRequest;
+import org.jvalue.ods.rest.v2.jsonapi.request.JsonApiRequest;
 
 import javax.ws.rs.WebApplicationException;
 import java.io.IOException;

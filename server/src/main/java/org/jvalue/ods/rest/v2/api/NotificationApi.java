@@ -17,7 +17,7 @@ import org.jvalue.ods.api.notifications.*;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.notifications.NotificationManager;
-import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiRequest;
+import org.jvalue.ods.rest.v2.jsonapi.request.JsonApiRequest;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonLinks;
 import org.jvalue.ods.rest.v2.jsonapi.swagger.JsonApiSchema;

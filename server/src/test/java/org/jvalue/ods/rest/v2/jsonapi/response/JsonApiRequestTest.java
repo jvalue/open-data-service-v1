@@ -3,6 +3,7 @@ package org.jvalue.ods.rest.v2.jsonapi.response;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.jvalue.ods.rest.v2.jsonapi.request.JsonApiRequest;
 import org.jvalue.ods.rest.v2.jsonapi.wrapper.JsonApiIdentifiable;
 import org.jvalue.ods.utils.JsonMapper;
 

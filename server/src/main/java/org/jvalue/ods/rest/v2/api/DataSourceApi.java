@@ -24,7 +24,7 @@ import org.jvalue.ods.data.DataViewManager;
 import org.jvalue.ods.notifications.NotificationManager;
 import org.jvalue.ods.processor.ProcessorChainManager;
 import org.jvalue.ods.processor.plugin.PluginMetaDataManager;
-import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiRequest;
+import org.jvalue.ods.rest.v2.jsonapi.request.JsonApiRequest;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonLinks;
 import org.jvalue.ods.rest.v2.jsonapi.swagger.JsonApiSchema;
