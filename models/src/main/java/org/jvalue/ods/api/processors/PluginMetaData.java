@@ -4,10 +4,11 @@ package org.jvalue.ods.api.processors;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.validation.constraints.NotNull;
 
-public final class PluginMetaData {
+public class PluginMetaData {
 
 	@NotNull private final String id, author;
 
@@ -21,11 +22,13 @@ public final class PluginMetaData {
 	}
 
 
+	@Schema(hidden = true)
 	public String getId() {
 		return id;
 	}
 
 
+	@Schema(example = "Walter Frosch", required = true)
 	public String getAuthor() {
 		return author;
 	}

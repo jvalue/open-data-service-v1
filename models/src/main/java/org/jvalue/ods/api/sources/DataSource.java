@@ -4,13 +4,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Objects;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.validation.constraints.NotNull;
 
 
-public final class DataSource extends AbstractDataSource {
+public class DataSource extends AbstractDataSource {
 
-	@NotNull private final String id;
+	@NotNull
+	protected final String id;
 
 	public DataSource(
 			@JsonProperty("id") String id,
@@ -23,6 +25,7 @@ public final class DataSource extends AbstractDataSource {
 	}
 
 
+	@Schema(hidden = true)
 	public String getId() {
 		return id;
 	}

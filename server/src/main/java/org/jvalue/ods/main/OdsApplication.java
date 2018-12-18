@@ -1,6 +1,7 @@
 package org.jvalue.ods.main;
 
 
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.hubspot.jackson.jaxrs.PropertyFilteringMessageBodyWriter;
@@ -15,10 +16,6 @@ import org.hibernate.validator.cfg.GenericConstraintDef;
 import org.jvalue.commons.auth.AuthBinder;
 import org.jvalue.commons.auth.BasicAuthUserDescription;
 import org.jvalue.commons.auth.UserManager;
-import org.jvalue.commons.auth.rest.UnauthorizedExceptionMapper;
-import org.jvalue.commons.couchdb.rest.DbExceptionMapper;
-import org.jvalue.commons.rest.JsonExceptionMapper;
-import org.jvalue.commons.rest.NotFoundExceptionMapper;
 import org.jvalue.commons.utils.HttpServiceCheck;
 import org.jvalue.ods.admin.monitoring.DbHealthCheck;
 import org.jvalue.ods.admin.monitoring.MonitoringModule;
@@ -36,6 +33,8 @@ import org.jvalue.ods.pegelalarm.FilterChainHealthCheck;
 import org.jvalue.ods.pegelalarm.PegelOnlineHealthCheck;
 import org.jvalue.ods.processor.ProcessorModule;
 import org.jvalue.ods.processor.reference.ValidChainReference;
+import org.jvalue.ods.rest.v2.api.SpecificationApi;
+import org.jvalue.ods.rest.v2.jsonapi.exceptionMapper.*;
 import org.jvalue.ods.transformation.DataTransformationModule;
 import org.jvalue.ods.rest.v1.DataApi;
 import org.jvalue.ods.rest.v1.DataSourceApi;
@@ -104,13 +103,24 @@ public final class OdsApplication extends Application<OdsConfig> {
 		environment.jersey().register(injector.getInstance(VersionApi.class));
 		environment.jersey().register(injector.getInstance(UserApi.class));
 		environment.jersey().register(PropertyFilteringMessageBodyWriter.class);
-		environment.jersey().register(new DbExceptionMapper());
-		environment.jersey().register(new JsonExceptionMapper());
-		environment.jersey().register(new UnauthorizedExceptionMapper());
-		environment.jersey().register(new NotFoundExceptionMapper());
+
+		// register jsonApi ExceptionMappers
+		environment.jersey().register(new JsonApiDbExceptionMapper());
+		environment.jersey().register(new JsonApiMappingExceptionMapper());
+		environment.jersey().register(new JsonApiUnauthorizedExceptionMapper());
+		environment.jersey().register(new JsonApiExceptionMapper());
+		environment.jersey().register(new WebApplicationExceptionMapper());
 
 		// v2
-        environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.DataSourceApi.class));
+        environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.api.DataSourceApi.class));
+		environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.api.DataApi.class));
+		environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.api.DataViewApi.class));
+		environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.api.ProcessorChainApi.class));
+		environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.api.ProcessorSpecificationApi.class));
+		environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.api.NotificationApi.class));
+		environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.api.UserApi.class));
+		environment.jersey().register(injector.getInstance(org.jvalue.ods.rest.v2.api.EntryPoint.class));
+		environment.jersey().register(injector.getInstance(SpecificationApi.class));
 
 		// setup users
 		setupDefaultUsers(injector.getInstance(UserManager.class), configuration.getAuth().getUsers());
@@ -150,6 +160,10 @@ public final class OdsApplication extends Application<OdsConfig> {
 				.constraintValidatorFactory(new GuiceConstraintValidatorFactory(injector))
 				.buildValidatorFactory()
 				.getValidator());
+
+		// configure generic type serialization for ClientWrapper in api v2
+		environment.getObjectMapper().disable(SerializationFeature.FAIL_ON_UNWRAPPED_TYPE_IDENTIFIERS);
+
 	}
 
 

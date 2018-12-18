@@ -1,0 +1,16 @@
+group 'org.jvalue.ods'
+version '0.2.2'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+	testCompile "junit:junit:$junitVersion"
+	implementation 'com.squareup.retrofit:retrofit:$retrofit-version'
+	compile project(':server')
+}

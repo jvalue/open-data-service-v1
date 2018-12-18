@@ -4,12 +4,13 @@ package org.jvalue.ods.api.processors;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
-public final class Specification {
+public class Specification {
 
 	@NotNull private final String name;
 	@NotNull private final ProcessorType type;
@@ -27,6 +28,7 @@ public final class Specification {
 	}
 
 
+	@Schema(example = "JsonSourceAdapter")
 	public String getName() {
 		return name;
 	}

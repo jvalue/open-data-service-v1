@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Objects;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.jvalue.ods.api.utils.JsonPointerDeserializer;
 import org.jvalue.ods.api.utils.JsonPointerSerializer;
 
@@ -17,8 +18,12 @@ abstract class AbstractDataSource {
 
 	@JsonSerialize(using = JsonPointerSerializer.class)
 	@JsonDeserialize(using = JsonPointerDeserializer.class)
+	@Schema(implementation = String.class, example = "/gaugeId", pattern = "/(.*)", required = true)
 	@NotNull private final JsonPointer domainIdKey;
+	@Schema(implementation = Object.class, required = true,
+		example = "{\"$schema\":\"http://json-schema.org/draft-04/schema#\"}")
 	@NotNull private final JsonNode schema;
+	@Schema(required = true)
 	@Valid @NotNull private final DataSourceMetaData metaData;
 
 	protected AbstractDataSource(

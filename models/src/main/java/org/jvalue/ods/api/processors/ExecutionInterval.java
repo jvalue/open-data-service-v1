@@ -4,6 +4,7 @@ package org.jvalue.ods.api.processors;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.concurrent.TimeUnit;
 
@@ -25,11 +26,13 @@ public class ExecutionInterval {
 	}
 
 
+	@Schema(minimum = "1", example = "60")
 	public long getPeriod() {
 		return period;
 	}
 
 
+	@Schema(required = true)
 	public TimeUnit getUnit() {
 		return unit;
 	}

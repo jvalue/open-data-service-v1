@@ -5,12 +5,13 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.validation.constraints.NotNull;
 
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public final class DataView extends AbstractDataView {
+public class DataView extends AbstractDataView {
 
 	@NotNull private final String id;
 
@@ -36,6 +37,7 @@ public final class DataView extends AbstractDataView {
 	}
 
 
+	@Schema(hidden = true)
 	public String getId() {
 		return id;
 	}

@@ -5,36 +5,36 @@ import com.squareup.javapoet.ClassName
 apply plugin: 'de.bitdroid.jaxrs2retrofit'
 
 buildscript {
-    apply from: '../dependencies.gradle'
+	apply from: '../dependencies.gradle'
 
-    repositories {
-        jcenter()
-        maven {
-            url project.ext.nexusPublicReleasesUrl
-        }
-    }
-    dependencies {
-        classpath "de.bitdroid.jaxrs2retrofit:plugin:$jaxrs2retrofitVersion"
-        classpath "org.jvalue.commons:auth:$jvalueCommonsVersion"
-    }
+	repositories {
+		jcenter()
+		maven {
+			url project.ext.nexusPublicReleasesUrl
+		}
+	}
+	dependencies {
+		classpath "de.bitdroid.jaxrs2retrofit:plugin:$jaxrs2retrofitVersion"
+		classpath "org.jvalue.commons:auth:$jvalueCommonsVersion"
+	}
 }
 
 dependencies {
-    compile "com.squareup.retrofit:retrofit:$retrofitVersion"
-    compile "com.squareup.retrofit:converter-jackson:$retrofitVersion"
-    compile "io.reactivex:rxjava:$rxjavaVersion"
-    compile "org.jvalue.commons:models:$jvalueCommonsVersion"
-    compile project(':models')
+	compile "com.squareup.retrofit:retrofit:$retrofitVersion"
+	compile "com.squareup.retrofit:converter-jackson:$retrofitVersion"
+	compile "io.reactivex:rxjava:$rxjavaVersion"
+	compile "org.jvalue.commons:models:$jvalueCommonsVersion"
+	compile project(':models')
 
-    testCompile "org.jmockit:jmockit:$jmockitVersion"
-    testCompile "junit:junit:$junitVersion"
+	testCompile "org.jmockit:jmockit:$jmockitVersion"
+	testCompile "junit:junit:$junitVersion"
 	testCompile "org.jvalue.commons:utils:$jvalueCommonsVersion"
 }
 
 jaxRs2Retrofit {
 	inputDir = file(project(':server').projectDir.toString() + '/' + mainSourcesDir + '/org/jvalue/ods/rest/v1')
 	outputDir = file(generatedSourcesDir)
-    packageName = 'org.jvalue.ods.api'
-    excludedClassNamesRegex = 'PluginApi|FilterDescriptionApi|Admin.*'
-    paramConverterManager.registerConverter(ClassName.get(RestrictedTo.class), new IgnoreConverter())
+	packageName = 'org.jvalue.ods.api'
+	excludedClassNamesRegex = 'PluginApi|FilterDescriptionApi|Admin.*'
+	paramConverterManager.registerConverter(ClassName.get(RestrictedTo.class), new IgnoreConverter())
 }
