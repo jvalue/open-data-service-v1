@@ -30,7 +30,7 @@ Once done you should be able to run
 
 `./gradlew run` (Windows users use the `.bat` version) 
 
-which first downloads all required dependencies and then starts the ODS. The server should be be running at [http://localhost:8080/ods/api/v1](http://localhost:8080/ods/api/v1).
+which first downloads all required dependencies and then starts the ODS. The server should be be running at [http://localhost:8080/ods/api/v1](http://localhost:8080/ods/api/v1) and [http://localhost:8080/ods/api/v2](http://localhost:8080/ods/api/v2).
 
 ## Docker
 
@@ -45,7 +45,7 @@ To run the local image with docker-compose call:
 `docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml up`
 
 
-## Usage
+## Usage of API v1
 
 The ODS uses a REST API for communicating with clients of all kinds, be it end users or admins. The basic usage of the api follows the template `/someObjects/{objectId}/someProperty` and is always relative to the base url you have defined in the `ods-configuration.yml` file.
 
@@ -97,7 +97,18 @@ In order for the Postman collection to work, Postman needs to know a couple of t
 ```
 To import those variables, save the above JSON in a file and click the _environment_ button at the top of Postman.
 
-## Client implementation
+## Usage of API v2
+
+The current API of the ODS (v2) implements the [JSON API](https://jsonapi.org/) specification to ensure a standardized data exchange format. Therefore, all HTTP requests containing a message body must contain the content-type header field with value "application/vnd.api+json".    
+Most of the v1 endpoints still remain but, since they are mutually linked, you can explore the API by simply clicking through it. On the [base path](http://localhost:8080/ods/api/v2) of API v2 you will find an entry point from which each endpoint is reachable.  
+
+### Swagger
+Another way of exploring the API is via [Swagger](https://swagger.io/). By executing the above mentioned docker-compose command (`docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml up`) Swagger-UI will be started and can be reached via [localhost:8082](http://localhost:8082). 
+
+### Postman
+If you prefer using postman to get to know the API, there is also a [Postman Collection](https://www.getpostman.com/collections/53d098fd1c7bbba3ed93) and a [Environment File](http://s000.tinyupload.com/index.php?file_id=07946991616650479571) adapted to API v2. Remember to declare the content-type as "application/vnd.api+json".
+
+## Client implementation (for API v1)
 
 If you want to start working the ODS and don't mind Java, you can use the client lib that comes with the ODS. The library was created using [JaxRs2Retrofit](https://github.com/Maddoc42/JaxRs2Retrofit) and is available on [bintray](https://bintray.com/maddoc42/maven/ods/view). For gradle builds:
 
