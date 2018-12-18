@@ -5,7 +5,6 @@ import org.ektorp.DocumentNotFoundException;
 import org.jvalue.commons.couchdb.RepositoryAdapter;
 import org.jvalue.commons.utils.Assert;
 import org.jvalue.commons.utils.Cache;
-import org.jvalue.commons.utils.Log;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.db.DataRepository;
 import org.jvalue.ods.db.RepositoryFactory;
@@ -64,12 +63,7 @@ public abstract class AbstractDataSourcePropertyManager<T, R extends RepositoryA
 
 	public final T get(DataSource source, String propertyId) {
 		Assert.assertNotNull(source, propertyId);
-		Log.info("not null assertion successful");
-		R repo = assertRepository(source);
-		Log.info(repo.getClass().getSimpleName() + " asserted");
-		T stuff = repo.findById(propertyId);
-		Log.info(stuff.getClass().getSimpleName() + " found");
-		return stuff;
+		return assertRepository(source).findById(propertyId);
 	}
 
 

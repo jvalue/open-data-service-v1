@@ -14,7 +14,6 @@ import org.jvalue.commons.couchdb.DbConnectorFactory;
 import org.jvalue.commons.couchdb.DbDocument;
 import org.jvalue.commons.couchdb.DbDocumentAdaptable;
 import org.jvalue.commons.couchdb.RepositoryAdapter;
-import org.jvalue.commons.utils.Log;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 
 import java.util.List;
@@ -47,9 +46,7 @@ public final class ProcessorChainReferenceRepository extends RepositoryAdapter<
 		@Override
 		@View(name = "by_id", map = "function(doc) { if (" + DOCUMENT_ID + ") emit(doc.value.id, doc._id) }")
 		public ProcessorReferenceChainDocument findById(String processorChainId) {
-			Log.info("findById( "+processorChainId+")");
 			List<ProcessorReferenceChainDocument> chains = queryView("by_id", processorChainId);
-			Log.info("Chains found: " + chains.size());
 			if (chains.isEmpty()) throw new DocumentNotFoundException(processorChainId);
 			if (chains.size() > 1)
 				throw new IllegalStateException("found more than one chain for id " + processorChainId);

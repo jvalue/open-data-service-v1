@@ -19,7 +19,6 @@ package org.jvalue.ods.processor.adapter;
 
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
@@ -84,7 +83,7 @@ final class OsmSourceAdapter extends AbstractSourceAdapter {
 
 
 		@Override
-		protected JsonNode doNext() {
+		protected ObjectNode doNext() {
 			try {
 				initOsmoisReader();
 				ObjectNode retValue = currentNode;

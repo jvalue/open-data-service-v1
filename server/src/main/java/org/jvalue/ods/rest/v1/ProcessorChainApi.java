@@ -7,7 +7,6 @@ import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
 import org.jvalue.commons.rest.RestUtils;
-import org.jvalue.commons.utils.Log;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
 import org.jvalue.ods.api.sources.DataSource;
@@ -62,10 +61,7 @@ public final class ProcessorChainApi extends AbstractApi {
 			@PathParam("sourceId") String sourceId,
 			@PathParam("filterChainId") String filterChainId) {
 
-		Log.info("getProcessorChain()");
 		DataSource source = sourceManager.findBySourceId(sourceId);
-		Log.info("source found");
-
 		return chainManager.get(source, filterChainId);
 	}
 
@@ -77,16 +73,12 @@ public final class ProcessorChainApi extends AbstractApi {
 			@PathParam("sourceId") String sourceId,
 			@PathParam("filterChainId") String filterChainId,
 			@Valid ProcessorReferenceChainDescription processorChain) {
-		Log.info("addProcessorChain()");
-
 
 		if (processorChain.getExecutionInterval() != null) {
 			assertIsValidTimeUnit(processorChain.getExecutionInterval().getUnit());
-			Log.info("executionInterval asserted");
 		}
 
 		DataSource source = sourceManager.findBySourceId(sourceId);
-		Log.info("source found");
 		if (chainManager.contains(source, filterChainId))
 			throw RestUtils.createJsonFormattedException("filter chain with id " + filterChainId + " already exists", 409);
 
@@ -94,13 +86,8 @@ public final class ProcessorChainApi extends AbstractApi {
 				filterChainId,
 				processorChain.getProcessors(),
 				processorChain.getExecutionInterval());
-		Log.info("chainReference initialized: " + processorChain.toString());
 
-		if (processorChain.getExecutionInterval() != null) {
-			Log.info("executionInterval != null");
-			chainManager.add(source, sourceManager.getDataRepository(source), chainReference);
-			Log.info("chainManager added");
-		}
+		if (processorChain.getExecutionInterval() != null) chainManager.add(source, sourceManager.getDataRepository(source), chainReference);
 		else chainManager.executeOnce(source, sourceManager.getDataRepository(source), chainReference);
 		return chainReference;
 	}
