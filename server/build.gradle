@@ -52,6 +52,7 @@ dependencies {
 	compile "io.swagger.core.v3:swagger-jaxrs2:$swaggerVersion"
 	compile "org.hibernate:hibernate-validator:$hibernateVersion"
 	compile "org.hibernate:hibernate-validator-annotation-processor:$hibernateVersion"
+	compile "com.google.gcm:gcm-server:$gcmVersion"
 	compile project(':models')
 	compile fileTree(dir: 'libs', include: '*.jar')
 
