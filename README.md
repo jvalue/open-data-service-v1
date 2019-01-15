@@ -140,7 +140,7 @@ The ODS has a number of [health checks](https://dropwizard.github.io/dropwizard/
 - [Adapter](docs/adapter/Adapter.md)
 
 ## License
-Copyright 2014-2018 Friedrich-Alexander Universität Erlangen-Nürnberg
+Copyright 2014-2019 Friedrich-Alexander Universität Erlangen-Nürnberg
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
@@ -154,3 +154,5 @@ GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+SPDX-License-Identifier: AGPL-3.0-only
