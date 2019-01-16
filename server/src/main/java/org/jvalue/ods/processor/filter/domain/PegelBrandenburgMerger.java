@@ -1,22 +1,25 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.processor.filter.domain;
 
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Sets;
 import com.google.inject.assistedinject.Assisted;
-
 import org.jvalue.commons.utils.Assert;
 import org.jvalue.commons.utils.Log;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.processor.filter.AbstractDataModifierFilter;
 import org.jvalue.ods.processor.filter.FilterException;
 
+import javax.inject.Inject;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Set;
-
-import javax.inject.Inject;
 
 
 /**

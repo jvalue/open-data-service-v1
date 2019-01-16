@@ -1,25 +1,16 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.rest.v1;
 
-import org.jvalue.commons.auth.AbstractUserDescription;
-import org.jvalue.commons.auth.BasicAuthUtils;
-import org.jvalue.commons.auth.BasicAuthenticator;
-import org.jvalue.commons.auth.OAuthUtils;
-import org.jvalue.commons.auth.RestrictedTo;
-import org.jvalue.commons.auth.Role;
-import org.jvalue.commons.auth.User;
-import org.jvalue.commons.auth.UserManager;
-
-import java.util.List;
+import org.jvalue.commons.auth.*;
 
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 /**
  * Empty class which calls super for every single method. Its solve purpose is to allow JaxRs2Retrofit to

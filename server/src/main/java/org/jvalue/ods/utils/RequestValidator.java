@@ -1,13 +1,17 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.utils;
-
 
 
 import org.jvalue.commons.rest.RestUtils;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
-import javax.validation.ValidatorFactory;
 import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.util.Set;
 
 public class RequestValidator {

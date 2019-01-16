@@ -1,10 +1,18 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.data;
 
 
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
+import mockit.Expectations;
+import mockit.Mocked;
+import mockit.Verifications;
+import mockit.integration.junit4.JMockit;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,11 +29,6 @@ import org.jvalue.ods.processor.ProcessorChainManager;
 
 import java.util.Arrays;
 import java.util.Map;
-
-import mockit.Expectations;
-import mockit.Mocked;
-import mockit.Verifications;
-import mockit.integration.junit4.JMockit;
 
 @RunWith(JMockit.class)
 public final class DataSourceManagerTest {

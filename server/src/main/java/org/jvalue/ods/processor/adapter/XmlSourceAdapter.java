@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.processor.adapter;
 
 import com.codahale.metrics.MetricRegistry;
@@ -8,7 +13,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlFactory;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-
 import org.jvalue.ods.api.sources.DataSource;
 
 import java.io.IOException;

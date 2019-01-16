@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.main;
 
 
@@ -5,7 +10,10 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.hubspot.jackson.jaxrs.PropertyFilteringMessageBodyWriter;
-
+import io.dropwizard.Application;
+import io.dropwizard.jersey.DropwizardResourceConfig;
+import io.dropwizard.jersey.setup.JerseyContainerHolder;
+import io.dropwizard.setup.Environment;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.servlet.ServletContainer;
@@ -26,39 +34,21 @@ import org.jvalue.ods.data.DataModule;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.db.DbModule;
 import org.jvalue.ods.notifications.NotificationsModule;
-import org.jvalue.ods.pegelalarm.CepsClientHealthCheck;
-import org.jvalue.ods.pegelalarm.DataHealthCheck;
-import org.jvalue.ods.pegelalarm.DataSourceHealthCheck;
-import org.jvalue.ods.pegelalarm.FilterChainHealthCheck;
-import org.jvalue.ods.pegelalarm.PegelOnlineHealthCheck;
+import org.jvalue.ods.pegelalarm.*;
 import org.jvalue.ods.processor.ProcessorModule;
 import org.jvalue.ods.processor.reference.ValidChainReference;
+import org.jvalue.ods.rest.v1.*;
 import org.jvalue.ods.rest.v2.api.SpecificationApi;
 import org.jvalue.ods.rest.v2.jsonapi.exceptionMapper.*;
 import org.jvalue.ods.transformation.DataTransformationModule;
-import org.jvalue.ods.rest.v1.DataApi;
-import org.jvalue.ods.rest.v1.DataSourceApi;
-import org.jvalue.ods.rest.v1.DataViewApi;
-import org.jvalue.ods.rest.v1.NotificationApi;
-import org.jvalue.ods.rest.v1.PluginApi;
-import org.jvalue.ods.rest.v1.ProcessorChainApi;
-import org.jvalue.ods.rest.v1.ProcessorSpecificationApi;
-import org.jvalue.ods.rest.v1.UserApi;
-import org.jvalue.ods.rest.v1.VersionApi;
 import org.jvalue.ods.utils.GuiceConstraintValidatorFactory;
-
-import java.util.EnumSet;
-import java.util.List;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
 import javax.validation.Validation;
 import javax.ws.rs.core.Context;
-
-import io.dropwizard.Application;
-import io.dropwizard.jersey.DropwizardResourceConfig;
-import io.dropwizard.jersey.setup.JerseyContainerHolder;
-import io.dropwizard.setup.Environment;
+import java.util.EnumSet;
+import java.util.List;
 
 public final class OdsApplication extends Application<OdsConfig> {
 

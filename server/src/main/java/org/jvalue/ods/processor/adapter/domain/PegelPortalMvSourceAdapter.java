@@ -14,6 +14,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+	SPDX-License-Identifier: AGPL-3.0-only
  */
 package org.jvalue.ods.processor.adapter.domain;
 
@@ -21,7 +22,6 @@ import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.assistedinject.Assisted;
-
 import org.apache.commons.text.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -33,13 +33,12 @@ import org.jvalue.ods.processor.adapter.SourceAdapterException;
 import org.jvalue.ods.processor.adapter.SourceIterator;
 import org.jvalue.ods.utils.HttpUtils;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import javax.inject.Inject;
 
 
 public final class PegelPortalMvSourceAdapter extends AbstractSourceAdapter {

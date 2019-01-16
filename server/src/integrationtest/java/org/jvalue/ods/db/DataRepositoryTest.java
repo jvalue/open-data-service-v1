@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.db;
 
 
@@ -5,7 +10,6 @@ import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import org.ektorp.DocumentNotFoundException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -14,11 +18,7 @@ import org.jvalue.commons.couchdb.test.AbstractRepositoryTest;
 import org.jvalue.ods.api.data.Data;
 import org.jvalue.ods.api.views.DataView;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public final class DataRepositoryTest extends AbstractRepositoryTest {
 

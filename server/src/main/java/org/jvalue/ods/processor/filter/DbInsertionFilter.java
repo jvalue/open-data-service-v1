@@ -13,7 +13,8 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-    
+
+    SPDX-License-Identifier: AGPL-3.0-only
  */
 package org.jvalue.ods.processor.filter;
 
@@ -22,7 +23,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-
 import org.ektorp.DocumentOperationResult;
 import org.jvalue.ods.admin.monitoring.PauseableTimer;
 import org.jvalue.ods.api.sources.DataSource;

@@ -1,9 +1,13 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.admin.monitoring;
 
 
 import com.codahale.metrics.health.HealthCheck;
 import com.google.inject.Inject;
-
 import org.jvalue.ods.db.DataSourceRepository;
 
 /**

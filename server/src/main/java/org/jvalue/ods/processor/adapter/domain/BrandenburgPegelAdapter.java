@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.processor.adapter.domain;
 
 
@@ -6,7 +11,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.assistedinject.Assisted;
-
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.processor.adapter.AbstractSourceAdapter;
 import org.jvalue.ods.processor.adapter.SourceAdapterException;
@@ -16,14 +20,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.LinkedList;
-
 import javax.inject.Inject;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.net.URL;
+import java.util.LinkedList;
 
 /**
  * Data adapter for water level provided by the German state Brandenburg.

@@ -13,12 +13,12 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-    
+
+    SPDX-License-Identifier: AGPL-3.0-only
  */
 package org.jvalue.ods.processor.plugin;
 
 import com.google.inject.Inject;
-
 import org.jvalue.commons.utils.Assert;
 import org.jvalue.commons.utils.Cache;
 import org.jvalue.ods.api.processors.PluginMetaData;

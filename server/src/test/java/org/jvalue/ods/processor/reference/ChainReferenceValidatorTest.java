@@ -1,31 +1,30 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.processor.reference;
 
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.jvalue.ods.api.processors.ExecutionInterval;
-import org.jvalue.ods.api.processors.ProcessorReference;
-import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
-import org.jvalue.ods.processor.adapter.SourceAdapterFactory;
-import org.jvalue.ods.processor.filter.FilterFactory;
-import org.jvalue.ods.api.processors.ProcessorType;
-import org.jvalue.ods.api.processors.Specification;
-import org.jvalue.ods.processor.specification.SpecificationManager;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
-import javax.validation.ConstraintValidatorContext;
 
 import mockit.Deencapsulation;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.integration.junit4.JMockit;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.jvalue.ods.api.processors.*;
+import org.jvalue.ods.processor.adapter.SourceAdapterFactory;
+import org.jvalue.ods.processor.filter.FilterFactory;
+import org.jvalue.ods.processor.specification.SpecificationManager;
+
+import javax.validation.ConstraintValidatorContext;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 
 @RunWith(JMockit.class)

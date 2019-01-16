@@ -1,8 +1,12 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.rest.v1;
 
 
 import com.google.inject.Inject;
-
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -15,19 +19,11 @@ import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.processor.plugin.PluginMetaDataManager;
 
-import java.io.InputStream;
-import java.util.List;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.InputStream;
+import java.util.List;
 
 
 @Path(AbstractApi.BASE_URL + "/{sourceId}/plugins")

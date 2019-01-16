@@ -14,6 +14,8 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+    SPDX-License-Identifier: AGPL-3.0-only
  */
 package org.jvalue.ods.processor.adapter;
 
@@ -24,7 +26,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-
+import crosby.binary.osmosis.OsmosisReader;
 import org.jvalue.commons.utils.Log;
 import org.jvalue.ods.api.sources.DataSource;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
@@ -36,8 +38,6 @@ import java.net.URL;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-
-import crosby.binary.osmosis.OsmosisReader;
 
 
 final class OsmSourceAdapter extends AbstractSourceAdapter {

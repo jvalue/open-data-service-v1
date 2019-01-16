@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+
+    SPDX-License-Identifier: AGPL-3.0-only
+
+-->
 <m:Weather xmlns:m="http://iec.ch/TC57/Weather#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://iec.ch/TC57/Weather# Weather.xsd">
 	<m:EnvironmentalMonitoringStation>
 		<m:mRID>String</m:mRID>

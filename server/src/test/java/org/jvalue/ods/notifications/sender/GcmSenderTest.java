@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.notifications.sender;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -6,7 +11,10 @@ import com.google.android.gcm.server.Constants;
 import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.MulticastResult;
 import com.google.android.gcm.server.Result;
-
+import mockit.Expectations;
+import mockit.Mocked;
+import mockit.Verifications;
+import mockit.integration.junit4.JMockit;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,11 +25,6 @@ import org.jvalue.ods.api.sources.DataSource;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-
-import mockit.Expectations;
-import mockit.Mocked;
-import mockit.Verifications;
-import mockit.integration.junit4.JMockit;
 
 
 @RunWith(JMockit.class)

@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:a="http://langdale.com.au/2005/Message#"
+<!--
+
+    Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+
+    SPDX-License-Identifier: AGPL-3.0-only
+
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
 		   xmlns:sawsdl="http://www.w3.org/ns/sawsdl" targetNamespace="http://iec.ch/TC57/Weather#"
 		   elementFormDefault="qualified" attributeFormDefault="unqualified"
 		   xmlns="http://langdale.com.au/2005/Message#" xmlns:m="http://iec.ch/TC57/Weather#">

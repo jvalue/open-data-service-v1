@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.notifications.sender;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -7,18 +12,16 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.assistedinject.Assisted;
-
 import org.jvalue.ods.api.notifications.HttpClient;
 import org.jvalue.ods.api.sources.DataSource;
-
-import javax.inject.Inject;
-
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.converter.JacksonConverter;
 import retrofit.http.Body;
 import retrofit.http.POST;
+
+import javax.inject.Inject;
 
 
 final class HttpSender extends AbstractSender<HttpClient> {
