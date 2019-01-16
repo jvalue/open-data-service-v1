@@ -1,13 +1,17 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.api;
 
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.jvalue.ods.api.sources.DataSource;
+import retrofit.RetrofitError;
 
 import java.util.List;
-
-import retrofit.RetrofitError;
 
 public final class DataSourceApiTest extends AbstractApiTest {
 
