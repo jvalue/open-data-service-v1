@@ -149,8 +149,6 @@ subprojects {
 		publications {
 			nexusJava(MavenPublication) {
 				from components.java
-				artifact sourcesJar
-				artifact javadocJar
 			}
 		}
 		repositories {
