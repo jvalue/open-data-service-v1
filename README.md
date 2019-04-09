@@ -59,7 +59,6 @@ To get a feeling for how this API works and which parameters are supported, you 
 
 - take a look at the implementation of the [REST api](https://github.com/jvalue/open-data-service/tree/master/server/src/main/java/org/jvalue/ods/rest)
 - have a look at this [Postman collection](https://www.getpostman.com/collections/25d694d4ba21348c5530)
-- examine an [example configuration](./docs/configuration/PegelOnline-Example.md) process
 - or start working with the Java client implementation (see below)
 
 In order for the Postman collection to work, Postman needs to know a couple of things (e.g. passwords, urls, etc.), which can be set by importing a so called _environment_ file that looks like this:
@@ -102,6 +101,10 @@ To import those variables, save the above JSON in a file and click the _environm
 
 The current API of the ODS (v2) implements the [JSON API](https://jsonapi.org/) specification to ensure a standardized data exchange format. Therefore, all HTTP requests containing a message body must contain the content-type header field with value "application/vnd.api+json".    
 Most of the v1 endpoints still remain but, since they are mutually linked, you can explore the API by simply clicking through it. On the [base path](http://localhost:8080/ods/api/v2) of API v2 you will find an entry point from which each endpoint is reachable.  
+
+## Getting Started
+
+Please see [PegelOnline-Example.md](./docs/configuration/PegelOnline-Example.md) for an introduction on how to use ODS.
 
 ### Swagger
 Another way of exploring the API is via [Swagger](https://swagger.io/). By executing the above mentioned docker-compose command (`docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml up`) Swagger-UI will be started and can be reached via [localhost:8082](http://localhost:8082). 
