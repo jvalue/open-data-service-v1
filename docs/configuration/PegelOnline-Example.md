@@ -28,7 +28,7 @@ Header | Value
 Content-Type | application/json
 Authorization | Basic YWRtaW46N2tweWd2YXF0M3FwM25lMnY4YnpxYzJkcmdq
 
-</summary>
+</details>
 
 
 <details><summary>Body</summary>
@@ -193,7 +193,7 @@ Header | Value
 Content-Type | application/json
 Authorization | Basic YWRtaW46N2tweWd2YXF0M3FwM25lMnY4YnpxYzJkcmdq
 
-</summary>
+</details>
 
 
 <details><summary>Body</summary>
@@ -241,7 +241,7 @@ Header | Value
 Content-Type | application/json
 Authorization | Basic YWRtaW46N2tweWd2YXF0M3FwM25lMnY4YnpxYzJkcmdq
 
-</summary>
+</details>
 
 
 <details><summary>Body</summary>
@@ -264,6 +264,4 @@ Header | Value
 Content-Type | application/json
 Authorization | Basic YWRtaW46N2tweWd2YXF0M3FwM25lMnY4YnpxYzJkcmdq
 
-</summary>
-
-</datails>
+</details>
