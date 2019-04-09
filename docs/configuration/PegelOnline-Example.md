@@ -178,7 +178,7 @@ Authorization | Basic YWRtaW46N2tweWd2YXF0M3FwM25lMnY4YnpxYzJkcmdq
   }
 }
 ```
-</datails>
+</details>
 
 
 
@@ -228,7 +228,7 @@ Authorization | Basic YWRtaW46N2tweWd2YXF0M3FwM25lMnY4YnpxYzJkcmdq
   }
 }
 ```
-</datails>
+</details>
 
 
 ## Configure data view
@@ -251,7 +251,7 @@ Authorization | Basic YWRtaW46N2tweWd2YXF0M3FwM25lMnY4YnpxYzJkcmdq
   "mapFunction": "function(doc) { emit(doc.viewId, doc); }"
 }
 ```
-</datails>
+</details>
 
 
 ## Get the data
