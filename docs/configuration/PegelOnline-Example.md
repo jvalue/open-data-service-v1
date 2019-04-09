@@ -9,13 +9,29 @@ This is an example on how to configure the ODS. Further documentation on the RES
 
 ## Overview
 
-As an example, the ODS is configured and used for PegelOnline as data source:
-- create a source
-- configure a filter chain
-- create a view on the retrieved data
-- get the data
 
 The placeholder `{{ods_base_url}}` is represented as `http://localhost:8080/ods/api/v1` in the default configuration.
+
+As an example, the ODS is configured and used for PegelOnline as data source:
+
+#### Create a source
+
+In this step the data source is configured. This contains the meta data of the source, like the origin, author, terms of use, etc.
+Additionally, the schema of the data source is provided, including which data is mandatory and which are optional.
+
+#### Configure a filter chain
+
+By configuring a filter chain, simple steps towards the final data are executed. This includes specifying which adapter is used (protocol + format to retrieve the data).
+The DbInsertionFilter is responsible for persisting the data in the final format, the NotificationFilter triggers notifications. Additionally, some configuration of the filter chain can be given, like when it should be executed.
+
+#### Create a view on the retrieved data
+
+This represents a querying mechanism that operates on the stored data. It relies on the capabilities of the underlying CouchDB and uses an map-reduce-like syntax.
+
+#### Get the data
+
+Fetching the data from the configured data view is a simple HTTP call. The format of the data depends on the prior steps.
+
 
 ## Create data source
 
