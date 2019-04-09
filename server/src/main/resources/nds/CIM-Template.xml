@@ -6,33 +6,33 @@
     SPDX-License-Identifier: AGPL-3.0-only
 
 -->
-<m:Weather xmlns:m="http://iec.ch/TC57/Weather#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://iec.ch/TC57/Weather# Weather.xsd">
-	<m:EnvironmentalMonitoringStation>
-		<m:mRID>String</m:mRID>
-			<m:EnvironmentalAnalog>
-				<m:kind>ambientTemperature</m:kind>
-				<m:unitMultiplier>none</m:unitMultiplier>
-				<m:unitSymbol>degC</m:unitSymbol>
-				<m:AnalogValues>
-					<m:timeStamp>__TIMESTAMP__</m:timeStamp>
-					<m:value>__TEMP_IN_C__</m:value>
-				</m:AnalogValues>
-			</m:EnvironmentalAnalog>
-			<m:EnvironmentalAnalog>
-				<m:kind>irradianceGlobalHorizontal</m:kind>
-				<m:unitMultiplier>none</m:unitMultiplier>
-				<m:unitSymbol>WPerm2</m:unitSymbol>
-				<m:AnalogValues>
-					<m:timeStamp>__TIMESTAMP__</m:timeStamp>
-					<m:value>__SOLAR_RADIATION__</m:value>
-				</m:AnalogValues>
-			</m:EnvironmentalAnalog>
-			<m:Location>
-				<m:mainAddress>
-					<m:townDetail>
-						<m:name>__CITY__</m:name>
-					</m:townDetail>
-				</m:mainAddress>
-			</m:Location>
-	</m:EnvironmentalMonitoringStation>
-</m:Weather>
+<cim:Weather xmlns:cim="http://iec.ch/TC57/Weather#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://iec.ch/TC57/Weather# Weather.xsd">
+	<cim:EnvironmentalMonitoringStation>
+		<cim:mRID>String</cim:mRID>
+		<cim:EnvironmentalAnalog>
+			<cim:kind>ambientTemperature</cim:kind>
+			<cim:unitMultiplier>none</cim:unitMultiplier>
+			<cim:unitSymbol>degC</cim:unitSymbol>
+			<cim:AnalogValues>
+				<cim:timeStamp>__TIMESTAMP__</cim:timeStamp>
+				<cim:value>__TEMP_IN_C__</cim:value>
+			</cim:AnalogValues>
+		</cim:EnvironmentalAnalog>
+		<cim:EnvironmentalAnalog>
+			<cim:kind>irradianceGlobalHorizontal</cim:kind>
+			<cim:unitMultiplier>a</cim:unitMultiplier>
+			<cim:unitSymbol>WPerm2</cim:unitSymbol>
+			<cim:AnalogValues>
+				<cim:timeStamp>__TIMESTAMP__</cim:timeStamp>
+				<cim:value>__SOLAR_RADIATION__</cim:value>
+			</cim:AnalogValues>
+		</cim:EnvironmentalAnalog>
+		<cim:Location>
+			<cim:mainAddress>
+				<cim:townDetail>
+					<cim:name>__CITY__</cim:name>
+				</cim:townDetail>
+			</cim:mainAddress>
+		</cim:Location>
+	</cim:EnvironmentalMonitoringStation>
+</cim:Weather>
