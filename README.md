@@ -59,6 +59,7 @@ To get a feeling for how this API works and which parameters are supported, you 
 
 - take a look at the implementation of the [REST api](https://github.com/jvalue/open-data-service/tree/master/server/src/main/java/org/jvalue/ods/rest)
 - have a look at this [Postman collection](https://www.getpostman.com/collections/25d694d4ba21348c5530)
+- examine an [example configuration](./docs/configuration/PegelOnline-Example.md) process
 - or start working with the Java client implementation (see below)
 
 In order for the Postman collection to work, Postman needs to know a couple of things (e.g. passwords, urls, etc.), which can be set by importing a so called _environment_ file that looks like this:
