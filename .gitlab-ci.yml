@@ -49,7 +49,7 @@ integration-test:
     script:
         - "apk add curl"
         - "curl -L \"https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m)\" -o docker-compose"
-        - "chmod +x /usr/local/bin/docker-compose"
+        - "chmod +x docker-compose"
         - "./docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml up -d"
         - "./gradlew integrationTest"
         - "./docker-compose docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml stop"
