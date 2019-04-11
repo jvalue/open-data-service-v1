@@ -12,6 +12,13 @@ variables:
     # See further: https://docs.gitlab.com/ee/ci/docker/using_docker_build.html
     DOCKER_DRIVER: "overlay2"
     IMAGE_TAG: "${CI_COMMIT_SHORT_SHA}-${CI_PIPELINE_ID}"
+    GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
+
+cache:
+  paths:
+    - .gradle/wrapper
+    - .gradle/caches
+
 
 stages:
     - build
@@ -20,23 +27,23 @@ stages:
     - acceptance-integration-test
     - release
 
-# build-ods:
-#     image: java:8
-#     stage: build
-#     script: "./gradlew clean build -x test"
-#     after_script:
-#         - "./gradlew copyDockerAssets" # copy it for docker task
-#     artifacts:
-#         paths:
-#             - "./docker/ods/" # hand it to docker task
+build-ods:
+    image: java:8
+    stage: build
+    script: "./gradlew clean build -x test"
+    # after_script:
+    #     - "./gradlew copyDockerAssets" # copy it for docker task
+    artifacts:
+        paths:
+            - "./docker/ods/" # hand it to docker task
 
-# unit-tests-ods:
-#     image: java:8
-#     stage: acceptance-unit-test
-#     script: "./gradlew test"
-#     artifacts:
-#         reports:
-#             junit: '*/build/test-results/**/*.xml'
+unit-tests-ods:
+    image: java:8
+    stage: acceptance-unit-test
+    script: "./gradlew test"
+    artifacts:
+        reports:
+            junit: '*/build/test-results/**/*.xml'
 
 # docker-build-ods:
 #     stage: acceptance-docker-build
@@ -44,15 +51,15 @@ stages:
 #     dependencies: # copying is done by build-ods task
 #         - build-ods
 
-integration-test:
-    stage: acceptance-integration-test
-    script:
-        - apk add --no-cache py-pip python-dev libffi-dev openssl-dev gcc libc-dev make
-        - pip install docker-compose
-        - docker build -t osrg_ods_public/ods-cd:latest ./docker/ods
-        - docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml up -d
-        - ./gradlew integrationTest
-        - docker-compose docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml stop
+# integration-test:
+#     stage: acceptance-integration-test
+#     script:
+#         - apk add --no-cache py-pip python-dev libffi-dev openssl-dev gcc libc-dev make
+#         - pip install docker-compose
+#         - docker build -t osrg_ods_public/ods-cd:latest ./docker/ods
+#         - docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml up -d
+#         - ./gradlew integrationTest
+#         - docker-compose docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml stop
 
 #docker-push-ods:
 #    stage: release
