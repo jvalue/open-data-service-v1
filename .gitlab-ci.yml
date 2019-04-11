@@ -20,8 +20,8 @@ cache:
         - .gradle/caches
 
 before_script:
-        - docker login -u $CI_DOCKER_REGISTRY_USER -p $CI_DOCKER_REGISTRY_TOKEN $CI_REGISTRY
-        
+    - docker login -u $CI_DOCKER_REGISTRY_USER -p $CI_DOCKER_REGISTRY_TOKEN $CI_REGISTRY
+
 stages:
     - build
     - acceptance-unit-test
@@ -63,7 +63,7 @@ integration-test:
     stage: acceptance-integration-test
     # dependencies:
     #     - docker-build
-    image: "http://registry.gitlab.com/profoss/open-data-service-legacy/ci-container"
+    services: "http://registry.gitlab.com/profoss/open-data-service-legacy/ci-container"
     script:
         - docker load -i image/ods.tar
         - docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml up -d
