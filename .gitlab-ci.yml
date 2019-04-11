@@ -47,12 +47,11 @@ stages:
 integration-test:
     stage: acceptance-integration-test
     script:
-        - "apk add curl"
-        - "curl -L \"https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m)\" -o docker-compose"
-        - "chmod +x docker-compose"
-        - "./docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml up -d"
-        - "./gradlew integrationTest"
-        - "./docker-compose docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml stop"
+        - apk add --no-cache py-pip python-dev libffi-dev openssl-dev gcc libc-dev make
+        - pip install docker-compose
+        - docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml up -d
+        - ./gradlew integrationTest
+        - docker-compose docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml stop
 
 #docker-push-ods:
 #    stage: release
