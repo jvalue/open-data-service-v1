@@ -67,7 +67,7 @@ integration-test:
     stage: acceptance-integration-test
     # dependencies:
     #     - docker-build
-    image: docker/compose:1.24.0
+    image: tmaier/docker-compose:18.09
     script:
         - docker-compose info
         - docker-compose version
