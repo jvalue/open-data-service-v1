@@ -20,39 +20,39 @@ stages:
     - acceptance-integration-test
     - release
 
-build-ods:
-    image: java:8
-    stage: build
-    script: "./gradlew clean build -x test"
-    after_script:
-        - "./gradlew copyDockerAssets" # copy it for docker task
-    artifacts:
-        paths:
-            - "./docker/ods/" # hand it to docker task
+# build-ods:
+#     image: java:8
+#     stage: build
+#     script: "./gradlew clean build -x test"
+#     after_script:
+#         - "./gradlew copyDockerAssets" # copy it for docker task
+#     artifacts:
+#         paths:
+#             - "./docker/ods/" # hand it to docker task
 
-unit-tests-ods:
-    image: java:8
-    stage: acceptance-unit-test
-    script: "./gradlew test"
-    artifacts:
-        reports:
-            junit: '*/build/test-results/**/*.xml'
+# unit-tests-ods:
+#     image: java:8
+#     stage: acceptance-unit-test
+#     script: "./gradlew test"
+#     artifacts:
+#         reports:
+#             junit: '*/build/test-results/**/*.xml'
 
-docker-build-ods:
-    stage: acceptance-docker-build
-    script: "docker build -t osrg_ods_public/ods-cd:latest ./docker/ods"
-    dependencies: # copying is done by build-ods task
-        - build-ods
+# docker-build-ods:
+#     stage: acceptance-docker-build
+#     script: "docker build -t osrg_ods_public/ods-cd:latest ./docker/ods"
+#     dependencies: # copying is done by build-ods task
+#         - build-ods
 
 integration-test:
     stage: acceptance-integration-test
     script:
         - "apk add curl"
-        - "curl -L \"https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m)\" -o /usr/local/bin/docker-compose"
+        - "curl -L \"https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m)\" -o docker-compose"
         - "chmod +x /usr/local/bin/docker-compose"
-        - "docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml up -d"
+        - "./docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml up -d"
         - "./gradlew integrationTest"
-        - "docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml stop"
+        - "./docker-compose docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml stop"
 
 #docker-push-ods:
 #    stage: release
