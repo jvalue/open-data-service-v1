@@ -19,6 +19,9 @@ cache:
         - .gradle/wrapper
         - .gradle/caches
 
+before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+
 stages:
     - build
     - acceptance-unit-test
@@ -30,7 +33,6 @@ build-ci-image:
     stage: build
     when: manual
     script:
-        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -t registry.gitlab.com/profoss/open-data-service-legacy/open-data-service/ci-base ./docker/ci-base
         - docker push registry.gitlab.com/profoss/open-data-service-legacy/open-data-service/ci-base
 
@@ -68,8 +70,7 @@ integration-test:
     stage: acceptance-integration-test
     # dependencies:
     #     - docker-build
-    services:
-        - registry.gitlab.com/profoss/open-data-service-legacy/open-data-service/ci-base
+    image: registry.gitlab.com/profoss/open-data-service-legacy/open-data-service/ci-base
     script:
         - docker-compose info
         - docker-compose version
