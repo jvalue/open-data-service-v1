@@ -26,13 +26,14 @@ stages:
     - acceptance-integration-test
     - release
 
-build-and-push-base-image:
+build-ci-image:
     stage: build
     when: manual
     script:
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -t registry.gitlab.com/profoss/open-data-service-legacy/open-data-service/ci-base ./docker/ci-base
         - docker push registry.gitlab.com/profoss/open-data-service-legacy/open-data-service/ci-base
+
 # build:
 #     image: java:8
 #     stage: build
@@ -63,18 +64,20 @@ build-and-push-base-image:
 #     dependencies: # copying is done by build-ods task
 #         - build
 
-# integration-test:
-#     stage: acceptance-integration-test
-#     # dependencies:
-#     #     - docker-build
-#     image: tmaier/docker-compose:18.09
-#     script:
-#         - docker-compose info
-#         - docker-compose version
+integration-test:
+    stage: acceptance-integration-test
+    # dependencies:
+    #     - docker-build
+    services:
+        - registry.gitlab.com/profoss/open-data-service-legacy/open-data-service/ci-base
+    script:
+        - docker-compose info
+        - docker-compose version
 # - docker load -i image/ods.tar
 # - docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml up -d
 # - ./gradlew integrationTest
 # - docker-compose docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml stop
+
 # publish:
 #     stage: release
 #     dependencies:
