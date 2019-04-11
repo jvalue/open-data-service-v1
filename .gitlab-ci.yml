@@ -58,8 +58,8 @@ stages:
 
 integration-test:
     stage: acceptance-integration-test
-    dependencies:
-        - docker-build
+    # dependencies:
+    #     - docker-build
     image: "http://registry.gitlab.com/profoss/open-data-service-legacy/ci-container"
     before_script:
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
