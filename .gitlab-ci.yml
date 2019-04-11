@@ -46,18 +46,36 @@ unit-tests:
 
 docker-build:
     stage: acceptance-docker-build
-    script: "docker build -t osrg_ods_public/ods-cd:latest ./docker/ods"
+    script:
+        - docker build -t registry.gitlab.com/profoss/open-data-service-legacy/open-data-service ./docker/ods
+        - mkdir image
+        - docker save registry.gitlab.com/profoss/open-data-service-legacy/open-data-service > image/ods.tar
+    artifacts:
+    paths:
+        - image
     dependencies: # copying is done by build-ods task
         - build
 
 integration-test:
     stage: acceptance-integration-test
+    dependencies:
+        - docker-build
+    image:
+        - http://registry.gitlab.com/profoss/open-data-service-legacy/ci-container
     script:
-        - apk add --no-cache py-pip python-dev libffi-dev openssl-dev gcc libc-dev make
-        - pip install docker-compose
+        - docker load -i image/ods.tar
         - docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml up -d
         - ./gradlew integrationTest
         - docker-compose docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml stop
+# publish:
+#     stage: release
+#     dependencies:
+#        - docker-build
+#     script:
+#        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+#        - docker load -i image/ods.tar
+#        - docker push registry.gitlab.com/profoss/open-data-service-legacy/open-data-service
+
 #docker-push-ods:
 #    stage: release
 #    script: "./gradlew dockerPush"
