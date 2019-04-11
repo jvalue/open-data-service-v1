@@ -63,7 +63,8 @@ integration-test:
     stage: acceptance-integration-test
     # dependencies:
     #     - docker-build
-    services: "http://registry.gitlab.com/profoss/open-data-service-legacy/ci-container"
+    services:
+        - "http://registry.gitlab.com/profoss/open-data-service-legacy/ci-container"
     script:
         - docker load -i image/ods.tar
         - docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml up -d
