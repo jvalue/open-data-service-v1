@@ -51,8 +51,8 @@ docker-build:
         - mkdir image
         - docker save registry.gitlab.com/profoss/open-data-service-legacy/open-data-service > image/ods.tar
     artifacts:
-    paths:
-        - image
+        paths:
+            - image
     dependencies: # copying is done by build-ods task
         - build
 
