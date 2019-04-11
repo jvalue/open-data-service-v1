@@ -36,48 +36,47 @@ build-ci-image:
         - docker build -t registry.gitlab.com/profoss/open-data-service-legacy/open-data-service/ci-base ./docker/ci-base
         - docker push registry.gitlab.com/profoss/open-data-service-legacy/open-data-service/ci-base
 
-# build:
-#     image: java:8
-#     stage: build
-#     script: "./gradlew clean build -x test"
-#     after_script:
-#         - "./gradlew copyDockerAssets" # copy it for docker task
-#     artifacts:
-#         paths:
-#             - "./docker/ods/" # hand it to docker task
+build:
+    image: java:8
+    stage: build
+    script: "./gradlew clean build -x test"
+    after_script:
+        - "./gradlew copyDockerAssets" # copy it for docker task
+    artifacts:
+        paths:
+            - "./docker/ods/" # hand it to docker task
 
-# unit-tests:
-#     image: java:8
-#     stage: acceptance-unit-test
-#     script: "./gradlew test"
-#     artifacts:
-#         reports:
-#             junit: "*/build/test-results/**/*.xml"
+unit-tests:
+    image: java:8
+    stage: acceptance-unit-test
+    script: "./gradlew test"
+    artifacts:
+        reports:
+            junit: "*/build/test-results/**/*.xml"
 
-# docker-build:
-#     stage: acceptance-docker-build
-#     script:
-#         - docker build -t registry.gitlab.com/profoss/open-data-service-legacy/open-data-service ./docker/ods
-#         - mkdir image
-#         - docker save registry.gitlab.com/profoss/open-data-service-legacy/open-data-service > image/ods.tar
-#     artifacts:
-#         paths:
-#             - image
-#     dependencies: # copying is done by build-ods task
-#         - build
+docker-build:
+    stage: acceptance-docker-build
+    script:
+        - docker build -t registry.gitlab.com/profoss/open-data-service-legacy/open-data-service ./docker/ods
+        - mkdir image
+        - docker save registry.gitlab.com/profoss/open-data-service-legacy/open-data-service > image/ods.tar
+    artifacts:
+        paths:
+            - image
+    dependencies: # copying is done by build-ods task
+        - build
 
 integration-test:
     stage: acceptance-integration-test
-    # dependencies:
-    #     - docker-build
+    dependencies:
+        - docker-build
     image: registry.gitlab.com/profoss/open-data-service-legacy/open-data-service/ci-base
     script:
-        - docker-compose version
-# - docker load -i image/ods.tar
-# - docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml up -d
-# - ./gradlew integrationTest
-# - docker-compose docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml stop
-
+        - docker load -i image/ods.tar
+        - docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml up -d
+        - ./gradlew integrationTest
+    after_script:
+        - docker-compose docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml stop
 # publish:
 #     stage: release
 #     dependencies:
