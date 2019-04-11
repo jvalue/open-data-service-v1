@@ -31,8 +31,8 @@ build-and-push-base-image:
     when: manual
     script:
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        - docker build -t registry.gitlab.com/profoss/open-data-service-legacy/open-data-service:build ./docker/ci-base
-        - docker push registry.gitlab.com/profoss/open-data-service-legacy/open-data-service:build
+        - docker build -t registry.gitlab.com/profoss/open-data-service-legacy/open-data-service/ci-base ./docker/ci-base
+        - docker push registry.gitlab.com/profoss/open-data-service-legacy/open-data-service/ci-base
 # build:
 #     image: java:8
 #     stage: build
