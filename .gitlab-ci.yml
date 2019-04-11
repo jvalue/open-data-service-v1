@@ -20,7 +20,7 @@ cache:
         - .gradle/caches
 
 before_script:
-    - docker login -u $CI_DOCKER_REGISTRY_USER -p $CI_DOCKER_REGISTRY_TOKEN $CI_REGISTRY
+    - docker login registry.gitlab.com -u $CI_DOCKER_REGISTRY_USER -p $CI_DOCKER_REGISTRY_TOKEN
 
 stages:
     - build
