@@ -73,7 +73,7 @@ integration-test:
         - docker load -i image/ods.tar
         - docker-compose -f docker/docker-compose.yml up -d
         - docker ps
-        - curl localhost:8080/ods/api/v1
+        # - curl localhost:8080/ods/api/v1
         - curl ods:8080/ods/api/v1
         - curl 0.0.0.0:8080/ods/api/v1
         #- ./gradlew integrationTest --info
