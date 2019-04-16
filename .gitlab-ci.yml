@@ -75,7 +75,7 @@ integration-test:
     script:
         - docker-compose -f docker/docker-compose.yml up -d
         - docker ps
-        - curl -H "Authorization: Basic YWRtaW46YWRtaW4=" docker:8080/ods/api/v1/version
+        - "curl -H \"Authorization: Basic YWRtaW46YWRtaW4=\" docker:8080/ods/api/v1/version"
     after_script:
         - docker-compose -f docker/docker-compose.yml down
 # publish:
