@@ -73,10 +73,6 @@ build-ci-image:
 integration-test:
     stage: test
     script:
-        - ./gradlew test
-        - ./gradlew copyDockerAssets
-        - docker build -t $CI_REGISTRY_IMAGE/ods ./docker/ods
-        - docker push $CI_REGISTRY_IMAGE/ods
         - docker-compose -f docker/docker-compose.yml up -d
         - docker ps
         - curl docker:8080/ods/api/v1/version
