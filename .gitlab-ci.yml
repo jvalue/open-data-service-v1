@@ -73,7 +73,7 @@ integration-test:
         - docker load -i image/ods.tar
         - docker-compose -f docker/docker-compose.yml up -d
         - docker ps
-        - ./gradlew integrationTest --info
+        - ./gradlew clean integrationTest --info
     after_script:
         - docker-compose docker-compose -f docker/docker-compose.yml stop
 # publish:
