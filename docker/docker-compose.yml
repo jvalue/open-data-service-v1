@@ -2,6 +2,7 @@ version: '2'
 services:
   ods:
     image: mojo-docker.cs.fau.de/osrg_ods_public/ods:latest
+    network_mode: host
     ports:
       - "8080:8080"
       - "8081:8081"
