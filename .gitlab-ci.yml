@@ -85,6 +85,7 @@ integration-test:
         - docker build -t $CI_REGISTRY_IMAGE/ods ./docker/ods
         - docker-compose -f docker/docker-compose.yml up -d
         - docker ps
+        - docker-compose -f docker/docker-compose.yml port ods 8080
         - ./gradlew integrationTest --info
     after_script:
         - docker-compose docker-compose -f docker/docker-compose.yml down
