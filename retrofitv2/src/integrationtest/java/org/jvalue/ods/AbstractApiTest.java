@@ -27,7 +27,7 @@ import java.io.IOException;
 
 public abstract class AbstractApiTest {
 
-	private static final String ODS_API_URL = "http://ods:8080/ods/api";
+	private static final String ODS_API_URL = "http://docker:8080/ods/api";
 
 	protected static DataSourceApi dataSourceApi;
 	protected static NotificationApi notificationApi;
