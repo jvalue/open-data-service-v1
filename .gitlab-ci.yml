@@ -80,6 +80,7 @@ build-ci-image:
 integration-test:
     stage: acceptance-integration-test
     script:
+        - export DOCKER_HOST=tcp://docker:2375
         - ./gradlew test
         - ./gradlew copyDockerAssets
         - docker build -t $CI_REGISTRY_IMAGE/ods ./docker/ods
