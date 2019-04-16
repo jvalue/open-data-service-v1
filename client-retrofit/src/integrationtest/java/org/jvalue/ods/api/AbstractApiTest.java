@@ -31,7 +31,7 @@ public abstract class AbstractApiTest {
 	protected final String sourceId = getClass().getSimpleName();
 	protected final DataSourceDescription dataSourceDescription = new DataSourceDescription(domainIdKey, schema, metaData);
 
-	private static final String ODS_API_URL = "http://docker:8080/ods/api";
+	private static final String ODS_API_URL = "http://localhost:8080/ods/api";
 
 	protected DataSource dataSource;
 
