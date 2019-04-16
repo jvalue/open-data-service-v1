@@ -17,10 +17,10 @@ variables:
 before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
-cache:
-    paths:
-        - .gradle/wrapper
-        - .gradle/caches
+# cache:
+#     paths:
+#         - .gradle/wrapper
+#         - .gradle/caches
 
 stages:
     - build
