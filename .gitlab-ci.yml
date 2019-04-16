@@ -71,7 +71,7 @@ build-ci-image:
 #         - docker-compose docker-compose -f docker/docker-compose.yml down
 
 integration-test:
-    stage: acceptance-integration-test
+    stage: test
     script:
         - ./gradlew test
         - ./gradlew copyDockerAssets
