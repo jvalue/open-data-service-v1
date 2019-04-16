@@ -37,43 +37,55 @@ build-ci-image:
         - docker build -t $CI_REGISTRY_IMAGE/ci-base ./docker/ci-base
         - docker push $CI_REGISTRY_IMAGE/ci-base
 
-build:
-    stage: build
-    script: "./gradlew clean build -x test"
-    after_script:
-        - "./gradlew copyDockerAssets" # copy it for docker task
-    artifacts:
-        paths:
-            - "./docker/ods/" # hand it to docker task
+# build:
+#     stage: build
+#     script: "./gradlew clean build -x test"
+#     after_script:
+#         - "./gradlew copyDockerAssets" # copy it for docker task
+#     artifacts:
+#         paths:
+#             - "./docker/ods/" # hand it to docker task
 
-unit-tests:
-    stage: acceptance-unit-test
-    script: "./gradlew test"
-    artifacts:
-        reports:
-            junit: "*/build/test-results/**/*.xml"
+# unit-tests:
+#     stage: acceptance-unit-test
+#     script: "./gradlew test"
+#     artifacts:
+#         reports:
+#             junit: "*/build/test-results/**/*.xml"
 
-docker-build:
-    stage: acceptance-docker-build
-    script:
-        - docker build -t $CI_REGISTRY_IMAGE/ods ./docker/ods
-        - mkdir image
-        - docker save $CI_REGISTRY_IMAGE/ods > image/ods.tar
-    artifacts:
-        paths:
-            - image
-    dependencies: # copying is done by build-ods task
-        - build
+# docker-build:
+#     stage: acceptance-docker-build
+#     script:
+#         - docker build -t $CI_REGISTRY_IMAGE/ods ./docker/ods
+#         - mkdir image
+#         - docker save $CI_REGISTRY_IMAGE/ods > image/ods.tar
+#     artifacts:
+#         paths:
+#             - image
+#     dependencies: # copying is done by build-ods task
+#         - build
+
+# integration-test:
+#     stage: acceptance-integration-test
+#     dependencies:
+#         - docker-build
+#     script:
+#         - docker load -i image/ods.tar
+#         - docker-compose -f docker/docker-compose.yml up -d
+#         - docker ps
+#         - ./gradlew clean integrationTest --info
+#     after_script:
+#         - docker-compose docker-compose -f docker/docker-compose.yml down
 
 integration-test:
     stage: acceptance-integration-test
-    dependencies:
-        - docker-build
     script:
-        - docker load -i image/ods.tar
+        - ./gradlew test
+        - ./gradlew copyDockerAssets
+        - docker build -t $CI_REGISTRY_IMAGE/ods ./docker/ods
         - docker-compose -f docker/docker-compose.yml up -d
         - docker ps
-        - ./gradlew clean integrationTest --info
+        - ./gradlew integrationTest --info
     after_script:
         - docker-compose docker-compose -f docker/docker-compose.yml down
 # publish:
