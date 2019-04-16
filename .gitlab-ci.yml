@@ -75,7 +75,7 @@ integration-test:
         - docker ps
         - ./gradlew clean integrationTest --info
     after_script:
-        - docker-compose docker-compose -f docker/docker-compose.yml stop
+        - docker-compose docker-compose -f docker/docker-compose.yml down
 # publish:
 #     stage: release
 #     dependencies:
