@@ -22,13 +22,6 @@ before_script:
 #         - .gradle/wrapper
 #         - .gradle/caches
 
-stages:
-    - build
-    - acceptance-unit-test
-    - acceptance-docker-build
-    - acceptance-integration-test
-    - release
-
 build-ci-image:
     stage: build
     image: docker:stable
@@ -80,17 +73,15 @@ build-ci-image:
 integration-test:
     stage: acceptance-integration-test
     script:
-        - export DOCKER_HOST=tcp://docker:2375
-        - cat /etc/hosts
         - ./gradlew test
         - ./gradlew copyDockerAssets
         - docker build -t $CI_REGISTRY_IMAGE/ods ./docker/ods
+        - docker push $CI_REGISTRY_IMAGE/ods
         - docker-compose -f docker/docker-compose.yml up -d
         - docker ps
-        - docker-compose -f docker/docker-compose.yml port ods 8080
-        - ./gradlew integrationTest --info
+        - curl docker:8080/ods/api/v1/version
     after_script:
-        - docker-compose docker-compose -f docker/docker-compose.yml down
+        - docker-compose -f docker/docker-compose.yml down
 # publish:
 #     stage: release
 #     dependencies:
