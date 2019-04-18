@@ -86,8 +86,8 @@ publish:
     dependencies:
        - build-docker
     when: manual
-    only:
-       - master
+    # only:
+    #    - master
     script:
        - docker load -i image/ods-ci.tar
        # Tag as latest and push
