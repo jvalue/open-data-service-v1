@@ -15,9 +15,12 @@ import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.converter.JacksonConverter;
 
+import java.util.Optional;
+
 public final class ApiFactory {
 
-	private static final String SERVER_URL = "http://docker:8080/ods/api";
+	private static final String ODS_HOST = Optional.ofNullable(System.getenv("ODS_IT_HOST")).orElse("localhost");
+	private static final String SERVER_URL = "http://" + ODS_HOST + ":8080/ods/api";
 
 	private final RestAdapter restAdapter;
 

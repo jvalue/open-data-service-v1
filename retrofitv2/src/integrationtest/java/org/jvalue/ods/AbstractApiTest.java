@@ -24,10 +24,12 @@ import retrofit.RestAdapter;
 import retrofit.converter.JacksonConverter;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public abstract class AbstractApiTest {
 
-	private static final String ODS_API_URL = "http://docker:8080/ods/api";
+	private static final String ODS_HOST = Optional.ofNullable(System.getenv("ODS_IT_HOST")).orElse("localhost");
+	private static final String ODS_API_URL = "http://" + ODS_HOST + ":8080/ods/api";
 
 	protected static DataSourceApi dataSourceApi;
 	protected static NotificationApi notificationApi;
