@@ -9,6 +9,7 @@ package org.jvalue.ods.sources.govdata;
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.junit.Ignore;
 import org.jvalue.ods.api.processors.ExecutionInterval;
 import org.jvalue.ods.api.processors.ProcessorReference;
 import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
@@ -18,6 +19,7 @@ import org.jvalue.ods.sources.AbstractDataSourceTest;
 
 import java.util.concurrent.TimeUnit;
 
+@Ignore
 public final class RostockTrashCansTest extends AbstractDataSourceTest {
 
 	@Override
