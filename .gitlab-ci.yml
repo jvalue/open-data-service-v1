@@ -61,7 +61,7 @@ build-docker:
     artifacts:
         expire_in: 1 day
         paths:
-            - image
+            - image/
 
 unit-tests:
     stage: test
