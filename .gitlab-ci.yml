@@ -43,11 +43,6 @@ build:
     stage: build
     script: 
         - "./gradlew assemble"
-    # after_script:
-    #     - "./gradlew copyDockerAssets" # copy it for docker task
-    # artifacts:
-    #     paths:
-    #         - "./docker/ods/"
 
 build-docker:
     stage: build-docker
@@ -68,12 +63,13 @@ unit-tests:
     script: "./gradlew test"
     artifacts:
         reports:
-            junit: "server/build/test-results/**/*.xml"
+            junit: /*/build/test-results/test/**/TEST-*.xml
 
 integration-test:
     stage: test
     dependencies:
         - build-docker
+    retry: 2
     script:
         - docker load -i image/ods-ci.tar 
         - docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml up -d
@@ -100,6 +96,6 @@ publish-as-version:
     script:
        - docker load -i image/ods-ci.tar
        # Tag as project version and push
-       - "export ODS_VERSION = ./gradlew properties -q | grep \"version:\" | awk '{print $2}'"
+       - export ODS_VERSION=$(./gradlew properties -q | grep 'version:' | awk '{print $2}')
        - docker tag ods-ci/ods  $CI_REGISTRY_IMAGE/ods:$ODS_VERSION
        - docker push $CI_REGISTRY_IMAGE/ods:$ODS_VERSION
