@@ -1,7 +1,7 @@
 version: "2"
 services:
     ods:
-        image: registry.gitlab.com/profoss/open-data-service-legacy/open-data-service/ods:latest
+        image: registry.gitlab.com/profoss/jvalue/open-data-service/ods:latest
         ports:
             - "8080:8080"
             - "8081:8081"
