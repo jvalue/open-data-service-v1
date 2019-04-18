@@ -30,14 +30,12 @@ dependencies {
 	compile "com.squareup.retrofit:converter-jackson:$retrofitVersion"
 	compile "io.reactivex:rxjava:$rxjavaVersion"
 	compile "org.jvalue.commons:models:$jvalueCommonsVersion"
-	compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.24'
 
 	compile project(':models')
 
 	testCompile "org.jmockit:jmockit:$jmockitVersion"
 	testCompile "junit:junit:$junitVersion"
 	testCompile "org.jvalue.commons:utils:$jvalueCommonsVersion"
-	testCompile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.24'
 }
 
 jaxRs2Retrofit {
