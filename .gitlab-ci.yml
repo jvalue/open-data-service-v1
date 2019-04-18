@@ -76,13 +76,12 @@ integration-test:
         - export ODS_IT_HOST=docker
         - export ODS_IT_COUCHDB_HOST=docker
         - docker-compose -f docker/docker-compose.yml up -d
-        - sleep 30
         - "curl -H \"Authorization: Basic YWRtaW46YWRtaW4=\" docker:8080/ods/api/v1/version && echo ''" 
         - ./gradlew integrationTest
     after_script:
         - docker-compose -f docker/docker-compose.yml down
 # publish:
-#     stage: release
+#     stage: deploy
 #     dependencies:
 #        - docker-build
 #     script:
