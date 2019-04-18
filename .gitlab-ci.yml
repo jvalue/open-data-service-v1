@@ -57,7 +57,7 @@ build-docker:
         - "./gradlew copyDockerAssets"
         - docker build -t ods-ci/ods ./docker/ods
         - mkdir image
-        - docker save ods-ci/ods > image/ods.tar
+        - docker save ods-ci/ods > image/ods-ci.tar
     artifacts:
         expire_in: 1 day
         paths:
@@ -74,37 +74,27 @@ integration-test:
     stage: test
     dependencies:
         - build-docker
-    before_script:
+    script:
         - docker load -i image/ods-ci.tar 
         - docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml up -d
-    script:
         - ./gradlew clean integrationTest
     after_script:
         - docker-compose docker-compose -f docker/docker-compose.yml down
 
-
-# integration-test:
-#     stage: test
-#     script:
-#         - docker-compose -f docker/docker-compose.yml up -d
-#         - "curl -H \"Authorization: Basic YWRtaW46YWRtaW4=\" docker:8080/ods/api/v1/version && echo ''" 
-#         - ./gradlew integrationTest
-#     after_script:
-#         - docker-compose -f docker/docker-compose.yml down
-
-
-
-# publish:
-#     stage: deploy
-#     dependencies:
-#        - docker-build
-#     script:
-#        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-#        - docker load -i image/ods.tar
-#        - docker push registry.gitlab.com/profoss/open-data-service-legacy/open-data-service
-#     only:
-#        - master
-
-#docker-push-ods:
-#    stage: release
-#    script: "./gradlew dockerPush"
+publish:
+    stage: deploy
+    dependencies:
+       - build-docker
+    when: manual
+    only:
+       - master
+    script:
+       - docker load -i image/ods-ci.tar
+       # Tag as latest and push
+       - docker tag ods-ci/ods  $CI_REGISTRY_IMAGE/ods:latest
+       - docker push $CI_REGISTRY_IMAGE/ods:latest
+       # Tag as project version and push
+       - "export ODS_VERSION = ./gradlew properties -q | grep \"version:\" | awk '{print $2}'"
+       - docker tag ods-ci/ods  $CI_REGISTRY_IMAGE/ods:$ODS_VERSION
+       - docker push $CI_REGISTRY_IMAGE/ods:$ODS_VERSION
+    
