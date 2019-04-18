@@ -68,7 +68,7 @@ unit-tests:
     script: "./gradlew test"
     artifacts:
         reports:
-            junit: "*/build/test-results/**/*.xml"
+            junit: "server/build/test-results/**/*.xml"
 
 integration-test:
     stage: test
