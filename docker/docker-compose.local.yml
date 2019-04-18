@@ -1,4 +1,4 @@
 version: '2'
 services:
   ods:
-    image: registry.gitlab.com/profoss/jvalue/open-data-service/ods-ci:latest
+    image: ods-ci/ods:latest

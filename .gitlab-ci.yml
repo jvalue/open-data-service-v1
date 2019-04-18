@@ -55,9 +55,9 @@ build-docker:
         - build
     script:
         - "./gradlew copyDockerAssets"
-        - docker build -t $CI_REGISTRY_IMAGE/ods ./docker/ods
+        - docker build -t ods-ci/ods ./docker/ods
         - mkdir image
-        - docker save $CI_REGISTRY_IMAGE/ods-ci > image/ods-ci.tar
+        - docker save ods-ci/ods > image/ods.tar
     artifacts:
         expire_in: 1 day
         paths:
