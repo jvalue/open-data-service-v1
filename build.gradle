@@ -188,44 +188,15 @@ subprojects {
 	}
 }
 
-def dockerCDTag = new Date().format('yyyyMMdd-HHmm') + '.' + versionDetails().gitHash
-def dockerRegistry = 'mojo-docker.cs.fau.de/'
 def dockerDir = 'docker/ods/'
-def dockerImageName = 'osrg_ods_public/ods-cd'
-def dockerNameLocal = dockerImageName+':latest'
-def dockerNameCD = dockerRegistry +dockerImageName+':' + dockerCDTag
-def dockerNameLatest = dockerRegistry + dockerNameLocal
+def dockerImageName = 'ods-ci/ods'
 
 task dockerBuild {
 	dependsOn ':server:copyDockerAssets'
 	doLast {
 		exec {
 			workingDir dockerDir
-			commandLine 'docker', 'build', '-t', dockerNameLocal, '.'
-		}
-	}
-}
-
-task dockerTag {
-	dependsOn dockerBuild
-	  doLast {
-		exec {
-			workingDir dockerDir
-			commandLine 'docker', 'tag', dockerNameLocal , dockerNameCD
-		}
-		exec {
-			workingDir dockerDir
-			commandLine 'docker', 'tag', dockerNameLocal , dockerNameLatest
-		}
-	}
-}
-
-task dockerPush {
-	dependsOn dockerTag
-	doLast {
-		exec {
-			workingDir dockerDir
-			commandLine 'docker', 'push', dockerRegistry + dockerImageName
+			commandLine 'docker', 'build', '-t', 'ods-ci/ods', '.'
 		}
 	}
 }
