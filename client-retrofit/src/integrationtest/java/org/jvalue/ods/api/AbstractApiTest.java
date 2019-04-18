@@ -20,6 +20,8 @@ import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.converter.JacksonConverter;
 
+import java.util.Optional;
+
 public abstract class AbstractApiTest {
 
 	protected DataSourceApi dataSourceApi;
@@ -31,7 +33,8 @@ public abstract class AbstractApiTest {
 	protected final String sourceId = getClass().getSimpleName();
 	protected final DataSourceDescription dataSourceDescription = new DataSourceDescription(domainIdKey, schema, metaData);
 
-	private static final String ODS_API_URL = "http://localhost:8080/ods/api";
+	private static final String ODS_HOST = Optional.ofNullable(System.getenv("ODS_IT_HOST")).orElse("localhost");
+	private static final String ODS_API_URL = "http://" + ODS_HOST + ":8080/ods/api";
 
 	protected DataSource dataSource;
 

@@ -14,7 +14,7 @@ import org.ektorp.DocumentNotFoundException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.jvalue.commons.couchdb.DbConnectorFactory;
-import org.jvalue.commons.couchdb.test.AbstractRepositoryTest;
+import org.jvalue.ods.AbstractRepositoryTest;
 import org.jvalue.ods.api.data.Data;
 import org.jvalue.ods.api.views.DataView;
 

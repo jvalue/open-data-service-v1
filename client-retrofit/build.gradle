@@ -30,6 +30,7 @@ dependencies {
 	compile "com.squareup.retrofit:converter-jackson:$retrofitVersion"
 	compile "io.reactivex:rxjava:$rxjavaVersion"
 	compile "org.jvalue.commons:models:$jvalueCommonsVersion"
+
 	compile project(':models')
 
 	testCompile "org.jmockit:jmockit:$jmockitVersion"
