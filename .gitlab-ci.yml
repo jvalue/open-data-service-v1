@@ -81,20 +81,25 @@ integration-test:
     after_script:
         - docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml down
 
-publish:
+publish-as-latest:
     stage: deploy
     dependencies:
        - build-docker
     when: manual
-    # only:
-    #    - master
     script:
        - docker load -i image/ods-ci.tar
        # Tag as latest and push
        - docker tag ods-ci/ods  $CI_REGISTRY_IMAGE/ods:latest
        - docker push $CI_REGISTRY_IMAGE/ods:latest
+
+publish-as-version:
+    stage: deploy
+    dependencies:
+       - build-docker
+    when: manual
+    script:
+       - docker load -i image/ods-ci.tar
        # Tag as project version and push
        - "export ODS_VERSION = ./gradlew properties -q | grep \"version:\" | awk '{print $2}'"
        - docker tag ods-ci/ods  $CI_REGISTRY_IMAGE/ods:$ODS_VERSION
        - docker push $CI_REGISTRY_IMAGE/ods:$ODS_VERSION
-    
