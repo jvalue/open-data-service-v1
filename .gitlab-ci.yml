@@ -50,7 +50,7 @@ build:
     #         - "./docker/ods/"
 
 build-docker:
-    stage: build
+    stage: build-docker
     script:
         - "./gradlew copyDockerAssets"
         - docker build -t $CI_REGISTRY_IMAGE/ods ./docker/ods
