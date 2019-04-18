@@ -13,14 +13,23 @@ variables:
     DOCKER_DRIVER: "overlay2"
     IMAGE_TAG: "${CI_COMMIT_SHORT_SHA}-${CI_PIPELINE_ID}"
     GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
+    # ODS related enviroment variables
+    ODS_IT_HOST: docker
+    ODS_IT_COUCHDB_HOST: docker
+
+stages:
+  - build
+  - build-docker
+  - test
+  - deploy
 
 before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
-# cache:
-#     paths:
-#         - .gradle/wrapper
-#         - .gradle/caches
+cache:
+    paths:
+        - .gradle/wrapper
+        - .gradle/caches
 
 build-ci-image:
     stage: build
@@ -30,33 +39,37 @@ build-ci-image:
         - docker build -t $CI_REGISTRY_IMAGE/ci-base ./docker/ci-base
         - docker push $CI_REGISTRY_IMAGE/ci-base
 
-# build:
-#     stage: build
-#     script: "./gradlew clean build -x test"
-#     after_script:
-#         - "./gradlew copyDockerAssets" # copy it for docker task
-#     artifacts:
-#         paths:
-#             - "./docker/ods/" # hand it to docker task
+build:
+    stage: build
+    script: 
+        - "./gradlew assemble"
+    # after_script:
+    #     - "./gradlew copyDockerAssets" # copy it for docker task
+    # artifacts:
+    #     paths:
+    #         - "./docker/ods/"
 
-# unit-tests:
-#     stage: acceptance-unit-test
-#     script: "./gradlew test"
-#     artifacts:
-#         reports:
-#             junit: "*/build/test-results/**/*.xml"
+build-docker:
+    stage: build
+    script:
+        - "./gradlew copyDockerAssets"
+        - docker build -t $CI_REGISTRY_IMAGE/ods ./docker/ods
+        - mkdir image
+        - docker save $CI_REGISTRY_IMAGE/ods > image/ods-ci.tar
+    artifacts:
+        expire_in: 1 day
+        paths:
+            - image
+    dependencies:
+        - build
 
-# docker-build:
-#     stage: acceptance-docker-build
-#     script:
-#         - docker build -t $CI_REGISTRY_IMAGE/ods ./docker/ods
-#         - mkdir image
-#         - docker save $CI_REGISTRY_IMAGE/ods > image/ods.tar
-#     artifacts:
-#         paths:
-#             - image
-#     dependencies: # copying is done by build-ods task
-#         - build
+unit-tests:
+    stage: test
+    script: "./gradlew test"
+    artifacts:
+        reports:
+            junit: "*/build/test-results/**/*.xml"
+
 
 # integration-test:
 #     stage: acceptance-integration-test
@@ -70,16 +83,18 @@ build-ci-image:
 #     after_script:
 #         - docker-compose docker-compose -f docker/docker-compose.yml down
 
-integration-test:
-    stage: test
-    script:
-        - export ODS_IT_HOST=docker
-        - export ODS_IT_COUCHDB_HOST=docker
-        - docker-compose -f docker/docker-compose.yml up -d
-        - "curl -H \"Authorization: Basic YWRtaW46YWRtaW4=\" docker:8080/ods/api/v1/version && echo ''" 
-        - ./gradlew integrationTest
-    after_script:
-        - docker-compose -f docker/docker-compose.yml down
+
+# integration-test:
+#     stage: test
+#     script:
+#         - docker-compose -f docker/docker-compose.yml up -d
+#         - "curl -H \"Authorization: Basic YWRtaW46YWRtaW4=\" docker:8080/ods/api/v1/version && echo ''" 
+#         - ./gradlew integrationTest
+#     after_script:
+#         - docker-compose -f docker/docker-compose.yml down
+
+
+
 # publish:
 #     stage: deploy
 #     dependencies:
