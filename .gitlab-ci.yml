@@ -79,7 +79,7 @@ integration-test:
         - docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml up -d
         - ./gradlew clean integrationTest
     after_script:
-        - docker-compose docker-compose -f docker/docker-compose.yml down
+        - docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml down
 
 publish:
     stage: deploy
