@@ -73,8 +73,8 @@ unit-tests:
 integration-test:
     stage: test
     dependencies:
-        - docker-build
-    bevore_script:
+        - build-docker
+    before_script:
         - docker load -i image/ods-ci.tar 
         - docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml up -d
     script:
