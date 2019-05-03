@@ -4,8 +4,6 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 #
 
-#REPO: mojo-docker.cs.fau.de/osrg_ods_public/ods
-
 FROM adoptopenjdk/openjdk8-openj9:alpine
 
 ENV ODS_LOG_DIR /var/log/ods
