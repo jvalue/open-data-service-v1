@@ -26,13 +26,16 @@ public interface SourceAdapterFactory {
 			NAME_PEGEL_PORTAL_MV_SOURCE_ADAPTER = "PegelPortalMvSourceAdapter",
 			NAME_PEGEL_BRANDENBURG = "PegelBrandenburg",
 			NAME_OPEN_WEATHER_MAP_SOURCE_ADAPTER = "OpenWeatherMapSourceAdapter",
-			NAME_APIXU_SOURCE_ADAPTER = "APIXUSourceAdapter";
+			NAME_APIXU_SOURCE_ADAPTER = "APIXUSourceAdapter",
+			NAME_DWD_WEATHER_SERVICE_SOURCE_ADAPTER = "DwdWeatherServiceSourceAdapter";
 
 	String	ARGUMENT_SOURCE_URL = "sourceUrl",
 			ARGUMENT_CSV_FORMAT = "csvFormat",
 			ARGUMENT_LOCATIONS = "locations",
 			ARGUMENT_API_KEY = "apiKey",
-			ARGUMENT_MULTI_SOURCE = "sources";
+			ARGUMENT_MULTI_SOURCE = "sources",
+			ARGUMENT_LOCATION = "location",
+			ARGUMENT_TIME = "time";
 
 
 	@CreationMethod(name = NAME_JSON_SOURCE_ADAPTER, filterType = ProcessorType.SOURCE_ADAPTER)
@@ -99,5 +102,13 @@ public interface SourceAdapterFactory {
 	SourceAdapter createMultiSourceAdapter(
 		DataSource source,
 		@Argument(ARGUMENT_MULTI_SOURCE) @Assisted(ARGUMENT_MULTI_SOURCE) ArrayList<LinkedHashMap<String, Object>> sourceAdapters);
+
+
+	@CreationMethod(name = NAME_DWD_WEATHER_SERVICE_SOURCE_ADAPTER, filterType = ProcessorType.SOURCE_ADAPTER)
+	@Named(NAME_DWD_WEATHER_SERVICE_SOURCE_ADAPTER)
+	SourceAdapter createDwdWatherServiceSourceAdapter(
+		DataSource source,
+		@Argument(ARGUMENT_LOCATION) @Assisted(ARGUMENT_LOCATION) LinkedHashMap<String, String> location,
+		@Argument(ARGUMENT_TIME) @Assisted(ARGUMENT_TIME) String time);
 
 }

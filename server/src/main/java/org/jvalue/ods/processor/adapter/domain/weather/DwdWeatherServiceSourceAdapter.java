@@ -20,13 +20,14 @@ import java.net.URI;
 import java.net.URL;
 import java.util.*;
 
-public class DwdWeatherService implements SourceAdapter {
+public class DwdWeatherServiceSourceAdapter implements SourceAdapter {
 
 	private static final String DWD_SERVICE_BASE_ADDRESS = "localhost:8080/api/v1";
 
 	private final DataSource dataSource;
 	private final MetricRegistry registry;
 	private final Location location;
+	private final String time;
 
 	/**
 	 * Only uses the first location. No need for more than one. TODO make the user only input one location.
@@ -34,22 +35,18 @@ public class DwdWeatherService implements SourceAdapter {
 	 * @throws IllegalArgumentException if no Location is specified.
 	 */
 	@Inject
-	DwdWeatherService(
+	DwdWeatherServiceSourceAdapter(
 		@Assisted DataSource dataSource,
-		@Assisted(SourceAdapterFactory.ARGUMENT_LOCATIONS) ArrayList<LinkedHashMap<String, String>> locations,
+		@Assisted(SourceAdapterFactory.ARGUMENT_LOCATION) LinkedHashMap<String, String> location,
+		@Assisted(SourceAdapterFactory.ARGUMENT_TIME) String time,
 		MetricRegistry registry) {
 
 		this.dataSource = dataSource;
 		this.registry = registry;
-
-		Optional<Location> optionalLocation = locations.stream()
-			.map(l -> JsonMapper.convertValue(l, Location.class))
-			.findFirst();
-
-		if (!optionalLocation.isPresent()) {
-			throw new IllegalArgumentException("We need a location to fetch weather data from a nearby weather station");
-		}
-		this.location = optionalLocation.get();
+		this.location = JsonMapper.convertValue(location, Location.class);
+		this.time = time;
+		//TODO
+		System.out.println("DWDWeatherService SourceAdapter created");
 	}
 
 	@Override
@@ -58,9 +55,10 @@ public class DwdWeatherService implements SourceAdapter {
 
 		List<ObjectNode> result = new ArrayList<>();
 
-		Iterator<ObjectNode> nodeIterator = new JsonSourceIterator(dataSource, createSourceUrl(location), registry);
+		Iterator<ObjectNode> nodeIterator = new JsonSourceIterator(dataSource, createSourceUrl(location, time), registry);
 		if (nodeIterator.hasNext()) {
 			ObjectNode node = nodeIterator.next();
+			System.out.println(node);
 			Weather weather = null;//TODO createWeatherFromObjectNode(node);
 			ObjectNode weatherNode = JsonMapper.valueToTree(weather);
 			result.add(weatherNode);
@@ -71,6 +69,14 @@ public class DwdWeatherService implements SourceAdapter {
 	/**
 	 * TODO only supports current weather at the moment.
 	 */
+	private URL createSourceUrl(Location location, String time) {
+		if (time == null) {
+			return createSourceUrl(location);
+		}
+		//TODO use time
+		return createSourceUrl(location);
+	}
+
 	private URL createSourceUrl(Location location) {
 		URI baseUri = URI.create(DWD_SERVICE_BASE_ADDRESS);
 		UriBuilder builder = UriBuilder.fromUri(baseUri).path("current");
