@@ -1,6 +1,7 @@
 package org.jvalue.ods.processor.adapter.domain.weather;
 
 import com.codahale.metrics.MetricRegistry;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.assistedinject.Assisted;
 import org.jvalue.ods.api.sources.DataSource;
@@ -8,8 +9,7 @@ import org.jvalue.ods.processor.adapter.JsonSourceIterator;
 import org.jvalue.ods.processor.adapter.SourceAdapter;
 import org.jvalue.ods.processor.adapter.SourceAdapterException;
 import org.jvalue.ods.processor.adapter.SourceAdapterFactory;
-import org.jvalue.ods.processor.adapter.domain.weather.models.Location;
-import org.jvalue.ods.processor.adapter.domain.weather.models.Weather;
+import org.jvalue.ods.processor.adapter.domain.weather.models.*;
 import org.jvalue.ods.utils.JsonMapper;
 
 import javax.annotation.Nonnull;
@@ -18,16 +18,18 @@ import javax.ws.rs.core.UriBuilder;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.time.Instant;
 import java.util.*;
 
 public class DwdWeatherServiceSourceAdapter implements SourceAdapter {
 
-	private static final String DWD_SERVICE_BASE_ADDRESS = "localhost:8080/api/v1";
+	private static final String DWD_SERVICE_BASE_ADDRESS = "http://localhost:8090/api/v1";
 
 	private final DataSource dataSource;
 	private final MetricRegistry registry;
 	private final Location location;
 	private final String time;
+//TODO add parameter
 
 	/**
 	 * Only uses the first location. No need for more than one. TODO make the user only input one location.
@@ -45,8 +47,6 @@ public class DwdWeatherServiceSourceAdapter implements SourceAdapter {
 		this.registry = registry;
 		this.location = JsonMapper.convertValue(location, Location.class);
 		this.time = time;
-		//TODO
-		System.out.println("DWDWeatherService SourceAdapter created");
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class DwdWeatherServiceSourceAdapter implements SourceAdapter {
 		if (nodeIterator.hasNext()) {
 			ObjectNode node = nodeIterator.next();
 			System.out.println(node);
-			Weather weather = null;//TODO createWeatherFromObjectNode(node);
+			Weather weather = createWeatherFromCurrentObjectNode(node);    //TODO only current weather
 			ObjectNode weatherNode = JsonMapper.valueToTree(weather);
 			result.add(weatherNode);
 		}
@@ -100,5 +100,52 @@ public class DwdWeatherServiceSourceAdapter implements SourceAdapter {
 		} else {
 			throw new IllegalArgumentException("Location must not be empty");
 		}
+	}
+
+	private Weather createWeatherFromCurrentObjectNode(ObjectNode node) {
+
+		String stationId = "unknown";
+		Instant timestamp = Instant.parse(node.get("time").asText());
+
+		JsonNode weatherNode = node.get("weather");
+
+		JsonNode temperatureNode = findDataPointNodeByName(weatherNode, "temperature200");
+		Temperature temperature = null;
+		if (temperatureNode != null) {
+			double temperatureValue = temperatureNode.get("value").asDouble();
+			temperature = new Temperature(TemperatureType.CELSIUS.fromKelvin(temperatureValue), TemperatureType.CELSIUS);
+		}
+
+		JsonNode airPressureNode = findDataPointNodeByName(weatherNode, "air_pressure");
+		Pressure pressure = null;
+		if (airPressureNode != null) {
+			double pressureValue = airPressureNode.get("value").asDouble();
+			pressure = new Pressure((int) pressureValue, PressureType.H_PA);//TODO Pressure destroys itself when receiving a proper double.
+		}
+
+		//TODO this is currently not delivered in current, but could be if the service differentiates between current and forecast standard parameters.
+		JsonNode humidityNode = findDataPointNodeByName(weatherNode, "humidity");
+		int humidityInPercent = -1;
+		if (humidityNode != null) {
+			double humidityValue = humidityNode.get("value").asDouble();
+			humidityInPercent = (int) Math.round(humidityValue);
+		}
+
+		return new Weather(
+			stationId,
+			temperature,
+			pressure,
+			humidityInPercent,
+			timestamp,
+			location);
+	}
+
+	private JsonNode findDataPointNodeByName(JsonNode node, String name) {
+		for (JsonNode subNode : node) {
+			if (name.equals(subNode.get("name").asText())) {
+				return subNode;
+			}
+		}
+		return null;
 	}
 }
