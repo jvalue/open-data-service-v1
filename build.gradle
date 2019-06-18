@@ -189,7 +189,6 @@ subprojects {
 }
 
 def dockerDir = 'docker/ods/'
-def dockerImageName = 'ods-ci/ods'
 
 task dockerBuild {
 	dependsOn ':server:copyDockerAssets'
