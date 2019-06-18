@@ -44,6 +44,11 @@ subprojects {
 		}
 	}
 
+	ext {
+		odsCommonsPackageUrl = 'https://gitlab.com/api/v4/projects/12889679/packages/maven'
+	}
+
+
 	// setup generated sources (if any)
 	ext {
 		mainSourcesDir = 'src/main/java'
@@ -64,7 +69,7 @@ subprojects {
 		jcenter()
 		maven {
 			// ODS-Commons Maven repository
-			url 'https://gitlab.com/api/v4/projects/12889679/packages/maven'
+			url project.ext.odsCommonsPackageUrl
 		}
 	}
 
