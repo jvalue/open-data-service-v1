@@ -38,6 +38,8 @@ An easy way to use the ODS is via a pre build Docker image.  Therefore use docke
 
 `docker-compose -f docker/docker-compose.yml up`
 
+You can find prebuild Docker images in the following container registry: [GitLab Container Registry](https://gitlab.com/profoss/jvalue/open-data-service/container_registry)
+
 ### Building a Docker Image
 You can build a local Docker image from source files using the Gradle task `./gradlew dockerBuild`.
 To run the local image with docker-compose call:
