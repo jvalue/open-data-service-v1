@@ -19,7 +19,12 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+
+import static org.jvalue.commons.utils.Assert.assertNotNull;
 
 public class DwdWeatherServiceSourceAdapter implements SourceAdapter {
 
@@ -29,12 +34,12 @@ public class DwdWeatherServiceSourceAdapter implements SourceAdapter {
 	private final MetricRegistry registry;
 	private final Location location;
 	private final String time;
-//TODO add parameter
+	private final NodeParsingStrategy responseParser;
 
 	/**
 	 * Only uses the first location. No need for more than one. TODO make the user only input one location.
 	 *
-	 * @throws IllegalArgumentException if no Location is specified.
+	 * @throws IllegalArgumentException if no Location is specified or time is neither current nor forecast.
 	 */
 	@Inject
 	DwdWeatherServiceSourceAdapter(
@@ -42,44 +47,31 @@ public class DwdWeatherServiceSourceAdapter implements SourceAdapter {
 		@Assisted(SourceAdapterFactory.ARGUMENT_LOCATION) LinkedHashMap<String, String> location,
 		@Assisted(SourceAdapterFactory.ARGUMENT_TIME) String time,
 		MetricRegistry registry) {
+		assertNotNull(location);
+		assertNotNull(time);
+		time = time.trim().toLowerCase();
+		checkTimeParameter(time);
 
 		this.dataSource = dataSource;
 		this.registry = registry;
 		this.location = JsonMapper.convertValue(location, Location.class);
 		this.time = time;
+		this.responseParser = selectResponseParser(this.time);
 	}
 
 	@Override
 	@Nonnull
 	public Iterator<ObjectNode> iterator() throws SourceAdapterException {
-
-		List<ObjectNode> result = new ArrayList<>();
-
-		Iterator<ObjectNode> nodeIterator = new JsonSourceIterator(dataSource, createSourceUrl(location, time), registry);
-		if (nodeIterator.hasNext()) {
-			ObjectNode node = nodeIterator.next();
-			System.out.println(node);
-			Weather weather = createWeatherFromCurrentObjectNode(node);    //TODO only current weather
-			ObjectNode weatherNode = JsonMapper.valueToTree(weather);
-			result.add(weatherNode);
-		}
-		return result.iterator();
+		Iterator<ObjectNode> nodeIterator = new JsonSourceIterator(dataSource, createSourceUrl(time, location), registry);
+		return responseParser.parseServiceResponse(nodeIterator);
 	}
 
 	/**
-	 * TODO only supports current weather at the moment.
+	 * @return the URL for the required request to fetch weather data in time for location.
 	 */
-	private URL createSourceUrl(Location location, String time) {
-		if (time == null) {
-			return createSourceUrl(location);
-		}
-		//TODO use time
-		return createSourceUrl(location);
-	}
-
-	private URL createSourceUrl(Location location) {
+	private URL createSourceUrl(String time, Location location) {
 		URI baseUri = URI.create(DWD_SERVICE_BASE_ADDRESS);
-		UriBuilder builder = UriBuilder.fromUri(baseUri).path("current");
+		UriBuilder builder = UriBuilder.fromUri(baseUri).path(time);
 		builder = addLocationQueryParam(builder, location);
 		URI resultUri = builder.build();
 		try {
@@ -89,6 +81,80 @@ public class DwdWeatherServiceSourceAdapter implements SourceAdapter {
 		}
 	}
 
+	/**
+	 * Interface for current and forecast response parsing strategies.
+	 */
+	private interface NodeParsingStrategy {
+		Iterator<ObjectNode> parseServiceResponse(Iterator<ObjectNode> nodeIterator);
+	}
+
+	/**
+	 * NodeParsingStrategy for current time.
+	 */
+	private class CurrentResponseParser implements NodeParsingStrategy {
+		public Iterator<ObjectNode> parseServiceResponse(Iterator<ObjectNode> nodeIterator) {
+			if (!nodeIterator.hasNext()) return Collections.emptyIterator();
+
+			ObjectNode node = nodeIterator.next();
+
+			String stationId = "unknown";
+			Instant timestamp = Instant.parse(node.get("time").asText());
+
+			JsonNode weatherNode = node.get("weather");
+
+			JsonNode temperatureNode = findDataPointNodeByName(weatherNode, "temperature200");
+			Temperature temperature = null;
+			if (temperatureNode != null) {
+				double temperatureValue = temperatureNode.get("value").asDouble();
+				temperature = new Temperature(TemperatureType.CELSIUS.fromKelvin(temperatureValue), TemperatureType.CELSIUS);
+			}
+
+			JsonNode airPressureNode = findDataPointNodeByName(weatherNode, "air_pressure");
+			Pressure pressure = null;
+			if (airPressureNode != null) {
+				double pressureValue = airPressureNode.get("value").asDouble();
+				pressure = new Pressure((int) pressureValue, PressureType.H_PA);
+			}
+
+			//TODO this is currently not delivered in current, but could be if the service differentiates between current and forecast standard parameters.
+			JsonNode humidityNode = findDataPointNodeByName(weatherNode, "humidity");
+			int humidityInPercent = -1;
+			if (humidityNode != null) {
+				double humidityValue = humidityNode.get("value").asDouble();
+				humidityInPercent = (int) Math.round(humidityValue);
+			}
+
+			Weather weather = new Weather(//TODO extend the weather model to support all standard parameters
+				stationId,
+				temperature,
+				pressure,
+				humidityInPercent,
+				timestamp,
+				location);
+
+			ObjectNode resultNode = JsonMapper.valueToTree(weather);
+			ArrayList<ObjectNode> resultList = new ArrayList<>();
+			resultList.add(resultNode);
+			return resultList.iterator();
+		}
+
+	}
+
+	/**
+	 * @return the JsonNode where the "name" field is set to name.
+	 */
+	private JsonNode findDataPointNodeByName(JsonNode node, String name) {
+		for (JsonNode subNode : node) {
+			if (name.equals(subNode.get("name").asText())) {
+				return subNode;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * @return the builder with either lat and lon or city query parameter set to location.
+	 */
 	private UriBuilder addLocationQueryParam(UriBuilder builder, Location location) {
 		if (location.hasCoordinate()) {
 			return builder.queryParam("lat", location.getCoordinate().getLatitude())
@@ -102,50 +168,23 @@ public class DwdWeatherServiceSourceAdapter implements SourceAdapter {
 		}
 	}
 
-	private Weather createWeatherFromCurrentObjectNode(ObjectNode node) {
-
-		String stationId = "unknown";
-		Instant timestamp = Instant.parse(node.get("time").asText());
-
-		JsonNode weatherNode = node.get("weather");
-
-		JsonNode temperatureNode = findDataPointNodeByName(weatherNode, "temperature200");
-		Temperature temperature = null;
-		if (temperatureNode != null) {
-			double temperatureValue = temperatureNode.get("value").asDouble();
-			temperature = new Temperature(TemperatureType.CELSIUS.fromKelvin(temperatureValue), TemperatureType.CELSIUS);
+	/**
+	 * Based on the requested time, different responses require different parsers.
+	 */
+	private NodeParsingStrategy selectResponseParser(String time) {
+		switch (time) {
+			case "forecast"://TODO
+			default:
+				return new CurrentResponseParser();
 		}
-
-		JsonNode airPressureNode = findDataPointNodeByName(weatherNode, "air_pressure");
-		Pressure pressure = null;
-		if (airPressureNode != null) {
-			double pressureValue = airPressureNode.get("value").asDouble();
-			pressure = new Pressure((int) pressureValue, PressureType.H_PA);//TODO Pressure destroys itself when receiving a proper double.
-		}
-
-		//TODO this is currently not delivered in current, but could be if the service differentiates between current and forecast standard parameters.
-		JsonNode humidityNode = findDataPointNodeByName(weatherNode, "humidity");
-		int humidityInPercent = -1;
-		if (humidityNode != null) {
-			double humidityValue = humidityNode.get("value").asDouble();
-			humidityInPercent = (int) Math.round(humidityValue);
-		}
-
-		return new Weather(
-			stationId,
-			temperature,
-			pressure,
-			humidityInPercent,
-			timestamp,
-			location);
 	}
 
-	private JsonNode findDataPointNodeByName(JsonNode node, String name) {
-		for (JsonNode subNode : node) {
-			if (name.equals(subNode.get("name").asText())) {
-				return subNode;
-			}
+	/**
+	 * @throws IllegalArgumentException if time is neither current nor forecast.
+	 */
+	private void checkTimeParameter(String time) throws IllegalArgumentException {
+		if (!(time.equals("current") || time.equals("forecast"))) {
+			throw new IllegalArgumentException("time parameter must either be current or forecast");
 		}
-		return null;
 	}
 }
