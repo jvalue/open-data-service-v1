@@ -1,5 +1,6 @@
 package org.jvalue.ods.processor.adapter.domain.weather.models.extended;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.jvalue.ods.processor.adapter.domain.weather.models.Location;
 import org.jvalue.ods.processor.adapter.domain.weather.models.Pressure;
@@ -19,6 +20,7 @@ public class ExtendedWeather extends Weather {
 	private final int cloudCoverInPercent;
 	private final TotalSolarRadiation totalSolarRadiation;
 
+	@JsonCreator
 	public ExtendedWeather(
 		@JsonProperty("stationId") String stationId,
 		@JsonProperty("temperature") Temperature temperature,
@@ -42,6 +44,34 @@ public class ExtendedWeather extends Weather {
 		this.windDirection = windDirection;
 		this.cloudCoverInPercent = cloudCoverInPercent;
 		this.totalSolarRadiation = totalSolarRadiation;
+	}
+
+	public PrecipitationDuration getPrecipitationDuration() {
+		return precipitationDuration;
+	}
+
+	public PrecipitationHeight getPrecipitationHeight() {
+		return precipitationHeight;
+	}
+
+	public SunshineDuration getSunshineDuration() {
+		return sunshineDuration;
+	}
+
+	public WindSpeed getWindSpeed() {
+		return windSpeed;
+	}
+
+	public WindDirection getWindDirection() {
+		return windDirection;
+	}
+
+	public int getCloudCoverInPercent() {
+		return cloudCoverInPercent;
+	}
+
+	public TotalSolarRadiation getTotalSolarRadiation() {
+		return totalSolarRadiation;
 	}
 
 	@Override
