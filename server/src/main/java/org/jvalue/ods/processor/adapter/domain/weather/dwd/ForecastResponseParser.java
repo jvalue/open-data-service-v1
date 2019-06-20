@@ -3,6 +3,7 @@ package org.jvalue.ods.processor.adapter.domain.weather.dwd;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.jvalue.ods.processor.adapter.domain.weather.models.*;
+import org.jvalue.ods.processor.adapter.domain.weather.models.extended.*;
 import org.jvalue.ods.utils.JsonMapper;
 
 import javax.annotation.Nonnull;
@@ -17,6 +18,14 @@ public class ForecastResponseParser implements NodeParsingStrategy {
 	private static final int FORECAST_LENGTH = 240;
 	private static final String TEMPERATURE = "temperature200";
 	private static final String PRESSURE = "air_pressure";
+	private static final String HUMIDITY = "humidity";
+	private static final String PRECIPITATION_DURATION = "precipitation_duration";
+	private static final String PRECIPITATION_HEIGHT = "precipitation_height";
+	private static final String SUNSHINE_DURATION = "sunshine_duration";
+	private static final String WIND_SPEED = "wind_speed";
+	private static final String WIND_DIRECTION = "wind_direction";
+	private static final String CLOUD_COVER = "cloud_cover";
+	private static final String TOTAL_SOLAR_RADIATION = "total_solar_radiation";
 
 
 	@Override
@@ -30,7 +39,7 @@ public class ForecastResponseParser implements NodeParsingStrategy {
 		Map<Instant, Map<String, Double>> forecastData = parseForecast(forecastNode);
 		Instant startTimeStamp = findEarliestTimeStamp(forecastNode);
 
-		List<Weather> weatherList = combineToWeather(location, forecastData, startTimeStamp);
+		List<ExtendedWeather> weatherList = combineToWeather(location, forecastData, startTimeStamp);
 
 		return weatherList.stream()
 			.map((weather -> (ObjectNode) JsonMapper.valueToTree(weather)))
@@ -125,10 +134,10 @@ public class ForecastResponseParser implements NodeParsingStrategy {
 	 * Combines all data to a list of Weather objects.
 	 */
 	@Nonnull
-	private List<Weather> combineToWeather(@Nonnull Location location,
-										   @Nonnull Map<Instant, Map<String, Double>> data,
-										   @Nonnull Instant startTimeStamp) {
-		List<Weather> weatherList = new ArrayList<>(FORECAST_LENGTH);
+	private List<ExtendedWeather> combineToWeather(@Nonnull Location location,
+												   @Nonnull Map<Instant, Map<String, Double>> data,
+												   @Nonnull Instant startTimeStamp) {
+		List<ExtendedWeather> weatherList = new ArrayList<>(FORECAST_LENGTH);
 
 		for (int i = 0; i < FORECAST_LENGTH; i++) {
 			Instant timeStamp = startTimeStamp.plus(i, ChronoUnit.HOURS);
@@ -146,9 +155,9 @@ public class ForecastResponseParser implements NodeParsingStrategy {
 	 * Put together all values to a Weather object.
 	 */
 	@Nonnull
-	private Weather getWeather(@Nonnull Map<String, Double> parameterMap,
-							   @Nonnull Instant timeStamp,
-							   @Nonnull Location location) {
+	private ExtendedWeather getWeather(@Nonnull Map<String, Double> parameterMap,
+									   @Nonnull Instant timeStamp,
+									   @Nonnull Location location) {
 		Temperature temperature = null;
 		if (parameterMap.containsKey(TEMPERATURE)) {
 			double temperatureValue = parameterMap.get(TEMPERATURE);
@@ -161,12 +170,65 @@ public class ForecastResponseParser implements NodeParsingStrategy {
 			pressure = new Pressure((int) pressureValue, PressureType.H_PA);
 		}
 
-		//TODO extend the weather model to feature all available parameters.
+		int humidityInPercent = -1;
+		if (parameterMap.containsKey(HUMIDITY)) {
+			double humidityValue = parameterMap.get(HUMIDITY);
+			humidityInPercent = (int) humidityValue;
+		}
 
-		return new Weather(null,
+		PrecipitationDuration precipitationDuration = null;
+		if (parameterMap.containsKey(PRECIPITATION_DURATION)) {
+			double precipitationDurationValue = parameterMap.get(PRECIPITATION_DURATION);
+			precipitationDuration = new PrecipitationDuration(precipitationDurationValue, DurationType.SECOND);
+		}
+
+		PrecipitationHeight precipitationHeight = null;
+		if (parameterMap.containsKey(PRECIPITATION_HEIGHT)) {
+			double precipitationHeightValue = parameterMap.get(PRECIPITATION_HEIGHT);
+			precipitationHeight = new PrecipitationHeight(precipitationHeightValue, LengthType.MILLIMETER);
+		}
+
+		SunshineDuration sunshineDuration = null;
+		if (parameterMap.containsKey(SUNSHINE_DURATION)) {
+			double sunShineDurationValue = parameterMap.get(SUNSHINE_DURATION);
+			sunshineDuration = new SunshineDuration(sunShineDurationValue, DurationType.SECOND);
+		}
+
+		WindSpeed windSpeed = null;
+		if (parameterMap.containsKey(WIND_SPEED)) {
+			double windSpeedValue = parameterMap.get(WIND_SPEED);
+			windSpeed = new WindSpeed(windSpeedValue, SpeedType.METER_PER_SECOND);
+		}
+
+		WindDirection windDirection = null;
+		if (parameterMap.containsKey(WIND_DIRECTION)) {
+			double windDirectionValue = parameterMap.get(WIND_DIRECTION);
+			windDirection = new WindDirection(windDirectionValue, AngleType.DEGREE);
+		}
+
+		int cloudCoverInPercent = -1;
+		if (parameterMap.containsKey(CLOUD_COVER)) {
+			double cloudCoverValue = parameterMap.get(CLOUD_COVER);
+			cloudCoverInPercent = (int) cloudCoverValue;
+		}
+
+		TotalSolarRadiation totalSolarRadiation = null;
+		if (parameterMap.containsKey(TOTAL_SOLAR_RADIATION)) {
+			double totalSolarRadiationValue = parameterMap.get(TOTAL_SOLAR_RADIATION);
+			totalSolarRadiation = new TotalSolarRadiation(totalSolarRadiationValue, RadiationType.JOULE_PER_SQUARE_CENTIMETER);
+		}
+
+		return new ExtendedWeather(null,
 			temperature,
 			pressure,
-			-1,
+			humidityInPercent,
+			precipitationDuration,
+			precipitationHeight,
+			sunshineDuration,
+			windSpeed,
+			windDirection,
+			cloudCoverInPercent,
+			totalSolarRadiation,
 			timeStamp,
 			location);
 	}
