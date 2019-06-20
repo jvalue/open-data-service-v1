@@ -45,7 +45,6 @@ class CurrentResponseParser implements NodeParsingStrategy {
 			pressure = new Pressure((int) pressureValue, PressureType.H_PA);
 		}
 
-		//TODO this is currently not delivered in current, but could be if the service differentiates between current and forecast standard parameters.
 		JsonNode humidityNode = findDataPointNodeByName(weatherNode, "humidity");
 		int humidityInPercent = -1;
 		if (humidityNode != null) {
