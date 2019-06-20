@@ -96,7 +96,9 @@ public class DwdWeatherServiceSourceAdapter implements SourceAdapter {
 	 */
 	private NodeParsingStrategy selectResponseParser(String time) {
 		switch (time) {
-			case "forecast"://TODO
+			case "forecast":
+				return new ForecastResponseParser();
+			case "current":
 			default:
 				return new CurrentResponseParser(location);
 		}
