@@ -3,6 +3,7 @@ package org.jvalue.ods.processor.adapter.domain.weather.dwd;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.jvalue.ods.processor.adapter.domain.weather.models.*;
+import org.jvalue.ods.processor.adapter.domain.weather.models.extended.*;
 import org.jvalue.ods.utils.JsonMapper;
 
 import java.time.Instant;
@@ -26,7 +27,6 @@ class CurrentResponseParser implements NodeParsingStrategy {
 
 		ObjectNode node = nodeIterator.next();
 
-		String stationId = "unknown";//TODO set it to null?
 		Instant timestamp = Instant.parse(node.get("time").asText());
 
 		JsonNode weatherNode = node.get("weather");
@@ -52,11 +52,67 @@ class CurrentResponseParser implements NodeParsingStrategy {
 			humidityInPercent = (int) Math.round(humidityValue);
 		}
 
-		Weather weather = new Weather(//TODO extend the weather model to support all standard parameters
-			stationId,
+		JsonNode precipitationDurationNode = findDataPointNodeByName(weatherNode, "precipitation_duration");
+		PrecipitationDuration precipitationDuration = null;
+		if (precipitationDurationNode != null) {
+			double precipitationDurationValue = precipitationDurationNode.get("value").asDouble();
+			precipitationDuration = new PrecipitationDuration(precipitationDurationValue, DurationType.SECOND);
+		}
+
+		JsonNode precipitationHeightNode = findDataPointNodeByName(weatherNode, "precipitation_height");
+		PrecipitationHeight precipitationHeight = null;
+		if (precipitationHeightNode != null) {
+			double precipitationHeightValue = precipitationHeightNode.get("value").asDouble();
+			precipitationHeight = new PrecipitationHeight(precipitationHeightValue, LengthType.MILLIMETER);
+		}
+
+		JsonNode sunshineDurationNode = findDataPointNodeByName(weatherNode, "sunshine_duration");
+		SunshineDuration sunshineDuration = null;
+		if (sunshineDurationNode != null) {
+			double sunshineDurationValue = sunshineDurationNode.get("value").asDouble();
+			sunshineDuration = new SunshineDuration(sunshineDurationValue, DurationType.SECOND);
+		}
+
+		JsonNode windSpeedNode = findDataPointNodeByName(weatherNode, "wind_speed");
+		WindSpeed windSpeed = null;
+		if (windSpeedNode != null) {
+			double windSpeedValue = windSpeedNode.get("value").asDouble();
+			windSpeed = new WindSpeed(windSpeedValue, SpeedType.METER_PER_SECOND);
+		}
+
+		JsonNode windDirectionNode = findDataPointNodeByName(weatherNode, "wind_direction");
+		WindDirection windDirection = null;
+		if (windDirectionNode != null) {
+			double windDirectionValue = windDirectionNode.get("value").asDouble();
+			windDirection = new WindDirection(windDirectionValue, AngleType.DEGREE);
+		}
+
+		JsonNode cloudCoverInPercentNode = findDataPointNodeByName(weatherNode, "cloud_cover");
+		int cloudCoverInPercent = -1;
+		if (cloudCoverInPercentNode != null) {
+			double cloudCoverInPercentValue = cloudCoverInPercentNode.get("value").asDouble();
+			humidityInPercent = (int) Math.round(cloudCoverInPercentValue);
+		}
+
+		JsonNode totalSolarRadiationNode = findDataPointNodeByName(weatherNode, "total_solar_radiation");
+		TotalSolarRadiation totalSolarRadiation = null;
+		if (totalSolarRadiationNode != null) {
+			double totalSolarRadiationValue = totalSolarRadiationNode.get("value").asDouble();
+			totalSolarRadiation = new TotalSolarRadiation(totalSolarRadiationValue, RadiationType.JOULE_PER_SQUARE_CENTIMETER);
+		}
+
+		ExtendedWeather weather = new ExtendedWeather(
+			null,
 			temperature,
 			pressure,
 			humidityInPercent,
+			precipitationDuration,
+			precipitationHeight,
+			sunshineDuration,
+			windSpeed,
+			windDirection,
+			cloudCoverInPercent,
+			totalSolarRadiation,
 			timestamp,
 			location);
 
