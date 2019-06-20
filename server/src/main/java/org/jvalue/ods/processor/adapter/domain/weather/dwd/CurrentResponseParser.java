@@ -13,7 +13,7 @@ import java.util.Iterator;
 /**
  * NodeParsingStrategy for current time.
  */
-class CurrentResponseParser extends AbstractNodeParsingStrategy {
+class CurrentResponseParser implements NodeParsingStrategy {
 
 	private final Location location;
 
@@ -26,7 +26,7 @@ class CurrentResponseParser extends AbstractNodeParsingStrategy {
 
 		ObjectNode node = nodeIterator.next();
 
-		String stationId = "unknown";
+		String stationId = "unknown";//TODO set it to null?
 		Instant timestamp = Instant.parse(node.get("time").asText());
 
 		JsonNode weatherNode = node.get("weather");
@@ -67,4 +67,15 @@ class CurrentResponseParser extends AbstractNodeParsingStrategy {
 		return resultList.iterator();
 	}
 
+	/**
+	 * @return the JsonNode where the "name" field is set to name.
+	 */
+	private JsonNode findDataPointNodeByName(JsonNode node, String name) {
+		for (JsonNode subNode : node) {
+			if (name.equals(subNode.get("name").asText())) {
+				return subNode;
+			}
+		}
+		return null;
+	}
 }
