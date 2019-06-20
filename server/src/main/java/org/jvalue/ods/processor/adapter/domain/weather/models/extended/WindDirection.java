@@ -5,14 +5,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 
-public class WindDuration {
+public class WindDirection {
 	private final double value;
-	private final DurationType type;
+	private final AngleType type;
 
 	@JsonCreator
-	public WindDuration(
+	public WindDirection(
 		@JsonProperty("value") double value,
-		@JsonProperty("type") DurationType type) {
+		@JsonProperty("type") AngleType type) {
 		this.value = value;
 		this.type = type;
 	}
@@ -23,7 +23,7 @@ public class WindDuration {
 	}
 
 
-	public DurationType getType() {
+	public AngleType getType() {
 		return type;
 	}
 
@@ -32,9 +32,9 @@ public class WindDuration {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		WindDuration windDuration = (WindDuration) o;
-		return Double.compare(windDuration.value, value) == 0 &&
-			type == windDuration.type;
+		WindDirection windDirection = (WindDirection) o;
+		return Double.compare(windDirection.value, value) == 0 &&
+			type == windDirection.type;
 	}
 
 
