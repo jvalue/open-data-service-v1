@@ -3,17 +3,16 @@ package org.jvalue.ods.processor.adapter.domain.weather.models.extended;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.text.DecimalFormat;
 import java.util.Objects;
 
-public class PrecipitationDuration {
+public class PrecipitationHeight {
 	private final double value;
-	private final DurationType type;
+	private final LengthType type;
 
 	@JsonCreator
-	public PrecipitationDuration(
+	public PrecipitationHeight(
 		@JsonProperty("value") double value,
-		@JsonProperty("type") DurationType type) {
+		@JsonProperty("type") LengthType type) {
 		this.value = value;
 		this.type = type;
 	}
@@ -24,7 +23,7 @@ public class PrecipitationDuration {
 	}
 
 
-	public DurationType getType() {
+	public LengthType getType() {
 		return type;
 	}
 
@@ -33,9 +32,9 @@ public class PrecipitationDuration {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		PrecipitationDuration precipitationDuration = (PrecipitationDuration) o;
-		return Double.compare(precipitationDuration.value, value) == 0 &&
-			type == precipitationDuration.type;
+		PrecipitationHeight precipitationHeight = (PrecipitationHeight) o;
+		return Double.compare(precipitationHeight.value, value) == 0 &&
+			type == precipitationHeight.type;
 	}
 
 
