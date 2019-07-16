@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 apply plugin: 'application'
 apply plugin: 'de.bitdroid.githash'
 
@@ -52,6 +57,7 @@ dependencies {
 	compile "io.swagger.core.v3:swagger-jaxrs2:$swaggerVersion"
 	compile "org.hibernate:hibernate-validator:$hibernateVersion"
 	compile "org.hibernate:hibernate-validator-annotation-processor:$hibernateVersion"
+	compile "com.google.gcm:gcm-server:$gcmVersion"
 	compile project(':models')
 	compile fileTree(dir: 'libs', include: '*.jar')
 

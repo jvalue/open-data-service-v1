@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.processor.filter;
 
 
@@ -7,7 +12,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
-
 import org.jvalue.ods.processor.filter.domain.PegelBrandenburgMerger;
 import org.jvalue.ods.processor.filter.domain.PegelOnlineMerger;
 

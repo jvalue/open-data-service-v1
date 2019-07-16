@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:a="http://langdale.com.au/2005/Message#"
-		   xmlns:sawsdl="http://www.w3.org/ns/sawsdl" targetNamespace="http://iec.ch/TC57/Weather#"
-		   elementFormDefault="qualified" attributeFormDefault="unqualified"
-		   xmlns="http://langdale.com.au/2005/Message#" xmlns:m="http://iec.ch/TC57/Weather#">
+<!--
+
+    Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+
+    SPDX-License-Identifier: AGPL-3.0-only
+
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:a="http://langdale.com.au/2005/Message#" xmlns:sawsdl="http://www.w3.org/ns/sawsdl" targetNamespace="http://iec.ch/TC57/Weather#" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="http://langdale.com.au/2005/Message#" xmlns:m="http://iec.ch/TC57/Weather#">
 	<xs:annotation>
 		<xs:documentation/>
 	</xs:annotation>
 	<xs:element name="Weather" type="m:Weather"/>
 	<xs:complexType name="Weather">
 		<xs:sequence>
-			<xs:element name="EnvironmentalMonitoringStation" type="m:EnvironmentalMonitoringStation" minOccurs="1"
-						maxOccurs="1"/>
+			<xs:element name="EnvironmentalMonitoringStation" type="m:EnvironmentalMonitoringStation" minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="AnalogValue" sawsdl:modelReference="http://iec.ch/TC57/CIM-generic#AnalogValue">
@@ -18,14 +21,12 @@
 			<xs:documentation>AnalogValue represents an analog MeasurementValue.</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="timeStamp" minOccurs="1" maxOccurs="1" type="xs:dateTime"
-						sawsdl:modelReference="http://iec.ch/TC57/CIM-generic#MeasurementValue.timeStamp">
+			<xs:element name="timeStamp" minOccurs="1" maxOccurs="1" type="xs:dateTime" sawsdl:modelReference="http://iec.ch/TC57/CIM-generic#MeasurementValue.timeStamp">
 				<xs:annotation>
 					<xs:documentation>The time when the value was last updated</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="value" minOccurs="1" maxOccurs="1" type="xs:float"
-						sawsdl:modelReference="http://iec.ch/TC57/CIM-generic#AnalogValue.value">
+			<xs:element name="value" minOccurs="1" maxOccurs="1" type="xs:float" sawsdl:modelReference="http://iec.ch/TC57/CIM-generic#AnalogValue.value">
 				<xs:annotation>
 					<xs:documentation>The value to supervise.</xs:documentation>
 				</xs:annotation>
@@ -37,45 +38,36 @@
 			<xs:documentation>Analog (float) measuring an atmospheric condition.</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="kind" minOccurs="1" maxOccurs="1" type="m:AtmosphericAnalogKind"
-						sawsdl:modelReference="http://iec.ch/TC57/CIM-generic#AtmosphericAnalog.kind">
+			<xs:element name="kind" minOccurs="1" maxOccurs="1" type="m:AtmosphericAnalogKind" sawsdl:modelReference="http://iec.ch/TC57/CIM-generic#AtmosphericAnalog.kind">
 				<xs:annotation>
 					<xs:documentation>Kind of atmospheric analog.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="unitMultiplier" minOccurs="1" maxOccurs="1" type="m:UnitMultiplier"
-						sawsdl:modelReference="http://iec.ch/TC57/CIM-generic#Measurement.unitMultiplier">
+			<xs:element name="unitMultiplier" minOccurs="1" maxOccurs="1" type="m:UnitMultiplier" sawsdl:modelReference="http://iec.ch/TC57/CIM-generic#Measurement.unitMultiplier">
 				<xs:annotation>
 					<xs:documentation>The unit multiplier of the measured quantity.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="unitSymbol" minOccurs="1" maxOccurs="1" type="m:UnitSymbol"
-						sawsdl:modelReference="http://iec.ch/TC57/CIM-generic#Measurement.unitSymbol">
+			<xs:element name="unitSymbol" minOccurs="1" maxOccurs="1" type="m:UnitSymbol" sawsdl:modelReference="http://iec.ch/TC57/CIM-generic#Measurement.unitSymbol">
 				<xs:annotation>
 					<xs:documentation>The unit of measure of the measured quantity.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="AnalogValues" minOccurs="1" maxOccurs="unbounded" type="m:AnalogValue"
-						sawsdl:modelReference="http://iec.ch/TC57/CIM-generic#Analog.AnalogValues">
+			<xs:element name="AnalogValues" minOccurs="1" maxOccurs="unbounded" type="m:AnalogValue" sawsdl:modelReference="http://iec.ch/TC57/CIM-generic#Analog.AnalogValues">
 				<xs:annotation>
 					<xs:documentation>The values connected to this measurement.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:simpleType name="AtmosphericAnalogKind"
-				   sawsdl:modelReference="http://iec.ch/TC57/CIM-generic#AtmosphericAnalogKind">
+	<xs:simpleType name="AtmosphericAnalogKind" sawsdl:modelReference="http://iec.ch/TC57/CIM-generic#AtmosphericAnalogKind">
 		<xs:annotation>
-			<xs:documentation>Kinds of analogs (floats) measuring an atmospheric condition.</xs:documentation>
+			<xs:documentation>Kinds of analogs (floats)  measuring an atmospheric condition.</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="ambientTemperature">
 				<xs:annotation>
-					<xs:documentation>The temperature measured b&lt;font color="#0f0f0f"&gt;y a thermometer exposed to
-						the air in a place sheltered from direct solar radiation. &lt;/font&gt;Also known as "dry bulb"
-						because&lt;font color="#0f0f0f"&gt; the air temperature is indicated by a thermometer not
-						affecte&lt;/font&gt;d by the moisture of the air.
-					</xs:documentation>
+					<xs:documentation>The temperature measured b&lt;font color="#0f0f0f"&gt;y a thermometer exposed to the air in a place sheltered from direct solar radiation. &lt;/font&gt;Also known as "dry bulb" because&lt;font color="#0f0f0f"&gt; the air temperature is indicated by a thermometer not affecte&lt;/font&gt;d by the moisture of the air.</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="irradianceGlobalHorizontal">
@@ -83,35 +75,23 @@
 			</xs:enumeration>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:complexType name="EnvironmentalMonitoringStation"
-					sawsdl:modelReference="http://iec.ch/TC57/CIM-generic#EnvironmentalMonitoringStation">
+	<xs:complexType name="EnvironmentalMonitoringStation" sawsdl:modelReference="http://iec.ch/TC57/CIM-generic#EnvironmentalMonitoringStation">
 		<xs:annotation>
-			<xs:documentation>An environmental monitoring station, examples of which could be a weather station or a
-				seismic monitoring station.
-			</xs:documentation>
+			<xs:documentation>An environmental monitoring station, examples of which could be a weather station or a seismic monitoring station.</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="mRID" minOccurs="1" maxOccurs="1" type="xs:string"
-						sawsdl:modelReference="http://iec.ch/TC57/CIM-generic#IdentifiedObject.mRID">
+			<xs:element name="mRID" minOccurs="1" maxOccurs="1" type="xs:string" sawsdl:modelReference="http://iec.ch/TC57/CIM-generic#IdentifiedObject.mRID">
 				<xs:annotation>
-					<xs:documentation>Master resource identifier issued by a model authority. The mRID is unique within
-						an exchange context. Global uniqueness is easily achieved by using a UUID, as specified in RFC
-						4122, for the mRID. The use of UUID is strongly recommended.
-					</xs:documentation>
-					<xs:documentation>For CIMXML data files in RDF syntax conforming to IEC 61970-552 Edition 1, the
-						mRID is mapped to rdf:ID or rdf:about attributes that identify CIM object elements.
-					</xs:documentation>
+					<xs:documentation>Master resource identifier issued by a model authority. The mRID is unique within an exchange context. Global uniqueness is easily achieved by using a UUID,  as specified in RFC 4122, for the mRID. The use of UUID is strongly recommended.</xs:documentation>
+					<xs:documentation>For CIMXML data files in RDF syntax conforming to IEC 61970-552 Edition 1, the mRID is mapped to rdf:ID or rdf:about attributes that identify CIM object elements.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="EnvironmentalAnalog" minOccurs="1" maxOccurs="unbounded" type="m:AtmosphericAnalog"
-						sawsdl:modelReference="http://iec.ch/TC57/CIM-generic#EnvironmentalMonitoringStation.EnvironmentalAnalog">
+			<xs:element name="EnvironmentalAnalog" minOccurs="1" maxOccurs="unbounded" type="m:AtmosphericAnalog" sawsdl:modelReference="http://iec.ch/TC57/CIM-generic#EnvironmentalMonitoringStation.EnvironmentalAnalog">
 				<xs:annotation>
-					<xs:documentation>Environmental analog measurement provided by this monitoring station.
-					</xs:documentation>
+					<xs:documentation>Environmental analog measurement provided by this monitoring station.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="Location" minOccurs="1" maxOccurs="1" type="m:Location"
-						sawsdl:modelReference="http://iec.ch/TC57/CIM-generic#EnvironmentalMonitoringStation.Location">
+			<xs:element name="Location" minOccurs="1" maxOccurs="1" type="m:Location" sawsdl:modelReference="http://iec.ch/TC57/CIM-generic#EnvironmentalMonitoringStation.Location">
 				<xs:annotation>
 					<xs:documentation>Location of this monitoring station.</xs:documentation>
 				</xs:annotation>
@@ -120,14 +100,10 @@
 	</xs:complexType>
 	<xs:complexType name="Location" sawsdl:modelReference="http://iec.ch/TC57/CIM-generic#Location">
 		<xs:annotation>
-			<xs:documentation>The place, scene, or point of something where someone or something has been, is, and/or
-				will be at a given moment in time. It can be defined with one or more postition points (coordinates) in
-				a given coordinate system.
-			</xs:documentation>
+			<xs:documentation>The place, scene, or point of something where someone or something has been, is, and/or will be at a given moment in time. It can be defined with one or more postition points (coordinates) in a given coordinate system.</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="mainAddress" minOccurs="1" maxOccurs="1" type="m:StreetAddress"
-						sawsdl:modelReference="http://iec.ch/TC57/CIM-generic#Location.mainAddress">
+			<xs:element name="mainAddress" minOccurs="1" maxOccurs="1" type="m:StreetAddress" sawsdl:modelReference="http://iec.ch/TC57/CIM-generic#Location.mainAddress">
 				<xs:annotation>
 					<xs:documentation>Main address of the location.</xs:documentation>
 				</xs:annotation>
@@ -139,8 +115,7 @@
 			<xs:documentation>General purpose street and postal address information.</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="townDetail" minOccurs="1" maxOccurs="1" type="m:TownDetail"
-						sawsdl:modelReference="http://iec.ch/TC57/CIM-generic#StreetAddress.townDetail">
+			<xs:element name="townDetail" minOccurs="1" maxOccurs="1" type="m:TownDetail" sawsdl:modelReference="http://iec.ch/TC57/CIM-generic#StreetAddress.townDetail">
 				<xs:annotation>
 					<xs:documentation>Town detail.</xs:documentation>
 				</xs:annotation>
@@ -152,8 +127,7 @@
 			<xs:documentation>Town details, in the context of address.</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="name" minOccurs="1" maxOccurs="1" type="xs:string"
-						sawsdl:modelReference="http://iec.ch/TC57/CIM-generic#TownDetail.name">
+			<xs:element name="name" minOccurs="1" maxOccurs="1" type="xs:string" sawsdl:modelReference="http://iec.ch/TC57/CIM-generic#TownDetail.name">
 				<xs:annotation>
 					<xs:documentation>Town name.</xs:documentation>
 				</xs:annotation>
@@ -162,26 +136,9 @@
 	</xs:complexType>
 	<xs:simpleType name="UnitMultiplier" sawsdl:modelReference="http://iec.ch/TC57/CIM-generic#UnitMultiplier">
 		<xs:annotation>
-			<xs:documentation>The unit multipliers defined for the CIM. When applied to unit symbols, the unit symbol is
-				treated as a derived unit. Regardless of the contents of the unit symbol text, the unit symbol shall be
-				treated as if it were a single-character unit symbol. Unit symbols should not contain multipliers, and
-				it should be left to the multiplier to define the multiple for an entire data type.
-			</xs:documentation>
-			<xs:documentation>For example, if a unit symbol is "A2Perh" and the multiplier is "k", then the value is
-				k(A^2/h), and the multiplier applies to the entire final value, not to any individual part of the value.
-				This can be conceptualized by substituting a derived unit symbol for the unit type. If one imagines that
-				the symbol "Þ" represents the derived unit "A2Perh", then applying the multiplier "k" can be
-				conceptualized simply as "kÞ".
-			</xs:documentation>
-			<xs:documentation>For example, the SI unit for mass is "kg" and not "g". If the unit symbol is defined as
-				"kg", then the multiplier is applied to "kg" as a whole and does not replace the "k" in front of the
-				"g". In this case, the multiplier of "m" would be used with the unit symbol of "kg" to represent one
-				gram. As a text string, this violates the instructions in IEC 80000-1. However, because the unit symbol
-				in CIM is treated as a derived unit instead of as an SI unit, it makes more sense to conceptualize the
-				"kg" as if it were replaced by one of the proposed replacements for the SI mass symbol. If one imagines
-				that the "kg" were replaced by a symbol "Þ", then it is easier to conceptualize the multiplier "m" as
-				creating the proper unit "mÞ", and not the forbidden unit "mkg".
-			</xs:documentation>
+			<xs:documentation>The unit multipliers defined for the CIM.  When applied to unit symbols, the unit symbol is treated as a derived unit. Regardless of the contents of the unit symbol text, the unit symbol shall be treated as if it were a single-character unit symbol. Unit symbols should not contain multipliers, and it should be left to the multiplier to define the multiple for an entire data type.</xs:documentation>
+			<xs:documentation>For example, if a unit symbol is "A2Perh" and the multiplier is "k", then the value is k(A^2/h), and the multiplier applies to the entire final value, not to any individual part of the value. This can be conceptualized by substituting a derived unit symbol for the unit type. If one imagines that the symbol "Þ" represents the derived unit "A2Perh", then applying the multiplier "k" can be conceptualized simply as "kÞ".</xs:documentation>
+			<xs:documentation>For example, the SI unit for mass is "kg" and not "g".  If the unit symbol is defined as "kg", then the multiplier is applied to "kg" as a whole and does not replace the "k" in front of the "g". In this case, the multiplier of "m" would be used with the unit symbol of "kg" to represent one gram.  As a text string, this violates the instructions in IEC 80000-1. However, because the unit symbol in CIM is treated as a derived unit instead of as an SI unit, it makes more sense to conceptualize the "kg" as if it were replaced by one of the proposed replacements for the SI mass symbol. If one imagines that the "kg" were replaced by a symbol "Þ", then it is easier to conceptualize the multiplier "m" as creating the proper unit "mÞ", and not the forbidden unit "mkg".</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="E">
@@ -293,30 +250,10 @@
 	</xs:simpleType>
 	<xs:simpleType name="UnitSymbol" sawsdl:modelReference="http://iec.ch/TC57/CIM-generic#UnitSymbol">
 		<xs:annotation>
-			<xs:documentation>The derived units defined for usage in the CIM. In some cases, the derived unit is equal
-				to an SI unit. Whenever possible, the standard derived symbol is used instead of the formula for the
-				derived unit. For example, the unit symbol Farad is defined as "F" instead of "CPerV". In cases where a
-				standard symbol does not exist for a derived unit, the formula for the unit is used as the unit symbol.
-				For example, density does not have a standard symbol and so it is represented as "kgPerm3". With the
-				exception of the "kg", which is an SI unit, the unit symbols do not contain multipliers and therefore
-				represent the base derived unit to which a multiplier can be applied as a whole.
-			</xs:documentation>
-			<xs:documentation>Every unit symbol is treated as an unparseable text as if it were a single-letter symbol.
-				The meaning of each unit symbol is defined by the accompanying descriptive text and not by the text
-				contents of the unit symbol.
-			</xs:documentation>
-			<xs:documentation>To allow the widest possible range of serializations without requiring special character
-				handling, several substitutions are made which deviate from the format described in IEC 80000-1. The
-				division symbol "/" is replaced by the letters"Per". Exponents are written in plain text after the unit
-				as "m3" instead of being formatted as in "m&lt;sup&gt;3&lt;/sup&gt;" or introducing a symbol as in
-				"m^3". The degree symbol "°" is replaced with the letters "deg". Any clarification of the meaning for a
-				substitution is included in the description for the unit symbol.
-			</xs:documentation>
-			<xs:documentation>Non-SI units are included in list of unit symbols to allow sources of data to be correctly
-				labeled with their non-SI units (for example, a GPS sensor that is reporting numbers that represent feet
-				instead of meters). This allows software to use the unit symbol information correctly convert and scale
-				the raw data of those sources into SI-based units.
-			</xs:documentation>
+			<xs:documentation>The derived units defined for usage in the CIM. In some cases, the derived unit is equal to an SI unit. Whenever possible, the standard derived symbol is used instead of the formula for the derived unit. For example, the unit symbol Farad is defined as "F" instead of "CPerV". In cases where a standard symbol does not exist for a derived unit, the formula for the unit is used as the unit symbol. For example, density does not have a standard symbol and so it is represented as "kgPerm3". With the exception of the "kg", which is an SI unit, the unit symbols do not contain multipliers and therefore represent the base derived unit to which a multiplier can be applied as a whole.</xs:documentation>
+			<xs:documentation>Every unit symbol is treated as an unparseable text as if it were a single-letter symbol. The meaning of each unit symbol is defined by the accompanying descriptive text and not by the text contents of the unit symbol.</xs:documentation>
+			<xs:documentation>To allow the widest possible range of serializations without requiring special character handling, several substitutions are made which deviate from the format described in IEC 80000-1. The division symbol "/" is replaced by the letters"Per". Exponents are written in plain text after the unit as "m3" instead of being formatted as in "m&lt;sup&gt;3&lt;/sup&gt;" or introducing a symbol as in "m^3". The degree symbol "°" is replaced with the letters "deg". Any clarification of the meaning for a substitution is included in the description for the unit symbol.</xs:documentation>
+			<xs:documentation>Non-SI units are included in list of unit symbols to allow sources of data to be correctly labeled with their non-SI units (for example, a GPS sensor that is reporting numbers that represent feet instead of meters). This allows software to use the unit symbol information correctly convert and scale the raw data of those sources into SI-based units.</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="WPerm2">
@@ -327,11 +264,7 @@
 			<xs:enumeration value="degC">
 				<xs:annotation>
 					<xs:documentation>Relative temperature in degrees Celsius.</xs:documentation>
-					<xs:documentation>In the SI unit system the symbol is ºC. Electric charge is measured in coulomb
-						that has the unit symbol C. To distinguish degree Celsius form coulomb the symbol used in the
-						UML is degC. Reason for not using ºC is the special character º is difficult to manage in
-						software.
-					</xs:documentation>
+					<xs:documentation>In the SI unit system the symbol is ºC. Electric charge is measured in coulomb that has the unit symbol C. To distinguish degree Celsius form coulomb the symbol used in the UML is degC. Reason for not using ºC is the special character º is difficult to manage in software.</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 		</xs:restriction>

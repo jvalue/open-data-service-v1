@@ -1,8 +1,12 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.rest.v1;
 
 
 import com.google.inject.Inject;
-
 import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;

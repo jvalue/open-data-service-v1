@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods;
 
 
@@ -6,14 +11,16 @@ import org.jvalue.ods.api.DataApi;
 import org.jvalue.ods.api.DataSourceApi;
 import org.jvalue.ods.api.DataViewApi;
 import org.jvalue.ods.api.ProcessorChainApi;
-
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.converter.JacksonConverter;
 
+import java.util.Optional;
+
 public final class ApiFactory {
 
-	private static final String SERVER_URL = "http://localhost:8080/ods/api";
+	private static final String ODS_HOST = Optional.ofNullable(System.getenv("ODS_IT_HOST")).orElse("localhost");
+	private static final String SERVER_URL = "http://" + ODS_HOST + ":8080/ods/api";
 
 	private final RestAdapter restAdapter;
 

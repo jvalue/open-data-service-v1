@@ -1,21 +1,24 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.admin.rest;
 
 
 import com.google.inject.Inject;
-
 import org.jvalue.commons.utils.ListValueMap;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.processor.ProcessorChainManager;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Path("/filterChains")
 @Produces(MediaType.APPLICATION_JSON)

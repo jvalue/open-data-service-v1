@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.processor.adapter;
 
 
@@ -5,16 +10,14 @@ import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
+import mockit.Mocked;
+import mockit.integration.junit4.JMockit;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.jvalue.ods.api.sources.DataSource;
 
 import java.util.List;
-
-import mockit.Mocked;
-import mockit.integration.junit4.JMockit;
 
 
 @RunWith(JMockit.class)

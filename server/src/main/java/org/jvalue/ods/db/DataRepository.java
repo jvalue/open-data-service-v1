@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.db;
 
 
@@ -6,12 +11,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-
-import org.ektorp.CouchDbConnector;
-import org.ektorp.DocumentNotFoundException;
-import org.ektorp.DocumentOperationResult;
-import org.ektorp.ViewQuery;
-import org.ektorp.ViewResult;
+import org.ektorp.*;
 import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.DesignDocument;
 import org.ektorp.support.DesignDocumentFactory;
@@ -22,11 +22,7 @@ import org.jvalue.ods.api.data.Cursor;
 import org.jvalue.ods.api.data.Data;
 import org.jvalue.ods.api.views.DataView;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public final class DataRepository extends CouchDbRepositorySupport<JsonNode> {
 

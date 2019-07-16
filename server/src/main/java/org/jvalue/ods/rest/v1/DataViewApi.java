@@ -1,8 +1,12 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.rest.v1;
 
 
 import com.google.inject.Inject;
-
 import org.jvalue.commons.auth.RestrictedTo;
 import org.jvalue.commons.auth.Role;
 import org.jvalue.commons.auth.User;
@@ -13,17 +17,10 @@ import org.jvalue.ods.api.views.DataViewDescription;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.data.DataViewManager;
 
-import java.util.List;
-
 import javax.validation.Valid;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 @Path(AbstractApi.BASE_URL + "/{sourceId}/views")
 @Produces(MediaType.APPLICATION_JSON)

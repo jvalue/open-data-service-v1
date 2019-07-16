@@ -1,13 +1,16 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.admin.monitoring;
 
 
-import com.codahale.metrics.Clock;
-import com.codahale.metrics.Metric;
-import com.codahale.metrics.MetricFilter;
-import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.Reservoir;
-import com.codahale.metrics.Timer;
-
+import com.codahale.metrics.*;
+import mockit.Expectations;
+import mockit.Mocked;
+import mockit.Verifications;
+import mockit.integration.junit4.JMockit;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,11 +18,6 @@ import org.junit.runner.RunWith;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
-
-import mockit.Expectations;
-import mockit.Mocked;
-import mockit.Verifications;
-import mockit.integration.junit4.JMockit;
 
 @RunWith(JMockit.class)
 public class PauseableTimerTest {

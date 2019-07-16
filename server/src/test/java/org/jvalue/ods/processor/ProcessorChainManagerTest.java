@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.processor;
 
 
@@ -5,7 +10,10 @@ import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
+import mockit.Expectations;
+import mockit.Mocked;
+import mockit.Verifications;
+import mockit.integration.junit4.JMockit;
 import org.ektorp.DocumentNotFoundException;
 import org.junit.Assert;
 import org.junit.Before;
@@ -26,11 +34,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
-import mockit.Expectations;
-import mockit.Mocked;
-import mockit.Verifications;
-import mockit.integration.junit4.JMockit;
 
 @RunWith(JMockit.class)
 public final class ProcessorChainManagerTest {

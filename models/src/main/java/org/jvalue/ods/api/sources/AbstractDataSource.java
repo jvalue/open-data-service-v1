@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.api.sources;
 
 import com.fasterxml.jackson.core.JsonPointer;
@@ -5,7 +10,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Objects;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.jvalue.ods.api.utils.JsonPointerDeserializer;
 import org.jvalue.ods.api.utils.JsonPointerSerializer;

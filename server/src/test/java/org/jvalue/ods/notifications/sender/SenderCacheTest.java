@@ -1,15 +1,19 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.notifications.sender;
 
 
+import mockit.Mocked;
+import mockit.Verifications;
+import mockit.integration.junit4.JMockit;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.jvalue.ods.api.notifications.GcmClient;
 import org.jvalue.ods.api.notifications.HttpClient;
 import org.jvalue.ods.api.sources.DataSource;
-
-import mockit.Mocked;
-import mockit.Verifications;
-import mockit.integration.junit4.JMockit;
 
 @RunWith(JMockit.class)
 public final class SenderCacheTest {

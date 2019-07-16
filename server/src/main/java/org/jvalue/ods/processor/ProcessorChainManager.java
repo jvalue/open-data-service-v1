@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.processor;
 
 import com.codahale.metrics.Gauge;
@@ -5,7 +10,6 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.google.common.base.Objects;
 import com.google.inject.Inject;
-
 import org.jvalue.commons.utils.Assert;
 import org.jvalue.commons.utils.Cache;
 import org.jvalue.commons.utils.ListValueMap;

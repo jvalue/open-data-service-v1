@@ -1,11 +1,16 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.notifications.sender;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 import org.jvalue.ods.api.notifications.Client;
 import org.jvalue.ods.notifications.DummyClient;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 
 public final class SenderResultTest {

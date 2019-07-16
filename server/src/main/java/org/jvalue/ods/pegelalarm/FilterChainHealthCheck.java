@@ -1,7 +1,11 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.pegelalarm;
 
 import com.codahale.metrics.health.HealthCheck;
-
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.data.DataSourceManager;
 import org.jvalue.ods.processor.ProcessorChainManager;

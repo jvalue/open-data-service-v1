@@ -1,28 +1,28 @@
-version: '2'
+version: "2"
 services:
-  ods:
-    image: mojo-docker.cs.fau.de/osrg_ods_public/ods:latest
-    ports:
-      - "8080:8080"
-      - "8081:8081"
-    environment:
-      - COUCHDB_MAX_CONNECTIONS=100
-      - ODS_ADMIN_CONTEXT_PATH=/
-      - ODS_CONTEXT_PATH=/ods
-      - ODS_ADMIN_PASSWORD=admin123
-      - COUCHDB_URL=http://couchdb:5984/
-      - COUCHDB_USER=admin
-      - COUCHDB_PASSWORD=admin
-  couchdb:
-    image: couchdb
-    ports:
-      - "5984:5984"
-    environment:
-      - COUCHDB_USER=admin
-      - COUCHDB_PASSWORD=admin
-  swagger-ui:
-    image: swaggerapi/swagger-ui
-    ports:
-      - "8082:8080"
-    environment:
-      - API_URL=http://localhost:8080/ods/api/v2/doc/
+    ods:
+        image: registry.gitlab.com/profoss/jvalue/open-data-service/ods:latest
+        ports:
+            - "8080:8080"
+            - "8081:8081"
+        environment:
+            - COUCHDB_MAX_CONNECTIONS=100
+            - ODS_ADMIN_CONTEXT_PATH=/
+            - ODS_CONTEXT_PATH=/ods
+            - ODS_ADMIN_PASSWORD=admin123
+            - COUCHDB_URL=http://couchdb:5984/
+            - COUCHDB_USER=admin
+            - COUCHDB_PASSWORD=admin
+    couchdb:
+        image: couchdb
+        ports:
+            - "5984:5984"
+        environment:
+            - COUCHDB_USER=admin
+            - COUCHDB_PASSWORD=admin
+    swagger-ui:
+        image: swaggerapi/swagger-ui
+        ports:
+            - "8082:8080"
+        environment:
+            - API_URL=http://localhost:8080/ods/api/v2/doc/

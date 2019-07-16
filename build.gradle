@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 buildscript {
 	apply from: 'dependencies.gradle'
 
@@ -15,7 +20,7 @@ plugins {
 
 allprojects {
     group = 'org.jvalue.ods'
-    version = '0.4.0'
+    version = '0.4.1'
 }
 
 wrapper {
@@ -26,15 +31,10 @@ subprojects {
 	apply plugin: 'java'
 	apply plugin: 'idea'
 	apply plugin: 'maven'
-	apply plugin: 'maven-publish'
 	apply plugin: "com.github.johnrengelman.shadow"
 
 	sourceCompatibility = JavaVersion.VERSION_1_8
 	targetCompatibility = JavaVersion.VERSION_1_8
-
-	ext {
-		nexusPublicReleasesUrl = 'https://mojo-maven.cs.fau.de/repository/public-releases/'
-	}
 
 	javadoc {
 		options.addStringOption('encoding', 'UTF-8')
@@ -43,6 +43,11 @@ subprojects {
 			options.addBooleanOption('html5', true)
 		}
 	}
+
+	ext {
+		odsCommonsPackageUrl = 'https://gitlab.com/api/v4/projects/12889679/packages/maven'
+	}
+
 
 	// setup generated sources (if any)
 	ext {
@@ -63,7 +68,8 @@ subprojects {
 		mavenLocal()
 		jcenter()
 		maven {
-			url project.ext.nexusPublicReleasesUrl
+			// ODS-Commons Maven repository
+			url project.ext.odsCommonsPackageUrl
 		}
 	}
 
@@ -133,33 +139,6 @@ subprojects {
 		}
 	}
 
-	// publishing to nexus
-	publishing {
-		if (!project.ext.has('nexusUsername')) {
-			project.ext.nexusUsername = ''
-		}
-		if (!project.ext.has('nexusPassword')) {
-			project.ext.nexusPassword = ''
-		}
-		publications {
-			nexusJava(MavenPublication) {
-				from components.java
-				artifact sourcesJar
-				artifact javadocJar
-			}
-		}
-		repositories {
-			maven {
-				url project.ext.nexusPublicReleasesUrl
-				credentials {
-					username nexusUsername
-					password nexusPassword
-				}
-			}
-
-		}
-	}
-
 	task sourcesJar(type: Jar, dependsOn: classes) {
 		classifier = 'sources'
 		from sourceSets.main.allSource
@@ -183,44 +162,14 @@ subprojects {
 	}
 }
 
-def dockerCDTag = new Date().format('yyyyMMdd-HHmm') + '.' + versionDetails().gitHash
-def dockerRegistry = 'mojo-docker.cs.fau.de/'
 def dockerDir = 'docker/ods/'
-def dockerImageName = 'osrg_ods_public/ods-cd'
-def dockerNameLocal = dockerImageName+':latest'
-def dockerNameCD = dockerRegistry +dockerImageName+':' + dockerCDTag
-def dockerNameLatest = dockerRegistry + dockerNameLocal
 
 task dockerBuild {
 	dependsOn ':server:copyDockerAssets'
 	doLast {
 		exec {
 			workingDir dockerDir
-			commandLine 'docker', 'build', '-t', dockerNameLocal, '.'
-		}
-	}
-}
-
-task dockerTag {
-	dependsOn dockerBuild
-	  doLast {
-		exec {
-			workingDir dockerDir
-			commandLine 'docker', 'tag', dockerNameLocal , dockerNameCD
-		}
-		exec {
-			workingDir dockerDir
-			commandLine 'docker', 'tag', dockerNameLocal , dockerNameLatest
-		}
-	}
-}
-
-task dockerPush {
-	dependsOn dockerTag
-	doLast {
-		exec {
-			workingDir dockerDir
-			commandLine 'docker', 'push', dockerRegistry + dockerImageName
+			commandLine 'docker', 'build', '-t', 'ods-ci/ods', '.'
 		}
 	}
 }

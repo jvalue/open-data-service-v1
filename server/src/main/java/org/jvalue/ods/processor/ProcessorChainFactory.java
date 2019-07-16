@@ -1,9 +1,13 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.processor;
 
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
-
 import org.jvalue.commons.utils.Assert;
 import org.jvalue.ods.api.processors.ProcessorReference;
 import org.jvalue.ods.api.processors.ProcessorReferenceChain;

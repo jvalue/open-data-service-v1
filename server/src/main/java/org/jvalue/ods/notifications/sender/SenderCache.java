@@ -1,20 +1,18 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.notifications.sender;
 
 
 import com.google.common.base.Objects;
-
-import org.jvalue.ods.api.notifications.AmqpClient;
-import org.jvalue.ods.api.notifications.Client;
-import org.jvalue.ods.api.notifications.ClientVisitor;
-import org.jvalue.ods.api.notifications.GcmClient;
-import org.jvalue.ods.api.notifications.HttpClient;
-import org.jvalue.ods.api.notifications.NdsClient;
+import org.jvalue.ods.api.notifications.*;
 import org.jvalue.ods.api.sources.DataSource;
 
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.inject.Inject;
 
 /**
  * Cache for {@link Sender} instance while data

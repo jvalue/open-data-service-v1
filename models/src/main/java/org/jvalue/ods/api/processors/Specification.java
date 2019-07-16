@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.api.processors;
 
 
@@ -6,9 +11,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-import java.util.Map;
-
 import javax.validation.constraints.NotNull;
+import java.util.Map;
 
 public class Specification {
 

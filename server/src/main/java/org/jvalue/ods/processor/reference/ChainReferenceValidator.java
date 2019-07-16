@@ -1,8 +1,12 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.processor.reference;
 
 
 import com.google.inject.Inject;
-
 import org.apache.commons.lang3.ClassUtils;
 import org.jvalue.ods.api.processors.ProcessorReference;
 import org.jvalue.ods.api.processors.ProcessorReferenceChainDescription;
@@ -10,11 +14,10 @@ import org.jvalue.ods.api.processors.ProcessorType;
 import org.jvalue.ods.api.processors.Specification;
 import org.jvalue.ods.processor.specification.SpecificationManager;
 
-import java.util.List;
-import java.util.Map;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.util.List;
+import java.util.Map;
 
 public class ChainReferenceValidator implements ConstraintValidator<ValidChainReference, ProcessorReferenceChainDescription> {
 

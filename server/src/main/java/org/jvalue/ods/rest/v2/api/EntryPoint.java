@@ -1,12 +1,16 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.rest.v2.api;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.links.Link;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.jvalue.commons.rest.VersionInfo;
 import org.jvalue.ods.GitConstants;
 import org.jvalue.ods.rest.v2.jsonapi.response.JsonApiResponse;

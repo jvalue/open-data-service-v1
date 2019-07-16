@@ -1,8 +1,13 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.data;
 
 
 import com.google.inject.Inject;
-
+import io.dropwizard.lifecycle.Managed;
 import org.ektorp.DocumentNotFoundException;
 import org.jvalue.commons.couchdb.DbConnectorFactory;
 import org.jvalue.commons.utils.Assert;
@@ -17,8 +22,6 @@ import org.jvalue.ods.processor.ProcessorChainManager;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import io.dropwizard.lifecycle.Managed;
 
 public final class DataSourceManager implements Managed {
 

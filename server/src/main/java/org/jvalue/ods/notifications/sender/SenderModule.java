@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.notifications.sender;
 
 
@@ -6,7 +11,6 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
-
 import org.jvalue.ods.api.notifications.AmqpClient;
 import org.jvalue.ods.api.notifications.GcmClient;
 import org.jvalue.ods.api.notifications.HttpClient;

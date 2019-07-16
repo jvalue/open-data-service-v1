@@ -38,6 +38,8 @@ An easy way to use the ODS is via a pre build Docker image.  Therefore use docke
 
 `docker-compose -f docker/docker-compose.yml up`
 
+You can find prebuild Docker images in the following container registry: [GitLab Container Registry](https://gitlab.com/profoss/jvalue/open-data-service/container_registry)
+
 ### Building a Docker Image
 You can build a local Docker image from source files using the Gradle task `./gradlew dockerBuild`.
 To run the local image with docker-compose call:
@@ -102,6 +104,10 @@ To import those variables, save the above JSON in a file and click the _environm
 The current API of the ODS (v2) implements the [JSON API](https://jsonapi.org/) specification to ensure a standardized data exchange format. Therefore, all HTTP requests containing a message body must contain the content-type header field with value "application/vnd.api+json".    
 Most of the v1 endpoints still remain but, since they are mutually linked, you can explore the API by simply clicking through it. On the [base path](http://localhost:8080/ods/api/v2) of API v2 you will find an entry point from which each endpoint is reachable.  
 
+## Getting Started
+
+Please see [PegelOnline-Example.md](./docs/configuration/PegelOnline-Example.md) for an introduction on how to use ODS.
+
 ### Swagger
 Another way of exploring the API is via [Swagger](https://swagger.io/). By executing the above mentioned docker-compose command (`docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml up`) Swagger-UI will be started and can be reached via [localhost:8082](http://localhost:8082). 
 
@@ -140,7 +146,7 @@ The ODS has a number of [health checks](https://dropwizard.github.io/dropwizard/
 - [Adapter](docs/adapter/Adapter.md)
 
 ## License
-Copyright 2014-2018 Friedrich-Alexander Universität Erlangen-Nürnberg
+Copyright 2014-2019 Friedrich-Alexander Universität Erlangen-Nürnberg
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
@@ -154,3 +160,5 @@ GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+SPDX-License-Identifier: AGPL-3.0-only

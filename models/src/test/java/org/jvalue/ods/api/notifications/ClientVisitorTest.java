@@ -1,9 +1,11 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.api.notifications;
 
 import org.junit.Test;
-import org.jvalue.ods.api.notifications.ClientVisitor;
-import org.jvalue.ods.api.notifications.GcmClient;
-import org.jvalue.ods.api.notifications.HttpClient;
 
 import static org.junit.Assert.assertEquals;
 

@@ -1,4 +1,8 @@
-#REPO: mojo-docker.cs.fau.de/osrg_ods_public/ods
+#
+# Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+#
 
 FROM adoptopenjdk/openjdk8-openj9:alpine
 

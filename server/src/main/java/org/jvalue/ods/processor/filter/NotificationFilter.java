@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 /*  Open Data Service
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
@@ -19,7 +24,6 @@ import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.notifications.NotificationManager;
 
