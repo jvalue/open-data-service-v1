@@ -49,6 +49,10 @@ To run the local image with docker-compose call:
 
 ## Usage of API v1
 
+## Getting Started
+
+Please see [PegelOnline-Example.md](./docs/configuration/PegelOnline-Example.md) for an introduction on how to use ODS.
+
 The ODS uses a REST API for communicating with clients of all kinds, be it end users or admins. The basic usage of the api follows the template `/someObjects/{objectId}/someProperty` and is always relative to the base url you have defined in the `ods-configuration.yml` file.
 
 The two 'concepts' that are most important in the context of the ODS are sources and filter chains. 
@@ -103,10 +107,6 @@ To import those variables, save the above JSON in a file and click the _environm
 
 The current API of the ODS (v2) implements the [JSON API](https://jsonapi.org/) specification to ensure a standardized data exchange format. Therefore, all HTTP requests containing a message body must contain the content-type header field with value "application/vnd.api+json".    
 Most of the v1 endpoints still remain but, since they are mutually linked, you can explore the API by simply clicking through it. On the [base path](http://localhost:8080/ods/api/v2) of API v2 you will find an entry point from which each endpoint is reachable.  
-
-## Getting Started
-
-Please see [PegelOnline-Example.md](./docs/configuration/PegelOnline-Example.md) for an introduction on how to use ODS.
 
 ### Swagger
 Another way of exploring the API is via [Swagger](https://swagger.io/). By executing the above mentioned docker-compose command (`docker-compose -f docker/docker-compose.yml -f docker/docker-compose.local.yml up`) Swagger-UI will be started and can be reached via [localhost:8082](http://localhost:8082). 
