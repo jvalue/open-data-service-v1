@@ -12,6 +12,7 @@ import com.google.inject.name.Names;
 import org.jvalue.ods.processor.adapter.domain.BrandenburgPegelAdapter;
 import org.jvalue.ods.processor.adapter.domain.PegelPortalMvSourceAdapter;
 import org.jvalue.ods.processor.adapter.domain.weather.APIXUSourceAdapter;
+import org.jvalue.ods.processor.adapter.domain.weather.dwd.DwdWeatherServiceSourceAdapter;
 import org.jvalue.ods.processor.adapter.domain.weather.OpenWeatherMapSourceAdapter;
 
 public final class AdapterModule extends AbstractModule {
@@ -57,6 +58,10 @@ public final class AdapterModule extends AbstractModule {
 						Names.named(SourceAdapterFactory.NAME_MULTI_SOURCE_ADAPTER),
 						MultiSourceAdapter.class
 				)
+				.implement(
+						SourceAdapter.class,
+						Names.named(SourceAdapterFactory.NAME_DWD_WEATHER_SERVICE_SOURCE_ADAPTER),
+						DwdWeatherServiceSourceAdapter.class)
 				.build(SourceAdapterFactory.class));
 	}
 
