@@ -34,7 +34,8 @@ public class TotalSolarRadiation {
 
 
 	public double toWattPerHourPerSquareMeter() {
-		return getType().toWattPerSquareMeter(getValue(), 3600);
+		double value = getType().toWattPerSquareMeter(getValue(), 3600);
+		return Math.floor(value * 100) / 100;
 	}
 
 

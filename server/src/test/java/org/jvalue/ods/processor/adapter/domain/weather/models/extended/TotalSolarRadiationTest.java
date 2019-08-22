@@ -27,7 +27,7 @@ public class TotalSolarRadiationTest {
 		double joulePerCm2 = 70.8;
 		TotalSolarRadiation solar = new TotalSolarRadiation(joulePerCm2, RadiationType.JOULE_PER_SQUARE_CENTIMETER);
 
-		Assert.assertEquals(196.6666, solar.toWattPerHourPerSquareMeter(), DELTA);
+		Assert.assertEquals(196.66, solar.toWattPerHourPerSquareMeter(), DELTA);
 	}
 
 
