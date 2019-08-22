@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.processor.adapter.domain.weather.models.extended;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -44,7 +49,6 @@ public class ExtendedWeatherTest {
 	public void testDeserialization_Json() throws IOException {
 		String weatherStr = JsonMapper.writeValueAsString(weather);
 
-		System.out.println(weatherStr);
 		ExtendedWeather result = JsonMapper.readValue(weatherStr, ExtendedWeather.class);
 
 		Assert.assertEquals(weather, result);
