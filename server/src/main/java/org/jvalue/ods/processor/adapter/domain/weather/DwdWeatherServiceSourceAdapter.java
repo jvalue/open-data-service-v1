@@ -32,7 +32,9 @@ import static org.jvalue.commons.utils.Assert.assertNotNull;
 
 public class DwdWeatherServiceSourceAdapter implements SourceAdapter {
 
-	private static final String DWD_SERVICE_BASE_ADDRESS = "http://localhost:8090/api/v1";
+	private static final String DWD_HOST = Optional.ofNullable(System.getenv("DWD_HOST")).orElse("dwd:8080");
+
+	private static final String DWD_SERVICE_BASE_ADDRESS = "http://"+ DWD_HOST+"/api/v1";
 
 	private final DataSource dataSource;
 	private final MetricRegistry registry;
