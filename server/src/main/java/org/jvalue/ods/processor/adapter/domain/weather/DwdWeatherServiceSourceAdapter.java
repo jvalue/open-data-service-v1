@@ -1,8 +1,12 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.processor.adapter.domain.weather;
 
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.assistedinject.Assisted;
 import org.jvalue.ods.api.sources.DataSource;
@@ -12,6 +16,7 @@ import org.jvalue.ods.processor.adapter.SourceAdapterException;
 import org.jvalue.ods.processor.adapter.SourceAdapterFactory;
 import org.jvalue.ods.processor.adapter.domain.weather.models.*;
 import org.jvalue.ods.processor.adapter.domain.weather.models.extended.*;
+import org.jvalue.ods.utils.JsonMapper;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -29,7 +34,6 @@ public class DwdWeatherServiceSourceAdapter implements SourceAdapter {
 
 	private static final String DWD_SERVICE_BASE_ADDRESS = "http://localhost:8090/api/v1";
 
-	private final ObjectMapper mapper = new ObjectMapper();
 	private final DataSource dataSource;
 	private final MetricRegistry registry;
 	private final List<Location> locations;
@@ -48,7 +52,7 @@ public class DwdWeatherServiceSourceAdapter implements SourceAdapter {
 		this.registry = registry;
 
 		this.locations = locations.stream()
-			.map(l -> mapper.convertValue(l, Location.class))
+			.map(l -> JsonMapper.convertValue(l, Location.class))
 			.collect(Collectors.toList());
 	}
 
@@ -61,7 +65,7 @@ public class DwdWeatherServiceSourceAdapter implements SourceAdapter {
 			if (nodeIterator.hasNext()) {
 				ObjectNode node = nodeIterator.next();
 				Weather weather = parseServiceResponse(node, location);
-				ObjectNode weatherNode = mapper.valueToTree(weather);
+				ObjectNode weatherNode = JsonMapper.valueToTree(weather);
 				result.add(weatherNode);
 			}
 		}
