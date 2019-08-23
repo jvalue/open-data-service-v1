@@ -1,0 +1,4 @@
+version: '2'
+services:
+  dwd:
+    image: registry.gitlab.com/profoss/jvalue/open-data-service/dwd:latest
