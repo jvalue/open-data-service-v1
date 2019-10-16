@@ -45,7 +45,7 @@ public class PublisherTest {
 	@Test
 	public void testPublish() throws Exception {
 		new Expectations() {{
-			channel.exchangeDeclare(EXCHANGE, EXCHANGE_TYPE);
+			channel.exchangeDeclare(EXCHANGE, EXCHANGE_TYPE, true);
 			channel.basicPublish(EXCHANGE, ROUTING_KEY, null, MESSAGE.getBytes(StandardCharsets.UTF_8));
 			channel.isOpen(); result = true;
 			channel.close();
