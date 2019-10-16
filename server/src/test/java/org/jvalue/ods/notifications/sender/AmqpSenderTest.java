@@ -46,7 +46,7 @@ public class AmqpSenderTest {
     @Test
     public void testSuccess() {
         new Expectations() {{
-            publisher.connect(HOST, EXCHANGE, EXCHANGE_TYPE); result = true;
+            publisher.connect(HOST, null, EXCHANGE, EXCHANGE_TYPE); result = true;
             publisher.publish("{\"sourceId\":\"someSourceId\"}", ""); result = true;
         }};
 

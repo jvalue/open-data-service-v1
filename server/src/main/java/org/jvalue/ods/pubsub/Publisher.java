@@ -31,21 +31,25 @@ public class Publisher {
 	}
 
 
-	public boolean connect(String host, String exchange, String exchangeType) {
+	public boolean connect(String host, String virtualHost, String exchange, String exchangeType) {
 		assertIsSupportedExchangeType(exchangeType);
 
 		this.host = host;
 		this.exchange = exchange;
 
 		factory.setHost(host);
+		if (virtualHost != null) {
+			factory.setVirtualHost(virtualHost);
+		}
 
 		try {
 			Log.info("Connect to publish/subscribe server: " + toString());
 			connection = factory.newConnection();
 			channel = connection.createChannel();
-			channel.exchangeDeclare(exchange, exchangeType);
+			channel.exchangeDeclare(exchange, exchangeType,true);
 		} catch (IOException | TimeoutException e) {
 			Log.error("Unable to connect to publish/subscribe server: " + toString());
+			e.printStackTrace();
 			return false;
 		}
 

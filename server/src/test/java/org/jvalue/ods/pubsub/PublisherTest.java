@@ -58,7 +58,7 @@ public class PublisherTest {
 			factory.newConnection(); result = connection;
 		}};
 
-		publisher.connect(HOST, EXCHANGE, EXCHANGE_TYPE);
+		publisher.connect(HOST,null, EXCHANGE, EXCHANGE_TYPE);
 		publisher.publish(MESSAGE, ROUTING_KEY);
 		publisher.close();
 	}
@@ -66,12 +66,12 @@ public class PublisherTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testExchangeType_DIRECT () {
-		publisher.connect(HOST, EXCHANGE, BuiltinExchangeType.DIRECT.getType());
+		publisher.connect(HOST, null, EXCHANGE, BuiltinExchangeType.DIRECT.getType());
 	}
 
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testExchangeType_HEADERS () {
-		publisher.connect(HOST, EXCHANGE, BuiltinExchangeType.HEADERS.getType());
+		publisher.connect(HOST, null, EXCHANGE, BuiltinExchangeType.HEADERS.getType());
 	}
 }

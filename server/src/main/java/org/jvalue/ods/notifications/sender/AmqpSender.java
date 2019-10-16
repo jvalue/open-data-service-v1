@@ -41,7 +41,7 @@ public class AmqpSender extends AbstractSender<AmqpClient> {
 
     @Override
     public void onNewDataComplete() {
-        boolean connected = publisher.connect(client.getHost(), client.getExchange(), client.getExchangeType());
+        boolean connected = publisher.connect(client.getHost(),null, client.getExchange(), client.getExchangeType());
 
         boolean sent = true;
 

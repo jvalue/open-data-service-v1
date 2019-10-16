@@ -60,7 +60,7 @@ public class NdsSender extends AbstractSender<NdsClient> {
 
 	@Override
 	public void onNewDataComplete() {
-		boolean connected = publisher.connect(client.getHost(), client.getExchange(), EXCHANGE_TYPE);
+		boolean connected = publisher.connect(client.getHost(),"weather", client.getExchange(), EXCHANGE_TYPE);
 
 		boolean sent = true;
 
