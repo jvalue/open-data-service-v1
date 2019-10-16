@@ -54,7 +54,7 @@ public class NdsSenderTest {
 	@Test
 	public void testMessageTransformation(){
 		new Expectations() {{
-			publisher.connect(HOST, EXCHANGE, "topic"); result = true;
+			publisher.connect(HOST, "weather", EXCHANGE, "topic"); result = true;
 			publisher.publish((String) any, "EnvironmentalMeasurement.Berlin"); result = true;
 		}};
 
