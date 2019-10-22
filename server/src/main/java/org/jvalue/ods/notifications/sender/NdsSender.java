@@ -113,7 +113,7 @@ public class NdsSender extends AbstractSender<NdsClient> {
 
 
 	private String createRoutingKey(String city) {
-		return "EnvironmentalMeasurement." + city;
+		return "1.0.0.EnvironmentalMeasurement." + city;
 	}
 
 
