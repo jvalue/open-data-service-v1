@@ -14,7 +14,10 @@ import org.jvalue.commons.utils.Log;
 import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.TimeoutException;
 
 public class Publisher {
@@ -23,7 +26,7 @@ public class Publisher {
 	private Connection connection;
 	private Channel channel;
 	@NotNull private String exchange;
-	@NotNull private String host;
+	@NotNull private String uri;
 
 	@Inject
 	public Publisher(ConnectionFactory factory) {
@@ -31,15 +34,19 @@ public class Publisher {
 	}
 
 
-	public boolean connect(String host, String virtualHost, String exchange, String exchangeType) {
+	public boolean connect(String uri, String exchange, String exchangeType) {
 		assertIsSupportedExchangeType(exchangeType);
-
-		this.host = host;
+		this.uri = uri;
 		this.exchange = exchange;
 
-		factory.setHost(host);
-		if (virtualHost != null) {
-			factory.setVirtualHost(virtualHost);
+		try {
+			factory.setUri(uri);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (KeyManagementException e) {
+			e.printStackTrace();
 		}
 
 		try {
@@ -85,7 +92,7 @@ public class Publisher {
 
 
 	public String toString() {
-		return "{host: '" + host + "', exchange_name: '" + exchange + "'}";
+		return "{uri: '" + uri + "', exchange_name: '" + exchange + "'}";
 	}
 
 

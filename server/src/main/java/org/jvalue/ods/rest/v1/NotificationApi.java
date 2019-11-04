@@ -122,13 +122,13 @@ public final class NotificationApi extends AbstractApi {
 
 		@Override
 		public Client visit(AmqpClientDescription client, String clientId) {
-			return new AmqpClient(clientId, client.getHost(), client.getExchange(), client.getExchangeType(), client.getRoutingKey());
+			return new AmqpClient(clientId, client.getUri(), client.getExchange(), client.getExchangeType(), client.getRoutingKey());
 		}
 
 
 		@Override
 		public Client visit(NdsClientDescription client, String clientId) {
-			return new NdsClient(clientId, client.getHost(), client.getExchange(), client.getValidateMessage());
+			return new NdsClient(clientId, client.getUri(), client.getExchange(), client.getValidateMessage());
 		}
 
 	}

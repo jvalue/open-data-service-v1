@@ -26,14 +26,14 @@ public class AmqpSenderTest {
 
     private final DataSource source = new DataSource(SOURCE_ID, null, null, null);
 
-    private static final String HOST = "dummy-host";
+    private static final String URI = "amqp://userName:password@hostName:portNumber/virtualHost";
 
     private static final String EXCHANGE = "dummy-exchange";
 	private static final String EXCHANGE_TYPE = "fanout";
 
     private  AmqpSender sender;
 
-    private AmqpClient client = new AmqpClient("someId", HOST, EXCHANGE, EXCHANGE_TYPE, "");
+    private AmqpClient client = new AmqpClient("someId", URI, EXCHANGE, EXCHANGE_TYPE, "");
 
     @Mocked
     private Publisher publisher;
@@ -46,7 +46,7 @@ public class AmqpSenderTest {
     @Test
     public void testSuccess() {
         new Expectations() {{
-            publisher.connect(HOST, null, EXCHANGE, EXCHANGE_TYPE); result = true;
+            publisher.connect(URI, EXCHANGE, EXCHANGE_TYPE); result = true;
             publisher.publish("{\"sourceId\":\"someSourceId\"}", ""); result = true;
         }};
 
@@ -65,7 +65,7 @@ public class AmqpSenderTest {
     @Test
     public void testConnectionError() {
         new Expectations() {{
-            publisher.connect((String) any, (String) any, (String) any, (String) any); result = false;
+            publisher.connect((String) any, (String) any, (String) any); result = false;
             publisher.publish((String) any, (String) any); result = true;
         }};
 
@@ -81,7 +81,7 @@ public class AmqpSenderTest {
     @Test
     public void testSentError() {
         new Expectations() {{
-            publisher.connect((String) any,(String) any, (String) any, (String) any); result = true;
+            publisher.connect((String) any, (String) any, (String) any); result = true;
             publisher.publish((String) any, (String) any); result = false;
         }};
 
