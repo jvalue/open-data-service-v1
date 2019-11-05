@@ -64,6 +64,12 @@ public class NdsSenderTest {
 
 		new Verifications() {{
 			Assert.assertEquals(SenderResult.Status.SUCCESS, sender.getSenderResult().getStatus());
+
+			String cimMsg;
+			publisher.publish(cimMsg = withCapture(), (String) any);
+			Assert.assertTrue(cimMsg.contains("<cim:name>Berlin</cim:name>"));
+			Assert.assertTrue(cimMsg.contains("<cim:value>30.0</cim:value>"));
 		}};
 	}
+
 }

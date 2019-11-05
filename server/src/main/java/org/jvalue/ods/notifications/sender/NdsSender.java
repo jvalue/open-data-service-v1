@@ -31,6 +31,7 @@ import javax.xml.validation.Validator;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.util.UUID;
 
 @SuppressWarnings("Duplicates")
 public class NdsSender extends AbstractSender<NdsClient> {
@@ -95,7 +96,7 @@ public class NdsSender extends AbstractSender<NdsClient> {
 		String cimTemplate = getCimTemplate();
 
 		cimTemplate = cimTemplate
-			.replace("__ID__", weather.getStationId())
+			.replace("__UUID4__", UUID.randomUUID().toString())
 			.replace("__CITY__", weather.getLocation().getCity())
 			.replace("__TEMP_IN_C__", String.valueOf(temperature.getValue()))
 			.replace("__TIMESTAMP__", weather.getTimestamp().toString());
