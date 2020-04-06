@@ -29,11 +29,11 @@ public class NdsSenderTest {
 
 	private static final String SOURCE_ID = "someSourceId";
 	private final DataSource source = new DataSource(SOURCE_ID, null, null, null);
-	private static final String HOST = "dummy-host";
+	private static final String URI = "amqp://userName:password@hostName:portNumber/virtualHost";
 	private static final String EXCHANGE = "dummy-exchange";
 
 	private  NdsSender sender;
-	private NdsClient client = new NdsClient("someId", HOST, EXCHANGE, false);
+	private NdsClient client = new NdsClient("someId", URI, EXCHANGE, false);
 
 	private final Weather weather = new Weather(
 		"42",
@@ -54,8 +54,8 @@ public class NdsSenderTest {
 	@Test
 	public void testMessageTransformation(){
 		new Expectations() {{
-			publisher.connect(HOST, EXCHANGE, "topic"); result = true;
-			publisher.publish((String) any, "EnvironmentalMeasurement.Berlin"); result = true;
+			publisher.connect(URI, EXCHANGE, "topic"); result = true;
+			publisher.publish((String) any, "1.0.0.EnvironmentalMeasurement.Berlin"); result = true;
 		}};
 
 		sender.onNewDataStart();
@@ -64,6 +64,12 @@ public class NdsSenderTest {
 
 		new Verifications() {{
 			Assert.assertEquals(SenderResult.Status.SUCCESS, sender.getSenderResult().getStatus());
+
+			String cimMsg;
+			publisher.publish(cimMsg = withCapture(), (String) any);
+			Assert.assertTrue(cimMsg.contains("<cim:name>Berlin</cim:name>"));
+			Assert.assertTrue(cimMsg.contains("<cim:value>30.0</cim:value>"));
 		}};
 	}
+
 }

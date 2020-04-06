@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2019 Friedrich-Alexander University Erlangen-Nuernberg (FAU)
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.jvalue.ods.processor.adapter.domain.weather.models.extended;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -25,6 +30,12 @@ public class TotalSolarRadiation {
 
 	public RadiationType getType() {
 		return type;
+	}
+
+
+	public double toWattPerHourPerSquareMeter() {
+		double value = getType().toWattPerSquareMeter(getValue(), 3600);
+		return Math.floor(value * 100) / 100;
 	}
 
 

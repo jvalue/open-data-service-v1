@@ -21,7 +21,7 @@ import java.nio.charset.StandardCharsets;
 @RunWith(JMockit.class)
 public class PublisherTest {
 
-	private static final String HOST = "dummy-host";
+	private static final String URI = "amqp://userName:password@hostName:portNumber/virtualHost";
 	private static final String EXCHANGE = "dummy-exchange";
 	private static final String EXCHANGE_TYPE = "topic";
 	private static final String MESSAGE = "{name: 'test'}";
@@ -45,7 +45,7 @@ public class PublisherTest {
 	@Test
 	public void testPublish() throws Exception {
 		new Expectations() {{
-			channel.exchangeDeclare(EXCHANGE, EXCHANGE_TYPE);
+			channel.exchangeDeclare(EXCHANGE, EXCHANGE_TYPE, true);
 			channel.basicPublish(EXCHANGE, ROUTING_KEY, null, MESSAGE.getBytes(StandardCharsets.UTF_8));
 			channel.isOpen(); result = true;
 			channel.close();
@@ -54,11 +54,11 @@ public class PublisherTest {
 			connection.isOpen(); result = true;
 			connection.close();
 
-			factory.setHost(HOST);
+			factory.setUri(URI);
 			factory.newConnection(); result = connection;
 		}};
 
-		publisher.connect(HOST, EXCHANGE, EXCHANGE_TYPE);
+		publisher.connect(URI, EXCHANGE, EXCHANGE_TYPE);
 		publisher.publish(MESSAGE, ROUTING_KEY);
 		publisher.close();
 	}
@@ -66,12 +66,12 @@ public class PublisherTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testExchangeType_DIRECT () {
-		publisher.connect(HOST, EXCHANGE, BuiltinExchangeType.DIRECT.getType());
+		publisher.connect(URI, EXCHANGE, BuiltinExchangeType.DIRECT.getType());
 	}
 
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testExchangeType_HEADERS () {
-		publisher.connect(HOST, EXCHANGE, BuiltinExchangeType.HEADERS.getType());
+		publisher.connect(URI, EXCHANGE, BuiltinExchangeType.HEADERS.getType());
 	}
 }

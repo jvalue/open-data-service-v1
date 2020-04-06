@@ -33,9 +33,7 @@ public interface SourceAdapterFactory {
 			ARGUMENT_CSV_FORMAT = "csvFormat",
 			ARGUMENT_LOCATIONS = "locations",
 			ARGUMENT_API_KEY = "apiKey",
-			ARGUMENT_MULTI_SOURCE = "sources",
-			ARGUMENT_LOCATION = "location",
-			ARGUMENT_TIME = "time";
+			ARGUMENT_MULTI_SOURCE = "sources";
 
 
 	@CreationMethod(name = NAME_JSON_SOURCE_ADAPTER, filterType = ProcessorType.SOURCE_ADAPTER)
@@ -108,7 +106,6 @@ public interface SourceAdapterFactory {
 	@Named(NAME_DWD_WEATHER_SERVICE_SOURCE_ADAPTER)
 	SourceAdapter createDwdWatherServiceSourceAdapter(
 		DataSource source,
-		@Argument(ARGUMENT_LOCATION) @Assisted(ARGUMENT_LOCATION) LinkedHashMap<String, String> location,
-		@Argument(ARGUMENT_TIME) @Assisted(ARGUMENT_TIME) String time);
+		@Argument(ARGUMENT_LOCATIONS) @Assisted(ARGUMENT_LOCATIONS) ArrayList<LinkedHashMap<String, String>> locations);
 
 }

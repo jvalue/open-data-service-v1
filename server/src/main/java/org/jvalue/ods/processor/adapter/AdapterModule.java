@@ -12,7 +12,7 @@ import com.google.inject.name.Names;
 import org.jvalue.ods.processor.adapter.domain.BrandenburgPegelAdapter;
 import org.jvalue.ods.processor.adapter.domain.PegelPortalMvSourceAdapter;
 import org.jvalue.ods.processor.adapter.domain.weather.APIXUSourceAdapter;
-import org.jvalue.ods.processor.adapter.domain.weather.dwd.DwdWeatherServiceSourceAdapter;
+import org.jvalue.ods.processor.adapter.domain.weather.DwdWeatherServiceSourceAdapter;
 import org.jvalue.ods.processor.adapter.domain.weather.OpenWeatherMapSourceAdapter;
 
 public final class AdapterModule extends AbstractModule {

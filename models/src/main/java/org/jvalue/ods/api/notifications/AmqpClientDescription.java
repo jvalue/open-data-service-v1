@@ -16,27 +16,27 @@ public class AmqpClientDescription extends ClientDescription {
     public static final String CLIENT_TYPE = "AMQP";
 
     @NotNull private final String exchange;
-    @NotNull private final String host;
+    @NotNull private final String uri;
 	@NotNull private final String exchangeType;
 	private final String routingKey;
 
     @JsonCreator
     public AmqpClientDescription(
-            @JsonProperty("host") String host,
+            @JsonProperty("uri") String uri,
             @JsonProperty("exchange") String exchange,
 			@JsonProperty("exchangeType") String exchangeType,
 			@JsonProperty("routingKey") String routingKey) {
 
         super(CLIENT_TYPE);
         this.exchange = exchange;
-        this.host = host;
+        this.uri = uri;
         this.exchangeType = exchangeType;
         this.routingKey = routingKey;
     }
 
 
-    public String getHost() {
-        return host;
+    public String getUri() {
+        return uri;
     }
 
 
@@ -62,7 +62,7 @@ public class AmqpClientDescription extends ClientDescription {
 		if (!super.equals(o)) return false;
 		AmqpClientDescription that = (AmqpClientDescription) o;
 		return Objects.equals(exchange, that.exchange) &&
-			Objects.equals(host, that.host) &&
+			Objects.equals(uri, that.uri) &&
 			Objects.equals(exchangeType, that.exchangeType) &&
 			Objects.equals(routingKey, that.routingKey);
 	}
@@ -70,7 +70,7 @@ public class AmqpClientDescription extends ClientDescription {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(super.hashCode(), exchange, host, exchangeType, routingKey);
+		return Objects.hash(super.hashCode(), exchange, uri, exchangeType, routingKey);
 	}
 
 

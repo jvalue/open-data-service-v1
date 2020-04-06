@@ -18,7 +18,7 @@ import org.jvalue.ods.api.notifications.NdsClient;
 import org.jvalue.ods.api.sources.DataSource;
 import org.jvalue.ods.processor.adapter.domain.weather.models.Temperature;
 import org.jvalue.ods.processor.adapter.domain.weather.models.TemperatureType;
-import org.jvalue.ods.processor.adapter.domain.weather.models.Weather;
+import org.jvalue.ods.processor.adapter.domain.weather.models.extended.ExtendedWeather;
 import org.jvalue.ods.pubsub.Publisher;
 import org.jvalue.ods.utils.JsonMapper;
 import org.xml.sax.SAXException;
@@ -31,6 +31,7 @@ import javax.xml.validation.Validator;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.util.UUID;
 
 @SuppressWarnings("Duplicates")
 public class NdsSender extends AbstractSender<NdsClient> {
@@ -60,12 +61,12 @@ public class NdsSender extends AbstractSender<NdsClient> {
 
 	@Override
 	public void onNewDataComplete() {
-		boolean connected = publisher.connect(client.getHost(), client.getExchange(), EXCHANGE_TYPE);
+		boolean connected = publisher.connect(client.getUri(), client.getExchange(), EXCHANGE_TYPE);
 
 		boolean sent = true;
 
 		for (JsonNode node : buffer) {
-			Weather weather = getWeatherFromJsonNode(node);
+			ExtendedWeather weather = getWeatherFromJsonNode(node);
 			String message = createCIMRepresentation(weather);
 
 			if (client.getValidateMessage()) {
@@ -90,27 +91,36 @@ public class NdsSender extends AbstractSender<NdsClient> {
 	}
 
 
-	private String createCIMRepresentation(Weather weather) {
+	private String createCIMRepresentation(ExtendedWeather weather) {
 		Temperature temperature = getTemperatureInCelsius(weather.getTemperature());
 		String cimTemplate = getCimTemplate();
 
-		return cimTemplate
-			.replace("__ID__", weather.getStationId())
+		cimTemplate = cimTemplate
+			.replace("__UUID4__", UUID.randomUUID().toString())
 			.replace("__CITY__", weather.getLocation().getCity())
 			.replace("__TEMP_IN_C__", String.valueOf(temperature.getValue()))
-			.replace("__SOLAR_RADIATION__", "200.243")
 			.replace("__TIMESTAMP__", weather.getTimestamp().toString());
+
+		if (weather.getTotalSolarRadiation() != null) {
+			double wattM2 = weather.getTotalSolarRadiation().toWattPerHourPerSquareMeter();
+			cimTemplate = cimTemplate.replace("__SOLAR_RADIATION__", String.valueOf(wattM2));
+		} else {
+			String regex = "<cim:EnvironmentalAnalog>[\\s]*<cim:kind>irradianceGlobalHorizontal[\\s\\S]*?</cim:EnvironmentalAnalog>";
+			cimTemplate = cimTemplate.replaceAll(regex, "");
+		}
+
+		return cimTemplate;
 	}
 
 
 	private String createRoutingKey(String city) {
-		return "EnvironmentalMeasurement." + city;
+		return "1.0.0.EnvironmentalMeasurement." + city;
 	}
 
 
-	private Weather getWeatherFromJsonNode(JsonNode node) {
+	private ExtendedWeather getWeatherFromJsonNode(JsonNode node) {
 		JsonNode clearNode = removeCouchDbElements(node);
-		return JsonMapper.convertValue(clearNode, Weather.class);
+		return JsonMapper.convertValue(clearNode, ExtendedWeather.class);
 	}
 
 

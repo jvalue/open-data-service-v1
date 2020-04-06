@@ -43,9 +43,9 @@ public class AmqpClientTest {
 
     @Test
     public final void testGet() {
-        AmqpClient client = new AmqpClient("0", "host1", "exchange", "topic", "abcRouting");
+        AmqpClient client = new AmqpClient("0", "uri1", "exchange", "topic", "abcRouting");
         assertEquals(client.getId(), "0");
-        assertEquals(client.getHost(), "host1");
+        assertEquals(client.getUri(), "uri1");
         assertEquals(client.getExchange(), "exchange");
         assertEquals(client.getExchangeType(), "topic");
         assertEquals(client.getRoutingKey(), "abcRouting");
@@ -54,7 +54,7 @@ public class AmqpClientTest {
 
     @Test
     public final void testJson() throws JsonProcessingException {
-        AmqpClient client =new AmqpClient("0", "host1", "exchange", "topic", "main.value");
+        AmqpClient client =new AmqpClient("0", "uri1", "exchange", "topic", "main.value");
         JsonNode json = mapper.valueToTree(client);
         assertNotNull(json);
         assertEquals(client, mapper.treeToValue(json, AmqpClient.class));

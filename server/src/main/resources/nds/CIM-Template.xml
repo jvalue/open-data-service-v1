@@ -6,33 +6,42 @@
     SPDX-License-Identifier: AGPL-3.0-only
 
 -->
-<cim:Weather xmlns:cim="http://iec.ch/TC57/Weather#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://iec.ch/TC57/Weather# Weather.xsd">
-	<cim:EnvironmentalMonitoringStation>
-		<cim:mRID>String</cim:mRID>
-		<cim:EnvironmentalAnalog>
-			<cim:kind>ambientTemperature</cim:kind>
-			<cim:unitMultiplier>none</cim:unitMultiplier>
-			<cim:unitSymbol>degC</cim:unitSymbol>
-			<cim:AnalogValues>
-				<cim:timeStamp>__TIMESTAMP__</cim:timeStamp>
-				<cim:value>__TEMP_IN_C__</cim:value>
-			</cim:AnalogValues>
-		</cim:EnvironmentalAnalog>
-		<cim:EnvironmentalAnalog>
-			<cim:kind>irradianceGlobalHorizontal</cim:kind>
-			<cim:unitMultiplier>a</cim:unitMultiplier>
-			<cim:unitSymbol>WPerm2</cim:unitSymbol>
-			<cim:AnalogValues>
-				<cim:timeStamp>__TIMESTAMP__</cim:timeStamp>
-				<cim:value>__SOLAR_RADIATION__</cim:value>
-			</cim:AnalogValues>
-		</cim:EnvironmentalAnalog>
-		<cim:Location>
-			<cim:mainAddress>
-				<cim:townDetail>
-					<cim:name>__CITY__</cim:name>
-				</cim:townDetail>
-			</cim:mainAddress>
-		</cim:Location>
-	</cim:EnvironmentalMonitoringStation>
-</cim:Weather>
+<n1:EventMessage xmlns:n1="http://iec.ch/TC57/2011/schema/message" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cim="http://iec.ch/TC57/Measurement#"  xsi:schemaLocation="http://iec.ch/TC57/2011/schema/message CIM61968-100-Header.xsd http://iec.ch/TC57/Measurement# Measurement.xsd">
+	<n1:Header>
+		<n1:Revision>1.0.0</n1:Revision>
+		<n1:TermOfUse>The base data is delivered by Deutscher Wetterdienst (https://www.dwd.de). The data is modified to fit units and time intervals. Locations are resolved using https://nominatim.openstreetmap.org. Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright</n1:TermOfUse>
+	</n1:Header>
+	<n1:Payload>
+		<cim:Weather xmlns:cim="http://iec.ch/TC57/Weather#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://iec.ch/TC57/Weather# Weather.xsd">
+			<cim:EnvironmentalMonitoringStation>
+				<cim:mRID>__UUID4__</cim:mRID>
+				<cim:EnvironmentalAnalog>
+					<cim:kind>ambientTemperature</cim:kind>
+					<cim:unitMultiplier>none</cim:unitMultiplier>
+					<cim:unitSymbol>degC</cim:unitSymbol>
+					<cim:AnalogValues>
+						<cim:timeStamp>__TIMESTAMP__</cim:timeStamp>
+						<cim:value>__TEMP_IN_C__</cim:value>
+					</cim:AnalogValues>
+				</cim:EnvironmentalAnalog>
+				<cim:EnvironmentalAnalog>
+					<cim:kind>irradianceGlobalHorizontal</cim:kind>
+					<cim:unitMultiplier>a</cim:unitMultiplier>
+					<cim:unitSymbol>WPerm2</cim:unitSymbol>
+					<cim:AnalogValues>
+						<cim:timeStamp>__TIMESTAMP__</cim:timeStamp>
+						<cim:value>__SOLAR_RADIATION__</cim:value>
+					</cim:AnalogValues>
+				</cim:EnvironmentalAnalog>
+				<cim:Location>
+					<cim:mainAddress>
+						<cim:townDetail>
+							<cim:name>__CITY__</cim:name>
+						</cim:townDetail>
+					</cim:mainAddress>
+				</cim:Location>
+			</cim:EnvironmentalMonitoringStation>
+		</cim:Weather>
+		<n1:Format>XML</n1:Format>
+	</n1:Payload>
+</n1:EventMessage>
