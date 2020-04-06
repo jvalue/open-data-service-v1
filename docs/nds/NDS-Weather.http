@@ -1,0 +1,105 @@
+# RFC 2616
+# For VSCode you can use https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+@baseURL = http://localhost:8080/ods/api/v1
+
+# Username: admin@adminland.com
+# Password: admin123
+@auth = Basic YWRtaW5AYWRtaW5sYW5kLmNvbTphZG1pbjEyMw==
+
+### Create a data source to group multiple filter chains under it. Like a project.
+PUT {{baseURL}}/datasources/dwd HTTP/1.1
+Content-Type: application/json
+Authorization: {{auth}}
+
+{
+  "domainIdKey": "/stationId",
+  "schema": {},
+  "metaData": {
+    "name": "DWD",
+    "title": "Deutscher Wetterdienst",
+    "author": "DWD",
+    "authorEmail": "",
+    "notes": "",
+    "url": "https://www.dwd.de",
+    "termsOfUse": "The base data is delivered by Deutscher Wetterdienst (https://www.dwd.de). The data is modified to fit units and time intervals. Locations are resolved using https://nominatim.openstreetmap.org. Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright"
+  }
+}
+
+
+
+### See all created data sources.
+GET {{baseURL}}/datasources HTTP/1.1
+
+
+
+### Add settings for notifications via AMQP/RabbitMQ.
+PUT {{baseURL}}/datasources/dwd/notifications/myClient  HTTP/1.1
+Content-Type: application/json
+Authorization: {{auth}}
+
+{
+	"type": "NDS",
+  "uri" : "amqp://ods:netzdatenstrom@localhost:5672/weather",
+  "exchange": "Weather",
+  "validateMessage" : false
+}
+
+
+
+### To check notification settings.
+GET {{baseURL}}/datasources/dwd/notifications/myClient  HTTP/1.1
+
+### Delete notification setttings.
+DELETE {{baseURL}}/datasources/dwd/notifications/myClient  HTTP/1.1
+Authorization: {{auth}}
+
+### Create a filter chain. A filter chain describes how data should be crawled and processed.
+# Location can be a city name, a zip code, or coordinates.
+# ODS executed a filter chain immediately after creation and execute all filter chains on start up.
+PUT {{baseURL}}/datasources/dwd/filterChains/mainFilter HTTP/1.1
+Content-Type: application/json
+Authorization: {{auth}}
+
+{
+  "processors" : [
+    {
+      "name" : "DwdWeatherServiceSourceAdapter",
+      "arguments" : {
+        "locations" : [
+            {"city": "Oldenburg"},
+            {"city": "Nuernberg"},
+            {"city": "Berlin"},
+            {"city": "Erlangen"},
+            {"city": "Bielefeld"}
+        ]
+      }
+    },
+    {
+      "name" : "DbInsertionFilter",
+      "arguments" : {
+        "updateData" : true
+      }
+    },
+    {
+      "name": "NotificationFilter",
+      "arguments" : {}
+    }
+  ],
+  "executionInterval" : {
+    "period" : 60,
+    "unit" : "MINUTES"
+  }
+}
+
+### To check all filter chains.
+GET {{baseURL}}/datasources/dwd/filterChains/  HTTP/1.1
+
+
+### Get collected data of a datasource.
+GET {{baseURL}}/datasources/dwd/data?count=100  HTTP/1.1
+
+
+
+### Delete data source.
+DELETE {{baseURL}}/datasources/dwd HTTP/1.1
+Authorization: {{auth}}
