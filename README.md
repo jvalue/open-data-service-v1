@@ -1,3 +1,5 @@
+New version (v2) available here: https://www.github.com/jvalue/open-data-service
+
 # Open Data Service
 
 The Open Data Service (ODS) is Java server application which can collect data from multiple sources simulataneously, process that data and then offer an improved (or "cleaned") version to its clients.
